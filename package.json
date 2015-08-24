@@ -5,7 +5,7 @@
   "main": "build",
   "scripts": {
     "prepublish": "npm run build",
-    "build": "babel src/index.js --out-file build/index.js",
+    "build": "babel src --out-dir build",
     "test": "mocha --compilers js:babel/register --recursive **/__tests__/*.js --watch"
   },
   "repository": {
@@ -20,7 +20,7 @@
     "tdd",
     "mocha"
   ],
-  "author": "Leland Richardson",
+  "author": "Leland Richardson <leland.richardson@airbnb.com>",
   "license": "MIT",
   "dependencies": {
     "alt": "^0.17.1",
