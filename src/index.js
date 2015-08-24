@@ -1,10 +1,16 @@
 import React from 'react/addons';
 import cheerio from 'cheerio';
 import Sinon from 'sinon';
-import jsdom from 'mocha-jsdom';
 import ReactWrapper from './ReactWrapper';
 import ShallowWrapper from './ShallowWrapper';
 import { onPrototype } from './Utils';
+
+var jsdom;
+try {
+  jsdom = require('mocha-jsdom');
+} catch(e) {
+  // jsdom is not supported...
+}
 
 const {
   Simulate,
@@ -23,7 +29,14 @@ export let sinon = Sinon.sandbox.create();
 export const simulate = Simulate;
 
 export function useJsDom() {
-  jsdom();
+  if (typeof jsdom === "function") {
+    jsdom();
+  } else {
+    // if jsdom isn't available, skip every test in this describe context
+    beforeEach(function() {
+      this.skip();
+    });
+  }
 }
 
 export function useSinon() {
