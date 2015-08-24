@@ -25,7 +25,6 @@
   "dependencies": {
     "alt": "^0.17.1",
     "cheerio": "^0.19.0",
-    "react": "^0.13.3",
     "sinon": "^1.15.4",
     "underscore": "^1.8.3"
   },
@@ -33,6 +32,9 @@
     "chai": "^3.2.0",
     "mocha": "^2.2.5",
     "babel": "^5.8.21"
+  },
+  "peerDependencies": {
+    "react": "^0.13.3"
   },
   "optionalDependencies": {
     "jsdom": "^6.1.0",

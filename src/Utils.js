@@ -40,7 +40,7 @@ export function getNode(node) {
 }
 
 export function children(node) {
-  const maybeArray = node._store.props.children;
+  const maybeArray = node && node._store && node._store.props && node._store.props.children;
   if (!maybeArray) return [];
   if (Array.isArray(maybeArray)) return maybeArray;
   return [maybeArray];
@@ -70,7 +70,7 @@ export function treeFilter(tree, fn) {
 
 export function single(array) {
   if (array.length !== 1) {
-    throw new Error(`Expected single element but found ${array.length} instead`)
+    throw new Error(`Expected single element but found ${array.length} instead`);
   }
   return array[0];
 }
