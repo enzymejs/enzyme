@@ -1,6 +1,6 @@
 {
   "name": "airbnb-catalyst",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "JavaScript Testing utilities for React / Flux",
   "main": "build",
   "scripts": {
@@ -34,7 +34,7 @@
     "babel": "^5.8.21"
   },
   "peerDependencies": {
-    "react": "^0.13.3"
+    "react": "0.13.x"
   },
   "optionalDependencies": {
     "jsdom": "^6.1.0",

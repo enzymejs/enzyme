@@ -42,6 +42,7 @@ var _Utils = require('./Utils');
 
 var jsdom;
 try {
+  require('jsdom'); // could throw
   jsdom = require('mocha-jsdom');
 } catch (e) {
   // jsdom is not supported...

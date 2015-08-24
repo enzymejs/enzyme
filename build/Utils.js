@@ -60,7 +60,7 @@ function getNode(node) {
 }
 
 function children(node) {
-  var maybeArray = node._store.props.children;
+  var maybeArray = node && node._store && node._store.props && node._store.props.children;
   if (!maybeArray) return [];
   if (Array.isArray(maybeArray)) return maybeArray;
   return [maybeArray];
