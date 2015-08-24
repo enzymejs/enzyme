@@ -14,7 +14,7 @@ import { shallow } from 'catalyst';
 
 describe('<MyComponent />', () => {
 
-  it('should render three <Foo /> components', () {
+  it('should render three <Foo /> components', () => {
     const wrapper = shallow(<MyComponent />);
     expect(wrapper.findAll(Foo).length).to.equal(3);
   });
@@ -52,7 +52,7 @@ describe('<Foo />', () => {
   useJsDom();
   useSinon();
 
-  it('should call componentDidMount', () {
+  it('should call componentDidMount', () => {
     spyLifecycle(Foo);
     const wrapper = mount(<Foo />);
     expect(Foo.prototype.componentDidMount.calledOnce).to.be.true;
@@ -85,7 +85,7 @@ import { render } from 'catalyst';
 
 describe('<Foo />', () => {
 
-  it('should render three `.foo-bar`s', () {
+  it('should render three `.foo-bar`s', () => {
     const wrapper = render(<Foo />);
     expect(wrapper.find('.foo-bar').length).to.equal(3);
   });
