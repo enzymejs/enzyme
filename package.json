@@ -1,0 +1,38 @@
+{
+  "name": "helium",
+  "version": "1.0.0",
+  "description": "JavaScript Testing utilities for React / Flux",
+  "main": "src",
+  "scripts": {
+    "test": "node_modules/.bin/mocha --compilers js:babel/register --recursive **/__tests__/*.js --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@git.musta.ch:leland-richardson/helium.git"
+  },
+  "keywords": [
+    "javascript",
+    "react",
+    "flux",
+    "testing",
+    "tdd",
+    "mocha"
+  ],
+  "author": "Leland Richardson",
+  "license": "MIT",
+  "dependencies": {
+    "alt": "^0.17.1",
+    "browserify": "^11.0.1",
+    "chai": "^3.2.0",
+    "cheerio": "^0.19.0",
+    "jsdom": "^6.1.0",
+    "mocha": "^2.2.5",
+    "mocha-jsdom": "^1.0.0",
+    "react": "^0.13.3",
+    "sinon": "^1.15.4",
+    "underscore": "^1.8.3"
+  },
+  "devDependencies": {
+    "babel": "^5.8.21"
+  }
+}
