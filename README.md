@@ -109,7 +109,7 @@ Top-Level API
 ## Testing Full Lifecycle React Components
 
 
-### `mount(node) => {ReactWrapper}`
+#### `mount(node) => {ReactWrapper}`
 
 Mounts and renders a react component into the document and provides a testing wrapper around it. This utility uses
 jsDom, and as such, will run the full lifecycle of your component and give a more "true" test than any of the other
@@ -123,28 +123,28 @@ NOTE: To use this function, one must have called `useJsDom()` earlier in the scr
 The `ReactWrapper` class that is returned has several useful prototype methods. See below:
 
 
-### `ReactWrapper::setProps(newProps) => {Promise}`
+#### `ReactWrapper::setProps(newProps) => {Promise}`
 
 This method will inject new props into the root component passed in to the constructor and re-render the tree. This is
 useful if you're testing how a React component behaves as new props are passed into an already mounted instance (e.g.,
 `componentDidUpdate` and `componentWillReceiveProps` lifecycle methods).
 
 
-### `ReactWrapper::forceUpdate() => void`
+#### `ReactWrapper::forceUpdate() => void`
 
 This method effectively passes through a call to the component's `forceUpdate()` method. Will force another render pass.
 This can sometimes be useful when you have components that may do "side-effecty" things (not generally recommended,
 but sometimes there's a good reason).
 
 
-### `ReactWrapper::ref(refName) => {ReactElement|HTMLElement}`
+#### `ReactWrapper::ref(refName) => {ReactElement|HTMLElement}`
 
 This method will return a `ref` from the component passed in through `mount()`. Please note that this library follows
 the React 0.14 convention that a ref on a DOM Component will return the actual `HTMLElement` instance, meaning you do
 not need to call `React.findDOMNode()` on the result.
 
 
-### `ReactWrapper::find(selector) => {ReactElement|HTMLElement}`
+#### `ReactWrapper::find(selector) => {ReactElement|HTMLElement}`
 
 A useful utility to find a single component in the render tree.  Please note that this will throw an error if there is
 more than one potential component found. If this is a possibility, please use `findAll`, which returns an array,
@@ -157,7 +157,7 @@ The `selector` parameter can be of three different forms:
 3. A React Component Constructor Function
 
 
-### `ReactWrapper::findAll(selector) => {Array<ReactElement|HTMLElement}`
+#### `ReactWrapper::findAll(selector) => {Array<ReactElement|HTMLElement}`
 
 A useful utility to find a set of components in a render tree. Returns an array of ReactElements and HTMLElements
 matching the selector. If one of the component found is a DOM Component, it will return the corresponding instance of
@@ -170,19 +170,19 @@ The `selector` parameter can be of three different forms:
 3. A React Component Constructor Function
 
 
-### `ReactWrapper::findWhere(predicate) => {Array<ReactElement|HTMLElement}`
+#### `ReactWrapper::findWhere(predicate) => {Array<ReactElement|HTMLElement}`
 
 Similar to `findAll`, except that it's argument is a general predicate function to be run on the React tree node. Any
 node such that `predicate(node)` returns a truthy value will get included in the result set.
 
 
-### `simulate.*` Event Simulation
+#### `simulate.*` Event Simulation
 
 This is effectively the `React.addons.TestUtils.Simulate` namespace passed through for convenience. That said, I would
 eventually like to add some utilities around this to more properly emulate native keyboard and mouse events.
 
 
-### `spyLifecycle(Component)`
+#### `spyLifecycle(Component)`
 
 This is a utility method that accepts a single React Component Constructor and will use `sinon` to call `spy` on the
 implemented React Lifecycle Methods on it, making it easier to test whether your component is working like you expect.
@@ -191,7 +191,7 @@ The spies used are tied into the sandboxed instance of sinon that helium uses in
 in your mocha tests earlier in the script, these spies will automatically be restored after every test.
 
 
-### `spyMethods(Component)
+#### `spyMethods(Component)`
 
 This is a utility method that accepts a single React Component Constructor and will use `sinon` to call `spy` on the
 prototype methods of the component that are not lifecycle methods, making it easier to test whether your component is
@@ -205,7 +205,7 @@ in your mocha tests earlier in the script, these spies will automatically be res
 
 ## Testing Components Using Shallow Rendering
 
-### `shallow(node) => {ShallowWrapper}`
+#### `shallow(node) => {ShallowWrapper}`
 
 This is the "shallow mode" of testing react components with Helium. Internally, this is using React's "Shallow
 Rendering" and returning a wrapper around the resulting tree with some useful prototype methods.
@@ -215,7 +215,7 @@ overall behavior of the output render. This is usually most useful in cases wher
 several logical branches that can result in different output.
 
 
-### `ShallowWrapper::find(selector) => {ShallowNode}`
+#### `ShallowWrapper::find(selector) => {ShallowNode}`
 
 A method to find a node in the shallow tree that matches the provided selector.  There must be one and
 only one node that matches, or else this method will throw an error. If it is possible for the selector to return
@@ -228,7 +228,7 @@ The selector parameter can be any one of the following three type:
 3. A React Component Constructor Function
 
 
-### `ShallowWrapper::findAll(selector) => {Array<ShallowNode>}`
+#### `ShallowWrapper::findAll(selector) => {Array<ShallowNode>}`
 
 A method to return an array of nodes in the shallow tree that match the provided selector.
 
@@ -239,12 +239,12 @@ The selector parameter can be any one of the following three type:
 3. A React Component Constructor Function
 
 
-### `ShallowWrapper::findWhere(predicate) => {Array<ShallowNode>}`
+#### `ShallowWrapper::findWhere(predicate) => {Array<ShallowNode>}`
 
 A method to return an array of nodes in the shallow tree that pass the provided predicate function.
 
 
-### `ShallowWrapper::contains(node) => {Boolean}`
+#### `ShallowWrapper::contains(node) => {Boolean}`
 
 A method that returns true or false if the passed in node exists in the tree somewhere. This is useful because this
 follows value-type semantics (ie, things do not need to be referentially equal).
@@ -266,7 +266,7 @@ expect(wrapper.contains(<i className="icon-foo icon-white pull-left" />)).to.be.
 
 ## Testing Components Using Static HTML Output
 
-### `render(node) => {CheerioWrapper}`
+#### `render(node) => {CheerioWrapper}`
 
 Why reinvent the wheel?  Cheerio does a great job parsing and navigating HTML strings in JS, and there is no need to
 recreate it.  This function is essentially just calling `React.renderToStaticMarkup` on the passed in node and calling
@@ -282,7 +282,7 @@ For now, this utility exists at the very least to provide symmetry with `mount` 
 
 ## Testing Flux Stores
 
-### `dispatch(action, payload)`
+#### `dispatch(action, payload)`
 
 Dispatch an action directly rather than going through an action creator:
 
@@ -294,7 +294,7 @@ dispatch(FooActions.fooSuccess, { foo: "bar" });
 
 ## Testing Flux Actions
 
-### `spyActions(Actions)`
+#### `spyActions(Actions)`
 
 Wraps an Alt Actions instance so that all of the action creators are wrapped with sinon spies. This uses the internal
 sandboxed instance of sinon so that the spies get restored after each test.  This can be particularly useful if you're
@@ -305,7 +305,7 @@ testing the implementation of async action creators, whose implementations may i
 
 ## Testing Connected Components
 
-### `stubActions(Actions)`
+#### `stubActions(Actions)`
 
 Wraps an Alt Actions instance so that all action creators are stubbed out to no-ops. Allows you to assert that
 specific action creators were called, without actually testing the implementation of the action creators themselves.
