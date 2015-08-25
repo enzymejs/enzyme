@@ -4,13 +4,48 @@ Catalyst
 JavaScript Testing utility for React / Flux
 
 
+
+Installation
+============
+
+Install catalyst from NPM into your project
+
+```bash
+npm install airbnb-catalyst --save-dev
+```
+
+If you plan on using `mount`, it requires jsdom. Jsdom requires io.js. As a result, if you want to use `mount`, you will
+need to install io.js on your machine.
+
+Io.js is pretty much a slide-in replacement for node and shouldn't change your workflow at all. Thankfully, NVM is a CLI
+client that can make it super easy to switch between io.js and node.js if for some reason you need or want to.
+
+To install NVM:
+
+```bash
+brew install nvm
+nvm install iojs
+```
+
+Now your machine will be running io.js. You can use the `nvm use` command to switch between the two environments:
+
+```bash
+nvm use node
+```
+
+```bash
+nvm use iojs
+```
+
+
+
 Basic Usage
 ===========
 
 ## Shallow Rendering
 
 ```javascript
-import { shallow } from 'catalyst';
+import { shallow } from 'airbnb-catalyst';
 
 describe('<MyComponent />', () => {
 
@@ -40,32 +75,31 @@ describe('<MyComponent />', () => {
 
 ```javascript
 import {
-  useJsDom,
+  describeWithDom,
   useSinon,
   sinon,
   mount,
   spyLifecycle,
   spyMethods,
-} from 'catalyst';
+} from 'airbnb-catalyst';
 
-describe('<Foo />', () => {
-  useJsDom();
+describeWithDom('<Foo />', () => {
   useSinon();
 
-  it('should call componentDidMount', () => {
+  it('calls componentDidMount', () => {
     spyLifecycle(Foo);
     const wrapper = mount(<Foo />);
     expect(Foo.prototype.componentDidMount.calledOnce).to.be.true;
   });
 
-  it('should also allow us to set props', () => {
+  it('allows us to set props', () => {
     const wrapper = mount(<Foo bar="baz" />);
     expect(wrapper.find(Foo).props.bar).to.equal("baz");
     wrapper.setProps({ bar: "foo" });
     expect(wrapper.find(Foo).props.bar).to.equal("foo");
   });
 
-  it('should render children when passed in', () => {
+  it('renders children when passed in', () => {
     const onButtonClick = sinon.spy();
     const wrapper = mount(
       <Foo onButtonClick={onButtonClick} />
@@ -81,16 +115,16 @@ describe('<Foo />', () => {
 ## Static Rendered Markup
 
 ```javascript
-import { render } from 'catalyst';
+import { render } from 'airbnb-catalyst';
 
 describe('<Foo />', () => {
 
-  it('should render three `.foo-bar`s', () => {
+  it('renders three `.foo-bar`s', () => {
     const wrapper = render(<Foo />);
     expect(wrapper.find('.foo-bar').length).to.equal(3);
   });
 
-  it('should have the rendered title', () => {
+  it('rendered the title', () => {
     const wrapper = render(<Foo title="unique" />);
     expect(wrapper.text()).to.contain("unique");
   });
@@ -109,7 +143,7 @@ Top-Level API
 ## Testing Full Lifecycle React Components
 
 
-#### `mount(node) => {ReactWrapper}`
+**`mount(node) => {ReactWrapper}`**
 
 Mounts and renders a react component into the document and provides a testing wrapper around it. This utility uses
 jsDom, and as such, will run the full lifecycle of your component and give a more "true" test than any of the other
@@ -342,3 +376,111 @@ To Do List
 - `dispatch` not yet implemented
 - write a "Testing Guide" breaking down testing strategy, common scenarios, things to not do, things to do, etc.
 
+
+
+
+
+
+Gotchas
+=======
+
+```
+Error: Invariant Violation: addComponentAsRefTo(...): Only a ReactOwner can have refs.
+```
+
+This is likely a result of using proxyquire to require your component, and there are multiple instances of React in
+memory.  This can break some things. To ensure that the right instance of React is being used by your component, make 
+sure to pass in react with proxyquire:
+
+
+Before:
+
+```javascript
+import React from 'react';
+const MyComponent = __helper.requireAsset('path/to/component/MyComponent', {
+  "foo": FooStub,
+});
+
+describeWithDom('jsdom stuff', () => {
+
+  it('should increment index on rightArrow click', () => {
+    const wrapper = mount(<MyComponent />);
+    // ...
+  });
+  
+]);
+```
+
+
+After:
+
+```javascript
+import React from 'react';
+let MyComponent = __helper.requireAsset('path/to/component/MyComponent', {
+  "foo": FooStub,
+  "react": React,
+});
+
+describeWithDom('jsdom stuff', () => {
+
+  it('should increment index on rightArrow click', () => {
+    const wrapper = mount(<MyComponent />);
+    // ...
+  });
+  
+]);
+```
+
+
+
+```
+Error: jQuery requires a window with a document
+```
+
+In Node.js environments without a window and a document global, jquery is loaded as a function that accepts a window to 
+attach it to.
+
+Since most of our browser based files are what we are testing, they will not be compatible with the node version of 
+jquery.  The way around this is to inject a jQuery object into your module using proxyquire inside a mocha `beforeEach` 
+call:
+
+
+Before:
+
+```javascript
+import React from 'react';
+const MyComponent = __helper.requireAsset('path/to/component/MyComponent');
+
+describeWithDom('jsdom stuff', () => {
+
+  it('should increment index on rightArrow click', () => {
+    const wrapper = mount(<MyComponent />);
+    // ...
+  });
+  
+]);
+```
+
+
+After:
+
+```javascript
+import React from 'react';
+let MyComponent = __helper.requireAsset('path/to/component/MyComponent');
+
+describeWithDom('jsdom stuff', () => {
+
+  beforeEach(() => {
+    MyComponent = __helper.requireAsset('path/to/component/MyComponent', {
+      "jquery": require('jquery')(global.window),
+      "react": React,
+    });
+  });
+
+  it('should increment index on rightArrow click', () => {
+    const wrapper = mount(<MyComponent />);
+    // ...
+  });
+  
+]);
+```

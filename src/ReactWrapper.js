@@ -39,9 +39,8 @@ export default class ReactWrapper {
   constructor(node) {
     if (!global.window && !global.document) {
       throw new Error(
-        `It looks like you called \`mount()\` without having ` +
-        `called \`useJsDom()\` first. As a result, the DOM isn't ` +
-        `loaded and \`renderIntoDocument\` will fail.`
+        `It looks like you called \`mount()\` without a jsdom document being loaded. ` +
+        `Make sure to only use \`mount()\` inside of a \`describeWithDom(...)\` call. `
       );
     }
     this.component = renderIntoDocument(
