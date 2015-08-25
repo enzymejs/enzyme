@@ -3,7 +3,7 @@
 Object.defineProperty(exports, '__esModule', {
   value: true
 });
-exports.useJsDom = useJsDom;
+exports.describeWithDom = describeWithDom;
 exports.useSinon = useSinon;
 exports.spySetup = spySetup;
 exports.spyTearDown = spyTearDown;
@@ -66,15 +66,16 @@ var simulate = Simulate;
 
 exports.simulate = simulate;
 
-function useJsDom() {
-  if (typeof jsdom === "function") {
-    jsdom();
-  } else {
-    // if jsdom isn't available, skip every test in this describe context
-    beforeEach(function () {
-      this.skip();
-    });
-  }
+function describeWithDom(a, b) {
+  describe('<< uses jsdom >>', function () {
+    if (typeof jsdom === "function") {
+      jsdom();
+      describe(a, b);
+    } else {
+      // if jsdom isn't available, skip every test in this describe context
+      describe.skip(a, b);
+    }
+  });
 }
 
 function useSinon() {

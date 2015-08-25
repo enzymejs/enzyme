@@ -18,8 +18,7 @@ var _chai = require('chai');
 
 var _ = require('../');
 
-describe('mount', function () {
-  (0, _.useJsDom)();
+(0, _.describeWithDom)('mount', function () {
 
   beforeEach(_.spySetup);
   afterEach(_.spyTearDown);

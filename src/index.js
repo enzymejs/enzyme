@@ -105,5 +105,5 @@ export function shallow(node) {
  */
 export function render(node) {
   const html = React.renderToStaticMarkup(node);
-  return cheerio.load(html);
+  return cheerio.load(html).root();
 }
