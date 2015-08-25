@@ -1,17 +1,6 @@
 import React from 'react';
 import { expect } from 'chai';
-import {
-  useJsDom,
-  shallow,
-  mount,
-  simulate,
-  spySetup,
-  spyTearDown,
-  spyLifecycle,
-  spyMethods,
-  sinon,
-  isComponentWithType,
-} from '../';
+import { shallow } from '../';
 
 
 describe('shallow', () => {

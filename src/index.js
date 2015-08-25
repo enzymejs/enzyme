@@ -29,15 +29,16 @@ export let sinon = Sinon.sandbox.create();
 
 export const simulate = Simulate;
 
-export function useJsDom() {
-  if (typeof jsdom === "function") {
-    jsdom();
-  } else {
-    // if jsdom isn't available, skip every test in this describe context
-    beforeEach(function() {
-      this.skip();
-    });
-  }
+export function describeWithDom(a, b) {
+  describe('<< uses jsdom >>', () => {
+    if (typeof jsdom === "function") {
+      jsdom();
+      describe(a, b);
+    } else {
+      // if jsdom isn't available, skip every test in this describe context
+      describe.skip(a, b);
+    }
+  });
 }
 
 export function useSinon() {

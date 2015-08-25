@@ -1,7 +1,7 @@
 import React from 'react';
 import { expect } from 'chai';
 import {
-  useJsDom,
+  describeWithDom,
   mount,
   simulate,
   spySetup,
@@ -12,8 +12,7 @@ import {
   isComponentWithType,
 } from '../';
 
-describe('mount', () => {
-  useJsDom();
+describeWithDom('mount', () => {
 
   beforeEach(spySetup);
   afterEach(spyTearDown);
