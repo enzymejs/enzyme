@@ -1,6 +1,6 @@
 {
   "name": "airbnb-catalyst",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "JavaScript Testing utilities for React / Flux",
   "main": "build",
   "scripts": {

@@ -67,7 +67,7 @@ function children(node) {
 }
 
 function hasClassName(node, className) {
-  var classes = node._store && node._store.props && node._store.props.className || '';
+  var classes = node._store.props.className || '';
   return (' ' + classes + ' ').indexOf(' ' + className + ' ') > -1;
 }
 

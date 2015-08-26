@@ -440,7 +440,7 @@ Error: jQuery requires a window with a document
 In Node.js environments without a window and a document global, jquery is loaded as a function that accepts a window to 
 attach it to.
 
-Since most of our browser based files are what we are testing, they will not be compatible with the node version of 
+Since most of our browser based files cdare what we are testing, they will not be compatible with the node version of 
 jquery.  The way around this is to inject a jQuery object into your module using proxyquire inside a mocha `beforeEach` 
 call:
 
