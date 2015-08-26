@@ -73,7 +73,7 @@ var ReactWrapper = (function () {
     _classCallCheck(this, ReactWrapper);
 
     if (!global.window && !global.document) {
-      throw new Error('It looks like you called `mount()` without having ' + 'called `useJsDom()` first. As a result, the DOM isn\'t ' + 'loaded and `renderIntoDocument` will fail.');
+      throw new Error('It looks like you called `mount()` without a jsdom document being loaded. ' + 'Make sure to only use `mount()` inside of a `describeWithDom(...)` call. ');
     }
     this.component = renderIntoDocument(_reactAddons2['default'].createElement(ReactWrapperComponent, {
       Component: node.type,

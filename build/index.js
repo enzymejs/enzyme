@@ -149,5 +149,5 @@ function shallow(node) {
 
 function render(node) {
   var html = _reactAddons2['default'].renderToStaticMarkup(node);
-  return _cheerio2['default'].load(html);
+  return _cheerio2['default'].load(html).root();
 }
