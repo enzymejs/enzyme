@@ -90,6 +90,8 @@ export function childrenEqual(a, b) {
 }
 
 export function nodeEqual(a, b) {
+  if (a === b) return true;
+  if (!a || !b) return false;
   if (a.type !== b.type) return false;
   var aLength = 0;
   var bLength = 0;

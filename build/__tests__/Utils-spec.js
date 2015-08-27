@@ -25,7 +25,6 @@ var _Utils = require('../Utils');
 var _ = require('../');
 
 describe('Utils', function () {
-  (0, _.useJsDom)();
 
   describe('onPrototype', function () {
     var Foo = (function () {
@@ -62,7 +61,7 @@ describe('Utils', function () {
     (0, _chai.expect)(methodSpy.args[1][1]).to.equal("b");
   });
 
-  describe('getNode', function () {
+  (0, _.describeWithDom)('getNode', function () {
 
     it('should return a DOMNode when a DOMComponent is given', function () {
       var div = (0, _.mount)(_reactAddons2['default'].createElement('div', null)).root();

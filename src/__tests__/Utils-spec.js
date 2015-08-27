@@ -14,13 +14,12 @@ import {
 } from '../Utils';
 
 import {
-  useJsDom,
+  describeWithDom,
   mount,
   shallow,
 } from '../';
 
 describe('Utils', () => {
-  useJsDom();
 
   describe('onPrototype', () => {
     class Foo {
@@ -45,7 +44,7 @@ describe('Utils', () => {
 
   });
 
-  describe('getNode', () => {
+  describeWithDom('getNode', () => {
 
     it('should return a DOMNode when a DOMComponent is given', () => {
       const div = mount(<div />).root();

@@ -1,12 +1,12 @@
 {
   "name": "airbnb-catalyst",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "JavaScript Testing utilities for React / Flux",
   "main": "build",
   "scripts": {
     "prepublish": "npm run build",
     "build": "babel src --out-dir build",
-    "test": "mocha --compilers js:babel/register --recursive **/__tests__/*.js --watch"
+    "test": "mocha --compilers js:babel/register --recursive src/**/__tests__/*.js --watch"
   },
   "repository": {
     "type": "git",

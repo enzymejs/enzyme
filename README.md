@@ -54,7 +54,7 @@ describe('<MyComponent />', () => {
     expect(wrapper.findAll(Foo).length).to.equal(3);
   });
 
-  it('should render an `.icon-star`, () => {
+  it('should render an `.icon-star`', () => {
     const wrapper = shallow(<MyComponent />);
     expect(wrapper.find('.icon-star')).to.exist;
   });
@@ -152,7 +152,7 @@ utilities.
 This utility is ideal for testing stateful React components and state transitions of react components, handling of DOM
 events, etc.
 
-NOTE: To use this function, one must have called `useJsDom()` earlier in the script.
+NOTE: To use this function, it must be called inside of a `describeWithDom(...)` test suite.
 
 The `ReactWrapper` class that is returned has several useful prototype methods. See below:
 

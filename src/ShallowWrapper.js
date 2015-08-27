@@ -36,12 +36,12 @@ export default class ShallowWrapper {
   findAll(selector) {
     switch (typeof selector) {
       case "function":
-        return this.findWhere(node => node.type === selector);
+        return this.findWhere(node => node && node.type === selector);
       case "string":
         if (selector[0] === ".") {
           return this.findWhere(node => hasClassName(node, selector.substr(1)));
         } else {
-          return this.findWhere(node => node.type === selector);
+          return this.findWhere(node => node && node.type === selector);
         }
       default:
         throw new TypeError("Expecting a string or Component Constructor");

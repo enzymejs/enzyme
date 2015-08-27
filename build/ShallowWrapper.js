@@ -51,7 +51,7 @@ var ShallowWrapper = (function () {
       switch (typeof selector) {
         case "function":
           return this.findWhere(function (node) {
-            return node.type === selector;
+            return node && node.type === selector;
           });
         case "string":
           if (selector[0] === ".") {
@@ -60,7 +60,7 @@ var ShallowWrapper = (function () {
             });
           } else {
             return this.findWhere(function (node) {
-              return node.type === selector;
+              return node && node.type === selector;
             });
           }
         default:
