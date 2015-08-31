@@ -2,6 +2,8 @@ import React from 'react/addons';
 import { deepEqual } from 'underscore';
 import {
   getNode,
+  selectorError,
+  isSimpleSelector,
 } from './Utils';
 const {
   isDOMComponent,
@@ -108,6 +110,7 @@ export default class ReactWrapper {
       case "function":
         return scryRenderedComponentsWithType(this.component, selector);
       case "string":
+        if (!isSimpleSelector(selector)) throw selectorError('ReactWrapper', 'findAll', selector);
         if (selector[0] === ".") {
           return scryRenderedDOMComponentsWithClass(this.component, selector.substr(1))
             .map(getNode);

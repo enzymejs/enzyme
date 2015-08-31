@@ -190,6 +190,17 @@ describeWithDom('mount', () => {
       );
       expect(wrapper.findAll(Foo).length).to.equal(2);
     });
+
+    it('should throw on a complex selector', () => {
+      const wrapper = mount(
+        <div>
+          <input className="foo" />
+          <input />
+          <button />
+        </div>
+      );
+      expect(() => wrapper.find('.foo .foo')).to.throw;
+    });
   });
 
 });

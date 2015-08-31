@@ -11,6 +11,7 @@ import {
   single,
   childrenEqual,
   nodeEqual,
+  isSimpleSelector,
 } from '../Utils';
 
 import {
@@ -286,6 +287,42 @@ describe('Utils', () => {
 
     it('should return the one item', () => {
       expect(single([1])).to.equal(1);
+    });
+
+  });
+
+  describe('isComplexSelector', () => {
+
+    describe('complex selectors', () => {
+      var isComplex = function(selector) {
+        it(selector, () => {
+          expect(isSimpleSelector(selector)).to.be.false;
+        });
+      };
+
+      isComplex('.foo .bar');
+      isComplex('.foo.bar');
+      isComplex('input.foo');
+      isComplex('input[name="foo"]');
+      isComplex(':visible');
+      isComplex('.foo>.bar');
+      isComplex('.foo > .bar');
+      isComplex('.foo~.bar');
+
+    });
+
+    describe('complex selectors', () => {
+      var isSimple = function(selector) {
+        it(selector, () => {
+          expect(isSimpleSelector(selector)).to.be.true;
+        });
+      };
+
+      isSimple('.foo');
+      isSimple('.foo-and-foo');
+      isSimple('.FoOaNdFoO');
+      isSimple('tag');
+
     });
 
   });

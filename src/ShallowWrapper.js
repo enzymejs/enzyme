@@ -5,6 +5,8 @@ import {
   treeForEach,
   treeFilter,
   hasClassName,
+  isSimpleSelector,
+  selectorError,
 } from './Utils';
 const {
   createRenderer,
@@ -38,6 +40,7 @@ export default class ShallowWrapper {
       case "function":
         return this.findWhere(node => node && node.type === selector);
       case "string":
+        if (!isSimpleSelector(selector)) throw selectorError('ShallowWrapper', 'findAll', selector);
         if (selector[0] === ".") {
           return this.findWhere(node => hasClassName(node, selector.substr(1)));
         } else {
@@ -54,6 +57,9 @@ export default class ShallowWrapper {
    * @returns {HTMLElement|ReactElement}
    */
   find(selector) {
+    if (typeof selector === 'string' && !isSimpleSelector(selector)) {
+      throw selectorError('ShallowWrapper', 'find', selector);
+    }
     return single(this.findAll(selector));
   }
 

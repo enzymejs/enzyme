@@ -120,3 +120,23 @@ export function nodeEqual(a, b) {
   }
   return aLength === bLength;
 }
+
+export function isSimpleSelector(selector) {
+  // any of these characters pretty much guarantee it's a complex selector
+  if (/[~\s\[\]:>]/.test(selector)) {
+    return false;
+  }
+  // multiple class names are complex
+  if (/[a-z]\.[a-z]/i.test(selector)) {
+    return false;
+  }
+  return true;
+}
+
+export function selectorError(className, fn, selector) {
+  return new TypeError(
+    `${className}::${fn} received a complex CSS selector ('${selector}'), ` +
+    `however, it currently only allows simple CSS selectors (class names and tag ` +
+    `names). This may change in the future though.`
+  );
+}
