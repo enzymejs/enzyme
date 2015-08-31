@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@git.musta.ch:leland-richardson/catalyst.git"
+    "url": "git@git.musta.ch:airbnb/catalyst.git"
   },
   "keywords": [
     "javascript",
