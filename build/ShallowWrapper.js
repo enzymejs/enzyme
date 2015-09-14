@@ -54,6 +54,7 @@ var ShallowWrapper = (function () {
             return node && node.type === selector;
           });
         case "string":
+          if (!(0, _Utils.isSimpleSelector)(selector)) throw (0, _Utils.selectorError)('ShallowWrapper', 'findAll', selector);
           if (selector[0] === ".") {
             return this.findWhere(function (node) {
               return (0, _Utils.hasClassName)(node, selector.substr(1));
@@ -76,6 +77,9 @@ var ShallowWrapper = (function () {
   }, {
     key: 'find',
     value: function find(selector) {
+      if (typeof selector === 'string' && !(0, _Utils.isSimpleSelector)(selector)) {
+        throw (0, _Utils.selectorError)('ShallowWrapper', 'find', selector);
+      }
       return (0, _Utils.single)(this.findAll(selector));
     }
 

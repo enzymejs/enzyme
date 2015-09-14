@@ -272,5 +272,18 @@ var _ = require('../');
       ));
       (0, _chai.expect)(wrapper.findAll(Foo).length).to.equal(2);
     });
+
+    it('should throw on a complex selector', function () {
+      var wrapper = (0, _.mount)(_react2['default'].createElement(
+        'div',
+        null,
+        _react2['default'].createElement('input', { className: 'foo' }),
+        _react2['default'].createElement('input', null),
+        _react2['default'].createElement('button', null)
+      ));
+      (0, _chai.expect)(function () {
+        return wrapper.find('.foo .foo');
+      }).to['throw'];
+    });
   });
 });

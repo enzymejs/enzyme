@@ -151,6 +151,7 @@ var ReactWrapper = (function () {
         case "function":
           return scryRenderedComponentsWithType(this.component, selector);
         case "string":
+          if (!(0, _Utils.isSimpleSelector)(selector)) throw (0, _Utils.selectorError)('ReactWrapper', 'findAll', selector);
           if (selector[0] === ".") {
             return scryRenderedDOMComponentsWithClass(this.component, selector.substr(1)).map(_Utils.getNode);
           } else {

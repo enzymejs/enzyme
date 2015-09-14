@@ -312,4 +312,37 @@ describe('Utils', function () {
       (0, _chai.expect)((0, _Utils.single)([1])).to.equal(1);
     });
   });
+
+  describe('isComplexSelector', function () {
+
+    describe('complex selectors', function () {
+      var isComplex = function isComplex(selector) {
+        it(selector, function () {
+          (0, _chai.expect)((0, _Utils.isSimpleSelector)(selector)).to.be['false'];
+        });
+      };
+
+      isComplex('.foo .bar');
+      isComplex('.foo.bar');
+      isComplex('input.foo');
+      isComplex('input[name="foo"]');
+      isComplex(':visible');
+      isComplex('.foo>.bar');
+      isComplex('.foo > .bar');
+      isComplex('.foo~.bar');
+    });
+
+    describe('complex selectors', function () {
+      var isSimple = function isSimple(selector) {
+        it(selector, function () {
+          (0, _chai.expect)((0, _Utils.isSimpleSelector)(selector)).to.be['true'];
+        });
+      };
+
+      isSimple('.foo');
+      isSimple('.foo-and-foo');
+      isSimple('.FoOaNdFoO');
+      isSimple('tag');
+    });
+  });
 });

@@ -154,6 +154,19 @@ describe('shallow', function () {
       (0, _chai.expect)(wrapper.findAll('input').length).to.equal(2);
       (0, _chai.expect)(wrapper.findAll('button').length).to.equal(1);
     });
+
+    it('should throw on a complex selector', function () {
+      var wrapper = (0, _.shallow)(_react2['default'].createElement(
+        'div',
+        null,
+        _react2['default'].createElement('input', { className: 'foo' }),
+        _react2['default'].createElement('input', null),
+        _react2['default'].createElement('button', null)
+      ));
+      (0, _chai.expect)(function () {
+        return wrapper.find('.foo .foo');
+      }).to['throw'];
+    });
   });
 
   describe('findWhere', function () {
