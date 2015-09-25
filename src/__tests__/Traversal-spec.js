@@ -1,16 +1,22 @@
 import React from 'react';
-import { expect } from 'chai';
-import { shallow } from '../';
 import sinon from 'sinon';
+import { expect } from 'chai';
+import {
+  shallow,
+  mount,
+  describeWithDom,
+} from '../';
 import {
   splitSelector,
+  isSimpleSelector,
+} from '../Utils';
+import {
   hasClassName,
   treeForEach,
   treeFilter,
-  isSimpleSelector,
-} from '../Traversal';
+} from '../ShallowTraversal';
 
-describe('Traversal', () => {
+describe('ShallowTraversal', () => {
 
   describe('splitSelector', () => {
     var fn = splitSelector;
@@ -137,42 +143,6 @@ describe('Traversal', () => {
     it('should filter for truthiness', () => {
       expect(treeFilter(tree, node => node.type === "nav").length).to.equal(1);
       expect(treeFilter(tree, node => node.type === "button").length).to.equal(2);
-    });
-
-  });
-
-  describe('iuSimpleSelector', () => {
-
-    describe('prohibited selectors', () => {
-      var isComplex = function(selector) {
-        it(selector, () => {
-          expect(isSimpleSelector(selector)).to.be.false;
-        });
-      };
-
-      isComplex('.foo .bar');
-      isComplex('input[name="foo"]');
-      isComplex(':visible');
-      isComplex('.foo>.bar');
-      isComplex('.foo > .bar');
-      isComplex('.foo~.bar');
-
-    });
-
-    describe('allowed selectors', () => {
-      var isSimple = function(selector) {
-        it(selector, () => {
-          expect(isSimpleSelector(selector)).to.be.true;
-        });
-      };
-
-      isSimple('.foo');
-      isSimple('.foo-and-foo');
-      isSimple('.FoOaNdFoO');
-      isSimple('tag');
-      isSimple('.foo.bar');
-      isSimple('input.foo');
-
     });
 
   });

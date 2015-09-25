@@ -16,7 +16,7 @@ import {
   treeForEach,
   treeFilter,
   buildPredicate,
-} from './Traversal';
+} from './ShallowTraversal';
 const {
   createRenderer,
 } = React.addons.TestUtils;

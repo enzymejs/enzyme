@@ -14,7 +14,6 @@ try {
 }
 
 const {
-  Simulate,
   mockComponent,
   isElement,
   isElementOfType,
@@ -23,11 +22,9 @@ const {
   isCompositeComponentWithType,
   } = React.addons.TestUtils;
 
-export const isComponentWithType = isCompositeComponentWithType;
+//export const isComponentWithType = isCompositeComponentWithType;
 
 export let sinon = Sinon.sandbox.create();
-
-export const simulate = Simulate;
 
 export function describeWithDom(a, b) {
   describe('<< uses jsdom >>', () => {
@@ -114,10 +111,16 @@ export function shallow(node) {
 }
 
 /**
- * Renders a react component into static HTML and provides a cheerio wrapper around it.
+ * Renders a react component into static HTML and provides a cheerio wrapper around it. This is
+ * somewhat asymmetric with `mount` and `shallow`, which don't use any external libraries, but
+ * Cheerio's API is pretty close to what we actually want and has a significant amount of utility
+ * that would be recreating the wheel if we didn't use it.
+ *
+ * I think there are a lot of good use cases to use `render` instead of `shallow` or `mount`, and
+ * thus I'd like to keep this API in here even though it's not really "ours".
  *
  * @param node
- * @returns {*}
+ * @returns {Cheerio}
  */
 export function render(node) {
   const html = React.renderToStaticMarkup(node);

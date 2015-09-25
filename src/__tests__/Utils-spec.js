@@ -48,7 +48,7 @@ describe('Utils', () => {
   describeWithDom('getNode', () => {
 
     it('should return a DOMNode when a DOMComponent is given', () => {
-      const div = mount(<div />).root();
+      const div = mount(<div />).node;
       expect(getNode(div)).to.be.instanceOf(window.HTMLElement);
     });
 
@@ -56,7 +56,7 @@ describe('Utils', () => {
       class Foo extends React.Component {
         render() { return <div /> }
       }
-      const foo = mount(<Foo />).root();
+      const foo = mount(<Foo />).node;
       expect(getNode(foo)).to.equal(foo);
     });
 
@@ -162,6 +162,43 @@ describe('Utils', () => {
     it('should work', () => {
       expect(fn('click')).to.equal('onClick');
       expect(fn('mouseEnter')).to.equal('onMouseEnter');
+    });
+
+  });
+
+
+  describe('iuSimpleSelector', () => {
+
+    describe('prohibited selectors', () => {
+      var isComplex = function(selector) {
+        it(selector, () => {
+          expect(isSimpleSelector(selector)).to.be.false;
+        });
+      };
+
+      isComplex('.foo .bar');
+      isComplex('input[name="foo"]');
+      isComplex(':visible');
+      isComplex('.foo>.bar');
+      isComplex('.foo > .bar');
+      isComplex('.foo~.bar');
+
+    });
+
+    describe('allowed selectors', () => {
+      var isSimple = function(selector) {
+        it(selector, () => {
+          expect(isSimpleSelector(selector)).to.be.true;
+        });
+      };
+
+      isSimple('.foo');
+      isSimple('.foo-and-foo');
+      isSimple('.FoOaNdFoO');
+      isSimple('tag');
+      isSimple('.foo.bar');
+      isSimple('input.foo');
+
     });
 
   });

@@ -1,6 +1,6 @@
 import {
   childrenOfNode,
-} from './Traversal';
+} from './ShallowTraversal';
 import { without, range, escape, compact } from 'underscore';
 
 

@@ -1,7 +1,20 @@
 import React from 'react/addons';
 import {
   nodeEqual,
+  isSimpleSelector,
+  splitSelector,
+  selectorError,
+  isCompoundSelector,
+  AND,
 } from './Utils';
+const {
+  findDOMNode,
+} = React;
+const {
+  isDOMComponent,
+  isCompositeComponentWithType,
+  findAllInRenderedTree,
+} = React.addons.TestUtils;
 
 export function childrenOfNode(node) {
   const maybeArray = node && node._store && node._store.props && node._store.props.children;
@@ -67,36 +80,6 @@ export function nodeHasType(node, type) {
   if (typeof node.type === 'string') return node.type == type;
   return node.type.displayName == type;
 }
-
-export function isSimpleSelector(selector) {
-  // any of these characters pretty much guarantee it's a complex selector
-  if (/[~\s\[\]:>]/.test(selector)) {
-    return false;
-  }
-  return true;
-}
-
-export function selectorError(selector) {
-  return new TypeError(
-    `Catalyst received a complex CSS selector ('${selector}') that it does not currently support`
-  );
-}
-
-function AND(fns) {
-  return x => {
-    let i = fns.length;
-    while (i--) {
-      if (!fns[i](x)) return false;
-    }
-    return true;
-  };
-}
-
-export function splitSelector(selector) {
-  return selector.split(/(?=\.)/);
-}
-
-const isCompoundSelector = /[a-z]\.[a-z]/i;
 
 export function buildPredicate(selector) {
   switch (typeof selector) {

@@ -1,24 +1,38 @@
 import React from 'react/addons';
-import { deepEqual } from 'underscore';
+import { flatten, unique, compact, deepEqual } from 'underscore';
 import {
-  getNode,
+  nodeEqual,
+  propFromEvent,
+  withSetStateAllowed,
 } from './Utils';
 import {
-  selectorError,
-  isSimpleSelector,
-} from './Traversal';
+  debugNodes,
+} from './Debug';
+import {
+  getTextFromInst,
+  instHasClassName,
+  childrenOfInst,
+  parentsOfInst,
+  buildInstPredicate,
+  instEqual,
+} from './MountedTraversal';
 const {
-  isDOMComponent,
+  findDOMNode,
+  } = React;
+const {
   renderIntoDocument,
   findAllInRenderedTree,
-  scryRenderedDOMComponentsWithClass,
-  findRenderedDOMComponentWithClass,
-  scryRenderedDOMComponentsWithTag,
-  findRenderedDOMComponentWithTag,
-  scryRenderedComponentsWithType,
-  findRenderedComponentWithType,
-  } = React.addons.TestUtils;
+  Simulate,
+} = React.addons.TestUtils;
 
+/**
+ * This is a utility component to wrap around the nodes we are
+ * passing in to `mount()`. Theoretically, you could do everything
+ * we are doing without this, but this makes it easier since
+ * `renderIntoDocument()` doesn't really pass back a reference to
+ * the DOM node it rendered to, so we can't really "re-render" to
+ * pass new props in.
+ */
 export class ReactWrapperComponent extends React.Component {
 
   constructor(props) {
@@ -40,108 +54,469 @@ export class ReactWrapperComponent extends React.Component {
 
 export default class ReactWrapper {
 
-  constructor(node) {
+  constructor(nodes, root) {
     if (!global.window && !global.document) {
       throw new Error(
         `It looks like you called \`mount()\` without a jsdom document being loaded. ` +
         `Make sure to only use \`mount()\` inside of a \`describeWithDom(...)\` call. `
       );
     }
-    this.component = renderIntoDocument(
-      <ReactWrapperComponent
-        Component={node.type}
-        props={node.props}
-        />
-    );
+
+    if (!root) {
+      this.component = renderIntoDocument(
+        <ReactWrapperComponent
+          Component={nodes.type}
+          props={nodes.props}
+          />
+      );
+      this.root = this;
+      this.node = this.component.refs.component;
+      this.nodes = [this.node];
+      this.length = 1;
+    } else {
+      if (!(nodes instanceof Array)) {
+        nodes = [nodes];
+      }
+      this.component = null;
+      this.root = root;
+      this.node = nodes[0];
+      this.nodes = nodes;
+      this.length = nodes.length;
+    }
   }
 
+
   /**
-   * Used like `setState(...)` but sets the propsn directly on the component this class wraps
+   * If the root component contained a ref, you can access it here
+   * and get a wrapper around it.
    *
-   * @param {Object} newProps
-   * @returns {Promise}
-   */
-  setProps(newProps) {
-    return this.component.setProps(newProps);
-  }
-
-  /**
-   * Force the component to update
-   */
-  forceUpdate() {
-    this.component.forceUpdate();
-  }
-
-  /**
-   * Get a ref of the component. If the ref is a DOM Node, it returns the DOM Node directly.
+   * NOTE: can only be called on a wrapper instance that is also the root instance.
    *
    * @param {String} refname
-   * @returns {HtmlElement|ReactElement}
+   * @returns {ReactWrapper}
    */
   ref(refname) {
-    const ref = this.component.refs.component.refs[refname];
-    if (!ref) return null;
-    return getNode(ref);
+    if (this.root !== this) {
+      throw new Error("ReactWrapper::ref(refname) can only be called on the root");
+    }
+    return this.wrap(this.instance().refs[refname]);
   }
 
   /**
+   * Gets the instance of the component being rendered as the root node passed into `mount()`.
    *
-   * @returns {ReactElement}
+   * NOTE: can only be called on a wrapper instance that is also the root instance.
+   *
+   * Example:
+   * ```
+   * const wrapper = mount(<MyComponent />);
+   * const inst = wrapper.instance();
+   * expect(inst).to.be.instanceOf(MyComponent);
+   * ```
+   * @returns {ReactComponent}
    */
-  root() {
+  instance() {
     return this.component.refs.component;
   }
 
   /**
-   * Finds all components in the tree that pass the passed in text
+   * Forces a re-render. Useful to run before checking the render output if something external
+   * may be updating the state of the component somewhere.
    *
-   * @param {Function} test function
-   * @returns {Array}
-   */
-  findWhere(test) {
-    return findAllInRenderedTree(this.component, test);
-  }
-
-  /**
+   * NOTE: can only be called on a wrapper instance that is also the root instance.
    *
-   * @param {Function|String} selector
-   * @returns {Array<ReactComponent>} results
+   * @returns {ReactWrapper}
    */
-  findAll(selector) {
-    switch (typeof selector) {
-      case "function":
-        return scryRenderedComponentsWithType(this.component, selector);
-      case "string":
-        if (!isSimpleSelector(selector)) throw selectorError('ReactWrapper', 'findAll', selector);
-        if (selector[0] === ".") {
-          return scryRenderedDOMComponentsWithClass(this.component, selector.substr(1))
-            .map(getNode);
-        } else {
-          return scryRenderedDOMComponentsWithTag(this.component, selector)
-            .map(getNode);
-        }
-      default:
-        throw new TypeError("Expecting a string or Component Constructor");
+  update() {
+    if (this.root !== this) {
+      // TODO(lmr): this requirement may not be necessary for the ReactWrapper
+      throw new Error("ReactWrapper::update() can only be called on the root");
     }
+    this.single(() => {
+      this.component.forceUpdate();
+    });
+    return this;
   }
 
   /**
+   * A method that sets the props of the root component, and re-renders. Useful for when you are
+   * wanting to test how the component behaves over time with changing props. Calling this, for
+   * instance, will call the `componentWillReceiveProps` lifecycle method.
    *
-   * @param {Function|String} selector
-   * @returns {ReactElement} resulting component
+   * Similar to `setState`, this method accepts a props object and will merge it in with the already
+   * existing props.
+   *
+   * NOTE: can only be called on a wrapper instance that is also the root instance.
+   *
+   * @param {Object} props object
+   * @returns {ReactWrapper}
+   */
+  setProps(props) {
+    if (this.root !== this) {
+      throw new Error("ReactWrapper::setProps() can only be called on the root");
+    }
+    this.component.setProps(props);
+    return this;
+  }
+
+  /**
+   * A method to invoke `setState` on the root component instance similar to how you might in the
+   * definition of the component, and re-renders.  This method is useful for testing your component
+   * in hard to achieve states, however should be used sparingly. If possible, you should utilize
+   * your component's external API in order to get it into whatever state you want to test, in order
+   * to be as accurate of a test as possible. This is not always practical, however.
+   *
+   * NOTE: can only be called on a wrapper instance that is also the root instance.
+   *
+   * @param {Object} state to merge
+   * @returns {ReactWrapper}
+   */
+  setState(state) {
+    if (this.root !== this) {
+      throw new Error("ReactWrapper::setState() can only be called on the root");
+    }
+    this.instance().setState(state);
+    return this;
+  }
+
+  /**
+   * Whether or not a given react element exists in the mount render tree.
+   *
+   * Example:
+   * ```
+   * const wrapper = mount(<MyComponent />);
+   * expect(wrapper.contains(<div className="foo bar" />)).to.be.true;
+   * ```
+   *
+   * @param {ReactElement} node
+   * @returns {Boolean}
+   */
+  contains(node) {
+    return this.findWhere(other => instEqual(node, other)).length > 0;
+  }
+
+  /**
+   * Finds every node in the render tree of the current wrapper that matches the provided selector.
+   *
+   * @param {String|Function} selector
+   * @returns {ReactWrapper}
    */
   find(selector) {
-    switch (typeof selector) {
-      case "function":
-        return findRenderedComponentWithType(this.component, selector);
-      case "string":
-        if (selector[0] === ".") {
-          return getNode(findRenderedDOMComponentWithClass(this.component, selector.substr(1)));
-        } else {
-          return getNode(findRenderedDOMComponentWithTag(this.component, selector));
-        }
-      default:
-        throw new TypeError("Expecting a string or Component Constructor");
+    const predicate = buildInstPredicate(selector);
+    return this.findWhere(predicate);
+  }
+
+  /**
+   * Returns whether or not current node matches a provided selector.
+   *
+   * NOTE: can only be called on a wrapper of a single node.
+   *
+   * @param {String|Function} selector
+   * @returns {boolean}
+   */
+  is(selector) {
+    const predicate = buildInstPredicate(selector);
+    return this.single(n => predicate(n));
+  }
+
+  /**
+   * Returns a new wrapper instance with only the nodes of the current wrapper instance that match
+   * the provided predicate function.
+   *
+   * @param {Function} predicate
+   * @returns {ReactWrapper}
+   */
+  filterWhere(predicate) {
+    return this.wrap(compact(this.nodes.filter(predicate)));
+  }
+
+  /**
+   * Returns a new wrapper instance with only the nodes of the current wrapper instance that match
+   * the provided selector.
+   *
+   * @param {String|Function} selector
+   * @returns {ReactWrapper}
+   */
+  filter(selector) {
+    const predicate = buildInstPredicate(selector);
+    return this.filterWhere(predicate);
+  }
+
+  /**
+   * Returns a new wrapper instance with only the nodes of the current wrapper that did not match
+   * the provided selector. Essentially the inverse of `filter`.
+   *
+   * @param {String|Function} selector
+   * @returns {ReactWrapper}
+   */
+  not(selector) {
+    const predicate = buildInstPredicate(selector);
+    return this.filterWhere(n => !predicate(n));
+  }
+
+  /**
+   * Returns a string of the rendered text of the current render tree.  This function should be
+   * looked at with skepticism if being used to test what the actual HTML output of the component
+   * will be. If that is what you would like to test, use catalyst's `render` function instead.
+   *
+   * NOTE: can only be called on a wrapper of a single node.
+   *
+   * @returns {String}
+   */
+  text() {
+    return this.single(getTextFromInst);
+  }
+
+  /**
+   * Used to simulate events. Pass an eventname and (optionally) event arguments. This method of
+   * testing events should be met with some skepticism.
+   *
+   * @param {String} event
+   * @param {Array} args
+   * @returns {ReactWrapper}
+   */
+  simulate(event, ...args) {
+    this.single(n => Simulate[event](findDOMNode(n), ...args));
+    return this;
+  }
+
+  /**
+   * Returns the props hash for the root node of the wrapper.
+   *
+   * NOTE: can only be called on a wrapper of a single node.
+   *
+   * @returns {Object}
+   */
+  props() {
+    return this.single(n => n.props || {});
+  }
+
+  /**
+   * Returns the state hash for the root node of the wrapper. Optionally pass in a prop name and it
+   * will return just that value.
+   *
+   * NOTE: can only be called on a wrapper of a single node.
+   *
+   * @param {String} name (optional)
+   * @returns {*}
+   */
+  state(name) {
+    if (this.root !== this) {
+      throw new Error("ReactWrapper::state() can only be called on the root");
+    }
+    const _state = this.single((n) => this.instance().state);
+    if (name !== undefined) {
+      return _state[name];
+    } else {
+      return _state;
     }
   }
+
+  /**
+   * Returns a new wrapper with all of the children of the current wrapper.
+   *
+   * @returns {ReactWrapper}
+   */
+  children() {
+    return this.flatMap(n => {
+      return childrenOfInst(n.node)
+    });
+  }
+
+  /**
+   * Returns a wrapper around all of the parents/ancestors of the wrapper. Does not include the node
+   * in the current wrapper.
+   *
+   * NOTE: can only be called on a wrapper of a single node.
+   *
+   * @returns {ReactWrapper}
+   */
+  parents() {
+    return this.wrap(this.single(n => parentsOfInst(n, this.root.node)));
+  }
+
+  /**
+   * Returns a wrapper around the immediate parent of the current node.
+   *
+   * NOTE: can only be called on a wrapper of a single node.
+   *
+   * @returns {ReactWrapper}
+   */
+  parent() {
+    return this.single(() => this.parents().first());
+  }
+
+  /**
+   *
+   * @param {String|Function} selector
+   * @returns {ReactWrapper}
+   */
+  closest(selector) {
+    return this.parents().filter(selector).first();
+  }
+
+  /**
+   * Returns the value of  prop with the given name of the root node.
+   *
+   * @param propName
+   * @returns {*}
+   */
+  prop(propName) {
+    return this.props()[propName];
+  }
+
+  /**
+   * Returns the type of the root ndoe of this wrapper. If it's a composite component, this will be
+   * the component constructor. If it's native DOM node, it will be a string.
+   *
+   * @returns {String|Function}
+   */
+  type() {
+    return this.single(n => n._reactInternalInstance._currentElement.type);
+  }
+
+  /**
+   * Returns whether or not the current root node has the given class name or not.
+   *
+   * NOTE: can only be called on a wrapper of a single node.
+   *
+   * @param className
+   * @returns {Boolean}
+   */
+  hasClass(className) {
+    if (className && className.indexOf('.') !== -1) {
+      console.log(
+        "It looks like you're calling `ReactWrapper::hasClass()` with a CSS selector. " +
+        "hasClass() expects a class name, not a CSS selector."
+      );
+    }
+    return this.single(n => instHasClassName(n, className));
+  }
+
+  /**
+   * Iterates through each node of the current wrapper and executes the provided function with a
+   * wrapper around the corresponding node passed in as the first argument.
+   *
+   * @param {Function} fn
+   * @returns {ReactWrapper}
+   */
+  forEach(fn) {
+    this.nodes.forEach((n, i) => fn.call(this, this.wrap(n), i));
+    return this;
+  }
+
+  /**
+   * Maps the current array of nodes to another array. Each node is passed in as a `ReactWrapper`
+   * to the map function.
+   *
+   * @param {Function} fn
+   * @returns {Array}
+   */
+  map(fn) {
+    return this.nodes.map((n, i) => fn.call(this, this.wrap(n), i));
+  }
+
+  /**
+   * Utility method used to create new wrappers with a mapping function that returns an array of
+   * nodes in response to a single node wrapper. The returned wrapper is a single wrapper around
+   * all of the mapped nodes flattened (and de-duplicated).
+   *
+   * @param {Function} fn
+   * @returns {ReactWrapper}
+   */
+  flatMap(fn) {
+    const nodes = this.nodes.map((n, i) => fn.call(this, this.wrap(n), i));
+    const flattened = flatten(nodes, true);
+    const uniques = unique(flattened);
+    return this.wrap(uniques);
+  }
+
+  /**
+   * Finds all nodes in the current wrapper nodes' render trees that match the provided predicate
+   * function.
+   *
+   * @param {Function} predicate
+   * @returns {ReactWrapper}
+   */
+  findWhere(predicate) {
+    return this.flatMap(n => findAllInRenderedTree(n.node, predicate));
+  }
+
+  /**
+   * Returns a wrapper around the node at a given index of the current wrapper.
+   *
+   * @param index
+   * @returns {ReactWrapper}
+   */
+  get(index) {
+    return this.wrap(this.nodes[index]);
+  }
+
+  /**
+   * Returns a wrapper around the first node of the current wrapper.
+   *
+   * @returns {ReactWrapper}
+   */
+  first() {
+    return this.get(0);
+  }
+
+  /**
+   * Returns a wrapper around the last node of the current wrapper.
+   *
+   * @returns {ReactWrapper}
+   */
+  last() {
+    return this.get(this.length - 1);
+  }
+
+  /**
+   * Returns true if the current wrapper has no nodes. False otherwise.
+   *
+   * @returns {boolean}
+   */
+  isEmpty() {
+    return this.length === 0;
+  }
+
+  /**
+   * Utility method that throws an error if the current instance has a length other than one.
+   * This is primarily used to enforce that certain methods are only run on a wrapper when it is
+   * wrapping a single node.
+   *
+   * @param fn
+   * @returns {*}
+   */
+  single(fn) {
+    if (this.length !== 1) {
+      throw new Error(
+        `This method is only meant to be run on single node. ${this.length} found instead.`
+      );
+    }
+    return fn.call(this, this.node);
+  }
+
+  /**
+   * Helpful utility method to create a new wrapper with the same root as the current wrapper, with
+   * any nodes passed in as the first parameter automatically wrapped.
+   *
+   * @param node
+   * @returns {ReactWrapper}
+   */
+  wrap(node) {
+    if (node instanceof ReactWrapper) {
+      return node;
+    } else {
+      return new ReactWrapper(node, this.root);
+    }
+  }
+
+  /**
+   * Returns an html-like string of the mount render for debugging purposes.
+   *
+   * @returns {String}
+   */
+  //debug() {
+  //  return debugNodes(this.nodes);
+  //}
 }
