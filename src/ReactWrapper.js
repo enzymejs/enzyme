@@ -2,9 +2,11 @@ import React from 'react/addons';
 import { deepEqual } from 'underscore';
 import {
   getNode,
+} from './Utils';
+import {
   selectorError,
   isSimpleSelector,
-} from './Utils';
+} from './Traversal';
 const {
   isDOMComponent,
   renderIntoDocument,

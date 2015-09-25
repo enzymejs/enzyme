@@ -41,6 +41,22 @@ export function describeWithDom(a, b) {
   });
 }
 
+export function useSetStateHack() {
+  var cleanup = false;
+  before(() => {
+    if (typeof global.document === 'undefined') {
+      cleanup = true;
+      global.document = {};
+    }
+  });
+  after(() => {
+    if (cleanup) {
+      delete global.document;
+    }
+  });
+
+}
+
 export function useSinon() {
   beforeEach(spySetup);
   afterEach(spyTearDown);
@@ -107,3 +123,6 @@ export function render(node) {
   const html = React.renderToStaticMarkup(node);
   return cheerio.load(html).root();
 }
+
+export { ShallowWrapper as ShallowWrapper };
+export { ReactWrapper as ReactWrapper };
