@@ -370,6 +370,62 @@ describeWithDom('mount', () => {
     });
   });
 
+
+  describe('.text()', () => {
+
+    const matchesRender = function matchesRender(node) {
+      const actual = mount(node).text();
+      const expected = render(node).text();
+      expect(expected).to.equal(actual);
+    };
+
+    it('should handle simple text nodes', () => {
+      const wrapper = mount(
+        <div>some text</div>
+      );
+      expect(wrapper.text()).to.equal('some text');
+    });
+
+    it('should handle nodes with mapped children', () => {
+      class Foo extends React.Component {
+        render() {
+          return (
+            <div>
+              {this.props.items.map(x=>x)}
+            </div>
+          );
+        }
+      }
+      matchesRender(<Foo items={['abc', 'def', 'hij']} />);
+      matchesRender(
+        <Foo items={[
+          <i key={1}>abc</i>,
+          <i key={2}>def</i>,
+          <i key={3}>hij</i>
+          ]}
+          />
+      );
+    });
+
+    it('should render composite components smartly', () => {
+      class Foo extends React.Component {
+        render() { return <div>foo</div>; }
+      }
+      const wrapper = mount(
+        <div>
+          <Foo />
+          <div>test</div>
+        </div>
+      );
+      expect(wrapper.text()).to.equal('footest');
+    });
+
+    it('should handle html entities', () => {
+      matchesRender(<div>&gt;</div>);
+    });
+
+  });
+
   describe('.props()', () => {
 
     it('should return the props object', () => {
@@ -764,11 +820,5 @@ describeWithDom('mount', () => {
       expect(wrapper.find('.bar').get(3).hasClass('baz')).to.be.true;
     });
   });
-
-  //describe('.debug()', () => {
-  //  it('should pass through to the debugNodes function', () => {
-  //    expect(mount(<div />).debug()).to.equal('<div />');
-  //  });
-  //});
 
 });

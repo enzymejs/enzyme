@@ -77,8 +77,8 @@ export function nodeHasId(node, id) {
 export function nodeHasType(node, type) {
   if (!type || !node) return false;
   if (!node.type) return false;
-  if (typeof node.type === 'string') return node.type == type;
-  return node.type.displayName == type;
+  if (typeof node.type === 'string') return node.type === type;
+  return node.type.name === type || node.type.displayName === type;
 }
 
 export function buildPredicate(selector) {
@@ -119,7 +119,7 @@ export function getTextFromNode(node) {
   }
 
   if (node.type && typeof node.type === 'function') {
-    return `<${node.type.displayName} />`;
+    return `<${node.type.name || node.type.displayName} />`;
   }
 
   return childrenOfNode(node).map(getTextFromNode).join('').replace(/\s+/, ' ');

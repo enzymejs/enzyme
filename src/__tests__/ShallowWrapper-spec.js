@@ -408,7 +408,6 @@ describe('shallow', () => {
       class Foo extends React.Component {
         render() { return <div/>; }
       }
-      Foo.displayName = 'Foo'; // TODO(lmr): what's up with this?
       const wrapper = shallow(
         <div>
           <Foo />

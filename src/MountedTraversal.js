@@ -42,9 +42,6 @@ export function childrenOfInst(inst) {
   if (!inst.getPublicInstance) {
     const internal = internalInstance(inst);
     if (internal) return childrenOfInst(internal);
-
-    console.log("childrenOfInst: falsy instance or no getPublicInstance method");
-    console.log(inst);
     return [];
   }
   const publicInst = inst.getPublicInstance();
@@ -65,8 +62,6 @@ export function childrenOfInst(inst) {
   } else if (isCompositeComponent(publicInst)) {
     return childrenOfInst(inst._renderedComponent);
   } else {
-    console.log("childrenOfInst: neither DOMComponent or CompositeComponent");
-    console.log(inst);
     return [];
   }
 }

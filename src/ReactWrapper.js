@@ -264,7 +264,7 @@ export default class ReactWrapper {
    * @returns {String}
    */
   text() {
-    return this.single(getTextFromInst);
+    return this.single(n => findDOMNode(n).textContent);
   }
 
   /**
@@ -510,13 +510,4 @@ export default class ReactWrapper {
       return new ReactWrapper(node, this.root);
     }
   }
-
-  /**
-   * Returns an html-like string of the mount render for debugging purposes.
-   *
-   * @returns {String}
-   */
-  //debug() {
-  //  return debugNodes(this.nodes);
-  //}
 }
