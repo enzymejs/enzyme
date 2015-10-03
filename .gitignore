@@ -29,4 +29,5 @@ node_modules
 # Jetbrains IDEs
 .idea
 
-build
+/build
+/docs

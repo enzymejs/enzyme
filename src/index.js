@@ -5,6 +5,10 @@ import ReactWrapper from './ReactWrapper';
 import ShallowWrapper from './ShallowWrapper';
 import { onPrototype } from './Utils';
 
+/**
+ * @class Catalyst
+ */
+
 var jsdom;
 try {
   require('jsdom'); // could throw

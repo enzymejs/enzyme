@@ -1,5 +1,6 @@
 import React from 'react/addons';
 import { flatten, unique, compact, deepEqual } from 'underscore';
+import ReactWrapperComponent from './ReactWrapperComponent';
 import {
   nodeEqual,
   propFromEvent,
@@ -26,32 +27,9 @@ const {
 } = React.addons.TestUtils;
 
 /**
- * This is a utility component to wrap around the nodes we are
- * passing in to `mount()`. Theoretically, you could do everything
- * we are doing without this, but this makes it easier since
- * `renderIntoDocument()` doesn't really pass back a reference to
- * the DOM node it rendered to, so we can't really "re-render" to
- * pass new props in.
+ *
+ * @class ReactWrapper
  */
-export class ReactWrapperComponent extends React.Component {
-
-  constructor(props) {
-    super(props);
-    this.state = Object.assign({}, props.props);
-  }
-
-  setProps(newProps) {
-    return new Promise(resolve => this.setState(newProps, resolve));
-  }
-
-  render() {
-    const { Component } = this.props;
-    return (
-      <Component ref="component" {...this.state} />
-    );
-  }
-}
-
 export default class ReactWrapper {
 
   constructor(nodes, root) {
@@ -358,7 +336,7 @@ export default class ReactWrapper {
   /**
    * Returns the value of  prop with the given name of the root node.
    *
-   * @param propName
+   * @param {String} propName
    * @returns {*}
    */
   prop(propName) {
@@ -380,7 +358,7 @@ export default class ReactWrapper {
    *
    * NOTE: can only be called on a wrapper of a single node.
    *
-   * @param className
+   * @param {String} className
    * @returns {Boolean}
    */
   hasClass(className) {
@@ -445,7 +423,7 @@ export default class ReactWrapper {
   /**
    * Returns a wrapper around the node at a given index of the current wrapper.
    *
-   * @param index
+   * @param {Number} index
    * @returns {ReactWrapper}
    */
   get(index) {
@@ -484,7 +462,7 @@ export default class ReactWrapper {
    * This is primarily used to enforce that certain methods are only run on a wrapper when it is
    * wrapping a single node.
    *
-   * @param fn
+   * @param {Function} fn
    * @returns {*}
    */
   single(fn) {
@@ -500,7 +478,7 @@ export default class ReactWrapper {
    * Helpful utility method to create a new wrapper with the same root as the current wrapper, with
    * any nodes passed in as the first parameter automatically wrapped.
    *
-   * @param node
+   * @param {ReactWrapper|ReactElement|Array<ReactElement>} node
    * @returns {ReactWrapper}
    */
   wrap(node) {
