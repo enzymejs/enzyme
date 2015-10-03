@@ -5,6 +5,7 @@
   "main": "build",
   "scripts": {
     "prepublish": "npm run build",
+    "postinstall": "npm run docs",
     "build": "babel src --out-dir build",
     "test": "mocha --compilers js:babel/register --recursive src/**/__tests__/*.js --watch",
     "docs": "doxx --source src --target docs --theme cayman --ignore __tests__,Debug.js,MountedTraversal.js,ShallowTraversal.js,Utils.js --title Catalyst"
