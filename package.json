@@ -6,7 +6,8 @@
   "scripts": {
     "prepublish": "npm run build",
     "build": "babel src --out-dir build",
-    "test": "mocha --compilers js:babel/register --recursive src/**/__tests__/*.js --watch"
+    "test": "mocha --compilers js:babel/register --recursive src/**/__tests__/*.js --watch",
+    "docs": "doxx --source src --target docs --theme cayman --ignore __tests__,Debug.js,MountedTraversal.js,ShallowTraversal.js,Utils.js --title Catalyst"
   },
   "repository": {
     "type": "git",
@@ -29,9 +30,10 @@
     "underscore": "^1.8.3"
   },
   "devDependencies": {
+    "babel": "^5.8.21",
     "chai": "^3.2.0",
-    "mocha": "^2.2.5",
-    "babel": "^5.8.21"
+    "doxx": "^2.1.1",
+    "mocha": "^2.2.5"
   },
   "peerDependencies": {
     "react": "0.13.x"

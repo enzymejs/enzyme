@@ -21,6 +21,9 @@ const {
   createRenderer,
 } = React.addons.TestUtils;
 
+/**
+ * @class ShallowWrapper
+ */
 export default class ShallowWrapper {
 
   constructor(nodes, root) {
