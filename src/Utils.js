@@ -39,42 +39,6 @@ export function getNode(node) {
   return isDOMComponent(node) ? React.findDOMNode(node) : node;
 }
 
-export function children(node) {
-  const maybeArray = node && node._store && node._store.props && node._store.props.children;
-  if (!maybeArray) return [];
-  if (Array.isArray(maybeArray)) return maybeArray;
-  return [maybeArray];
-}
-
-export function hasClassName(node, className) {
-  var classes = node && node._store && node._store.props && node._store.props.className || '';
-  return (
-      ' ' + classes + ' '
-    ).indexOf(' ' + className + ' ') > -1;
-}
-
-export function treeForEach(tree, fn) {
-  fn(tree);
-  children(tree).forEach(node => treeForEach(node, fn));
-}
-
-export function treeFilter(tree, fn) {
-  var results = [];
-  treeForEach(tree, node => {
-    if (fn(node)) {
-      results.push(node);
-    }
-  });
-  return results;
-}
-
-export function single(array) {
-  if (array.length !== 1) {
-    throw new Error(`Expected single element but found ${array.length} instead`);
-  }
-  return array[0];
-}
-
 export function childrenEqual(a, b) {
   if (a === b) return true;
   if (!Array.isArray(a) && !Array.isArray(b)) {
@@ -101,9 +65,7 @@ export function nodeEqual(a, b) {
   for (prop in a) {
     if (!a.hasOwnProperty(prop)) continue;
     aLength++;
-    if (!(
-        prop in b
-      )) return false;
+    if (!(prop in b)) return false;
     if (prop === "children") {
       if (!childrenEqual(a.children, b.children)) return false;
     } else if (b[prop] === a[prop]) {
@@ -121,22 +83,54 @@ export function nodeEqual(a, b) {
   return aLength === bLength;
 }
 
+// 'click' => 'onClick'
+// 'mouseEnter' => 'onMouseEnter'
+export function propFromEvent(event) {
+  return `on${event[0].toUpperCase()}${event.substring(1)}`;
+}
+
+export function withSetStateAllowed(fn) {
+  // NOTE(lmr):
+  // this is currently here to circumvent a React bug where `setState()` is
+  // not allowed without global being defined.
+  let cleanup = false;
+  if (typeof global.document === 'undefined') {
+    cleanup = true;
+    global.document = {};
+  }
+  fn();
+  if (cleanup) {
+    delete global.document;
+  }
+}
+
+export function splitSelector(selector) {
+  return selector.split(/(?=\.)/);
+}
+
 export function isSimpleSelector(selector) {
   // any of these characters pretty much guarantee it's a complex selector
   if (/[~\s\[\]:>]/.test(selector)) {
     return false;
   }
-  // multiple class names are complex
-  if (/[a-z]\.[a-z]/i.test(selector)) {
-    return false;
-  }
   return true;
 }
 
-export function selectorError(className, fn, selector) {
+export function selectorError(selector) {
   return new TypeError(
-    `${className}::${fn} received a complex CSS selector ('${selector}'), ` +
-    `however, it currently only allows simple CSS selectors (class names and tag ` +
-    `names). This may change in the future though.`
+    `Catalyst received a complex CSS selector ('${selector}') that it does not currently support`
   );
+}
+
+export const isCompoundSelector = /[a-z]\.[a-z]/i;
+
+
+export function AND(fns) {
+  return x => {
+    let i = fns.length;
+    while (i--) {
+      if (!fns[i](x)) return false;
+    }
+    return true;
+  };
 }

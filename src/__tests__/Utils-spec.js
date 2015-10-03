@@ -12,8 +12,8 @@ import {
   childrenEqual,
   nodeEqual,
   isSimpleSelector,
+  propFromEvent,
 } from '../Utils';
-
 import {
   describeWithDom,
   mount,
@@ -48,7 +48,7 @@ describe('Utils', () => {
   describeWithDom('getNode', () => {
 
     it('should return a DOMNode when a DOMComponent is given', () => {
-      const div = mount(<div />).root();
+      const div = mount(<div />).node;
       expect(getNode(div)).to.be.instanceOf(window.HTMLElement);
     });
 
@@ -56,136 +56,17 @@ describe('Utils', () => {
       class Foo extends React.Component {
         render() { return <div /> }
       }
-      const foo = mount(<Foo />).root();
+      const foo = mount(<Foo />).node;
       expect(getNode(foo)).to.equal(foo);
-    });
-
-  });
-
-  describe('hasClassName', () => {
-
-    it('should work for standalone classNames', () => {
-      const node = shallow(<div className="foo"/>).tree;
-      expect(hasClassName(node, "foo")).to.be.true;
-      expect(hasClassName(node, "bar")).to.be.false;
-    });
-
-    it('should work for multiple classNames', () => {
-      const node = shallow(<div className="foo bar baz"/>).tree;
-      expect(hasClassName(node, "foo")).to.be.true;
-      expect(hasClassName(node, "bar")).to.be.true;
-      expect(hasClassName(node, "baz")).to.be.true;
-      expect(hasClassName(node, "bax")).to.be.false;
-    });
-
-    it('should also allow hyphens', () => {
-      const node = shallow(<div className="foo-bar"/>).tree;
-      expect(hasClassName(node, "foo-bar")).to.be.true;
-    });
-
-  });
-
-  describe('treeForEach', () => {
-
-    it('should be called once for a leaf node', () => {
-      const spy = sinon.spy();
-      const wrapper = shallow(<div />);
-      treeForEach(wrapper.tree, spy);
-      expect(spy.calledOnce).to.be.true;
-    });
-
-    it('should handle a single child', () => {
-      const spy = sinon.spy();
-      const wrapper = shallow(
-        <div>
-          <div />
-        </div>
-      );
-      treeForEach(wrapper.tree, spy);
-      expect(spy.callCount).to.equal(2);
-    });
-
-    it('should handle several children', () => {
-      const spy = sinon.spy();
-      const wrapper = shallow(
-        <div>
-          <div />
-          <div />
-        </div>
-      );
-      treeForEach(wrapper.tree, spy);
-      expect(spy.callCount).to.equal(3);
-    });
-
-    it('should handle multiple hierarchies', () => {
-      const spy = sinon.spy();
-      const wrapper = shallow(
-        <div>
-          <div>
-            <div />
-            <div />
-          </div>
-        </div>
-      );
-      treeForEach(wrapper.tree, spy);
-      expect(spy.callCount).to.equal(4);
-    });
-
-    it('should pass in the node', () => {
-      const spy = sinon.spy();
-      const wrapper = shallow(
-        <div>
-          <button />
-          <nav>
-            <input />
-          </nav>
-        </div>
-      );
-      treeForEach(wrapper.tree, spy);
-      expect(spy.callCount).to.equal(4);
-      expect(spy.args[0][0].type).to.equal("div");
-      expect(spy.args[1][0].type).to.equal("button");
-      expect(spy.args[2][0].type).to.equal("nav");
-      expect(spy.args[3][0].type).to.equal("input");
-    });
-
-  });
-
-  describe('treeFilter', () => {
-    const tree = shallow(
-      <div>
-        <button />
-        <button />
-        <nav>
-          <input />
-        </nav>
-      </div>
-    ).tree;
-
-    it('should return an empty array for falsey test', () => {
-      expect(treeFilter(tree, () => false).length).to.equal(0);
-    });
-
-    it('should return the full array for truthy test', () => {
-      expect(treeFilter(tree, () => true).length).to.equal(5);
-    });
-
-    it('should filter for truthiness', () => {
-      expect(treeFilter(tree, node => node.type === "nav").length).to.equal(1);
-      expect(treeFilter(tree, node => node.type === "button").length).to.equal(2);
     });
 
   });
 
   describe('nodeEqual', () => {
 
-    function isMatch(a, b) {
-      return nodeEqual(shallow(a).tree, shallow(b).tree);
-    }
-
     it('should match empty elements of same tag', () => {
 
-      expect(isMatch(
+      expect(nodeEqual(
         <div />,
         <div />
       )).to.be.true;
@@ -194,7 +75,7 @@ describe('Utils', () => {
 
     it('should not match empty elements of different type', () => {
 
-      expect(isMatch(
+      expect(nodeEqual(
         <div />,
         <nav />
       )).to.be.false;
@@ -203,17 +84,17 @@ describe('Utils', () => {
 
     it('should match basic prop types', () => {
 
-      expect(isMatch(
+      expect(nodeEqual(
         <div className="foo" />,
         <div className="foo" />
       )).to.be.true;
 
-      expect(isMatch(
+      expect(nodeEqual(
         <div id="foo" className="bar" />,
         <div id="foo" className="bar" />
       )).to.be.true;
 
-      expect(isMatch(
+      expect(nodeEqual(
         <div id="foo" className="baz" />,
         <div id="foo" className="bar" />
       )).to.be.false;
@@ -222,14 +103,14 @@ describe('Utils', () => {
 
     it('should check children as well', () => {
 
-      expect(isMatch(
+      expect(nodeEqual(
         <div>
           <div />
         </div>,
         <div />
       )).to.be.false;
 
-      expect(isMatch(
+      expect(nodeEqual(
         <div>
           <div />
         </div>,
@@ -238,7 +119,7 @@ describe('Utils', () => {
         </div>
       )).to.be.true;
 
-      expect(isMatch(
+      expect(nodeEqual(
         <div>
           <div className="foo" />
         </div>,
@@ -247,7 +128,7 @@ describe('Utils', () => {
         </div>
       )).to.be.true;
 
-      expect(isMatch(
+      expect(nodeEqual(
         <div>
           <div className="foo" />
         </div>,
@@ -260,12 +141,12 @@ describe('Utils', () => {
 
     it('should test deepEquality with object props', () => {
 
-      expect(isMatch(
+      expect(nodeEqual(
         <div foo={{ a: 1, b: 2 }} />,
         <div foo={{ a: 1, b: 2 }} />
       )).to.be.true;
 
-      expect(isMatch(
+      expect(nodeEqual(
         <div foo={{ a: 2, b: 2 }} />,
         <div foo={{ a: 1, b: 2 }} />
       )).to.be.false;
@@ -274,26 +155,21 @@ describe('Utils', () => {
 
   });
 
-  describe('single', () => {
+  describe('propFromEvent', () => {
 
-    it('should throw for multi-item arrays', () => {
-      expect(() => single([1, 2])).to.throw;
-      expect(() => single([1])).to.not.throw;
-    });
+    const fn = propFromEvent;
 
-    it('should throw for empty arrays', () => {
-      expect(() => single([])).to.throw;
-    });
-
-    it('should return the one item', () => {
-      expect(single([1])).to.equal(1);
+    it('should work', () => {
+      expect(fn('click')).to.equal('onClick');
+      expect(fn('mouseEnter')).to.equal('onMouseEnter');
     });
 
   });
 
-  describe('isComplexSelector', () => {
 
-    describe('complex selectors', () => {
+  describe('iuSimpleSelector', () => {
+
+    describe('prohibited selectors', () => {
       var isComplex = function(selector) {
         it(selector, () => {
           expect(isSimpleSelector(selector)).to.be.false;
@@ -301,8 +177,6 @@ describe('Utils', () => {
       };
 
       isComplex('.foo .bar');
-      isComplex('.foo.bar');
-      isComplex('input.foo');
       isComplex('input[name="foo"]');
       isComplex(':visible');
       isComplex('.foo>.bar');
@@ -311,7 +185,7 @@ describe('Utils', () => {
 
     });
 
-    describe('complex selectors', () => {
+    describe('allowed selectors', () => {
       var isSimple = function(selector) {
         it(selector, () => {
           expect(isSimpleSelector(selector)).to.be.true;
@@ -322,6 +196,8 @@ describe('Utils', () => {
       isSimple('.foo-and-foo');
       isSimple('.FoOaNdFoO');
       isSimple('tag');
+      isSimple('.foo.bar');
+      isSimple('input.foo');
 
     });
 
