@@ -101,6 +101,17 @@ describe('ShallowTraversal', () => {
       expect(spy.callCount).to.equal(4);
     });
 
+    it('should not get trapped from empty strings', () => {
+      const spy = sinon.spy();
+      const node = (
+        <div>
+          <p>{""}</p>
+        </div>
+      );
+      treeForEach(node, spy);
+      expect(spy.callCount).to.equal(3);
+    });
+
     it('should pass in the node', () => {
       const spy = sinon.spy();
       const node = (

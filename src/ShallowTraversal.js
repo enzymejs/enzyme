@@ -17,6 +17,7 @@ const {
 } = React.addons.TestUtils;
 
 export function childrenOfNode(node) {
+  if (!node) return [];
   const maybeArray = node && node._store && node._store.props && node._store.props.children;
   const result = [];
   React.Children.forEach(maybeArray, child => result.push(child));
