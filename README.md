@@ -3,6 +3,8 @@ Catalyst
 
 JavaScript Testing utility for React / Flux
 
+[Documentation](https://pages.git.musta.ch/airbnb/catalyst/docs/index.html)
+
 
 
 Installation
