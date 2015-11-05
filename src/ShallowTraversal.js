@@ -1,4 +1,4 @@
-import React from 'react/addons';
+import React, { findDOMNode } from 'react';
 import {
   nodeEqual,
   isSimpleSelector,
@@ -7,14 +7,11 @@ import {
   isCompoundSelector,
   AND,
 } from './Utils';
-const {
-  findDOMNode,
-} = React;
-const {
+import {
   isDOMComponent,
   isCompositeComponentWithType,
   findAllInRenderedTree,
-} = React.addons.TestUtils;
+} from 'react-addons-test-utils';
 
 export function childrenOfNode(node) {
   if (!node) return [];

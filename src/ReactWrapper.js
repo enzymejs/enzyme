@@ -1,4 +1,4 @@
-import React from 'react/addons';
+import React, { findDOMNode } from 'react';
 import { flatten, unique, compact, deepEqual } from 'underscore';
 import ReactWrapperComponent from './ReactWrapperComponent';
 import {
@@ -17,14 +17,11 @@ import {
   buildInstPredicate,
   instEqual,
 } from './MountedTraversal';
-const {
-  findDOMNode,
-  } = React;
-const {
+import {
   renderIntoDocument,
   findAllInRenderedTree,
   Simulate,
-} = React.addons.TestUtils;
+} from 'react-addons-test-utils';
 
 /**
  *

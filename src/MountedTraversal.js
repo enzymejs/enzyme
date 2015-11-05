@@ -1,4 +1,4 @@
-import React from 'react/addons';
+import React, { findDOMNode } from 'react';
 import {
   nodeEqual,
   isSimpleSelector,
@@ -7,16 +7,13 @@ import {
   isCompoundSelector,
   AND,
 } from './Utils';
-const {
-  findDOMNode,
-} = React;
-const {
+import {
   isDOMComponent,
   isCompositeComponent,
   isCompositeComponentElement,
   isCompositeComponentWithType,
   findAllInRenderedTree,
-} = React.addons.TestUtils;
+} from 'react-addons-test-utils';
 
 function getNode(inst) {
   if (!inst || inst._store || typeof inst === 'string') {

@@ -1,4 +1,4 @@
-import React from 'react/addons';
+import React from 'react';
 import { flatten, unique, compact } from 'underscore';
 import {
   nodeEqual,
@@ -17,9 +17,10 @@ import {
   treeFilter,
   buildPredicate,
 } from './ShallowTraversal';
-const {
+
+import {
   createRenderer,
-} = React.addons.TestUtils;
+} from 'react-addons-test-utils';
 
 /**
  * @class ShallowWrapper

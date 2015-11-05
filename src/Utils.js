@@ -1,13 +1,13 @@
 import { isEqual } from 'underscore';
-import React from 'react/addons';
-const {
+import React from 'react';
+import {
   Simulate,
   mockComponent,
   isElement,
   isElementOfType,
   isDOMComponent,
   isCompositeComponent,
-  } = React.addons.TestUtils;
+} from 'react-addons-test-utils';
 
 export function onPrototype(Component, lifecycle, method) {
   let proto = Component.prototype;

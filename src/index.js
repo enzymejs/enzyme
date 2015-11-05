@@ -1,9 +1,18 @@
-import React from 'react/addons';
+import React from 'react';
+import ReactDOMServer from 'react-dom/server';
 import cheerio from 'cheerio';
 import Sinon from 'sinon';
 import ReactWrapper from './ReactWrapper';
 import ShallowWrapper from './ShallowWrapper';
 import { onPrototype } from './Utils';
+import {
+  mockComponent,
+  isElement,
+  isElementOfType,
+  isDOMComponent,
+  isCompositeComponent,
+  isCompositeComponentWithType,
+} from 'react-addons-test-utils';
 
 /**
  * @class Catalyst
@@ -16,15 +25,6 @@ try {
 } catch(e) {
   // jsdom is not supported...
 }
-
-const {
-  mockComponent,
-  isElement,
-  isElementOfType,
-  isDOMComponent,
-  isCompositeComponent,
-  isCompositeComponentWithType,
-  } = React.addons.TestUtils;
 
 //export const isComponentWithType = isCompositeComponentWithType;
 
@@ -127,7 +127,7 @@ export function shallow(node) {
  * @returns {Cheerio}
  */
 export function render(node) {
-  const html = React.renderToStaticMarkup(node);
+  const html = ReactDOMServer.renderToStaticMarkup(node);
   return cheerio.load(html).root();
 }
 
