@@ -1,38 +1,27 @@
-import React from 'react/addons';
 import cheerio from 'cheerio';
 import Sinon from 'sinon';
 import ReactWrapper from './ReactWrapper';
 import ShallowWrapper from './ShallowWrapper';
 import { onPrototype } from './Utils';
+import { renderToStaticMarkup } from './react-compat';
 
 /**
  * @class Catalyst
  */
 
-var jsdom;
+let jsdom;
 try {
   require('jsdom'); // could throw
   jsdom = require('mocha-jsdom');
-} catch(e) {
+} catch (e) {
   // jsdom is not supported...
 }
-
-const {
-  mockComponent,
-  isElement,
-  isElementOfType,
-  isDOMComponent,
-  isCompositeComponent,
-  isCompositeComponentWithType,
-  } = React.addons.TestUtils;
-
-//export const isComponentWithType = isCompositeComponentWithType;
 
 export let sinon = Sinon.sandbox.create();
 
 export function describeWithDom(a, b) {
   describe('<< uses jsdom >>', () => {
-    if (typeof jsdom === "function") {
+    if (typeof jsdom === 'function') {
       jsdom();
       describe(a, b);
     } else {
@@ -43,7 +32,7 @@ export function describeWithDom(a, b) {
 }
 
 export function useSetStateHack() {
-  var cleanup = false;
+  let cleanup = false;
   before(() => {
     if (typeof global.document === 'undefined') {
       cleanup = true;
@@ -55,12 +44,6 @@ export function useSetStateHack() {
       delete global.document;
     }
   });
-
-}
-
-export function useSinon() {
-  beforeEach(spySetup);
-  afterEach(spyTearDown);
 }
 
 export function spySetup() {
@@ -71,27 +54,17 @@ export function spyTearDown() {
   sinon.restore();
 }
 
+export function useSinon() {
+  beforeEach(spySetup);
+  afterEach(spyTearDown);
+}
+
 export function spyLifecycle(Component) {
   onPrototype(Component, (proto, name) => sinon.spy(proto, name));
 }
 
 export function spyMethods(Component) {
   onPrototype(Component, null, (proto, name) => sinon.spy(proto, name));
-}
-
-export function spyActions(Actions) {
-  // TODO(lmr): implement
-  throw new Error("Not Implemented");
-}
-
-export function stubActions(Actions) {
-  // TODO(lmr): implement
-  throw new Error("Not Implemented");
-}
-
-export function dispatch(action, payload) {
-  // TODO(lmr): implement
-  throw new Error("Not Implemented");
 }
 
 /**
@@ -127,7 +100,7 @@ export function shallow(node) {
  * @returns {Cheerio}
  */
 export function render(node) {
-  const html = React.renderToStaticMarkup(node);
+  const html = renderToStaticMarkup(node);
   return cheerio.load(html).root();
 }
 

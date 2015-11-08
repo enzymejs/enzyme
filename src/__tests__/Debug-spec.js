@@ -78,7 +78,7 @@ describe('debug', () => {
 
     it('should render composite components as tags w/ displayName', () => {
       class Foo extends React.Component {
-        render() { return <div />}
+        render() { return <div />; }
       }
       Foo.displayName = 'Foo'; // TODO(lmr): why do i have to do this...?
 
@@ -98,7 +98,7 @@ describe('debug', () => {
       expect(debugNode(
         <div>
           <i>not in array</i>
-          {['a','b','c']}
+          {['a', 'b', 'c']}
         </div>
       )).to.equal(
 `<div>

@@ -1,8 +1,10 @@
 import {
   childrenOfNode,
 } from './ShallowTraversal';
-import { without, range, escape, compact } from 'underscore';
-
+import {
+  propsOfNode,
+} from './Utils';
+import { without, escape, compact } from 'underscore';
 
 export function typeName(node) {
   return typeof node.type === 'function'
@@ -11,32 +13,31 @@ export function typeName(node) {
 }
 
 export function spaces(n) {
-  return Array(n+1).join(' ');
+  return Array(n + 1).join(' ');
 }
 
 export function indent(depth, string) {
   return string.split('\n').map(x => `${spaces(depth)}${x}`).join('\n');
 }
 
-
 function propString(prop) {
   switch (typeof prop) {
-    case 'function':
-      return '{[Function]}';
-    case 'string':
-      return `"${prop}"`;
-    case 'number':
-    case 'boolean':
-      return `{${prop}}`;
-    case 'object':
-      return `{{...}}`;
-    default:
-      return `{[${typeof prop}]}`;
+  case 'function':
+    return '{[Function]}';
+  case 'string':
+    return `"${prop}"`;
+  case 'number':
+  case 'boolean':
+    return `{${prop}}`;
+  case 'object':
+    return `{{...}}`;
+  default:
+    return `{[${typeof prop}]}`;
   }
 }
 
 function propsString(node) {
-  const props = node && node._store && node._store.props || {};
+  const props = propsOfNode(node);
   const keys = without(Object.keys(props), 'children');
   return keys.map(key => `${key}=${propString(props[key])}`).join(' ');
 }

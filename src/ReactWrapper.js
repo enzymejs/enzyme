@@ -1,30 +1,20 @@
-import React from 'react/addons';
-import { flatten, unique, compact, deepEqual } from 'underscore';
+import React from 'react';
+import { flatten, unique, compact } from 'underscore';
 import ReactWrapperComponent from './ReactWrapperComponent';
 import {
-  nodeEqual,
-  propFromEvent,
-  withSetStateAllowed,
-} from './Utils';
-import {
-  debugNodes,
-} from './Debug';
-import {
-  getTextFromInst,
   instHasClassName,
   childrenOfInst,
   parentsOfInst,
   buildInstPredicate,
   instEqual,
+  treeFilter,
+  getNode,
 } from './MountedTraversal';
-const {
-  findDOMNode,
-  } = React;
-const {
+import {
   renderIntoDocument,
-  findAllInRenderedTree,
   Simulate,
-} = React.addons.TestUtils;
+  findDOMNode,
+} from './react-compat';
 
 /**
  *
@@ -52,14 +42,16 @@ export default class ReactWrapper {
       this.nodes = [this.node];
       this.length = 1;
     } else {
-      if (!(nodes instanceof Array)) {
-        nodes = [nodes];
-      }
       this.component = null;
       this.root = root;
-      this.node = nodes[0];
-      this.nodes = nodes;
-      this.length = nodes.length;
+      if (!(nodes instanceof Array)) {
+        this.node = nodes;
+        this.nodes = [nodes];
+      } else {
+        this.node = nodes[0];
+        this.nodes = nodes;
+      }
+      this.length = this.nodes.length;
     }
   }
 
@@ -75,7 +67,7 @@ export default class ReactWrapper {
    */
   ref(refname) {
     if (this.root !== this) {
-      throw new Error("ReactWrapper::ref(refname) can only be called on the root");
+      throw new Error('ReactWrapper::ref(refname) can only be called on the root');
     }
     return this.wrap(this.instance().refs[refname]);
   }
@@ -108,7 +100,7 @@ export default class ReactWrapper {
   update() {
     if (this.root !== this) {
       // TODO(lmr): this requirement may not be necessary for the ReactWrapper
-      throw new Error("ReactWrapper::update() can only be called on the root");
+      throw new Error('ReactWrapper::update() can only be called on the root');
     }
     this.single(() => {
       this.component.forceUpdate();
@@ -131,7 +123,7 @@ export default class ReactWrapper {
    */
   setProps(props) {
     if (this.root !== this) {
-      throw new Error("ReactWrapper::setProps() can only be called on the root");
+      throw new Error('ReactWrapper::setProps() can only be called on the root');
     }
     this.component.setProps(props);
     return this;
@@ -151,7 +143,7 @@ export default class ReactWrapper {
    */
   setState(state) {
     if (this.root !== this) {
-      throw new Error("ReactWrapper::setState() can only be called on the root");
+      throw new Error('ReactWrapper::setState() can only be called on the root');
     }
     this.instance().setState(state);
     return this;
@@ -266,7 +258,7 @@ export default class ReactWrapper {
    * @returns {Object}
    */
   props() {
-    return this.single(n => n.props || {});
+    return this.single(n => getNode(n).props || {});
   }
 
   /**
@@ -280,14 +272,13 @@ export default class ReactWrapper {
    */
   state(name) {
     if (this.root !== this) {
-      throw new Error("ReactWrapper::state() can only be called on the root");
+      throw new Error('ReactWrapper::state() can only be called on the root');
     }
-    const _state = this.single((n) => this.instance().state);
+    const _state = this.single(() => this.instance().state);
     if (name !== undefined) {
       return _state[name];
-    } else {
-      return _state;
     }
+    return _state;
   }
 
   /**
@@ -296,9 +287,7 @@ export default class ReactWrapper {
    * @returns {ReactWrapper}
    */
   children() {
-    return this.flatMap(n => {
-      return childrenOfInst(n.node)
-    });
+    return this.flatMap(n => childrenOfInst(n.node));
   }
 
   /**
@@ -350,7 +339,7 @@ export default class ReactWrapper {
    * @returns {String|Function}
    */
   type() {
-    return this.single(n => n._reactInternalInstance._currentElement.type);
+    return this.single(n => getNode(n).type);
   }
 
   /**
@@ -364,8 +353,8 @@ export default class ReactWrapper {
   hasClass(className) {
     if (className && className.indexOf('.') !== -1) {
       console.log(
-        "It looks like you're calling `ReactWrapper::hasClass()` with a CSS selector. " +
-        "hasClass() expects a class name, not a CSS selector."
+        'It looks like you\'re calling `ReactWrapper::hasClass()` with a CSS selector. ' +
+        'hasClass() expects a class name, not a CSS selector.'
       );
     }
     return this.single(n => instHasClassName(n, className));
@@ -417,7 +406,7 @@ export default class ReactWrapper {
    * @returns {ReactWrapper}
    */
   findWhere(predicate) {
-    return this.flatMap(n => findAllInRenderedTree(n.node, predicate));
+    return this.flatMap(n => treeFilter(n.node, predicate));
   }
 
   /**
@@ -484,8 +473,7 @@ export default class ReactWrapper {
   wrap(node) {
     if (node instanceof ReactWrapper) {
       return node;
-    } else {
-      return new ReactWrapper(node, this.root);
     }
+    return new ReactWrapper(node, this.root);
   }
 }

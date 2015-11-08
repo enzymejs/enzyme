@@ -2,13 +2,7 @@ import React from 'react';
 import sinon from 'sinon';
 import { expect } from 'chai';
 import {
-  shallow,
-  mount,
-  describeWithDom,
-} from '../';
-import {
   splitSelector,
-  isSimpleSelector,
 } from '../Utils';
 import {
   hasClassName,
@@ -19,16 +13,16 @@ import {
 describe('ShallowTraversal', () => {
 
   describe('splitSelector', () => {
-    var fn = splitSelector;
+    const fn = splitSelector;
     it('splits multiple class names', () => {
-      expect(fn('.foo.bar')).to.eql(['.foo','.bar']);
-      expect(fn('.foo.bar.baz')).to.eql(['.foo','.bar', '.baz']);
+      expect(fn('.foo.bar')).to.eql(['.foo', '.bar']);
+      expect(fn('.foo.bar.baz')).to.eql(['.foo', '.bar', '.baz']);
     });
 
     it('splits tag names and class names', () => {
-      expect(fn('input.bar')).to.eql(['input','.bar']);
-      expect(fn('div.bar.baz')).to.eql(['div','.bar', '.baz']);
-      expect(fn('Foo.bar')).to.eql(['Foo','.bar']);
+      expect(fn('input.bar')).to.eql(['input', '.bar']);
+      expect(fn('div.bar.baz')).to.eql(['div', '.bar', '.baz']);
+      expect(fn('Foo.bar')).to.eql(['Foo', '.bar']);
     });
   });
 
@@ -36,21 +30,21 @@ describe('ShallowTraversal', () => {
 
     it('should work for standalone classNames', () => {
       const node = (<div className="foo"/>);
-      expect(hasClassName(node, "foo")).to.be.true;
-      expect(hasClassName(node, "bar")).to.be.false;
+      expect(hasClassName(node, 'foo')).to.be.true;
+      expect(hasClassName(node, 'bar')).to.be.false;
     });
 
     it('should work for multiple classNames', () => {
       const node = (<div className="foo bar baz"/>);
-      expect(hasClassName(node, "foo")).to.be.true;
-      expect(hasClassName(node, "bar")).to.be.true;
-      expect(hasClassName(node, "baz")).to.be.true;
-      expect(hasClassName(node, "bax")).to.be.false;
+      expect(hasClassName(node, 'foo')).to.be.true;
+      expect(hasClassName(node, 'bar')).to.be.true;
+      expect(hasClassName(node, 'baz')).to.be.true;
+      expect(hasClassName(node, 'bax')).to.be.false;
     });
 
     it('should also allow hyphens', () => {
       const node = (<div className="foo-bar"/>);
-      expect(hasClassName(node, "foo-bar")).to.be.true;
+      expect(hasClassName(node, 'foo-bar')).to.be.true;
     });
 
   });
@@ -124,10 +118,10 @@ describe('ShallowTraversal', () => {
       );
       treeForEach(node, spy);
       expect(spy.callCount).to.equal(4);
-      expect(spy.args[0][0].type).to.equal("div");
-      expect(spy.args[1][0].type).to.equal("button");
-      expect(spy.args[2][0].type).to.equal("nav");
-      expect(spy.args[3][0].type).to.equal("input");
+      expect(spy.args[0][0].type).to.equal('div');
+      expect(spy.args[1][0].type).to.equal('button');
+      expect(spy.args[2][0].type).to.equal('nav');
+      expect(spy.args[3][0].type).to.equal('input');
     });
 
   });
@@ -152,8 +146,8 @@ describe('ShallowTraversal', () => {
     });
 
     it('should filter for truthiness', () => {
-      expect(treeFilter(tree, node => node.type === "nav").length).to.equal(1);
-      expect(treeFilter(tree, node => node.type === "button").length).to.equal(2);
+      expect(treeFilter(tree, node => node.type === 'nav').length).to.equal(1);
+      expect(treeFilter(tree, node => node.type === 'button').length).to.equal(2);
     });
 
   });

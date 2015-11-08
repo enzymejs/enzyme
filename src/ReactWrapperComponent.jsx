@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react'
+import React, { PropTypes } from 'react';
 
 /**
  * This is a utility component to wrap around the nodes we are
@@ -26,3 +26,7 @@ export default class ReactWrapperComponent extends React.Component {
     );
   }
 }
+ReactWrapperComponent.propTypes = {
+  Component: PropTypes.oneOfType(PropTypes.func, PropTypes.string).isRequired,
+  props: PropTypes.object.isRequired,
+};

@@ -1,6 +1,6 @@
 import React from 'react';
 import { expect } from 'chai';
-import { shallow, simulate, render, ShallowWrapper } from '../';
+import { shallow, render, ShallowWrapper } from '../';
 import sinon from 'sinon';
 
 
@@ -28,7 +28,7 @@ describe('shallow', () => {
 
     it('should match composite components', () => {
       class Foo extends React.Component {
-        render() { return <div /> }
+        render() { return <div />; }
       }
       const wrapper = shallow(
         <div>
@@ -49,7 +49,7 @@ describe('shallow', () => {
           <input className="foo" />
         </div>
       );
-      expect(wrapper.find(".foo").type()).to.equal("input");
+      expect(wrapper.find('.foo').type()).to.equal('input');
     });
 
     it('should find an element based on a tag name', () => {
@@ -58,7 +58,7 @@ describe('shallow', () => {
           <input className="foo" />
         </div>
       );
-      expect(wrapper.find("input").props().className).to.equal("foo");
+      expect(wrapper.find('input').props().className).to.equal('foo');
     });
 
     it('should find a component based on a constructor', () => {
@@ -80,7 +80,7 @@ describe('shallow', () => {
           <button className="foo" />
         </div>
       );
-      expect(wrapper.find(".foo").length).to.equal(2);
+      expect(wrapper.find('.foo').length).to.equal(2);
     });
 
     it('should find multiple elements based on a tag name', () => {
@@ -129,7 +129,7 @@ describe('shallow', () => {
           <input />
         </div>
       );
-      expect(wrapper.findWhere(x=>true).length).to.equal(3);
+      expect(wrapper.findWhere(() => true).length).to.equal(3);
     });
 
     it('should return no elements for a falsy test', () => {
@@ -139,7 +139,7 @@ describe('shallow', () => {
           <input />
         </div>
       );
-      expect(wrapper.findWhere(x=>false).length).to.equal(0);
+      expect(wrapper.findWhere(() => false).length).to.equal(0);
     });
 
   });
@@ -153,12 +153,12 @@ describe('shallow', () => {
             <div className={this.props.id}>
               {this.props.id}
             </div>
-          )
+          );
         }
       }
       const wrapper = shallow(<Foo id="foo" />);
       expect(wrapper.find('.foo').length).to.equal(1);
-      wrapper.setProps({ id: "bar", foo: "bla"});
+      wrapper.setProps({ id: 'bar', foo: 'bla' });
       expect(wrapper.find('.bar').length).to.equal(1);
     });
 
@@ -179,7 +179,7 @@ describe('shallow', () => {
           );
         }
       }
-      const nextProps = { id: "bar", foo: "bla"};
+      const nextProps = { id: 'bar', foo: 'bla' };
       const wrapper = shallow(<Foo id="foo" />);
       expect(spy.calledOnce).to.be.false;
       wrapper.setProps(nextProps);
@@ -248,12 +248,12 @@ describe('shallow', () => {
         render() {
           return (
             <div className={this.state.id}/>
-          )
+          );
         }
       }
       const wrapper = shallow(<Foo />);
       expect(wrapper.find('.foo').length).to.equal(1);
-      wrapper.setState({ id: "bar" });
+      wrapper.setState({ id: 'bar' });
       expect(wrapper.find('.bar').length).to.equal(1);
     });
   });
@@ -261,17 +261,17 @@ describe('shallow', () => {
   describe('.is(selector)', () => {
     it('should return true when selector matches current element', () => {
       const wrapper = shallow(<div className="foo bar baz" />);
-      expect(wrapper.is(".foo")).to.be.true;
+      expect(wrapper.is('.foo')).to.be.true;
     });
 
     it('should allow for compound selectors', () => {
       const wrapper = shallow(<div className="foo bar baz" />);
-      expect(wrapper.is(".foo.bar")).to.be.true;
+      expect(wrapper.is('.foo.bar')).to.be.true;
     });
 
     it('should return false when selector does not match', () => {
       const wrapper = shallow(<div className="bar baz" />);
-      expect(wrapper.is(".foo")).to.be.false;
+      expect(wrapper.is('.foo')).to.be.false;
     });
   });
 
@@ -347,7 +347,7 @@ describe('shallow', () => {
       expect(baz.length).to.equal(1);
       expect(baz.hasClass('baz')).to.be.true;
     });
-    
+
     it('should call the predicate with the node as the first argument', () => {
       const wrapper = shallow(
         <div>
@@ -360,7 +360,7 @@ describe('shallow', () => {
       const stub = sinon.stub();
       stub.returns(true);
       const spy = sinon.spy(stub);
-      const baz = wrapper.find('.foo').filterWhere(spy);
+      wrapper.find('.foo').filterWhere(spy);
       expect(spy.callCount).to.equal(3);
       expect(spy.args[0][0]).to.equal(wrapper.find('.bar').node);
       expect(spy.args[1][0]).to.equal(wrapper.find('.baz').node);
@@ -398,9 +398,8 @@ describe('shallow', () => {
         <Foo items={[
           <i key={1}>abc</i>,
           <i key={2}>def</i>,
-          <i key={3}>hij</i>
-          ]}
-        />
+          <i key={3}>hij</i>,
+        ]} />
       );
     });
 
@@ -428,15 +427,15 @@ describe('shallow', () => {
     it('should return the props object', () => {
       const fn = ()=>{};
       const wrapper = shallow(
-        <div id="fooId"  className="bax" onClick={fn} >
+        <div id="fooId" className="bax" onClick={fn} >
           <div className="baz" />
           <div className="foo" />
         </div>
       );
 
-      expect(wrapper.props().className).to.equal("bax");
+      expect(wrapper.props().className).to.equal('bax');
       expect(wrapper.props().onClick).to.equal(fn);
-      expect(wrapper.props().id).to.equal("fooId");
+      expect(wrapper.props().id).to.equal('fooId');
 
     });
 
@@ -450,7 +449,7 @@ describe('shallow', () => {
       );
 
       expect(wrapper.find('.baz').props().onClick).to.equal(fn);
-      expect(wrapper.find('.foo').props().id).to.equal("fooId");
+      expect(wrapper.find('.foo').props().id).to.equal('fooId');
     });
   });
 
@@ -460,9 +459,9 @@ describe('shallow', () => {
       class Foo extends React.Component {
         constructor(props) {
           super(props);
-          this.state = { foo: 'foo' }
+          this.state = { foo: 'foo' };
         }
-        render() { return <div />}
+        render() { return <div />; }
       }
       const wrapper = shallow(<Foo />);
       expect(wrapper.state()).to.eql({ foo: 'foo' });
@@ -472,9 +471,9 @@ describe('shallow', () => {
       class Foo extends React.Component {
         constructor(props) {
           super(props);
-          this.state = { foo: 'foo' }
+          this.state = { foo: 'foo' };
         }
-        render() { return <div />}
+        render() { return <div />; }
       }
       const wrapper = shallow(<Foo />);
       wrapper.setState({ foo: 'bar' });
@@ -485,9 +484,9 @@ describe('shallow', () => {
       class Foo extends React.Component {
         constructor(props) {
           super(props);
-          this.state = { foo: 'foo' }
+          this.state = { foo: 'foo' };
         }
-        render() { return <div />}
+        render() { return <div />; }
       }
       const wrapper = shallow(<Foo />);
       expect(wrapper.state('foo')).to.equal('foo');
@@ -499,7 +498,7 @@ describe('shallow', () => {
       const wrapper = shallow(<div />);
       expect(wrapper.children().length).to.equal(0);
     });
-    
+
     it('should return the children nodes of the root', () => {
       const wrapper = shallow(
         <div>
@@ -509,9 +508,9 @@ describe('shallow', () => {
         </div>
       );
       expect(wrapper.children().length).to.equal(3);
-      expect(wrapper.children().get(0).hasClass("foo")).to.be.true;
-      expect(wrapper.children().get(1).hasClass("bar")).to.be.true;
-      expect(wrapper.children().get(2).hasClass("baz")).to.be.true;
+      expect(wrapper.children().get(0).hasClass('foo')).to.be.true;
+      expect(wrapper.children().get(1).hasClass('bar')).to.be.true;
+      expect(wrapper.children().get(2).hasClass('baz')).to.be.true;
     });
 
     it('should not return any of the children of children', () => {
@@ -524,8 +523,8 @@ describe('shallow', () => {
         </div>
       );
       expect(wrapper.children().length).to.equal(2);
-      expect(wrapper.children().get(0).hasClass("foo")).to.be.true;
-      expect(wrapper.children().get(1).hasClass("baz")).to.be.true;
+      expect(wrapper.children().get(0).hasClass('foo')).to.be.true;
+      expect(wrapper.children().get(1).hasClass('baz')).to.be.true;
     });
 
     it('should handle mixed children with and without arrays', () => {
@@ -546,9 +545,9 @@ describe('shallow', () => {
         ]} />
       );
       expect(wrapper.children().length).to.equal(3);
-      expect(wrapper.children().get(0).hasClass("foo")).to.be.true;
-      expect(wrapper.children().get(1).hasClass("bar")).to.be.true;
-      expect(wrapper.children().get(2).hasClass("baz")).to.be.true;
+      expect(wrapper.children().get(0).hasClass('foo')).to.be.true;
+      expect(wrapper.children().get(1).hasClass('bar')).to.be.true;
+      expect(wrapper.children().get(2).hasClass('baz')).to.be.true;
     });
   });
 
@@ -725,9 +724,9 @@ describe('shallow', () => {
       const result = wrapper.find('.foo').map(w => w.props().className);
 
       expect(result).to.eql([
-        "foo bax",
-        "foo bar",
-        "foo baz"
+        'foo bax',
+        'foo bar',
+        'foo baz',
       ]);
     });
   });

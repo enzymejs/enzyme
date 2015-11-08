@@ -6,8 +6,10 @@
   "scripts": {
     "prepublish": "npm run build",
     "build": "babel src --out-dir build && npm run docs",
-    "test": "mocha --compilers js:babel/register --recursive src/**/__tests__/*.js --watch",
-    "docs": "doxx --source src --target docs --theme cayman --ignore __tests__,Debug.js,MountedTraversal.js,ShallowTraversal.js,Utils.js --title Catalyst"
+    "test": "mocha --compilers js:babel/register --recursive src/**/__tests__/*.js",
+    "test-watch": "mocha --compilers js:babel/register --recursive src/**/__tests__/*.js --watch",
+    "docs": "doxx --source src --target docs --theme cayman --ignore __tests__,Debug.js,MountedTraversal.js,ShallowTraversal.js,Utils.js --title Catalyst",
+    "lint": "eslint src/**"
   },
   "repository": {
     "type": "git",
@@ -31,12 +33,17 @@
   },
   "devDependencies": {
     "babel": "^5.8.21",
+    "babel-eslint": "^4.1.4",
     "chai": "^3.2.0",
+    "coveralls": "^2.11.4",
     "doxx": "^2.1.1",
+    "eslint": "^1.9.0",
+    "eslint-config-airbnb": "^0.1.0",
+    "eslint-plugin-react": "^3.8.0",
     "mocha": "^2.2.5"
   },
   "peerDependencies": {
-    "react": "0.13.x"
+    "react": "0.13.x || 0.14.x"
   },
   "optionalDependencies": {
     "jsdom": "^6.1.0",
