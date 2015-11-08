@@ -112,17 +112,19 @@ export function childrenOfInstInternal(inst) {
   return [];
 }
 
-export function childrenOfInst(node) {
-  let inst = node;
-  // TODO: we could refactor this into a function...
+export function internalInstanceOrComponent(node) {
   if (REACT013) {
-    inst = node;
+    return node;
   } else if (node._reactInternalComponent) {
-    inst = node._reactInternalComponent;
+    return node._reactInternalComponent;
   } else if (node._reactInternalInstance) {
-    inst = node._reactInternalInstance;
+    return node._reactInternalInstance;
   }
-  return childrenOfInstInternal(inst);
+  return node;
+}
+
+export function childrenOfInst(node) {
+  return childrenOfInstInternal(internalInstanceOrComponent(node));
 }
 
 export function pathToNode(node, root) {
@@ -179,11 +181,14 @@ export function buildInstPredicate(selector) {
   }
 }
 
-// called with private inst
+// This function should be called with an "internal instance". Nevertheless, if it is
+// called with a "public instance" instead, the function will call itself with the
+// internal instance and return the proper result.
 function findAllInRenderedTreeInternal(inst, test) {
   if (!inst) {
     return [];
   }
+
   if (!inst.getPublicInstance) {
     const internal = internalInstance(inst);
     return findAllInRenderedTreeInternal(internal, test);
@@ -231,15 +236,8 @@ function findAllInRenderedTreeInternal(inst, test) {
   return ret;
 }
 
-// called with public inst
+// This function could be called with a number of different things technically, so we need to
+// pass the *right* thing to our internal helper.
 export function treeFilter(node, test) {
-  let inst = node;
-  if (REACT013) {
-    inst = node;
-  } else if (node._reactInternalComponent) {
-    inst = node._reactInternalComponent;
-  } else if (node._reactInternalInstance) {
-    inst = node._reactInternalInstance;
-  }
-  return findAllInRenderedTreeInternal(inst, test);
+  return findAllInRenderedTreeInternal(internalInstanceOrComponent(node), test);
 }

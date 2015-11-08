@@ -1,8 +1,8 @@
 /* eslint no-use-before-define:0 */
 import { isEqual } from 'underscore';
-import React from 'react';
 import {
   isDOMComponent,
+  findDOMNode,
 } from './react-compat';
 import { REACT013 } from './version';
 
@@ -40,7 +40,7 @@ export function onPrototype(Component, lifecycle, method) {
 }
 
 export function getNode(node) {
-  return isDOMComponent(node) ? React.findDOMNode(node) : node;
+  return isDOMComponent(node) ? findDOMNode(node) : node;
 }
 
 export function childrenEqual(a, b) {
@@ -61,14 +61,11 @@ export function nodeEqual(a, b) {
   if (a === b) return true;
   if (!a || !b) return false;
   if (a.type !== b.type) return false;
-  let aLength = 0;
-  let bLength = 0;
-  let prop;
   const left = propsOfNode(a);
+  const leftKeys = Object.keys(left);
   const right = propsOfNode(b);
-  for (prop in left) {
-    if (!left.hasOwnProperty(prop)) continue;
-    aLength++;
+  for (let i = 0; i < leftKeys.length; i++) {
+    const prop = leftKeys[i];
     if (!(prop in right)) return false;
     if (prop === 'children') {
       if (!childrenEqual(left.children, right.children)) return false;
@@ -80,11 +77,7 @@ export function nodeEqual(a, b) {
       return false;
     }
   }
-  for (prop in right) {
-    if (!right.hasOwnProperty(prop)) continue;
-    bLength++;
-  }
-  return aLength === bLength;
+  return leftKeys.length === Object.keys(right).length;
 }
 
 // 'click' => 'onClick'

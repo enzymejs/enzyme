@@ -27,6 +27,6 @@ export default class ReactWrapperComponent extends React.Component {
   }
 }
 ReactWrapperComponent.propTypes = {
-  Component: PropTypes.oneOfType(PropTypes.func, PropTypes.string).isRequired,
+  Component: PropTypes.oneOfType([PropTypes.func, PropTypes.string]).isRequired,
   props: PropTypes.object.isRequired,
 };

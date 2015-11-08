@@ -39,7 +39,7 @@ export default class ShallowWrapper {
       this.root = root;
       this.unrendered = null;
       this.renderer = null;
-      if (!(nodes instanceof Array)) {
+      if (!Array.isArray(nodes)) {
         this.node = nodes;
         this.nodes = [nodes];
       } else {
