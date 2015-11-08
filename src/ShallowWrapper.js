@@ -1,9 +1,10 @@
-import React from 'react/addons';
+import React from 'react';
 import { flatten, unique, compact } from 'underscore';
 import {
   nodeEqual,
   propFromEvent,
   withSetStateAllowed,
+  propsOfNode,
 } from './Utils';
 import {
   debugNodes,
@@ -13,13 +14,12 @@ import {
   hasClassName,
   childrenOfNode,
   parentsOfNode,
-  treeForEach,
   treeFilter,
   buildPredicate,
 } from './ShallowTraversal';
-const {
-  createRenderer,
-} = React.addons.TestUtils;
+import {
+  createShallowRenderer,
+} from './react-compat';
 
 /**
  * @class ShallowWrapper
@@ -30,21 +30,23 @@ export default class ShallowWrapper {
     if (!root) {
       this.root = this;
       this.unrendered = nodes;
-      this.renderer = createRenderer();
+      this.renderer = createShallowRenderer();
       this.renderer.render(nodes);
       this.node = this.renderer.getRenderOutput();
       this.nodes = [this.node];
       this.length = 1;
     } else {
-      if (!(nodes instanceof Array)) {
-        nodes = [nodes];
-      }
       this.root = root;
       this.unrendered = null;
       this.renderer = null;
-      this.node = nodes[0];
-      this.nodes = nodes;
-      this.length = nodes.length;
+      if (!Array.isArray(nodes)) {
+        this.node = nodes;
+        this.nodes = [nodes];
+      } else {
+        this.node = nodes[0];
+        this.nodes = nodes;
+      }
+      this.length = this.nodes.length;
     }
   }
 
@@ -75,7 +77,7 @@ export default class ShallowWrapper {
    */
   update() {
     if (this.root !== this) {
-      throw new Error("ShallowWrapper::update() can only be called on the root");
+      throw new Error('ShallowWrapper::update() can only be called on the root');
     }
     this.single(() => {
       this.node = this.renderer.getRenderOutput();
@@ -99,7 +101,7 @@ export default class ShallowWrapper {
    */
   setProps(props) {
     if (this.root !== this) {
-      throw new Error("ShallowWrapper::setProps() can only be called on the root");
+      throw new Error('ShallowWrapper::setProps() can only be called on the root');
     }
     this.single(() => {
       withSetStateAllowed(() => {
@@ -124,7 +126,7 @@ export default class ShallowWrapper {
    */
   setState(state) {
     if (this.root !== this) {
-      throw new Error("ShallowWrapper::setState() can only be called on the root");
+      throw new Error('ShallowWrapper::setState() can only be called on the root');
     }
     this.single(() => {
       withSetStateAllowed(() => {
@@ -252,7 +254,7 @@ export default class ShallowWrapper {
    * @returns {Object}
    */
   props() {
-    return this.single(n => n && n._store && n._store.props || {});
+    return this.single(propsOfNode);
   }
 
   /**
@@ -266,14 +268,13 @@ export default class ShallowWrapper {
    */
   state(name) {
     if (this.root !== this) {
-      throw new Error("ShallowWrapper::state() can only be called on the root");
+      throw new Error('ShallowWrapper::state() can only be called on the root');
     }
-    const _state = this.single((n) => this.instance().state);
+    const _state = this.single(() => this.instance().state);
     if (name !== undefined) {
       return _state[name];
-    } else {
-      return _state;
     }
+    return _state;
   }
 
   /**
@@ -347,9 +348,9 @@ export default class ShallowWrapper {
    */
   hasClass(className) {
     if (className && className.indexOf('.') !== -1) {
-      console.log(
-        "It looks like you're calling `ShallowWrapper::hasClass()` with a CSS selector. " +
-        "hasClass() expects a class name, not a CSS selector."
+      console.warn(
+        'It looks like you\'re calling `ShallowWrapper::hasClass()` with a CSS selector. ' +
+        'hasClass() expects a class name, not a CSS selector.'
       );
     }
     return this.single(n => hasClassName(n, className));
@@ -468,9 +469,8 @@ export default class ShallowWrapper {
   wrap(node) {
     if (node instanceof ShallowWrapper) {
       return node;
-    } else {
-      return new ShallowWrapper(node, this.root);
     }
+    return new ShallowWrapper(node, this.root);
   }
 
   /**

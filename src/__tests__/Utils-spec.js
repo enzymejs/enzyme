@@ -4,12 +4,6 @@ import sinon from 'sinon';
 import {
   onPrototype,
   getNode,
-  children,
-  hasClassName,
-  treeForEach,
-  treeFilter,
-  single,
-  childrenEqual,
   nodeEqual,
   isSimpleSelector,
   propFromEvent,
@@ -17,7 +11,6 @@ import {
 import {
   describeWithDom,
   mount,
-  shallow,
 } from '../';
 
 describe('Utils', () => {
@@ -36,12 +29,12 @@ describe('Utils', () => {
 
     expect(lifecycleSpy.callCount).to.equal(1);
     expect(lifecycleSpy.args[0][0]).to.equal(Foo.prototype);
-    expect(lifecycleSpy.args[0][1]).to.equal("componentDidUpdate");
+    expect(lifecycleSpy.args[0][1]).to.equal('componentDidUpdate');
 
     expect(methodSpy.callCount).to.equal(2);
     expect(methodSpy.args[0][0]).to.equal(Foo.prototype);
-    expect(methodSpy.args[0][1]).to.equal("a");
-    expect(methodSpy.args[1][1]).to.equal("b");
+    expect(methodSpy.args[0][1]).to.equal('a');
+    expect(methodSpy.args[1][1]).to.equal('b');
 
   });
 
@@ -54,7 +47,7 @@ describe('Utils', () => {
 
     it('should return the component when a component is given', () => {
       class Foo extends React.Component {
-        render() { return <div /> }
+        render() { return <div />; }
       }
       const foo = mount(<Foo />).node;
       expect(getNode(foo)).to.equal(foo);
@@ -170,11 +163,11 @@ describe('Utils', () => {
   describe('iuSimpleSelector', () => {
 
     describe('prohibited selectors', () => {
-      var isComplex = function(selector) {
+      function isComplex(selector) {
         it(selector, () => {
           expect(isSimpleSelector(selector)).to.be.false;
         });
-      };
+      }
 
       isComplex('.foo .bar');
       isComplex('input[name="foo"]');
@@ -186,11 +179,11 @@ describe('Utils', () => {
     });
 
     describe('allowed selectors', () => {
-      var isSimple = function(selector) {
+      function isSimple(selector) {
         it(selector, () => {
           expect(isSimpleSelector(selector)).to.be.true;
         });
-      };
+      }
 
       isSimple('.foo');
       isSimple('.foo-and-foo');

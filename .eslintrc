@@ -1,0 +1,12 @@
+{
+  "extends": "airbnb",
+  "env": {
+    "node": true,
+    "mocha": true
+  },
+  "rules": {
+    "id-length": 0,
+    "new-cap": 0,
+    "no-console": 0
+  }
+}

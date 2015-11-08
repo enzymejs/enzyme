@@ -1,31 +1,23 @@
-import React from 'react/addons';
+import React from 'react';
 import {
-  nodeEqual,
+  propsOfNode,
   isSimpleSelector,
   splitSelector,
   selectorError,
   isCompoundSelector,
   AND,
 } from './Utils';
-const {
-  findDOMNode,
-} = React;
-const {
-  isDOMComponent,
-  isCompositeComponentWithType,
-  findAllInRenderedTree,
-} = React.addons.TestUtils;
 
 export function childrenOfNode(node) {
   if (!node) return [];
-  const maybeArray = node && node._store && node._store.props && node._store.props.children;
+  const maybeArray = propsOfNode(node).children;
   const result = [];
   React.Children.forEach(maybeArray, child => result.push(child));
   return result;
 }
 
 export function hasClassName(node, className) {
-  var classes = node && node._store && node._store.props && node._store.props.className || '';
+  const classes = propsOfNode(node).className || '';
   return (' ' + classes + ' ').indexOf(' ' + className + ' ') > -1;
 }
 
@@ -35,7 +27,7 @@ export function treeForEach(tree, fn) {
 }
 
 export function treeFilter(tree, fn) {
-  var results = [];
+  const results = [];
   treeForEach(tree, node => {
     if (fn(node)) {
       results.push(node);
@@ -49,8 +41,8 @@ export function pathToNode(node, root) {
   const path = [];
 
   while (queue.length) {
-    let current = queue.pop();
-    let children = childrenOfNode(current);
+    const current = queue.pop();
+    const children = childrenOfNode(current);
 
     if (current === node) return path;
 
@@ -84,29 +76,29 @@ export function nodeHasType(node, type) {
 
 export function buildPredicate(selector) {
   switch (typeof selector) {
-    case "function":
-      // selector is a component constructor
-      return node => node && node.type === selector;
+  case 'function':
+    // selector is a component constructor
+    return node => node && node.type === selector;
 
-    case "string":
-      if (!isSimpleSelector(selector)) {
-        throw selectorError(selector);
-      }
-      if (isCompoundSelector.test(selector)) {
-        return AND(splitSelector(selector).map(buildPredicate));
-      }
-      if (selector[0] === '.') {
-        // selector is a class name
-        return node => hasClassName(node, selector.substr(1));
-      } else if (selector[0] === '#') {
-        // selector is an id name
-        return node => nodeHasId(node, selector.substr(1));
-      } else {
-        // selector is a string. match to DOM tag or constructor displayName
-        return node => nodeHasType(node, selector);
-      }
-    default:
-      throw new TypeError("Expecting a string or Component Constructor");
+  case 'string':
+    if (!isSimpleSelector(selector)) {
+      throw selectorError(selector);
+    }
+    if (isCompoundSelector.test(selector)) {
+      return AND(splitSelector(selector).map(buildPredicate));
+    }
+    if (selector[0] === '.') {
+      // selector is a class name
+      return node => hasClassName(node, selector.substr(1));
+    } else if (selector[0] === '#') {
+      // selector is an id name
+      return node => nodeHasId(node, selector.substr(1));
+    }
+    // selector is a string. match to DOM tag or constructor displayName
+    return node => nodeHasType(node, selector);
+
+  default:
+    throw new TypeError('Expecting a string or Component Constructor');
   }
 }
 
