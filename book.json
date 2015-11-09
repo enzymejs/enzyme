@@ -18,11 +18,11 @@
   ],
   "pluginsConfig": {
     "edit-link": {
-      "base": "https://github.com/airbnb/catalyst/tree/master",
+      "base": "https://git.musta.ch/airbnb/catalyst/tree/master",
       "label": "Edit This Page"
     },
     "github": {
-      "url": "https://github.com/airbnb/catalyst/"
+      "url": "https://git.musta.ch/airbnb/catalyst/"
     }
   }
 }
