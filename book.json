@@ -1,0 +1,28 @@
+{
+  "gitbook": "2.4.3",
+  "title": "Airbnb Catalyst",
+  "description": "React Testing",
+  "structure": {
+    "summary": "docs/README.md",
+    "glossary": "docs/GLOSSARY.md"
+  },
+  "plugins": [
+    "edit-link",
+    "prism",
+    "-highlight",
+    "github",
+    "-search",
+    "codeblock-disable-glossary",
+    "collapsible-menu",
+    "anchors"
+  ],
+  "pluginsConfig": {
+    "edit-link": {
+      "base": "https://github.com/airbnb/catalyst/tree/master",
+      "label": "Edit This Page"
+    },
+    "github": {
+      "url": "https://github.com/airbnb/catalyst/"
+    }
+  }
+}

@@ -30,4 +30,4 @@ node_modules
 .idea
 
 /build
-/docs
+_book
