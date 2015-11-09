@@ -1,0 +1,646 @@
+<!DOCTYPE HTML>
+<html lang="en" >
+    <!-- Start book Airbnb Catalyst -->
+    <head>
+        <!-- head:start -->
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <title>Working with React 0.14.x | Airbnb Catalyst</title>
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 2.4.3">
+        
+        
+        <meta name="HandheldFriendly" content="true"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../../gitbook/images/apple-touch-icon-precomposed-152.png">
+        <link rel="shortcut icon" href="../../gitbook/images/favicon.ico" type="image/x-icon">
+        
+    <link rel="stylesheet" href="../../gitbook/style.css">
+    
+        
+        <link rel="stylesheet" href="../../gitbook/plugins/gitbook-plugin-edit-link/plugin.css">
+        
+    
+        
+        <link rel="stylesheet" href="../../gitbook/plugins/gitbook-plugin-prism/prism.css">
+        
+    
+        
+        <link rel="stylesheet" href="../../gitbook/plugins/gitbook-plugin-anchors/plugin.css">
+        
+    
+    
+
+        
+    
+    
+    <link rel="next" href="../../docs/installation/jsdom.html" />
+    
+    
+    <link rel="prev" href="../../docs/installation/react-013.html" />
+    
+
+        <!-- head:end -->
+    </head>
+    <body>
+        <!-- body:start -->
+        
+    <div class="book" data-level="1.2" data-basepath="../.." data-revision="Mon Nov 09 2015 14:59:06 GMT-0800 (PST)">
+    
+
+<div class="book-summary">
+    <div class="book-search" role="search">
+        <input type="text" placeholder="Type to search" class="form-control" />
+    </div>
+    <nav role="navigation">
+        <ul class="summary">
+            
+            
+            
+            
+
+            
+
+            
+    
+        <li class="chapter " data-level="0" data-path="index.html">
+            
+                
+                    <a href="../../index.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                        Introduction
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="1" data-path="docs/installation/index.html">
+            
+                
+                    <a href="../../docs/installation/index.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>1.</b>
+                        
+                        Installation
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.1" data-path="docs/installation/react-013.html">
+            
+                
+                    <a href="../../docs/installation/react-013.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>1.1.</b>
+                        
+                        Working with React 0.13.x
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.2" data-path="docs/installation/react-014.html">
+            
+                
+                    <a href="../../docs/installation/react-014.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>1.2.</b>
+                        
+                        Working with React 0.14.x
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="docs/installation/jsdom.html">
+            
+                
+                    <a href="../../docs/installation/jsdom.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>1.3.</b>
+                        
+                        Working with jsDom
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="2" data-path="docs/api/index.html">
+            
+                
+                    <a href="../../docs/api/index.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>2.</b>
+                        
+                        API Reference
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="2.1" data-path="docs/api/shallow.html">
+            
+                
+                    <a href="../../docs/api/shallow.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>2.1.</b>
+                        
+                        Shallow Rendering
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="2.1.1" data-path="docs/api/ShallowWrapper/find.html">
+            
+                
+                    <a href="../../docs/api/ShallowWrapper/find.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>2.1.1.</b>
+                        
+                        find(selector)
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.2" data-path="docs/api/ShallowWrapper/findWhere.html">
+            
+                
+                    <a href="../../docs/api/ShallowWrapper/findWhere.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>2.1.2.</b>
+                        
+                        findWhere(predicate)
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.3" data-path="docs/api/ShallowWrapper/filter.html">
+            
+                
+                    <a href="../../docs/api/ShallowWrapper/filter.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>2.1.3.</b>
+                        
+                        filter(selector)
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.4" data-path="docs/api/ShallowWrapper/filterWhere.html">
+            
+                
+                    <a href="../../docs/api/ShallowWrapper/filterWhere.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>2.1.4.</b>
+                        
+                        filterWhere(predicate)
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.5" data-path="docs/api/ShallowWrapper/contains.html">
+            
+                
+                    <a href="../../docs/api/ShallowWrapper/contains.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>2.1.5.</b>
+                        
+                        contains(node)
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.6" data-path="docs/api/ShallowWrapper/hasClass.html">
+            
+            <span><b>2.1.6.</b> hasClass(className)</span>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.7" data-path="docs/api/ShallowWrapper/is.html">
+            
+            <span><b>2.1.7.</b> is(selector)</span>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.8" data-path="docs/api/ShallowWrapper/not.html">
+            
+            <span><b>2.1.8.</b> not(selector)</span>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.9" data-path="docs/api/ShallowWrapper/children.html">
+            
+            <span><b>2.1.9.</b> children()</span>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.10" data-path="docs/api/ShallowWrapper/parents.html">
+            
+            <span><b>2.1.10.</b> parents()</span>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.11" data-path="docs/api/ShallowWrapper/parent.html">
+            
+            <span><b>2.1.11.</b> parent()</span>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.12" data-path="docs/api/ShallowWrapper/closest.html">
+            
+            <span><b>2.1.12.</b> closest(selector)</span>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.13" data-path="docs/api/ShallowWrapper/text.html">
+            
+            <span><b>2.1.13.</b> text()</span>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.14" data-path="docs/api/ShallowWrapper/get.html">
+            
+            <span><b>2.1.14.</b> get(index)</span>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.15" data-path="docs/api/ShallowWrapper/first.html">
+            
+            <span><b>2.1.15.</b> first()</span>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.16" data-path="docs/api/ShallowWrapper/last.html">
+            
+            <span><b>2.1.16.</b> last()</span>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.17" data-path="docs/api/ShallowWrapper/state.html">
+            
+            <span><b>2.1.17.</b> state([key])</span>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.18" data-path="docs/api/ShallowWrapper/props.html">
+            
+            <span><b>2.1.18.</b> props()</span>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.19" data-path="docs/api/ShallowWrapper/prop.html">
+            
+            <span><b>2.1.19.</b> prop([key])</span>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.20" data-path="docs/api/ShallowWrapper/simulate.html">
+            
+                
+                    <a href="../../docs/api/ShallowWrapper/simulate.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>2.1.20.</b>
+                        
+                        simulate(event[, data])
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.21" data-path="docs/api/ShallowWrapper/setState.html">
+            
+            <span><b>2.1.21.</b> setState(nextState)</span>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.22" data-path="docs/api/ShallowWrapper/setProps.html">
+            
+            <span><b>2.1.22.</b> setProps(nextProps)</span>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.23" data-path="docs/api/ShallowWrapper/instance.html">
+            
+            <span><b>2.1.23.</b> instance()</span>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.24" data-path="docs/api/ShallowWrapper/update.html">
+            
+            <span><b>2.1.24.</b> update()</span>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.25" data-path="docs/api/ShallowWrapper/debug.html">
+            
+            <span><b>2.1.25.</b> debug()</span>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="2.2" data-path="docs/api/mount.html">
+            
+                
+                    <a href="../../docs/api/mount.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>2.2.</b>
+                        
+                        Full DOM Rendering
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2.3" data-path="docs/api/render.html">
+            
+                
+                    <a href="../../docs/api/render.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>2.3.</b>
+                        
+                        Static Rendering
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="3" data-path="CHANGELOG.html">
+            
+                
+                    <a href="../../CHANGELOG.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.</b>
+                        
+                        Change Log
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="4" data-path="docs/future.html">
+            
+                
+                    <a href="../../docs/future.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>4.</b>
+                        
+                        Future
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="5" data-path="CONTRIBUTING.html">
+            
+                
+                    <a href="../../CONTRIBUTING.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>5.</b>
+                        
+                        Contributing Guide
+                    </a>
+            
+            
+        </li>
+    
+
+
+            
+            <li class="divider"></li>
+            <li>
+                <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+                    Published with GitBook
+                </a>
+            </li>
+            
+        </ul>
+    </nav>
+</div>
+
+    <div class="book-body">
+        <div class="body-inner">
+            <div class="book-header" role="navigation">
+    <!-- Actions Left -->
+    <a href="#" class="btn pull-left toggle-summary" aria-label="Table of Contents"><i class="fa fa-align-justify"></i></a>
+    <a href="#" class="btn pull-left toggle-search" aria-label="Search"><i class="fa fa-search"></i></a>
+    
+    <a href="../../GLOSSARY.html" class="btn pull-left" aria-label="Glossary"><i class="fa fa-sort-alpha-asc"></i></a>
+    
+    <div id="font-settings-wrapper" class="dropdown pull-left">
+        <a href="#" class="btn toggle-dropdown" aria-label="Font Settings"><i class="fa fa-font"></i>
+        </a>
+        <div class="dropdown-menu font-settings">
+    <div class="dropdown-caret">
+        <span class="caret-outer"></span>
+        <span class="caret-inner"></span>
+    </div>
+
+    <div class="buttons">
+        <button type="button" id="reduce-font-size" class="button size-2">A</button>
+        <button type="button" id="enlarge-font-size" class="button size-2">A</button>
+    </div>
+
+    <div class="buttons font-family-list">
+        <button type="button" data-font="0" class="button">Serif</button>
+        <button type="button" data-font="1" class="button">Sans</button>
+    </div>
+
+    <div class="buttons color-theme-list">
+        <button type="button" id="color-theme-preview-0" class="button size-3" data-theme="0">White</button>
+        <button type="button" id="color-theme-preview-1" class="button size-3" data-theme="1">Sepia</button>
+        <button type="button" id="color-theme-preview-2" class="button size-3" data-theme="2">Night</button>
+    </div>
+</div>
+
+    </div>
+
+    <!-- Actions Right -->
+    
+    <div class="dropdown pull-right">
+        <a href="#" class="btn toggle-dropdown" aria-label="Share"><i class="fa fa-share-alt"></i>
+        </a>
+        <div class="dropdown-menu font-settings dropdown-left">
+            <div class="dropdown-caret">
+                <span class="caret-outer"></span>
+                <span class="caret-inner"></span>
+            </div>
+            <div class="buttons">
+                <button type="button" data-sharing="twitter" class="button">
+                    Share on Twitter
+                </button>
+                <button type="button" data-sharing="google-plus" class="button">
+                    Share on Google
+                </button>
+                <button type="button" data-sharing="facebook" class="button">
+                    Share on Facebook
+                </button>
+                <button type="button" data-sharing="weibo" class="button">
+                    Share on Weibo
+                </button>
+                <button type="button" data-sharing="instapaper" class="button">
+                    Share on Instapaper
+                </button>
+            </div>
+        </div>
+    </div>
+    
+
+    
+    <a href="#" target="_blank" class="btn pull-right google-plus-sharing-link sharing-link" data-sharing="google-plus" aria-label="Google"><i class="fa fa-google-plus"></i></a>
+    
+    
+    <a href="#" target="_blank" class="btn pull-right facebook-sharing-link sharing-link" data-sharing="facebook" aria-label="Facebook"><i class="fa fa-facebook"></i></a>
+    
+    
+    <a href="#" target="_blank" class="btn pull-right twitter-sharing-link sharing-link" data-sharing="twitter" aria-label="Twitter"><i class="fa fa-twitter"></i></a>
+    
+    
+    
+
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="../../" >Airbnb Catalyst</a>
+    </h1>
+</div>
+
+            <div class="page-wrapper" tabindex="-1" role="main">
+                <div class="page-inner">
+                
+                
+                    <section class="normal" id="section-">
+                    
+                        <a id="edit-link" href="https://git.musta.ch/airbnb/catalyst/tree/master/docs/installation/react-014.md" class="btn fa fa-edit pull-left">&#xA0;&#xA0;Edit This Page</a><h1 id="working-with-react-0-14"><a name="working-with-react-0-14" class="plugin-anchor" href="#working-with-react-0-14"><span class="fa fa-link"></span></a>Working with React 0.14</h1>
+<pre><code class="lang-bash">npm i react@<span class="token number">0.14</span> react<span class="token operator">-</span>dom@<span class="token number">0.14</span> react<span class="token operator">-</span>addons<span class="token operator">-</span><span class="token function">test</span><span class="token operator">-</span>utils@<span class="token number">0.14</span> airbnb<span class="token operator">-</span>catalyst
+</code></pre>
+
+                    
+                    </section>
+                
+                
+                </div>
+            </div>
+        </div>
+
+        
+        <a href="../../docs/installation/react-013.html" class="navigation navigation-prev " aria-label="Previous page: Working with React 0.13.x"><i class="fa fa-angle-left"></i></a>
+        
+        
+        <a href="../../docs/installation/jsdom.html" class="navigation navigation-next " aria-label="Next page: Working with jsDom"><i class="fa fa-angle-right"></i></a>
+        
+    </div>
+</div>
+
+        
+<script src="../../gitbook/app.js"></script>
+
+    
+    <script src="../../gitbook/plugins/gitbook-plugin-edit-link/plugin.js"></script>
+    
+
+    
+    <script src="../../gitbook/plugins/gitbook-plugin-github/plugin.js"></script>
+    
+
+    
+    <script src="../../gitbook/plugins/gitbook-plugin-codeblock-disable-glossary/disable-glossary.js"></script>
+    
+
+    
+    <script src="../../gitbook/plugins/gitbook-plugin-collapsible-menu/plugin.js"></script>
+    
+
+<script>
+require(["gitbook"], function(gitbook) {
+    var config = {"fontSettings":{"theme":null,"family":"sans","size":2},"edit-link":{"base":"https://git.musta.ch/airbnb/catalyst/tree/master","label":"Edit This Page"},"github":{"url":"https://git.musta.ch/airbnb/catalyst/"}};
+    gitbook.start(config);
+});
+</script>
+
+        <!-- body:end -->
+    </body>
+    <!-- End of book Airbnb Catalyst -->
+</html>

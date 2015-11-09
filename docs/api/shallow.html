@@ -1,0 +1,736 @@
+<!DOCTYPE HTML>
+<html lang="en" >
+    <!-- Start book Airbnb Catalyst -->
+    <head>
+        <!-- head:start -->
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <title>Shallow Rendering | Airbnb Catalyst</title>
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 2.4.3">
+        
+        
+        <meta name="HandheldFriendly" content="true"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../../gitbook/images/apple-touch-icon-precomposed-152.png">
+        <link rel="shortcut icon" href="../../gitbook/images/favicon.ico" type="image/x-icon">
+        
+    <link rel="stylesheet" href="../../gitbook/style.css">
+    
+        
+        <link rel="stylesheet" href="../../gitbook/plugins/gitbook-plugin-edit-link/plugin.css">
+        
+    
+        
+        <link rel="stylesheet" href="../../gitbook/plugins/gitbook-plugin-prism/prism.css">
+        
+    
+        
+        <link rel="stylesheet" href="../../gitbook/plugins/gitbook-plugin-anchors/plugin.css">
+        
+    
+    
+
+        
+    
+    
+    <link rel="next" href="../../docs/api/ShallowWrapper/find.html" />
+    
+    
+    <link rel="prev" href="../../docs/api/index.html" />
+    
+
+        <!-- head:end -->
+    </head>
+    <body>
+        <!-- body:start -->
+        
+    <div class="book" data-level="2.1" data-basepath="../.." data-revision="Mon Nov 09 2015 14:59:06 GMT-0800 (PST)">
+    
+
+<div class="book-summary">
+    <div class="book-search" role="search">
+        <input type="text" placeholder="Type to search" class="form-control" />
+    </div>
+    <nav role="navigation">
+        <ul class="summary">
+            
+            
+            
+            
+
+            
+
+            
+    
+        <li class="chapter " data-level="0" data-path="index.html">
+            
+                
+                    <a href="../../index.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                        Introduction
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="1" data-path="docs/installation/index.html">
+            
+                
+                    <a href="../../docs/installation/index.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>1.</b>
+                        
+                        Installation
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.1" data-path="docs/installation/react-013.html">
+            
+                
+                    <a href="../../docs/installation/react-013.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>1.1.</b>
+                        
+                        Working with React 0.13.x
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="docs/installation/react-014.html">
+            
+                
+                    <a href="../../docs/installation/react-014.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>1.2.</b>
+                        
+                        Working with React 0.14.x
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="docs/installation/jsdom.html">
+            
+                
+                    <a href="../../docs/installation/jsdom.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>1.3.</b>
+                        
+                        Working with jsDom
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="2" data-path="docs/api/index.html">
+            
+                
+                    <a href="../../docs/api/index.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>2.</b>
+                        
+                        API Reference
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter active" data-level="2.1" data-path="docs/api/shallow.html">
+            
+                
+                    <a href="../../docs/api/shallow.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>2.1.</b>
+                        
+                        Shallow Rendering
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="2.1.1" data-path="docs/api/ShallowWrapper/find.html">
+            
+                
+                    <a href="../../docs/api/ShallowWrapper/find.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>2.1.1.</b>
+                        
+                        find(selector)
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.2" data-path="docs/api/ShallowWrapper/findWhere.html">
+            
+                
+                    <a href="../../docs/api/ShallowWrapper/findWhere.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>2.1.2.</b>
+                        
+                        findWhere(predicate)
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.3" data-path="docs/api/ShallowWrapper/filter.html">
+            
+                
+                    <a href="../../docs/api/ShallowWrapper/filter.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>2.1.3.</b>
+                        
+                        filter(selector)
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.4" data-path="docs/api/ShallowWrapper/filterWhere.html">
+            
+                
+                    <a href="../../docs/api/ShallowWrapper/filterWhere.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>2.1.4.</b>
+                        
+                        filterWhere(predicate)
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.5" data-path="docs/api/ShallowWrapper/contains.html">
+            
+                
+                    <a href="../../docs/api/ShallowWrapper/contains.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>2.1.5.</b>
+                        
+                        contains(node)
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.6" data-path="docs/api/ShallowWrapper/hasClass.html">
+            
+            <span><b>2.1.6.</b> hasClass(className)</span>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.7" data-path="docs/api/ShallowWrapper/is.html">
+            
+            <span><b>2.1.7.</b> is(selector)</span>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.8" data-path="docs/api/ShallowWrapper/not.html">
+            
+            <span><b>2.1.8.</b> not(selector)</span>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.9" data-path="docs/api/ShallowWrapper/children.html">
+            
+            <span><b>2.1.9.</b> children()</span>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.10" data-path="docs/api/ShallowWrapper/parents.html">
+            
+            <span><b>2.1.10.</b> parents()</span>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.11" data-path="docs/api/ShallowWrapper/parent.html">
+            
+            <span><b>2.1.11.</b> parent()</span>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.12" data-path="docs/api/ShallowWrapper/closest.html">
+            
+            <span><b>2.1.12.</b> closest(selector)</span>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.13" data-path="docs/api/ShallowWrapper/text.html">
+            
+            <span><b>2.1.13.</b> text()</span>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.14" data-path="docs/api/ShallowWrapper/get.html">
+            
+            <span><b>2.1.14.</b> get(index)</span>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.15" data-path="docs/api/ShallowWrapper/first.html">
+            
+            <span><b>2.1.15.</b> first()</span>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.16" data-path="docs/api/ShallowWrapper/last.html">
+            
+            <span><b>2.1.16.</b> last()</span>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.17" data-path="docs/api/ShallowWrapper/state.html">
+            
+            <span><b>2.1.17.</b> state([key])</span>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.18" data-path="docs/api/ShallowWrapper/props.html">
+            
+            <span><b>2.1.18.</b> props()</span>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.19" data-path="docs/api/ShallowWrapper/prop.html">
+            
+            <span><b>2.1.19.</b> prop([key])</span>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.20" data-path="docs/api/ShallowWrapper/simulate.html">
+            
+                
+                    <a href="../../docs/api/ShallowWrapper/simulate.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>2.1.20.</b>
+                        
+                        simulate(event[, data])
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.21" data-path="docs/api/ShallowWrapper/setState.html">
+            
+            <span><b>2.1.21.</b> setState(nextState)</span>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.22" data-path="docs/api/ShallowWrapper/setProps.html">
+            
+            <span><b>2.1.22.</b> setProps(nextProps)</span>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.23" data-path="docs/api/ShallowWrapper/instance.html">
+            
+            <span><b>2.1.23.</b> instance()</span>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.24" data-path="docs/api/ShallowWrapper/update.html">
+            
+            <span><b>2.1.24.</b> update()</span>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2.1.25" data-path="docs/api/ShallowWrapper/debug.html">
+            
+            <span><b>2.1.25.</b> debug()</span>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="2.2" data-path="docs/api/mount.html">
+            
+                
+                    <a href="../../docs/api/mount.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>2.2.</b>
+                        
+                        Full DOM Rendering
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2.3" data-path="docs/api/render.html">
+            
+                
+                    <a href="../../docs/api/render.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>2.3.</b>
+                        
+                        Static Rendering
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="3" data-path="CHANGELOG.html">
+            
+                
+                    <a href="../../CHANGELOG.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.</b>
+                        
+                        Change Log
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="4" data-path="docs/future.html">
+            
+                
+                    <a href="../../docs/future.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>4.</b>
+                        
+                        Future
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="5" data-path="CONTRIBUTING.html">
+            
+                
+                    <a href="../../CONTRIBUTING.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>5.</b>
+                        
+                        Contributing Guide
+                    </a>
+            
+            
+        </li>
+    
+
+
+            
+            <li class="divider"></li>
+            <li>
+                <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+                    Published with GitBook
+                </a>
+            </li>
+            
+        </ul>
+    </nav>
+</div>
+
+    <div class="book-body">
+        <div class="body-inner">
+            <div class="book-header" role="navigation">
+    <!-- Actions Left -->
+    <a href="#" class="btn pull-left toggle-summary" aria-label="Table of Contents"><i class="fa fa-align-justify"></i></a>
+    <a href="#" class="btn pull-left toggle-search" aria-label="Search"><i class="fa fa-search"></i></a>
+    
+    <a href="../../GLOSSARY.html" class="btn pull-left" aria-label="Glossary"><i class="fa fa-sort-alpha-asc"></i></a>
+    
+    <div id="font-settings-wrapper" class="dropdown pull-left">
+        <a href="#" class="btn toggle-dropdown" aria-label="Font Settings"><i class="fa fa-font"></i>
+        </a>
+        <div class="dropdown-menu font-settings">
+    <div class="dropdown-caret">
+        <span class="caret-outer"></span>
+        <span class="caret-inner"></span>
+    </div>
+
+    <div class="buttons">
+        <button type="button" id="reduce-font-size" class="button size-2">A</button>
+        <button type="button" id="enlarge-font-size" class="button size-2">A</button>
+    </div>
+
+    <div class="buttons font-family-list">
+        <button type="button" data-font="0" class="button">Serif</button>
+        <button type="button" data-font="1" class="button">Sans</button>
+    </div>
+
+    <div class="buttons color-theme-list">
+        <button type="button" id="color-theme-preview-0" class="button size-3" data-theme="0">White</button>
+        <button type="button" id="color-theme-preview-1" class="button size-3" data-theme="1">Sepia</button>
+        <button type="button" id="color-theme-preview-2" class="button size-3" data-theme="2">Night</button>
+    </div>
+</div>
+
+    </div>
+
+    <!-- Actions Right -->
+    
+    <div class="dropdown pull-right">
+        <a href="#" class="btn toggle-dropdown" aria-label="Share"><i class="fa fa-share-alt"></i>
+        </a>
+        <div class="dropdown-menu font-settings dropdown-left">
+            <div class="dropdown-caret">
+                <span class="caret-outer"></span>
+                <span class="caret-inner"></span>
+            </div>
+            <div class="buttons">
+                <button type="button" data-sharing="twitter" class="button">
+                    Share on Twitter
+                </button>
+                <button type="button" data-sharing="google-plus" class="button">
+                    Share on Google
+                </button>
+                <button type="button" data-sharing="facebook" class="button">
+                    Share on Facebook
+                </button>
+                <button type="button" data-sharing="weibo" class="button">
+                    Share on Weibo
+                </button>
+                <button type="button" data-sharing="instapaper" class="button">
+                    Share on Instapaper
+                </button>
+            </div>
+        </div>
+    </div>
+    
+
+    
+    <a href="#" target="_blank" class="btn pull-right google-plus-sharing-link sharing-link" data-sharing="google-plus" aria-label="Google"><i class="fa fa-google-plus"></i></a>
+    
+    
+    <a href="#" target="_blank" class="btn pull-right facebook-sharing-link sharing-link" data-sharing="facebook" aria-label="Facebook"><i class="fa fa-facebook"></i></a>
+    
+    
+    <a href="#" target="_blank" class="btn pull-right twitter-sharing-link sharing-link" data-sharing="twitter" aria-label="Twitter"><i class="fa fa-twitter"></i></a>
+    
+    
+    
+
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="../../" >Airbnb Catalyst</a>
+    </h1>
+</div>
+
+            <div class="page-wrapper" tabindex="-1" role="main">
+                <div class="page-inner">
+                
+                
+                    <section class="normal" id="section-">
+                    
+                        <a id="edit-link" href="https://git.musta.ch/airbnb/catalyst/tree/master/docs/api/shallow.md" class="btn fa fa-edit pull-left">&#xA0;&#xA0;Edit This Page</a><h1 id="shallow-rendering-api"><a name="shallow-rendering-api" class="plugin-anchor" href="#shallow-rendering-api"><span class="fa fa-link"></span></a>Shallow Rendering API</h1>
+<p>Shallow rendering is useful to constrain yourself to testing a component as a unit, and to ensure
+that your tests aren&apos;t indirectly asserting on behavior of child components.</p>
+<pre><code class="lang-jsx"><span class="token keyword">import</span> <span class="token punctuation">{</span> shallow <span class="token punctuation">}</span> from <span class="token string">&apos;airbnb-catalyst&apos;</span><span class="token punctuation">;</span>
+
+<span class="token function">describe</span><span class="token punctuation">(</span>&apos;<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>MyComponent</span> <span class="token punctuation">/&gt;</span></span>&apos;<span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">&gt;</span> <span class="token punctuation">{</span>
+
+  <span class="token function">it</span><span class="token punctuation">(</span>&apos;should render three <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>Foo</span> <span class="token punctuation">/&gt;</span></span> components&apos;<span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">&gt;</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> wrapper <span class="token operator">=</span> <span class="token function">shallow</span><span class="token punctuation">(</span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>MyComponent</span> <span class="token punctuation">/&gt;</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">expect</span><span class="token punctuation">(</span>wrapper<span class="token punctuation">.</span><span class="token function">find</span><span class="token punctuation">(</span>Foo<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span>to<span class="token punctuation">.</span>have<span class="token punctuation">.</span><span class="token function">length</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token function">it</span><span class="token punctuation">(</span><span class="token string">&apos;should render an `.icon-star`&apos;</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">&gt;</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> wrapper <span class="token operator">=</span> <span class="token function">shallow</span><span class="token punctuation">(</span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>MyComponent</span> <span class="token punctuation">/&gt;</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">expect</span><span class="token punctuation">(</span>wrapper<span class="token punctuation">.</span><span class="token function">find</span><span class="token punctuation">(</span><span class="token string">&apos;.icon-star&apos;</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span>to<span class="token punctuation">.</span>have<span class="token punctuation">.</span><span class="token function">length</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token function">it</span><span class="token punctuation">(</span><span class="token string">&apos;should render children when passed in&apos;</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">&gt;</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> wrapper <span class="token operator">=</span> <span class="token function">shallow</span><span class="token punctuation">(</span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>MyComponent</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">className</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>unique<span class="token punctuation">&quot;</span></span> <span class="token punctuation">/&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>MyComponent</span><span class="token punctuation">&gt;</span></span>
+    <span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">expect</span><span class="token punctuation">(</span>wrapper<span class="token punctuation">.</span><span class="token function">contains</span><span class="token punctuation">(</span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">className</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">&quot;</span>unique<span class="token punctuation">&quot;</span></span> <span class="token punctuation">/&gt;</span></span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span>to<span class="token punctuation">.</span>be<span class="token punctuation">.</span><span class="token keyword">true</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token function">it</span><span class="token punctuation">(</span><span class="token string">&apos;simulates click events&apos;</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">&gt;</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> onButtonClick <span class="token operator">=</span> sinon<span class="token punctuation">.</span><span class="token function">spy</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> wrapper <span class="token operator">=</span> <span class="token function">shallow</span><span class="token punctuation">(</span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>Foo</span> <span class="token attr-name">onButtonClick</span><span class="token script language-javascript"><span class="token punctuation">=</span><span class="token punctuation">{</span>onButtonClick<span class="token punctuation">}</span></span> <span class="token punctuation">/&gt;</span></span>
+    <span class="token punctuation">)</span><span class="token punctuation">;</span>
+    wrapper<span class="token punctuation">.</span><span class="token function">find</span><span class="token punctuation">(</span><span class="token string">&apos;button&apos;</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">click</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">expect</span><span class="token punctuation">(</span>onButtonClick<span class="token punctuation">.</span>calledOnce<span class="token punctuation">)</span><span class="token punctuation">.</span>to<span class="token punctuation">.</span>be<span class="token punctuation">.</span><span class="token keyword">true</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<h2 id="shallowwrapper-api"><a name="shallowwrapper-api" class="plugin-anchor" href="#shallowwrapper-api"><span class="fa fa-link"></span></a>ShallowWrapper API</h2>
+<h4 id="-find-selector-shallowwrapper-shallowwrapper-find-md"><a name="-find-selector-shallowwrapper-shallowwrapper-find-md" class="plugin-anchor" href="#-find-selector-shallowwrapper-shallowwrapper-find-md"><span class="fa fa-link"></span></a><a href="ShallowWrapper/find.html"><code>.find(selector) =&gt; ShallowWrapper</code></a></h4>
+<p>Find every node in the render tree that matches the provided <a href="../../GLOSSARY.html#selector" class="glossary-term" title="A Selector in catalyst is either 1) a valid CSS selector, 2) a react Component constructor function,
+or 3) the `displayName` of a component, where the first letter of the name is a capital letter.">selector</a>.</p>
+<h4 id="-findwhere-predicate-shallowwrapper-docs-api-shallowwrapper-findwhere-md"><a name="-findwhere-predicate-shallowwrapper-docs-api-shallowwrapper-findwhere-md" class="plugin-anchor" href="#-findwhere-predicate-shallowwrapper-docs-api-shallowwrapper-findwhere-md"><span class="fa fa-link"></span></a><a href="docs/api/ShallowWrapper/findWhere.md"><code>.findWhere(predicate) =&gt; ShallowWrapper</code></a></h4>
+<p>Find every node in the render tree that return true for the provided <a href="../../GLOSSARY.html#predicate" class="glossary-term" title="A function that returns true or false">predicate</a> function.</p>
+<h4 id="-filter-selector-shallowwrapper-docs-api-shallowwrapper-filter-md"><a name="-filter-selector-shallowwrapper-docs-api-shallowwrapper-filter-md" class="plugin-anchor" href="#-filter-selector-shallowwrapper-docs-api-shallowwrapper-filter-md"><span class="fa fa-link"></span></a><a href="docs/api/ShallowWrapper/filter.md"><code>.filter(selector) =&gt; ShallowWrapper</code></a></h4>
+<p>Remove nodes in the current <a href="../../GLOSSARY.html#wrapper" class="glossary-term" title="A wrapper refers to the catalyst wrapper class that provides the API.">wrapper</a> that do not match the provided <a href="../../GLOSSARY.html#selector" class="glossary-term" title="A Selector in catalyst is either 1) a valid CSS selector, 2) a react Component constructor function,
+or 3) the `displayName` of a component, where the first letter of the name is a capital letter.">selector</a>.</p>
+<h4 id="-filterwhere-predicate-shallowwrapper-docs-api-shallowwrapper-filterwhere-md"><a name="-filterwhere-predicate-shallowwrapper-docs-api-shallowwrapper-filterwhere-md" class="plugin-anchor" href="#-filterwhere-predicate-shallowwrapper-docs-api-shallowwrapper-filterwhere-md"><span class="fa fa-link"></span></a><a href="docs/api/ShallowWrapper/filterWhere.md"><code>.filterWhere(predicate) =&gt; ShallowWrapper</code></a></h4>
+<p>Remove nodes in the current <a href="../../GLOSSARY.html#wrapper" class="glossary-term" title="A wrapper refers to the catalyst wrapper class that provides the API.">wrapper</a> that do not return true for the provided <a href="../../GLOSSARY.html#predicate" class="glossary-term" title="A function that returns true or false">predicate</a> function.</p>
+<h4 id="-contains-node-boolean-shallowwrapper-contains-md"><a name="-contains-node-boolean-shallowwrapper-contains-md" class="plugin-anchor" href="#-contains-node-boolean-shallowwrapper-contains-md"><span class="fa fa-link"></span></a><a href="ShallowWrapper/contains.html"><code>.contains(node) =&gt; Boolean</code></a></h4>
+<p>Returns whether or not a given node is somewhere in the render tree.</p>
+<h4 id="-hasclass-classname-boolean-docs-api-shallowwrapper-hasclass-md"><a name="-hasclass-classname-boolean-docs-api-shallowwrapper-hasclass-md" class="plugin-anchor" href="#-hasclass-classname-boolean-docs-api-shallowwrapper-hasclass-md"><span class="fa fa-link"></span></a><a href="docs/api/ShallowWrapper/hasClass.md"><code>.hasClass(className) =&gt; Boolean</code></a></h4>
+<p>Returns whether or not the current root node has the given class name or not.</p>
+<h4 id="-is-selector-boolean-docs-api-shallowwrapper-is-md"><a name="-is-selector-boolean-docs-api-shallowwrapper-is-md" class="plugin-anchor" href="#-is-selector-boolean-docs-api-shallowwrapper-is-md"><span class="fa fa-link"></span></a><a href="docs/api/ShallowWrapper/is.md"><code>.is(selector) =&gt; Boolean</code></a></h4>
+<p>Returns whether or not the current node matches a provided <a href="../../GLOSSARY.html#selector" class="glossary-term" title="A Selector in catalyst is either 1) a valid CSS selector, 2) a react Component constructor function,
+or 3) the `displayName` of a component, where the first letter of the name is a capital letter.">selector</a>.</p>
+<h4 id="-not-selector-shallowwrapper-docs-api-shallowwrapper-not-md"><a name="-not-selector-shallowwrapper-docs-api-shallowwrapper-not-md" class="plugin-anchor" href="#-not-selector-shallowwrapper-docs-api-shallowwrapper-not-md"><span class="fa fa-link"></span></a><a href="docs/api/ShallowWrapper/not.md"><code>.not(selector) =&gt; ShallowWrapper</code></a></h4>
+<p>Remove nodes in the current <a href="../../GLOSSARY.html#wrapper" class="glossary-term" title="A wrapper refers to the catalyst wrapper class that provides the API.">wrapper</a> that match the provided <a href="../../GLOSSARY.html#selector" class="glossary-term" title="A Selector in catalyst is either 1) a valid CSS selector, 2) a react Component constructor function,
+or 3) the `displayName` of a component, where the first letter of the name is a capital letter.">selector</a>. (inverse of <code>.filter()</code>)</p>
+<h4 id="-children-shallowwrapper-docs-api-shallowwrapper-children-md"><a name="-children-shallowwrapper-docs-api-shallowwrapper-children-md" class="plugin-anchor" href="#-children-shallowwrapper-docs-api-shallowwrapper-children-md"><span class="fa fa-link"></span></a><a href="docs/api/ShallowWrapper/children.md"><code>.children() =&gt; ShallowWrapper</code></a></h4>
+<p>Get a <a href="../../GLOSSARY.html#wrapper" class="glossary-term" title="A wrapper refers to the catalyst wrapper class that provides the API.">wrapper</a> with all of the children nodes of the current <a href="../../GLOSSARY.html#wrapper" class="glossary-term" title="A wrapper refers to the catalyst wrapper class that provides the API.">wrapper</a>.</p>
+<h4 id="-parents-shallowwrapper-docs-api-shallowwrapper-parents-md"><a name="-parents-shallowwrapper-docs-api-shallowwrapper-parents-md" class="plugin-anchor" href="#-parents-shallowwrapper-docs-api-shallowwrapper-parents-md"><span class="fa fa-link"></span></a><a href="docs/api/ShallowWrapper/parents.md"><code>.parents() =&gt; ShallowWrapper</code></a></h4>
+<p>Get a <a href="../../GLOSSARY.html#wrapper" class="glossary-term" title="A wrapper refers to the catalyst wrapper class that provides the API.">wrapper</a> with all of the parents (ancestors) of the current node.</p>
+<h4 id="-parent-shallowwrapper-docs-api-shallowwrapper-parent-md"><a name="-parent-shallowwrapper-docs-api-shallowwrapper-parent-md" class="plugin-anchor" href="#-parent-shallowwrapper-docs-api-shallowwrapper-parent-md"><span class="fa fa-link"></span></a><a href="docs/api/ShallowWrapper/parent.md"><code>.parent() =&gt; ShallowWrapper</code></a></h4>
+<p>Get a <a href="../../GLOSSARY.html#wrapper" class="glossary-term" title="A wrapper refers to the catalyst wrapper class that provides the API.">wrapper</a> with the direct parent of the current node.</p>
+<h4 id="-closest-selector-shallowwrapper-docs-api-shallowwrapper-closest-md"><a name="-closest-selector-shallowwrapper-docs-api-shallowwrapper-closest-md" class="plugin-anchor" href="#-closest-selector-shallowwrapper-docs-api-shallowwrapper-closest-md"><span class="fa fa-link"></span></a><a href="docs/api/ShallowWrapper/closest.md"><code>.closest(selector) =&gt; ShallowWrapper</code></a></h4>
+<p>Get a <a href="../../GLOSSARY.html#wrapper" class="glossary-term" title="A wrapper refers to the catalyst wrapper class that provides the API.">wrapper</a> with the first ancestor of the current node to match the provided <a href="../../GLOSSARY.html#selector" class="glossary-term" title="A Selector in catalyst is either 1) a valid CSS selector, 2) a react Component constructor function,
+or 3) the `displayName` of a component, where the first letter of the name is a capital letter.">selector</a>.</p>
+<h4 id="-text-string-docs-api-shallowwrapper-text-md"><a name="-text-string-docs-api-shallowwrapper-text-md" class="plugin-anchor" href="#-text-string-docs-api-shallowwrapper-text-md"><span class="fa fa-link"></span></a><a href="docs/api/ShallowWrapper/text.md"><code>.text() =&gt; String</code></a></h4>
+<p>Returns a string representation of the text nodes in the current render tree.</p>
+<h4 id="-get-index-shallowwrapper-docs-api-shallowwrapper-get-md"><a name="-get-index-shallowwrapper-docs-api-shallowwrapper-get-md" class="plugin-anchor" href="#-get-index-shallowwrapper-docs-api-shallowwrapper-get-md"><span class="fa fa-link"></span></a><a href="docs/api/ShallowWrapper/get.md"><code>.get(index) =&gt; ShallowWrapper</code></a></h4>
+<p>Returns a <a href="../../GLOSSARY.html#wrapper" class="glossary-term" title="A wrapper refers to the catalyst wrapper class that provides the API.">wrapper</a> of the node at the provided index of the current <a href="../../GLOSSARY.html#wrapper" class="glossary-term" title="A wrapper refers to the catalyst wrapper class that provides the API.">wrapper</a>.</p>
+<h4 id="-first-shallowwrapper-docs-api-shallowwrapper-first-md"><a name="-first-shallowwrapper-docs-api-shallowwrapper-first-md" class="plugin-anchor" href="#-first-shallowwrapper-docs-api-shallowwrapper-first-md"><span class="fa fa-link"></span></a><a href="docs/api/ShallowWrapper/first.md"><code>.first() =&gt; ShallowWrapper</code></a></h4>
+<p>Returns a <a href="../../GLOSSARY.html#wrapper" class="glossary-term" title="A wrapper refers to the catalyst wrapper class that provides the API.">wrapper</a> of the first node of the current <a href="../../GLOSSARY.html#wrapper" class="glossary-term" title="A wrapper refers to the catalyst wrapper class that provides the API.">wrapper</a>.</p>
+<h4 id="-last-shallowwrapper-docs-api-shallowwrapper-last-md"><a name="-last-shallowwrapper-docs-api-shallowwrapper-last-md" class="plugin-anchor" href="#-last-shallowwrapper-docs-api-shallowwrapper-last-md"><span class="fa fa-link"></span></a><a href="docs/api/ShallowWrapper/last.md"><code>.last() =&gt; ShallowWrapper</code></a></h4>
+<p>Returns a <a href="../../GLOSSARY.html#wrapper" class="glossary-term" title="A wrapper refers to the catalyst wrapper class that provides the API.">wrapper</a> of the last node of the current <a href="../../GLOSSARY.html#wrapper" class="glossary-term" title="A wrapper refers to the catalyst wrapper class that provides the API.">wrapper</a>.</p>
+<h4 id="-state-key-any-docs-api-shallowwrapper-state-md"><a name="-state-key-any-docs-api-shallowwrapper-state-md" class="plugin-anchor" href="#-state-key-any-docs-api-shallowwrapper-state-md"><span class="fa fa-link"></span></a><a href="docs/api/ShallowWrapper/state.md"><code>.state([key]) =&gt; Any</code></a></h4>
+<p>Returns the state of the root component.</p>
+<h4 id="-props-object-docs-api-shallowwrapper-props-md"><a name="-props-object-docs-api-shallowwrapper-props-md" class="plugin-anchor" href="#-props-object-docs-api-shallowwrapper-props-md"><span class="fa fa-link"></span></a><a href="docs/api/ShallowWrapper/props.md"><code>.props() =&gt; Object</code></a></h4>
+<p>Returns the props of the root component.</p>
+<h4 id="-prop-key-any-docs-api-shallowwrapper-prop-md"><a name="-prop-key-any-docs-api-shallowwrapper-prop-md" class="plugin-anchor" href="#-prop-key-any-docs-api-shallowwrapper-prop-md"><span class="fa fa-link"></span></a><a href="docs/api/ShallowWrapper/prop.md"><code>.prop(key) =&gt; Any</code></a></h4>
+<p>Returns the named prop of the root component.</p>
+<h4 id="-simulate-event-data-shallowwrapper-docs-api-shallowwrapper-simulate-md"><a name="-simulate-event-data-shallowwrapper-docs-api-shallowwrapper-simulate-md" class="plugin-anchor" href="#-simulate-event-data-shallowwrapper-docs-api-shallowwrapper-simulate-md"><span class="fa fa-link"></span></a><a href="docs/api/ShallowWrapper/simulate.md"><code>.simulate(event[, data]) =&gt; ShallowWrapper</code></a></h4>
+<p>Simulates an event on the current node.</p>
+<h4 id="-setstate-nextstate-shallowwrapper-docs-api-shallowwrapper-setstate-md"><a name="-setstate-nextstate-shallowwrapper-docs-api-shallowwrapper-setstate-md" class="plugin-anchor" href="#-setstate-nextstate-shallowwrapper-docs-api-shallowwrapper-setstate-md"><span class="fa fa-link"></span></a><a href="docs/api/ShallowWrapper/setState.md"><code>.setState(nextState) =&gt; ShallowWrapper</code></a></h4>
+<p>Manually sets state of the root component.</p>
+<h4 id="-setprops-nextprops-shallowwrapper-docs-api-shallowwrapper-setprops-md"><a name="-setprops-nextprops-shallowwrapper-docs-api-shallowwrapper-setprops-md" class="plugin-anchor" href="#-setprops-nextprops-shallowwrapper-docs-api-shallowwrapper-setprops-md"><span class="fa fa-link"></span></a><a href="docs/api/ShallowWrapper/setProps.md"><code>.setProps(nextProps) =&gt; ShallowWrapper</code></a></h4>
+<p>Manually sets props of the root component.</p>
+<h4 id="-instance-reactcomponent-docs-api-shallowwrapper-instance-md"><a name="-instance-reactcomponent-docs-api-shallowwrapper-instance-md" class="plugin-anchor" href="#-instance-reactcomponent-docs-api-shallowwrapper-instance-md"><span class="fa fa-link"></span></a><a href="docs/api/ShallowWrapper/instance.md"><code>.instance() =&gt; ReactComponent</code></a></h4>
+<p>Returns the instance of the root component.</p>
+<h4 id="-update-shallowwrapper-docs-api-shallowwrapper-update-md"><a name="-update-shallowwrapper-docs-api-shallowwrapper-update-md" class="plugin-anchor" href="#-update-shallowwrapper-docs-api-shallowwrapper-update-md"><span class="fa fa-link"></span></a><a href="docs/api/ShallowWrapper/update.md"><code>.update() =&gt; ShallowWrapper</code></a></h4>
+<p>Calls <code>.forceUpdate()</code> on the root component instance.</p>
+<h4 id="-debug-string-docs-api-shallowwrapper-debug-md"><a name="-debug-string-docs-api-shallowwrapper-debug-md" class="plugin-anchor" href="#-debug-string-docs-api-shallowwrapper-debug-md"><span class="fa fa-link"></span></a><a href="docs/api/ShallowWrapper/debug.md"><code>.debug() =&gt; String</code></a></h4>
+<p>Returns a string representation of the current shallow render tree for debugging purposes.</p>
+
+                    
+                    </section>
+                
+                
+                </div>
+            </div>
+        </div>
+
+        
+        <a href="../../docs/api/index.html" class="navigation navigation-prev " aria-label="Previous page: API Reference"><i class="fa fa-angle-left"></i></a>
+        
+        
+        <a href="../../docs/api/ShallowWrapper/find.html" class="navigation navigation-next " aria-label="Next page: find(selector)"><i class="fa fa-angle-right"></i></a>
+        
+    </div>
+</div>
+
+        
+<script src="../../gitbook/app.js"></script>
+
+    
+    <script src="../../gitbook/plugins/gitbook-plugin-edit-link/plugin.js"></script>
+    
+
+    
+    <script src="../../gitbook/plugins/gitbook-plugin-github/plugin.js"></script>
+    
+
+    
+    <script src="../../gitbook/plugins/gitbook-plugin-codeblock-disable-glossary/disable-glossary.js"></script>
+    
+
+    
+    <script src="../../gitbook/plugins/gitbook-plugin-collapsible-menu/plugin.js"></script>
+    
+
+<script>
+require(["gitbook"], function(gitbook) {
+    var config = {"fontSettings":{"theme":null,"family":"sans","size":2},"edit-link":{"base":"https://git.musta.ch/airbnb/catalyst/tree/master","label":"Edit This Page"},"github":{"url":"https://git.musta.ch/airbnb/catalyst/"}};
+    gitbook.start(config);
+});
+</script>
+
+        <!-- body:end -->
+    </body>
+    <!-- End of book Airbnb Catalyst -->
+</html>
