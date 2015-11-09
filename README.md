@@ -1,51 +1,16 @@
 Catalyst
 ======
 
-JavaScript Testing utility for React / Flux
+Catalyst is a JavaScript Testing utility for React
 
-[Documentation](https://pages.git.musta.ch/airbnb/catalyst/docs/index.html)
+### [Installation](/docs/installation/README.md)
 
-
-
-Installation
-============
-
-Install catalyst from NPM into your project
-
-```bash
-npm install airbnb-catalyst --save-dev
-```
-
-If you plan on using `mount`, it requires jsdom. Jsdom requires node 4. As a result, if you want to use `mount`, you will
-need to make sure node 4 or iojs is on your machine.
-
-If you need to switch between different versions of node, you can use a CLI tool called `nvm` to quickly
-switch between them.
-
-To install NVM:
-
-```bash
-brew install nvm
-nvm install 4.1.1
-```
-
-Now your machine will be running Node 4. You can use the `nvm use` command to switch between the two 
-environments:
-
-```bash
-nvm use 0.12.7
-```
-
-```bash
-nvm use 4.1.1
-```
-
-
+### [API Reference](/docs/api/README.md)
 
 Basic Usage
 ===========
 
-## Shallow Rendering
+## [Shallow Rendering](/docs/api/shallow.md)
 
 ```javascript
 import { shallow } from 'airbnb-catalyst';
@@ -72,18 +37,18 @@ describe('<MyComponent />', () => {
   });
   
   it('simulates click events', () => {
-      const onButtonClick = sinon.spy();
-      const wrapper = shallow(
-        <Foo onButtonClick={onButtonClick} />
-      );
-      wrapper.find('button').click();
-      expect(onButtonClick.calledOnce).to.be.true;
-    });
+    const onButtonClick = sinon.spy();
+    const wrapper = shallow(
+      <Foo onButtonClick={onButtonClick} />
+    );
+    wrapper.find('button').click();
+    expect(onButtonClick.calledOnce).to.be.true;
+  });
 
 });
 ```
 
-## JsDom Full Rendering
+## [JSDOM Full Rendering](/docs/api/mount.md)
 
 ```javascript
 import {
@@ -120,7 +85,7 @@ describeWithDom('<Foo />', () => {
 ```
 
 
-## Static Rendered Markup
+## [Static Rendered Markup](/docs/api/render.md)
 
 ```javascript
 import { render } from 'airbnb-catalyst';
@@ -139,3 +104,12 @@ describe('<Foo />', () => {
 
 });
 ```
+
+### [Future](/docs/future.md)
+
+### [Contributing](/CONTRIBUTING.md)
+
+### License
+
+MIT
+

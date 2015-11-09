@@ -1,15 +1,29 @@
 {
   "name": "airbnb-catalyst",
   "version": "2.0.1",
-  "description": "JavaScript Testing utilities for React / Flux",
+  "description": "JavaScript Testing utilities for React",
   "main": "build",
   "scripts": {
-    "prepublish": "npm run build",
-    "build": "babel src --out-dir build && npm run docs",
+    "prepublish": "npm run clean && npm run build",
+    "preversion": "npm run clean && npm run check",
+    "postversion": "git push && git push --tags && npm run clean && npm run docs:publish",
+    "version": "npm run build",
+    "clean": "rimraf build",
+    "lint": "eslint src/**",
     "test": "mocha --compilers js:babel/register --recursive src/**/__tests__/*.js",
-    "test-watch": "mocha --compilers js:babel/register --recursive src/**/__tests__/*.js --watch",
-    "docs": "doxx --source src --target docs --theme cayman --ignore __tests__,Debug.js,MountedTraversal.js,ShallowTraversal.js,Utils.js --title Catalyst",
-    "lint": "eslint src/**"
+    "check": "npm run lint && npm run test:all",
+    "build": "babel src --out-dir build",
+    "test:watch": "mocha --compilers js:babel/register --recursive src/**/__tests__/*.js --watch",
+    "test:all": "npm run react:13 && npm test && npm run react:14 && npm test",
+    "react:clean": "rimraf node_modules/react node_modules/react-dom node_modules/react-addons-test-utils",
+    "react:13": "npm run react:clean && npm i react@0.13",
+    "react:14": "npm run react:clean && npm i react@0.14 react-dom@0.14 react-addons-test-utils@0.14",
+    "docs:clean": "rimraf _book",
+    "docs:prepare": "gitbook install",
+    "docs:build": "npm run docs:prepare && gitbook build",
+    "docs:watch": "npm run docs:prepare && gitbook serve",
+    "docs:publish": "npm run docs:clean && npm run docs:build && cd _book && git init && git commit --allow-empty -m 'update book' && git fetch && git checkout gh-pages && git add . && git commit -am 'update book' && git push git@git.musta.ch:airbnb/catalyst.git gh-pages --force",
+    "travis": "istanbul cover _mocha --"
   },
   "repository": {
     "type": "git",
@@ -17,9 +31,15 @@
   },
   "keywords": [
     "javascript",
+    "shallow rendering",
+    "shallowRender",
+    "test",
+    "reactjs",
     "react",
     "flux",
     "testing",
+    "test utils",
+    "assertion helpers",
     "tdd",
     "mocha"
   ],
@@ -36,11 +56,13 @@
     "babel-eslint": "^4.1.4",
     "chai": "^3.2.0",
     "coveralls": "^2.11.4",
-    "doxx": "^2.1.1",
     "eslint": "^1.9.0",
     "eslint-config-airbnb": "^0.1.0",
     "eslint-plugin-react": "^3.8.0",
-    "mocha": "^2.2.5"
+    "gitbook-cli": "^1.0.0",
+    "istanbul": "^0.4.0",
+    "mocha": "^2.2.5",
+    "rimraf": "^2.4.3"
   },
   "peerDependencies": {
     "react": "0.13.x || 0.14.x"
