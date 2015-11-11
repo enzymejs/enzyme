@@ -1,6 +1,6 @@
 {
   "gitbook": "2.4.3",
-  "title": "Airbnb Catalyst",
+  "title": "Reagent",
   "description": "React Testing",
   "structure": {
     "summary": "docs/README.md",
@@ -18,11 +18,11 @@
   ],
   "pluginsConfig": {
     "edit-link": {
-      "base": "https://git.musta.ch/airbnb/catalyst/tree/master",
+      "base": "https://github.com/airbnb/reagent/tree/master",
       "label": "Edit This Page"
     },
     "github": {
-      "url": "https://git.musta.ch/airbnb/catalyst/"
+      "url": "https://github.com/airbnb/reagent/"
     }
   }
 }

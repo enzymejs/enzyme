@@ -1,6 +1,6 @@
 {
-  "name": "airbnb-catalyst",
-  "version": "2.1.0",
+  "name": "reagent",
+  "version": "0.1.0",
   "description": "JavaScript Testing utilities for React",
   "main": "build",
   "scripts": {
@@ -22,12 +22,12 @@
     "docs:prepare": "gitbook install",
     "docs:build": "npm run docs:prepare && gitbook build",
     "docs:watch": "npm run docs:prepare && gitbook serve",
-    "docs:publish": "npm run docs:clean && npm run docs:build && cd _book && git init && git commit --allow-empty -m 'update book' && git fetch git@git.musta.ch:airbnb/catalyst.git gh-pages && git checkout -b gh-pages && git add . && git commit -am 'update book' && git push git@git.musta.ch:airbnb/catalyst.git gh-pages --force",
+    "docs:publish": "npm run docs:clean && npm run docs:build && cd _book && git init && git commit --allow-empty -m 'update book' && git fetch https://github.com/airbnb/reagent.git gh-pages && git checkout -b gh-pages && git add . && git commit -am 'update book' && git push https://github.com/airbnb/reagent.git gh-pages --force",
     "travis": "istanbul cover _mocha --"
   },
   "repository": {
     "type": "git",
-    "url": "git@git.musta.ch:airbnb/catalyst.git"
+    "url": "https://github.com/airbnb/reagent.git"
   },
   "keywords": [
     "javascript",
@@ -46,7 +46,6 @@
   "author": "Leland Richardson <leland.richardson@airbnb.com>",
   "license": "MIT",
   "dependencies": {
-    "alt": "^0.17.1",
     "cheerio": "^0.19.0",
     "sinon": "^1.15.4",
     "underscore": "^1.8.3"
@@ -70,8 +69,5 @@
   "optionalDependencies": {
     "jsdom": "^6.1.0",
     "mocha-jsdom": "^1.0.0"
-  },
-  "publishConfig": {
-    "registry": "https://npm.d.musta.ch"
   }
 }

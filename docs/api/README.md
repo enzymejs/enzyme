@@ -5,7 +5,7 @@
 ### [Shallow Rendering](shallow.md)
 
 ```jsx
-import { shallow } from 'airbnb-catalyst';
+import { shallow } from 'reagent';
 
 const wrapper = shallow(<MyComponent />);
 // ...
@@ -15,7 +15,7 @@ const wrapper = shallow(<MyComponent />);
 ### [Full Rendering](mount.md)
 
 ```jsx
-import { mount } from 'airbnb-catalyst';
+import { mount } from 'reagent';
 
 const wrapper = mount(<MyComponent />);
 // ...
@@ -25,7 +25,7 @@ const wrapper = mount(<MyComponent />);
 ### [Static Rendering](render.md)
 
 ```jsx
-import { render } from 'airbnb-catalyst';
+import { render } from 'reagent';
 
 const wrapper = render(<MyComponent />);
 // ...

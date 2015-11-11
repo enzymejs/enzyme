@@ -8,14 +8,14 @@ always be given.
 
 ## Setting up your environment
 
-After forking catalyst to your own github org, do the following steps to get started:
+After forking reagent to your own github org, do the following steps to get started:
 
 ```bash
 # clone your fork to your local machine
-git clone git@github.com:<YourUsername>/catalyst.git
+git clone https://github.com/airbnb/reagent.git
 
 # step into local repo
-cd catalyst
+cd reagent
 
 # install dependencies (use react:13 if you want to use React 0.13)
 npm install && npm run react:14

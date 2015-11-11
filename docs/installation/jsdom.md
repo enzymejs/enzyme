@@ -29,13 +29,13 @@ nvm use 4
 
 ### Preventing tests from failing on old versions
 
-If you are worried about tests not passing on versions of node that don't support jsdom, Catalyst
+If you are worried about tests not passing on versions of node that don't support jsdom, Reagent
 comes with a helper function to wrap your tests in a safety layer such that any tests written
 inside of that function will be skipped if jsdom is not available.  (Note that this is for mocha
 only).
 
 ```jsx
-import { mount, shallow } from 'airbnb-catalyst';
+import { mount, shallow } from 'reagent';
 
 describe('MyComponent', () => {
   describeWithDom('interaction', () => {

@@ -227,7 +227,7 @@ export default class ReactWrapper {
   /**
    * Returns a string of the rendered text of the current render tree.  This function should be
    * looked at with skepticism if being used to test what the actual HTML output of the component
-   * will be. If that is what you would like to test, use catalyst's `render` function instead.
+   * will be. If that is what you would like to test, use reagent's `render` function instead.
    *
    * NOTE: can only be called on a wrapper of a single node.
    *
