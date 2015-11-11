@@ -6,7 +6,7 @@ import { onPrototype } from './Utils';
 import { renderToStaticMarkup } from './react-compat';
 
 /**
- * @class Catalyst
+ * @class Reagent
  */
 
 let jsdom;

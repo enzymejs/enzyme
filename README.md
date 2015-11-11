@@ -1,7 +1,7 @@
-Catalyst
+Reagent
 ======
 
-Catalyst is a JavaScript Testing utility for React
+Reagent is a JavaScript Testing utility for React
 
 ### [Installation](/docs/installation/README.md)
 
@@ -13,7 +13,7 @@ Basic Usage
 ## [Shallow Rendering](/docs/api/shallow.md)
 
 ```javascript
-import { shallow } from 'airbnb-catalyst';
+import { shallow } from 'reagent';
 
 describe('<MyComponent />', () => {
 
@@ -55,7 +55,7 @@ import {
   describeWithDom,
   mount,
   spyLifecycle,
-} from 'airbnb-catalyst';
+} from 'reagent';
 
 describeWithDom('<Foo />', () => {
 
@@ -88,7 +88,7 @@ describeWithDom('<Foo />', () => {
 ## [Static Rendered Markup](/docs/api/render.md)
 
 ```javascript
-import { render } from 'airbnb-catalyst';
+import { render } from 'reagent';
 
 describe('<Foo />', () => {
 

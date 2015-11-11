@@ -4,7 +4,7 @@ Shallow rendering is useful to constrain yourself to testing a component as a un
 that your tests aren't indirectly asserting on behavior of child components.
 
 ```jsx
-import { shallow } from 'airbnb-catalyst';
+import { shallow } from 'reagent';
 
 describe('<MyComponent />', () => {
 
