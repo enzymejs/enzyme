@@ -1,0 +1,31 @@
+# `.not(selector) => ShallowWrapper`
+
+Returns a new wrapper with only the nodes of the current wrapper that don't match the provided 
+selector.
+
+This method is effectively the negation or inverse of [`filter`](filter.md).
+
+
+#### Arguments
+
+1. `selector` (`String|Function`): The selector to match.
+
+
+
+#### Returns
+
+`ShallowWrapper`: A new wrapper that wraps the filtered nodes.
+
+
+
+#### Examples
+
+```jsx
+const wrapper = shallow(<MyComponent />);
+expect(wrapper.find('.foo').not('.bar')).to.have.length(1);
+```
+
+#### Related Methods
+
+- [`.filterWhere(predicate) => ShallowWrapper`](filterWhere.md)
+- [`.filter(selector) => ShallowWrapper`](filter.md)
