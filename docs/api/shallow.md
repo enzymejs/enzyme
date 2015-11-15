@@ -92,6 +92,9 @@ Returns a string representation of the text nodes in the current render tree.
 Returns a static HTML rendering of the current node.
 
 #### [`.get(index) => ShallowWrapper`](ShallowWrapper/get.md)
+Returns the node at the provided index of the current wrapper.
+
+#### [`.at(index) => ShallowWrapper`](ShallowWrapper/at.md)
 Returns a wrapper of the node at the provided index of the current wrapper.
 
 #### [`.first() => ShallowWrapper`](ShallowWrapper/first.md)
