@@ -146,6 +146,29 @@ describeWithDOM('mount', () => {
       expect(wrapper.findWhere(() => false).length).to.equal(0);
     });
 
+    it('should call the predicate with the wrapped node as the first argument', () => {
+      const wrapper = mount(
+        <div>
+          <div className="foo bar" />
+          <div className="foo baz" />
+          <div className="foo bux" />
+        </div>
+      );
+
+      const stub = sinon.stub();
+      stub.returns(true);
+      const spy = sinon.spy(stub);
+      wrapper.findWhere(spy);
+      expect(spy.callCount).to.equal(4);
+      expect(spy.args[0][0]).to.be.instanceOf(ReactWrapper);
+      expect(spy.args[1][0]).to.be.instanceOf(ReactWrapper);
+      expect(spy.args[2][0]).to.be.instanceOf(ReactWrapper);
+      expect(spy.args[3][0]).to.be.instanceOf(ReactWrapper);
+      expect(spy.args[1][0].hasClass('bar')).to.be.true;
+      expect(spy.args[2][0].hasClass('baz')).to.be.true;
+      expect(spy.args[3][0].hasClass('bux')).to.be.true;
+    });
+
   });
 
   describe('.setProps(newProps)', () => {
@@ -369,7 +392,7 @@ describeWithDOM('mount', () => {
       expect(baz.hasClass('baz')).to.be.true;
     });
 
-    it('should call the predicate with the node as the first argument', () => {
+    it('should call the predicate with the wrapper as the first argument', () => {
       const wrapper = mount(
         <div>
           <div className="foo bar" />
@@ -383,9 +406,12 @@ describeWithDOM('mount', () => {
       const spy = sinon.spy(stub);
       wrapper.find('.foo').filterWhere(spy);
       expect(spy.callCount).to.equal(3);
-      expect(spy.args[0][0]).to.equal(wrapper.find('.bar').node);
-      expect(spy.args[1][0]).to.equal(wrapper.find('.baz').node);
-      expect(spy.args[2][0]).to.equal(wrapper.find('.bux').node);
+      expect(spy.args[0][0]).to.be.instanceOf(ReactWrapper);
+      expect(spy.args[1][0]).to.be.instanceOf(ReactWrapper);
+      expect(spy.args[2][0]).to.be.instanceOf(ReactWrapper);
+      expect(spy.args[0][0].hasClass('bar')).to.be.true;
+      expect(spy.args[1][0].hasClass('baz')).to.be.true;
+      expect(spy.args[2][0].hasClass('bux')).to.be.true;
     });
   });
 

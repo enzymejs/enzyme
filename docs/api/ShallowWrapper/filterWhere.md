@@ -6,7 +6,7 @@ provided predicate function, return true.
 
 #### Arguments
 
-1. `predicate` (`ReactElement => Boolean`): A predicate function to match the nodes.
+1. `predicate` (`ShallowWrapper => Boolean`): A predicate function that is passed a wrapped node.
 
 
 
@@ -20,7 +20,7 @@ provided predicate function, return true.
 
 ```jsx
 const wrapper = shallow(<MyComponent />);
-const complexFoo = wrapper.find('.foo').filterWhere(n => typeof n.type !== 'string');
+const complexFoo = wrapper.find('.foo').filterWhere(n => typeof n.type() !== 'string');
 expect(complexComponents).to.have.length(4);
 ```
 
