@@ -762,6 +762,35 @@ describe('shallow', () => {
     });
   });
 
+  describe('.shallow()', () => {
+
+    it('should return a shallow rendered instance of the current node', () => {
+      class Bar extends React.Component {
+        render() {
+          return (
+            <div>
+              <div className="in-bar" />
+            </div>
+          );
+        }
+      }
+      class Foo extends React.Component {
+        render() {
+          return (
+            <div>
+              <Bar />
+            </div>
+          );
+        }
+      }
+      const wrapper = shallow(<Foo />);
+      expect(wrapper.find('.in-bar')).to.have.length(0);
+      expect(wrapper.find(Bar)).to.have.length(1);
+      expect(wrapper.find(Bar).shallow().find('.in-bar')).to.have.length(1);
+    });
+
+  });
+
   describe('.first()', () => {
     it('should return the first node in the current set', () => {
       const wrapper = shallow(

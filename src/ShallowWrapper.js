@@ -319,6 +319,17 @@ export default class ShallowWrapper {
   }
 
   /**
+   * Shallow renders the current node and returns a shallow wrapper around it.
+   *
+   * NOTE: can only be called on wrapper of a single node.
+   *
+   * @returns {ShallowWrapper}
+   */
+  shallow() {
+    return this.single((n) => new ShallowWrapper(n));
+  }
+
+  /**
    * Returns the value of  prop with the given name of the root node.
    *
    * @param propName
