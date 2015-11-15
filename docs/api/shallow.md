@@ -32,7 +32,7 @@ describe('<MyComponent />', () => {
     const wrapper = shallow(
       <Foo onButtonClick={onButtonClick} />
     );
-    wrapper.find('button').click();
+    wrapper.find('button').simulate('click');
     expect(onButtonClick.calledOnce).to.be.true;
   });
 
@@ -46,74 +46,83 @@ describe('<MyComponent />', () => {
 #### [`.find(selector) => ShallowWrapper`](ShallowWrapper/find.md)
 Find every node in the render tree that matches the provided selector.
 
-#### [`.findWhere(predicate) => ShallowWrapper`](/docs/api/ShallowWrapper/findWhere.md)
+#### [`.findWhere(predicate) => ShallowWrapper`](ShallowWrapper/findWhere.md)
 Find every node in the render tree that return true for the provided predicate function.
 
-#### [`.filter(selector) => ShallowWrapper`](/docs/api/ShallowWrapper/filter.md)
+#### [`.filter(selector) => ShallowWrapper`](ShallowWrapper/filter.md)
 Remove nodes in the current wrapper that do not match the provided selector.
 
-#### [`.filterWhere(predicate) => ShallowWrapper`](/docs/api/ShallowWrapper/filterWhere.md)
+#### [`.filterWhere(predicate) => ShallowWrapper`](ShallowWrapper/filterWhere.md)
 Remove nodes in the current wrapper that do not return true for the provided predicate function.
 
 #### [`.contains(node) => Boolean`](ShallowWrapper/contains.md) 
 Returns whether or not a given node is somewhere in the render tree.
 
-#### [`.hasClass(className) => Boolean`](/docs/api/ShallowWrapper/hasClass.md)
+#### [`.hasClass(className) => Boolean`](ShallowWrapper/hasClass.md)
 Returns whether or not the current root node has the given class name or not.
 
-#### [`.is(selector) => Boolean`](/docs/api/ShallowWrapper/is.md)
+#### [`.is(selector) => Boolean`](ShallowWrapper/is.md)
 Returns whether or not the current node matches a provided selector.
 
-#### [`.not(selector) => ShallowWrapper`](/docs/api/ShallowWrapper/not.md)
+#### [`.not(selector) => ShallowWrapper`](ShallowWrapper/not.md)
 Remove nodes in the current wrapper that match the provided selector. (inverse of `.filter()`)
 
-#### [`.children() => ShallowWrapper`](/docs/api/ShallowWrapper/children.md)
+#### [`.children() => ShallowWrapper`](ShallowWrapper/children.md)
 Get a wrapper with all of the children nodes of the current wrapper.
 
-#### [`.parents() => ShallowWrapper`](/docs/api/ShallowWrapper/parents.md)
+#### [`.parents() => ShallowWrapper`](ShallowWrapper/parents.md)
 Get a wrapper with all of the parents (ancestors) of the current node.
 
-#### [`.parent() => ShallowWrapper`](/docs/api/ShallowWrapper/parent.md)
+#### [`.parent() => ShallowWrapper`](ShallowWrapper/parent.md)
 Get a wrapper with the direct parent of the current node.
 
-#### [`.closest(selector) => ShallowWrapper`](/docs/api/ShallowWrapper/closest.md)
+#### [`.closest(selector) => ShallowWrapper`](ShallowWrapper/closest.md)
 Get a wrapper with the first ancestor of the current node to match the provided selector.
 
-#### [`.text() => String`](/docs/api/ShallowWrapper/text.md)
+#### [`.text() => String`](ShallowWrapper/text.md)
 Returns a string representation of the text nodes in the current render tree.
 
-#### [`.get(index) => ShallowWrapper`](/docs/api/ShallowWrapper/get.md)
+#### [`.get(index) => ShallowWrapper`](ShallowWrapper/get.md)
 Returns a wrapper of the node at the provided index of the current wrapper.
 
-#### [`.first() => ShallowWrapper`](/docs/api/ShallowWrapper/first.md)
+#### [`.first() => ShallowWrapper`](ShallowWrapper/first.md)
 Returns a wrapper of the first node of the current wrapper.
 
-#### [`.last() => ShallowWrapper`](/docs/api/ShallowWrapper/last.md)
+#### [`.last() => ShallowWrapper`](ShallowWrapper/last.md)
 Returns a wrapper of the last node of the current wrapper.
 
-#### [`.state([key]) => Any`](/docs/api/ShallowWrapper/state.md)
+#### [`.state([key]) => Any`](ShallowWrapper/state.md)
 Returns the state of the root component.
 
-#### [`.props() => Object`](/docs/api/ShallowWrapper/props.md)
+#### [`.props() => Object`](ShallowWrapper/props.md)
 Returns the props of the root component.
 
-#### [`.prop(key) => Any`](/docs/api/ShallowWrapper/prop.md)
+#### [`.prop(key) => Any`](ShallowWrapper/prop.md)
 Returns the named prop of the root component.
 
-#### [`.simulate(event[, data]) => ShallowWrapper`](/docs/api/ShallowWrapper/simulate.md)
+#### [`.simulate(event[, data]) => ShallowWrapper`](ShallowWrapper/simulate.md)
 Simulates an event on the current node.
 
-#### [`.setState(nextState) => ShallowWrapper`](/docs/api/ShallowWrapper/setState.md)
+#### [`.setState(nextState) => ShallowWrapper`](ShallowWrapper/setState.md)
 Manually sets state of the root component.
 
-#### [`.setProps(nextProps) => ShallowWrapper`](/docs/api/ShallowWrapper/setProps.md)
+#### [`.setProps(nextProps) => ShallowWrapper`](ShallowWrapper/setProps.md)
 Manually sets props of the root component.
 
-#### [`.instance() => ReactComponent`](/docs/api/ShallowWrapper/instance.md)
+#### [`.instance() => ReactComponent`](ShallowWrapper/instance.md)
 Returns the instance of the root component.
 
-#### [`.update() => ShallowWrapper`](/docs/api/ShallowWrapper/update.md)
+#### [`.update() => ShallowWrapper`](ShallowWrapper/update.md)
 Calls `.forceUpdate()` on the root component instance.
 
-#### [`.debug() => String`](/docs/api/ShallowWrapper/debug.md)
+#### [`.debug() => String`](ShallowWrapper/debug.md)
 Returns a string representation of the current shallow render tree for debugging purposes.
+
+#### [`.type() => String|Function`](ShallowWrapper/type.md)
+Returns the type of the current node of the wrapper.
+
+#### [`.forEach(fn) => ShallowWrapper`](ShallowWrapper/forEach.md)
+Iterates through each node of the current wrapper and executes the provided function
+
+#### [`.map(fn) => Array`](ShallowWrapper/map.md)
+Maps the current array of nodes to another array.

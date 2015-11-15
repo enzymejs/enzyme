@@ -1,4 +1,4 @@
-# `.findWhere(predicate) => ShallowWrapper`
+# `.findWhere(fn) => ShallowWrapper`
 
 Finds every node in the render tree that return true for the provided predicate function.
 
