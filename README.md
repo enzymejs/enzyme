@@ -1,18 +1,45 @@
 Reagent
-======
+=======
 
-Reagent is a JavaScript Testing utility for React
+Reagent is a JavaScript Testing utility for React that makes it easier to assert, manipulate,
+and traverse your React Components' output.
+
+Reagent's API is meant to be intuitive and flexible by mimicking jQuery's API for DOM manipulation
+and traversal.
+
+Reagent is unopinionated regarding which test runner or assertion library you use, and should be
+compatible with all major test runners and assertion libraries out there. The documentation and
+examples for reagent use [mocha](https://mochajs.org/) and [chai](http://chaijs.com/), but you
+should be able to extrapolate to your framework of choice.
+
+
 
 ### [Installation](/docs/installation/README.md)
 
-### [API Reference](/docs/api/README.md)
+To get started with reagent, you can simply install it with npm:
+
+```bash
+npm i --save-dev reagent
+```
+
+Reagent is currently compatible with both `React 0.14.x` and `React 0.13.x`. In order to achieve
+this compatibility, some dependencies cannot be explicitly listed in our `package.json`.
+
+If you are using `React 0.14`, in addition to `reagent`, you will have to ensure that you also 
+have the following npm modules installed if they were not already:
+
+```bash
+npm i --save-dev react-addons-test-utils
+npm i --save-dev react-dom
+```
+
 
 Basic Usage
 ===========
 
 ## [Shallow Rendering](/docs/api/shallow.md)
 
-```javascript
+```jsx
 import { shallow } from 'reagent';
 
 describe('<MyComponent />', () => {
@@ -48,9 +75,13 @@ describe('<MyComponent />', () => {
 });
 ```
 
+Read the full [API Documentation](/docs/api/shallow.md)
+
+
+
 ## [JSDOM Full Rendering](/docs/api/mount.md)
 
-```javascript
+```jsx
 import {
   describeWithDom,
   mount,
@@ -84,10 +115,12 @@ describeWithDom('<Foo />', () => {
 });
 ```
 
+Read the full [API Documentation](/docs/api/mount.md)
+
 
 ## [Static Rendered Markup](/docs/api/render.md)
 
-```javascript
+```jsx
 import { render } from 'reagent';
 
 describe('<Foo />', () => {
@@ -105,11 +138,14 @@ describe('<Foo />', () => {
 });
 ```
 
+Read the full [API Documentation](/docs/api/render.md)
+
+
 ### [Future](/docs/future.md)
 
 ### [Contributing](/CONTRIBUTING.md)
 
 ### License
 
-MIT
+[MIT](/LICENSE.md)
 
