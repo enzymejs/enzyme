@@ -321,7 +321,7 @@ export default class ReactWrapper {
    * @returns {ReactWrapper}
    */
   closest(selector) {
-    return this.parents().filter(selector).first();
+    return this.is(selector) ? this : this.parents().filter(selector).first();
   }
 
   /**

@@ -317,7 +317,7 @@ export default class ShallowWrapper {
    * @returns {ShallowWrapper}
    */
   closest(selector) {
-    return this.parents().filter(selector).first();
+    return this.is(selector) ? this : this.parents().filter(selector).first();
   }
 
   /**

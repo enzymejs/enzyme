@@ -621,7 +621,7 @@ describe('shallow', () => {
     });
   });
 
-  describe('.closest()', () => {
+  describe('.closest(selector)', () => {
     it('should return the closest ancestor for a given selector', () => {
       const wrapper = shallow(
         <div className="foo">
@@ -652,7 +652,7 @@ describe('shallow', () => {
       expect(wrapper.find('.baz').parent().hasClass('bar')).to.be.true;
     });
 
-    it('should never return itself', () => {
+    it('should return itself if matching', () => {
       const wrapper = shallow(
         <div className="bax">
           <div className="foo">
@@ -663,7 +663,7 @@ describe('shallow', () => {
         </div>
       );
 
-      expect(wrapper.find('.bux').closest('.baz').hasClass('bux')).to.be.false;
+      expect(wrapper.find('.bux').closest('.baz').hasClass('bux')).to.be.true;
     });
   });
 
