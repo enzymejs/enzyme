@@ -19,6 +19,7 @@
     * [parents()](/docs/api/ShallowWrapper/parents.md)
     * [parent()](/docs/api/ShallowWrapper/parent.md)
     * [closest(selector)](/docs/api/ShallowWrapper/closest.md)
+    * [shallow()](/docs/api/ShallowWrapper/shallow.md)
     * [text()](/docs/api/ShallowWrapper/text.md)
     * [get(index)](/docs/api/ShallowWrapper/get.md)
     * [first()](/docs/api/ShallowWrapper/first.md)
