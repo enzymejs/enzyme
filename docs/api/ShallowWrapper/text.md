@@ -24,3 +24,9 @@ expect(wrapper.text()).to.equal('important');
 const wrapper = shallow(<div><Foo /><b>important</b></div>);
 expect(wrapper.text()).to.equal('<Foo />important');
 ```
+
+
+
+#### Related Methods
+
+[`.html() => String`](html.md)

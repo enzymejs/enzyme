@@ -82,8 +82,14 @@ Get a wrapper with the first ancestor of the current node to match the provided 
 #### [`.shallow() => ShallowWrapper`](ShallowWrapper/shallow.md)
 Shallow renders the current node and returns a shallow wrapper around it.
 
+#### [`.render() => CheerioWrapper`](ShallowWrapper/render.md)
+Returns a CheerioWrapper of the current node's subtree.
+
 #### [`.text() => String`](ShallowWrapper/text.md)
 Returns a string representation of the text nodes in the current render tree.
+
+#### [`.html() => String`](ShallowWrapper/html.md)
+Returns a static HTML rendering of the current node.
 
 #### [`.get(index) => ShallowWrapper`](ShallowWrapper/get.md)
 Returns a wrapper of the node at the provided index of the current wrapper.

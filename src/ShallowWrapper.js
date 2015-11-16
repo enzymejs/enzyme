@@ -1,5 +1,6 @@
 import React from 'react';
 import { flatten, unique, compact } from 'underscore';
+import cheerio from 'cheerio';
 import {
   nodeEqual,
   propFromEvent,
@@ -19,6 +20,7 @@ import {
 } from './ShallowTraversal';
 import {
   createShallowRenderer,
+  renderToStaticMarkup,
 } from './react-compat';
 
 /**
@@ -223,6 +225,28 @@ export default class ShallowWrapper {
    */
   text() {
     return this.single(getTextFromNode);
+  }
+
+  /**
+   * Returns the HTML of the node.
+   *
+   * NOTE: can only be called on a wrapper of a single node.
+   *
+   * @returns {String}
+   */
+  html() {
+    return this.single(renderToStaticMarkup);
+  }
+
+  /**
+   * Returns the current node rendered to HTML and wrapped in a CheerioWrapper.
+   *
+   * NOTE: can only be called on a wrapper of a single node.
+   *
+   * @returns {CheerioWrapper}
+   */
+  render() {
+    return cheerio.load(this.html()).root();
   }
 
   /**
