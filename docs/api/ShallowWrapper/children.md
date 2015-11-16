@@ -1,6 +1,7 @@
 # `.children([selector]) => ShallowWrapper`
 
-Returns a new wrapper with all of the children of the node(s) in the current wrapper.
+Returns a new wrapper with all of the children of the node(s) in the current wrapper. Optionally, a 
+selector can be provided and it will filter the children by this selector
 
 
 #### Arguments

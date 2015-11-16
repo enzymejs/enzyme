@@ -565,7 +565,7 @@ describe('shallow', () => {
     });
   });
 
-  describe('.parents()', () => {
+  describe('.parents([selector])', () => {
     it('should return an array of current nodes ancestors', () => {
       const wrapper = shallow(
         <div className="bax">
@@ -598,6 +598,24 @@ describe('shallow', () => {
       );
 
       const parents = wrapper.find('.bar').parents();
+
+      expect(parents.length).to.equal(2);
+      expect(parents.get(0).hasClass('foo')).to.be.true;
+      expect(parents.get(1).hasClass('bax')).to.be.true;
+    });
+
+    it('should optionally allow a selector', () => {
+      const wrapper = shallow(
+        <div className="bax foo">
+          <div className="foo">
+            <div className="bar">
+              <div className="baz" />
+            </div>
+          </div>
+        </div>
+      );
+
+      const parents = wrapper.find('.baz').parents('.foo');
 
       expect(parents.length).to.equal(2);
       expect(parents.get(0).hasClass('foo')).to.be.true;

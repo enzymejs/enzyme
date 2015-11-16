@@ -294,10 +294,12 @@ export default class ShallowWrapper {
    *
    * NOTE: can only be called on a wrapper of a single node.
    *
+   * @param {String|Function} [selector]
    * @returns {ShallowWrapper}
    */
-  parents() {
-    return this.wrap(this.single(n => parentsOfNode(n, this.root.node)));
+  parents(selector) {
+    const allParents = this.wrap(this.single(n => parentsOfNode(n, this.root.node)));
+    return selector ? allParents.filter(selector) : allParents;
   }
 
   /**

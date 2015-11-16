@@ -298,10 +298,12 @@ export default class ReactWrapper {
    *
    * NOTE: can only be called on a wrapper of a single node.
    *
+   * @param {String|Function} [selector]
    * @returns {ReactWrapper}
    */
-  parents() {
-    return this.wrap(this.single(n => parentsOfInst(n, this.root.node)));
+  parents(selector) {
+    const allParents = this.wrap(this.single(n => parentsOfInst(n, this.root.node)));
+    return selector ? allParents.filter(selector) : allParents;
   }
 
   /**
