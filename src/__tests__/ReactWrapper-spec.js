@@ -733,6 +733,158 @@ describeWithDom('mount', () => {
     });
   });
 
+  describe('.reduce(fn[, initialValue])', () => {
+    it('should call a function with a wrapper for each node in the wrapper', () => {
+      const wrapper = mount(
+        <div>
+          <div className="foo bax" />
+          <div className="foo bar" />
+          <div className="foo baz" />
+        </div>
+      );
+      const spy = sinon.spy(n => n + 1);
+
+      wrapper.find('.foo').reduce(spy, 0);
+
+      expect(spy.callCount).to.equal(3);
+      expect(spy.args[0][1]).to.be.instanceOf(ReactWrapper);
+      expect(spy.args[0][1].hasClass('bax')).to.be.true;
+      expect(spy.args[1][1]).to.be.instanceOf(ReactWrapper);
+      expect(spy.args[1][1].hasClass('bar')).to.be.true;
+      expect(spy.args[2][1]).to.be.instanceOf(ReactWrapper);
+      expect(spy.args[2][1].hasClass('baz')).to.be.true;
+    });
+
+    it('should accumulate a value', () => {
+      const wrapper = mount(
+        <div>
+          <div id="bax" className="foo qoo" />
+          <div id="bar" className="foo boo" />
+          <div id="baz" className="foo hoo" />
+        </div>
+      );
+      const result = wrapper.find('.foo').reduce(
+        (obj, n) => {
+          obj[n.prop('id')] = n.prop('className');
+          return obj;
+        },
+        {}
+      );
+
+      expect(result).to.eql({
+        bax: 'foo qoo',
+        bar: 'foo boo',
+        baz: 'foo hoo',
+      });
+    });
+  });
+
+  describe('.reduceRight(fn[, initialValue])', () => {
+    it('should call a function with a wrapper for each node in the wrapper in reverse', () => {
+      const wrapper = mount(
+        <div>
+          <div className="foo bax" />
+          <div className="foo bar" />
+          <div className="foo baz" />
+        </div>
+      );
+      const spy = sinon.spy(n => n + 1);
+
+      wrapper.find('.foo').reduceRight(spy, 0);
+
+      expect(spy.callCount).to.equal(3);
+      expect(spy.args[0][1]).to.be.instanceOf(ReactWrapper);
+      expect(spy.args[0][1].hasClass('baz')).to.be.true;
+      expect(spy.args[1][1]).to.be.instanceOf(ReactWrapper);
+      expect(spy.args[1][1].hasClass('bar')).to.be.true;
+      expect(spy.args[2][1]).to.be.instanceOf(ReactWrapper);
+      expect(spy.args[2][1].hasClass('bax')).to.be.true;
+    });
+
+    it('should accumulate a value', () => {
+      const wrapper = mount(
+        <div>
+          <div id="bax" className="foo qoo" />
+          <div id="bar" className="foo boo" />
+          <div id="baz" className="foo hoo" />
+        </div>
+      );
+      const result = wrapper.find('.foo').reduceRight(
+        (obj, n) => {
+          obj[n.prop('id')] = n.prop('className');
+          return obj;
+        },
+        {}
+      );
+
+      expect(result).to.eql({
+        bax: 'foo qoo',
+        bar: 'foo boo',
+        baz: 'foo hoo',
+      });
+    });
+  });
+
+  describe('.some(selector)', () => {
+    it('should return if a node matches a selector', () => {
+      const wrapper = mount(
+        <div>
+          <div className="foo qoo" />
+          <div className="foo boo" />
+          <div className="foo hoo" />
+        </div>
+      );
+      expect(wrapper.find('.foo').some('.qoo')).to.be.true;
+      expect(wrapper.find('.foo').some('.foo')).to.be.true;
+      expect(wrapper.find('.foo').some('.bar')).to.be.false;
+    });
+  });
+
+  describe('.someWhere(predicate)', () => {
+    it('should return if a node matches a predicate', () => {
+      const wrapper = mount(
+        <div>
+          <div className="foo qoo" />
+          <div className="foo boo" />
+          <div className="foo hoo" />
+        </div>
+      );
+      expect(wrapper.find('.foo').someWhere(n => n.hasClass('qoo'))).to.be.true;
+      expect(wrapper.find('.foo').someWhere(n => n.hasClass('foo'))).to.be.true;
+      expect(wrapper.find('.foo').someWhere(n => n.hasClass('bar'))).to.be.false;
+    });
+  });
+
+  describe('.every(selector)', () => {
+    it('should return if every node matches a selector', () => {
+      const wrapper = mount(
+        <div>
+          <div className="foo qoo" />
+          <div className="foo boo" />
+          <div className="foo hoo" />
+        </div>
+      );
+      expect(wrapper.find('.foo').every('.foo')).to.be.true;
+      expect(wrapper.find('.foo').every('.qoo')).to.be.false;
+      expect(wrapper.find('.foo').every('.bar')).to.be.false;
+    });
+  });
+
+  describe('.everyWhere(predicate)', () => {
+    it('should return if every node matches a predicate', () => {
+      const wrapper = mount(
+        <div>
+          <div className="foo qoo" />
+          <div className="foo boo" />
+          <div className="foo hoo" />
+        </div>
+      );
+      expect(wrapper.find('.foo').everyWhere(n => n.hasClass('foo'))).to.be.true;
+      expect(wrapper.find('.foo').everyWhere(n => n.hasClass('qoo'))).to.be.false;
+      expect(wrapper.find('.foo').everyWhere(n => n.hasClass('bar'))).to.be.false;
+    });
+  });
+
   describe('.flatMap(fn)', () => {
     it('should return a wrapper with the mapped and flattened nodes', () => {
       const wrapper = mount(

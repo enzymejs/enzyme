@@ -1,0 +1,38 @@
+# `.everyWhere(fn) => Boolean`
+
+Returns whether or not any of the nodes in the wrapper pass the provided predicate function.
+
+
+#### Arguments
+
+1. `predicate` (`ShallowWrapper => Boolean`): A predicate function to match the nodes.
+
+
+
+#### Returns
+
+`Boolean`: True if every node in the current wrapper passed the predicate function.
+
+
+
+#### Example
+
+```jsx
+const wrapper = shallow(
+  <div>
+    <div className="foo qoo" />
+    <div className="foo boo" />
+    <div className="foo hoo" />
+  </div>
+);
+expect(wrapper.find('.foo').everyWhere(n => n.hasClass('foo'))).to.be.true;
+expect(wrapper.find('.foo').everyWhere(n => n.hasClass('qoo'))).to.be.false;
+expect(wrapper.find('.foo').everyWhere(n => n.hasClass('bar'))).to.be.false;
+```
+
+
+#### Related Methods
+
+- [`.some(selector) => Boolean`](some.md)
+- [`.every(selector) => Boolean`](every.md)
+- [`.everyWhere(predicate) => Boolean`](everyWhere.md)
