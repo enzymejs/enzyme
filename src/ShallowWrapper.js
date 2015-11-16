@@ -391,6 +391,78 @@ export default class ShallowWrapper {
   }
 
   /**
+   * Reduces the current array of nodes to a value. Each node is passed in as a `ShallowWrapper`
+   * to the reducer function.
+   *
+   * @param {Function} fn - the reducer function
+   * @param {*} initialValue - the initial value
+   * @returns {*}
+   */
+  reduce(fn, initialValue) {
+    return this.nodes.reduce(
+      (accum, n, i) => fn.call(this, accum, this.wrap(n), i),
+      initialValue
+    );
+  }
+
+  /**
+   * Reduces the current array of nodes to another array, from right to left. Each node is passed
+   * in as a `ShallowWrapper` to the reducer function.
+   *
+   * @param {Function} fn - the reducer function
+   * @param {*} initialValue - the initial value
+   * @returns {*}
+   */
+  reduceRight(fn, initialValue) {
+    return this.nodes.reduceRight(
+      (accum, n, i) => fn.call(this, accum, this.wrap(n), i),
+      initialValue
+    );
+  }
+
+  /**
+   * Returns whether or not any of the nodes in the wrapper match the provided selector.
+   *
+   * @param {Function|String} selector
+   * @returns {Boolean}
+   */
+  some(selector) {
+    const predicate = buildPredicate(selector);
+    return this.nodes.some(predicate);
+  }
+
+  /**
+   * Returns whether or not any of the nodes in the wrapper pass the provided predicate function.
+   *
+   * @param {Function} predicate
+   * @returns {Boolean}
+   */
+  someWhere(predicate) {
+    return this.nodes.some((n, i) => predicate.call(this, this.wrap(n), i));
+  }
+
+  /**
+   * Returns whether or not all of the nodes in the wrapper match the provided selector.
+   *
+   * @param {Function|String} selector
+   * @returns {Boolean}
+   */
+  every(selector) {
+    const predicate = buildPredicate(selector);
+    return this.nodes.every(predicate);
+  }
+
+  /**
+   * Returns whether or not any of the nodes in the wrapper pass the provided predicate function.
+   *
+   * @param {Function} predicate
+   * @returns {Boolean}
+   */
+  everyWhere(predicate) {
+    return this.nodes.every((n, i) => predicate.call(this, this.wrap(n), i));
+  }
+
+  /**
    * Utility method used to create new wrappers with a mapping function that returns an array of
    * nodes in response to a single node wrapper. The returned wrapper is a single wrapper around
    * all of the mapped nodes flattened (and de-duplicated).

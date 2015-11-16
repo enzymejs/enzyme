@@ -14,7 +14,7 @@ the original instance.
 
 #### Returns
 
-`Array<Any>r`: Returns an array of the returned values from the mapping function..
+`Array<Any>`: Returns an array of the returned values from the mapping function..
 
 
 
@@ -37,3 +37,5 @@ expect(texts).to.eql([ 'bax', 'bar', 'baz' ]);
 #### Related Methods
 
 - [`.forEach(fn) => ShallowWrapper`](forEach.md)
+- [`.reduce(fn[, initialValue]) => Any`](reduce.md)
+- [`.reduceRight(fn[, initialValue]) => Any`](reduceRight.md)

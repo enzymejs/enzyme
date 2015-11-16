@@ -17,7 +17,6 @@ import {
 } from './react-compat';
 
 /**
- *
  * @class ReactWrapper
  */
 export default class ReactWrapper {
@@ -381,6 +380,78 @@ export default class ReactWrapper {
    */
   map(fn) {
     return this.nodes.map((n, i) => fn.call(this, this.wrap(n), i));
+  }
+
+  /**
+   * Reduces the current array of nodes to another array. Each node is passed in as a `ShallowWrapper`
+   * to the reducer function.
+   *
+   * @param {Function} fn - the reducer function
+   * @param {*} initialValue - the initial value
+   * @returns {*}
+   */
+  reduce(fn, initialValue) {
+    return this.nodes.reduce(
+      (accum, n, i) => fn.call(this, accum, this.wrap(n), i),
+      initialValue
+    );
+  }
+
+  /**
+   * Reduces the current array of nodes to another array, from right to left. Each node is passed
+   * in as a `ShallowWrapper` to the reducer function.
+   *
+   * @param {Function} fn - the reducer function
+   * @param {*} initialValue - the initial value
+   * @returns {*}
+   */
+  reduceRight(fn, initialValue) {
+    return this.nodes.reduceRight(
+      (accum, n, i) => fn.call(this, accum, this.wrap(n), i),
+      initialValue
+    );
+  }
+
+  /**
+   * Returns whether or not any of the nodes in the wrapper match the provided selector.
+   *
+   * @param {Function|String} selector
+   * @returns {Boolean}
+   */
+  some(selector) {
+    const predicate = buildInstPredicate(selector);
+    return this.nodes.some(predicate);
+  }
+
+  /**
+   * Returns whether or not any of the nodes in the wrapper pass the provided predicate function.
+   *
+   * @param {Function} predicate
+   * @returns {Boolean}
+   */
+  someWhere(predicate) {
+    return this.nodes.some((n, i) => predicate.call(this, this.wrap(n), i));
+  }
+
+  /**
+   * Returns whether or not all of the nodes in the wrapper match the provided selector.
+   *
+   * @param {Function|String} selector
+   * @returns {Boolean}
+   */
+  every(selector) {
+    const predicate = buildInstPredicate(selector);
+    return this.nodes.every(predicate);
+  }
+
+  /**
+   * Returns whether or not any of the nodes in the wrapper pass the provided predicate function.
+   *
+   * @param {Function} predicate
+   * @returns {Boolean}
+   */
+  everyWhere(predicate) {
+    return this.nodes.every((n, i) => predicate.call(this, this.wrap(n), i));
   }
 
   /**
