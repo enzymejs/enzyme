@@ -25,7 +25,7 @@ npm i --save-dev reagent
 Reagent is currently compatible with both `React 0.14.x` and `React 0.13.x`. In order to achieve
 this compatibility, some dependencies cannot be explicitly listed in our `package.json`.
 
-If you are using `React 0.14`, in addition to `reagent`, you will have to ensure that you also 
+If you are using `React 0.14`, in addition to `reagent`, you will have to ensure that you also
 have the following npm modules installed if they were not already:
 
 ```bash
@@ -62,7 +62,7 @@ describe('<MyComponent />', () => {
     );
     expect(wrapper.contains(<div className="unique" />)).to.be.true;
   });
-  
+
   it('simulates click events', () => {
     const onButtonClick = sinon.spy();
     const wrapper = shallow(
@@ -83,12 +83,12 @@ Read the full [API Documentation](/docs/api/shallow.md)
 
 ```jsx
 import {
-  describeWithDom,
+  describeWithDOM,
   mount,
   spyLifecycle,
 } from 'reagent';
 
-describeWithDom('<Foo />', () => {
+describeWithDOM('<Foo />', () => {
 
   it('calls componentDidMount', () => {
     spyLifecycle(Foo);

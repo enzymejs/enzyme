@@ -25,7 +25,7 @@ export default class ReactWrapper {
     if (!global.window && !global.document) {
       throw new Error(
         `It looks like you called \`mount()\` without a jsdom document being loaded. ` +
-        `Make sure to only use \`mount()\` inside of a \`describeWithDom(...)\` call. `
+        `Make sure to only use \`mount()\` inside of a \`describeWithDOM(...)\` call. `
       );
     }
 

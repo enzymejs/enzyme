@@ -5,10 +5,10 @@ import {
   mount,
   render,
   ReactWrapper,
-  describeWithDom,
+  describeWithDOM,
 } from '../';
 
-describeWithDom('mount', () => {
+describeWithDOM('mount', () => {
 
   describe('.contains(node)', () => {
 
