@@ -303,12 +303,10 @@ export default class ShallowWrapper {
   /**
    * Returns a wrapper around the immediate parent of the current node.
    *
-   * NOTE: can only be called on a wrapper of a single node.
-   *
    * @returns {ShallowWrapper}
    */
   parent() {
-    return this.single(() => this.parents().first());
+    return this.flatMap(n => [n.parents().nodes[0]]);
   }
 
   /**

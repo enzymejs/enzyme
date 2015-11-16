@@ -307,12 +307,10 @@ export default class ReactWrapper {
   /**
    * Returns a wrapper around the immediate parent of the current node.
    *
-   * NOTE: can only be called on a wrapper of a single node.
-   *
    * @returns {ReactWrapper}
    */
   parent() {
-    return this.single(() => this.parents().first());
+    return this.flatMap(n => [n.parents().nodes[0]]);
   }
 
   /**

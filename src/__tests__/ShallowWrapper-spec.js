@@ -619,6 +619,28 @@ describe('shallow', () => {
 
       expect(wrapper.find('.baz').parent().hasClass('bar')).to.be.true;
     });
+
+    it('should work for multiple nodes', () => {
+      const wrapper = shallow(
+        <div>
+          <div className="foo">
+            <div className="baz" />
+          </div>
+          <div className="bar">
+            <div className="baz" />
+          </div>
+          <div className="bax">
+            <div className="baz" />
+          </div>
+        </div>
+      );
+
+      const parents = wrapper.find('.baz').parent();
+      expect(parents).to.have.length(3);
+      expect(parents.get(0).hasClass('foo')).to.be.true;
+      expect(parents.get(1).hasClass('bar')).to.be.true;
+      expect(parents.get(2).hasClass('bax')).to.be.true;
+    });
   });
 
   describe('.closest(selector)', () => {
