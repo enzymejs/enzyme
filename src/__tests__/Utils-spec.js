@@ -9,7 +9,7 @@ import {
   propFromEvent,
 } from '../Utils';
 import {
-  describeWithDom,
+  describeWithDOM,
   mount,
 } from '../';
 
@@ -38,7 +38,7 @@ describe('Utils', () => {
 
   });
 
-  describeWithDom('getNode', () => {
+  describeWithDOM('getNode', () => {
 
     it('should return a DOMNode when a DOMComponent is given', () => {
       const div = mount(<div />).node;
