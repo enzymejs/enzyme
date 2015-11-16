@@ -1,9 +1,15 @@
-# `.parents() => ShallowWrapper`
+# `.parents([selector]) => ShallowWrapper`
 
 Returns a wrapper around all of the parents/ancestors of the wrapper. Does not include the node
-in the current wrapper.
+in the current wrapper. Optionally, a selector can be provided and it will filter the parents by
+this selector
 
 Note: can only be called on a wrapper of a single node.
+
+
+#### Arguments
+
+1. `selector` (`String|Function` [optional]): The selector to filter the parents by.
 
 
 #### Returns

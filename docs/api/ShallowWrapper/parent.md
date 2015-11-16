@@ -2,8 +2,6 @@
 
 Returns a wrapper with the direct parent of the node in the current wrapper.
 
-Note: can only be called on a wrapper of a single node.
-
 
 #### Returns
 

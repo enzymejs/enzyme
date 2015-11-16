@@ -493,7 +493,7 @@ describe('shallow', () => {
     });
   });
 
-  describe('.children()', () => {
+  describe('.children([selector])', () => {
     it('should return empty wrapper for node with no children', () => {
       const wrapper = shallow(<div />);
       expect(wrapper.children().length).to.equal(0);
@@ -549,9 +549,23 @@ describe('shallow', () => {
       expect(wrapper.children().get(1).hasClass('bar')).to.be.true;
       expect(wrapper.children().get(2).hasClass('baz')).to.be.true;
     });
+
+    it('should optionally allow a selector to filter by', () => {
+      const wrapper = shallow(
+        <div>
+          <div className="foo" />
+          <div className="bar bip" />
+          <div className="baz bip" />
+        </div>
+      );
+      const children = wrapper.children('.bip');
+      expect(children.length).to.equal(2);
+      expect(children.get(0).hasClass('bar')).to.be.true;
+      expect(children.get(1).hasClass('baz')).to.be.true;
+    });
   });
 
-  describe('.parents()', () => {
+  describe('.parents([selector])', () => {
     it('should return an array of current nodes ancestors', () => {
       const wrapper = shallow(
         <div className="bax">
@@ -589,6 +603,24 @@ describe('shallow', () => {
       expect(parents.get(0).hasClass('foo')).to.be.true;
       expect(parents.get(1).hasClass('bax')).to.be.true;
     });
+
+    it('should optionally allow a selector', () => {
+      const wrapper = shallow(
+        <div className="bax foo">
+          <div className="foo">
+            <div className="bar">
+              <div className="baz" />
+            </div>
+          </div>
+        </div>
+      );
+
+      const parents = wrapper.find('.baz').parents('.foo');
+
+      expect(parents.length).to.equal(2);
+      expect(parents.get(0).hasClass('foo')).to.be.true;
+      expect(parents.get(1).hasClass('bax')).to.be.true;
+    });
   });
 
   describe('.parent()', () => {
@@ -605,9 +637,31 @@ describe('shallow', () => {
 
       expect(wrapper.find('.baz').parent().hasClass('bar')).to.be.true;
     });
+
+    it('should work for multiple nodes', () => {
+      const wrapper = shallow(
+        <div>
+          <div className="foo">
+            <div className="baz" />
+          </div>
+          <div className="bar">
+            <div className="baz" />
+          </div>
+          <div className="bax">
+            <div className="baz" />
+          </div>
+        </div>
+      );
+
+      const parents = wrapper.find('.baz').parent();
+      expect(parents).to.have.length(3);
+      expect(parents.get(0).hasClass('foo')).to.be.true;
+      expect(parents.get(1).hasClass('bar')).to.be.true;
+      expect(parents.get(2).hasClass('bax')).to.be.true;
+    });
   });
 
-  describe('.closest()', () => {
+  describe('.closest(selector)', () => {
     it('should return the closest ancestor for a given selector', () => {
       const wrapper = shallow(
         <div className="foo">
@@ -638,7 +692,7 @@ describe('shallow', () => {
       expect(wrapper.find('.baz').parent().hasClass('bar')).to.be.true;
     });
 
-    it('should never return itself', () => {
+    it('should return itself if matching', () => {
       const wrapper = shallow(
         <div className="bax">
           <div className="foo">
@@ -649,7 +703,7 @@ describe('shallow', () => {
         </div>
       );
 
-      expect(wrapper.find('.bux').closest('.baz').hasClass('bux')).to.be.false;
+      expect(wrapper.find('.bux').closest('.baz').hasClass('bux')).to.be.true;
     });
   });
 

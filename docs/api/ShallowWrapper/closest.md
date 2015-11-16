@@ -1,7 +1,7 @@
 # `.closest(selector) => ShallowWrapper`
 
 Returns a wrapper of the first element that matches the selector by traversing up through the
-current node's ancestors in the tree.
+current node's ancestors in the tree, starting with itself.
 
 Note: can only be called on a wrapper of a single node.
 

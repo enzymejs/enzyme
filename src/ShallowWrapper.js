@@ -304,10 +304,12 @@ export default class ShallowWrapper {
   /**
    * Returns a new wrapper with all of the children of the current wrapper.
    *
+   * @param {String|Function} [selector]
    * @returns {ShallowWrapper}
    */
-  children() {
-    return this.flatMap(n => childrenOfNode(n.node));
+  children(selector) {
+    const allChildren = this.flatMap(n => childrenOfNode(n.node));
+    return selector ? allChildren.filter(selector) : allChildren;
   }
 
   /**
@@ -316,21 +318,21 @@ export default class ShallowWrapper {
    *
    * NOTE: can only be called on a wrapper of a single node.
    *
+   * @param {String|Function} [selector]
    * @returns {ShallowWrapper}
    */
-  parents() {
-    return this.wrap(this.single(n => parentsOfNode(n, this.root.node)));
+  parents(selector) {
+    const allParents = this.wrap(this.single(n => parentsOfNode(n, this.root.node)));
+    return selector ? allParents.filter(selector) : allParents;
   }
 
   /**
    * Returns a wrapper around the immediate parent of the current node.
    *
-   * NOTE: can only be called on a wrapper of a single node.
-   *
    * @returns {ShallowWrapper}
    */
   parent() {
-    return this.single(() => this.parents().first());
+    return this.flatMap(n => [n.parents().nodes[0]]);
   }
 
   /**
@@ -339,7 +341,7 @@ export default class ShallowWrapper {
    * @returns {ShallowWrapper}
    */
   closest(selector) {
-    return this.parents().filter(selector).first();
+    return this.is(selector) ? this : this.parents().filter(selector).first();
   }
 
   /**
