@@ -280,10 +280,12 @@ export default class ShallowWrapper {
   /**
    * Returns a new wrapper with all of the children of the current wrapper.
    *
+   * @param {String|Function} [selector]
    * @returns {ShallowWrapper}
    */
-  children() {
-    return this.flatMap(n => childrenOfNode(n.node));
+  children(selector) {
+    const allChildren = this.flatMap(n => childrenOfNode(n.node));
+    return selector ? allChildren.filter(selector) : allChildren;
   }
 
   /**

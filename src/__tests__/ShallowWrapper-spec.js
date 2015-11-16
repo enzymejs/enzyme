@@ -493,7 +493,7 @@ describe('shallow', () => {
     });
   });
 
-  describe('.children()', () => {
+  describe('.children([selector])', () => {
     it('should return empty wrapper for node with no children', () => {
       const wrapper = shallow(<div />);
       expect(wrapper.children().length).to.equal(0);
@@ -548,6 +548,20 @@ describe('shallow', () => {
       expect(wrapper.children().get(0).hasClass('foo')).to.be.true;
       expect(wrapper.children().get(1).hasClass('bar')).to.be.true;
       expect(wrapper.children().get(2).hasClass('baz')).to.be.true;
+    });
+
+    it('should optionally allow a selector to filter by', () => {
+      const wrapper = shallow(
+        <div>
+          <div className="foo" />
+          <div className="bar bip" />
+          <div className="baz bip" />
+        </div>
+      );
+      const children = wrapper.children('.bip');
+      expect(children.length).to.equal(2);
+      expect(children.get(0).hasClass('bar')).to.be.true;
+      expect(children.get(1).hasClass('baz')).to.be.true;
     });
   });
 

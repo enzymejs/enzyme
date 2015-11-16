@@ -284,10 +284,12 @@ export default class ReactWrapper {
   /**
    * Returns a new wrapper with all of the children of the current wrapper.
    *
+   * @param {String|Function} [selector]
    * @returns {ReactWrapper}
    */
-  children() {
-    return this.flatMap(n => childrenOfInst(n.node));
+  children(selector) {
+    const allChildren = this.flatMap(n => childrenOfInst(n.node));
+    return selector ? allChildren.filter(selector) : allChildren;
   }
 
   /**
