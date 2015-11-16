@@ -1004,4 +1004,68 @@ describe('shallow', () => {
     });
   });
 
+  describe('.html()', () => {
+    it('should return html of straight DOM elements', () => {
+      const wrapper = shallow(
+        <div className="test">
+          <span>Hello World!</span>
+        </div>
+      );
+      expect(wrapper.html()).to.equal(
+        `<div class="test"><span>Hello World!</span></div>`
+      );
+    });
+
+    it('should render out nested composite components', () => {
+      class Foo extends React.Component {
+        render() {
+          return (<div className="in-foo" />);
+        }
+      }
+      class Bar extends React.Component {
+        render() {
+          return (
+            <div className="in-bar">
+              <Foo />
+            </div>
+          );
+        }
+      }
+      const wrapper = shallow(<Bar />);
+      expect(wrapper.html()).to.equal(
+        `<div class="in-bar"><div class="in-foo"></div></div>`
+      );
+      expect(wrapper.find(Foo).html()).to.equal(
+        `<div class="in-foo"></div>`
+      );
+    });
+
+  });
+
+  describe('.render()', () => {
+
+    it('should return a cheerio wrapper around the current node', () => {
+      class Foo extends React.Component {
+        render() {
+          return (<div className="in-foo" />);
+        }
+      }
+      class Bar extends React.Component {
+        render() {
+          return (
+            <div className="in-bar">
+              <Foo />
+            </div>
+          );
+        }
+      }
+      const wrapper = shallow(<Bar />);
+      expect(wrapper.render().find('.in-bar')).to.have.length(1);
+      const renderedFoo = wrapper.find(Foo).render();
+      expect(renderedFoo.find('.in-foo')).to.have.length(1);
+      expect(renderedFoo.find('.in-bar')).to.have.length(0);
+    });
+
+  });
+
 });
