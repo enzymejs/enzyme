@@ -332,7 +332,7 @@ export default class ShallowWrapper {
    * @returns {ShallowWrapper}
    */
   parent() {
-    return this.flatMap(n => [n.parents().nodes[0]]);
+    return this.flatMap(n => [n.parents().get(0)]);
   }
 
   /**
@@ -515,12 +515,22 @@ export default class ShallowWrapper {
   }
 
   /**
+   * Returns the node at a given index of the current wrapper.
+   *
+   * @param index
+   * @returns {ReactElement}
+   */
+  get(index) {
+    return this.nodes[index];
+  }
+
+  /**
    * Returns a wrapper around the node at a given index of the current wrapper.
    *
    * @param index
    * @returns {ShallowWrapper}
    */
-  get(index) {
+  at(index) {
     return this.wrap(this.nodes[index]);
   }
 
@@ -530,7 +540,7 @@ export default class ShallowWrapper {
    * @returns {ShallowWrapper}
    */
   first() {
-    return this.get(0);
+    return this.at(0);
   }
 
   /**
@@ -539,7 +549,7 @@ export default class ShallowWrapper {
    * @returns {ShallowWrapper}
    */
   last() {
-    return this.get(this.length - 1);
+    return this.at(this.length - 1);
   }
 
   /**

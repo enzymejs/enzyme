@@ -508,9 +508,9 @@ describe('shallow', () => {
         </div>
       );
       expect(wrapper.children().length).to.equal(3);
-      expect(wrapper.children().get(0).hasClass('foo')).to.be.true;
-      expect(wrapper.children().get(1).hasClass('bar')).to.be.true;
-      expect(wrapper.children().get(2).hasClass('baz')).to.be.true;
+      expect(wrapper.children().at(0).hasClass('foo')).to.be.true;
+      expect(wrapper.children().at(1).hasClass('bar')).to.be.true;
+      expect(wrapper.children().at(2).hasClass('baz')).to.be.true;
     });
 
     it('should not return any of the children of children', () => {
@@ -523,8 +523,8 @@ describe('shallow', () => {
         </div>
       );
       expect(wrapper.children().length).to.equal(2);
-      expect(wrapper.children().get(0).hasClass('foo')).to.be.true;
-      expect(wrapper.children().get(1).hasClass('baz')).to.be.true;
+      expect(wrapper.children().at(0).hasClass('foo')).to.be.true;
+      expect(wrapper.children().at(1).hasClass('baz')).to.be.true;
     });
 
     it('should handle mixed children with and without arrays', () => {
@@ -545,9 +545,9 @@ describe('shallow', () => {
         ]} />
       );
       expect(wrapper.children().length).to.equal(3);
-      expect(wrapper.children().get(0).hasClass('foo')).to.be.true;
-      expect(wrapper.children().get(1).hasClass('bar')).to.be.true;
-      expect(wrapper.children().get(2).hasClass('baz')).to.be.true;
+      expect(wrapper.children().at(0).hasClass('foo')).to.be.true;
+      expect(wrapper.children().at(1).hasClass('bar')).to.be.true;
+      expect(wrapper.children().at(2).hasClass('baz')).to.be.true;
     });
 
     it('should optionally allow a selector to filter by', () => {
@@ -560,8 +560,8 @@ describe('shallow', () => {
       );
       const children = wrapper.children('.bip');
       expect(children.length).to.equal(2);
-      expect(children.get(0).hasClass('bar')).to.be.true;
-      expect(children.get(1).hasClass('baz')).to.be.true;
+      expect(children.at(0).hasClass('bar')).to.be.true;
+      expect(children.at(1).hasClass('baz')).to.be.true;
     });
   });
 
@@ -580,9 +580,9 @@ describe('shallow', () => {
       const parents = wrapper.find('.baz').parents();
 
       expect(parents.length).to.equal(3);
-      expect(parents.get(0).hasClass('bar')).to.be.true;
-      expect(parents.get(1).hasClass('foo')).to.be.true;
-      expect(parents.get(2).hasClass('bax')).to.be.true;
+      expect(parents.at(0).hasClass('bar')).to.be.true;
+      expect(parents.at(1).hasClass('foo')).to.be.true;
+      expect(parents.at(2).hasClass('bax')).to.be.true;
 
     });
 
@@ -600,8 +600,8 @@ describe('shallow', () => {
       const parents = wrapper.find('.bar').parents();
 
       expect(parents.length).to.equal(2);
-      expect(parents.get(0).hasClass('foo')).to.be.true;
-      expect(parents.get(1).hasClass('bax')).to.be.true;
+      expect(parents.at(0).hasClass('foo')).to.be.true;
+      expect(parents.at(1).hasClass('bax')).to.be.true;
     });
 
     it('should optionally allow a selector', () => {
@@ -618,8 +618,8 @@ describe('shallow', () => {
       const parents = wrapper.find('.baz').parents('.foo');
 
       expect(parents.length).to.equal(2);
-      expect(parents.get(0).hasClass('foo')).to.be.true;
-      expect(parents.get(1).hasClass('bax')).to.be.true;
+      expect(parents.at(0).hasClass('foo')).to.be.true;
+      expect(parents.at(1).hasClass('bax')).to.be.true;
     });
   });
 
@@ -655,9 +655,9 @@ describe('shallow', () => {
 
       const parents = wrapper.find('.baz').parent();
       expect(parents).to.have.length(3);
-      expect(parents.get(0).hasClass('foo')).to.be.true;
-      expect(parents.get(1).hasClass('bar')).to.be.true;
-      expect(parents.get(2).hasClass('bax')).to.be.true;
+      expect(parents.at(0).hasClass('foo')).to.be.true;
+      expect(parents.at(1).hasClass('bar')).to.be.true;
+      expect(parents.at(2).hasClass('bax')).to.be.true;
     });
   });
 
@@ -959,12 +959,12 @@ describe('shallow', () => {
       const nodes = wrapper.find('.foo').flatMap(w => w.children().nodes);
 
       expect(nodes.length).to.equal(6);
-      expect(nodes.get(0).hasClass('bar')).to.be.true;
-      expect(nodes.get(1).hasClass('bar')).to.be.true;
-      expect(nodes.get(2).hasClass('baz')).to.be.true;
-      expect(nodes.get(3).hasClass('baz')).to.be.true;
-      expect(nodes.get(4).hasClass('bax')).to.be.true;
-      expect(nodes.get(5).hasClass('bax')).to.be.true;
+      expect(nodes.at(0).hasClass('bar')).to.be.true;
+      expect(nodes.at(1).hasClass('bar')).to.be.true;
+      expect(nodes.at(2).hasClass('baz')).to.be.true;
+      expect(nodes.at(3).hasClass('baz')).to.be.true;
+      expect(nodes.at(4).hasClass('bax')).to.be.true;
+      expect(nodes.at(5).hasClass('bax')).to.be.true;
     });
   });
 
@@ -1035,6 +1035,23 @@ describe('shallow', () => {
     });
   });
 
+  describe('.at(index)', () => {
+    it('gets a wrapper of the node at the specified index', () => {
+      const wrapper = shallow(
+        <div>
+          <div className="bar foo" />
+          <div className="bar bax" />
+          <div className="bar bux" />
+          <div className="bar baz" />
+        </div>
+      );
+      expect(wrapper.find('.bar').at(0).hasClass('foo')).to.be.true;
+      expect(wrapper.find('.bar').at(1).hasClass('bax')).to.be.true;
+      expect(wrapper.find('.bar').at(2).hasClass('bux')).to.be.true;
+      expect(wrapper.find('.bar').at(3).hasClass('baz')).to.be.true;
+    });
+  });
+
   describe('.get(index)', () => {
     it('gets the node at the specified index', () => {
       const wrapper = shallow(
@@ -1045,10 +1062,10 @@ describe('shallow', () => {
           <div className="bar baz" />
         </div>
       );
-      expect(wrapper.find('.bar').get(0).hasClass('foo')).to.be.true;
-      expect(wrapper.find('.bar').get(1).hasClass('bax')).to.be.true;
-      expect(wrapper.find('.bar').get(2).hasClass('bux')).to.be.true;
-      expect(wrapper.find('.bar').get(3).hasClass('baz')).to.be.true;
+      expect(wrapper.find('.bar').get(0)).to.equal(wrapper.find('.foo').node);
+      expect(wrapper.find('.bar').get(1)).to.equal(wrapper.find('.bax').node);
+      expect(wrapper.find('.bar').get(2)).to.equal(wrapper.find('.bux').node);
+      expect(wrapper.find('.bar').get(3)).to.equal(wrapper.find('.baz').node);
     });
   });
 

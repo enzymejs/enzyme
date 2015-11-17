@@ -1,6 +1,6 @@
-# `.get(index) => ShallowWrapper`
+# `.get(index) => ReactElement`
 
-Returns a wrapper around the node at a given index of the current wrapper.
+Returns the node at a given index of the current wrapper.
 
 
 #### Arguments
@@ -11,7 +11,7 @@ Returns a wrapper around the node at a given index of the current wrapper.
 
 #### Returns
 
-`ShallowWrapper`: A new wrapper that wraps the retrieved node.
+`ReactElement`: The retrieved node.
 
 
 
@@ -19,5 +19,5 @@ Returns a wrapper around the node at a given index of the current wrapper.
 
 ```jsx
 const wrapper = shallow(<MyComponent />);
-expect(wrapper.find(Foo).get(0).props().foo).to.equal("bar");
+expect(wrapper.find(Foo).get(0).props.foo).to.equal("bar");
 ```

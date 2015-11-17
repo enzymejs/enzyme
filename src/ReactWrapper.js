@@ -311,7 +311,7 @@ export default class ReactWrapper {
    * @returns {ReactWrapper}
    */
   parent() {
-    return this.flatMap(n => [n.parents().nodes[0]]);
+    return this.flatMap(n => [n.parents().get(0)]);
   }
 
   /**
@@ -483,12 +483,22 @@ export default class ReactWrapper {
   }
 
   /**
+   * Returns the node at a given index of the current wrapper.
+   *
+   * @param {Number} index
+   * @returns {ReactElement}
+   */
+  get(index) {
+    return this.nodes[index];
+  }
+
+  /**
    * Returns a wrapper around the node at a given index of the current wrapper.
    *
    * @param {Number} index
    * @returns {ReactWrapper}
    */
-  get(index) {
+  at(index) {
     return this.wrap(this.nodes[index]);
   }
 
@@ -498,7 +508,7 @@ export default class ReactWrapper {
    * @returns {ReactWrapper}
    */
   first() {
-    return this.get(0);
+    return this.at(0);
   }
 
   /**
@@ -507,7 +517,7 @@ export default class ReactWrapper {
    * @returns {ReactWrapper}
    */
   last() {
-    return this.get(this.length - 1);
+    return this.at(this.length - 1);
   }
 
   /**

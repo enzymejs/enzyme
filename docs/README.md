@@ -24,6 +24,7 @@
     * [text()](/docs/api/ShallowWrapper/text.md)
     * [html()](/docs/api/ShallowWrapper/html.md)
     * [get(index)](/docs/api/ShallowWrapper/get.md)
+    * [at(index)](/docs/api/ShallowWrapper/at.md)
     * [first()](/docs/api/ShallowWrapper/first.md)
     * [last()](/docs/api/ShallowWrapper/last.md)
     * [state([key])](/docs/api/ShallowWrapper/state.md)
