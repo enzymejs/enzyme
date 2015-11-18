@@ -258,6 +258,25 @@ describeWithDOM('mount', () => {
       wrapper.setState({ id: 'bar' });
       expect(wrapper.find('.bar').length).to.equal(1);
     });
+
+    it('allows setState inside of componentDidMount', () => {
+      // NOTE: this test is a test to ensure that the following issue is
+      // fixed: https://github.com/airbnb/reagent/issues/27
+      class MySharona extends React.Component {
+        constructor(props) {
+          super(props);
+          this.state = {mounted: false};
+        }
+        componentDidMount() {
+          this.setState({mounted: true});
+        }
+        render() {
+          return <div>{this.state.mounted ? 'a' : 'b'}</div>;
+        }
+      }
+      const wrapper = mount(<MySharona />);
+      expect(wrapper.find('div').text()).to.equal('a');
+    });
   });
 
   describe('.is(selector)', () => {
