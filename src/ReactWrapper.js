@@ -17,6 +17,30 @@ import {
 } from './react-compat';
 
 /**
+ * Finds all nodes in the current wrapper nodes' render trees that match the provided predicate
+ * function.
+ *
+ * @param {ReactWrapper} wrapper
+ * @param {Function} predicate
+ * @returns {ReactWrapper}
+ */
+function findWhereUnwrapped(wrapper, predicate) {
+  return wrapper.flatMap(n => treeFilter(n.node, predicate));
+}
+
+/**
+ * Returns a new wrapper instance with only the nodes of the current wrapper instance that match
+ * the provided predicate function.
+ *
+ * @param {ReactWrapper} wrapper
+ * @param {Function} predicate
+ * @returns {ReactWrapper}
+ */
+function filterWhereUnwrapped(wrapper, predicate) {
+  return wrapper.wrap(compact(wrapper.nodes.filter(predicate)));
+}
+
+/**
  * @class ReactWrapper
  */
 export default class ReactWrapper {
@@ -161,7 +185,7 @@ export default class ReactWrapper {
    * @returns {Boolean}
    */
   contains(node) {
-    return this.findWhere(other => instEqual(node, other)).length > 0;
+    return findWhereUnwrapped(this, other => instEqual(node, other)).length > 0;
   }
 
   /**
@@ -172,7 +196,7 @@ export default class ReactWrapper {
    */
   find(selector) {
     const predicate = buildInstPredicate(selector);
-    return this.findWhere(predicate);
+    return findWhereUnwrapped(this, predicate);
   }
 
   /**
@@ -196,7 +220,7 @@ export default class ReactWrapper {
    * @returns {ReactWrapper}
    */
   filterWhere(predicate) {
-    return this.wrap(compact(this.nodes.filter(predicate)));
+    return filterWhereUnwrapped(this, n => predicate(this.wrap(n)));
   }
 
   /**
@@ -208,7 +232,7 @@ export default class ReactWrapper {
    */
   filter(selector) {
     const predicate = buildInstPredicate(selector);
-    return this.filterWhere(predicate);
+    return filterWhereUnwrapped(this, predicate);
   }
 
   /**
@@ -220,7 +244,7 @@ export default class ReactWrapper {
    */
   not(selector) {
     const predicate = buildInstPredicate(selector);
-    return this.filterWhere(n => !predicate(n));
+    return filterWhereUnwrapped(this, n => !predicate(n));
   }
 
   /**
@@ -479,7 +503,7 @@ export default class ReactWrapper {
    * @returns {ReactWrapper}
    */
   findWhere(predicate) {
-    return this.flatMap(n => treeFilter(n.node, predicate));
+    return findWhereUnwrapped(this, n => predicate(this.wrap(n)));
   }
 
   /**

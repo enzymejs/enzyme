@@ -24,6 +24,30 @@ import {
 } from './react-compat';
 
 /**
+ * Finds all nodes in the current wrapper nodes' render trees that match the provided predicate
+ * function.
+ *
+ * @param {ShallowWrapper} wrapper
+ * @param {Function} predicate
+ * @returns {ShallowWrapper}
+ */
+function findWhereUnwrapped(wrapper, predicate) {
+  return wrapper.flatMap(n => treeFilter(n.node, predicate));
+}
+
+/**
+ * Returns a new wrapper instance with only the nodes of the current wrapper instance that match
+ * the provided predicate function.
+ *
+ * @param {ShallowWrapper} wrapper
+ * @param {Function} predicate
+ * @returns {ShallowWrapper}
+ */
+function filterWhereUnwrapped(wrapper, predicate) {
+  return wrapper.wrap(compact(wrapper.nodes.filter(predicate)));
+}
+
+/**
  * @class ShallowWrapper
  */
 export default class ShallowWrapper {
@@ -152,7 +176,7 @@ export default class ShallowWrapper {
    * @returns {Boolean}
    */
   contains(node) {
-    return this.findWhere(other => nodeEqual(node, other)).length > 0;
+    return findWhereUnwrapped(this, other => nodeEqual(node, other)).length > 0;
   }
 
   /**
@@ -163,7 +187,7 @@ export default class ShallowWrapper {
    */
   find(selector) {
     const predicate = buildPredicate(selector);
-    return this.findWhere(predicate);
+    return findWhereUnwrapped(this, predicate);
   }
 
   /**
@@ -181,13 +205,14 @@ export default class ShallowWrapper {
 
   /**
    * Returns a new wrapper instance with only the nodes of the current wrapper instance that match
-   * the provided predicate function.
+   * the provided predicate function. The predicate should receive a wrapped node as its first
+   * argument.
    *
    * @param {Function} predicate
    * @returns {ShallowWrapper}
    */
   filterWhere(predicate) {
-    return this.wrap(compact(this.nodes.filter(predicate)));
+    return filterWhereUnwrapped(this, n => predicate(this.wrap(n)));
   }
 
   /**
@@ -199,7 +224,7 @@ export default class ShallowWrapper {
    */
   filter(selector) {
     const predicate = buildPredicate(selector);
-    return this.filterWhere(predicate);
+    return filterWhereUnwrapped(this, predicate);
   }
 
   /**
@@ -211,7 +236,7 @@ export default class ShallowWrapper {
    */
   not(selector) {
     const predicate = buildPredicate(selector);
-    return this.filterWhere(n => !predicate(n));
+    return filterWhereUnwrapped(this, n => !predicate(n));
   }
 
   /**
@@ -505,13 +530,14 @@ export default class ShallowWrapper {
 
   /**
    * Finds all nodes in the current wrapper nodes' render trees that match the provided predicate
-   * function.
+   * function. The predicate function will receive the nodes inside a ShallowWrapper as its
+   * first argument.
    *
    * @param {Function} predicate
    * @returns {ShallowWrapper}
    */
   findWhere(predicate) {
-    return this.flatMap(n => treeFilter(n.node, predicate));
+    return findWhereUnwrapped(this, n => predicate(this.wrap(n)));
   }
 
   /**

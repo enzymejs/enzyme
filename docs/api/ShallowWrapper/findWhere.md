@@ -5,7 +5,8 @@ Finds every node in the render tree that return true for the provided predicate 
 
 #### Arguments
 
-1. `predicate` (`ReactElement => Boolean`): A predicate function to match
+1. `predicate` (`ShallowWrapper => Boolean`): A predicate function called with the passed in wrapped
+nodes.
 
 
 
@@ -19,7 +20,7 @@ Finds every node in the render tree that return true for the provided predicate 
 
 ```jsx
 const wrapper = shallow(<MyComponent />);
-const complexComponents = wrapper.findWhere(n => typeof n.type !== 'string');
+const complexComponents = wrapper.findWhere(n => typeof n.type() !== 'string');
 expect(complexComponents).to.have.length(8);
 ```
 
