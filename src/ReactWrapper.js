@@ -78,7 +78,6 @@ export default class ReactWrapper {
     }
   }
 
-
   /**
    * If the root component contained a ref, you can access it here
    * and get a wrapper around it.
