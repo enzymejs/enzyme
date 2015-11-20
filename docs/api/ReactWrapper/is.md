@@ -1,0 +1,25 @@
+# `.is(selector) => Boolean`
+
+Returns whether or not the current node matches a provided selector.
+
+
+#### Arguments
+
+1. `selector` ([`ReagentSelector`](../selector.md)): The selector to match.
+
+
+
+#### Returns
+
+`Boolean`: whether or not the current node matches a provided selector.
+
+
+
+#### Example
+
+
+```jsx
+const wrapper = mount(<div className="some-class other-class" />);
+expect(wrapper.is('.some-class')).to.be.true;
+```
+
