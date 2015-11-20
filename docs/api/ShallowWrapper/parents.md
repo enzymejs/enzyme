@@ -9,7 +9,7 @@ Note: can only be called on a wrapper of a single node.
 
 #### Arguments
 
-1. `selector` (`String|Function` [optional]): The selector to filter the parents by.
+1. `selector` ([`ReagentSelector`](../selector.md) [optional]): The selector to filter the parents by.
 
 
 #### Returns

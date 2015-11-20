@@ -5,7 +5,7 @@ Returns a new wrapper with only the nodes of the current wrapper that match the 
 
 #### Arguments
 
-1. `selector` (`String|Function`): The selector to match.
+1. `selector` ([`ReagentSelector`](../selector.md)): The selector to match.
 
 
 

@@ -5,7 +5,7 @@ Returns whether or not any of the nodes in the wrapper match the provided select
 
 #### Arguments
 
-1. `selector` (`String|Function`): The selector to match.
+1. `selector` ([`ReagentSelector`](../selector.md)): The selector to match.
 
 
 
