@@ -1,7 +1,8 @@
 # selector
 
-A Selector in reagent is either 1) a valid CSS selector, 2) a react Component constructor function,
-or 3) the `displayName` of a component, where the first letter of the name is a capital letter.
+A Selector in reagent is similar to a CSS selector, but can be a number of other things as well in
+order to easily specify a criteria by which you want to find nodes in a reagent wrapper. See the 
+Selector page for more information.
 
 # wrapper
 

@@ -5,7 +5,7 @@ Returns whether or not the current node matches a provided selector.
 
 #### Arguments
 
-1. `selector` (`String|Function`): The selector to match.
+1. `selector` ([`ReagentSelector`](../selector.md)): The selector to match.
 
 
 

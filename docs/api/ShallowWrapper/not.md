@@ -8,7 +8,7 @@ This method is effectively the negation or inverse of [`filter`](filter.md).
 
 #### Arguments
 
-1. `selector` (`String|Function`): The selector to match.
+1. `selector` ([`ReagentSelector`](../selector.md)): The selector to match.
 
 
 

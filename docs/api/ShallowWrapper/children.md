@@ -6,7 +6,7 @@ selector can be provided and it will filter the children by this selector
 
 #### Arguments
 
-1. `selector` (`String|Function` [optional]): A selector to filter the children by.
+1. `selector` ([`ReagentSelector`](../selector.md) [optional]): A selector to filter the children by.
 
 
 #### Returns
