@@ -5,10 +5,9 @@ REACT=${REACT:-0.14}
 echo "installing React $REACT"
 
 if [ "$REACT" = "0.13" ]; then
-    npm remove react react-dom react-addons-test-utils
-    npm install react@0.13
-    exit
+    npm run react:13
 fi
 
-npm prune
-npm install
+if [ "$REACT" = "0.14" ]; then
+    npm run react:14
+fi
