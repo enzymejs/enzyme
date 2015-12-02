@@ -1,6 +1,8 @@
 Reagent
 =======
 
+[![npm Version](https://img.shields.io/npm/v/reagent.svg)](https://www.npmjs.com/package/reagent) [![License](https://img.shields.io/npm/l/reagent.svg)](https://www.npmjs.com/package/reagent) [![Build Status](https://travis-ci.org/airbnb/reagent.svg)](https://travis-ci.org/airbnb/reagent) [![Coverage Status](https://coveralls.io/repos/airbnb/reagent/badge.svg?branch=master&service=github)](https://coveralls.io/github/airbnb/reagent?branch=master)
+
 Reagent is a JavaScript Testing utility for React that makes it easier to assert, manipulate,
 and traverse your React Components' output.
 
