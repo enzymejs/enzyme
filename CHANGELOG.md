@@ -1,6 +1,4 @@
-## 2.1.0 (November 9, 2016)
 
-### Features
+## 1.0.0 (December 3, 2015)
 
-- Added React 0.14 Compatibility
-- Moved docs to [Gitbook](https://www.gitbook.com/)
+- Official Release!
