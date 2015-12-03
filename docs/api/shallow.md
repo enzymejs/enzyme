@@ -26,7 +26,7 @@ describe('<MyComponent />', () => {
     );
     expect(wrapper.contains(<div className="unique" />)).to.be.true;
   });
-  
+
   it('simulates click events', () => {
     const onButtonClick = sinon.spy();
     const wrapper = shallow(
@@ -55,7 +55,7 @@ Remove nodes in the current wrapper that do not match the provided selector.
 #### [`.filterWhere(predicate) => ShallowWrapper`](ShallowWrapper/filterWhere.md)
 Remove nodes in the current wrapper that do not return true for the provided predicate function.
 
-#### [`.contains(node) => Boolean`](ShallowWrapper/contains.md) 
+#### [`.contains(node) => Boolean`](ShallowWrapper/contains.md)
 Returns whether or not a given node is somewhere in the render tree.
 
 #### [`.hasClass(className) => Boolean`](ShallowWrapper/hasClass.md)
@@ -91,7 +91,7 @@ Returns a string representation of the text nodes in the current render tree.
 #### [`.html() => String`](ShallowWrapper/html.md)
 Returns a static HTML rendering of the current node.
 
-#### [`.get(index) => ShallowWrapper`](ShallowWrapper/get.md)
+#### [`.get(index) => ReactElement`](ShallowWrapper/get.md)
 Returns the node at the provided index of the current wrapper.
 
 #### [`.at(index) => ShallowWrapper`](ShallowWrapper/at.md)
@@ -141,10 +141,10 @@ Maps the current array of nodes to another array.
 
 #### [`reduce(fn[, initialValue]) => Any`](/docs/api/ShallowWrapper/reduce.md)
 Reduces the current array of nodes to a value
- 
+
 #### [`reduceRight(fn[, initialValue]) => Any`](/docs/api/ShallowWrapper/reduceRight.md)
 Reduces the current array of nodes to a value, from right to left.
- 
+
 #### [`some(selector) => Boolean`](/docs/api/ShallowWrapper/some.md)
 Returns whether or not any of the nodes in the wrapper match the provided selector.
 
