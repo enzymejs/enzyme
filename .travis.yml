@@ -27,10 +27,6 @@ node_js:
   - "0.12"
   - "0.11"
   - "0.10"
-  - "0.9"
-  - "0.8"
-  - "0.6"
-  - "0.4"
 before_install:
   - 'if [ "${TRAVIS_NODE_VERSION}" != "0.9" ]; then case "$(npm --version)" in 1.*) npm install -g npm@1.4.28 ;; 2.*) npm install -g npm@2 ;; esac ; fi'
   - 'if [ "${TRAVIS_NODE_VERSION}" != "0.6" ] && [ "${TRAVIS_NODE_VERSION}" != "0.9" ]; then npm install -g npm; fi'
@@ -66,6 +62,3 @@ matrix:
     - node_js: "iojs-v1.1"
     - node_js: "iojs-v1.0"
     - node_js: "0.11"
-    - node_js: "0.9"
-    - node_js: "0.6"
-    - node_js: "0.4"
