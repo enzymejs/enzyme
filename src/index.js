@@ -20,7 +20,7 @@ try {
 export let sinon = Sinon.sandbox.create();
 
 export function describeWithDOM(a, b) {
-  describe('<< uses jsdom >>', () => {
+  describe('(uses jsdom)', () => {
     if (typeof jsdom === 'function') {
       jsdom();
       describe(a, b);
