@@ -13,7 +13,7 @@ For the purposes of this documentation, we will refer to Cheerio's constructor a
 `CheerioWrapper`, which is to say that it is analogous to our `ReactWrapper` and `ShallowWrapper`
 constructors.
 
-### Exmple Usage
+### Example Usage
 
 ```jsx
 import { render } from 'reagent';
