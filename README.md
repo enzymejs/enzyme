@@ -70,7 +70,7 @@ describe('<MyComponent />', () => {
     const wrapper = shallow(
       <Foo onButtonClick={onButtonClick} />
     );
-    wrapper.find('button').click();
+    wrapper.find('button').simulate('click');
     expect(onButtonClick.calledOnce).to.be.true;
   });
 
@@ -110,7 +110,7 @@ describeWithDOM('<Foo />', () => {
     const wrapper = mount(
       <Foo onButtonClick={onButtonClick} />
     );
-    wrapper.find('button').click();
+    wrapper.find('button').simulate('click');
     expect(onButtonClick.calledOnce).to.be.true;
   });
 
