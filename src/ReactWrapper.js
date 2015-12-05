@@ -61,7 +61,7 @@ export default class ReactWrapper {
           />
       );
       this.root = this;
-      this.node = this.component.refs.component;
+      this.node = this.component.getWrappedComponent();
       this.nodes = [this.node];
       this.length = 1;
     } else {
@@ -108,7 +108,7 @@ export default class ReactWrapper {
    * @returns {ReactComponent}
    */
   instance() {
-    return this.component.refs.component;
+    return this.component.getInstance();
   }
 
   /**

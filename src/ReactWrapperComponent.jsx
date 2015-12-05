@@ -19,10 +19,30 @@ export default class ReactWrapperComponent extends React.Component {
     return new Promise(resolve => this.setState(newProps, resolve));
   }
 
+  getInstance() {
+    const component = this._reactInternalInstance._renderedComponent;
+    const inst = component.getPublicInstance();
+    if (inst === null) {
+      throw new Error(
+        `You cannot get an instance of a stateless component.`
+      );
+    }
+    return inst;
+  }
+
+  getWrappedComponent() {
+    const component = this._reactInternalInstance._renderedComponent;
+    const inst = component.getPublicInstance();
+    if (inst === null) {
+      return component;
+    }
+    return inst;
+  }
+
   render() {
     const { Component } = this.props;
     return (
-      <Component ref="component" {...this.state} />
+      <Component {...this.state} />
     );
   }
 }
