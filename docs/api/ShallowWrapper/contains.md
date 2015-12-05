@@ -1,4 +1,4 @@
-# `.contains(node)`
+# `.contains(node) => Boolean`
 
 Returns whether or not the current wrapper has a node anywhere in it's render tree that looks like
 the one passed in.
