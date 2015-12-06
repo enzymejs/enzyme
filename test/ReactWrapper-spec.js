@@ -1,13 +1,13 @@
 import { describeWithDOM, describeIf } from './_helpers';
 import React from 'react';
 import { expect } from 'chai';
-import sinon from 'sinon';
 import {
   mount,
   render,
   ReactWrapper,
-} from '../';
-import { REACT013 } from '../version';
+} from '../src/';
+import sinon from 'sinon';
+import { REACT013 } from '../src/version';
 
 describeWithDOM('mount', () => {
 

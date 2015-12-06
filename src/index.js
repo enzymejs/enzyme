@@ -1,52 +1,7 @@
 import cheerio from 'cheerio';
-import Sinon from 'sinon';
 import ReactWrapper from './ReactWrapper';
 import ShallowWrapper from './ShallowWrapper';
-import { describeWithDOM } from './describeWithDOM';
-import { onPrototype } from './Utils';
 import { renderToStaticMarkup } from './react-compat';
-
-/**
- * @class Enzyme
- */
-
-export let sinon = Sinon.sandbox.create();
-
-export function useSetStateHack() {
-  let cleanup = false;
-  before(() => {
-    if (typeof global.document === 'undefined') {
-      cleanup = true;
-      global.document = {};
-    }
-  });
-  after(() => {
-    if (cleanup) {
-      delete global.document;
-    }
-  });
-}
-
-export function spySetup() {
-  sinon = Sinon.sandbox.create();
-}
-
-export function spyTearDown() {
-  sinon.restore();
-}
-
-export function useSinon() {
-  beforeEach(spySetup);
-  afterEach(spyTearDown);
-}
-
-export function spyLifecycle(Component) {
-  onPrototype(Component, (proto, name) => sinon.spy(proto, name));
-}
-
-export function spyMethods(Component) {
-  onPrototype(Component, null, (proto, name) => sinon.spy(proto, name));
-}
 
 /**
  * Mounts and renders a react component into the document and provides a testing wrapper around it.
@@ -87,4 +42,3 @@ export function render(node) {
 
 export { ShallowWrapper as ShallowWrapper };
 export { ReactWrapper as ReactWrapper };
-export { describeWithDOM as describeWithDOM };

@@ -4,10 +4,10 @@ import {
   spaces,
   indent,
   debugNode,
-} from '../Debug';
-import { mount } from '../';
+} from '../src/Debug';
+import { mount } from '../src/';
 import { describeWithDOM, itIf } from './_helpers';
-import { REACT013 } from '../version';
+import { REACT013 } from '../src/version';
 
 describe('debug', () => {
 

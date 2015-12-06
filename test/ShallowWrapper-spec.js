@@ -1,9 +1,9 @@
 import React from 'react';
 import { expect } from 'chai';
-import { shallow, render, ShallowWrapper } from '../';
+import { shallow, render, ShallowWrapper } from '../src/';
 import sinon from 'sinon';
 import { describeIf } from './_helpers';
-import { REACT013 } from '../version';
+import { REACT013 } from '../src/version';
 
 describe('shallow', () => {
 
