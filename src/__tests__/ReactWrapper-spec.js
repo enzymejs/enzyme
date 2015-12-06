@@ -7,8 +7,25 @@ import {
   ReactWrapper,
   describeWithDOM,
 } from '../';
+import { describeIf } from './_helpers';
+import { REACT013 } from '../version';
 
 describeWithDOM('mount', () => {
+
+  describeIf(!REACT013, 'stateless components', () => {
+    it('works with stateless components', () => {
+      const Foo = ({ foo }) => (
+        <div>
+          <div className="bar">bar</div>
+          <div className="qoo">{foo}</div>
+        </div>
+      );
+      const wrapper = mount(<Foo foo="qux" />);
+      expect(wrapper.type()).to.equal(Foo);
+      expect(wrapper.find('.bar')).to.have.length(1);
+      expect(wrapper.find('.qoo').text()).to.equal('qux');
+    });
+  });
 
   describe('.contains(node)', () => {
 

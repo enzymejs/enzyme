@@ -2,9 +2,25 @@ import React from 'react';
 import { expect } from 'chai';
 import { shallow, render, ShallowWrapper } from '../';
 import sinon from 'sinon';
-
+import { describeIf } from './_helpers';
+import { REACT013 } from '../version';
 
 describe('shallow', () => {
+
+  describeIf(!REACT013, 'stateless components', () => {
+    it('works with stateless components', () => {
+      const Foo = ({ foo }) => (
+        <div>
+          <div className="bar">bar</div>
+          <div className="qoo">{foo}</div>
+        </div>
+      );
+      const wrapper = shallow(<Foo foo="qux" />);
+      expect(wrapper.type()).to.equal('div');
+      expect(wrapper.find('.bar')).to.have.length(1);
+      expect(wrapper.find('.qoo').text()).to.equal('qux');
+    });
+  });
 
   describe('.contains(node)', () => {
 
