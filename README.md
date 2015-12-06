@@ -14,6 +14,10 @@ compatible with all major test runners and assertion libraries out there. The do
 examples for enzyme use [mocha](https://mochajs.org/) and [chai](http://chaijs.com/), but you
 should be able to extrapolate to your framework of choice.
 
+[Using Enzyme with Mocha](/docs/guides/mocha.md)
+[Using Enzyme with Karma](/docs/guides/karma.md)
+[Using Enzyme with Jasmine](/docs/guides/jasmine.md)
+
 
 
 ### [Installation](/docs/installation/README.md)
@@ -42,6 +46,7 @@ Basic Usage
 ## [Shallow Rendering](/docs/api/shallow.md)
 
 ```jsx
+import React from 'react';
 import { shallow } from 'enzyme';
 
 describe('<MyComponent />', () => {
@@ -81,22 +86,14 @@ Read the full [API Documentation](/docs/api/shallow.md)
 
 
 
-## [JSDOM Full Rendering](/docs/api/mount.md)
+## [Full DOM Rendering](/docs/api/mount.md)
 
 ```jsx
-import {
-  describeWithDOM,
-  mount,
-  spyLifecycle,
-} from 'enzyme';
+import React from 'react';
+import sinon from 'sinon';
+import { mount } from 'enzyme';
 
-describeWithDOM('<Foo />', () => {
-
-  it('calls componentDidMount', () => {
-    spyLifecycle(Foo);
-    const wrapper = mount(<Foo />);
-    expect(Foo.prototype.componentDidMount.calledOnce).to.be.true;
-  });
+describe('<Foo />', () => {
 
   it('allows us to set props', () => {
     const wrapper = mount(<Foo bar="baz" />);
@@ -113,6 +110,13 @@ describeWithDOM('<Foo />', () => {
     wrapper.find('button').simulate('click');
     expect(onButtonClick.calledOnce).to.be.true;
   });
+  
+  it('calls componentDidMount', () => {
+    sinon.spy(Foo.prototype, 'componentDidMount');
+    const wrapper = mount(<Foo />);
+    expect(Foo.prototype.componentDidMount.calledOnce).to.be.true;
+    Foo.prototype.componentDidMount.restore();
+  });
 
 });
 ```
@@ -123,6 +127,7 @@ Read the full [API Documentation](/docs/api/mount.md)
 ## [Static Rendered Markup](/docs/api/render.md)
 
 ```jsx
+import React from 'react';
 import { render } from 'enzyme';
 
 describe('<Foo />', () => {

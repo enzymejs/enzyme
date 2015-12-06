@@ -26,32 +26,3 @@ nvm use 0.12
 ```bash
 nvm use 4
 ```
-
-### Preventing tests from failing on old versions
-
-If you are worried about tests not passing on versions of node that don't support jsdom, Enzyme
-comes with a helper function to wrap your tests in a safety layer such that any tests written
-inside of that function will be skipped if jsdom is not available.  (Note that this is for mocha
-only).
-
-```jsx
-import { mount, shallow } from 'enzyme';
-
-describe('MyComponent', () => {
-  describeWithDOM('interaction', () => {
-    // these tests will get skipped if jsdom is not available...
-    it('should do something', () => {
-      const wrapper = mount(<MyComponent />);
-      // ...
-    });
-  });
-  describe('non-interaction', () => {
-    // these tests will always run
-    it('should do something', () => {
-      const wrapper = shallow(<MyComponent />);
-      // ...
-    });
-  });
-});
-
-```

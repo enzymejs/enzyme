@@ -3,12 +3,12 @@ import sinon from 'sinon';
 import { expect } from 'chai';
 import {
   splitSelector,
-} from '../Utils';
+} from '../src/Utils';
 import {
   hasClassName,
   treeForEach,
   treeFilter,
-} from '../ShallowTraversal';
+} from '../src/ShallowTraversal';
 
 describe('ShallowTraversal', () => {
 

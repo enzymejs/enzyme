@@ -9,11 +9,15 @@
     "postversion": "git push && git push --tags && npm run clean && npm run docs:publish",
     "version": "npm run build",
     "clean": "rimraf build",
-    "lint": "eslint src/**",
-    "test": "mocha --compilers js:babel/register --recursive src/**/__tests__/*.js",
+    "lint": "eslint src/** packages/**/src/**",
     "check": "npm run lint && npm run test:all",
-    "build": "babel src --out-dir build",
-    "test:watch": "mocha --compilers js:babel/register --recursive src/**/__tests__/*.js --watch",
+    "build": "npm run build:core && npm run build:packages",
+    "build:core": "babel src --out-dir build",
+    "build:packages": "bash ./scripts/build-packages.sh",
+    "test": "npm run test:core && npm run test:packages",
+    "test:core": "mocha --compilers js:babel/register test/*.js",
+    "test:packages": "bash ./scripts/test-packages.sh",
+    "test:watch": "mocha --compilers js:babel/register test/*.js packages/**/test/*.js --watch",
     "test:all": "npm run react:13 && npm test && npm run react:14 && npm test",
     "react:clean": "rimraf node_modules/react node_modules/react-dom node_modules/react-addons-test-utils",
     "react:13": "npm run react:clean && npm i react@0.13",
@@ -23,7 +27,7 @@
     "docs:build": "npm run docs:prepare && gitbook build",
     "docs:watch": "npm run docs:prepare && gitbook serve",
     "docs:publish": "npm run docs:clean && npm run docs:build && cd _book && git init && git commit --allow-empty -m 'update book' && git fetch https://github.com/airbnb/enzyme.git gh-pages && git checkout -b gh-pages && git add . && git commit -am 'update book' && git push https://github.com/airbnb/enzyme.git gh-pages --force",
-    "travis": "istanbul cover _mocha -- --compilers js:babel/register --recursive src/**/__tests__/*.js"
+    "travis": "istanbul cover _mocha -- --compilers js:babel/register test/*.js packages/**/test/*.js"
   },
   "repository": {
     "type": "git",
@@ -47,7 +51,6 @@
   "license": "MIT",
   "dependencies": {
     "cheerio": "^0.19.0",
-    "sinon": "^1.15.4",
     "underscore": "^1.8.3"
   },
   "devDependencies": {
@@ -60,14 +63,13 @@
     "eslint-plugin-react": "^3.8.0",
     "gitbook-cli": "^1.0.0",
     "istanbul": "^0.4.0",
+    "jsdom": "^6.1.0",
     "mocha": "^2.2.5",
-    "rimraf": "^2.4.3"
+    "mocha-jsdom": "^1.0.0",
+    "rimraf": "^2.4.3",
+    "sinon": "^1.15.4"
   },
   "peerDependencies": {
     "react": "0.13.x || 0.14.x"
-  },
-  "optionalDependencies": {
-    "jsdom": "^6.1.0",
-    "mocha-jsdom": "^1.0.0"
   }
 }
