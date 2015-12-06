@@ -1,9 +1,9 @@
 # Static Rendering API
 
-Reagent's `render` function is used to render react components to static HTML and analyze the 
+Enzyme's `render` function is used to render react components to static HTML and analyze the 
 resulting HTML structure.
 
-`render` returns a wrapper very similar to the other renderers in reagent, [`mount`](mount.md) and 
+`render` returns a wrapper very similar to the other renderers in enzyme, [`mount`](mount.md) and 
 [`shallow`](shallow.md); however, `render` uses a third party HTML parsing and traversal library 
 [Cheerio](http://cheeriojs.github.io/cheerio/). We believe that Cheerio handles parsing and 
 traversing HTML extremely well, and duplicating this functionality ourselves would be a 
@@ -16,7 +16,7 @@ constructors.
 ### Example Usage
 
 ```jsx
-import { render } from 'reagent';
+import { render } from 'enzyme';
 
 describe('<Foo />', () => {
 

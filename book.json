@@ -1,6 +1,6 @@
 {
   "gitbook": "2.4.3",
-  "title": "Reagent",
+  "title": "Enzyme",
   "description": "React Testing",
   "structure": {
     "summary": "docs/README.md",
@@ -18,11 +18,11 @@
   ],
   "pluginsConfig": {
     "edit-link": {
-      "base": "https://github.com/airbnb/reagent/tree/master",
+      "base": "https://github.com/airbnb/enzyme/tree/master",
       "label": "Edit This Page"
     },
     "github": {
-      "url": "https://github.com/airbnb/reagent/"
+      "url": "https://github.com/airbnb/enzyme/"
     }
   }
 }

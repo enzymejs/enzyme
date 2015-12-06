@@ -12,7 +12,7 @@ if (REACT013) {
   createShallowRenderer = TestUtils.createRenderer;
   renderIntoDocument = TestUtils.renderIntoDocument;
   // this fixes some issues in React 0.13 with setState and jsdom...
-  // see issue: https://github.com/airbnb/reagent/issues/27
+  // see issue: https://github.com/airbnb/enzyme/issues/27
   require('react/lib/ExecutionEnvironment').canUseDOM = true;
 } else {
   renderToStaticMarkup = require('react-dom/server').renderToStaticMarkup;

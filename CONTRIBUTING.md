@@ -8,14 +8,14 @@ always be given.
 
 ## Setting up your environment
 
-After forking reagent to your own github org, do the following steps to get started:
+After forking enzyme to your own github org, do the following steps to get started:
 
 ```bash
 # clone your fork to your local machine
-git clone https://github.com/airbnb/reagent.git
+git clone https://github.com/airbnb/enzyme.git
 
 # step into local repo
-cd reagent
+cd enzyme
 
 # install dependencies (use react:13 if you want to use React 0.13)
 npm install && npm run react:14

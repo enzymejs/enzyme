@@ -5,7 +5,7 @@
 ### [Shallow Rendering](shallow.md)
 
 ```jsx
-import { shallow } from 'reagent';
+import { shallow } from 'enzyme';
 
 const wrapper = shallow(<MyComponent />);
 // ...
@@ -15,7 +15,7 @@ const wrapper = shallow(<MyComponent />);
 ### [Full Rendering](mount.md)
 
 ```jsx
-import { mount } from 'reagent';
+import { mount } from 'enzyme';
 
 const wrapper = mount(<MyComponent />);
 // ...
@@ -25,7 +25,7 @@ const wrapper = mount(<MyComponent />);
 ### [Static Rendering](render.md)
 
 ```jsx
-import { render } from 'reagent';
+import { render } from 'enzyme';
 
 const wrapper = render(<MyComponent />);
 // ...

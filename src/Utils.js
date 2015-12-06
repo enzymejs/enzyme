@@ -112,7 +112,7 @@ export function isSimpleSelector(selector) {
 
 export function selectorError(selector) {
   return new TypeError(
-    `Reagent received a complex CSS selector ('${selector}') that it does not currently support`
+    `Enzyme received a complex CSS selector ('${selector}') that it does not currently support`
   );
 }
 

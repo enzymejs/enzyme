@@ -8,7 +8,7 @@ Full DOM rendering  depends on a library called [jsdom](https://github.com/tmpva
 essentially a headless browser implemented completely in JS.
 
 ```jsx
-import { mount } from 'reagent';
+import { mount } from 'enzyme';
 
 describe('<Foo />', () => {
 

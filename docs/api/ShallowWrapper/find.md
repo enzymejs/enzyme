@@ -5,7 +5,7 @@ Finds every node in the render tree of the current wrapper that matches the prov
 
 #### Arguments
 
-1. `selector` ([`ReagentSelector`](../selector.md)): The selector to match.
+1. `selector` ([`EnzymeSelector`](../selector.md)): The selector to match.
 
 
 
