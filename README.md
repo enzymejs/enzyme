@@ -43,6 +43,7 @@ Basic Usage
 
 ```jsx
 import { shallow } from 'enzyme';
+import sinon from 'sinon';
 
 describe('<MyComponent />', () => {
 
