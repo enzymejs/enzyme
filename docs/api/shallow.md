@@ -40,6 +40,18 @@ describe('<MyComponent />', () => {
 
 ```
 
+## `shallow(node[, options]) => ReactWrapper`
+
+#### Arguments
+
+1. `node` (`ReactElement`): The node to render
+2. `options` (`Object` [optional]): 
+- `options.context`: (`Object` [optional]): Context to be passed into the component
+
+#### Returns
+
+`ShallowWrapper`: The wrapper instance around the rendered output.
+
 
 ## ShallowWrapper API
 
@@ -120,6 +132,9 @@ Manually sets state of the root component.
 
 #### [`.setProps(nextProps) => ShallowWrapper`](ShallowWrapper/setProps.md)
 Manually sets props of the root component.
+
+#### [`.setContext(context) => ShallowWrapper`](ShallowWrapper/setContext.md)
+Manually sets context of the root component.
 
 #### [`.instance() => ReactComponent`](ShallowWrapper/instance.md)
 Returns the instance of the root component.

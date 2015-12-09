@@ -59,5 +59,6 @@ expect(spy.calledOnce).to.be.true;
 #### Related Methods
 
 - [`.setState(state) => Self`](setState.md)
+- [`.setContext(context) => Self`](setContext.md)
 
 

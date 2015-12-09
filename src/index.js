@@ -73,8 +73,8 @@ export function spyMethods(Component) {
  * @param node
  * @returns {ReactWrapper}
  */
-export function mount(node) {
-  return new ReactWrapper(node);
+export function mount(node, options) {
+  return new ReactWrapper(node, null, options);
 }
 
 /**
@@ -83,8 +83,8 @@ export function mount(node) {
  * @param node
  * @returns {ShallowWrapper}
  */
-export function shallow(node) {
-  return new ShallowWrapper(node);
+export function shallow(node, options) {
+  return new ShallowWrapper(node, null, options);
 }
 
 /**

@@ -52,12 +52,12 @@ function filterWhereUnwrapped(wrapper, predicate) {
  */
 export default class ShallowWrapper {
 
-  constructor(nodes, root) {
+  constructor(nodes, root, options = {}) {
     if (!root) {
       this.root = this;
       this.unrendered = nodes;
       this.renderer = createShallowRenderer();
-      this.renderer.render(nodes);
+      this.renderer.render(nodes, options.context);
       this.node = this.renderer.getRenderOutput();
       this.nodes = [this.node];
       this.length = 1;
@@ -74,6 +74,7 @@ export default class ShallowWrapper {
       }
       this.length = this.nodes.length;
     }
+    this.options = options;
   }
 
   /**
@@ -131,7 +132,8 @@ export default class ShallowWrapper {
     }
     this.single(() => {
       withSetStateAllowed(() => {
-        this.renderer.render(React.cloneElement(this.unrendered, props));
+        this.unrendered = React.cloneElement(this.unrendered, props);
+        this.renderer.render(this.unrendered);
         this.update();
       });
     });
@@ -160,6 +162,30 @@ export default class ShallowWrapper {
         this.update();
       });
     });
+    return this;
+  }
+
+  /**
+   * A method that sets the context of the root component, and re-renders. Useful for when you are
+   * wanting to test how the component behaves over time with changing contexts.
+   *
+   * NOTE: can only be called on a wrapper instance that is also the root instance.
+   *
+   * @param {Object} context object
+   * @returns {ShallowWrapper}
+   */
+  setContext(context) {
+    if (this.root !== this) {
+      throw new Error('ShallowWrapper::setContext() can only be called on the root');
+    }
+    if (!this.options.context) {
+      throw new Error(
+        'ShallowWrapper::setContext() can only be called on a wrapper that was originally passed ' +
+        'a context option'
+      );
+    }
+    this.renderer.render(this.unrendered, context);
+    this.update();
     return this;
   }
 

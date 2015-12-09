@@ -1,6 +1,6 @@
 import React from 'react';
 import { flatten, unique, compact } from 'underscore';
-import ReactWrapperComponent from './ReactWrapperComponent';
+import createWrapperComponent from './ReactWrapperComponent';
 import {
   instHasClassName,
   childrenOfInst,
@@ -45,7 +45,7 @@ function filterWhereUnwrapped(wrapper, predicate) {
  */
 export default class ReactWrapper {
 
-  constructor(nodes, root) {
+  constructor(nodes, root, options = {}) {
     if (!global.window && !global.document) {
       throw new Error(
         `It looks like you called \`mount()\` without a jsdom document being loaded. ` +
@@ -54,10 +54,12 @@ export default class ReactWrapper {
     }
 
     if (!root) {
+      const ReactWrapperComponent = createWrapperComponent(nodes, options);
       this.component = renderIntoDocument(
         <ReactWrapperComponent
           Component={nodes.type}
           props={nodes.props}
+          context={options.context}
           />
       );
       this.root = this;
@@ -76,6 +78,7 @@ export default class ReactWrapper {
       }
       this.length = this.nodes.length;
     }
+    this.options = options;
   }
 
   /**
@@ -147,7 +150,7 @@ export default class ReactWrapper {
     if (this.root !== this) {
       throw new Error('ReactWrapper::setProps() can only be called on the root');
     }
-    this.component.setProps(props);
+    this.component.setChildProps(props);
     return this;
   }
 
@@ -168,6 +171,29 @@ export default class ReactWrapper {
       throw new Error('ReactWrapper::setState() can only be called on the root');
     }
     this.instance().setState(state);
+    return this;
+  }
+
+  /**
+   * A method that sets the context of the root component, and re-renders. Useful for when you are
+   * wanting to test how the component behaves over time with changing contexts.
+   *
+   * NOTE: can only be called on a wrapper instance that is also the root instance.
+   *
+   * @param {Object} context object
+   * @returns {ReactWrapper}
+   */
+  setContext(context) {
+    if (this.root !== this) {
+      throw new Error('ReactWrapper::setContext() can only be called on the root');
+    }
+    if (!this.options.context) {
+      throw new Error(
+        'ShallowWrapper::setContext() can only be called on a wrapper that was originally passed ' +
+        'a context option'
+      );
+    }
+    this.component.setChildContext(context);
     return this;
   }
 
