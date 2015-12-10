@@ -1,0 +1,25 @@
+{
+  "name": "enzyme-mocha",
+  "version": "1.1.0",
+  "description": "Make Mocha and Enzyme play nice",
+  "main": "build/index.js",
+  "scripts": {
+    "build": "babel src --out-dir build",
+    "test": "mocha --compilers js:babel/register"
+  },
+  "repository": "https://github.com/airbnb/enzyme/tree/master/packages/enzyme-mocha",
+  "keywords": [
+    "mocha",
+    "enzyme"
+  ],
+  "author": "Leland Richardson <leland.richardson@airbnb.com>",
+  "license": "MIT",
+  "dependencies": {
+    "jsdomify": "^1.0.2"
+  },
+  "peerDependencies": {
+    "react": "0.13.x || 0.14.x",
+    "mocha": ">= 2.0.0",
+    "enzyme": "^1.1.0"
+  }
+}

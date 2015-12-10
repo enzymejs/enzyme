@@ -4,7 +4,7 @@ import {
   spaces,
   indent,
   debugNode,
-} from '../Debug';
+} from '../src/Debug';
 
 describe('debug', () => {
 
