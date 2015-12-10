@@ -87,6 +87,12 @@ describe('shallow', () => {
 
   describe('.find(selector)', () => {
 
+    it('should be able to match the root DOM element', () => {
+      const wrapper = shallow(<div id="ttt" className="ttt">hello</div>);
+      expect(wrapper.find('#ttt')).to.have.length(1);
+      expect(wrapper.find('.ttt')).to.have.length(1);
+    });
+
     it('should find an element based on a class name', () => {
       const wrapper = shallow(
         <div>

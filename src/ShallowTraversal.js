@@ -63,8 +63,7 @@ export function parentsOfNode(node, root) {
 }
 
 export function nodeHasId(node, id) {
-  const maybeId = node && node._store && node._store.props && node._store.props.id;
-  return maybeId === id;
+  return propsOfNode(node).id === id;
 }
 
 export function nodeHasType(node, type) {
