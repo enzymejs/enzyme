@@ -37,6 +37,18 @@ describe('<Foo />', () => {
 });
 ```
 
+## `mount(node[, options]) => ReactWrapper`
+
+#### Arguments
+
+1. `node` (`ReactElement`): The node to render
+2. `options` (`Object` [optional]): 
+- `options.context`: (`Object` [optional]): Context to be passed into the component
+
+#### Returns
+
+`ReactWrapper`: The wrapper instance around the rendered output.
+
 
 ## ReactWrapper API
 
@@ -108,6 +120,9 @@ Manually sets state of the root component.
 
 #### [`.setProps(nextProps) => ReactWrapper`](ReactWrapper/setProps.md)
 Manually sets props of the root component.
+
+#### [`.setContext(context) => ReactWrapper`](ReactWrapper/setContext.md)
+Manually sets context of the root component.
 
 #### [`.instance() => ReactComponent`](ReactWrapper/instance.md)
 Returns the instance of the root component.

@@ -5,11 +5,28 @@ let createShallowRenderer;
 let renderToStaticMarkup;
 let renderIntoDocument;
 let findDOMNode;
+let React;
+let ReactContext;
 if (REACT013) {
   renderToStaticMarkup = require('react').renderToStaticMarkup;
-  findDOMNode = require('react').findDOMNode;
+  React = require('react');
+  findDOMNode = React.findDOMNode;
   TestUtils = require('react/addons').addons.TestUtils;
-  createShallowRenderer = TestUtils.createRenderer;
+  ReactContext = require('react/lib/ReactContext');
+
+  // Shallow rendering in 0.13 did not properly support context. This function provides a shim
+  // around `TestUtils.createRenderer` that instead returns a ShallowRenderer that actually
+  // works with context. See https://github.com/facebook/react/issues/3721 for more details.
+  createShallowRenderer = function createRendererCompatible() {
+    const renderer = TestUtils.createRenderer();
+    renderer.render = (originalRender => function contextCompatibleRender(node, context = {}) {
+      ReactContext.current = context;
+      originalRender.call(this, React.createElement(node.type, node.props), context);
+      ReactContext.current = {};
+      return renderer.getRenderOutput();
+    })(renderer.render);
+    return renderer;
+  };
   renderIntoDocument = TestUtils.renderIntoDocument;
   // this fixes some issues in React 0.13 with setState and jsdom...
   // see issue: https://github.com/airbnb/enzyme/issues/27
@@ -36,13 +53,13 @@ if (REACT013) {
     let _node;
     return {
       _instance: renderer._instance,
-      render(node) {
+      render(node, context) {
         if (typeof node.type === 'string') {
           isDOM = true;
           _node = node;
         } else {
           isDOM = false;
-          renderer.render(node);
+          renderer.render(node, context);
           this._instance = renderer._instance;
         }
       },

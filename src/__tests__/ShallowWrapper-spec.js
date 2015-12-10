@@ -7,6 +7,34 @@ import { REACT013 } from '../version';
 
 describe('shallow', () => {
 
+  describe('context', () => {
+    it('can pass in context', () => {
+      const SimpleComponent = React.createClass({
+        contextTypes: {
+          name: React.PropTypes.string,
+        },
+        render() {
+          return <div>{this.context.name}</div>;
+        },
+      });
+
+      const context = { name: 'foo' };
+      const wrapper = shallow(<SimpleComponent />, { context });
+      expect(wrapper.text()).to.equal('foo');
+    });
+
+    it('throws if context is passed in but contextTypes is missing', () => {
+      const SimpleComponent = React.createClass({
+        render() {
+          return <div>{this.context.name}</div>;
+        },
+      });
+
+      const context = { name: 'foo' };
+      expect(() => shallow(<SimpleComponent />, { context })).to.throw;
+    });
+  });
+
   describeIf(!REACT013, 'stateless components', () => {
     it('works with stateless components', () => {
       const Foo = ({ foo }) => (
@@ -226,6 +254,32 @@ describe('shallow', () => {
       expect(spy.calledWith(nextProps)).to.be.true;
     });
 
+  });
+
+  describe('.setContext(newContext)', () => {
+    const SimpleComponent = React.createClass({
+      contextTypes: {
+        name: React.PropTypes.string,
+      },
+      render() {
+        return <div>{this.context.name}</div>;
+      },
+    });
+
+    it('should set context for a component multiple times', () => {
+      const context = { name: 'foo' };
+      const wrapper = shallow(<SimpleComponent />, { context });
+      expect(wrapper.text()).to.equal('foo');
+      wrapper.setContext({ name: 'bar' });
+      expect(wrapper.text()).to.equal('bar');
+      wrapper.setContext({ name: 'baz' });
+      expect(wrapper.text()).to.equal('baz');
+    });
+
+    it('should throw if it is called when shallow didnt include context', () => {
+      const wrapper = shallow(<SimpleComponent />);
+      expect(() => wrapper.setContext({ name: 'bar' })).to.throw;
+    });
   });
 
   describe('.simulate(eventName, data)', () => {

@@ -8,45 +8,75 @@ import React, { PropTypes } from 'react';
  * the DOM node it rendered to, so we can't really "re-render" to
  * pass new props in.
  */
-export default class ReactWrapperComponent extends React.Component {
+export default function createWrapperComponent(node, options = {}) {
+  const spec = {
 
-  constructor(props) {
-    super(props);
-    this.state = Object.assign({}, props.props);
-  }
+    propTypes: {
+      Component: PropTypes.oneOfType([PropTypes.func, PropTypes.string]).isRequired,
+      props: PropTypes.object.isRequired,
+      context: PropTypes.object,
+    },
 
-  setProps(newProps) {
-    return new Promise(resolve => this.setState(newProps, resolve));
-  }
+    getDefaultProps() {
+      return {
+        context: null,
+      };
+    },
 
-  getInstance() {
-    const component = this._reactInternalInstance._renderedComponent;
-    const inst = component.getPublicInstance();
-    if (inst === null) {
-      throw new Error(
-        `You cannot get an instance of a stateless component.`
+    getInitialState() {
+      return {
+        props: this.props.props,
+        context: this.props.context,
+      };
+    },
+
+    setChildProps(props) {
+      return new Promise(resolve => this.setState({ props }, resolve));
+    },
+
+    setChildContext(context) {
+      return new Promise(resolve => this.setState({ context }, resolve));
+    },
+
+    getInstance() {
+      const component = this._reactInternalInstance._renderedComponent;
+      const inst = component.getPublicInstance();
+      if (inst === null) {
+        throw new Error(
+          `You cannot get an instance of a stateless component.`
+        );
+      }
+      return inst;
+    },
+
+    getWrappedComponent() {
+      const component = this._reactInternalInstance._renderedComponent;
+      const inst = component.getPublicInstance();
+      if (inst === null) {
+        return component;
+      }
+      return inst;
+    },
+
+    render() {
+      const { Component } = this.props;
+      return (
+        <Component {...this.state.props} />
       );
-    }
-    return inst;
+    },
+  };
+
+  if (options.context && node.type.contextTypes) {
+    // For full rendering, we are using this wrapper component to provide context if it is
+    // specified in both the options AND the child component defines `contextTypes` statically.
+    // In that case, we define both a `getChildContext()` function and a `childContextTypes` prop.
+    Object.assign(spec, {
+      childContextTypes: node.type.contextTypes,
+      getChildContext() {
+        return this.state.context;
+      },
+    });
   }
 
-  getWrappedComponent() {
-    const component = this._reactInternalInstance._renderedComponent;
-    const inst = component.getPublicInstance();
-    if (inst === null) {
-      return component;
-    }
-    return inst;
-  }
-
-  render() {
-    const { Component } = this.props;
-    return (
-      <Component {...this.state} />
-    );
-  }
+  return React.createClass(spec);
 }
-ReactWrapperComponent.propTypes = {
-  Component: PropTypes.oneOfType([PropTypes.func, PropTypes.string]).isRequired,
-  props: PropTypes.object.isRequired,
-};
