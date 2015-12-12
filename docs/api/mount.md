@@ -91,6 +91,9 @@ Get a wrapper with the first ancestor of the current node to match the provided 
 #### [`.text() => String`](ReactWrapper/text.md)
 Returns a string representation of the text nodes in the current render tree.
 
+#### [`.html() => String`](ReactWrapper/html.md)
+Returns a static HTML rendering of the current node.
+
 #### [`.get(index) => ReactWrapper`](ReactWrapper/get.md)
 Returns the node at the provided index of the current wrapper.
 

@@ -1202,4 +1202,42 @@ describeWithDOM('mount', () => {
       expect(wrapper.ref('secondRef').text()).to.equal('Second');
     });
   });
+
+  describe('.html()', () => {
+    it('should return html of straight DOM elements', () => {
+      const wrapper = mount(
+        <div className="test">
+          <span>Hello World!</span>
+        </div>
+      );
+      expect(wrapper.html()).to.equal(
+        `<div class="test"><span>Hello World!</span></div>`
+      );
+    });
+
+    it('should render out nested composite components', () => {
+      class Foo extends React.Component {
+        render() {
+          return (<div className="in-foo" />);
+        }
+      }
+      class Bar extends React.Component {
+        render() {
+          return (
+            <div className="in-bar">
+              <Foo />
+            </div>
+          );
+        }
+      }
+      const wrapper = mount(<Bar />);
+      expect(wrapper.html()).to.equal(
+        `<div class="in-bar"><div class="in-foo"></div></div>`
+      );
+      expect(wrapper.find(Foo).html()).to.equal(
+        `<div class="in-foo"></div>`
+      );
+    });
+  });
+
 });
