@@ -1,12 +1,16 @@
 import React from 'react';
 import {
+  coercePropValue,
   propsOfNode,
   isSimpleSelector,
   splitSelector,
   selectorError,
   isCompoundSelector,
+  selectorType,
   AND,
+  SELECTOR,
 } from './Utils';
+
 
 export function childrenOfNode(node) {
   if (!node) return [];
@@ -66,6 +70,24 @@ export function nodeHasId(node, id) {
   return propsOfNode(node).id === id;
 }
 
+
+export function nodeHasProperty(node, propKey, stringifiedPropValue) {
+  const nodeProps = propsOfNode(node);
+  const propValue = coercePropValue(stringifiedPropValue);
+  const nodePropValue = nodeProps[propKey];
+
+  if (nodePropValue === undefined) {
+    return false;
+  }
+
+  if (propValue) {
+    return nodePropValue === propValue;
+  }
+
+  return nodeProps.hasOwnProperty(propKey);
+}
+
+
 export function nodeHasType(node, type) {
   if (!type || !node) return false;
   if (!node.type) return false;
@@ -86,20 +108,31 @@ export function buildPredicate(selector) {
       if (isCompoundSelector.test(selector)) {
         return AND(splitSelector(selector).map(buildPredicate));
       }
-      if (selector[0] === '.') {
-        // selector is a class name
-        return node => hasClassName(node, selector.substr(1));
-      } else if (selector[0] === '#') {
-        // selector is an id name
-        return node => nodeHasId(node, selector.substr(1));
+
+      switch (selectorType(selector)) {
+        case SELECTOR.CLASS_TYPE:
+          return node => hasClassName(node, selector.substr(1));
+
+        case SELECTOR.ID_TYPE:
+          return node => nodeHasId(node, selector.substr(1));
+
+        case SELECTOR.PROP_TYPE:
+          const propKey = selector.split(/\[([a-zA-Z\-]*?)(=|\])/)[1];
+          const propValue = selector.split(/=(.*?)\]/)[1];
+
+          return node => nodeHasProperty(node, propKey, propValue);
+        default:
+          // selector is a string. match to DOM tag or constructor displayName
+          return node => nodeHasType(node, selector);
       }
-      // selector is a string. match to DOM tag or constructor displayName
-      return node => nodeHasType(node, selector);
+      break;
+
 
     default:
       throw new TypeError('Expecting a string or Component Constructor');
   }
 }
+
 
 export function getTextFromNode(node) {
   if (node === null || node === undefined) {

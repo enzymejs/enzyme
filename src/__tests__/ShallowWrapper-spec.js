@@ -158,6 +158,81 @@ describe('shallow', () => {
       expect(wrapper.find('button').length).to.equal(1);
     });
 
+    it('should find component based on a react prop', () => {
+      const wrapper = shallow(
+        <div>
+          <span title="foo" />
+        </div>
+      );
+
+      expect(wrapper.find('[title="foo"]')).to.have.length(1);
+      expect(wrapper.find('[title]')).to.have.length(1);
+    });
+
+    it('should compound tag and prop selector', () => {
+      const wrapper = shallow(
+        <div>
+          <span preserveAspectRatio="xMaxYMax"/>
+        </div>
+      );
+
+      expect(wrapper.find('span[preserveAspectRatio="xMaxYMax"]')).to.have.length(1);
+      expect(wrapper.find('span[preserveAspectRatio]')).to.have.length(1);
+    });
+
+    it('should support data prop selectors', () => {
+      const wrapper = shallow(
+        <div>
+          <span data-foo="bar" />
+        </div>
+      );
+
+      expect(wrapper.find('[data-foo="bar"]')).to.have.length(1);
+      expect(wrapper.find('[data-foo]')).to.have.length(1);
+    });
+
+    it('should find components with multiple matching react props', () => {
+      function noop() {}
+      const wrapper = shallow(
+        <div>
+          <span htmlFor="foo" onChange={noop} preserveAspectRatio="xMaxYMax" />
+        </div>
+      );
+
+      expect(wrapper.find('span[htmlFor="foo"][onChange]')).to.have.length(1);
+      expect(wrapper.find('span[htmlFor="foo"][preserveAspectRatio="xMaxYMax"]')).to.have.length(1);
+      expect(wrapper.find('[htmlFor][preserveAspectRatio]')).to.have.length(1);
+    });
+
+    it('should support boolean and numeric values for matching props', () => {
+      const wrapper = shallow(
+        <div>
+          <span value={1} />
+          <a value={false} />
+        </div>
+      );
+
+      expect(wrapper.find('span[value=1]')).to.have.length(1);
+      expect(wrapper.find('span[value=2]')).to.have.length(0);
+      expect(wrapper.find('a[value=false]')).to.have.length(1);
+      expect(wrapper.find('a[value=true]')).to.have.length(0);
+    });
+
+    it('should not find key or ref via property selector', () => {
+      const arrayOfComponents = [<div key="1" />, <div key="2" />];
+      const wrapper = shallow(
+        <div>
+          <div ref="foo" />
+          {arrayOfComponents}
+        </div>
+      );
+
+      expect(wrapper.find('div[ref="foo"]')).to.have.length(0);
+      expect(wrapper.find('div[key="1"]')).to.have.length(0);
+      expect(wrapper.find('[ref]')).to.have.length(0);
+      expect(wrapper.find('[key]')).to.have.length(0);
+    });
+
     it('should find multiple elements based on a constructor', () => {
       const wrapper = shallow(
         <div>

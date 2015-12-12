@@ -102,12 +102,12 @@ export function withSetStateAllowed(fn) {
 }
 
 export function splitSelector(selector) {
-  return selector.split(/(?=\.)/);
+  return selector.split(/(?=\.|\[.*\])/);
 }
 
 export function isSimpleSelector(selector) {
   // any of these characters pretty much guarantee it's a complex selector
-  return !/[~\s\[\]:>]/.test(selector);
+  return !/[~\s:>]/.test(selector);
 }
 
 export function selectorError(selector) {
@@ -116,8 +116,25 @@ export function selectorError(selector) {
   );
 }
 
-export const isCompoundSelector = /[a-z]\.[a-z]/i;
+export const isCompoundSelector = /([a-z]\.[a-z]|[a-z]\[.*\])/i;
 
+const isPropSelector = /^\[.*\]$/;
+
+export const SELECTOR = {
+  CLASS_TYPE: 0,
+  ID_TYPE: 1,
+  PROP_TYPE: 2,
+};
+
+export function selectorType(selector) {
+  if (selector[0] === '.') {
+    return SELECTOR.CLASS_TYPE;
+  } else if (selector[0] === '#') {
+    return SELECTOR.ID_TYPE;
+  } else if (isPropSelector.test(selector)) {
+    return SELECTOR.PROP_TYPE;
+  }
+}
 
 export function AND(fns) {
   return x => {
@@ -127,4 +144,27 @@ export function AND(fns) {
     }
     return true;
   };
+}
+
+export function coercePropValue(propValue) {
+  // can be undefined
+  if (propValue === undefined) {
+    return propValue;
+  }
+
+  // if propValue includes quotes, it should be
+  // treated as a string
+  if (propValue.search(/"/) !== -1) {
+    return propValue.replace(/"/g, '');
+  }
+
+  const numericPropValue = parseInt(propValue, 10);
+
+  // if parseInt is not NaN, then we've wanted a number
+  if (!isNaN(numericPropValue)) {
+    return numericPropValue;
+  }
+
+  // coerce to boolean
+  return propValue === 'true' ? true : false;
 }

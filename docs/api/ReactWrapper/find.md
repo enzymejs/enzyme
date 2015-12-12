@@ -28,6 +28,9 @@ expect(wrapper.find('div.some-class')).to.have.length(3);
 
 // CSS id selector
 expect(wrapper.find('#foo')).to.have.length(1);
+
+// property selector
+expect(wrapper.find('[htmlFor="checkbox"]')).to.have.length(1);
 ```
 
 Component Constructors:

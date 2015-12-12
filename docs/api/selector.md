@@ -12,6 +12,24 @@ follows:
 - class syntax (`.foo`, `.foo-bar`, etc.)
 - tag syntax (`input`, `div`, `span`, etc.)
 - id syntax (`#foo`, `#foo-bar`, etc.)
+- prop syntax (`[htmlFor="foo"]`, `[bar]`, `[baz=1]`, etc.);
+
+**Note -- Prop selector**
+Strings, numeric literals and boolean property values are supported for prop syntax
+in combination of the expected string syntax. For example, the following
+is supported:
+
+```js
+const wrapper = mount(
+  <div>
+    <span foo={3} bar={false} title="baz" />
+  </div>
+)
+
+wrapper.find('[foo=3]')
+wrapper.find('[bar=false]')
+wrapper.find('[title="baz"]')
+```
 
 Further, enzyme supports combining any of those supported syntaxes together to uniquely identify a
 single node.  For instance:
@@ -19,6 +37,7 @@ single node.  For instance:
 ```css
 div.foo.bar
 input#input-name
+label[foo=true]
 ```
 
 Are all valid selectors in enzyme.  At this time, however, any contextual CSS selector syntax that

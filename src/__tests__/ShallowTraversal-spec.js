@@ -6,6 +6,7 @@ import {
 } from '../Utils';
 import {
   hasClassName,
+  nodeHasProperty,
   treeForEach,
   treeFilter,
 } from '../ShallowTraversal';
@@ -23,6 +24,13 @@ describe('ShallowTraversal', () => {
       expect(fn('input.bar')).to.eql(['input', '.bar']);
       expect(fn('div.bar.baz')).to.eql(['div', '.bar', '.baz']);
       expect(fn('Foo.bar')).to.eql(['Foo', '.bar']);
+    });
+
+    it('splits tag names and attributes', () => {
+      expect(fn('input[type="text"]')).to.eql(['input', '[type="text"]']);
+      expect(
+        fn('div[title="title"][data-value="foo"]')
+      ).to.eql(['div', '[title="title"]', '[data-value="foo"]']);
     });
   });
 
@@ -45,6 +53,30 @@ describe('ShallowTraversal', () => {
     it('should also allow hyphens', () => {
       const node = (<div className="foo-bar"/>);
       expect(hasClassName(node, 'foo-bar')).to.equal(true);
+    });
+
+  });
+
+  describe('nodeHasProperty', () => {
+
+    it('should find properties', () => {
+      function noop() {}
+      const node = (<div onChange={noop} title="foo" />);
+
+      expect(nodeHasProperty(node, 'onChange')).to.equal(true);
+      expect(nodeHasProperty(node, 'title', 'foo')).to.equal(true);
+    });
+
+    it('should not match on html attributes', () => {
+      const node = (<div htmlFor="foo" />);
+
+      expect(nodeHasProperty(node, 'for', 'foo')).to.equal(false);
+    });
+
+    it('should not find undefined properties', () => {
+      const node = (<div title={undefined} />);
+
+      expect(nodeHasProperty(node, 'title')).to.equal(false);
     });
 
   });
