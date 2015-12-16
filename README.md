@@ -48,17 +48,17 @@ import { shallow } from 'enzyme';
 
 describe('<MyComponent />', () => {
 
-  it('should render three <Foo /> components', () => {
+  it('renders three <Foo /> components', () => {
     const wrapper = shallow(<MyComponent />);
     expect(wrapper.find(Foo)).to.have.length(3);
   });
 
-  it('should render an `.icon-star`', () => {
+  it('renders an `.icon-star`', () => {
     const wrapper = shallow(<MyComponent />);
     expect(wrapper.find('.icon-star')).to.have.length(1);
   });
 
-  it('should render children when passed in', () => {
+  it('renders children when passed in', () => {
     const wrapper = shallow(
       <MyComponent>
         <div className="unique" />
@@ -134,7 +134,7 @@ describe('<Foo />', () => {
     expect(wrapper.find('.foo-bar').length).to.equal(3);
   });
 
-  it('rendered the title', () => {
+  it('renders the title', () => {
     const wrapper = render(<Foo title="unique" />);
     expect(wrapper.text()).to.contain("unique");
   });
