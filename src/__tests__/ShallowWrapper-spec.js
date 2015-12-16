@@ -123,6 +123,19 @@ describe('shallow', () => {
       expect(wrapper.find(Foo).type()).to.equal(Foo);
     });
 
+    it('should find a component based on a display name', () => {
+      class Foo extends React.Component {
+        render() { return <div />; }
+      }
+      const wrapper = shallow(
+        <div>
+          <Foo className="foo" />
+        </div>
+      );
+      expect(wrapper.find('Foo').type()).to.equal(Foo);
+    });
+
+
     it('should find multiple elements based on a class name', () => {
       const wrapper = shallow(
         <div>
