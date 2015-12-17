@@ -15,6 +15,7 @@ import {
   Simulate,
   findDOMNode,
 } from './react-compat';
+import { mapNativeEventNames } from './Utils';
 
 /**
  * Finds all nodes in the current wrapper nodes' render trees that match the provided predicate
@@ -306,7 +307,8 @@ export default class ReactWrapper {
    */
   simulate(event, ...args) {
     this.single(n => {
-      const eventFn = Simulate[event];
+      const mappedEvent = mapNativeEventNames(event);
+      const eventFn = Simulate[mappedEvent];
       if (!eventFn) {
         throw new TypeError(`ReactWrapper::simulate() event '${event}' does not exist`);
       }

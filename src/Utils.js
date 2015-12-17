@@ -4,7 +4,10 @@ import {
   isDOMComponent,
   findDOMNode,
 } from './react-compat';
-import { REACT013 } from './version';
+import {
+  REACT013,
+  REACT014,
+} from './version';
 
 export function propsOfNode(node) {
   if (REACT013) {
@@ -167,4 +170,50 @@ export function coercePropValue(propValue) {
 
   // coerce to boolean
   return propValue === 'true' ? true : false;
+}
+
+export function mapNativeEventNames(event) {
+  const nativeToReactEventMap = {
+    compositionend: 'compositionEnd',
+    compositionstart: 'compositionStart',
+    compositionupdate: 'compositionUpdate',
+    keydown: 'keyDown',
+    keyup: 'keyUp',
+    keypress: 'keyPress',
+    contextmenu: 'contextMenu',
+    doubleclick: 'doubleClick',
+    dragend: 'dragEnd',
+    dragenter: 'dragEnter',
+    dragexist: 'dragExit',
+    dragleave: 'dragLeave',
+    dragover: 'dragOver',
+    dragstart: 'dragStart',
+    mousedown: 'mouseDown',
+    mousemove: 'mouseMove',
+    mouseout: 'mouseOut',
+    mouseover: 'mouseOver',
+    mouseup: 'mouseUp',
+    touchcancel: 'touchCancel',
+    touchend: 'touchEnd',
+    touchmove: 'touchMove',
+    touchstart: 'touchStart',
+    canplay: 'canPlay',
+    canplaythrough: 'canPlayThrough',
+    durationchange: 'durationChange',
+    loadeddata: 'loadedData',
+    loadedmetadata: 'loadedMetadata',
+    loadstart: 'loadStart',
+    ratechange: 'rateChange',
+    timeupdate: 'timeUpdate',
+    volumechange: 'volumeChange',
+  };
+
+  if (REACT014) {
+    // these could not be simulated in React 0.13:
+    // https://github.com/facebook/react/issues/1297
+    nativeToReactEventMap.mouseenter = 'mouseEnter';
+    nativeToReactEventMap.mouseleave = 'mouseLeave';
+  }
+
+  return nativeToReactEventMap[event] || event;
 }

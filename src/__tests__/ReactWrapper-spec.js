@@ -457,6 +457,42 @@ describeWithDOM('mount', () => {
       expect(wrapper.simulate.bind(wrapper, 'invalidEvent'))
         .to.throw(TypeError, "ReactWrapper::simulate() event 'invalidEvent' does not exist");
     });
+
+    describe('Normalizing JS event names', () => {
+      it('should convert lowercase events to React camelcase', () => {
+        const spy = sinon.spy();
+        class Foo extends React.Component {
+          render() {
+            return (
+              <a onDoubleClick={spy}>foo</a>
+            );
+          }
+        }
+
+        const wrapper = mount(<Foo />);
+
+        wrapper.simulate('doubleclick');
+        expect(spy.calledOnce).to.equal(true);
+      });
+
+      describeIf(!REACT013, 'normalizing mouseenter', () => {
+        it('should convert lowercase events to React camelcase', () => {
+          const spy = sinon.spy();
+          class Foo extends React.Component {
+            render() {
+              return (
+                <a onMouseEnter={spy}>foo</a>
+              );
+            }
+          }
+
+          const wrapper = mount(<Foo />);
+
+          wrapper.simulate('mouseenter');
+          expect(spy.calledOnce).to.equal(true);
+        });
+      });
+    });
   });
 
   describe('.setState(newState)', () => {
