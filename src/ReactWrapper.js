@@ -293,7 +293,7 @@ export default class ReactWrapper {
    * @returns {String}
    */
   html() {
-    return this.single(n => findDOMNode(n).outerHTML.replace(/\sdata-reactid[^>]+/g, ''));
+    return this.single(n => findDOMNode(n).outerHTML.replace(/\sdata-reactid+="[^"]+"/g, ''));
   }
 
   /**
