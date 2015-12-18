@@ -72,7 +72,7 @@ export default function createWrapperComponent(node, options = {}) {
     // For full rendering, we are using this wrapper component to provide context if it is
     // specified in both the options AND the child component defines `contextTypes` statically.
     // In that case, we define both a `getChildContext()` function and a `childContextTypes` prop.
-    Object.assign(spec, {
+    objectAssign(spec, {
       childContextTypes: node.type.contextTypes,
       getChildContext() {
         return this.state.context;
