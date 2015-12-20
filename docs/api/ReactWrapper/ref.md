@@ -1,4 +1,4 @@
-# `.ref(refName) => Any`
+# `.ref(refName) => ReactWrapper`
 
 Returns a wrapper of the node that matches the provided reference name.
 
