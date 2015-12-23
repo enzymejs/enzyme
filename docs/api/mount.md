@@ -1,7 +1,7 @@
 # Full Rendering API (`mount(...)`)
 
 Full DOM rendering is ideal for use cases where you have components that may interact with DOM apis,
-or may require the full lifecycle in order to fully test the component (ie, `componentDidMount` 
+or may require the full lifecycle in order to fully test the component (ie, `componentDidMount`
 etc.)
 
 Full DOM rendering  depends on a library called [jsdom](https://github.com/tmpvar/jsdom) which is
@@ -42,7 +42,7 @@ describe('<Foo />', () => {
 #### Arguments
 
 1. `node` (`ReactElement`): The node to render
-2. `options` (`Object` [optional]): 
+2. `options` (`Object` [optional]):
 - `options.context`: (`Object` [optional]): Context to be passed into the component
 
 #### Returns
@@ -64,7 +64,7 @@ Remove nodes in the current wrapper that do not match the provided selector.
 #### [`.filterWhere(predicate) => ReactWrapper`](ReactWrapper/filterWhere.md)
 Remove nodes in the current wrapper that do not return true for the provided predicate function.
 
-#### [`.contains(node) => Boolean`](ReactWrapper/contains.md) 
+#### [`.contains(node) => Boolean`](ReactWrapper/contains.md)
 Returns whether or not a given node is somewhere in the render tree.
 
 #### [`.hasClass(className) => Boolean`](ReactWrapper/hasClass.md)
@@ -141,10 +141,10 @@ Maps the current array of nodes to another array.
 
 #### [`reduce(fn[, initialValue]) => Any`](/docs/api/ReactWrapper/reduce.md)
 Reduces the current array of nodes to a value
- 
+
 #### [`reduceRight(fn[, initialValue]) => Any`](/docs/api/ReactWrapper/reduceRight.md)
 Reduces the current array of nodes to a value, from right to left.
- 
+
 #### [`some(selector) => Boolean`](/docs/api/ReactWrapper/some.md)
 Returns whether or not any of the nodes in the wrapper match the provided selector.
 
@@ -157,5 +157,5 @@ Returns whether or not all of the nodes in the wrapper match the provided select
 #### [`everyWhere(selector) => Boolean`](/docs/api/ReactWrapper/everyWhere.md)
 Returns whether or not any of the nodes in the wrapper pass the provided predicate function.
 
-#### [`ref(refName) => ReactWrapper`](/docs/api/ReactWrapper/everyWhere.md)
+#### [`ref(refName) => ReactWrapper`](/docs/api/ReactWrapper/ref.md)
 Returns a wrapper of the node that matches the provided reference name.
