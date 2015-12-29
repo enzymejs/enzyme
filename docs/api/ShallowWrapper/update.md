@@ -30,4 +30,4 @@ const wrapper = shallow(<ImpureRender />);
 expect(wrapper.text()).to.equal("0");
 wrapper.update();
 expect(wrapper.text()).to.equal("1");
-``
+```
