@@ -30,7 +30,7 @@ const wrapper = shallow(
 );
 
 wrapper.find('.foo').forEach(function (node) {
-  expect(s.hasClass('foo')).to.be true;
+  expect(node.hasClass('foo')).to.equal(true);
 });
 ```
 
