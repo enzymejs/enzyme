@@ -18,4 +18,4 @@ NOTE: can only be called on a wrapper instance that is also the root instance.
 const wrapper = mount(<MyComponent />);
 const inst = wrapper.instance();
 expect(inst).to.be.instanceOf(MyComponent);
-``
+```
