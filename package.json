@@ -67,7 +67,7 @@
     "react": "0.13.x || 0.14.x"
   },
   "optionalDependencies": {
-    "jsdom": "^6.1.0",
+    "jsdom": "^3.1.2 || ^5.6.1 || ^6.1.0 || ^7.2.2",
     "mocha-jsdom": "^1.0.0"
   }
 }
