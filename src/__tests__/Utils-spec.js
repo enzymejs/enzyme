@@ -62,7 +62,7 @@ describe('Utils', () => {
       expect(nodeEqual(
         <div />,
         <div />
-      )).to.be.true;
+      )).to.equal(true);
 
     });
 
@@ -71,7 +71,7 @@ describe('Utils', () => {
       expect(nodeEqual(
         <div />,
         <nav />
-      )).to.be.false;
+      )).to.equal(false);
 
     });
 
@@ -80,17 +80,17 @@ describe('Utils', () => {
       expect(nodeEqual(
         <div className="foo" />,
         <div className="foo" />
-      )).to.be.true;
+      )).to.equal(true);
 
       expect(nodeEqual(
         <div id="foo" className="bar" />,
         <div id="foo" className="bar" />
-      )).to.be.true;
+      )).to.equal(true);
 
       expect(nodeEqual(
         <div id="foo" className="baz" />,
         <div id="foo" className="bar" />
-      )).to.be.false;
+      )).to.equal(false);
 
     });
 
@@ -101,7 +101,7 @@ describe('Utils', () => {
           <div />
         </div>,
         <div />
-      )).to.be.false;
+      )).to.equal(false);
 
       expect(nodeEqual(
         <div>
@@ -110,7 +110,7 @@ describe('Utils', () => {
         <div>
           <div />
         </div>
-      )).to.be.true;
+      )).to.equal(true);
 
       expect(nodeEqual(
         <div>
@@ -119,7 +119,7 @@ describe('Utils', () => {
         <div>
           <div className="foo" />
         </div>
-      )).to.be.true;
+      )).to.equal(true);
 
       expect(nodeEqual(
         <div>
@@ -128,7 +128,7 @@ describe('Utils', () => {
         <div>
           <div />
         </div>
-      )).to.be.false;
+      )).to.equal(false);
 
     });
 
@@ -137,12 +137,12 @@ describe('Utils', () => {
       expect(nodeEqual(
         <div foo={{ a: 1, b: 2 }} />,
         <div foo={{ a: 1, b: 2 }} />
-      )).to.be.true;
+      )).to.equal(true);
 
       expect(nodeEqual(
         <div foo={{ a: 2, b: 2 }} />,
         <div foo={{ a: 1, b: 2 }} />
-      )).to.be.false;
+      )).to.equal(false);
 
     });
 
@@ -165,7 +165,7 @@ describe('Utils', () => {
     describe('prohibited selectors', () => {
       function isComplex(selector) {
         it(selector, () => {
-          expect(isSimpleSelector(selector)).to.be.false;
+          expect(isSimpleSelector(selector)).to.equal(false);
         });
       }
 
@@ -181,7 +181,7 @@ describe('Utils', () => {
     describe('allowed selectors', () => {
       function isSimple(selector) {
         it(selector, () => {
-          expect(isSimpleSelector(selector)).to.be.true;
+          expect(isSimpleSelector(selector)).to.equal(true);
         });
       }
 

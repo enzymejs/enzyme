@@ -24,7 +24,7 @@ describe('<MyComponent />', () => {
         <div className="unique" />
       </MyComponent>
     );
-    expect(wrapper.contains(<div className="unique" />)).to.be.true;
+    expect(wrapper.contains(<div className="unique" />)).to.equal(true);
   });
 
   it('simulates click events', () => {
@@ -33,7 +33,7 @@ describe('<MyComponent />', () => {
       <Foo onButtonClick={onButtonClick} />
     );
     wrapper.find('button').simulate('click');
-    expect(onButtonClick.calledOnce).to.be.true;
+    expect(onButtonClick.calledOnce).to.equal(true);
   });
 
 });

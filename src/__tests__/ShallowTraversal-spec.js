@@ -30,21 +30,21 @@ describe('ShallowTraversal', () => {
 
     it('should work for standalone classNames', () => {
       const node = (<div className="foo"/>);
-      expect(hasClassName(node, 'foo')).to.be.true;
-      expect(hasClassName(node, 'bar')).to.be.false;
+      expect(hasClassName(node, 'foo')).to.equal(true);
+      expect(hasClassName(node, 'bar')).to.equal(false);
     });
 
     it('should work for multiple classNames', () => {
       const node = (<div className="foo bar baz"/>);
-      expect(hasClassName(node, 'foo')).to.be.true;
-      expect(hasClassName(node, 'bar')).to.be.true;
-      expect(hasClassName(node, 'baz')).to.be.true;
-      expect(hasClassName(node, 'bax')).to.be.false;
+      expect(hasClassName(node, 'foo')).to.equal(true);
+      expect(hasClassName(node, 'bar')).to.equal(true);
+      expect(hasClassName(node, 'baz')).to.equal(true);
+      expect(hasClassName(node, 'bax')).to.equal(false);
     });
 
     it('should also allow hyphens', () => {
       const node = (<div className="foo-bar"/>);
-      expect(hasClassName(node, 'foo-bar')).to.be.true;
+      expect(hasClassName(node, 'foo-bar')).to.equal(true);
     });
 
   });
@@ -55,7 +55,7 @@ describe('ShallowTraversal', () => {
       const spy = sinon.spy();
       const node = (<div />);
       treeForEach(node, spy);
-      expect(spy.calledOnce).to.be.true;
+      expect(spy.calledOnce).to.equal(true);
     });
 
     it('should handle a single child', () => {

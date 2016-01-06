@@ -25,9 +25,9 @@ const wrapper = mount(
     <div className="foo hoo" />
   </div>
 );
-expect(wrapper.find('.foo').every('.foo')).to.be.true;
-expect(wrapper.find('.foo').every('.qoo')).to.be.false;
-expect(wrapper.find('.foo').every('.bar')).to.be.false;
+expect(wrapper.find('.foo').every('.foo')).to.equal(true);
+expect(wrapper.find('.foo').every('.qoo')).to.equal(false);
+expect(wrapper.find('.foo').every('.bar')).to.equal(false);
 ```
 
 #### Related Methods
