@@ -46,9 +46,9 @@ expect(wrapper.find('.bar')).to.have.length(1);
 const spy = sinon.spy(MyComponent.prototype, 'componentWillReceiveProps');
 
 const wrapper = shallow(<MyComponent foo="bar" />);
-expect(spy.calledOnce).to.be.false;
+expect(spy.calledOnce).to.equal(false);
 wrapper.setProps({ foo: 'foo' });
-expect(spy.calledOnce).to.be.true;
+expect(spy.calledOnce).to.equal(true);
 ```
 
 

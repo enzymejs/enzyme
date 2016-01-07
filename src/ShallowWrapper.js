@@ -195,7 +195,7 @@ export default class ShallowWrapper {
    * Example:
    * ```
    * const wrapper = shallow(<MyComponent />);
-   * expect(wrapper.contains(<div className="foo bar" />)).to.be.true;
+   * expect(wrapper.contains(<div className="foo bar" />)).to.equal(true);
    * ```
    *
    * @param {ReactElement} node

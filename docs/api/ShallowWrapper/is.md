@@ -20,6 +20,6 @@ Returns whether or not the current node matches a provided selector.
 
 ```jsx
 const wrapper = shallow(<div className="some-class other-class" />);
-expect(wrapper.is('.some-class')).to.be.true;
+expect(wrapper.is('.some-class')).to.equal(true);
 ```
 

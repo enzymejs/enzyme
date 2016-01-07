@@ -203,7 +203,7 @@ export default class ReactWrapper {
    * Example:
    * ```
    * const wrapper = mount(<MyComponent />);
-   * expect(wrapper.contains(<div className="foo bar" />)).to.be.true;
+   * expect(wrapper.contains(<div className="foo bar" />)).to.equal(true);
    * ```
    *
    * @param {ReactElement} node

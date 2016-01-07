@@ -65,7 +65,7 @@ describe('<MyComponent />', () => {
         <div className="unique" />
       </MyComponent>
     );
-    expect(wrapper.contains(<div className="unique" />)).to.be.true;
+    expect(wrapper.contains(<div className="unique" />)).to.equal(true);
   });
 
   it('simulates click events', () => {
@@ -74,7 +74,7 @@ describe('<MyComponent />', () => {
       <Foo onButtonClick={onButtonClick} />
     );
     wrapper.find('button').simulate('click');
-    expect(onButtonClick.calledOnce).to.be.true;
+    expect(onButtonClick.calledOnce).to.equal(true);
   });
 
 });
@@ -98,7 +98,7 @@ describeWithDOM('<Foo />', () => {
   it('calls componentDidMount', () => {
     spyLifecycle(Foo);
     const wrapper = mount(<Foo />);
-    expect(Foo.prototype.componentDidMount.calledOnce).to.be.true;
+    expect(Foo.prototype.componentDidMount.calledOnce).to.equal(true);
   });
 
   it('allows us to set props', () => {
@@ -114,7 +114,7 @@ describeWithDOM('<Foo />', () => {
       <Foo onButtonClick={onButtonClick} />
     );
     wrapper.find('button').simulate('click');
-    expect(onButtonClick.calledOnce).to.be.true;
+    expect(onButtonClick.calledOnce).to.equal(true);
   });
 
 });
