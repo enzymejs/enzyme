@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react';
+import objectAssign from 'object.assign';
 
 /**
  * This is a utility component to wrap around the nodes we are
@@ -30,7 +31,8 @@ export default function createWrapperComponent(node, options = {}) {
       };
     },
 
-    setChildProps(props) {
+    setChildProps(newProps) {
+      const props = objectAssign({}, this.state.props, newProps);
       return new Promise(resolve => this.setState({ props }, resolve));
     },
 
