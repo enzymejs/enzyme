@@ -273,6 +273,25 @@ describe('shallow', () => {
       expect(spy.calledWith(nextProps)).to.equal(true);
     });
 
+    it('should merge newProps with oldProps', () => {
+      class Foo extends React.Component {
+        render() {
+          return (
+            <div {...this.props} />
+          );
+        }
+      }
+
+      const wrapper = shallow(<Foo a="a" b="b" />);
+      expect(wrapper.props().a).to.equal('a');
+      expect(wrapper.props().b).to.equal('b');
+
+      wrapper.setProps({ b: 'c', d: 'e' });
+      expect(wrapper.props().a).to.equal('a');
+      expect(wrapper.props().b).to.equal('c');
+      expect(wrapper.props().d).to.equal('e');
+    });
+
   });
 
   describe('.setContext(newContext)', () => {
