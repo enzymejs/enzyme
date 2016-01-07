@@ -1,4 +1,5 @@
-import React from 'react/addons';
+import { describeWithDOM } from './_helpers.js';
+import React from 'react';
 import { expect } from 'chai';
 import sinon from 'sinon';
 import {
@@ -12,10 +13,7 @@ import {
   selectorType,
   mapNativeEventNames,
 } from '../Utils';
-import {
-  describeWithDOM,
-  mount,
-} from '../';
+import { mount } from '../';
 
 describe('Utils', () => {
 

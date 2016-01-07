@@ -1,3 +1,4 @@
+import { describeWithDOM, describeIf } from './_helpers';
 import React from 'react';
 import { expect } from 'chai';
 import sinon from 'sinon';
@@ -5,9 +6,7 @@ import {
   mount,
   render,
   ReactWrapper,
-  describeWithDOM,
 } from '../';
-import { describeIf } from './_helpers';
 import { REACT013 } from '../version';
 
 describeWithDOM('mount', () => {
@@ -488,6 +487,68 @@ describeWithDOM('mount', () => {
       const wrapper = mount(<SimpleComponent />);
       expect(() => wrapper.setContext({ name: 'bar' })).to.throw(Error);
     });
+  });
+
+
+  describe('.mount()', () => {
+    it('should call componentWillUnmount()', () => {
+      const willMount = sinon.spy();
+      const didMount = sinon.spy();
+      const willUnmount = sinon.spy();
+
+      class Foo extends React.Component {
+        constructor(props) {
+          super(props);
+          this.componentWillUnmount = willUnmount;
+          this.componentWillMount = willMount;
+          this.componentDidMount = didMount;
+        }
+        render() {
+          return (
+            <div className={this.props.id}>
+              {this.props.id}
+            </div>
+          );
+        }
+      }
+      const wrapper = mount(<Foo id="foo" />);
+      expect(willMount.callCount).to.equal(1);
+      expect(didMount.callCount).to.equal(1);
+      expect(willUnmount.callCount).to.equal(0);
+      wrapper.unmount();
+      expect(willMount.callCount).to.equal(1);
+      expect(didMount.callCount).to.equal(1);
+      expect(willUnmount.callCount).to.equal(1);
+      wrapper.mount();
+      expect(willMount.callCount).to.equal(2);
+      expect(didMount.callCount).to.equal(2);
+      expect(willUnmount.callCount).to.equal(1);
+    });
+  });
+
+  describe('.unmount()', () => {
+    it('should call componentWillUnmount()', () => {
+      const spy = sinon.spy();
+
+      class Foo extends React.Component {
+        constructor(props) {
+          super(props);
+          this.componentWillUnmount = spy;
+        }
+        render() {
+          return (
+            <div className={this.props.id}>
+              {this.props.id}
+            </div>
+          );
+        }
+      }
+      const wrapper = mount(<Foo id="foo" />);
+      expect(spy.calledOnce).to.equal(false);
+      wrapper.unmount();
+      expect(spy.calledOnce).to.equal(true);
+    });
+
   });
 
   describe('.simulate(eventName, data)', () => {

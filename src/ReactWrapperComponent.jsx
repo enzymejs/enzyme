@@ -26,6 +26,7 @@ export default function createWrapperComponent(node, options = {}) {
 
     getInitialState() {
       return {
+        mount: true,
         props: this.props.props,
         context: this.props.context,
       };
@@ -62,8 +63,10 @@ export default function createWrapperComponent(node, options = {}) {
 
     render() {
       const { Component } = this.props;
+      const { mount, props } = this.state;
+      if (!mount) return null;
       return (
-        <Component {...this.state.props} />
+        <Component {...props} />
       );
     },
   };

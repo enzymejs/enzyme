@@ -1,3 +1,14 @@
+export function describeWithDOM(a, b) {
+  describe('(uses jsdom)', () => {
+    if (global.document) {
+      describe(a, b);
+    } else {
+      // if jsdom isn't available, skip every test in this describe context
+      describe.skip(a, b);
+    }
+  });
+}
+
 /**
  * Simple wrapper around mocha describe which allows a boolean to be passed in first which
  * determines whether or not the test will be run
