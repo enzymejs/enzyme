@@ -163,7 +163,7 @@ Reduces the current array of nodes to a value, from right to left.
 #### [`some(selector) => Boolean`](/docs/api/ShallowWrapper/some.md)
 Returns whether or not any of the nodes in the wrapper match the provided selector.
 
-#### [`someWhere(predicate) => Boolean`](/docs/api/ShallowWrapper/someWHere.md)
+#### [`someWhere(predicate) => Boolean`](/docs/api/ShallowWrapper/someWhere.md)
 Returns whether or not any of the nodes in the wrapper pass the provided predicate function.
 
 #### [`every(selector) => Boolean`](/docs/api/ShallowWrapper/every.md)
