@@ -328,12 +328,18 @@ describe('shallow', () => {
         constructor(props) {
           super(props);
           this.state = { count: 0 };
+          this.incrementCount = this.incrementCount.bind(this);
         }
+
+        incrementCount() {
+          this.setState({ count: this.state.count + 1 });
+        }
+
         render() {
           return (
             <a
               className={`clicks-${this.state.count}`}
-              onClick={() => this.setState({ count: this.state.count + 1 })}
+              onClick={this.incrementCount}
             >foo</a>
           );
         }
@@ -522,18 +528,20 @@ describe('shallow', () => {
         render() {
           return (
             <div>
-              {this.props.items.map(x=>x)}
+              {this.props.items.map(x => x)}
             </div>
           );
         }
       }
       matchesRender(<Foo items={['abc', 'def', 'hij']} />);
       matchesRender(
-        <Foo items={[
-          <i key={1}>abc</i>,
-          <i key={2}>def</i>,
-          <i key={3}>hij</i>,
-        ]} />
+        <Foo
+          items={[
+            <i key={1}>abc</i>,
+            <i key={2}>def</i>,
+            <i key={3}>hij</i>,
+          ]}
+        />
       );
     });
 
@@ -559,7 +567,7 @@ describe('shallow', () => {
   describe('.props()', () => {
 
     it('should return the props object', () => {
-      const fn = ()=>{};
+      const fn = () => {};
       const wrapper = shallow(
         <div id="fooId" className="bax" onClick={fn} >
           <div className="baz" />
@@ -574,7 +582,7 @@ describe('shallow', () => {
     });
 
     it('should be allowed to be used on an inner node', () => {
-      const fn = ()=>{};
+      const fn = () => {};
       const wrapper = shallow(
         <div className="bax">
           <div className="baz" onClick={fn} />
@@ -667,16 +675,18 @@ describe('shallow', () => {
           return (
             <div>
               <span className="foo"></span>
-              {this.props.items.map(x=>x)}
+              {this.props.items.map(x => x)}
             </div>
           );
         }
       }
       const wrapper = shallow(
-        <Foo items={[
-          <i key={1} className="bar">abc</i>,
-          <i key={2} className="baz">def</i>,
-        ]} />
+        <Foo
+          items={[
+            <i key={1} className="bar">abc</i>,
+            <i key={2} className="baz">def</i>,
+          ]}
+        />
       );
       expect(wrapper.children().length).to.equal(3);
       expect(wrapper.children().at(0).hasClass('foo')).to.equal(true);

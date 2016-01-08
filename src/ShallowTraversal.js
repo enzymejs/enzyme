@@ -75,29 +75,29 @@ export function nodeHasType(node, type) {
 
 export function buildPredicate(selector) {
   switch (typeof selector) {
-  case 'function':
-    // selector is a component constructor
-    return node => node && node.type === selector;
+    case 'function':
+      // selector is a component constructor
+      return node => node && node.type === selector;
 
-  case 'string':
-    if (!isSimpleSelector(selector)) {
-      throw selectorError(selector);
-    }
-    if (isCompoundSelector.test(selector)) {
-      return AND(splitSelector(selector).map(buildPredicate));
-    }
-    if (selector[0] === '.') {
-      // selector is a class name
-      return node => hasClassName(node, selector.substr(1));
-    } else if (selector[0] === '#') {
-      // selector is an id name
-      return node => nodeHasId(node, selector.substr(1));
-    }
-    // selector is a string. match to DOM tag or constructor displayName
-    return node => nodeHasType(node, selector);
+    case 'string':
+      if (!isSimpleSelector(selector)) {
+        throw selectorError(selector);
+      }
+      if (isCompoundSelector.test(selector)) {
+        return AND(splitSelector(selector).map(buildPredicate));
+      }
+      if (selector[0] === '.') {
+        // selector is a class name
+        return node => hasClassName(node, selector.substr(1));
+      } else if (selector[0] === '#') {
+        // selector is an id name
+        return node => nodeHasId(node, selector.substr(1));
+      }
+      // selector is a string. match to DOM tag or constructor displayName
+      return node => nodeHasType(node, selector);
 
-  default:
-    throw new TypeError('Expecting a string or Component Constructor');
+    default:
+      throw new TypeError('Expecting a string or Component Constructor');
   }
 }
 

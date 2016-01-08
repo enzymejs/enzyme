@@ -60,7 +60,7 @@ export default class ReactWrapper {
           Component={nodes.type}
           props={nodes.props}
           context={options.context}
-          />
+        />
       );
       this.root = this;
       this.node = this.component.getWrappedComponent();
@@ -434,8 +434,8 @@ export default class ReactWrapper {
   }
 
   /**
-   * Reduces the current array of nodes to another array. Each node is passed in as a `ShallowWrapper`
-   * to the reducer function.
+   * Reduces the current array of nodes to another array.
+   * Each node is passed in as a `ShallowWrapper` to the reducer function.
    *
    * @param {Function} fn - the reducer function
    * @param {*} initialValue - the initial value

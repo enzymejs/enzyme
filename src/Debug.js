@@ -22,17 +22,17 @@ export function indent(depth, string) {
 
 function propString(prop) {
   switch (typeof prop) {
-  case 'function':
-    return '{[Function]}';
-  case 'string':
-    return `"${prop}"`;
-  case 'number':
-  case 'boolean':
-    return `{${prop}}`;
-  case 'object':
-    return `{{...}}`;
-  default:
-    return `{[${typeof prop}]}`;
+    case 'function':
+      return '{[Function]}';
+    case 'string':
+      return `"${prop}"`;
+    case 'number':
+    case 'boolean':
+      return `{${prop}}`;
+    case 'object':
+      return `{{...}}`;
+    default:
+      return `{[${typeof prop}]}`;
   }
 }
 

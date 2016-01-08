@@ -55,13 +55,13 @@ export function instHasId(inst, id) {
 
 export function instHasType(inst, type) {
   switch (typeof type) {
-  case 'string':
-    return isDOMComponent(inst) &&
-      inst.tagName.toUpperCase() === type.toUpperCase();
-  case 'function':
-    return isCompositeComponentWithType(inst, type);
-  default:
-    return false;
+    case 'string':
+      return isDOMComponent(inst) &&
+        inst.tagName.toUpperCase() === type.toUpperCase();
+    case 'function':
+      return isCompositeComponentWithType(inst, type);
+    default:
+      return false;
   }
 }
 
@@ -155,29 +155,29 @@ export function parentsOfInst(inst, root) {
 
 export function buildInstPredicate(selector) {
   switch (typeof selector) {
-  case 'function':
-    // selector is a component constructor
-    return inst => instHasType(inst, selector);
+    case 'function':
+      // selector is a component constructor
+      return inst => instHasType(inst, selector);
 
-  case 'string':
-    if (!isSimpleSelector(selector)) {
-      throw selectorError(selector);
-    }
-    if (isCompoundSelector.test(selector)) {
-      return AND(splitSelector(selector).map(buildInstPredicate));
-    }
-    if (selector[0] === '.') {
-      // selector is a class name
-      return inst => instHasClassName(inst, selector.substr(1));
-    } else if (selector[0] === '#') {
-      // selector is an id name
-      return inst => instHasId(inst, selector.substr(1));
-    }
-    // selector is a string. match to DOM tag or constructor displayName
-    return inst => instHasType(inst, selector);
+    case 'string':
+      if (!isSimpleSelector(selector)) {
+        throw selectorError(selector);
+      }
+      if (isCompoundSelector.test(selector)) {
+        return AND(splitSelector(selector).map(buildInstPredicate));
+      }
+      if (selector[0] === '.') {
+        // selector is a class name
+        return inst => instHasClassName(inst, selector.substr(1));
+      } else if (selector[0] === '#') {
+        // selector is an id name
+        return inst => instHasId(inst, selector.substr(1));
+      }
+      // selector is a string. match to DOM tag or constructor displayName
+      return inst => instHasType(inst, selector);
 
-  default:
-    throw new TypeError('Expecting a string or Component Constructor');
+    default:
+      throw new TypeError('Expecting a string or Component Constructor');
   }
 }
 

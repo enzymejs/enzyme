@@ -230,7 +230,7 @@ describeWithDOM('mount', () => {
       }
       const wrapper = mount(<Foo id="foo" />);
       expect(wrapper.find('.foo').length).to.equal(1);
-      wrapper.setProps({ id: 'bar', foo: 'bla'});
+      wrapper.setProps({ id: 'bar', foo: 'bla' });
       expect(wrapper.find('.bar').length).to.equal(1);
     });
 
@@ -251,7 +251,7 @@ describeWithDOM('mount', () => {
           );
         }
       }
-      const nextProps = { id: 'bar', foo: 'bla'};
+      const nextProps = { id: 'bar', foo: 'bla' };
       const wrapper = mount(<Foo id="foo" />);
       expect(spy.calledOnce).to.equal(false);
       wrapper.setProps(nextProps);
@@ -314,13 +314,21 @@ describeWithDOM('mount', () => {
         constructor(props) {
           super(props);
           this.state = { count: 0 };
+          this.incrementCount = this.incrementCount.bind(this);
         }
+
+        incrementCount() {
+          this.setState({ count: this.state.count + 1 });
+        }
+
         render() {
           return (
             <a
               className={`clicks-${this.state.count}`}
-              onClick={() => this.setState({ count: this.state.count + 1 })}
-              >foo</a>
+              onClick={this.incrementCount}
+            >
+              foo
+            </a>
           );
         }
       }
@@ -346,7 +354,7 @@ describeWithDOM('mount', () => {
 
       const wrapper = mount(<Foo />);
 
-      wrapper.simulate('click', { someSpecialData: 'foo'});
+      wrapper.simulate('click', { someSpecialData: 'foo' });
       expect(spy.calledOnce).to.equal(true);
       expect(spy.args[0][0].someSpecialData).to.equal('foo');
     });
@@ -378,10 +386,10 @@ describeWithDOM('mount', () => {
       class MySharona extends React.Component {
         constructor(props) {
           super(props);
-          this.state = {mounted: false};
+          this.state = { mounted: false };
         }
         componentDidMount() {
-          this.setState({mounted: true});
+          this.setState({ mounted: true });
         }
         render() {
           return <div>{this.state.mounted ? 'a' : 'b'}</div>;
@@ -525,18 +533,20 @@ describeWithDOM('mount', () => {
         render() {
           return (
             <div>
-              {this.props.items.map(x=>x)}
+              {this.props.items.map(x => x)}
             </div>
           );
         }
       }
       matchesRender(<Foo items={['abc', 'def', 'hij']} />);
       matchesRender(
-        <Foo items={[
-          <i key={1}>abc</i>,
-          <i key={2}>def</i>,
-          <i key={3}>hij</i>,
-        ]} />
+        <Foo
+          items={[
+            <i key={1}>abc</i>,
+            <i key={2}>def</i>,
+            <i key={3}>hij</i>,
+          ]}
+        />
       );
     });
 
@@ -562,7 +572,7 @@ describeWithDOM('mount', () => {
   describe('.props()', () => {
 
     it('should return the props object', () => {
-      const fn = ()=>{};
+      const fn = () => {};
       const wrapper = mount(
         <div id="fooId" className="bax" onClick={fn} >
           <div className="baz" />
@@ -577,7 +587,7 @@ describeWithDOM('mount', () => {
     });
 
     it('should be allowed to be used on an inner node', () => {
-      const fn = ()=>{};
+      const fn = () => {};
       const wrapper = mount(
         <div className="bax">
           <div className="baz" onClick={fn} />
@@ -670,16 +680,18 @@ describeWithDOM('mount', () => {
           return (
             <div>
               <span className="foo"></span>
-              {this.props.items.map(x=>x)}
+              {this.props.items.map(x => x)}
             </div>
           );
         }
       }
       const wrapper = mount(
-        <Foo items={[
-          <i key={1} className="bar">abc</i>,
-          <i key={2} className="baz">def</i>,
-        ]} />
+        <Foo
+          items={[
+            <i key={1} className="bar">abc</i>,
+            <i key={2} className="baz">def</i>,
+          ]}
+        />
       );
       expect(wrapper.children().length).to.equal(3);
       expect(wrapper.children().at(0).hasClass('foo')).to.equal(true);
@@ -952,13 +964,10 @@ describeWithDOM('mount', () => {
           <div id="baz" className="foo hoo" />
         </div>
       );
-      const result = wrapper.find('.foo').reduce(
-        (obj, n) => {
-          obj[n.prop('id')] = n.prop('className');
-          return obj;
-        },
-        {}
-      );
+      const result = wrapper.find('.foo').reduce((obj, n) => {
+        obj[n.prop('id')] = n.prop('className');
+        return obj;
+      }, {});
 
       expect(result).to.eql({
         bax: 'foo qoo',
@@ -998,13 +1007,10 @@ describeWithDOM('mount', () => {
           <div id="baz" className="foo hoo" />
         </div>
       );
-      const result = wrapper.find('.foo').reduceRight(
-        (obj, n) => {
-          obj[n.prop('id')] = n.prop('className');
-          return obj;
-        },
-        {}
-      );
+      const result = wrapper.find('.foo').reduceRight((obj, n) => {
+        obj[n.prop('id')] = n.prop('className');
+        return obj;
+      }, {});
 
       expect(result).to.eql({
         bax: 'foo qoo',

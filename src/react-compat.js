@@ -10,7 +10,9 @@ let ReactContext;
 if (REACT013) {
   renderToStaticMarkup = require('react').renderToStaticMarkup;
   React = require('react');
+  /* eslint-disable react/no-deprecated */
   findDOMNode = React.findDOMNode;
+  /* eslint-enable react/no-deprecated */
   TestUtils = require('react/addons').addons.TestUtils;
   ReactContext = require('react/lib/ReactContext');
 
