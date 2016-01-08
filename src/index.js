@@ -19,10 +19,14 @@ try {
 
 export let sinon = Sinon.sandbox.create();
 
-export function describeWithDOM(a, b) {
+export function describeWithDOM(a, options, b) {
+  if (typeof b == 'undefined') {
+    b = options;
+    options = undefined;
+  }
   describe('(uses jsdom)', () => {
     if (typeof jsdom === 'function') {
-      jsdom();
+      jsdom(options);
       describe(a, b);
     } else {
       // if jsdom isn't available, skip every test in this describe context
