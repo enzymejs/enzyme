@@ -294,7 +294,14 @@ export default class ReactWrapper {
    * @returns {ReactWrapper}
    */
   simulate(event, ...args) {
-    this.single(n => Simulate[event](findDOMNode(n), ...args));
+    this.single(n => {
+      const eventFn = Simulate[event];
+      if (!eventFn) {
+        throw new TypeError(`ReactWrapper::simulate() event '${event}' does not exist`);
+      }
+
+      eventFn(findDOMNode(n), ...args);
+    });
     return this;
   }
 
