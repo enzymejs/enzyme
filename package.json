@@ -8,11 +8,12 @@
     "preversion": "npm run clean && npm run check",
     "postversion": "git push && git push --tags && npm run clean && npm run docs:publish",
     "version": "npm run build",
-    "clean": "rimraf build",
+    "clean": "rimraf build dist",
     "lint": "eslint src/**",
     "test": "mocha --compilers js:babel/register --recursive src/**/__tests__/*.js",
     "check": "npm run lint && npm run test:all",
     "build": "babel src --out-dir build",
+    "build:amd": "webpack",
     "test:watch": "mocha --compilers js:babel/register --recursive src/**/__tests__/*.js --watch",
     "test:all": "npm run react:13 && npm test && npm run react:14 && npm test",
     "react:clean": "rimraf node_modules/react node_modules/react-dom node_modules/react-addons-test-utils",
@@ -61,7 +62,9 @@
     "gitbook-cli": "^1.0.0",
     "istanbul": "^0.4.0",
     "mocha": "^2.2.5",
-    "rimraf": "^2.4.3"
+    "rimraf": "^2.4.3",
+    "webpack": "^1.12.10",
+    "json-loader": "^0.5.4"
   },
   "peerDependencies": {
     "react": "0.13.x || 0.14.x"

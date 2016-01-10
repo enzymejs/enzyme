@@ -31,3 +31,4 @@ node_modules
 
 /build
 _book
+dist
