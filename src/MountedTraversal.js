@@ -1,10 +1,14 @@
 import {
+  coercePropValue,
   nodeEqual,
+  propsOfNode,
   isSimpleSelector,
   splitSelector,
   selectorError,
+  selectorType,
   isCompoundSelector,
   AND,
+  SELECTOR,
 } from './Utils';
 import {
   isDOMComponent,
@@ -63,6 +67,26 @@ export function instHasType(inst, type) {
     default:
       return false;
   }
+}
+
+export function instHasProperty(inst, propKey, stringifiedPropValue) {
+  if (!isDOMComponent(inst)) return false;
+  const node = getNode(inst);
+  const nodeProps = propsOfNode(node);
+  const nodePropValue = nodeProps[propKey];
+
+  const propValue = coercePropValue(stringifiedPropValue);
+
+  // intentionally not matching node props that are undefined
+  if (nodePropValue === undefined) {
+    return false;
+  }
+
+  if (propValue) {
+    return nodePropValue === propValue;
+  }
+
+  return nodeProps.hasOwnProperty(propKey);
 }
 
 // called with private inst
@@ -166,15 +190,22 @@ export function buildInstPredicate(selector) {
       if (isCompoundSelector.test(selector)) {
         return AND(splitSelector(selector).map(buildInstPredicate));
       }
-      if (selector[0] === '.') {
-        // selector is a class name
-        return inst => instHasClassName(inst, selector.substr(1));
-      } else if (selector[0] === '#') {
-        // selector is an id name
-        return inst => instHasId(inst, selector.substr(1));
+
+      switch (selectorType(selector)) {
+        case SELECTOR.CLASS_TYPE:
+          return inst => instHasClassName(inst, selector.substr(1));
+        case SELECTOR.ID_TYPE:
+          return inst => instHasId(inst, selector.substr(1));
+        case SELECTOR.PROP_TYPE:
+          const propKey = selector.split(/\[([a-zA-Z\-\:]*?)(=|\])/)[1];
+          const propValue = selector.split(/=(.*?)]/)[1];
+
+          return node => instHasProperty(node, propKey, propValue);
+        default:
+          // selector is a string. match to DOM tag or constructor displayName
+          return inst => instHasType(inst, selector);
       }
-      // selector is a string. match to DOM tag or constructor displayName
-      return inst => instHasType(inst, selector);
+      break;
 
     default:
       throw new TypeError('Expecting a string or Component Constructor');

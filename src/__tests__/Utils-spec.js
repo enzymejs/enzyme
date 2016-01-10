@@ -2,11 +2,14 @@ import React from 'react/addons';
 import { expect } from 'chai';
 import sinon from 'sinon';
 import {
+  coercePropValue,
   onPrototype,
   getNode,
   nodeEqual,
   isSimpleSelector,
   propFromEvent,
+  SELECTOR,
+  selectorType,
 } from '../Utils';
 import {
   describeWithDOM,
@@ -160,7 +163,7 @@ describe('Utils', () => {
   });
 
 
-  describe('iuSimpleSelector', () => {
+  describe('isSimpleSelector', () => {
 
     describe('prohibited selectors', () => {
       function isComplex(selector) {
@@ -170,7 +173,6 @@ describe('Utils', () => {
       }
 
       isComplex('.foo .bar');
-      isComplex('input[name="foo"]');
       isComplex(':visible');
       isComplex('.foo>.bar');
       isComplex('.foo > .bar');
@@ -187,11 +189,56 @@ describe('Utils', () => {
 
       isSimple('.foo');
       isSimple('.foo-and-foo');
+      isSimple('input[foo="bar"]');
+      isSimple('input[foo="bar"][bar="baz"][baz="foo"]');
       isSimple('.FoOaNdFoO');
       isSimple('tag');
       isSimple('.foo.bar');
       isSimple('input.foo');
 
+    });
+
+  });
+
+  describe('selectorType', () => {
+
+    it('returns CLASS_TYPE for a prefixed .', () => {
+      const type = selectorType('.foo');
+
+      expect(type).to.be.equal(SELECTOR.CLASS_TYPE);
+    });
+
+    it('returns ID_TYPE for a prefixed #', () => {
+      const type = selectorType('#foo');
+
+      expect(type).to.be.equal(SELECTOR.ID_TYPE);
+    });
+
+    it('returns PROP_TYPE for []', () => {
+      function isProp(selector) {
+        expect(selectorType(selector)).to.be.equal(SELECTOR.PROP_TYPE);
+      }
+
+      isProp('[foo]');
+      isProp('[foo="bar"]');
+    });
+
+  });
+
+  describe('coercePropValue', () => {
+
+    it('returns undefined if passed undefined', () => {
+      expect(coercePropValue(undefined)).to.equal(undefined);
+    });
+
+    it('returns number if passed a stringified number', () => {
+      expect(coercePropValue('1')).to.be.equal(1);
+      expect(coercePropValue('0')).to.be.equal(0);
+    });
+
+    it('returns a boolean if passed a stringified bool', () => {
+      expect(coercePropValue('true')).to.equal(true);
+      expect(coercePropValue('false')).to.equal(false);
     });
 
   });

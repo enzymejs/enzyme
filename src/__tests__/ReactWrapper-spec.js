@@ -122,6 +122,100 @@ describeWithDOM('mount', () => {
       expect(wrapper.find(Foo).type()).to.equal(Foo);
     });
 
+    it('should find component based on a react prop', () => {
+      const wrapper = mount(
+        <div>
+          <span htmlFor="foo" />
+        </div>
+      );
+
+      expect(wrapper.find('[htmlFor="foo"]')).to.have.length(1);
+      expect(wrapper.find('[htmlFor]')).to.have.length(1);
+    });
+
+    it('should compound tag and prop selector', () => {
+      const wrapper = mount(
+        <div>
+          <span htmlFor="foo" />
+        </div>
+      );
+
+      expect(wrapper.find('span[htmlFor="foo"]')).to.have.length(1);
+      expect(wrapper.find('span[htmlFor]')).to.have.length(1);
+
+    });
+
+    it('should support data prop selectors', () => {
+      const wrapper = mount(
+        <div>
+          <span data-foo="bar" />
+        </div>
+      );
+
+      expect(wrapper.find('[data-foo="bar"]')).to.have.length(1);
+      expect(wrapper.find('[data-foo]')).to.have.length(1);
+    });
+
+    it('should find components with multiple matching props', () => {
+      const onChange = () => {};
+      const wrapper = mount(
+        <div>
+          <span htmlFor="foo" onChange={onChange} preserveAspectRatio="xMaxYMax" />
+        </div>
+      );
+
+      expect(wrapper.find('span[htmlFor="foo"][onChange]')).to.have.length(1);
+      expect(wrapper.find('span[htmlFor="foo"][preserveAspectRatio="xMaxYMax"]')).to.have.length(1);
+    });
+
+
+    it('should not find property when undefined', () => {
+      const wrapper = mount(
+        <div>
+          <span data-foo={undefined} />
+        </div>
+      );
+
+      expect(wrapper.find('[data-foo]')).to.have.length(0);
+    });
+
+    it('should support boolean and numeric values for matching props', () => {
+      const wrapper = mount(
+        <div>
+          <span value={1} />
+          <a value={false} />
+        </div>
+      );
+
+      expect(wrapper.find('span[value=1]')).to.have.length(1);
+      expect(wrapper.find('span[value=2]')).to.have.length(0);
+      expect(wrapper.find('a[value=false]')).to.have.length(1);
+      expect(wrapper.find('a[value=true]')).to.have.length(0);
+    });
+
+    it('should not find key or ref via property selector', () => {
+      class Foo extends React.Component {
+        render() {
+          const arrayOfComponents = [<div key="1" />, <div key="2" />];
+
+          return (
+            <div>
+              <div ref="foo" />
+              {arrayOfComponents}
+            </div>
+          );
+        }
+      }
+
+      const wrapper = mount(<Foo />);
+
+      expect(wrapper.find('div[ref="foo"]')).to.have.length(0);
+      expect(wrapper.find('div[key="1"]')).to.have.length(0);
+      expect(wrapper.find('[ref]')).to.have.length(0);
+      expect(wrapper.find('[key]')).to.have.length(0);
+    });
+
+
     it('should find multiple elements based on a class name', () => {
       const wrapper = mount(
         <div>
