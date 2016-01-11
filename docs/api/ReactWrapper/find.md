@@ -47,7 +47,11 @@ const wrapper = mount(<MyComponent />);
 expect(wrapper.find('Foo')).to.have.length(1);
 ```
 
-
+Object Property Selector:
+```jsx
+const wrapper = mount(<MyComponent />);
+expect(wrapper.find({prop: 'value'})).to.have.length(1);
+```
 
 #### Related Methods
 

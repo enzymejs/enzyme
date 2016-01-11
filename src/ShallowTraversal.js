@@ -1,4 +1,6 @@
 import React from 'react';
+import { isEmpty } from 'underscore';
+import isSubset from 'is-subset';
 import {
   coercePropValue,
   propsOfNode,
@@ -95,6 +97,10 @@ export function nodeHasType(node, type) {
   return node.type.name === type || node.type.displayName === type;
 }
 
+export function nodeMatchesObjectProps(node, props) {
+  return isSubset(propsOfNode(node), props);
+}
+
 export function buildPredicate(selector) {
   switch (typeof selector) {
     case 'function':
@@ -127,9 +133,16 @@ export function buildPredicate(selector) {
       }
       break;
 
+    case 'object':
+      if (!Array.isArray(selector) && selector !== null && !isEmpty(selector)) {
+        return node => nodeMatchesObjectProps(node, selector);
+      }
+      throw new TypeError(
+        'Enzyme::Selector does not support an array, null, or empty object as a selector'
+      );
 
     default:
-      throw new TypeError('Expecting a string or Component Constructor');
+      throw new TypeError(`Enzyme::Selector expects a string, object, or Component Constructor`);
   }
 }
 
