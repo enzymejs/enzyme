@@ -30,7 +30,7 @@ const wrapper = mount(
 );
 
 wrapper.find('.foo').forEach(function (node) {
-  expect(s.hasClass('foo')).to.equal(true);
+  expect(node.hasClass('foo')).to.equal(true);
 });
 ```
 
