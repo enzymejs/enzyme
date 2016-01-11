@@ -30,6 +30,6 @@ expect(wrapper.contains(<div className="foo bar" />)).to.equal(true);
 #### Common Gotchas
 
 - `.contains()` expects a ReactElement, not a selector (like many other methods). Make sure that 
-when you are calling it you are calling it with a 
+when you are calling it you are calling it with a ReactElement or a JSX expression.
 - Keep in mind that this method determines equality based on the equality of the node's children as 
 well.
