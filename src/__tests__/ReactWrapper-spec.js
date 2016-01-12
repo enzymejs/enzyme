@@ -435,7 +435,6 @@ describeWithDOM('mount', () => {
 
     });
 
-
     it('should pass in event data', () => {
       const spy = sinon.spy();
       class Foo extends React.Component {
@@ -453,6 +452,11 @@ describeWithDOM('mount', () => {
       expect(spy.args[0][0].someSpecialData).to.equal('foo');
     });
 
+    it('should throw a descriptive error for invalid events', () => {
+      const wrapper = mount(<div>foo</div>);
+      expect(wrapper.simulate.bind(wrapper, 'invalidEvent'))
+        .to.throw(TypeError, "ReactWrapper::simulate() event 'invalidEvent' does not exist");
+    });
   });
 
   describe('.setState(newState)', () => {
