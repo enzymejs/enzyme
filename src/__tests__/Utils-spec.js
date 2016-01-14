@@ -10,6 +10,7 @@ import {
   propFromEvent,
   SELECTOR,
   selectorType,
+  mapNativeEventNames,
 } from '../Utils';
 import {
   describeWithDOM,
@@ -240,7 +241,30 @@ describe('Utils', () => {
       expect(coercePropValue('true')).to.equal(true);
       expect(coercePropValue('false')).to.equal(false);
     });
+  });
 
+  describe('mapNativeEventNames', () => {
+    describe('given an event that isn\'t a mapped', () => {
+      it('returns the original event', () => {
+        const result = mapNativeEventNames('click');
+        expect(result).to.equal('click');
+      });
+
+    });
+
+    describe('given a React capitalised mouse event', () => {
+      it('returns the original event', () => {
+        const result = mapNativeEventNames('mouseEnter');
+        expect(result).to.equal('mouseEnter');
+      });
+    });
+
+    describe('given a native lowercase event', () => {
+      it('transforms it into the React capitalised event', () => {
+        const result = mapNativeEventNames('dragenter');
+        expect(result).to.equal('dragEnter');
+      });
+    });
   });
 
 });
