@@ -16,7 +16,7 @@ Note: can only be called on a wrapper of a single node.
 
 ```jsx
 const wrapper = mount(<div/>);
-expect(wrapper.ype()).to.equal('div');
+expect(wrapper.type()).to.equal('div');
 ```
 
 ```jsx
