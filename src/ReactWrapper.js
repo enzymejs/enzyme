@@ -286,6 +286,17 @@ export default class ReactWrapper {
   }
 
   /**
+   * Returns the HTML of the node.
+   *
+   * NOTE: can only be called on a wrapper of a single node.
+   *
+   * @returns {String}
+   */
+  html() {
+    return this.single(n => findDOMNode(n).outerHTML.replace(/\sdata-reactid+="[^"]+"/g, ''));
+  }
+
+  /**
    * Used to simulate events. Pass an eventname and (optionally) event arguments. This method of
    * testing events should be met with some skepticism.
    *
