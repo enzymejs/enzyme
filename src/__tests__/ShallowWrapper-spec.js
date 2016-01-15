@@ -367,6 +367,24 @@ describe('shallow', () => {
       expect(wrapper.props().d).to.equal('e');
     });
 
+    it('should pass in old context', () => {
+      class Foo extends React.Component {
+        render() {
+          return (
+            <div>{this.context.x}</div>
+          );
+        }
+      }
+
+      Foo.contextTypes = { x: React.PropTypes.string };
+
+      const context = { x: 'yolo' };
+      const wrapper = shallow(<Foo x={5} />, { context });
+      expect(wrapper.first('div').text()).to.equal('yolo');
+
+      wrapper.setProps({ x: 5 }); // Just force a re-render
+      expect(wrapper.first('div').text()).to.equal('yolo');
+    });
   });
 
   describe('.setContext(newContext)', () => {

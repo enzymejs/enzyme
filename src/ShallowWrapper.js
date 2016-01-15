@@ -133,7 +133,7 @@ export default class ShallowWrapper {
     this.single(() => {
       withSetStateAllowed(() => {
         this.unrendered = React.cloneElement(this.unrendered, props);
-        this.renderer.render(this.unrendered);
+        this.renderer.render(this.unrendered, this.options.context);
         this.update();
       });
     });
