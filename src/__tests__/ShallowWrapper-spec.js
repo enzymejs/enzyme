@@ -380,10 +380,10 @@ describe('shallow', () => {
 
       const context = { x: 'yolo' };
       const wrapper = shallow(<Foo x={5} />, { context });
-      expect(wrapper.first('div').text(), 'value of context.x should be printed').to.equal('yolo');
+      expect(wrapper.first('div').text()).to.equal('yolo');
 
       wrapper.setProps({ x: 5 }); // Just force a re-render
-      expect(wrapper.first('div').text(), 'context should still be the same').to.equal('yolo');
+      expect(wrapper.first('div').text()).to.equal('yolo');
     });
   });
 
