@@ -1,5 +1,15 @@
 # Change Log
 
+## 1.3.1 (January 15, 2016)
+
+### Patches
+
+- Fix setProps not passing old context ([#121](https://github.com/airbnb/enzyme/pull/121))
+
+- Map lowercase mouse events in simulate ([#77](https://github.com/airbnb/enzyme/pull/77))
+
+
+
 ## 1.3.0 (January 13, 2016)
 
 ### Minor Changes
