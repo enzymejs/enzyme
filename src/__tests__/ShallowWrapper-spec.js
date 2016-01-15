@@ -367,7 +367,7 @@ describe('shallow', () => {
       expect(wrapper.props().d).to.equal('e');
     });
 
-    it('should pass in old context', ( ) => {
+    it('should pass in old context', () => {
       class Foo extends React.Component {
         render() {
           return (
