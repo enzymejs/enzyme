@@ -5,8 +5,8 @@ import {
   mount,
   render,
   ReactWrapper,
-  describeWithDOM,
 } from '../';
+import { describeWithDOM } from '../describeWithDOM';
 import { describeIf } from './_helpers';
 import { REACT013 } from '../version';
 
