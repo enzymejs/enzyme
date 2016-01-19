@@ -2,6 +2,7 @@ import cheerio from 'cheerio';
 import Sinon from 'sinon';
 import ReactWrapper from './ReactWrapper';
 import ShallowWrapper from './ShallowWrapper';
+import { describeWithDOM } from './describeWithDOM';
 import { onPrototype } from './Utils';
 import { renderToStaticMarkup } from './react-compat';
 
@@ -86,3 +87,4 @@ export function render(node) {
 
 export { ShallowWrapper as ShallowWrapper };
 export { ReactWrapper as ReactWrapper };
+export { describeWithDOM as describeWithDOM };

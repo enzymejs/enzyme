@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { describeWithDOM } from '../../describeWithDOM';
+import { describeWithDOM } from '../..';
 
 describe('describeWithDOM', () => {
   describe('.only()', () => {

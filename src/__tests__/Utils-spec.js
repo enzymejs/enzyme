@@ -13,11 +13,9 @@ import {
   mapNativeEventNames,
 } from '../Utils';
 import {
+  describeWithDOM,
   mount,
 } from '../';
-import {
-	describeWithDOM,
-} from '../describeWithDOM';
 
 describe('Utils', () => {
 
