@@ -29,5 +29,8 @@ node_modules
 # Jetbrains IDEs
 .idea
 
+# vim swp files
+*.swp
+
 /build
 _book

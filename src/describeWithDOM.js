@@ -1,15 +1,15 @@
 let jsdom;
 
 try {
-	require('jsdom'); // could throw
-	jsdom = require('mocha-jsdom');
+  require('jsdom'); // could throw
+  jsdom = require('mocha-jsdom');
 } catch (e) {
-	// jsdom is not supported...
+  // jsdom is not supported...
 }
 
 export function describeWithDOM(a, b) {
   describe('(uses jsdom)', () => {
-		if (typeof jsdom === 'function') {
+    if (typeof jsdom === 'function') {
       jsdom();
       describe(a, b);
     } else {
