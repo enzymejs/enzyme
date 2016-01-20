@@ -256,6 +256,58 @@ describe('shallow', () => {
       expect(() => wrapper.find('.foo .foo')).to.throw(Error);
     });
 
+    it('should support object property selectors', () => {
+      const wrapper = shallow(
+        <div>
+          <input data-test="ref" className="foo" type="text" />
+          <input data-test="ref" type="text"/>
+          <button data-test="ref" prop={undefined} />
+          <span data-test="ref" prop={null} />
+          <div data-test="ref" prop={123} />
+          <input data-test="ref" prop={false} />
+          <a data-test="ref" prop />
+        </div>
+      );
+      expect(wrapper.find({ a: 1 })).to.have.length(0);
+      expect(wrapper.find({ 'data-test': 'ref' })).to.have.length(7);
+      expect(wrapper.find({ className: 'foo' })).to.have.length(1);
+      expect(wrapper.find({ prop: undefined })).to.have.length(1);
+      expect(wrapper.find({ prop: null })).to.have.length(1);
+      expect(wrapper.find({ prop: 123 })).to.have.length(1);
+      expect(wrapper.find({ prop: false })).to.have.length(1);
+      expect(wrapper.find({ prop: true })).to.have.length(1);
+    });
+
+    it('should support complex and nested object property selectors', () => {
+      const testFunction = () => {};
+      const wrapper = shallow(
+        <div>
+          <span more={[{ id: 1 }]} data-test="ref" prop onChange={testFunction} />
+          <a more={[{ id: 1 }]} data-test="ref" />
+          <div more={{ item: { id: 1 } }} data-test="ref" />
+          <input style={{ height: 20 }} data-test="ref" />
+        </div>
+      );
+      expect(wrapper.find({ 'data-test': 'ref' })).to.have.length(4);
+      expect(wrapper.find({ more: { a: 1 } })).to.have.length(0);
+      expect(wrapper.find({ more: [{ id: 1 }] })).to.have.length(2);
+      expect(wrapper.find({ more: { item: { id: 1 } } })).to.have.length(1);
+      expect(wrapper.find({ style: { height: 20 } })).to.have.length(1);
+      expect(wrapper
+        .find({ more: [{ id: 1 }], 'data-test': 'ref', prop: true, onChange: testFunction })
+      ).to.have.length(1);
+    });
+
+    it('should throw when given empty object, null, or an array', () => {
+      const wrapper = shallow(
+        <div>
+          <input className="foo" type="text" />
+        </div>
+      );
+      expect(() => wrapper.find({})).to.throw(Error);
+      expect(() => wrapper.find([])).to.throw(Error);
+      expect(() => wrapper.find(null)).to.throw(Error);
+    });
   });
 
   describe('.findWhere(predicate)', () => {

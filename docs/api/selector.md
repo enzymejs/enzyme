@@ -6,7 +6,7 @@ one of the following three categories:
 
 ### 1. A Valid CSS Selector
 
-Enzyme supports a subset of valid CSS selectors to find nodes inside a render tree. Support is as 
+Enzyme supports a subset of valid CSS selectors to find nodes inside a render tree. Support is as
 follows:
 
 - class syntax (`.foo`, `.foo-bar`, etc.)
@@ -92,6 +92,25 @@ MyComponent.displayName = 'MyComponent';
 const myComponents = wrapper.find('MyComponent');
 ```
 
-NOTE: This will *only* work if the selector (and thus the component's `displayName`) is a string 
+NOTE: This will *only* work if the selector (and thus the component's `displayName`) is a string
 starting with a capital letter. Strings starting with lower case letters will assume it is a CSS
 selector using the tag syntax.
+
+
+
+### 4. Object Property Selector
+
+Enzyme allows you to find components and nodes based on a subset of their properties:
+
+
+```jsx
+const wrapper = mount(
+  <div>
+    <span foo={3} bar={false} title="baz" />
+  </div>
+)
+
+wrapper.find({ foo: 3 })
+wrapper.find({ bar: false })
+wrapper.find({ title: 'baz'})
+```

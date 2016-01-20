@@ -1,3 +1,5 @@
+import { isEmpty } from 'underscore';
+import isSubset from 'is-subset';
 import {
   coercePropValue,
   nodeEqual,
@@ -177,6 +179,12 @@ export function parentsOfInst(inst, root) {
   return pathToNode(inst, root).reverse();
 }
 
+export function instMatchesObjectProps(inst, props) {
+  if (!isDOMComponent(inst)) return false;
+  const node = getNode(inst);
+  return isSubset(propsOfNode(node), props);
+}
+
 export function buildInstPredicate(selector) {
   switch (typeof selector) {
     case 'function':
@@ -207,8 +215,16 @@ export function buildInstPredicate(selector) {
       }
       break;
 
+    case 'object':
+      if (!Array.isArray(selector) && selector !== null && !isEmpty(selector)) {
+        return node => instMatchesObjectProps(node, selector);
+      }
+      throw new TypeError(
+        'Enzyme::Selector does not support an array, null, or empty object as a selector'
+      );
+
     default:
-      throw new TypeError('Expecting a string or Component Constructor');
+      throw new TypeError(`Enzyme::Selector expects a string, object, or Component Constructor`);
   }
 }
 
