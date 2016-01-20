@@ -75,7 +75,7 @@ export function instHasProperty(inst, propKey, stringifiedPropValue) {
   const nodeProps = propsOfNode(node);
   const nodePropValue = nodeProps[propKey];
 
-  const propValue = coercePropValue(stringifiedPropValue);
+  const propValue = coercePropValue(propKey, stringifiedPropValue);
 
   // intentionally not matching node props that are undefined
   if (nodePropValue === undefined) {

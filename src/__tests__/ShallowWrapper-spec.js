@@ -169,6 +169,17 @@ describe('shallow', () => {
       expect(wrapper.find('[title]')).to.have.length(1);
     });
 
+    it('should error sensibly if prop selector without quotes', () => {
+      const wrapper = shallow(
+        <div>
+          <input type="text" />
+          <input type="hidden" />
+        </div>
+      );
+
+      expect(() => wrapper.find('[type=text]')).to.throw();
+    });
+
     it('should compound tag and prop selector', () => {
       const wrapper = shallow(
         <div>

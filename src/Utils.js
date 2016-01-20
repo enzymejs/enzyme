@@ -149,19 +149,21 @@ export function AND(fns) {
   };
 }
 
-export function coercePropValue(propValue) {
+export function coercePropValue(propName, propValue) {
   // can be undefined
   if (propValue === undefined) {
     return propValue;
   }
 
+  const trimmedValue = propValue.trim();
+
   // if propValue includes quotes, it should be
   // treated as a string
-  if (propValue.search(/"/) !== -1) {
-    return propValue.replace(/"/g, '');
+  if (/^(['"]).*\1$/.test(trimmedValue)) {
+    return trimmedValue.slice(1, -1);
   }
 
-  const numericPropValue = parseInt(propValue, 10);
+  const numericPropValue = +trimmedValue;
 
   // if parseInt is not NaN, then we've wanted a number
   if (!isNaN(numericPropValue)) {
@@ -169,7 +171,14 @@ export function coercePropValue(propValue) {
   }
 
   // coerce to boolean
-  return propValue === 'true' ? true : false;
+  if (trimmedValue === 'true') return true;
+  if (trimmedValue === 'false') return false;
+
+  // user provided an unquoted string value
+  throw new TypeError(
+    `Enzyme::Unable to parse selector '[${propName}=${propValue}]'. ` +
+    `Perhaps you forgot to escape a string? Try '[${propName}="${trimmedValue}"]' instead.`
+  );
 }
 
 export function mapNativeEventNames(event) {

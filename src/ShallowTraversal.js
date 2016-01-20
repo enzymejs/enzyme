@@ -73,7 +73,7 @@ export function nodeHasId(node, id) {
 
 export function nodeHasProperty(node, propKey, stringifiedPropValue) {
   const nodeProps = propsOfNode(node);
-  const propValue = coercePropValue(stringifiedPropValue);
+  const propValue = coercePropValue(propKey, stringifiedPropValue);
   const nodePropValue = nodeProps[propKey];
 
   if (nodePropValue === undefined) {

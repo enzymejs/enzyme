@@ -227,19 +227,19 @@ describe('Utils', () => {
   });
 
   describe('coercePropValue', () => {
-
+    const key = 'foo';
     it('returns undefined if passed undefined', () => {
-      expect(coercePropValue(undefined)).to.equal(undefined);
+      expect(coercePropValue(key, undefined)).to.equal(undefined);
     });
 
     it('returns number if passed a stringified number', () => {
-      expect(coercePropValue('1')).to.be.equal(1);
-      expect(coercePropValue('0')).to.be.equal(0);
+      expect(coercePropValue(key, '1')).to.be.equal(1);
+      expect(coercePropValue(key, '0')).to.be.equal(0);
     });
 
     it('returns a boolean if passed a stringified bool', () => {
-      expect(coercePropValue('true')).to.equal(true);
-      expect(coercePropValue('false')).to.equal(false);
+      expect(coercePropValue(key, 'true')).to.equal(true);
+      expect(coercePropValue(key, 'false')).to.equal(false);
     });
   });
 
