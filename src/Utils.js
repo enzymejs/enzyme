@@ -168,8 +168,17 @@ export function coercePropValue(propValue) {
     return numericPropValue;
   }
 
-  // coerce to boolean
-  return propValue === 'true' ? true : false;
+  if (/true|false/.test(propValue)) {
+    return propValue === 'true' ? true : false;
+  }
+
+  // if none of these match a literal, the api has been used incorrectly
+  // and should throw an error
+  throw new TypeError(
+    'Enzyme::Selector expects a literal value on the right side of the property expression.' +
+    'This error is likely caused by not wrapping a string in quotes.' +
+    'i.e., [foo=bar] should be [foo="bar"].'
+  );
 }
 
 export function mapNativeEventNames(event) {
