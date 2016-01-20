@@ -215,6 +215,11 @@ describeWithDOM('mount', () => {
       expect(wrapper.find('[key]')).to.have.length(0);
     });
 
+    it('should throw an error when using property selector with an invalid literal', () => {
+      const wrapper = mount(<div />);
+      expect(() => wrapper.find('[foo=bar]')).to.throw(Error);
+    });
+
 
     it('should find multiple elements based on a class name', () => {
       const wrapper = mount(

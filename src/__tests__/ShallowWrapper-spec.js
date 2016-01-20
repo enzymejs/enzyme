@@ -233,6 +233,11 @@ describe('shallow', () => {
       expect(wrapper.find('[key]')).to.have.length(0);
     });
 
+    it('should throw an error when using the property selector without a literal', () => {
+      const wrapper = shallow(<div />);
+      expect(() => wrapper.find('[foo=bar]')).to.throw(Error);
+    });
+
     it('should find multiple elements based on a constructor', () => {
       const wrapper = shallow(
         <div>

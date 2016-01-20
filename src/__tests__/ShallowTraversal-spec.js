@@ -64,13 +64,13 @@ describe('ShallowTraversal', () => {
       const node = (<div onChange={noop} title="foo" />);
 
       expect(nodeHasProperty(node, 'onChange')).to.equal(true);
-      expect(nodeHasProperty(node, 'title', 'foo')).to.equal(true);
+      expect(nodeHasProperty(node, 'title', '"foo"')).to.equal(true);
     });
 
     it('should not match on html attributes', () => {
       const node = (<div htmlFor="foo" />);
 
-      expect(nodeHasProperty(node, 'for', 'foo')).to.equal(false);
+      expect(nodeHasProperty(node, 'for', '"foo"')).to.equal(false);
     });
 
     it('should not find undefined properties', () => {
