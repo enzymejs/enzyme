@@ -85,6 +85,54 @@ describe('shallow', () => {
 
   });
 
+  describe('.equals(node)', () => {
+
+    it('should allow matches on the root node', () => {
+      const a = <div className="foo" />;
+      const b = <div className="foo" />;
+      const c = <div className="bar" />;
+      expect(shallow(a).equals(b)).to.equal(true);
+      expect(shallow(a).equals(c)).to.equal(false);
+    });
+
+    it('should NOT allow matches on a nested node', () => {
+      const wrapper = shallow(
+        <div>
+          <div className="foo" />
+        </div>
+      );
+      const b = <div className="foo" />;
+      expect(wrapper.equals(b)).to.equal(false);
+    });
+
+    it('should match composite components', () => {
+      class Foo extends React.Component {
+        render() { return <div />; }
+      }
+      const wrapper = shallow(
+        <div>
+          <Foo />
+        </div>
+      );
+      const b = <div><Foo /></div>;
+      expect(wrapper.equals(b)).to.equal(true);
+    });
+
+    it('should not expand `node` content', () => {
+      class Bar extends React.Component {
+        render() { return <div />; }
+      }
+
+      class Foo extends React.Component {
+        render() { return <Bar />; }
+      }
+
+      expect(shallow(<Foo />).equals(<Bar />)).to.equal(true);
+      expect(shallow(<Foo />).equals(<Foo />)).to.equal(false);
+    });
+
+  });
+
   describe('.find(selector)', () => {
 
     it('should be able to match the root DOM element', () => {
