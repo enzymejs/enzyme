@@ -1,5 +1,23 @@
 # Change Log
 
+## 1.4.0 (January 21, 2016)
+
+### Minor Changes
+
+- `describeWithDOM` enhancement ([#126](https://github.com/airbnb/enzyme/pull/126))
+
+- add `.equals()` method to `ShallowWrapper` ([#124](https://github.com/airbnb/enzyme/pull/124))
+
+- add object selector syntax ([#110](https://github.com/airbnb/enzyme/pull/110))
+
+### Patches
+
+- Fixed confusing behavior of prop selector syntax ([#130](https://github.com/airbnb/enzyme/pull/130))
+
+- Documentation fixes
+
+
+
 ## 1.3.1 (January 15, 2016)
 
 ### Patches
