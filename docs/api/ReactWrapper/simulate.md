@@ -43,6 +43,6 @@ class Foo extends React.Component {
 const wrapper = mount(<Foo />);
 
 expect(wrapper.find('.clicks-0').length).to.equal(1);
-wrapper.simulate('click');
+wrapper.find('a').simulate('click');
 expect(wrapper.find('.clicks-1').length).to.equal(1);
 ```
