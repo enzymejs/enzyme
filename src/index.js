@@ -2,6 +2,7 @@ import cheerio from 'cheerio';
 import Sinon from 'sinon';
 import ReactWrapper from './ReactWrapper';
 import ShallowWrapper from './ShallowWrapper';
+import { describeWithDOM } from './describeWithDOM';
 import { onPrototype } from './Utils';
 import { renderToStaticMarkup } from './react-compat';
 
@@ -9,27 +10,7 @@ import { renderToStaticMarkup } from './react-compat';
  * @class Enzyme
  */
 
-let jsdom;
-try {
-  require('jsdom'); // could throw
-  jsdom = require('mocha-jsdom');
-} catch (e) {
-  // jsdom is not supported...
-}
-
 export let sinon = Sinon.sandbox.create();
-
-export function describeWithDOM(a, b) {
-  describe('(uses jsdom)', () => {
-    if (typeof jsdom === 'function') {
-      jsdom();
-      describe(a, b);
-    } else {
-      // if jsdom isn't available, skip every test in this describe context
-      describe.skip(a, b);
-    }
-  });
-}
 
 export function useSetStateHack() {
   let cleanup = false;
@@ -106,3 +87,4 @@ export function render(node) {
 
 export { ShallowWrapper as ShallowWrapper };
 export { ReactWrapper as ReactWrapper };
+export { describeWithDOM as describeWithDOM };
