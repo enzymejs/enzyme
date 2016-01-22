@@ -88,7 +88,7 @@ const {
   findAllInRenderedTree,
 } = TestUtils;
 
-export default {
+export {
   createShallowRenderer,
   renderToStaticMarkup,
   renderIntoDocument,
