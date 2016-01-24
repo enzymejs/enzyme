@@ -12,6 +12,7 @@
     * [filter(selector)](/docs/api/ShallowWrapper/filter.md)
     * [filterWhere(predicate)](/docs/api/ShallowWrapper/filterWhere.md)
     * [contains(node)](/docs/api/ShallowWrapper/contains.md)
+    * [equals(node)](/docs/api/ShallowWrapper/equals.md)
     * [hasClass(className)](/docs/api/ShallowWrapper/hasClass.md)
     * [is(selector)](/docs/api/ShallowWrapper/is.md)
     * [not(selector)](/docs/api/ShallowWrapper/not.md)
