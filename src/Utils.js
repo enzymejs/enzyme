@@ -86,7 +86,8 @@ export function nodeEqual(a, b) {
 // 'click' => 'onClick'
 // 'mouseEnter' => 'onMouseEnter'
 export function propFromEvent(event) {
-  return `on${event[0].toUpperCase()}${event.substring(1)}`;
+  const nativeEvent = mapNativeEventNames(event);
+  return `on${nativeEvent[0].toUpperCase()}${nativeEvent.substring(1)}`;
 }
 
 export function withSetStateAllowed(fn) {
