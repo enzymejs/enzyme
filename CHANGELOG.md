@@ -1,5 +1,16 @@
 # Change Log
 
+## 1.4.1 (January 24, 2016)
+
+### Patches
+
+- Upgrade to babel 6 ([#81](https://github.com/airbnb/enzyme/pull/81))
+
+- Fix event naming bug in ShallowWrapper ([#135](https://github.com/airbnb/enzyme/pull/135))
+
+- Documentation fixes
+
+
 ## 1.4.0 (January 21, 2016)
 
 ### Minor Changes

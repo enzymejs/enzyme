@@ -1,6 +1,6 @@
 {
   "name": "enzyme",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "JavaScript Testing utilities for React",
   "main": "build",
   "scripts": {
