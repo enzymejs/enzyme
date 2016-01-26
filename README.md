@@ -16,7 +16,7 @@ compatible with all major test runners and assertion libraries out there. The do
 examples for enzyme use [mocha](https://mochajs.org/) and [chai](http://chaijs.com/), but you
 should be able to extrapolate to your framework of choice.
 
-If you are interesting in using enzyme with custom Chai.js assertions and convenience functions for
+If you are interested in using enzyme with custom Chai.js assertions and convenience functions for
 testing your React components, you can consider using [chai-enzyme](https://github.com/producthunt/chai-enzyme).
 
 
@@ -155,4 +155,3 @@ Read the full [API Documentation](/docs/api/render.md)
 ### License
 
 [MIT](/LICENSE.md)
-
