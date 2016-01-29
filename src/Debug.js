@@ -43,8 +43,8 @@ function propsString(node) {
 }
 
 export function debugNode(node, indentLength = 2) {
+  if (typeof node === 'string' || typeof node === 'number') return escape(node);
   if (!node) return '';
-  if (typeof node === 'string') return escape(node);
 
   const children = compact(childrenOfNode(node).map(n => debugNode(n, indentLength)));
   const type = typeName(node);

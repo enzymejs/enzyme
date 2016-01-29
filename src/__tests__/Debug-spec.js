@@ -112,6 +112,22 @@ describe('debug', () => {
       );
     });
 
+    it('should render number children properly', () => {
+      expect(debugNode(
+        <div>
+          {-1}
+          {0}
+          {1}
+        </div>
+      )).to.equal(
+`<div>
+  -1
+  0
+  1
+</div>`
+      );
+    });
+
     it('renders html entities properly', () => {
       expect(debugNode(
         <div>&gt;</div>
@@ -124,7 +140,12 @@ describe('debug', () => {
 
     it('should not render falsy children ', () => {
       expect(debugNode(
-        <div id="foo">{false}</div>
+        <div id="foo">
+          {false}
+          {null}
+          {undefined}
+          {''}
+        </div>
       )).to.equal(
 `<div id="foo" />`
       );
