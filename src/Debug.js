@@ -8,7 +8,7 @@ import { without, escape, compact } from 'underscore';
 
 export function typeName(node) {
   return typeof node.type === 'function'
-    ? (node.type.displayName || 'Component')
+    ? (node.type.displayName || node.type.name || 'Component')
     : node.type;
 }
 

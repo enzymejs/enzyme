@@ -5,6 +5,8 @@ import {
   indent,
   debugNode,
 } from '../Debug';
+import { itIf } from './_helpers';
+import { REACT013 } from '../version';
 
 describe('debug', () => {
 
@@ -80,7 +82,40 @@ describe('debug', () => {
       class Foo extends React.Component {
         render() { return <div />; }
       }
-      Foo.displayName = 'Foo'; // TODO(lmr): why do i have to do this...?
+      Foo.displayName = 'Bar';
+
+      expect(debugNode(
+        <div>
+          <Foo />
+        </div>
+      )).to.equal(
+`<div>
+  <Bar />
+</div>`
+      );
+
+    });
+
+    it('should render composite components as tags w/ name', () => {
+      class Foo extends React.Component {
+        render() { return <div />; }
+      }
+
+      expect(debugNode(
+        <div>
+          <Foo />
+        </div>
+      )).to.equal(
+`<div>
+  <Foo />
+</div>`
+      );
+
+    });
+
+    itIf(!REACT013, 'should render stateless components as tags w/ name', () => {
+
+      const Foo = () => <div />;
 
       expect(debugNode(
         <div>
