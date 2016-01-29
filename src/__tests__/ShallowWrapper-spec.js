@@ -91,10 +91,11 @@ describe('shallow', () => {
     });
 
     it('should work with numbers', () => {
-      const wrapper = shallow(<div>1</div>);
+      const wrapper = shallow(<div>{1}</div>);
 
       expect(wrapper.contains(1)).to.equal(true);
       expect(wrapper.contains(2)).to.equal(false);
+      expect(wrapper.contains('1')).to.equal(false);
     });
 
   });

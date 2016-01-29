@@ -82,7 +82,7 @@ export function nodeEqual(a, b) {
     }
   }
 
-  if (typeof a !== 'string') {
+  if (typeof a !== 'string' && typeof a !== 'number') {
     return leftKeys.length === Object.keys(right).length;
   }
 
