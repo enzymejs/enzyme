@@ -64,6 +64,7 @@ export function nodeEqual(a, b) {
   if (a === b) return true;
   if (!a || !b) return false;
   if (a.type !== b.type) return false;
+
   const left = propsOfNode(a);
   const leftKeys = Object.keys(left);
   const right = propsOfNode(b);
@@ -80,7 +81,12 @@ export function nodeEqual(a, b) {
       return false;
     }
   }
-  return leftKeys.length === Object.keys(right).length;
+
+  if (typeof a !== 'string') {
+    return leftKeys.length === Object.keys(right).length;
+  }
+
+  return false;
 }
 
 // 'click' => 'onClick'

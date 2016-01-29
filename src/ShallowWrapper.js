@@ -202,7 +202,13 @@ export default class ShallowWrapper {
    * @returns {Boolean}
    */
   contains(node) {
-    return findWhereUnwrapped(this, other => nodeEqual(node, other)).length > 0;
+    let nodeToCompare = node;
+
+    if (typeof nodeToCompare === 'number') {
+      nodeToCompare = '' + nodeToCompare;
+    }
+
+    return findWhereUnwrapped(this, other => nodeEqual(nodeToCompare, other)).length > 0;
   }
 
   /**
