@@ -25,3 +25,4 @@ expect(wrapper.state('foo')).to.equal(10);
 
 - [`.props() => Object`](props.md)
 - [`.prop(key) => Any`](prop.md)
+- [`.context([key]) => Any`](context.md)
