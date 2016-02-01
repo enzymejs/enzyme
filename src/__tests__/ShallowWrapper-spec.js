@@ -83,6 +83,38 @@ describe('shallow', () => {
       expect(wrapper.contains(b)).to.equal(true);
     });
 
+    it('should work with strings', () => {
+      const wrapper = shallow(<div>foo</div>);
+
+      expect(wrapper.contains('foo')).to.equal(true);
+      expect(wrapper.contains('bar')).to.equal(false);
+    });
+
+    it('should work with numbers', () => {
+      const wrapper = shallow(<div>{1}</div>);
+
+      expect(wrapper.contains(1)).to.equal(true);
+      expect(wrapper.contains(2)).to.equal(false);
+      expect(wrapper.contains('1')).to.equal(false);
+    });
+
+    it('should work with nested strings & numbers', () => {
+      const wrapper = shallow(
+        <div>
+          <div>
+            <div>{5}</div>
+          </div>
+          <div>foo</div>
+        </div>
+      );
+
+      expect(wrapper.contains('foo')).to.equal(true);
+      expect(wrapper.contains(<div>foo</div>)).to.equal(true);
+
+      expect(wrapper.contains(5)).to.equal(true);
+      expect(wrapper.contains(<div>{5}</div>)).to.equal(true);
+    });
+
   });
 
   describe('.equals(node)', () => {
