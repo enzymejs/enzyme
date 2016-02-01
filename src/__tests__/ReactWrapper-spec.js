@@ -13,6 +13,8 @@ import { REACT013 } from '../version';
 describeWithDOM('mount', () => {
 
   describe('context', () => {
+    const context = { name: 'foo' };
+
     it('can pass in context', () => {
       const SimpleComponent = React.createClass({
         contextTypes: {
@@ -23,7 +25,6 @@ describeWithDOM('mount', () => {
         },
       });
 
-      const context = { name: 'foo' };
       const wrapper = mount(<SimpleComponent />, { context });
       expect(wrapper.text()).to.equal('foo');
     });
@@ -35,8 +36,23 @@ describeWithDOM('mount', () => {
         },
       });
 
-      const context = { name: 'foo' };
       expect(() => mount(<SimpleComponent />, { context })).to.not.throw(Error);
+    });
+
+    it('is instrospectable through context API', () => {
+      const SimpleComponent = React.createClass({
+        contextTypes: {
+          name: React.PropTypes.string,
+        },
+        render() {
+          return <div>{this.context.name}</div>;
+        },
+      });
+
+      const wrapper = mount(<SimpleComponent />, { context });
+
+      expect(wrapper.context().name).to.equal(context.name);
+      expect(wrapper.context('name')).to.equal(context.name);
     });
   });
 

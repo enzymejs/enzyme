@@ -353,6 +353,26 @@ export default class ShallowWrapper {
   }
 
   /**
+   * Returns the context hash for the root node of the wrapper.
+   * Optionally pass in a prop name and it will return just that value.
+   *
+   * NOTE: can only be called on a wrapper of a single node.
+   *
+   * @param {String} name (optional)
+   * @returns {*}
+   */
+  context(name) {
+    if (this.root !== this) {
+      throw new Error('ShallowWrapper::context() can only be called on the root');
+    }
+    const _context = this.single(() => this.instance().context);
+    if (name) {
+      return _context[name];
+    }
+    return _context;
+  }
+
+  /**
    * Returns a new wrapper with all of the children of the current wrapper.
    *
    * @param {String|Function} [selector]

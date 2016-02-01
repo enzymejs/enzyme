@@ -118,6 +118,9 @@ Returns a wrapper of the last node of the current wrapper.
 #### [`.state([key]) => Any`](ShallowWrapper/state.md)
 Returns the state of the root component.
 
+#### [`.context([key]) => Any`](ShallowWrapper/context.md)
+Returns the context of the root component.
+
 #### [`.props() => Object`](ShallowWrapper/props.md)
 Returns the props of the root component.
 
