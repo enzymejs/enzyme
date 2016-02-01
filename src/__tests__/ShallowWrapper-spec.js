@@ -98,6 +98,23 @@ describe('shallow', () => {
       expect(wrapper.contains('1')).to.equal(false);
     });
 
+    it('should work with nested strings & numbers', () => {
+      const wrapper = shallow(
+        <div>
+          <div>
+            <div>{5}</div>
+          </div>
+          <div>foo</div>
+        </div>
+      );
+
+      expect(wrapper.contains('foo')).to.equal(true);
+      expect(wrapper.contains(<div>foo</div>)).to.equal(true);
+
+      expect(wrapper.contains(5)).to.equal(true);
+      expect(wrapper.contains(<div>{5}</div>)).to.equal(true);
+    });
+
   });
 
   describe('.equals(node)', () => {
