@@ -1,3 +1,4 @@
+/* eslint react/no-deprecated: 0 */
 import { REACT013 } from './version';
 
 let TestUtils;
@@ -7,9 +8,12 @@ let renderIntoDocument;
 let findDOMNode;
 let React;
 let ReactContext;
+let childrenToArray;
+
+React = require('react');
+
 if (REACT013) {
-  renderToStaticMarkup = require('react').renderToStaticMarkup;
-  React = require('react');
+  renderToStaticMarkup = React.renderToStaticMarkup;
   /* eslint-disable react/no-deprecated */
   findDOMNode = React.findDOMNode;
   /* eslint-enable react/no-deprecated */
@@ -33,6 +37,19 @@ if (REACT013) {
   // this fixes some issues in React 0.13 with setState and jsdom...
   // see issue: https://github.com/airbnb/enzyme/issues/27
   require('react/lib/ExecutionEnvironment').canUseDOM = true;
+
+  // in 0.13, a Children.toArray function was not exported. Make our own instead.
+  childrenToArray = (children) => {
+    const results = [];
+    if (children !== undefined && children !== null && children !== false) {
+      React.Children.forEach(children, (el) => {
+        if (el !== undefined && el !== null && el !== false) {
+          results.push(el);
+        }
+      });
+    }
+    return results;
+  };
 } else {
   renderToStaticMarkup = require('react-dom/server').renderToStaticMarkup;
   findDOMNode = require('react-dom').findDOMNode;
@@ -74,6 +91,7 @@ if (REACT013) {
     };
   };
   renderIntoDocument = TestUtils.renderIntoDocument;
+  childrenToArray = React.Children.toArray;
 }
 
 const {
@@ -102,4 +120,5 @@ export {
   Simulate,
   findDOMNode,
   findAllInRenderedTree,
+  childrenToArray,
 };

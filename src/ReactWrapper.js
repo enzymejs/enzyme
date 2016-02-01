@@ -15,7 +15,10 @@ import {
   Simulate,
   findDOMNode,
 } from './react-compat';
-import { mapNativeEventNames } from './Utils';
+import {
+  mapNativeEventNames,
+  containsChildrenSubArray,
+} from './Utils';
 
 /**
  * Finds all nodes in the current wrapper nodes' render trees that match the provided predicate
@@ -207,11 +210,15 @@ export default class ReactWrapper {
    * expect(wrapper.contains(<div className="foo bar" />)).to.equal(true);
    * ```
    *
-   * @param {ReactElement} node
+   * @param {ReactElement|Array<ReactElement>} nodeOrNodes
    * @returns {Boolean}
    */
-  contains(node) {
-    return findWhereUnwrapped(this, other => instEqual(node, other)).length > 0;
+  contains(nodeOrNodes) {
+    const predicate = Array.isArray(nodeOrNodes)
+      ? other => containsChildrenSubArray(instEqual, other, nodeOrNodes)
+      : other => instEqual(nodeOrNodes, other);
+
+    return findWhereUnwrapped(this, predicate).length > 0;
   }
 
   /**

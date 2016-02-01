@@ -64,8 +64,8 @@ Remove nodes in the current wrapper that do not match the provided selector.
 #### [`.filterWhere(predicate) => ReactWrapper`](ReactWrapper/filterWhere.md)
 Remove nodes in the current wrapper that do not return true for the provided predicate function.
 
-#### [`.contains(node) => Boolean`](ReactWrapper/contains.md)
-Returns whether or not a given node is somewhere in the render tree.
+#### [`.contains(nodeOrNodes) => Boolean`](ReactWrapper/contains.md)
+Returns whether or not a given node or array of nodes is somewhere in the render tree.
 
 #### [`.hasClass(className) => Boolean`](ReactWrapper/hasClass.md)
 Returns whether or not the current root node has the given class name or not.

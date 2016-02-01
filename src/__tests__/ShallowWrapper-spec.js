@@ -115,6 +115,28 @@ describe('shallow', () => {
       expect(wrapper.contains(<div>{5}</div>)).to.equal(true);
     });
 
+    it('should do something with arrays of nodes', () => {
+      const wrapper = shallow(
+        <div>
+          <span>Hello</span>
+          <div>Goodbye</div>
+          <span>More</span>
+        </div>
+      );
+      const fails = [
+        <span>wrong</span>,
+        <div>Goodbye</div>,
+      ];
+
+      const passes = [
+        <span>Hello</span>,
+        <div>Goodbye</div>,
+      ];
+
+      expect(wrapper.contains(fails)).to.equal(false);
+      expect(wrapper.contains(passes)).to.equal(true);
+    });
+
   });
 
   describe('.equals(node)', () => {

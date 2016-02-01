@@ -3,6 +3,7 @@ import { isEqual } from 'underscore';
 import {
   isDOMComponent,
   findDOMNode,
+  childrenToArray,
 } from './react-compat';
 import {
   REACT013,
@@ -10,8 +11,8 @@ import {
 } from './version';
 
 export function propsOfNode(node) {
-  if (REACT013) {
-    return (node && node._store && node._store.props) || {};
+  if (REACT013 && node && node._store) {
+    return (node._store.props) || {};
   }
   return (node && node.props) || {};
 }
@@ -64,7 +65,6 @@ export function nodeEqual(a, b) {
   if (a === b) return true;
   if (!a || !b) return false;
   if (a.type !== b.type) return false;
-
   const left = propsOfNode(a);
   const leftKeys = Object.keys(left);
   const right = propsOfNode(b);
@@ -72,7 +72,9 @@ export function nodeEqual(a, b) {
     const prop = leftKeys[i];
     if (!(prop in right)) return false;
     if (prop === 'children') {
-      if (!childrenEqual(left.children, right.children)) return false;
+      if (!childrenEqual(childrenToArray(left.children), childrenToArray(right.children))) {
+        return false;
+      }
     } else if (right[prop] === left[prop]) {
       // continue;
     } else if (typeof right[prop] === typeof left[prop] && typeof left[prop] === 'object') {
@@ -88,6 +90,22 @@ export function nodeEqual(a, b) {
 
   return false;
 }
+
+export function containsChildrenSubArray(match, node, subArray) {
+  const children = childrenOfNode(node);
+  return children.some((_, i) => arraysEqual(match, children.slice(i, subArray.length), subArray));
+}
+
+function arraysEqual(match, left, right) {
+  return left.length === right.length && left.every((el, i) => match(el, right[i]));
+}
+
+function childrenOfNode(node) {
+  const props = propsOfNode(node);
+  const { children } = props;
+  return childrenToArray(children);
+}
+
 
 // 'click' => 'onClick'
 // 'mouseEnter' => 'onMouseEnter'

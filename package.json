@@ -14,6 +14,7 @@
     "check": "npm run lint && npm run test:all",
     "build": "babel src --out-dir build",
     "test:watch": "mocha --compilers js:babel-core/register --recursive src/**/__tests__/*.js --watch",
+    "test:only": "mocha --compilers js:babel-core/register --watch",
     "test:describeWithDOMOnly": "mocha --compilers js:babel-core/register --recursive src/**/__tests__/describeWithDOM/describeWithDOMOnly-spec.js",
     "test:describeWithDOMSkip": "mocha --compilers js:babel-core/register --recursive src/**/__tests__/describeWithDOM/describeWithDOMSkip-spec.js",
     "test:all": "npm run react:13 && npm test && npm run test:describeWithDOMOnly && npm run test:describeWithDOMSkip && npm run react:14 && npm test && npm run test:describeWithDOMOnly && npm run test:describeWithDOMSkip",
