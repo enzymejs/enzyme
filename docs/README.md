@@ -77,6 +77,8 @@
     * [setProps(nextProps)](/docs/api/ReactWrapper/setProps.md)
     * [setContext(context)](/docs/api/ReactWrapper/setContext.md)
     * [instance()](/docs/api/ReactWrapper/instance.md)
+    * [unmount()](/docs/api/ReactWrapper/unmount.md)
+    * [mount()](/docs/api/ReactWrapper/mount.md)
     * [update()](/docs/api/ReactWrapper/update.md)
     * [type()](/docs/api/ReactWrapper/type.md)
     * [forEach(fn)](/docs/api/ReactWrapper/forEach.md)

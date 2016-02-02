@@ -136,6 +136,12 @@ Manually sets context of the root component.
 #### [`.instance() => ReactComponent`](ReactWrapper/instance.md)
 Returns the instance of the root component.
 
+#### [`.unmount() => ReactWrapper`](ReactWrapper/unmount.md)
+A method that un-mounts the component.
+
+#### [`.mount() => ReactWrapper`](ReactWrapper/mount.md)
+A method that re-mounts the component.
+
 #### [`.update() => ReactWrapper`](ReactWrapper/update.md)
 Calls `.forceUpdate()` on the root component instance.
 

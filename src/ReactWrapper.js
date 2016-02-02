@@ -139,6 +139,38 @@ export default class ReactWrapper {
   }
 
   /**
+   * A method that unmounts the component. This can be used to simulate a component going through
+   * and unmount/mount lifecycle.
+   *
+   * @returns {ReactWrapper}
+   */
+  unmount() {
+    if (this.root !== this) {
+      throw new Error('ReactWrapper::unmount() can only be called on the root');
+    }
+    this.single(() => {
+      this.component.setState({ mount: false });
+    });
+    return this;
+  }
+
+  /**
+   * A method that re-mounts the component. This can be used to simulate a component going through
+   * an unmount/mount lifecycle.
+   *
+   * @returns {ReactWrapper}
+   */
+  mount() {
+    if (this.root !== this) {
+      throw new Error('ReactWrapper::mount() can only be called on the root');
+    }
+    this.single(() => {
+      this.component.setState({ mount: true });
+    });
+    return this;
+  }
+
+  /**
    * A method that sets the props of the root component, and re-renders. Useful for when you are
    * wanting to test how the component behaves over time with changing props. Calling this, for
    * instance, will call the `componentWillReceiveProps` lifecycle method.
