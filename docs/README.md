@@ -61,6 +61,7 @@
     * [parents()](/docs/api/ReactWrapper/parents.md)
     * [parent()](/docs/api/ReactWrapper/parent.md)
     * [closest(selector)](/docs/api/ReactWrapper/closest.md)
+    * [render()](/docs/api/ReactWrapper/render.md)
     * [text()](/docs/api/ReactWrapper/text.md)
     * [html()](/docs/api/ReactWrapper/html.md)
     * [get(index)](/docs/api/ReactWrapper/get.md)
