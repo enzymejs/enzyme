@@ -686,7 +686,7 @@ export default class ShallowWrapper {
   }
 
   /**
-   * Returns an html-like string of the shallow render for debugging purposes.
+   * Returns an HTML-like string of the shallow render for debugging purposes.
    *
    * @returns {String}
    */
