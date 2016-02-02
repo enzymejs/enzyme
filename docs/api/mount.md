@@ -44,6 +44,7 @@ describe('<Foo />', () => {
 1. `node` (`ReactElement`): The node to render
 2. `options` (`Object` [optional]):
 - `options.context`: (`Object` [optional]): Context to be passed into the component
+- `options.attachTo`: (`DOMElement` [optional]): DOM Element to attach the component to.
 
 #### Returns
 
@@ -177,3 +178,6 @@ Returns whether or not any of the nodes in the wrapper pass the provided predica
 
 #### [`ref(refName) => ReactWrapper`](/docs/api/ReactWrapper/ref.md)
 Returns a wrapper of the node that matches the provided reference name.
+
+#### [`.detach() => void`](ReactWrapper/detach.md)
+Unmount the component from the DOM node it's attached to.

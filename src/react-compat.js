@@ -9,6 +9,8 @@ let findDOMNode;
 let React;
 let ReactContext;
 let childrenToArray;
+let renderWithOptions;
+let unmountComponentAtNode;
 
 React = require('react');
 
@@ -16,6 +18,7 @@ if (REACT013) {
   renderToStaticMarkup = React.renderToStaticMarkup;
   /* eslint-disable react/no-deprecated */
   findDOMNode = React.findDOMNode;
+  unmountComponentAtNode = React.unmountComponentAtNode;
   /* eslint-enable react/no-deprecated */
   TestUtils = require('react/addons').addons.TestUtils;
   ReactContext = require('react/lib/ReactContext');
@@ -50,9 +53,18 @@ if (REACT013) {
     }
     return results;
   };
+
+  renderWithOptions = (node, options) => {
+    if (options.attachTo) {
+      return React.render(node, options.attachTo);
+    }
+    return TestUtils.renderIntoDocument(node);
+  };
 } else {
+  const ReactDOM = require('react-dom');
   renderToStaticMarkup = require('react-dom/server').renderToStaticMarkup;
-  findDOMNode = require('react-dom').findDOMNode;
+  findDOMNode = ReactDOM.findDOMNode;
+  unmountComponentAtNode = ReactDOM.unmountComponentAtNode;
   // We require the testutils, but they don't come with 0.14 out of the box, so we
   // require them here through this node module. The bummer is that we are not able
   // to list this as a dependency in package.json and have 0.13 work properly.
@@ -92,6 +104,13 @@ if (REACT013) {
   };
   renderIntoDocument = TestUtils.renderIntoDocument;
   childrenToArray = React.Children.toArray;
+
+  renderWithOptions = (node, options) => {
+    if (options.attachTo) {
+      return ReactDOM.render(node, options.attachTo);
+    }
+    return TestUtils.renderIntoDocument(node);
+  };
 }
 
 const {
@@ -121,4 +140,6 @@ export {
   findDOMNode,
   findAllInRenderedTree,
   childrenToArray,
+  renderWithOptions,
+  unmountComponentAtNode,
 };
