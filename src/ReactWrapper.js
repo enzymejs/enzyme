@@ -1,4 +1,5 @@
 import React from 'react';
+import cheerio from 'cheerio';
 import { flatten, unique, compact } from 'underscore';
 import createWrapperComponent from './ReactWrapperComponent';
 import {
@@ -302,6 +303,17 @@ export default class ReactWrapper {
    */
   html() {
     return this.single(n => findDOMNode(n).outerHTML.replace(/\sdata-reactid+="[^"]+"/g, ''));
+  }
+
+  /**
+   * Returns the current node rendered to HTML and wrapped in a CheerioWrapper.
+   *
+   * NOTE: can only be called on a wrapper of a single node.
+   *
+   * @returns {CheerioWrapper}
+   */
+  render() {
+    return cheerio.load(this.html()).root();
   }
 
   /**

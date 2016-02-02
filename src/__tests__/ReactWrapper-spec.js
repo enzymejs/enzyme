@@ -1464,4 +1464,25 @@ describeWithDOM('mount', () => {
     });
   });
 
+  describe('.render()', () => {
+    it('should return a cheerio wrapper around the current node', () => {
+      class Foo extends React.Component {
+        render() {
+          return (<div className="in-foo" />);
+        }
+      }
+      class Bar extends React.Component {
+        render() {
+          return (
+            <div className="in-bar">
+              <Foo />
+            </div>
+          );
+        }
+      }
+      const wrapper = mount(<Bar />);
+      expect(wrapper.render().find('.in-foo')).to.have.length(1);
+    });
+  });
+
 });

@@ -88,6 +88,9 @@ Get a wrapper with the direct parent of the current node.
 #### [`.closest(selector) => ReactWrapper`](ReactWrapper/closest.md)
 Get a wrapper with the first ancestor of the current node to match the provided selector.
 
+#### [`.render() => CheerioWrapper`](ReactWrapper/render.md)
+Returns a CheerioWrapper of the current node's subtree.
+
 #### [`.text() => String`](ReactWrapper/text.md)
 Returns a string representation of the text nodes in the current render tree.
 
