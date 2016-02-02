@@ -1,4 +1,4 @@
-# `.contains(node)`
+# `.contains(nodeOrNodes) => Boolean`
 
 Returns whether or not the current wrapper has a node anywhere in it's render tree that looks like
 the one passed in.
@@ -6,7 +6,7 @@ the one passed in.
 
 #### Arguments
 
-1. `node` (`ReactElement`): The node whose presence you are detecting in the current instance's 
+1. `nodeOrNodes` (`ReactElement|Array<ReactElement>`): The node or array of nodes whose presence you are detecting in the current instance's 
 render tree. 
 
 
@@ -24,6 +24,25 @@ like the one passed in.
 ```jsx
 const wrapper = mount(<MyComponent />);
 expect(wrapper.contains(<div className="foo bar" />)).to.equal(true);
+```
+
+```jsx
+const wrapper = mount(
+  <div>
+    <span>Hello</span>
+    <div>Goodbye</div>
+    <span>Again</span>
+  </div>
+);
+const passes = [
+  <span>Hello</span>,
+  <div>Goodbye</div>,
+];
+
+expect(wrapper.contains([
+  <span>Hello</span>,
+  <div>Goodbye</div>,
+])).to.equal(true);
 ```
 
 

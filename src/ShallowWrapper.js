@@ -3,6 +3,7 @@ import { flatten, unique, compact } from 'underscore';
 import cheerio from 'cheerio';
 import {
   nodeEqual,
+  containsChildrenSubArray,
   propFromEvent,
   withSetStateAllowed,
   propsOfNode,
@@ -198,11 +199,15 @@ export default class ShallowWrapper {
    * expect(wrapper.contains(<div className="foo bar" />)).to.equal(true);
    * ```
    *
-   * @param {ReactElement} node
+   * @param {ReactElement|Array<ReactElement>} nodeOrNodes
    * @returns {Boolean}
    */
-  contains(node) {
-    return findWhereUnwrapped(this, other => nodeEqual(node, other)).length > 0;
+  contains(nodeOrNodes) {
+    const predicate = Array.isArray(nodeOrNodes)
+      ? other => containsChildrenSubArray(nodeEqual, other, nodeOrNodes)
+      : other => nodeEqual(nodeOrNodes, other);
+
+    return findWhereUnwrapped(this, predicate).length > 0;
   }
 
   /**
