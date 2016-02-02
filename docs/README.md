@@ -91,6 +91,7 @@
     * [every(selector)](/docs/api/ReactWrapper/every.md)
     * [everyWhere(selector)](/docs/api/ReactWrapper/everyWhere.md)
     * [ref(refName)](/docs/api/ReactWrapper/ref.md)
+    * [detach()](/docs/api/ReactWrapper/detach.md)
   * [Static Rendering](/docs/api/render.md)
   * [Selectors](/docs/api/selector.md)
 * [Change Log](/CHANGELOG.md)

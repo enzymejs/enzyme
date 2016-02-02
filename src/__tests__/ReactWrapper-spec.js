@@ -1546,4 +1546,94 @@ describeWithDOM('mount', () => {
     });
   });
 
+  describe('attachTo option', () => {
+    it('should attach and stuff', () => {
+      class Foo extends React.Component {
+        render() {
+          return (<div className="in-foo" />);
+        }
+      }
+      const div = global.document.createElement('div');
+      global.document.body.appendChild(div);
+
+      expect(document.body.childNodes).to.have.length(1);
+      expect(div.childNodes).to.have.length(0);
+
+      const wrapper = mount(<Foo />, { attachTo: div });
+
+      expect(wrapper.find('.in-foo')).to.have.length(1);
+      expect(document.body.childNodes).to.have.length(1);
+      expect(div.childNodes).to.have.length(1);
+
+      wrapper.detach();
+
+      expect(document.body.childNodes).to.have.length(1);
+      expect(div.childNodes).to.have.length(0);
+
+      global.document.body.removeChild(div);
+
+      expect(document.body.childNodes).to.have.length(0);
+      expect(div.childNodes).to.have.length(0);
+    });
+
+    it('should allow for multiple attaches/detaches on same node', () => {
+      class Foo extends React.Component {
+        render() {
+          return (<div className="in-foo" />);
+        }
+      }
+      class Bar extends React.Component {
+        render() {
+          return (<section className="in-bar" />);
+        }
+      }
+      let wrapper;
+      const div = global.document.createElement('div');
+      global.document.body.appendChild(div);
+
+      expect(document.body.childNodes).to.have.length(1);
+      expect(div.childNodes).to.have.length(0);
+
+      wrapper = mount(<Foo />, { attachTo: div });
+
+      expect(wrapper.find('.in-foo')).to.have.length(1);
+      expect(document.body.childNodes).to.have.length(1);
+      expect(div.childNodes).to.have.length(1);
+
+      wrapper.detach();
+
+      wrapper = mount(<Bar />, { attachTo: div });
+
+      expect(wrapper.find('.in-bar')).to.have.length(1);
+      expect(document.body.childNodes).to.have.length(1);
+      expect(div.childNodes).to.have.length(1);
+
+      wrapper.detach();
+
+      expect(document.body.childNodes).to.have.length(1);
+      expect(div.childNodes).to.have.length(0);
+
+      global.document.body.removeChild(div);
+
+      expect(document.body.childNodes).to.have.length(0);
+      expect(div.childNodes).to.have.length(0);
+    });
+
+    it('will attach to the body successfully', () => {
+      class Bar extends React.Component {
+        render() {
+          return (<section className="in-bar" />);
+        }
+      }
+      const wrapper = mount(<Bar />, { attachTo: document.body });
+
+      expect(wrapper.find('.in-bar')).to.have.length(1);
+      expect(document.body.childNodes).to.have.length(1);
+
+      wrapper.detach();
+
+      expect(document.body.childNodes).to.have.length(0);
+    });
+  });
+
 });

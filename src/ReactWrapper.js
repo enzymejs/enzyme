@@ -12,9 +12,10 @@ import {
   getNode,
 } from './MountedTraversal';
 import {
-  renderIntoDocument,
+  renderWithOptions,
   Simulate,
   findDOMNode,
+  unmountComponentAtNode,
 } from './react-compat';
 import {
   mapNativeEventNames,
@@ -63,13 +64,13 @@ export default class ReactWrapper {
 
     if (!root) {
       const ReactWrapperComponent = createWrapperComponent(nodes, options);
-      this.component = renderIntoDocument(
+      this.component = renderWithOptions(
         <ReactWrapperComponent
           Component={nodes.type}
           props={nodes.props}
           context={options.context}
-        />
-      );
+        />,
+      options);
       this.root = this;
       this.node = this.component.getWrappedComponent();
       this.nodes = [this.node];
@@ -710,5 +711,27 @@ export default class ReactWrapper {
    */
   debug() {
     return debugInsts(this.nodes);
+  }
+
+  /**
+   * Detaches the react tree from the DOM. Runs `ReactDOM.unmountComponentAtNode()` under the hood.
+   *
+   * This method will most commonly be used as a "cleanup" method if you decide to use the
+   * `attachTo` option in `mount(node, options)`.
+   *
+   * The method is intentionally not "fluent" (in that it doesn't return `this`) because you should
+   * not be doing anything with this wrapper after this method is called.
+   */
+  detach() {
+    if (this.root !== this) {
+      throw new Error('ReactWrapper::detach() can only be called on the root');
+    }
+    if (!this.options.attachTo) {
+      throw new Error(
+        'ReactWrapper::detach() can only be called on when the `attachTo` option was passed into ' +
+        '`mount()`.'
+      );
+    }
+    unmountComponentAtNode(this.options.attachTo);
   }
 }
