@@ -1,5 +1,33 @@
 # Change Log
 
+## 1.5.0 (February 2, 2016)
+
+### Minor Changes
+
+- Add `attachTo` option to `mount` to mount to a specific element #160
+
+- Add `.debug()` method to `ReactWrapper` #158
+
+- Add `.mount()` and `.unmount()` APIs to `ReactWrapper` #155
+
+- Add `.render()` method to `ReactWrapper` #156
+
+- Allow `.contains()` to accept an array of nodes #154
+
+- Add `.context()` method to `ReactWrapper` and `ShallowWrapper` #152
+
+### Patches
+
+- Fixed some behavior with `.contains()` matching on strings #148
+
+- Fixed `.debug()`'s output for numeric children #149
+
+- Documentation fixes
+
+- Update versions of dependencies
+
+
+
 ## 1.4.1 (January 24, 2016)
 
 ### Patches
