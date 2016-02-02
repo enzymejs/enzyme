@@ -80,6 +80,7 @@
     * [unmount()](/docs/api/ReactWrapper/unmount.md)
     * [mount()](/docs/api/ReactWrapper/mount.md)
     * [update()](/docs/api/ReactWrapper/update.md)
+    * [debug()](/docs/api/ReactWrapper/debug.md)
     * [type()](/docs/api/ReactWrapper/type.md)
     * [forEach(fn)](/docs/api/ReactWrapper/forEach.md)
     * [map(fn)](/docs/api/ReactWrapper/map.md)

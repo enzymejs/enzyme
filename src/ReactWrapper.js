@@ -20,6 +20,9 @@ import {
   mapNativeEventNames,
   containsChildrenSubArray,
 } from './Utils';
+import {
+  debugInsts,
+} from './Debug';
 
 /**
  * Finds all nodes in the current wrapper nodes' render trees that match the provided predicate
@@ -698,5 +701,14 @@ export default class ReactWrapper {
       return node;
     }
     return new ReactWrapper(node, this.root);
+  }
+
+  /**
+   * Returns an HTML-like string of the shallow render for debugging purposes.
+   *
+   * @returns {String}
+   */
+  debug() {
+    return debugInsts(this.nodes);
   }
 }

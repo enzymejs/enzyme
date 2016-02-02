@@ -2,9 +2,20 @@ import {
   childrenOfNode,
 } from './ShallowTraversal';
 import {
+  internalInstance,
+  renderedChildrenOfInst,
+} from './MountedTraversal';
+import {
+  isDOMComponent,
+  isCompositeComponent,
+  isElement,
+} from './react-compat';
+import {
   propsOfNode,
 } from './Utils';
 import { without, escape, compact } from 'underscore';
+import { REACT013, REACT014 } from './version';
+import objectValues from 'object.values';
 
 export function typeName(node) {
   return typeof node.type === 'function'
@@ -62,4 +73,60 @@ export function debugNode(node, indentLength = 2) {
 
 export function debugNodes(nodes) {
   return nodes.map(debugNode).join('\n\n\n');
+}
+
+export function debugInst(inst, indentLength = 2) {
+  if (typeof inst === 'string' || typeof inst === 'number') return escape(inst);
+  if (!inst) return '';
+
+  if (!inst.getPublicInstance) {
+    const internal = internalInstance(inst);
+    return debugInst(internal, indentLength);
+  }
+
+  const publicInst = inst.getPublicInstance();
+
+  if (typeof publicInst === 'string' || typeof publicInst === 'number') return escape(publicInst);
+  if (!publicInst) return '';
+
+  // do stuff with publicInst
+  const currentElement = inst._currentElement;
+  const type = typeName(currentElement);
+  const props = propsString(currentElement);
+  const children = [];
+  if (isDOMComponent(publicInst)) {
+    const renderedChildren = renderedChildrenOfInst(inst);
+    if (!renderedChildren) {
+      children.push(...childrenOfNode(currentElement));
+    } else {
+      children.push(...objectValues(renderedChildren));
+    }
+  } else if (
+    REACT014 &&
+    isElement(currentElement) &&
+    typeof currentElement.type === 'function'
+  ) {
+    children.push(inst._renderedComponent);
+  } else if (
+    REACT013 &&
+    isCompositeComponent(publicInst)
+  ) {
+    children.push(inst._renderedComponent);
+  }
+
+  const childrenStrs = compact(children.map(n => debugInst(n, indentLength)));
+
+  const beforeProps = props ? ' ' : '';
+  const nodeClose = childrenStrs.length ? `</${type}>` : '/>';
+  const afterProps = childrenStrs.length
+    ? '>'
+    : ' ';
+  const childrenIndented = childrenStrs.length
+    ? `\n${childrenStrs.map(x => indent(indentLength + 2, x)).join('\n')}\n`
+    : '';
+  return `<${type}${beforeProps}${props}${afterProps}${childrenIndented}${nodeClose}`;
+}
+
+export function debugInsts(insts) {
+  return insts.map(debugInst).join('\n\n\n');
 }

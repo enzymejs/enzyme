@@ -145,6 +145,9 @@ A method that re-mounts the component.
 #### [`.update() => ReactWrapper`](ReactWrapper/update.md)
 Calls `.forceUpdate()` on the root component instance.
 
+#### [`.debug() => String`](ReactWrapper/debug.md)
+Returns a string representation of the current render tree for debugging purposes.
+
 #### [`.type() => String|Function`](ReactWrapper/type.md)
 Returns the type of the current node of the wrapper.
 

@@ -5,7 +5,8 @@ import {
   indent,
   debugNode,
 } from '../Debug';
-import { itIf } from './_helpers';
+import { mount } from '../';
+import { describeWithDOM, itIf } from './_helpers';
 import { REACT013 } from '../version';
 
 describe('debug', () => {
@@ -188,4 +189,133 @@ describe('debug', () => {
 
   });
 
+  describeWithDOM('debugInst(inst)', () => {
+    it('renders basic debug of mounted components', () => {
+      class Foo extends React.Component {
+        render() {
+          return (
+            <div className="foo">
+              <span>Foo</span>
+            </div>
+          );
+        }
+      }
+      expect(mount(<Foo id="2" />).debug()).to.eql(
+`<Foo id="2">
+  <div className="foo">
+    <span>
+      Foo
+    </span>
+  </div>
+</Foo>`);
+    });
+
+    it('renders debug of compositional components', () => {
+      class Foo extends React.Component {
+        render() {
+          return (
+            <div className="foo">
+              <span>Foo</span>
+            </div>
+          );
+        }
+      }
+      class Bar extends React.Component {
+        render() {
+          return (
+            <div className="bar">
+              <span>Non-Foo</span>
+              <Foo baz="bax" />
+            </div>
+          );
+        }
+      }
+      expect(mount(<Bar id="2" />).debug()).to.eql(
+        `<Bar id="2">
+  <div className="bar">
+    <span>
+      Non-Foo
+    </span>
+    <Foo baz="bax">
+      <div className="foo">
+        <span>
+          Foo
+        </span>
+      </div>
+    </Foo>
+  </div>
+</Bar>`);
+    });
+
+    it('renders a subtree of a mounted tree', () => {
+      class Foo extends React.Component {
+        render() {
+          return (
+            <div className="foo">
+              <span>Foo</span>
+            </div>
+          );
+        }
+      }
+      class Bar extends React.Component {
+        render() {
+          return (
+            <div className="bar">
+              <span>Non-Foo</span>
+              <Foo baz="bax" />
+            </div>
+          );
+        }
+      }
+      expect(mount(<Bar id="2" />).find(Foo).debug()).to.eql(
+        `<Foo baz="bax">
+  <div className="foo">
+    <span>
+      Foo
+    </span>
+  </div>
+</Foo>`);
+    });
+
+    it('renders passed children properly', () => {
+      class Foo extends React.Component {
+        render() {
+          return (
+            <div className="foo">
+              <span>From Foo</span>
+              {this.props.children}
+            </div>
+          );
+        }
+      }
+      class Bar extends React.Component {
+        render() {
+          return (
+            <div className="bar">
+              <Foo baz="bax">
+                <span>From Bar</span>
+              </Foo>
+            </div>
+          );
+        }
+      }
+
+      expect(mount(<Bar id="2" />).debug()).to.eql(
+`<Bar id="2">
+  <div className="bar">
+    <Foo baz="bax">
+      <div className="foo">
+        <span>
+          From Foo
+        </span>
+        <span>
+          From Bar
+        </span>
+      </div>
+    </Foo>
+  </div>
+</Bar>`);
+
+    });
+  });
 });
