@@ -194,7 +194,7 @@ describeWithDOM('mount', () => {
     });
 
     it('should find components with multiple matching props', () => {
-      const onChange = () => {};
+      const onChange = () => ({});
       const wrapper = mount(
         <div>
           <span htmlFor="foo" onChange={onChange} preserveAspectRatio="xMaxYMax" />
@@ -321,7 +321,7 @@ describeWithDOM('mount', () => {
     });
 
     it('should support complex and nested object property selectors', () => {
-      const testFunction = () => {};
+      const testFunction = () => ({});
       const wrapper = mount(
         <div>
           <span more={[{ id: 1 }]} data-test="ref" prop onChange={testFunction} />
@@ -857,7 +857,7 @@ describeWithDOM('mount', () => {
   describe('.props()', () => {
 
     it('should return the props object', () => {
-      const fn = () => {};
+      const fn = () => ({});
       const wrapper = mount(
         <div id="fooId" className="bax" onClick={fn} >
           <div className="baz" />
@@ -872,7 +872,7 @@ describeWithDOM('mount', () => {
     });
 
     it('should be allowed to be used on an inner node', () => {
-      const fn = () => {};
+      const fn = () => ({});
       const wrapper = mount(
         <div className="bax">
           <div className="baz" onClick={fn} />

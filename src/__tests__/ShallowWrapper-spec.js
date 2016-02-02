@@ -408,7 +408,7 @@ describe('shallow', () => {
     });
 
     it('should support complex and nested object property selectors', () => {
-      const testFunction = () => {};
+      const testFunction = () => ({});
       const wrapper = shallow(
         <div>
           <span more={[{ id: 1 }]} data-test="ref" prop onChange={testFunction} />
@@ -877,7 +877,7 @@ describe('shallow', () => {
   describe('.props()', () => {
 
     it('should return the props object', () => {
-      const fn = () => {};
+      const fn = () => ({});
       const wrapper = shallow(
         <div id="fooId" className="bax" onClick={fn} >
           <div className="baz" />
@@ -892,7 +892,7 @@ describe('shallow', () => {
     });
 
     it('should be allowed to be used on an inner node', () => {
-      const fn = () => {};
+      const fn = () => ({});
       const wrapper = shallow(
         <div className="bax">
           <div className="baz" onClick={fn} />

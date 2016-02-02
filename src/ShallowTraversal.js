@@ -24,7 +24,7 @@ export function childrenOfNode(node) {
 
 export function hasClassName(node, className) {
   const classes = propsOfNode(node).className || '';
-  return (' ' + classes + ' ').indexOf(' ' + className + ' ') > -1;
+  return ` ${classes} `.indexOf(` ${className} `) > -1;
 }
 
 export function treeForEach(tree, fn) {
@@ -153,7 +153,7 @@ export function getTextFromNode(node) {
   }
 
   if (typeof node === 'string' || typeof node === 'number') {
-    return '' + node;
+    return String(node);
   }
 
   if (node.type && typeof node.type === 'function') {

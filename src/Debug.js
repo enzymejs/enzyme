@@ -55,7 +55,7 @@ export function debugNode(node, indentLength = 2) {
     ? '>'
     : ' ';
   const childrenIndented = children.length
-    ? '\n' + children.map(x => indent(indentLength, x)).join('\n') + '\n'
+    ? `\n${children.map(x => indent(indentLength, x)).join('\n')}\n`
     : '';
   return `<${type}${beforeProps}${props}${afterProps}${childrenIndented}${nodeClose}`;
 }

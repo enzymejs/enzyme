@@ -50,7 +50,7 @@ export function instHasClassName(inst, className) {
     return false;
   }
   const classes = findDOMNode(inst).className || '';
-  return (' ' + classes + ' ').indexOf(' ' + className + ' ') > -1;
+  return ` ${classes} `.indexOf(` ${className} `) > -1;
 }
 
 export function instHasId(inst, id) {
