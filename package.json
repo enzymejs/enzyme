@@ -58,19 +58,19 @@
   "devDependencies": {
     "babel-cli": "^6.3.17",
     "babel-core": "^6.3.21",
-    "babel-eslint": "^4.1.4",
+    "babel-eslint": "^4.1.8",
     "babel-istanbul": "^0.5.9",
     "babel-preset-airbnb": "^1.0.1",
     "babel-register": "^6.3.13",
-    "chai": "^3.2.0",
-    "coveralls": "^2.11.4",
+    "chai": "^3.5.0",
+    "coveralls": "^2.11.6",
     "eslint": "^1.10.3",
-    "eslint-config-airbnb": "^3.0.2",
-    "eslint-plugin-react": "^3.14.0",
-    "gitbook-cli": "^1.0.0",
-    "istanbul": "^0.4.0",
-    "mocha": "^2.3.4",
-    "rimraf": "^2.4.3"
+    "eslint-config-airbnb": "^4.0.0",
+    "eslint-plugin-react": "^3.16.1",
+    "gitbook-cli": "^1.0.1",
+    "istanbul": "^0.4.2",
+    "mocha": "^2.4.5",
+    "rimraf": "^2.5.1"
   },
   "peerDependencies": {
     "react": "0.13.x || 0.14.x"
