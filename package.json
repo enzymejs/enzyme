@@ -49,10 +49,10 @@
   "author": "Leland Richardson <leland.richardson@airbnb.com>",
   "license": "MIT",
   "dependencies": {
-    "cheerio": "^0.19.0",
+    "cheerio": "^0.20.0",
     "is-subset": "^0.1.1",
     "object.assign": "^4.0.3",
-    "sinon": "^1.15.4",
+    "sinon": "^1.17.3",
     "underscore": "^1.8.3"
   },
   "devDependencies": {
