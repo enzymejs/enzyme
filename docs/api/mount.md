@@ -98,7 +98,7 @@ Returns a string representation of the text nodes in the current render tree.
 #### [`.html() => String`](ReactWrapper/html.md)
 Returns a static HTML rendering of the current node.
 
-#### [`.get(index) => ReactWrapper`](ReactWrapper/get.md)
+#### [`.get(index) => ReactElement`](ReactWrapper/get.md)
 Returns the node at the provided index of the current wrapper.
 
 #### [`.at(index) => ReactWrapper`](ReactWrapper/at.md)
