@@ -20,6 +20,7 @@ import {
 import {
   mapNativeEventNames,
   containsChildrenSubArray,
+  propsOfNode,
 } from './Utils';
 import {
   debugInsts,
@@ -381,7 +382,7 @@ export default class ReactWrapper {
    * @returns {Object}
    */
   props() {
-    return this.single(n => getNode(n).props || {});
+    return this.single(propsOfNode);
   }
 
   /**
@@ -484,7 +485,10 @@ export default class ReactWrapper {
    * @returns {String|Function}
    */
   type() {
-    return this.single(n => getNode(n).type);
+    return this.single((n) => {
+      const node = getNode(n);
+      return node ? node.type : null;
+    });
   }
 
   /**

@@ -484,6 +484,53 @@ describe('shallow', () => {
       expect(spy.args[3][0].hasClass('bux')).to.equal(true);
     });
 
+    describeIf(!REACT013, 'stateless functional components', () => {
+      it('finds nodes', () => {
+        const SFC = function SFC({ selector }) {
+          return (
+            <div>
+              <span data-foo={selector} />
+              <i data-foo={selector} />
+            </div>
+          );
+        };
+
+        const selector = 'blah';
+        const wrapper = shallow(<SFC selector={selector} />);
+        const foundSpan = wrapper.findWhere(n => (
+          n.type() === 'span' && n.props()['data-foo'] === selector
+        ));
+        expect(foundSpan.type()).to.equal('span');
+
+        const foundNotSpan = wrapper.findWhere(n => (
+          n.type() !== 'span' && n.props()['data-foo'] === selector
+        ));
+        expect(foundNotSpan.type()).to.equal('i');
+      });
+
+      it('finds nodes when conditionally rendered', () => {
+        const SFC = function SFC({ selector }) {
+          return (
+            <div>
+              <span data-foo={selector} />
+              {selector === 'baz' ? <i data-foo={selector} /> : null}
+            </div>
+          );
+        };
+
+        const selector = 'blah';
+        const wrapper = shallow(<SFC selector={selector} />);
+        const foundSpan = wrapper.findWhere(n => (
+          n.type() === 'span' && n.props()['data-foo'] === selector
+        ));
+        expect(foundSpan.type()).to.equal('span');
+
+        const foundNotSpan = wrapper.findWhere(n => (
+          n.type() !== 'span' && n.props()['data-foo'] === selector
+        ));
+        expect(foundNotSpan).to.have.length(0);
+      });
+    });
   });
 
   describe('.setProps(newProps)', () => {
