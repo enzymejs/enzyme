@@ -20,6 +20,10 @@ export function propsOfNode(node) {
   return (node && node.props) || {};
 }
 
+export function typeOfNode(node) {
+  return node ? node.type : null;
+}
+
 export function onPrototype(Component, lifecycle, method) {
   const proto = Component.prototype;
   Object.getOwnPropertyNames(proto).forEach((name) => {

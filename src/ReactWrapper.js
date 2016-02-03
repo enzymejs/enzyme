@@ -21,6 +21,7 @@ import {
   mapNativeEventNames,
   containsChildrenSubArray,
   propsOfNode,
+  typeOfNode,
 } from './Utils';
 import {
   debugInsts,
@@ -485,10 +486,7 @@ export default class ReactWrapper {
    * @returns {String|Function}
    */
   type() {
-    return this.single((n) => {
-      const node = getNode(n);
-      return node ? node.type : null;
-    });
+    return this.single(n => typeOfNode(getNode(n)));
   }
 
   /**
