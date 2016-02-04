@@ -45,6 +45,7 @@ describe('<Foo />', () => {
 2. `options` (`Object` [optional]):
 - `options.context`: (`Object` [optional]): Context to be passed into the component
 - `options.attachTo`: (`DOMElement` [optional]): DOM Element to attach the component to.
+- `options.childContextTypes`: (`Object` [optional]): Merged contextTypes for all children of the wrapper.
 
 #### Returns
 

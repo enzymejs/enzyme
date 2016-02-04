@@ -28,6 +28,28 @@ describeWithDOM('mount', () => {
       expect(wrapper.text()).to.equal('foo');
     });
 
+    it('can pass context to the child of mounted component', () => {
+      const SimpleComponent = React.createClass({
+        contextTypes: {
+          name: React.PropTypes.string,
+        },
+        render() {
+          return <div>{this.context.name}</div>;
+        },
+      });
+      const ComplexComponent = React.createClass({
+        render() {
+          return <div><SimpleComponent /></div>;
+        },
+      });
+
+      const childContextTypes = {
+        name: React.PropTypes.string.isRequired,
+      };
+      const wrapper = mount(<ComplexComponent />, { context, childContextTypes });
+      expect(wrapper.find(SimpleComponent)).to.have.length(1);
+    });
+
     it('should not throw if context is passed in but contextTypes is missing', () => {
       const SimpleComponent = React.createClass({
         render() {

@@ -71,12 +71,18 @@ export default function createWrapperComponent(node, options = {}) {
     },
   };
 
-  if (options.context && node.type.contextTypes) {
+  if (options.context && (node.type.contextTypes || options.childContextTypes)) {
     // For full rendering, we are using this wrapper component to provide context if it is
-    // specified in both the options AND the child component defines `contextTypes` statically.
+    // specified in both the options AND the child component defines `contextTypes` statically
+    // OR the merged context types for all children (the node component or deeper children) are
+    // specified in options parameter under childContextTypes.
     // In that case, we define both a `getChildContext()` function and a `childContextTypes` prop.
+    let childContextTypes = node.type.contextTypes;
+    if (options.childContextTypes) {
+      childContextTypes = options.childContextTypes;
+    }
     objectAssign(spec, {
-      childContextTypes: node.type.contextTypes,
+      childContextTypes,
       getChildContext() {
         return this.state.context;
       },
