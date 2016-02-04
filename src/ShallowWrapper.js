@@ -7,6 +7,7 @@ import {
   propFromEvent,
   withSetStateAllowed,
   propsOfNode,
+  typeOfNode,
 } from './Utils';
 import {
   debugNodes,
@@ -464,7 +465,7 @@ export default class ShallowWrapper {
    * @returns {String|Function}
    */
   type() {
-    return this.single(n => n.type);
+    return this.single(typeOfNode);
   }
 
   /**
