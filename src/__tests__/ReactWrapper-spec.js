@@ -508,6 +508,35 @@ describeWithDOM('mount', () => {
       expect(wrapper.props().d).to.equal('e');
     });
 
+    it('should throw if an exception occurs during render', () => {
+      class Trainwreck extends React.Component {
+        render() {
+          const { user } = this.props;
+          return (
+            <div>
+              {user.name.givenName}
+            </div>
+          );
+        }
+      }
+
+      const validUser = {
+        name: {
+          givenName: 'Brian',
+        },
+      };
+
+      const wrapper = mount(<Trainwreck user={validUser} />);
+
+      const setInvalidProps = () => {
+        wrapper.setProps({
+          user: {},
+        });
+      };
+
+      expect(setInvalidProps).to.throw();
+    });
+
   });
 
   describe('.setContext(newContext)', () => {
@@ -535,7 +564,6 @@ describeWithDOM('mount', () => {
       expect(() => wrapper.setContext({ name: 'bar' })).to.throw(Error);
     });
   });
-
 
   describe('.mount()', () => {
     it('should call componentWillUnmount()', () => {

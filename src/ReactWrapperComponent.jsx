@@ -34,7 +34,7 @@ export default function createWrapperComponent(node, options = {}) {
 
     setChildProps(newProps) {
       const props = objectAssign({}, this.state.props, newProps);
-      return new Promise(resolve => this.setState({ props }, resolve));
+      this.setState({ props });
     },
 
     setChildContext(context) {
