@@ -176,4 +176,4 @@ Returns whether or not any of the nodes in the wrapper pass the provided predica
 Returns whether or not all of the nodes in the wrapper match the provided selector.
 
 #### [`everyWhere(selector) => Boolean`](/docs/api/ShallowWrapper/everyWhere.md)
-Returns whether or not any of the nodes in the wrapper pass the provided predicate function.
+Returns whether or not all of the nodes in the wrapper pass the provided predicate function.
