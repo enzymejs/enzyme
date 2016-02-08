@@ -77,9 +77,9 @@ export default function createWrapperComponent(node, options = {}) {
     // OR the merged context types for all children (the node component or deeper children) are
     // specified in options parameter under childContextTypes.
     // In that case, we define both a `getChildContext()` function and a `childContextTypes` prop.
-    let childContextTypes = node.type.contextTypes;
+    const childContextTypes = node.type.contextTypes || {};
     if (options.childContextTypes) {
-      childContextTypes = options.childContextTypes;
+      objectAssign(childContextTypes, options.childContextTypes);
     }
     objectAssign(spec, {
       childContextTypes,
