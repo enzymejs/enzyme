@@ -28,7 +28,9 @@ export function hasClassName(node, className) {
 }
 
 export function treeForEach(tree, fn) {
-  fn(tree);
+  if (tree !== null && tree !== false) {
+    fn(tree);
+  }
   childrenOfNode(tree).forEach(node => treeForEach(node, fn));
 }
 
