@@ -444,6 +444,22 @@ describeWithDOM('mount', () => {
         expect(foundNotSpan).to.have.length(0);
       });
     });
+
+    it('should not pass in null or false nodes', () => {
+      const wrapper = mount(
+        <div>
+          <div className="foo bar" />
+          {null}
+          {false}
+        </div>
+      );
+      const stub = sinon.stub();
+      stub.returns(true);
+      const spy = sinon.spy(stub);
+      wrapper.findWhere(spy);
+      expect(spy.callCount).to.equal(2);
+    });
+
   });
 
   describe('.setProps(newProps)', () => {
