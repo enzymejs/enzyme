@@ -1,5 +1,22 @@
 # Change Log
 
+## 1.6.0 (February 10, 2016)
+
+### Minor Changes
+
+- add option for childContextTypes of `ReactWrapper` #171
+
+
+### Patches
+
+- Prevent null or false nodes from being passed into tree traversal #174
+
+- setProps no longer swallows exceptions #170
+
+- `.type()` and `.props()` should not fail on null now #162
+
+
+
 ## 1.5.0 (February 2, 2016)
 
 ### Minor Changes
