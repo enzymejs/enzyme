@@ -4,8 +4,11 @@ Full DOM rendering is ideal for use cases where you have components that may int
 or may require the full lifecycle in order to fully test the component (ie, `componentDidMount`
 etc.)
 
-Full DOM rendering  depends on a library called [jsdom](https://github.com/tmpvar/jsdom) which is
-essentially a headless browser implemented completely in JS.
+Full DOM rendering requires that a full DOM API be available at the global scope. This means that 
+it must be run in an environment that at least "looks like" a browser environment. If you do not 
+want to run your tests inside of a browser, the recommended approach to using `mount` is to depend 
+on a library called [jsdom](https://github.com/tmpvar/jsdom) which is essentially a headless browser 
+implemented completely in JS.
 
 ```jsx
 import { mount } from 'enzyme';

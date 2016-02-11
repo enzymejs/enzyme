@@ -1,10 +1,17 @@
 ## Table of Contents
 
 * [Introduction](/README.md)
+* [Guides](/docs/guides.md)
+  * [Browserify](/docs/guides/browserify.md)
+  * [WebPack](/docs/guides/webpack.md)
+  * [JSDOM](/docs/guides/jsdom.md)
+  * [Jest](/docs/guides/jest.md)
+  * [Karma](/docs/guides/karma.md)
+  * [Mocha](/docs/guides/mocha.md)
+  * [React Native](/docs/guides/react-native.md)
 * [Installation](/docs/installation/README.md)
   * [Working with React 0.13.x](/docs/installation/react-013.md)
   * [Working with React 0.14.x](/docs/installation/react-014.md)
-  * [Working with jsDom](/docs/installation/jsdom.md)
 * [API Reference](/docs/api/README.md)
   * [Shallow Rendering](/docs/api/shallow.md)
     * [find(selector)](/docs/api/ShallowWrapper/find.md)
