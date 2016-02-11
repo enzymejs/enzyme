@@ -13,5 +13,3 @@ although neither library is a dependency of enzyme.
 {% include "./react-013.md" %}
 
 {% include "./react-014.md" %}
-
-{% include "./jsdom.md" %}
