@@ -13,27 +13,6 @@ See the [webpack guide](webpack.md).
 
 ```js
 /* karma.conf.js */
-browserify: {
-  debug: true,
-  transform: [
-    ['babelify', { presets: ['airbnb'] }]
-  ],
-  configure: function(bundle) {
-    bundle.on('prebundle', function() {
-      bundle.external('react/lib/ReactContext');
-      bundle.external('react/lib/ExecutionEnvironment');
-    });
-  }
-},
-```
-
-## Enzyme + Karma + Browserify
-
-See the [browserify guide](browserify.md).
-
-
-```js
-/* karma.conf.js */
 
 webpack: { //kind of a copy of your webpack config
   devtool: 'inline-source-map', //just do inline source maps instead of the default
@@ -53,6 +32,26 @@ webpack: { //kind of a copy of your webpack config
     'cheerio': 'window',
     'react/lib/ExecutionEnvironment': true,
     'react/lib/ReactContext': true
+  }
+},
+```
+
+## Enzyme + Karma + Browserify
+
+See the [browserify guide](browserify.md).
+
+```js
+/* karma.conf.js */
+browserify: {
+  debug: true,
+  transform: [
+    ['babelify', { presets: ['airbnb'] }]
+  ],
+  configure: function(bundle) {
+    bundle.on('prebundle', function() {
+      bundle.external('react/lib/ReactContext');
+      bundle.external('react/lib/ExecutionEnvironment');
+    });
   }
 },
 ```
