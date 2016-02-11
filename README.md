@@ -21,12 +21,19 @@ testing your React components, you can consider using [chai-enzyme](https://gith
 
 
 [Using Enzyme with Mocha](/docs/guides/mocha.md)
+
 [Using Enzyme with Karma](/docs/guides/karma.md)
+
 [Using Enzyme with Jasmine](/docs/guides/jasmine.md)
+
 [Using Enzyme with Browserify](/docs/guides/browserify.md)
+
 [Using Enzyme with WebPack](/docs/guides/webpack.md)
+
 [Using Enzyme with JSDOM](/docs/guides/jsdom.md)
+
 [Using Enzyme with React Native](/docs/guides/react-native.md)
+
 [Using Enzyme with Jest](/docs/guides/jest.md)
 
 
