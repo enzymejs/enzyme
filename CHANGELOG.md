@@ -1,5 +1,18 @@
 # Change Log
 
+## 2.0.0 (February 10, 2016)
+
+### Major Changes (breaking)
+
+- removed `describeWithDOM` utility #159
+
+- removed `useSinon`, `spyPrototype` and `spyLifecycle` utilities #159
+
+- removed `sinon` dependency #159
+
+- removed `jsdom` dependency #159
+
+
 ## 1.6.0 (February 10, 2016)
 
 ### Minor Changes
