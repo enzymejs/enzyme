@@ -38,7 +38,7 @@ documentRef = document;
 ## `describeWithDOM` API and clearing the document after every test
 
 In previous versions of enzyme, there was a public `describeWithDOM` API which loaded in a new
-JSDOM documnent into the global namespace before every test, ensuring that tests were deterministic
+JSDOM document into the global namespace before every test, ensuring that tests were deterministic
 and did not have side-effects.
 
 This approach is no longer recommended. React's source code makes several assumptions about the
