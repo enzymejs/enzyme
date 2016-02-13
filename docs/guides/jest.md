@@ -22,7 +22,9 @@ several modules to be unmocked in your `package.json`:
     "object.assign",
     "define-properties",
     "function-bind",
-    "object-keys"
+    "object-keys",
+    "object.values",
+    "es-abstract"
   ]
 }
 ```
