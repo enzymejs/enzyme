@@ -1,0 +1,1830 @@
+<!DOCTYPE HTML>
+<html lang="en" >
+    <!-- Start book Enzyme -->
+    <head>
+        <!-- head:start -->
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <title>prop([key]) | Enzyme</title>
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 2.4.3">
+        
+        
+        <meta name="HandheldFriendly" content="true"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../../../gitbook/images/apple-touch-icon-precomposed-152.png">
+        <link rel="shortcut icon" href="../../../gitbook/images/favicon.ico" type="image/x-icon">
+        
+    <link rel="stylesheet" href="../../../gitbook/style.css">
+    
+        
+        <link rel="stylesheet" href="../../../gitbook/plugins/gitbook-plugin-edit-link/plugin.css">
+        
+    
+        
+        <link rel="stylesheet" href="../../../gitbook/plugins/gitbook-plugin-prism/prism.css">
+        
+    
+        
+        <link rel="stylesheet" href="../../../gitbook/plugins/gitbook-plugin-anchors/plugin.css">
+        
+    
+    
+
+        
+    
+    
+    <link rel="next" href="../../../docs/api/ReactWrapper/simulate.html" />
+    
+    
+    <link rel="prev" href="../../../docs/api/ReactWrapper/context.html" />
+    
+
+        <!-- head:end -->
+    </head>
+    <body>
+        <!-- body:start -->
+        
+    <div class="book" data-level="3.2.23" data-basepath="../../.." data-revision="Sat Feb 13 2016 09:51:19 GMT-0800 (PST)">
+    
+
+<div class="book-summary">
+    <div class="book-search" role="search">
+        <input type="text" placeholder="Type to search" class="form-control" />
+    </div>
+    <nav role="navigation">
+        <ul class="summary">
+            
+            
+            
+            
+
+            
+
+            
+    
+        <li class="chapter " data-level="0" data-path="index.html">
+            
+                
+                    <a href="../../../index.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                        Introduction
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="1" data-path="docs/guides.html">
+            
+                
+                    <a href="../../../docs/guides.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>1.</b>
+                        
+                        Guides
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.1" data-path="docs/guides/browserify.html">
+            
+                
+                    <a href="../../../docs/guides/browserify.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>1.1.</b>
+                        
+                        Browserify
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="docs/guides/webpack.html">
+            
+                
+                    <a href="../../../docs/guides/webpack.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>1.2.</b>
+                        
+                        WebPack
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="docs/guides/jsdom.html">
+            
+                
+                    <a href="../../../docs/guides/jsdom.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>1.3.</b>
+                        
+                        JSDOM
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="docs/guides/jest.html">
+            
+                
+                    <a href="../../../docs/guides/jest.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>1.4.</b>
+                        
+                        Jest
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" data-path="docs/guides/karma.html">
+            
+                
+                    <a href="../../../docs/guides/karma.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>1.5.</b>
+                        
+                        Karma
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6" data-path="docs/guides/mocha.html">
+            
+                
+                    <a href="../../../docs/guides/mocha.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>1.6.</b>
+                        
+                        Mocha
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7" data-path="docs/guides/react-native.html">
+            
+                
+                    <a href="../../../docs/guides/react-native.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>1.7.</b>
+                        
+                        React Native
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="2" data-path="docs/installation/index.html">
+            
+                
+                    <a href="../../../docs/installation/index.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>2.</b>
+                        
+                        Installation
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="2.1" data-path="docs/installation/react-013.html">
+            
+                
+                    <a href="../../../docs/installation/react-013.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>2.1.</b>
+                        
+                        Working with React 0.13.x
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2.2" data-path="docs/installation/react-014.html">
+            
+                
+                    <a href="../../../docs/installation/react-014.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>2.2.</b>
+                        
+                        Working with React 0.14.x
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="3" data-path="docs/api/index.html">
+            
+                
+                    <a href="../../../docs/api/index.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.</b>
+                        
+                        API Reference
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="3.1" data-path="docs/api/shallow.html">
+            
+                
+                    <a href="../../../docs/api/shallow.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.1.</b>
+                        
+                        Shallow Rendering
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="3.1.1" data-path="docs/api/ShallowWrapper/find.html">
+            
+                
+                    <a href="../../../docs/api/ShallowWrapper/find.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.1.1.</b>
+                        
+                        find(selector)
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.1.2" data-path="docs/api/ShallowWrapper/findWhere.html">
+            
+                
+                    <a href="../../../docs/api/ShallowWrapper/findWhere.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.1.2.</b>
+                        
+                        findWhere(predicate)
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.1.3" data-path="docs/api/ShallowWrapper/filter.html">
+            
+                
+                    <a href="../../../docs/api/ShallowWrapper/filter.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.1.3.</b>
+                        
+                        filter(selector)
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.1.4" data-path="docs/api/ShallowWrapper/filterWhere.html">
+            
+                
+                    <a href="../../../docs/api/ShallowWrapper/filterWhere.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.1.4.</b>
+                        
+                        filterWhere(predicate)
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.1.5" data-path="docs/api/ShallowWrapper/contains.html">
+            
+                
+                    <a href="../../../docs/api/ShallowWrapper/contains.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.1.5.</b>
+                        
+                        contains(nodeOrNodes)
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.1.6" data-path="docs/api/ShallowWrapper/equals.html">
+            
+                
+                    <a href="../../../docs/api/ShallowWrapper/equals.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.1.6.</b>
+                        
+                        equals(node)
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.1.7" data-path="docs/api/ShallowWrapper/hasClass.html">
+            
+                
+                    <a href="../../../docs/api/ShallowWrapper/hasClass.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.1.7.</b>
+                        
+                        hasClass(className)
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.1.8" data-path="docs/api/ShallowWrapper/is.html">
+            
+                
+                    <a href="../../../docs/api/ShallowWrapper/is.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.1.8.</b>
+                        
+                        is(selector)
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.1.9" data-path="docs/api/ShallowWrapper/not.html">
+            
+                
+                    <a href="../../../docs/api/ShallowWrapper/not.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.1.9.</b>
+                        
+                        not(selector)
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.1.10" data-path="docs/api/ShallowWrapper/children.html">
+            
+                
+                    <a href="../../../docs/api/ShallowWrapper/children.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.1.10.</b>
+                        
+                        children()
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.1.11" data-path="docs/api/ShallowWrapper/parents.html">
+            
+                
+                    <a href="../../../docs/api/ShallowWrapper/parents.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.1.11.</b>
+                        
+                        parents()
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.1.12" data-path="docs/api/ShallowWrapper/parent.html">
+            
+                
+                    <a href="../../../docs/api/ShallowWrapper/parent.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.1.12.</b>
+                        
+                        parent()
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.1.13" data-path="docs/api/ShallowWrapper/closest.html">
+            
+                
+                    <a href="../../../docs/api/ShallowWrapper/closest.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.1.13.</b>
+                        
+                        closest(selector)
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.1.14" data-path="docs/api/ShallowWrapper/shallow.html">
+            
+                
+                    <a href="../../../docs/api/ShallowWrapper/shallow.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.1.14.</b>
+                        
+                        shallow()
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.1.15" data-path="docs/api/ShallowWrapper/render.html">
+            
+                
+                    <a href="../../../docs/api/ShallowWrapper/render.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.1.15.</b>
+                        
+                        render()
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.1.16" data-path="docs/api/ShallowWrapper/text.html">
+            
+                
+                    <a href="../../../docs/api/ShallowWrapper/text.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.1.16.</b>
+                        
+                        text()
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.1.17" data-path="docs/api/ShallowWrapper/html.html">
+            
+                
+                    <a href="../../../docs/api/ShallowWrapper/html.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.1.17.</b>
+                        
+                        html()
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.1.18" data-path="docs/api/ShallowWrapper/get.html">
+            
+                
+                    <a href="../../../docs/api/ShallowWrapper/get.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.1.18.</b>
+                        
+                        get(index)
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.1.19" data-path="docs/api/ShallowWrapper/at.html">
+            
+                
+                    <a href="../../../docs/api/ShallowWrapper/at.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.1.19.</b>
+                        
+                        at(index)
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.1.20" data-path="docs/api/ShallowWrapper/first.html">
+            
+                
+                    <a href="../../../docs/api/ShallowWrapper/first.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.1.20.</b>
+                        
+                        first()
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.1.21" data-path="docs/api/ShallowWrapper/last.html">
+            
+                
+                    <a href="../../../docs/api/ShallowWrapper/last.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.1.21.</b>
+                        
+                        last()
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.1.22" data-path="docs/api/ShallowWrapper/state.html">
+            
+                
+                    <a href="../../../docs/api/ShallowWrapper/state.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.1.22.</b>
+                        
+                        state([key])
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.1.23" data-path="docs/api/ShallowWrapper/props.html">
+            
+                
+                    <a href="../../../docs/api/ShallowWrapper/props.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.1.23.</b>
+                        
+                        props()
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.1.24" data-path="docs/api/ShallowWrapper/context.html">
+            
+                
+                    <a href="../../../docs/api/ShallowWrapper/context.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.1.24.</b>
+                        
+                        context([key])
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.1.25" data-path="docs/api/ShallowWrapper/prop.html">
+            
+                
+                    <a href="../../../docs/api/ShallowWrapper/prop.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.1.25.</b>
+                        
+                        prop([key])
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.1.26" data-path="docs/api/ShallowWrapper/simulate.html">
+            
+                
+                    <a href="../../../docs/api/ShallowWrapper/simulate.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.1.26.</b>
+                        
+                        simulate(event[, data])
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.1.27" data-path="docs/api/ShallowWrapper/setState.html">
+            
+                
+                    <a href="../../../docs/api/ShallowWrapper/setState.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.1.27.</b>
+                        
+                        setState(nextState)
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.1.28" data-path="docs/api/ShallowWrapper/setProps.html">
+            
+                
+                    <a href="../../../docs/api/ShallowWrapper/setProps.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.1.28.</b>
+                        
+                        setProps(nextProps)
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.1.29" data-path="docs/api/ShallowWrapper/setContext.html">
+            
+                
+                    <a href="../../../docs/api/ShallowWrapper/setContext.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.1.29.</b>
+                        
+                        setContext(context)
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.1.30" data-path="docs/api/ShallowWrapper/instance.html">
+            
+                
+                    <a href="../../../docs/api/ShallowWrapper/instance.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.1.30.</b>
+                        
+                        instance()
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.1.31" data-path="docs/api/ShallowWrapper/update.html">
+            
+                
+                    <a href="../../../docs/api/ShallowWrapper/update.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.1.31.</b>
+                        
+                        update()
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.1.32" data-path="docs/api/ShallowWrapper/debug.html">
+            
+                
+                    <a href="../../../docs/api/ShallowWrapper/debug.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.1.32.</b>
+                        
+                        debug()
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.1.33" data-path="docs/api/ShallowWrapper/type.html">
+            
+                
+                    <a href="../../../docs/api/ShallowWrapper/type.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.1.33.</b>
+                        
+                        type()
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.1.34" data-path="docs/api/ShallowWrapper/forEach.html">
+            
+                
+                    <a href="../../../docs/api/ShallowWrapper/forEach.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.1.34.</b>
+                        
+                        forEach(fn)
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.1.35" data-path="docs/api/ShallowWrapper/map.html">
+            
+                
+                    <a href="../../../docs/api/ShallowWrapper/map.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.1.35.</b>
+                        
+                        map(fn)
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.1.36" data-path="docs/api/ShallowWrapper/reduce.html">
+            
+                
+                    <a href="../../../docs/api/ShallowWrapper/reduce.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.1.36.</b>
+                        
+                        reduce(fn[, initialValue])
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.1.37" data-path="docs/api/ShallowWrapper/reduceRight.html">
+            
+                
+                    <a href="../../../docs/api/ShallowWrapper/reduceRight.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.1.37.</b>
+                        
+                        reduceRight(fn[, initialValue])
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.1.38" data-path="docs/api/ShallowWrapper/some.html">
+            
+                
+                    <a href="../../../docs/api/ShallowWrapper/some.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.1.38.</b>
+                        
+                        some(selector)
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.1.39" data-path="docs/api/ShallowWrapper/someWhere.html">
+            
+                
+                    <a href="../../../docs/api/ShallowWrapper/someWhere.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.1.39.</b>
+                        
+                        someWhere(predicate)
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.1.40" data-path="docs/api/ShallowWrapper/every.html">
+            
+                
+                    <a href="../../../docs/api/ShallowWrapper/every.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.1.40.</b>
+                        
+                        every(selector)
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.1.41" data-path="docs/api/ShallowWrapper/everyWhere.html">
+            
+                
+                    <a href="../../../docs/api/ShallowWrapper/everyWhere.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.1.41.</b>
+                        
+                        everyWhere(selector)
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="3.2" data-path="docs/api/mount.html">
+            
+                
+                    <a href="../../../docs/api/mount.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.2.</b>
+                        
+                        Full DOM Rendering
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="3.2.1" data-path="docs/api/ReactWrapper/find.html">
+            
+                
+                    <a href="../../../docs/api/ReactWrapper/find.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.2.1.</b>
+                        
+                        find(selector)
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.2.2" data-path="docs/api/ReactWrapper/findWhere.html">
+            
+                
+                    <a href="../../../docs/api/ReactWrapper/findWhere.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.2.2.</b>
+                        
+                        findWhere(predicate)
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.2.3" data-path="docs/api/ReactWrapper/filter.html">
+            
+                
+                    <a href="../../../docs/api/ReactWrapper/filter.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.2.3.</b>
+                        
+                        filter(selector)
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.2.4" data-path="docs/api/ReactWrapper/filterWhere.html">
+            
+                
+                    <a href="../../../docs/api/ReactWrapper/filterWhere.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.2.4.</b>
+                        
+                        filterWhere(predicate)
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.2.5" data-path="docs/api/ReactWrapper/contains.html">
+            
+                
+                    <a href="../../../docs/api/ReactWrapper/contains.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.2.5.</b>
+                        
+                        contains(nodeOrNodes)
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.2.6" data-path="docs/api/ReactWrapper/hasClass.html">
+            
+                
+                    <a href="../../../docs/api/ReactWrapper/hasClass.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.2.6.</b>
+                        
+                        hasClass(className)
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.2.7" data-path="docs/api/ReactWrapper/is.html">
+            
+                
+                    <a href="../../../docs/api/ReactWrapper/is.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.2.7.</b>
+                        
+                        is(selector)
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.2.8" data-path="docs/api/ReactWrapper/not.html">
+            
+                
+                    <a href="../../../docs/api/ReactWrapper/not.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.2.8.</b>
+                        
+                        not(selector)
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.2.9" data-path="docs/api/ReactWrapper/children.html">
+            
+                
+                    <a href="../../../docs/api/ReactWrapper/children.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.2.9.</b>
+                        
+                        children()
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.2.10" data-path="docs/api/ReactWrapper/parents.html">
+            
+                
+                    <a href="../../../docs/api/ReactWrapper/parents.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.2.10.</b>
+                        
+                        parents()
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.2.11" data-path="docs/api/ReactWrapper/parent.html">
+            
+                
+                    <a href="../../../docs/api/ReactWrapper/parent.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.2.11.</b>
+                        
+                        parent()
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.2.12" data-path="docs/api/ReactWrapper/closest.html">
+            
+                
+                    <a href="../../../docs/api/ReactWrapper/closest.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.2.12.</b>
+                        
+                        closest(selector)
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.2.13" data-path="docs/api/ReactWrapper/render.html">
+            
+                
+                    <a href="../../../docs/api/ReactWrapper/render.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.2.13.</b>
+                        
+                        render()
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.2.14" data-path="docs/api/ReactWrapper/text.html">
+            
+                
+                    <a href="../../../docs/api/ReactWrapper/text.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.2.14.</b>
+                        
+                        text()
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.2.15" data-path="docs/api/ReactWrapper/html.html">
+            
+                
+                    <a href="../../../docs/api/ReactWrapper/html.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.2.15.</b>
+                        
+                        html()
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.2.16" data-path="docs/api/ReactWrapper/get.html">
+            
+                
+                    <a href="../../../docs/api/ReactWrapper/get.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.2.16.</b>
+                        
+                        get(index)
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.2.17" data-path="docs/api/ReactWrapper/at.html">
+            
+                
+                    <a href="../../../docs/api/ReactWrapper/at.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.2.17.</b>
+                        
+                        at(index)
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.2.18" data-path="docs/api/ReactWrapper/first.html">
+            
+                
+                    <a href="../../../docs/api/ReactWrapper/first.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.2.18.</b>
+                        
+                        first()
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.2.19" data-path="docs/api/ReactWrapper/last.html">
+            
+                
+                    <a href="../../../docs/api/ReactWrapper/last.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.2.19.</b>
+                        
+                        last()
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.2.20" data-path="docs/api/ReactWrapper/state.html">
+            
+                
+                    <a href="../../../docs/api/ReactWrapper/state.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.2.20.</b>
+                        
+                        state([key])
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.2.21" data-path="docs/api/ReactWrapper/props.html">
+            
+                
+                    <a href="../../../docs/api/ReactWrapper/props.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.2.21.</b>
+                        
+                        props()
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.2.22" data-path="docs/api/ReactWrapper/context.html">
+            
+                
+                    <a href="../../../docs/api/ReactWrapper/context.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.2.22.</b>
+                        
+                        context([key])
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter active" data-level="3.2.23" data-path="docs/api/ReactWrapper/prop.html">
+            
+                
+                    <a href="../../../docs/api/ReactWrapper/prop.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.2.23.</b>
+                        
+                        prop([key])
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.2.24" data-path="docs/api/ReactWrapper/simulate.html">
+            
+                
+                    <a href="../../../docs/api/ReactWrapper/simulate.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.2.24.</b>
+                        
+                        simulate(event[, data])
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.2.25" data-path="docs/api/ReactWrapper/setState.html">
+            
+                
+                    <a href="../../../docs/api/ReactWrapper/setState.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.2.25.</b>
+                        
+                        setState(nextState)
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.2.26" data-path="docs/api/ReactWrapper/setProps.html">
+            
+                
+                    <a href="../../../docs/api/ReactWrapper/setProps.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.2.26.</b>
+                        
+                        setProps(nextProps)
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.2.27" data-path="docs/api/ReactWrapper/setContext.html">
+            
+                
+                    <a href="../../../docs/api/ReactWrapper/setContext.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.2.27.</b>
+                        
+                        setContext(context)
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.2.28" data-path="docs/api/ReactWrapper/instance.html">
+            
+                
+                    <a href="../../../docs/api/ReactWrapper/instance.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.2.28.</b>
+                        
+                        instance()
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.2.29" data-path="docs/api/ReactWrapper/unmount.html">
+            
+                
+                    <a href="../../../docs/api/ReactWrapper/unmount.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.2.29.</b>
+                        
+                        unmount()
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.2.30" data-path="docs/api/ReactWrapper/mount.html">
+            
+                
+                    <a href="../../../docs/api/ReactWrapper/mount.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.2.30.</b>
+                        
+                        mount()
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.2.31" data-path="docs/api/ReactWrapper/update.html">
+            
+                
+                    <a href="../../../docs/api/ReactWrapper/update.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.2.31.</b>
+                        
+                        update()
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.2.32" data-path="docs/api/ReactWrapper/debug.html">
+            
+                
+                    <a href="../../../docs/api/ReactWrapper/debug.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.2.32.</b>
+                        
+                        debug()
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.2.33" data-path="docs/api/ReactWrapper/type.html">
+            
+                
+                    <a href="../../../docs/api/ReactWrapper/type.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.2.33.</b>
+                        
+                        type()
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.2.34" data-path="docs/api/ReactWrapper/forEach.html">
+            
+                
+                    <a href="../../../docs/api/ReactWrapper/forEach.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.2.34.</b>
+                        
+                        forEach(fn)
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.2.35" data-path="docs/api/ReactWrapper/map.html">
+            
+                
+                    <a href="../../../docs/api/ReactWrapper/map.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.2.35.</b>
+                        
+                        map(fn)
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.2.36" data-path="docs/api/ReactWrapper/reduce.html">
+            
+                
+                    <a href="../../../docs/api/ReactWrapper/reduce.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.2.36.</b>
+                        
+                        reduce(fn[, initialValue])
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.2.37" data-path="docs/api/ReactWrapper/reduceRight.html">
+            
+                
+                    <a href="../../../docs/api/ReactWrapper/reduceRight.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.2.37.</b>
+                        
+                        reduceRight(fn[, initialValue])
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.2.38" data-path="docs/api/ReactWrapper/some.html">
+            
+                
+                    <a href="../../../docs/api/ReactWrapper/some.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.2.38.</b>
+                        
+                        some(selector)
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.2.39" data-path="docs/api/ReactWrapper/someWhere.html">
+            
+                
+                    <a href="../../../docs/api/ReactWrapper/someWhere.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.2.39.</b>
+                        
+                        someWhere(predicate)
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.2.40" data-path="docs/api/ReactWrapper/every.html">
+            
+                
+                    <a href="../../../docs/api/ReactWrapper/every.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.2.40.</b>
+                        
+                        every(selector)
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.2.41" data-path="docs/api/ReactWrapper/everyWhere.html">
+            
+                
+                    <a href="../../../docs/api/ReactWrapper/everyWhere.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.2.41.</b>
+                        
+                        everyWhere(selector)
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.2.42" data-path="docs/api/ReactWrapper/ref.html">
+            
+                
+                    <a href="../../../docs/api/ReactWrapper/ref.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.2.42.</b>
+                        
+                        ref(refName)
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.2.43" data-path="docs/api/ReactWrapper/detach.html">
+            
+                
+                    <a href="../../../docs/api/ReactWrapper/detach.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.2.43.</b>
+                        
+                        detach()
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="3.3" data-path="docs/api/render.html">
+            
+                
+                    <a href="../../../docs/api/render.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.3.</b>
+                        
+                        Static Rendering
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3.4" data-path="docs/api/selector.html">
+            
+                
+                    <a href="../../../docs/api/selector.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.4.</b>
+                        
+                        Selectors
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="4" data-path="CHANGELOG.html">
+            
+                
+                    <a href="../../../CHANGELOG.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>4.</b>
+                        
+                        Change Log
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="5" data-path="docs/future.html">
+            
+                
+                    <a href="../../../docs/future.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>5.</b>
+                        
+                        Future
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="6" data-path="CONTRIBUTING.html">
+            
+                
+                    <a href="../../../CONTRIBUTING.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>6.</b>
+                        
+                        Contributing Guide
+                    </a>
+            
+            
+        </li>
+    
+
+
+            
+            <li class="divider"></li>
+            <li>
+                <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+                    Published with GitBook
+                </a>
+            </li>
+            
+        </ul>
+    </nav>
+</div>
+
+    <div class="book-body">
+        <div class="body-inner">
+            <div class="book-header" role="navigation">
+    <!-- Actions Left -->
+    <a href="#" class="btn pull-left toggle-summary" aria-label="Table of Contents"><i class="fa fa-align-justify"></i></a>
+    <a href="#" class="btn pull-left toggle-search" aria-label="Search"><i class="fa fa-search"></i></a>
+    
+    <a href="../../../GLOSSARY.html" class="btn pull-left" aria-label="Glossary"><i class="fa fa-sort-alpha-asc"></i></a>
+    
+    <div id="font-settings-wrapper" class="dropdown pull-left">
+        <a href="#" class="btn toggle-dropdown" aria-label="Font Settings"><i class="fa fa-font"></i>
+        </a>
+        <div class="dropdown-menu font-settings">
+    <div class="dropdown-caret">
+        <span class="caret-outer"></span>
+        <span class="caret-inner"></span>
+    </div>
+
+    <div class="buttons">
+        <button type="button" id="reduce-font-size" class="button size-2">A</button>
+        <button type="button" id="enlarge-font-size" class="button size-2">A</button>
+    </div>
+
+    <div class="buttons font-family-list">
+        <button type="button" data-font="0" class="button">Serif</button>
+        <button type="button" data-font="1" class="button">Sans</button>
+    </div>
+
+    <div class="buttons color-theme-list">
+        <button type="button" id="color-theme-preview-0" class="button size-3" data-theme="0">White</button>
+        <button type="button" id="color-theme-preview-1" class="button size-3" data-theme="1">Sepia</button>
+        <button type="button" id="color-theme-preview-2" class="button size-3" data-theme="2">Night</button>
+    </div>
+</div>
+
+    </div>
+
+    <!-- Actions Right -->
+    
+    <div class="dropdown pull-right">
+        <a href="#" class="btn toggle-dropdown" aria-label="Share"><i class="fa fa-share-alt"></i>
+        </a>
+        <div class="dropdown-menu font-settings dropdown-left">
+            <div class="dropdown-caret">
+                <span class="caret-outer"></span>
+                <span class="caret-inner"></span>
+            </div>
+            <div class="buttons">
+                <button type="button" data-sharing="twitter" class="button">
+                    Share on Twitter
+                </button>
+                <button type="button" data-sharing="google-plus" class="button">
+                    Share on Google
+                </button>
+                <button type="button" data-sharing="facebook" class="button">
+                    Share on Facebook
+                </button>
+                <button type="button" data-sharing="weibo" class="button">
+                    Share on Weibo
+                </button>
+                <button type="button" data-sharing="instapaper" class="button">
+                    Share on Instapaper
+                </button>
+            </div>
+        </div>
+    </div>
+    
+
+    
+    <a href="#" target="_blank" class="btn pull-right google-plus-sharing-link sharing-link" data-sharing="google-plus" aria-label="Google"><i class="fa fa-google-plus"></i></a>
+    
+    
+    <a href="#" target="_blank" class="btn pull-right facebook-sharing-link sharing-link" data-sharing="facebook" aria-label="Facebook"><i class="fa fa-facebook"></i></a>
+    
+    
+    <a href="#" target="_blank" class="btn pull-right twitter-sharing-link sharing-link" data-sharing="twitter" aria-label="Twitter"><i class="fa fa-twitter"></i></a>
+    
+    
+    
+
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="../../../" >Enzyme</a>
+    </h1>
+</div>
+
+            <div class="page-wrapper" tabindex="-1" role="main">
+                <div class="page-inner">
+                
+                
+                    <section class="normal" id="section-">
+                    
+                        <a id="edit-link" href="https://github.com/airbnb/enzyme/tree/master/docs/api/ReactWrapper/prop.md" class="btn fa fa-edit pull-left">&#xA0;&#xA0;Edit This Page</a><h1 id="-prop-key-any"><a name="-prop-key-any" class="plugin-anchor" href="#-prop-key-any"><span class="fa fa-link"></span></a><code>.prop(key) =&gt; Any</code></h1>
+<p>Returns the prop value for the node of the current <a href="../../../GLOSSARY.html#wrapper" class="glossary-term" title="A wrapper refers to the enzyme wrapper class that provides the API.">wrapper</a> with the provided key. </p>
+<p>NOTE: can only be called on a <a href="../../../GLOSSARY.html#wrapper" class="glossary-term" title="A wrapper refers to the enzyme wrapper class that provides the API.">wrapper</a> of a single node.</p>
+<h4 id="arguments"><a name="arguments" class="plugin-anchor" href="#arguments"><span class="fa fa-link"></span></a>Arguments</h4>
+<ol>
+<li><code>key</code> (<code>String</code>): The prop name such that this will return value will be the <code>this.props[key]</code> 
+of the component instance.</li>
+</ol>
+<h4 id="example"><a name="example" class="plugin-anchor" href="#example"><span class="fa fa-link"></span></a>Example</h4>
+<pre><code class="lang-jsx"><span class="token keyword">const</span> wrapper <span class="token operator">=</span> <span class="token function">mount</span><span class="token punctuation">(</span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>MyComponent</span> <span class="token attr-name">foo</span><span class="token script language-javascript"><span class="token punctuation">=</span><span class="token punctuation">{</span>10<span class="token punctuation">}</span></span> <span class="token punctuation">/&gt;</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">expect</span><span class="token punctuation">(</span>wrapper<span class="token punctuation">.</span><span class="token function">prop</span><span class="token punctuation">(</span><span class="token string">&apos;foo&apos;</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span>to<span class="token punctuation">.</span><span class="token function">equal</span><span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<h4 id="related-methods"><a name="related-methods" class="plugin-anchor" href="#related-methods"><span class="fa fa-link"></span></a>Related Methods</h4>
+<ul>
+<li><a href="props.html"><code>.props() =&gt; Object</code></a></li>
+<li><a href="state.html"><code>.state([key]) =&gt; Any</code></a></li>
+<li><a href="context.html"><code>.context([key]) =&gt; Any</code></a></li>
+</ul>
+
+                    
+                    </section>
+                
+                
+                </div>
+            </div>
+        </div>
+
+        
+        <a href="../../../docs/api/ReactWrapper/context.html" class="navigation navigation-prev " aria-label="Previous page: context([key])"><i class="fa fa-angle-left"></i></a>
+        
+        
+        <a href="../../../docs/api/ReactWrapper/simulate.html" class="navigation navigation-next " aria-label="Next page: simulate(event[, data])"><i class="fa fa-angle-right"></i></a>
+        
+    </div>
+</div>
+
+        
+<script src="../../../gitbook/app.js"></script>
+
+    
+    <script src="../../../gitbook/plugins/gitbook-plugin-edit-link/plugin.js"></script>
+    
+
+    
+    <script src="../../../gitbook/plugins/gitbook-plugin-github/plugin.js"></script>
+    
+
+    
+    <script src="../../../gitbook/plugins/gitbook-plugin-codeblock-disable-glossary/disable-glossary.js"></script>
+    
+
+    
+    <script src="../../../gitbook/plugins/gitbook-plugin-collapsible-menu/plugin.js"></script>
+    
+
+<script>
+require(["gitbook"], function(gitbook) {
+    var config = {"fontSettings":{"theme":null,"family":"sans","size":2},"edit-link":{"base":"https://github.com/airbnb/enzyme/tree/master","label":"Edit This Page"},"github":{"url":"https://github.com/airbnb/enzyme/"}};
+    gitbook.start(config);
+});
+</script>
+
+        <!-- body:end -->
+    </body>
+    <!-- End of book Enzyme -->
+</html>

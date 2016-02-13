@@ -1,0 +1,10 @@
+{
+  "rules": {
+    "padded-blocks": 0,
+    "react/no-multi-comp": 0,
+    "react/prop-types": 0,
+    "react/no-did-mount-set-state": 0,
+    "react/prefer-es6-class": 0,
+    "no-param-reassign": 0,
+  }
+}
