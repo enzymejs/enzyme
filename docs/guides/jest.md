@@ -31,4 +31,4 @@ several modules to be unmocked in your `package.json`:
 
 ## Example Projects
 
-- [enzyme-example-ject](https://github.com/lelandrichardson/enzyme-example-jest)
+- [enzyme-example-jest](https://github.com/lelandrichardson/enzyme-example-jest)
