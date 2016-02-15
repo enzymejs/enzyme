@@ -13,7 +13,9 @@ import {
 import {
   propsOfNode,
 } from './Utils';
-import { without, escape, compact } from 'underscore';
+import without from 'lodash/without';
+import escape from 'lodash/escape';
+import compact from 'lodash/compact';
 import { REACT013, REACT014 } from './version';
 import objectValues from 'object.values';
 

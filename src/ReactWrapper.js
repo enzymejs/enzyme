@@ -1,6 +1,8 @@
 import React from 'react';
 import cheerio from 'cheerio';
-import { flatten, unique, compact } from 'underscore';
+import flatten from 'lodash/flatten';
+import unique from 'lodash/uniq';
+import compact from 'lodash/compact';
 import createWrapperComponent from './ReactWrapperComponent';
 import {
   instHasClassName,
