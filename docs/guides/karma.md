@@ -1,7 +1,7 @@
 # Using Enzyme with Karma
 
 Karma is a popular test runner that can run tests in browser environments. Enzyme is compatible with
-enzyme, but often requires a little bit of configuration.
+Karma, but often requires a little bit of configuration.
 
 This configuration largely depends on which plugins you are using to bundle your JavaScript code.  In
 the case of Browserify or Webpack, see the below documentation in order to get these up and running.
