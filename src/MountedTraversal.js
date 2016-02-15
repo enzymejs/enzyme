@@ -1,4 +1,4 @@
-import { isEmpty } from 'underscore';
+import isEmpty from 'lodash/isEmpty';
 import isSubset from 'is-subset';
 import {
   coercePropValue,

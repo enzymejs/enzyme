@@ -1,6 +1,6 @@
 # Using Jest with Enzyme
 
-If you are using Jest with enzyme and using Jest's "automocking" feature, you will need to mark 
+If you are using Jest with enzyme and using Jest's "automocking" feature, you will need to mark
 several modules to be unmocked in your `package.json`:
 
 ```js
@@ -16,7 +16,6 @@ several modules to be unmocked in your `package.json`:
     "enzyme",
     "cheerio",
     "htmlparser2",
-    "underscore",
     "lodash",
     "domhandler",
     "object.assign",
