@@ -1082,6 +1082,20 @@ describe('shallow', () => {
     });
   });
 
+  describe('.childAt(index)', () => {
+    it('should get a wrapped node at the specified index', () => {
+      const wrapper = shallow(
+        <div>
+          <div className="bar" />
+          <div className="baz" />
+        </div>
+      );
+
+      expect(wrapper.childAt(0).hasClass('bar')).to.equal(true);
+      expect(wrapper.childAt(1).hasClass('baz')).to.equal(true);
+    });
+  });
+
   describe('.parents([selector])', () => {
     it('should return an array of current nodes ancestors', () => {
       const wrapper = shallow(
