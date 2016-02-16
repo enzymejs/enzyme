@@ -45,7 +45,7 @@ describe('<MyComponent />', () => {
 #### Arguments
 
 1. `node` (`ReactElement`): The node to render
-2. `options` (`Object` [optional]): 
+2. `options` (`Object` [optional]):
 - `options.context`: (`Object` [optional]): Context to be passed into the component
 
 #### Returns
@@ -160,20 +160,20 @@ Iterates through each node of the current wrapper and executes the provided func
 #### [`.map(fn) => Array`](ShallowWrapper/map.md)
 Maps the current array of nodes to another array.
 
-#### [`reduce(fn[, initialValue]) => Any`](/docs/api/ShallowWrapper/reduce.md)
+#### [`.reduce(fn[, initialValue]) => Any`](/docs/api/ShallowWrapper/reduce.md)
 Reduces the current array of nodes to a value
 
-#### [`reduceRight(fn[, initialValue]) => Any`](/docs/api/ShallowWrapper/reduceRight.md)
+#### [`.reduceRight(fn[, initialValue]) => Any`](/docs/api/ShallowWrapper/reduceRight.md)
 Reduces the current array of nodes to a value, from right to left.
 
-#### [`some(selector) => Boolean`](/docs/api/ShallowWrapper/some.md)
+#### [`.some(selector) => Boolean`](/docs/api/ShallowWrapper/some.md)
 Returns whether or not any of the nodes in the wrapper match the provided selector.
 
-#### [`someWhere(predicate) => Boolean`](/docs/api/ShallowWrapper/someWhere.md)
+#### [`.someWhere(predicate) => Boolean`](/docs/api/ShallowWrapper/someWhere.md)
 Returns whether or not any of the nodes in the wrapper pass the provided predicate function.
 
-#### [`every(selector) => Boolean`](/docs/api/ShallowWrapper/every.md)
+#### [`.every(selector) => Boolean`](/docs/api/ShallowWrapper/every.md)
 Returns whether or not all of the nodes in the wrapper match the provided selector.
 
-#### [`everyWhere(predicate) => Boolean`](/docs/api/ShallowWrapper/everyWhere.md)
+#### [`.everyWhere(predicate) => Boolean`](/docs/api/ShallowWrapper/everyWhere.md)
 Returns whether or not all of the nodes in the wrapper pass the provided predicate function.
