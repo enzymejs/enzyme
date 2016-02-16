@@ -4,10 +4,10 @@ Full DOM rendering is ideal for use cases where you have components that may int
 or may require the full lifecycle in order to fully test the component (ie, `componentDidMount`
 etc.)
 
-Full DOM rendering requires that a full DOM API be available at the global scope. This means that 
-it must be run in an environment that at least "looks like" a browser environment. If you do not 
-want to run your tests inside of a browser, the recommended approach to using `mount` is to depend 
-on a library called [jsdom](https://github.com/tmpvar/jsdom) which is essentially a headless browser 
+Full DOM rendering requires that a full DOM API be available at the global scope. This means that
+it must be run in an environment that at least "looks like" a browser environment. If you do not
+want to run your tests inside of a browser, the recommended approach to using `mount` is to depend
+on a library called [jsdom](https://github.com/tmpvar/jsdom) which is essentially a headless browser
 implemented completely in JS.
 
 ```jsx
@@ -162,25 +162,25 @@ Iterates through each node of the current wrapper and executes the provided func
 #### [`.map(fn) => Array`](ReactWrapper/map.md)
 Maps the current array of nodes to another array.
 
-#### [`reduce(fn[, initialValue]) => Any`](/docs/api/ReactWrapper/reduce.md)
+#### [`.reduce(fn[, initialValue]) => Any`](/docs/api/ReactWrapper/reduce.md)
 Reduces the current array of nodes to a value
 
-#### [`reduceRight(fn[, initialValue]) => Any`](/docs/api/ReactWrapper/reduceRight.md)
+#### [`.reduceRight(fn[, initialValue]) => Any`](/docs/api/ReactWrapper/reduceRight.md)
 Reduces the current array of nodes to a value, from right to left.
 
-#### [`some(selector) => Boolean`](/docs/api/ReactWrapper/some.md)
+#### [`.some(selector) => Boolean`](/docs/api/ReactWrapper/some.md)
 Returns whether or not any of the nodes in the wrapper match the provided selector.
 
-#### [`someWhere(predicate) => Boolean`](/docs/api/ReactWrapper/someWHere.md)
+#### [`.someWhere(predicate) => Boolean`](/docs/api/ReactWrapper/someWHere.md)
 Returns whether or not any of the nodes in the wrapper pass the provided predicate function.
 
-#### [`every(selector) => Boolean`](/docs/api/ReactWrapper/every.md)
+#### [`.every(selector) => Boolean`](/docs/api/ReactWrapper/every.md)
 Returns whether or not all of the nodes in the wrapper match the provided selector.
 
-#### [`everyWhere(predicate) => Boolean`](/docs/api/ReactWrapper/everyWhere.md)
+#### [`.everyWhere(predicate) => Boolean`](/docs/api/ReactWrapper/everyWhere.md)
 Returns whether or not any of the nodes in the wrapper pass the provided predicate function.
 
-#### [`ref(refName) => ReactWrapper`](/docs/api/ReactWrapper/ref.md)
+#### [`.ref(refName) => ReactWrapper`](/docs/api/ReactWrapper/ref.md)
 Returns a wrapper of the node that matches the provided reference name.
 
 #### [`.detach() => void`](ReactWrapper/detach.md)
