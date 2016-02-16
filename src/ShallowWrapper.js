@@ -408,6 +408,16 @@ export default class ShallowWrapper {
   }
 
   /**
+   * Returns a new wrapper with a specific child
+   *
+   * @param {Number} [index]
+   * @returns {ShallowWrapper}
+   */
+  childAt(index) {
+    return this.single(() => this.children().at(index));
+  }
+
+  /**
    * Returns a wrapper around all of the parents/ancestors of the wrapper. Does not include the node
    * in the current wrapper.
    *

@@ -440,6 +440,16 @@ export default class ReactWrapper {
   }
 
   /**
+   * Returns a new wrapper with a specific child
+   *
+   * @param {Number} [index]
+   * @returns {ReactWrapper}
+   */
+  childAt(index) {
+    return this.single(() => this.children().at(index));
+  }
+
+  /**
    * Returns a wrapper around all of the parents/ancestors of the wrapper. Does not include the node
    * in the current wrapper.
    *
