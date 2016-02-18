@@ -24,8 +24,6 @@ testing your React components, you can consider using [chai-enzyme](https://gith
 
 [Using Enzyme with Karma](/docs/guides/karma.md)
 
-[Using Enzyme with Jasmine](/docs/guides/jasmine.md)
-
 [Using Enzyme with Browserify](/docs/guides/browserify.md)
 
 [Using Enzyme with WebPack](/docs/guides/webpack.md)
