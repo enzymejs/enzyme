@@ -1670,4 +1670,18 @@ describe('shallow', () => {
 
   });
 
+  it('works with components that return null', () => {
+    class Foo extends React.Component {
+      render() {
+        return null;
+      }
+    }
+    const wrapper = shallow(<Foo />);
+    expect(wrapper).to.have.length(1);
+    expect(wrapper.html()).to.equal(null);
+    expect(wrapper.type()).to.equal(null);
+    const rendered = wrapper.render();
+    expect(rendered.length).to.equal(0);
+    expect(rendered.html()).to.equal(null);
+  });
 });

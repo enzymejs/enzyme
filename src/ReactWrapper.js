@@ -342,7 +342,10 @@ export default class ReactWrapper {
    * @returns {String}
    */
   html() {
-    return this.single(n => findDOMNode(n).outerHTML.replace(/\sdata-reactid+="[^"]+"/g, ''));
+    return this.single(n => {
+      const node = findDOMNode(n);
+      return node === null ? null : node.outerHTML.replace(/\sdata-reactid+="[^"]+"/g, '');
+    });
   }
 
   /**
@@ -353,7 +356,8 @@ export default class ReactWrapper {
    * @returns {CheerioWrapper}
    */
   render() {
-    return cheerio.load(this.html()).root();
+    const html = this.html();
+    return html === null ? cheerio() : cheerio.load(html).root();
   }
 
   /**

@@ -310,7 +310,7 @@ export default class ShallowWrapper {
    * @returns {String}
    */
   html() {
-    return this.single(renderToStaticMarkup);
+    return this.single(n => this.type() === null ? null : renderToStaticMarkup(n));
   }
 
   /**
@@ -321,7 +321,7 @@ export default class ShallowWrapper {
    * @returns {CheerioWrapper}
    */
   render() {
-    return cheerio.load(this.html()).root();
+    return this.type() === null ? cheerio() : cheerio.load(this.html()).root();
   }
 
   /**
