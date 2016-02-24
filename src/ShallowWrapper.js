@@ -1,4 +1,5 @@
 import React from 'react';
+import ComplexSelector from './ComplexSelector';
 import flatten from 'lodash/flatten';
 import unique from 'lodash/uniq';
 import compact from 'lodash/compact';
@@ -33,10 +34,11 @@ import {
  *
  * @param {ShallowWrapper} wrapper
  * @param {Function} predicate
+ * @param {Function} filter
  * @returns {ShallowWrapper}
  */
-function findWhereUnwrapped(wrapper, predicate) {
-  return wrapper.flatMap(n => treeFilter(n.node, predicate));
+function findWhereUnwrapped(wrapper, predicate, filter = treeFilter) {
+  return wrapper.flatMap(n => filter(n.node, predicate));
 }
 
 /**
@@ -79,6 +81,7 @@ export default class ShallowWrapper {
       this.length = this.nodes.length;
     }
     this.options = options;
+    this.complexSelector = new ComplexSelector(buildPredicate, findWhereUnwrapped, childrenOfNode);
   }
 
   /**
@@ -236,8 +239,7 @@ export default class ShallowWrapper {
    * @returns {ShallowWrapper}
    */
   find(selector) {
-    const predicate = buildPredicate(selector);
-    return findWhereUnwrapped(this, predicate);
+    return this.complexSelector.find(selector, this);
   }
 
   /**
@@ -629,7 +631,8 @@ export default class ShallowWrapper {
     const nodes = this.nodes.map((n, i) => fn.call(this, this.wrap(n), i));
     const flattened = flatten(nodes, true);
     const uniques = unique(flattened);
-    return this.wrap(uniques);
+    const compacted = compact(uniques);
+    return this.wrap(compacted);
   }
 
   /**

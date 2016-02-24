@@ -463,17 +463,6 @@ describe('shallow', () => {
       expect(wrapper.find('button').length).to.equal(1);
     });
 
-    it('should throw on a complex selector', () => {
-      const wrapper = shallow(
-        <div>
-          <input className="foo" />
-          <input />
-          <button />
-        </div>
-      );
-      expect(() => wrapper.find('.foo .foo')).to.throw(Error);
-    });
-
     it('should support object property selectors', () => {
       const wrapper = shallow(
         <div>

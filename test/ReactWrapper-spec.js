@@ -285,7 +285,6 @@ describeWithDOM('mount', () => {
       expect(wrapper.find('span[htmlFor="foo"][preserveAspectRatio="xMaxYMax"]')).to.have.length(1);
     });
 
-
     it('should not find property when undefined', () => {
       const wrapper = mount(
         <div>
@@ -332,7 +331,6 @@ describeWithDOM('mount', () => {
       expect(wrapper.find('[key]')).to.have.length(0);
     });
 
-
     it('should find multiple elements based on a class name', () => {
       const wrapper = mount(
         <div>
@@ -365,17 +363,6 @@ describeWithDOM('mount', () => {
       );
       expect(wrapper.find('input').length).to.equal(2);
       expect(wrapper.find('button').length).to.equal(1);
-    });
-
-    it('should throw on a complex selector', () => {
-      const wrapper = mount(
-        <div>
-          <input className="foo" />
-          <input />
-          <button />
-        </div>
-      );
-      expect(() => wrapper.find('.foo .foo')).to.throw(Error);
     });
 
     it('should support object property selectors', () => {

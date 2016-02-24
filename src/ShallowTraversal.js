@@ -4,9 +4,7 @@ import isSubset from 'is-subset';
 import {
   coercePropValue,
   propsOfNode,
-  isSimpleSelector,
   splitSelector,
-  selectorError,
   isCompoundSelector,
   selectorType,
   AND,
@@ -117,9 +115,6 @@ export function buildPredicate(selector) {
       return node => node && node.type === selector;
 
     case 'string':
-      if (!isSimpleSelector(selector)) {
-        throw selectorError(selector);
-      }
       if (isCompoundSelector.test(selector)) {
         return AND(splitSelector(selector).map(buildPredicate));
       }
