@@ -1,5 +1,5 @@
 /* eslint no-use-before-define:0 */
-import { isEqual } from 'underscore';
+import isEqual from 'lodash/isEqual';
 import {
   isDOMComponent,
   findDOMNode,
