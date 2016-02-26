@@ -103,6 +103,9 @@ Shallow renders the current node and returns a shallow wrapper around it.
 #### [`.render() => CheerioWrapper`](ShallowWrapper/render.md)
 Returns a CheerioWrapper of the current node's subtree.
 
+#### [`.unmount() => ShallowWrapper`](ShallowWrapper/unmount.md)
+A method that un-mounts the component.
+
 #### [`.text() => String`](ShallowWrapper/text.md)
 Returns a string representation of the text nodes in the current render tree.
 

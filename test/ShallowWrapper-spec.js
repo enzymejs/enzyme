@@ -1644,6 +1644,30 @@ describe('shallow', () => {
 
   });
 
+  describe('.unmount()', () => {
+    it('should call componentWillUnmount()', () => {
+      const spy = sinon.spy();
+
+      class Foo extends React.Component {
+        constructor(props) {
+          super(props);
+          this.componentWillUnmount = spy;
+        }
+        render() {
+          return (
+            <div className={this.props.id}>
+              {this.props.id}
+            </div>
+          );
+        }
+      }
+      const wrapper = shallow(<Foo id="foo" />);
+      expect(spy.calledOnce).to.equal(false);
+      wrapper.unmount();
+      expect(spy.calledOnce).to.equal(true);
+    });
+  });
+
   describe('.render()', () => {
 
     it('should return a cheerio wrapper around the current node', () => {

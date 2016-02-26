@@ -30,6 +30,7 @@
     * [closest(selector)](/docs/api/ShallowWrapper/closest.md)
     * [shallow()](/docs/api/ShallowWrapper/shallow.md)
     * [render()](/docs/api/ShallowWrapper/render.md)
+    * [unmount()](/docs/api/ShallowWrapper/unmount.md)
     * [text()](/docs/api/ShallowWrapper/text.md)
     * [html()](/docs/api/ShallowWrapper/html.md)
     * [get(index)](/docs/api/ShallowWrapper/get.md)
