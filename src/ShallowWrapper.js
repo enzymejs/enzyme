@@ -325,6 +325,16 @@ export default class ShallowWrapper {
   }
 
   /**
+   * A method that unmounts the component. This can be used to simulate a component going through
+   * and unmount/mount lifecycle.
+   * @returns {ShallowWrapper}
+   */
+  unmount() {
+    this.renderer.unmount();
+    return this;
+  }
+
+  /**
    * Used to simulate events. Pass an eventname and (optionally) event arguments. This method of
    * testing events should be met with some skepticism.
    *

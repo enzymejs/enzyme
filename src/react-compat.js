@@ -1,5 +1,6 @@
 /* eslint react/no-deprecated: 0 */
 import { REACT013 } from './version';
+import objectAssign from 'object.assign';
 
 let TestUtils;
 let createShallowRenderer;
@@ -80,27 +81,27 @@ if (REACT013) {
   // shallow rendering when it's just a DOM element.
   createShallowRenderer = function createRendererCompatible() {
     const renderer = TestUtils.createRenderer();
+    const originalRender = renderer.render;
+    const originalRenderOutput = renderer.getRenderOutput;
     let isDOM = false;
     let _node;
-    return {
-      _instance: renderer._instance,
+    return objectAssign(renderer, {
       render(node, context) {
         if (typeof node.type === 'string') {
           isDOM = true;
           _node = node;
         } else {
           isDOM = false;
-          renderer.render(node, context);
-          this._instance = renderer._instance;
+          return originalRender.call(this, node, context);
         }
       },
       getRenderOutput() {
         if (isDOM) {
           return _node;
         }
-        return renderer.getRenderOutput();
+        return originalRenderOutput.call(this);
       },
-    };
+    });
   };
   renderIntoDocument = TestUtils.renderIntoDocument;
   childrenToArray = React.Children.toArray;
