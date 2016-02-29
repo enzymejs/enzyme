@@ -126,7 +126,7 @@ describe('<Foo />', () => {
     wrapper.find('button').simulate('click');
     expect(onButtonClick.calledOnce).to.equal(true);
   });
-  
+
   it('calls componentDidMount', () => {
     sinon.spy(Foo.prototype, 'componentDidMount');
     const wrapper = mount(<Foo />);
@@ -173,7 +173,9 @@ Read the full [API Documentation](/docs/api/render.md)
 
 See the [Contributors Guide](/CONTRIBUTING.md)
 
+### In the wild
 
+Organizations and projects using `enzyme` can list themselves [here](INTHEWILD.md).
 
 ### License
 
