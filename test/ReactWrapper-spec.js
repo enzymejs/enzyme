@@ -465,6 +465,18 @@ describeWithDOM('mount', () => {
         ));
         expect(foundNotSpan).to.have.length(0);
       });
+
+      it('should return props object when debug() is called', () => {
+        const SFC = function SFC({ selector }) {
+          return (
+            <div data-foo={selector}>Test SFC</div>
+          );
+        };
+
+        const selector = 'blah';
+        const wrapper = mount(<SFC data-foo={selector} />);
+        expect(wrapper.props()).to.deep.equal({ 'data-foo' : selector });
+      });
     });
 
     it('should not pass in null or false nodes', () => {
