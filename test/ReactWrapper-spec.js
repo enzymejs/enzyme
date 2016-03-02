@@ -467,18 +467,18 @@ describeWithDOM('mount', () => {
       });
 
       it('should return props object when props() is called', () => {
-        const SFC = function SFC({ selector }) {
+        const SFC = function SFC({ data }) {
           return (
-            <div data-foo={selector}>Test SFC</div>
+            <div data-foo={data}>Test SFC</div>
           );
         };
 
-        const selector = 'blah';
-        const wrapper = mount(<SFC data-foo={selector} />);
-        expect(wrapper.props()).to.deep.equal({ 'data-foo' : selector });
+        const content = 'blah';
+        const wrapper = mount(<SFC data={content} />);
+        expect(wrapper.props()).to.deep.equal({ 'data' : content });
       });
 
-      it.only('should return shallow rendered string when debug() is called', () => {
+      it('should return shallow rendered string when debug() is called', () => {
         const SFC = function SFC({ data }) {
           return (
             <div data-foo={data}>Test SFC</div>
