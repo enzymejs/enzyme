@@ -475,7 +475,7 @@ describeWithDOM('mount', () => {
 
         const content = 'blah';
         const wrapper = mount(<SFC data={content} />);
-        expect(wrapper.props()).to.deep.equal({ 'data' : content });
+        expect(wrapper.props()).to.deep.equal({ data: content });
       });
 
       it('should return shallow rendered string when debug() is called', () => {
