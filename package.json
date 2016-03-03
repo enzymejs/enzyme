@@ -56,11 +56,11 @@
     "object.values": "^1.0.3"
   },
   "devDependencies": {
-    "babel-cli": "^6.3.17",
-    "babel-core": "^6.3.21",
-    "babel-eslint": "^4.1.8",
-    "babel-preset-airbnb": "^1.0.1",
-    "babel-register": "^6.3.13",
+    "babel-cli": "^6.6.4",
+    "babel-core": "^6.6.4",
+    "babel-eslint": "^5.0.0",
+    "babel-preset-airbnb": "^1.1.1",
+    "babel-register": "^6.6.0",
     "chai": "^3.5.0",
     "coveralls": "^2.11.6",
     "enzyme-example-jest": "^0.1.0",
