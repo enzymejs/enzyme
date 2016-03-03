@@ -70,7 +70,16 @@ if (REACT013) {
   // require them here through this node module. The bummer is that we are not able
   // to list this as a dependency in package.json and have 0.13 work properly.
   // As a result, right now this is basically an implicit dependency.
-  TestUtils = require('react-addons-test-utils');
+  try {
+    TestUtils = require('react-addons-test-utils');
+  } catch (e) {
+    console.error(
+      'react-addons-test-utils is an implicit dependency in order to support react@0.13-14. ' +
+      'Please add the appropriate version to your devDependencies. ' +
+      'See https://github.com/airbnb/enzyme/issues/225'
+    );
+    throw e;
+  }
 
   // Shallow rendering changed from 0.13 => 0.14 in such a way that
   // 0.14 now does not allow shallow rendering of native DOM elements.
