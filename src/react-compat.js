@@ -7,13 +7,11 @@ let createShallowRenderer;
 let renderToStaticMarkup;
 let renderIntoDocument;
 let findDOMNode;
-let React;
-let ReactContext;
 let childrenToArray;
 let renderWithOptions;
 let unmountComponentAtNode;
 
-React = require('react');
+const React = require('react');
 
 if (REACT013) {
   renderToStaticMarkup = React.renderToStaticMarkup;
@@ -22,7 +20,7 @@ if (REACT013) {
   unmountComponentAtNode = React.unmountComponentAtNode;
   /* eslint-enable react/no-deprecated */
   TestUtils = require('react/addons').addons.TestUtils;
-  ReactContext = require('react/lib/ReactContext');
+  const ReactContext = require('react/lib/ReactContext');
 
   // Shallow rendering in 0.13 did not properly support context. This function provides a shim
   // around `TestUtils.createRenderer` that instead returns a ShallowRenderer that actually
@@ -87,6 +85,7 @@ if (REACT013) {
     let _node;
     return objectAssign(renderer, {
       render(node, context) {
+        /* eslint consistent-return: 0 */
         if (typeof node.type === 'string') {
           isDOM = true;
           _node = node;

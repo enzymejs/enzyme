@@ -204,16 +204,16 @@ export function buildInstPredicate(selector) {
           return inst => instHasClassName(inst, selector.substr(1));
         case SELECTOR.ID_TYPE:
           return inst => instHasId(inst, selector.substr(1));
-        case SELECTOR.PROP_TYPE:
+        case SELECTOR.PROP_TYPE: {
           const propKey = selector.split(/\[([a-zA-Z\-\:]*?)(=|\])/)[1];
           const propValue = selector.split(/=(.*?)]/)[1];
 
           return node => instHasProperty(node, propKey, propValue);
+        }
         default:
           // selector is a string. match to DOM tag or constructor displayName
           return inst => instHasType(inst, selector);
       }
-      break;
 
     case 'object':
       if (!Array.isArray(selector) && selector !== null && !isEmpty(selector)) {
@@ -224,7 +224,7 @@ export function buildInstPredicate(selector) {
       );
 
     default:
-      throw new TypeError(`Enzyme::Selector expects a string, object, or Component Constructor`);
+      throw new TypeError('Enzyme::Selector expects a string, object, or Component Constructor');
   }
 }
 

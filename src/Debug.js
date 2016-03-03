@@ -43,7 +43,7 @@ function propString(prop) {
     case 'boolean':
       return `{${prop}}`;
     case 'object':
-      return `{{...}}`;
+      return '{{...}}';
     default:
       return `{[${typeof prop}]}`;
   }

@@ -143,6 +143,7 @@ export function selectorType(selector) {
   } else if (isPropSelector.test(selector)) {
     return SELECTOR.PROP_TYPE;
   }
+  return undefined;
 }
 
 export function AND(fns) {

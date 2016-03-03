@@ -124,16 +124,16 @@ export function buildPredicate(selector) {
         case SELECTOR.ID_TYPE:
           return node => nodeHasId(node, selector.substr(1));
 
-        case SELECTOR.PROP_TYPE:
+        case SELECTOR.PROP_TYPE: {
           const propKey = selector.split(/\[([a-zA-Z\-]*?)(=|\])/)[1];
           const propValue = selector.split(/=(.*?)\]/)[1];
 
           return node => nodeHasProperty(node, propKey, propValue);
+        }
         default:
           // selector is a string. match to DOM tag or constructor displayName
           return node => nodeHasType(node, selector);
       }
-      break;
 
     case 'object':
       if (!Array.isArray(selector) && selector !== null && !isEmpty(selector)) {
@@ -144,7 +144,7 @@ export function buildPredicate(selector) {
       );
 
     default:
-      throw new TypeError(`Enzyme::Selector expects a string, object, or Component Constructor`);
+      throw new TypeError('Enzyme::Selector expects a string, object, or Component Constructor');
   }
 }
 

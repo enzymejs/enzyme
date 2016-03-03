@@ -45,9 +45,7 @@ export default function createWrapperComponent(node, options = {}) {
       const component = this._reactInternalInstance._renderedComponent;
       const inst = component.getPublicInstance();
       if (inst === null) {
-        throw new Error(
-          `You cannot get an instance of a stateless component.`
-        );
+        throw new Error('You cannot get an instance of a stateless component.');
       }
       return inst;
     },
