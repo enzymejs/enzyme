@@ -40,7 +40,7 @@ describe('<MyComponent />', () => {
 
 ```
 
-## `shallow(node[, options]) => ReactWrapper`
+## `shallow(node[, options]) => ShallowWrapper`
 
 #### Arguments
 
