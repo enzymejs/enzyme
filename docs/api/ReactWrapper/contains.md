@@ -34,10 +34,6 @@ const wrapper = mount(
     <span>Again</span>
   </div>
 );
-const passes = [
-  <span>Hello</span>,
-  <div>Goodbye</div>,
-];
 
 expect(wrapper.contains([
   <span>Hello</span>,
