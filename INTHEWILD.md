@@ -3,6 +3,7 @@ Please use [pull requests](https://github.com/airbnb/enzyme/pull/new/master) to 
 Organizations
 ----------
  - [Airbnb](https://github.com/airbnb)
+ - [Product Hunt](https://github.com/producthunt)
 
 Projects
 ----------
