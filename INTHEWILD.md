@@ -9,3 +9,4 @@ Organizations
 Projects
 ----------
  - [Rheostat](https://github.com/airbnb/rheostat)
+ - [React Boilerplate](https://github.com/mxstbr/react-boilerplate/tree/v3.0.0)
