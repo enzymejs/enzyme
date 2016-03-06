@@ -4,6 +4,7 @@ Organizations
 ----------
  - [Airbnb](https://github.com/airbnb)
  - [Product Hunt](https://github.com/producthunt)
+ - [Walmart Labs](https://github.com/walmartlabs)
 
 Projects
 ----------
