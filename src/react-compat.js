@@ -62,7 +62,19 @@ if (REACT013) {
     return TestUtils.renderIntoDocument(node);
   };
 } else {
-  const ReactDOM = require('react-dom');
+  let ReactDOM;
+
+  try {
+    ReactDOM = require('react-dom');
+  } catch (e) {
+    console.error(
+      'react-dom is an implicit dependency in order to support react@0.13-14. ' +
+      'Please add the appropriate version to your devDependencies. ' +
+      'See https://github.com/airbnb/enzyme#installation'
+    );
+    throw e;
+  }
+
   renderToStaticMarkup = require('react-dom/server').renderToStaticMarkup;
   findDOMNode = ReactDOM.findDOMNode;
   unmountComponentAtNode = ReactDOM.unmountComponentAtNode;
@@ -76,7 +88,7 @@ if (REACT013) {
     console.error(
       'react-addons-test-utils is an implicit dependency in order to support react@0.13-14. ' +
       'Please add the appropriate version to your devDependencies. ' +
-      'See https://github.com/airbnb/enzyme/issues/225'
+      'See https://github.com/airbnb/enzyme#installation'
     );
     throw e;
   }
