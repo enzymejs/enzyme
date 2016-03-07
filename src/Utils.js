@@ -81,7 +81,8 @@ export function nodeEqual(a, b) {
 
 export function containsChildrenSubArray(match, node, subArray) {
   const children = childrenOfNode(node);
-  return children.some((_, i) => arraysEqual(match, children.slice(i, subArray.length), subArray));
+  const checker = (_, i) => arraysEqual(match, children.slice(i, i + subArray.length), subArray);
+  return children.some(checker);
 }
 
 function arraysEqual(match, left, right) {

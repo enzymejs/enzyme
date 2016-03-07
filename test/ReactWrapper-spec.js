@@ -138,13 +138,18 @@ describeWithDOM('mount', () => {
         <div>Goodbye</div>,
       ];
 
-      const passes = [
+      const passes1 = [
         <span>Hello</span>,
         <div>Goodbye</div>,
       ];
+      const passes2 = [
+        <div>Goodbye</div>,
+        <span>More</span>,
+      ];
 
       expect(wrapper.contains(fails)).to.equal(false);
-      expect(wrapper.contains(passes)).to.equal(true);
+      expect(wrapper.contains(passes1)).to.equal(true);
+      expect(wrapper.contains(passes2)).to.equal(true);
     });
 
   });
