@@ -11,6 +11,7 @@ import {
   isCompoundSelector,
   AND,
   SELECTOR,
+  nodeHasType,
 } from './Utils';
 import {
   isDOMComponent,
@@ -62,8 +63,7 @@ export function instHasId(inst, id) {
 export function instHasType(inst, type) {
   switch (typeof type) {
     case 'string':
-      return isDOMComponent(inst) &&
-        inst.tagName.toUpperCase() === type.toUpperCase();
+      return nodeHasType(getNode(inst), type);
     case 'function':
       return isCompositeComponentWithType(inst, type);
     default:

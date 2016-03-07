@@ -181,6 +181,18 @@ describeWithDOM('mount', () => {
       expect(wrapper.find(Foo).type()).to.equal(Foo);
     });
 
+    it('should find a component based on a component displayName', () => {
+      class Foo extends React.Component {
+        render() { return <div />; }
+      }
+      const wrapper = mount(
+        <div>
+          <Foo className="foo" />
+        </div>
+      );
+      expect(wrapper.find('Foo').type()).to.equal(Foo);
+    });
+
     it('should find component based on a react prop', () => {
       const wrapper = mount(
         <div>

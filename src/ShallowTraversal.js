@@ -11,6 +11,7 @@ import {
   selectorType,
   AND,
   SELECTOR,
+  nodeHasType,
 } from './Utils';
 
 
@@ -89,14 +90,6 @@ export function nodeHasProperty(node, propKey, stringifiedPropValue) {
   }
 
   return nodeProps.hasOwnProperty(propKey);
-}
-
-
-export function nodeHasType(node, type) {
-  if (!type || !node) return false;
-  if (!node.type) return false;
-  if (typeof node.type === 'string') return node.type === type;
-  return node.type.name === type || node.type.displayName === type;
 }
 
 export function nodeMatchesObjectProps(node, props) {
