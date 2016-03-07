@@ -28,6 +28,13 @@ export function getNode(node) {
   return isDOMComponent(node) ? findDOMNode(node) : node;
 }
 
+export function nodeHasType(node, type) {
+  if (!type || !node) return false;
+  if (!node.type) return false;
+  if (typeof node.type === 'string') return node.type === type;
+  return node.type.name === type || node.type.displayName === type;
+}
+
 export function childrenEqual(a, b) {
   if (a === b) return true;
   if (!Array.isArray(a) && !Array.isArray(b)) {
