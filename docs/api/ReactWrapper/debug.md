@@ -62,7 +62,7 @@ Would output the following to the console:
 Likewise, running:
 
 ```jsx
-console.log(mount(<Bar id="2" />).find(Foo).debug();
+console.log(mount(<Bar id="2" />).find(Foo).debug());
 ```
 Would output the following to the console:
 ```jsx
