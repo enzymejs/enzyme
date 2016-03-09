@@ -2,7 +2,6 @@ import {
   childrenOfNode,
 } from './ShallowTraversal';
 import {
-  internalInstance,
   renderedChildrenOfInst,
 } from './MountedTraversal';
 import {
@@ -11,12 +10,13 @@ import {
   isElement,
 } from './react-compat';
 import {
+  internalInstance,
   propsOfNode,
 } from './Utils';
 import without from 'lodash/without';
 import escape from 'lodash/escape';
 import compact from 'lodash/compact';
-import { REACT013, REACT014 } from './version';
+import { REACT013 } from './version';
 import objectValues from 'object.values';
 
 export function typeName(node) {
@@ -85,7 +85,6 @@ export function debugInst(inst, indentLength = 2) {
     const internal = internalInstance(inst);
     return debugInst(internal, indentLength);
   }
-
   const publicInst = inst.getPublicInstance();
 
   if (typeof publicInst === 'string' || typeof publicInst === 'number') return escape(publicInst);
@@ -104,7 +103,7 @@ export function debugInst(inst, indentLength = 2) {
       children.push(...objectValues(renderedChildren));
     }
   } else if (
-    REACT014 &&
+    !REACT013 &&
     isElement(currentElement) &&
     typeof currentElement.type === 'function'
   ) {

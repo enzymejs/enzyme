@@ -257,7 +257,6 @@ export default class ReactWrapper {
     const predicate = Array.isArray(nodeOrNodes)
       ? other => containsChildrenSubArray(instEqual, other, nodeOrNodes)
       : other => instEqual(nodeOrNodes, other);
-
     return findWhereUnwrapped(this, predicate).length > 0;
   }
 
@@ -343,7 +342,8 @@ export default class ReactWrapper {
   html() {
     return this.single(n => {
       const node = findDOMNode(n);
-      return node === null ? null : node.outerHTML.replace(/\sdata-reactid+="[^"]+"/g, '');
+      return node === null ? null :
+        node.outerHTML.replace(/\sdata-(reactid|reactroot)+="([^"]*)+"/g, '');
     });
   }
 

@@ -12,6 +12,7 @@
 * [Installation](/docs/installation/README.md)
   * [Working with React 0.13.x](/docs/installation/react-013.md)
   * [Working with React 0.14.x](/docs/installation/react-014.md)
+  * [Working with React 15.x](/docs/installation/react-15.md)
 * [API Reference](/docs/api/README.md)
   * [Shallow Rendering](/docs/api/shallow.md)
     * [at(index)](/docs/api/ShallowWrapper/at.md)

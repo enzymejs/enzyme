@@ -1,6 +1,7 @@
 import isEmpty from 'lodash/isEmpty';
 import isSubset from 'is-subset';
 import {
+  internalInstance,
   coercePropValue,
   nodeEqual,
   propsOfNode,
@@ -20,11 +21,7 @@ import {
   isElement,
   findDOMNode,
 } from './react-compat';
-import { REACT013, REACT014 } from './version';
-
-export function internalInstance(inst) {
-  return inst._reactInternalInstance;
-}
+import { REACT013 } from './version';
 
 export function getNode(inst) {
   if (!inst || inst._store || typeof inst === 'string') {
@@ -35,6 +32,9 @@ export function getNode(inst) {
   }
   if (internalInstance(inst)) {
     return internalInstance(inst)._currentElement;
+  }
+  if (inst._reactInternalInstance) {
+    return inst._reactInternalInstance._currentElement;
   }
   if (inst._reactInternalComponent) {
     return inst._reactInternalComponent._currentElement;
@@ -75,6 +75,10 @@ export function instHasProperty(inst, propKey, stringifiedPropValue) {
   if (!isDOMComponent(inst)) return false;
   const node = getNode(inst);
   const nodeProps = propsOfNode(node);
+  const descriptor = Object.getOwnPropertyDescriptor(nodeProps, propKey);
+  if (descriptor && descriptor.get) {
+    return false;
+  }
   const nodePropValue = nodeProps[propKey];
 
   const propValue = coercePropValue(propKey, stringifiedPropValue);
@@ -107,6 +111,7 @@ export function childrenOfInstInternal(inst) {
     const internal = internalInstance(inst);
     return childrenOfInstInternal(internal);
   }
+
   const publicInst = inst.getPublicInstance();
   const currentElement = inst._currentElement;
   if (isDOMComponent(publicInst)) {
@@ -124,7 +129,7 @@ export function childrenOfInstInternal(inst) {
     }
     return children;
   } else if (
-    REACT014 &&
+    !REACT013 &&
     isElement(currentElement) &&
     typeof currentElement.type === 'function'
   ) {
@@ -259,7 +264,7 @@ function findAllInRenderedTreeInternal(inst, test) {
       );
     }
   } else if (
-    REACT014 &&
+    !REACT013 &&
     isElement(currentElement) &&
     typeof currentElement.type === 'function'
   ) {

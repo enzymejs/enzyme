@@ -13,14 +13,15 @@
     "check": "npm run lint && npm run test:all",
     "build": "babel src --out-dir build",
     "test": "npm run lint && npm run test:only",
-    "test:only": "mocha --require withDom.js --compilers js:babel-core/register --recursive test/*.js",
-    "test:single": "mocha --require withDom.js --compilers js:babel-core/register --watch",
-    "test:watch": "mocha --require withDom.js --compilers js:babel-core/register --recursive test/*.js --watch",
+    "test:only": "mocha --require withDom.js --compilers js:babel-core/register --recursive test/*.js --reporter dot",
+    "test:single": "mocha --require withDom.js --compilers js:babel-core/register --watch --reporter dot",
+    "test:watch": "mocha --require withDom.js --compilers js:babel-core/register --recursive test/*.js --watch --reporter dot",
     "test:env": "sh ./example-test.sh",
-    "test:all": "npm run react:13 && npm test && npm run react:14 && npm test",
+    "test:all": "npm run react:13 && npm test && npm run react:14 && npm test && npm run react:15 && npm test",
     "react:clean": "rimraf node_modules/react node_modules/react-dom node_modules/react-addons-test-utils",
     "react:13": "npm run react:clean && npm i react@0.13",
     "react:14": "npm run react:clean && npm i react@0.14 react-dom@0.14 react-addons-test-utils@0.14",
+    "react:15": "npm run react:clean && npm i react@15.0.0-rc.1 react-dom@15.0.0-rc.1 react-addons-test-utils@15.0.0-rc.1",
     "docs:clean": "rimraf _book",
     "docs:prepare": "gitbook install",
     "docs:build": "npm run docs:prepare && gitbook build",
@@ -79,6 +80,6 @@
     "sinon": "^1.15.4"
   },
   "peerDependencies": {
-    "react": "0.13.x || 0.14.x"
+    "react": "0.13.x || 0.14.x || 15.* || 15.0.0-rc.1"
   }
 }
