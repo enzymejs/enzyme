@@ -7,8 +7,17 @@ import {
 } from './react-compat';
 import {
   REACT013,
-  REACT014,
+  REACT15,
 } from './version';
+
+function internalInstanceKey(node) {
+  return Object.keys(Object(node)).filter(key => key.match(/^__reactInternalInstance\$/))[0];
+}
+
+export function internalInstance(inst) {
+  return inst._reactInternalInstance ||
+    inst[internalInstanceKey(inst)];
+}
 
 export function propsOfNode(node) {
   if (REACT013 && node && node._store) {
@@ -17,6 +26,12 @@ export function propsOfNode(node) {
   if (node && node._reactInternalComponent && node._reactInternalComponent._currentElement) {
     return (node._reactInternalComponent._currentElement.props) || {};
   }
+  if (REACT15 && node) {
+    if (internalInstance(node) && internalInstance(node)._currentElement) {
+      return (internalInstance(node)._currentElement.props) || {};
+    }
+  }
+
   return (node && node.props) || {};
 }
 
@@ -232,7 +247,7 @@ export function mapNativeEventNames(event) {
     volumechange: 'volumeChange',
   };
 
-  if (REACT014) {
+  if (!REACT013) {
     // these could not be simulated in React 0.13:
     // https://github.com/facebook/react/issues/1297
     nativeToReactEventMap.mouseenter = 'mouseEnter';
