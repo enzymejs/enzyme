@@ -19,7 +19,7 @@ class Book extends React.Component {
       <div>
         <h1 className="title"">{title}</h1>
         {cover && <BookCover cover={cover} />}
-      </div
+      </div>
     );
   }
 }
