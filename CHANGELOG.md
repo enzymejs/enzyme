@@ -1,5 +1,33 @@
 # Change Log
 
+## 2.1.0 (February 10, 2016)
+
+### Minor Changes
+
+- add support for React 15.0.0-rc.1 #240
+
+- add `.unmount()` method for ShallowWrapper #215
+
+- add direct imports for `mount`, `shallow`, and `render` #198
+
+- add a `.childAt(n)` shorthand method #187
+
+
+### Patches
+
+- fix bug in .contains() for matching sub-arrays #226
+
+- fix bug in matching by type displayName #230
+
+- add more useful warnings for missing implicit dependencies #228
+
+- improve SFC support for `.type()` #196
+
+- fix null handling for `.html()` and `.render()` #196
+
+- moved from `underscore` to `lodash` #189
+
+
 ## 2.0.0 (February 10, 2016)
 
 ### Major Changes (breaking)
