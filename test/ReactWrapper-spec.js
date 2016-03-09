@@ -1,4 +1,4 @@
-import { describeWithDOM, describeIf } from './_helpers';
+import { describeWithDOM, describeIf, itIf } from './_helpers';
 import React from 'react';
 import { expect } from 'chai';
 import {
@@ -7,7 +7,7 @@ import {
   ReactWrapper,
 } from '../src/';
 import sinon from 'sinon';
-import { REACT013 } from '../src/version';
+import { REACT013, REACT15 } from '../src/version';
 
 describeWithDOM('mount', () => {
 
@@ -1667,6 +1667,8 @@ describeWithDOM('mount', () => {
         `<div class="in-foo"></div>`
       );
     });
+
+
   });
 
   describe('.render()', () => {
