@@ -16,6 +16,7 @@ after_script:
 env:
   - REACT=0.13
   - REACT=0.14
+  - REACT=15
   - EXAMPLE=mocha
   - EXAMPLE=karma
   - EXAMPLE=react-native
