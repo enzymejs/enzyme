@@ -482,6 +482,30 @@ describeWithDOM('mount', () => {
         ));
         expect(foundNotSpan).to.have.length(0);
       });
+
+      it('should return props object when props() is called', () => {
+        const SFC = function SFC({ data }) {
+          return (
+            <div data-foo={data}>Test SFC</div>
+          );
+        };
+
+        const content = 'blah';
+        const wrapper = mount(<SFC data={content} />);
+        expect(wrapper.props()).to.deep.equal({ data: content });
+      });
+
+      it('should return shallow rendered string when debug() is called', () => {
+        const SFC = function SFC({ data }) {
+          return (
+            <div data-foo={data}>Test SFC</div>
+          );
+        };
+
+        const content = 'blah';
+        const wrapper = mount(<SFC data={content} />);
+        expect(wrapper.debug()).to.equal('<SFC data="' + content + '">\n  <div data-foo="' + content + '">\n    Test SFC\n  </div>\n</SFC>');
+      });
     });
 
     it('should not pass in null or false nodes', () => {

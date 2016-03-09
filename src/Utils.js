@@ -17,6 +17,9 @@ export function propsOfNode(node) {
   if (node && node._reactInternalComponent && node._reactInternalComponent._currentElement) {
     return (node._reactInternalComponent._currentElement.props) || {};
   }
+  if (node && node._currentElement) {
+    return (node._currentElement.props) || {};
+  }
   return (node && node.props) || {};
 }
 
