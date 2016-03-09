@@ -43,11 +43,11 @@ To get started with enzyme, you can simply install it with npm:
 npm i --save-dev enzyme
 ```
 
-Enzyme is currently compatible with both `React 0.14.x` and `React 0.13.x`. In order to achieve
-this compatibility, some dependencies cannot be explicitly listed in our `package.json`.
+Enzyme is currently compatible with `React 15.x`, `React 0.14.x` and `React 0.13.x`. In order to
+achieve this compatibility, some dependencies cannot be explicitly listed in our `package.json`.
 
-If you are using `React 0.14`, in addition to `enzyme`, you will have to ensure that you also
-have the following npm modules installed if they were not already:
+If you are using React 0.14` or `React 15.x`, in addition to `enzyme`, you will have to ensure that
+you also have the following npm modules installed if they were not already:
 
 ```bash
 npm i --save-dev react-addons-test-utils
