@@ -1,7 +1,7 @@
 # Using Jest with Enzyme
 
-If you are using Jest with enzyme and using Jest's "automocking" feature, you will need to mark
-several modules to be unmocked in your `package.json`:
+If you are using Jest 0.9+ with enzyme and using Jest's "automocking" feature, you will need to mark
+react and enzyme to be unmocked in your `package.json`:
 
 ```js
 /* package.json */
@@ -10,23 +10,12 @@ several modules to be unmocked in your `package.json`:
   "scriptPreprocessor": "<rootDir>/node_modules/babel-jest",
   "unmockedModulePathPatterns": [
     "react",
-    "react-dom",
-    "react-addons-test-utils",
-    "fbjs",
-    "enzyme",
-    "cheerio",
-    "htmlparser2",
-    "lodash",
-    "domhandler",
-    "object.assign",
-    "define-properties",
-    "function-bind",
-    "object-keys",
-    "object.values",
-    "es-abstract"
+    "enzyme"
   ]
 }
 ```
+
+If you are using a previous version of Jest together with npm3, you may need to unmock [more modules](https://github.com/airbnb/enzyme/blob/78febd90fe2fb184771b8b0356b0fcffbdad386e/docs/guides/jest.md).
 
 ## Example Projects
 
