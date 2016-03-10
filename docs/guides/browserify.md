@@ -33,9 +33,9 @@ b.external('react/lib/ExecutionEnvironment');
 ```
 
 
-## React 0.13 Compatibility
+## React 0.14 Compatibility
 
-If you are using React 0.13, the instructions above will be the same but with a different list of 
+If you are using React 0.14, the instructions above will be the same but with a different list of 
 externals:
 
 ```
