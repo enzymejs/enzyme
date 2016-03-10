@@ -1,6 +1,6 @@
 # Change Log
 
-## 2.1.0 (February 10, 2016)
+## 2.1.0 (March 10, 2016)
 
 ### Minor Changes
 
