@@ -4,57 +4,57 @@
 
 ### Minor Changes
 
-- add support for React 15.0.0-rc.1 #240
+- add support for React 15.0.0-rc.1 ([#240](https://github.com/airbnb/enzyme/pull/240))
 
-- add `.unmount()` method for ShallowWrapper #215
+- add `.unmount()` method for ShallowWrapper ([#215](https://github.com/airbnb/enzyme/pull/215))
 
-- add direct imports for `mount`, `shallow`, and `render` #198
+- add direct imports for `mount`, `shallow`, and `render` ([#198](https://github.com/airbnb/enzyme/pull/198))
 
-- add a `.childAt(n)` shorthand method #187
+- add a `.childAt(n)` shorthand method ([#187](https://github.com/airbnb/enzyme/pull/187))
 
 
 ### Patches
 
-- fix bug in .contains() for matching sub-arrays #226
+- fix bug in .contains() for matching sub-arrays ([#226](https://github.com/airbnb/enzyme/pull/226))
 
-- fix bug in matching by type displayName #230
+- fix bug in matching by type displayName ([#230](https://github.com/airbnb/enzyme/pull/230))
 
-- add more useful warnings for missing implicit dependencies #228
+- add more useful warnings for missing implicit dependencies ([#228](https://github.com/airbnb/enzyme/pull/228))
 
-- improve SFC support for `.type()` #196
+- improve SFC support for `.type()` ([#196](https://github.com/airbnb/enzyme/pull/196))
 
-- fix null handling for `.html()` and `.render()` #196
+- fix null handling for `.html()` and `.render()` ([#196](https://github.com/airbnb/enzyme/pull/196))
 
-- moved from `underscore` to `lodash` #189
+- moved from `underscore` to `lodash` ([#189](https://github.com/airbnb/enzyme/pull/189))
 
 
 ## 2.0.0 (February 10, 2016)
 
 ### Major Changes (breaking)
 
-- removed `describeWithDOM` utility #159
+- removed `describeWithDOM` utility ([#159](https://github.com/airbnb/enzyme/pull/159))
 
-- removed `useSinon`, `spyPrototype` and `spyLifecycle` utilities #159
+- removed `useSinon`, `spyPrototype` and `spyLifecycle` utilities ([#159](https://github.com/airbnb/enzyme/pull/159))
 
-- removed `sinon` dependency #159
+- removed `sinon` dependency ([#159](https://github.com/airbnb/enzyme/pull/159))
 
-- removed `jsdom` dependency #159
+- removed `jsdom` dependency ([#159](https://github.com/airbnb/enzyme/pull/159))
 
 
 ## 1.6.0 (February 10, 2016)
 
 ### Minor Changes
 
-- add option for childContextTypes of `ReactWrapper` #171
+- add option for childContextTypes of `ReactWrapper` ([#171](https://github.com/airbnb/enzyme/pull/171))
 
 
 ### Patches
 
-- Prevent null or false nodes from being passed into tree traversal #174
+- Prevent null or false nodes from being passed into tree traversal ([#174](https://github.com/airbnb/enzyme/pull/174))
 
-- setProps no longer swallows exceptions #170
+- setProps no longer swallows exceptions ([#170](https://github.com/airbnb/enzyme/pull/170))
 
-- `.type()` and `.props()` should not fail on null now #162
+- `.type()` and `.props()` should not fail on null now ([#162](https://github.com/airbnb/enzyme/pull/162))
 
 
 
@@ -62,23 +62,23 @@
 
 ### Minor Changes
 
-- Add `attachTo` option to `mount` to mount to a specific element #160
+- Add `attachTo` option to `mount` to mount to a specific element ([#160](https://github.com/airbnb/enzyme/pull/160))
 
-- Add `.debug()` method to `ReactWrapper` #158
+- Add `.debug()` method to `ReactWrapper` ([#158](https://github.com/airbnb/enzyme/pull/158))
 
-- Add `.mount()` and `.unmount()` APIs to `ReactWrapper` #155
+- Add `.mount()` and `.unmount()` APIs to `ReactWrapper` ([#155](https://github.com/airbnb/enzyme/pull/155))
 
-- Add `.render()` method to `ReactWrapper` #156
+- Add `.render()` method to `ReactWrapper` ([#156](https://github.com/airbnb/enzyme/pull/156))
 
-- Allow `.contains()` to accept an array of nodes #154
+- Allow `.contains()` to accept an array of nodes ([#154](https://github.com/airbnb/enzyme/pull/154))
 
-- Add `.context()` method to `ReactWrapper` and `ShallowWrapper` #152
+- Add `.context()` method to `ReactWrapper` and `ShallowWrapper` ([#152](https://github.com/airbnb/enzyme/pull/152))
 
 ### Patches
 
-- Fixed some behavior with `.contains()` matching on strings #148
+- Fixed some behavior with `.contains()` matching on strings ([#148](https://github.com/airbnb/enzyme/pull/148))
 
-- Fixed `.debug()`'s output for numeric children #149
+- Fixed `.debug()`'s output for numeric children ([#149](https://github.com/airbnb/enzyme/pull/149))
 
 - Documentation fixes
 
