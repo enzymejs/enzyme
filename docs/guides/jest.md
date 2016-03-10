@@ -1,6 +1,6 @@
 # Using Jest with Enzyme
 
-If you are using Jest with enzyme and using Jest's "automocking" feature, you will need to mark
+If you are using Jest 0.9+ with enzyme and using Jest's "automocking" feature, you will need to mark
 react and enzyme to be unmocked in your `package.json`:
 
 ```js
@@ -14,6 +14,8 @@ react and enzyme to be unmocked in your `package.json`:
   ]
 }
 ```
+
+If you are using a previous version of Jest together with npm3, you may need to unmock [more modules](https://github.com/airbnb/enzyme/blob/78febd90fe2fb184771b8b0356b0fcffbdad386e/docs/guides/jest.md).
 
 ## Example Projects
 
