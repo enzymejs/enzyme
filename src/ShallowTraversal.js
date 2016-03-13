@@ -19,7 +19,11 @@ export function childrenOfNode(node) {
   if (!node) return [];
   const maybeArray = propsOfNode(node).children;
   const result = [];
-  React.Children.forEach(maybeArray, child => result.push(child));
+  React.Children.forEach(maybeArray, child => {
+    if (child !== null && child !== false && typeof child !== 'undefined') {
+      result.push(child);
+    }
+  });
   return result;
 }
 
@@ -29,7 +33,7 @@ export function hasClassName(node, className) {
 }
 
 export function treeForEach(tree, fn) {
-  if (tree !== null && tree !== false) {
+  if (tree !== null && tree !== false && typeof tree !== 'undefined') {
     fn(tree);
   }
   childrenOfNode(tree).forEach(node => treeForEach(node, fn));
