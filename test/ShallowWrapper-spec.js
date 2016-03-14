@@ -1019,6 +1019,31 @@ describe('shallow', () => {
       expect(wrapper.children().length).to.equal(0);
     });
 
+    it('should skip the falsy children', () => {
+      const wrapper = shallow(
+        <div>
+          <div>
+            {false}
+            {[false, false]}
+            <p>foo</p>
+          </div>
+          <div>
+            {undefined}
+            {[undefined, undefined]}
+            <p>bar</p>
+          </div>
+          <div>
+            {null}
+            {[null, null]}
+            <p>baz</p>
+          </div>
+        </div>
+      );
+      expect(wrapper.childAt(0).children().length).to.equal(1);
+      expect(wrapper.childAt(1).children().length).to.equal(1);
+      expect(wrapper.childAt(2).children().length).to.equal(1);
+    });
+
     it('should return the children nodes of the root', () => {
       const wrapper = shallow(
         <div>
