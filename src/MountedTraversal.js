@@ -125,6 +125,10 @@ export function childrenOfInstInternal(inst) {
       if (REACT013 && !renderedChildren[key].getPublicInstance) {
         continue;
       }
+      if (!REACT013 && typeof renderedChildren[key]._currentElement.type === 'function') {
+        children.push(renderedChildren[key]._instance);
+        continue;
+      }
       children.push(renderedChildren[key].getPublicInstance());
     }
     return children;

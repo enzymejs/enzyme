@@ -90,6 +90,23 @@ describeWithDOM('mount', () => {
       expect(wrapper.find('.bar')).to.have.length(1);
       expect(wrapper.find('.qoo').text()).to.equal('qux');
     });
+
+    it('works with nested stateless', () => {
+      const TestItem = (props) => (
+        <div className="item">1</div>
+      );
+      const Test = (props) => (
+        <div className="box">
+          <TestItem test="123"/>
+          <TestItem/>
+          <TestItem/>
+        </div>
+      );
+      const wrapper = mount(<Test />);
+      const children = wrapper.find('.box').children();
+      expect(children).to.have.length(3);
+      expect(children.at(0).props().test).to.equal('123');
+    })
   });
 
   describe('.contains(node)', () => {
