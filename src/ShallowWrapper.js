@@ -11,6 +11,7 @@ import {
   withSetStateAllowed,
   propsOfNode,
   typeOfNode,
+  isReactElementAlike,
 } from './Utils';
 import {
   debugNodes,
@@ -209,6 +210,13 @@ export default class ShallowWrapper {
    * @returns {Boolean}
    */
   contains(nodeOrNodes) {
+    if (!isReactElementAlike(nodeOrNodes)) {
+      throw new Error(
+        'ShallowWrapper::contains() can only be called with ReactElement (or array of them), ' +
+        'string or number as argument.'
+      );
+    }
+
     const predicate = Array.isArray(nodeOrNodes)
       ? other => containsChildrenSubArray(nodeEqual, other, nodeOrNodes)
       : other => nodeEqual(nodeOrNodes, other);
