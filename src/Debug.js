@@ -88,7 +88,7 @@ export function debugInst(inst, indentLength = 2) {
   const publicInst = inst.getPublicInstance();
 
   if (typeof publicInst === 'string' || typeof publicInst === 'number') return escape(publicInst);
-  if (!publicInst) return '';
+  if (!publicInst && !inst._renderedComponent) return '';
 
   // do stuff with publicInst
   const currentElement = inst._currentElement;

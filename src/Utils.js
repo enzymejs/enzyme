@@ -26,6 +26,9 @@ export function propsOfNode(node) {
   if (node && node._reactInternalComponent && node._reactInternalComponent._currentElement) {
     return (node._reactInternalComponent._currentElement.props) || {};
   }
+  if (node && node._currentElement) {
+    return (node._currentElement.props) || {};
+  }
   if (REACT15 && node) {
     if (internalInstance(node) && internalInstance(node)._currentElement) {
       return (internalInstance(node)._currentElement.props) || {};
