@@ -123,6 +123,9 @@ export default class ReactWrapper {
    * @returns {ReactComponent}
    */
   instance() {
+    if (this.root !== this) {
+      throw new Error('ReactWrapper::instance() can only be called on the root');
+    }
     return this.component.getInstance();
   }
 

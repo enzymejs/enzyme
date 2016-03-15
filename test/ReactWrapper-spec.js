@@ -75,6 +75,28 @@ describeWithDOM('mount', () => {
       expect(wrapper.context().name).to.equal(context.name);
       expect(wrapper.context('name')).to.equal(context.name);
     });
+
+    describeIf(!REACT013, 'stateless components', () => {
+      it('works with stateless components', () => {
+        const Foo = ({ foo }, {_}) => (
+          <div>
+            <div className="bar">bar</div>
+            <div className="qoo">{foo}</div>
+          </div>
+        );
+
+        Foo.contextTypes = {
+          _: React.PropTypes.string,
+        };
+
+        const wrapper = mount(<Foo foo="qux" />, {
+          context: {
+            _: 'foo',
+          },
+        });
+        expect(wrapper.context('_')).to.equal('foo');
+      });
+    });
   });
 
   describeIf(!REACT013, 'stateless components', () => {
