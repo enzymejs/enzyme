@@ -20,7 +20,7 @@ provided predicate function, return true.
 
 ```jsx
 const wrapper = mount(<MyComponent />);
-const complexFoo = wrapper.find('.foo').filterWhere(n => typeof n.type() !== 'string');
+const complexComponents = wrapper.find('.foo').filterWhere(n => typeof n.type() !== 'string');
 expect(complexComponents).to.have.length(4);
 ```
 
