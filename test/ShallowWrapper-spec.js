@@ -2,7 +2,7 @@ import React from 'react';
 import { expect } from 'chai';
 import { shallow, render, ShallowWrapper } from '../src/';
 import sinon from 'sinon';
-import { describeIf } from './_helpers';
+import { describeIf, itIf } from './_helpers';
 import { REACT013 } from '../src/version';
 
 describe('shallow', () => {
@@ -49,9 +49,42 @@ describe('shallow', () => {
       expect(wrapper.context().name).to.equal(context.name);
       expect(wrapper.context('name')).to.equal(context.name);
     });
+
+    describeIf(!REACT013, 'stateless function components', () => {
+      it('can pass in context', () => {
+        const SimpleComponent = (props, context) => (
+          <div>{context.name}</div>
+        );
+        SimpleComponent.contextTypes = { name: React.PropTypes.string };
+
+        const wrapper = shallow(<SimpleComponent />, { context });
+        expect(wrapper.text()).to.equal('foo');
+      });
+
+      it('should not throw if context is passed in but contextTypes is missing', () => {
+        const SimpleComponent = (props, context) => (
+          <div>{context.name}</div>
+        );
+
+        const wrapper = shallow(<SimpleComponent />, { context });
+        expect(() => shallow(<SimpleComponent />, { context })).to.not.throw(Error);
+      });
+
+      it('is instrospectable through context API', () => {
+        const SimpleComponent = (props, context) => (
+          <div>{context.name}</div>
+        );
+        SimpleComponent.contextTypes = { name: React.PropTypes.string };
+
+        const wrapper = shallow(<SimpleComponent />, { context });
+
+        expect(wrapper.context().name).to.equal(context.name);
+        expect(wrapper.context('name')).to.equal(context.name);
+      });
+    });
   });
 
-  describeIf(!REACT013, 'stateless components', () => {
+  describeIf(!REACT013, 'stateless function components', () => {
     it('works with stateless components', () => {
       const Foo = ({ foo }) => (
         <div>
@@ -158,6 +191,21 @@ describe('shallow', () => {
       expect(wrapper.contains(passes2)).to.equal(true);
     });
 
+    describeIf(!REACT013, 'stateless function components', () => {
+      it('should match composite components', () => {
+        const Foo = () => (
+          <div />
+        );
+
+        const wrapper = shallow(
+          <div>
+            <Foo />
+          </div>
+        );
+        const b = <Foo />;
+        expect(wrapper.contains(b)).to.equal(true);
+      });
+    });
   });
 
   describe('.equals(node)', () => {
@@ -204,6 +252,35 @@ describe('shallow', () => {
 
       expect(shallow(<Foo />).equals(<Bar />)).to.equal(true);
       expect(shallow(<Foo />).equals(<Foo />)).to.equal(false);
+    });
+
+    describeIf(!REACT013, 'stateless components', () => {
+      it('should match composite stateless components', () => {
+        const Foo = () => (
+          <div />
+        );
+
+        const wrapper = shallow(
+          <div>
+            <Foo />
+          </div>
+        );
+        const b = <div><Foo /></div>;
+        expect(wrapper.equals(b)).to.equal(true);
+      });
+
+      it('should not expand `node` content', () => {
+        const Bar = () => (
+          <div />
+        );
+
+        const Foo = () => (
+          <Bar />
+        );
+
+        expect(shallow(<Foo />).equals(<Bar />)).to.equal(true);
+        expect(shallow(<Foo />).equals(<Foo />)).to.equal(false);
+      });
     });
 
   });
@@ -257,7 +334,6 @@ describe('shallow', () => {
       );
       expect(wrapper.find('Foo').type()).to.equal(Foo);
     });
-
 
     it('should find multiple elements based on a class name', () => {
       const wrapper = shallow(
@@ -442,6 +518,32 @@ describe('shallow', () => {
       expect(() => wrapper.find([])).to.throw(Error);
       expect(() => wrapper.find(null)).to.throw(Error);
     });
+
+    describeIf(!REACT013, 'stateless function components', () => {
+      it('should find a component based on a constructor', () => {
+        const Foo = () => (
+          <div />
+        );
+        const wrapper = shallow(
+          <div>
+            <Foo className="foo" />
+          </div>
+        );
+        expect(wrapper.find(Foo).type()).to.equal(Foo);
+      });
+
+      it('should find a component based on a display name', () => {
+        const Foo = () => (
+          <div />
+        );
+        const wrapper = shallow(
+          <div>
+            <Foo className="foo" />
+          </div>
+        );
+        expect(wrapper.find('Foo').type()).to.equal(Foo);
+      });
+    });
   });
 
   describe('.findWhere(predicate)', () => {
@@ -489,7 +591,7 @@ describe('shallow', () => {
       expect(spy.args[3][0].hasClass('bux')).to.equal(true);
     });
 
-    describeIf(!REACT013, 'stateless functional components', () => {
+    describeIf(!REACT013, 'stateless function components', () => {
       it('finds nodes', () => {
         const SFC = function SFC({ selector }) {
           return (
@@ -634,6 +736,50 @@ describe('shallow', () => {
       wrapper.setProps({ x: 5 }); // Just force a re-render
       expect(wrapper.first('div').text()).to.equal('yolo');
     });
+
+    describeIf(!REACT013, 'stateless function components', () => {
+      it('should set props for a component multiple times', () => {
+        const Foo = (props) => (
+          <div className={props.id}>
+            {props.id}
+          </div>
+        );
+
+        const wrapper = shallow(<Foo id="foo" />);
+        expect(wrapper.find('.foo').length).to.equal(1);
+        wrapper.setProps({ id: 'bar', foo: 'bla' });
+        expect(wrapper.find('.bar').length).to.equal(1);
+      });
+
+      it('should merge newProps with oldProps', () => {
+        const Foo = (props) => (
+          <div {...props} />
+        );
+
+        const wrapper = shallow(<Foo a="a" b="b" />);
+        expect(wrapper.props().a).to.equal('a');
+        expect(wrapper.props().b).to.equal('b');
+
+        wrapper.setProps({ b: 'c', d: 'e' });
+        expect(wrapper.props().a).to.equal('a');
+        expect(wrapper.props().b).to.equal('c');
+        expect(wrapper.props().d).to.equal('e');
+      });
+
+      it('should pass in old context', () => {
+        const Foo = (props, context) => (
+          <div>{context.x}</div>
+        );
+        Foo.contextTypes = { x: React.PropTypes.string };
+
+        const context = { x: 'yolo' };
+        const wrapper = shallow(<Foo x={5} />, { context });
+        expect(wrapper.first('div').text()).to.equal('yolo');
+
+        wrapper.setProps({ x: 5 }); // Just force a re-render
+        expect(wrapper.first('div').text()).to.equal('yolo');
+      });
+    });
   });
 
   describe('.setContext(newContext)', () => {
@@ -659,6 +805,28 @@ describe('shallow', () => {
     it('should throw if it is called when shallow didnt include context', () => {
       const wrapper = shallow(<SimpleComponent />);
       expect(() => wrapper.setContext({ name: 'bar' })).to.throw(Error);
+    });
+
+    describeIf(!REACT013, 'stateless function components', () => {
+      const SimpleComponent = (props, context) => (
+        <div>{context.name}</div>
+      );
+      SimpleComponent.contextTypes = { name: React.PropTypes.string };
+
+      it('should set context for a component multiple times', () => {
+        const context = { name: 'foo' };
+        const wrapper = shallow(<SimpleComponent />, { context });
+        expect(wrapper.text()).to.equal('foo');
+        wrapper.setContext({ name: 'bar' });
+        expect(wrapper.text()).to.equal('bar');
+        wrapper.setContext({ name: 'baz' });
+        expect(wrapper.text()).to.equal('baz');
+      });
+
+      it('should throw if it is called when shallow didnt include context', () => {
+        const wrapper = shallow(<SimpleComponent />);
+        expect(() => wrapper.setContext({ name: 'bar' })).to.throw(Error);
+      });
     });
   });
 
@@ -715,6 +883,37 @@ describe('shallow', () => {
       expect(spy.args[0][1]).to.equal(b);
     });
 
+    describeIf(!REACT013, 'stateless function components', () => {
+      it('should simulate events', () => {
+        const spy = sinon.spy();
+        const Foo = (props) => (
+          <a onClick={props.onClick}>foo</a>
+        );
+
+        const wrapper = shallow(<Foo onClick={spy} />);
+
+        expect(spy.calledOnce).to.equal(false);
+        wrapper.find('a').simulate('click');
+        expect(spy.calledOnce).to.equal(true);
+      });
+
+
+      it('should pass in event data', () => {
+        const spy = sinon.spy();
+        const Foo = (props) => (
+          <a onClick={spy}>foo</a>
+        );
+
+        const wrapper = shallow(<Foo />);
+        const a = {};
+        const b = {};
+
+        wrapper.simulate('click', a, b);
+        expect(spy.args[0][0]).to.equal(a);
+        expect(spy.args[0][1]).to.equal(b);
+      });
+    });
+
     describe('Normalizing JS event names', () => {
       it('should convert lowercase events to React camelcase', () => {
         const spy = sinon.spy();
@@ -742,6 +941,18 @@ describe('shallow', () => {
               );
             }
           }
+
+          const wrapper = shallow(<Foo />);
+
+          wrapper.simulate('mouseenter');
+          expect(spy.calledOnce).to.equal(true);
+        });
+
+        it('should convert lowercase events to React camelcase in stateless components', () => {
+          const spy = sinon.spy();
+          const Foo = () => (
+            <a onMouseEnter={spy}>foo</a>
+          );
 
           const wrapper = shallow(<Foo />);
 
@@ -940,6 +1151,40 @@ describe('shallow', () => {
       matchesRender(<div>&gt;</div>);
     });
 
+    describeIf(!REACT013, 'stateless function components', () => {
+      it('should handle nodes with mapped children', () => {
+        const Foo = (props) => (
+          <div>
+            {props.items.map(x => x)}
+          </div>
+        );
+        matchesRender(<Foo items={['abc', 'def', 'hij']} />);
+        matchesRender(
+          <Foo
+            items={[
+              <i key={1}>abc</i>,
+              <i key={2}>def</i>,
+              <i key={3}>hij</i>,
+            ]}
+          />
+        );
+      });
+
+      it('should render composite components dumbly', () => {
+        const Foo = () => (
+          <div />
+        );
+
+        const wrapper = shallow(
+          <div>
+            <Foo />
+            <div>test</div>
+          </div>
+        );
+        expect(wrapper.text()).to.equal('<Foo />test');
+      });
+    });
+
   });
 
   describe('.props()', () => {
@@ -1110,6 +1355,31 @@ describe('shallow', () => {
       expect(children.at(0).hasClass('bar')).to.equal(true);
       expect(children.at(1).hasClass('baz')).to.equal(true);
     });
+
+    describeIf(!REACT013, 'stateless function components', () => {
+      it('should handle mixed children with and without arrays', () => {
+        const Foo = (props) => (
+          <div>
+            <span className="foo"></span>
+            {props.items.map(x => x)}
+          </div>
+        );
+
+        const wrapper = shallow(
+          <Foo
+            items={[
+              <i key={1} className="bar">abc</i>,
+              <i key={2} className="baz">def</i>,
+            ]}
+          />
+        );
+        expect(wrapper.children().length).to.equal(3);
+        expect(wrapper.children().at(0).hasClass('foo')).to.equal(true);
+        expect(wrapper.children().at(1).hasClass('bar')).to.equal(true);
+        expect(wrapper.children().at(2).hasClass('baz')).to.equal(true);
+      });
+    });
+
   });
 
   describe('.childAt(index)', () => {
@@ -1556,6 +1826,26 @@ describe('shallow', () => {
       expect(wrapper.find(Bar).shallow().find('.in-bar')).to.have.length(1);
     });
 
+    describeIf(!REACT013, 'stateless function components', () => {
+      it('should return a shallow rendered instance of the current node', () => {
+        const Bar = () => (
+          <div>
+            <div className="in-bar" />
+          </div>
+        );
+        const Foo = () => (
+          <div>
+            <Bar />
+          </div>
+        );
+
+        const wrapper = shallow(<Foo />);
+        expect(wrapper.find('.in-bar')).to.have.length(0);
+        expect(wrapper.find(Bar)).to.have.length(1);
+        expect(wrapper.find(Bar).shallow().find('.in-bar')).to.have.length(1);
+      });
+    });
+
   });
 
   describe('.first()', () => {
@@ -1672,6 +1962,27 @@ describe('shallow', () => {
       );
     });
 
+    describeIf(!REACT013, 'stateless function components', () => {
+      it('should render out nested composite components', () => {
+        const Foo = () => (
+          <div className="in-foo" />
+        );
+        const Bar = () => (
+          <div className="in-bar">
+            <Foo />
+          </div>
+        );
+
+        const wrapper = shallow(<Bar />);
+        expect(wrapper.html()).to.equal(
+          `<div class="in-bar"><div class="in-foo"></div></div>`
+        );
+        expect(wrapper.find(Foo).html()).to.equal(
+          `<div class="in-foo"></div>`
+        );
+      });
+    });
+
   });
 
   describe('.unmount()', () => {
@@ -1722,9 +2033,28 @@ describe('shallow', () => {
       expect(renderedFoo.find('.in-bar')).to.have.length(0);
     });
 
+    describeIf(!REACT013, 'stateless function components', () => {
+      it('should return a cheerio wrapper around the current node', () => {
+        const Foo = () => (
+          <div className="in-foo" />
+        );
+        const Bar = () => (
+          <div className="in-bar">
+            <Foo />
+          </div>
+        );
+
+        const wrapper = shallow(<Bar />);
+        expect(wrapper.render().find('.in-bar')).to.have.length(1);
+        const renderedFoo = wrapper.find(Foo).render();
+        expect(renderedFoo.find('.in-foo')).to.have.length(1);
+        expect(renderedFoo.find('.in-bar')).to.have.length(0);
+      });
+    });
+
   });
 
-  it('works with components that return null', () => {
+  it('works with class components that return null', () => {
     class Foo extends React.Component {
       render() {
         return null;
