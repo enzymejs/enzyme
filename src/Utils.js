@@ -19,6 +19,10 @@ export function internalInstance(inst) {
     inst[internalInstanceKey(inst)];
 }
 
+export function isFunctionalComponent(inst) {
+  return inst && inst.constructor && inst.constructor.name === 'StatelessComponent';
+}
+
 export function propsOfNode(node) {
   if (REACT013 && node && node._store) {
     return (node._store.props) || {};
