@@ -1,3 +1,5 @@
+/* globals jsdom */
+
 /**
  * Simple wrapper around mocha describe which allows a boolean to be passed in first which
  * determines whether or not the test will be run

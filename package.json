@@ -9,7 +9,7 @@
     "postversion": "git push && git push --tags && npm run clean && npm run docs:publish",
     "version": "npm run build",
     "clean": "rimraf build",
-    "lint": "eslint src/**",
+    "lint": "eslint src/** test/**",
     "check": "npm run lint && npm run test:all",
     "build": "babel src --out-dir build",
     "test": "npm run lint && npm run test:only",

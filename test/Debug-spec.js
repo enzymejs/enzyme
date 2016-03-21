@@ -34,14 +34,14 @@ describe('debug', () => {
   describe('debugNode(node)', () => {
 
     it('should render a node with no props or children as single single xml tag', () => {
-      expect(debugNode(<div />)).to.equal(`<div />`);
+      expect(debugNode(<div />)).to.equal('<div />');
     });
 
     it('should render props inline inline', () => {
       expect(debugNode(
         <div id="foo" className="bar" />
       )).to.equal(
-        `<div id="foo" className="bar" />`
+        '<div id="foo" className="bar" />'
       );
     });
 
@@ -182,9 +182,7 @@ describe('debug', () => {
           {undefined}
           {''}
         </div>
-      )).to.equal(
-`<div id="foo" />`
-      );
+      )).to.equal('<div id="foo" />');
     });
 
   });

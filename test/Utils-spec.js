@@ -4,7 +4,6 @@ import { expect } from 'chai';
 import { mount } from '../src/';
 import {
   coercePropValue,
-  onPrototype,
   getNode,
   nodeEqual,
   isSimpleSelector,

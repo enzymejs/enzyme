@@ -2,14 +2,12 @@ import React from 'react';
 import { expect } from 'chai';
 import { shallow, render, ShallowWrapper } from '../src/';
 import sinon from 'sinon';
-import { describeIf, itIf } from './_helpers';
+import { describeIf } from './_helpers';
 import { REACT013 } from '../src/version';
 
 describe('shallow', () => {
 
   describe('context', () => {
-    const context = { name: 'foo' };
-
     it('can pass in context', () => {
       const SimpleComponent = React.createClass({
         contextTypes: {
@@ -20,6 +18,7 @@ describe('shallow', () => {
         },
       });
 
+      const context = { name: 'foo' };
       const wrapper = shallow(<SimpleComponent />, { context });
       expect(wrapper.text()).to.equal('foo');
     });
@@ -31,6 +30,7 @@ describe('shallow', () => {
         },
       });
 
+      const context = { name: 'foo' };
       expect(() => shallow(<SimpleComponent />, { context })).to.not.throw(Error);
     });
 
@@ -44,6 +44,7 @@ describe('shallow', () => {
         },
       });
 
+      const context = { name: 'foo' };
       const wrapper = shallow(<SimpleComponent />, { context });
 
       expect(wrapper.context().name).to.equal(context.name);
@@ -57,6 +58,7 @@ describe('shallow', () => {
         );
         SimpleComponent.contextTypes = { name: React.PropTypes.string };
 
+        const context = { name: 'foo' };
         const wrapper = shallow(<SimpleComponent />, { context });
         expect(wrapper.text()).to.equal('foo');
       });
@@ -66,8 +68,8 @@ describe('shallow', () => {
           <div>{context.name}</div>
         );
 
-        const wrapper = shallow(<SimpleComponent />, { context });
-        expect(() => shallow(<SimpleComponent />, { context })).to.not.throw(Error);
+        const context = { name: 'foo' };
+        expect(() => shallow(<SimpleComponent />, { context })).not.to.throw(Error);
       });
 
       it('is instrospectable through context API', () => {
@@ -382,7 +384,7 @@ describe('shallow', () => {
     it('should compound tag and prop selector', () => {
       const wrapper = shallow(
         <div>
-          <span preserveAspectRatio="xMaxYMax"/>
+          <span preserveAspectRatio="xMaxYMax" />
         </div>
       );
 
@@ -470,7 +472,7 @@ describe('shallow', () => {
       const wrapper = shallow(
         <div>
           <input data-test="ref" className="foo" type="text" />
-          <input data-test="ref" type="text"/>
+          <input data-test="ref" type="text" />
           <button data-test="ref" prop={undefined} />
           <span data-test="ref" prop={null} />
           <div data-test="ref" prop={123} />
@@ -808,14 +810,14 @@ describe('shallow', () => {
     });
 
     describeIf(!REACT013, 'stateless function components', () => {
-      const SimpleComponent = (props, context) => (
+      const SFC = (props, context) => (
         <div>{context.name}</div>
       );
-      SimpleComponent.contextTypes = { name: React.PropTypes.string };
+      SFC.contextTypes = { name: React.PropTypes.string };
 
       it('should set context for a component multiple times', () => {
         const context = { name: 'foo' };
-        const wrapper = shallow(<SimpleComponent />, { context });
+        const wrapper = shallow(<SFC />, { context });
         expect(wrapper.text()).to.equal('foo');
         wrapper.setContext({ name: 'bar' });
         expect(wrapper.text()).to.equal('bar');
@@ -824,7 +826,7 @@ describe('shallow', () => {
       });
 
       it('should throw if it is called when shallow didnt include context', () => {
-        const wrapper = shallow(<SimpleComponent />);
+        const wrapper = shallow(<SFC />);
         expect(() => wrapper.setContext({ name: 'bar' })).to.throw(Error);
       });
     });
@@ -900,7 +902,7 @@ describe('shallow', () => {
 
       it('should pass in event data', () => {
         const spy = sinon.spy();
-        const Foo = (props) => (
+        const Foo = () => (
           <a onClick={spy}>foo</a>
         );
 
@@ -973,7 +975,7 @@ describe('shallow', () => {
         }
         render() {
           return (
-            <div className={this.state.id}/>
+            <div className={this.state.id} />
           );
         }
       }
@@ -1136,7 +1138,7 @@ describe('shallow', () => {
 
     it('should render composite components dumbly', () => {
       class Foo extends React.Component {
-        render() { return <div/>; }
+        render() { return <div />; }
       }
       const wrapper = shallow(
         <div>
@@ -1934,7 +1936,7 @@ describe('shallow', () => {
         </div>
       );
       expect(wrapper.html()).to.equal(
-        `<div class="test"><span>Hello World!</span></div>`
+        '<div class="test"><span>Hello World!</span></div>'
       );
     });
 
@@ -1955,10 +1957,10 @@ describe('shallow', () => {
       }
       const wrapper = shallow(<Bar />);
       expect(wrapper.html()).to.equal(
-        `<div class="in-bar"><div class="in-foo"></div></div>`
+        '<div class="in-bar"><div class="in-foo"></div></div>'
       );
       expect(wrapper.find(Foo).html()).to.equal(
-        `<div class="in-foo"></div>`
+        '<div class="in-foo"></div>'
       );
     });
 
@@ -1975,10 +1977,10 @@ describe('shallow', () => {
 
         const wrapper = shallow(<Bar />);
         expect(wrapper.html()).to.equal(
-          `<div class="in-bar"><div class="in-foo"></div></div>`
+          '<div class="in-bar"><div class="in-foo"></div></div>'
         );
         expect(wrapper.find(Foo).html()).to.equal(
-          `<div class="in-foo"></div>`
+          '<div class="in-foo"></div>'
         );
       });
     });

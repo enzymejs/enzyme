@@ -78,7 +78,7 @@ describeWithDOM('mount', () => {
 
     describeIf(!REACT013, 'stateless components', () => {
       it('works with stateless components', () => {
-        const Foo = ({ foo }, {_}) => (
+        const Foo = ({ foo }) => (
           <div>
             <div className="bar">bar</div>
             <div className="qoo">{foo}</div>
@@ -114,21 +114,21 @@ describeWithDOM('mount', () => {
     });
 
     it('works with nested stateless', () => {
-      const TestItem = (props) => (
+      const TestItem = () => (
         <div className="item">1</div>
       );
-      const Test = (props) => (
+      const Test = () => (
         <div className="box">
-          <TestItem test="123"/>
-          <TestItem/>
-          <TestItem/>
+          <TestItem test="123" />
+          <TestItem />
+          <TestItem />
         </div>
       );
       const wrapper = mount(<Test />);
       const children = wrapper.find('.box').children();
       expect(children).to.have.length(3);
       expect(children.at(0).props().test).to.equal('123');
-    })
+    });
   });
 
   describe('.contains(node)', () => {
@@ -380,7 +380,7 @@ describeWithDOM('mount', () => {
       const wrapper = mount(
         <div>
           <input data-test="ref" className="foo" type="text" />
-          <input data-test="ref" type="text"/>
+          <input data-test="ref" type="text" />
           <button data-test="ref" prop={undefined} />
           <span data-test="ref" prop={null} />
           <div data-test="ref" prop={123} />
@@ -543,7 +543,13 @@ describeWithDOM('mount', () => {
 
         const content = 'blah';
         const wrapper = mount(<SFC data={content} />);
-        expect(wrapper.debug()).to.equal('<SFC data="' + content + '">\n  <div data-foo="' + content + '">\n    Test SFC\n  </div>\n</SFC>');
+        expect(wrapper.debug()).to.equal(
+`<SFC data="${content}">
+  <div data-foo="${content}">
+    Test SFC
+  </div>
+</SFC>`
+        );
       });
     });
 
@@ -848,7 +854,7 @@ describeWithDOM('mount', () => {
         }
         render() {
           return (
-            <div className={this.state.id}/>
+            <div className={this.state.id} />
           );
         }
       }
@@ -1703,7 +1709,7 @@ describeWithDOM('mount', () => {
         </div>
       );
       expect(wrapper.html()).to.equal(
-        `<div class="test"><span>Hello World!</span></div>`
+        '<div class="test"><span>Hello World!</span></div>'
       );
     });
 
@@ -1724,10 +1730,10 @@ describeWithDOM('mount', () => {
       }
       const wrapper = mount(<Bar />);
       expect(wrapper.html()).to.equal(
-        `<div class="in-bar"><div class="in-foo"></div></div>`
+        '<div class="in-bar"><div class="in-foo"></div></div>'
       );
       expect(wrapper.find(Foo).html()).to.equal(
-        `<div class="in-foo"></div>`
+        '<div class="in-foo"></div>'
       );
     });
   });

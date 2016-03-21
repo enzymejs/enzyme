@@ -37,13 +37,13 @@ describe('ShallowTraversal', () => {
   describe('hasClassName', () => {
 
     it('should work for standalone classNames', () => {
-      const node = (<div className="foo"/>);
+      const node = (<div className="foo" />);
       expect(hasClassName(node, 'foo')).to.equal(true);
       expect(hasClassName(node, 'bar')).to.equal(false);
     });
 
     it('should work for multiple classNames', () => {
-      const node = (<div className="foo bar baz"/>);
+      const node = (<div className="foo bar baz" />);
       expect(hasClassName(node, 'foo')).to.equal(true);
       expect(hasClassName(node, 'bar')).to.equal(true);
       expect(hasClassName(node, 'baz')).to.equal(true);
@@ -51,7 +51,7 @@ describe('ShallowTraversal', () => {
     });
 
     it('should also allow hyphens', () => {
-      const node = (<div className="foo-bar"/>);
+      const node = (<div className="foo-bar" />);
       expect(hasClassName(node, 'foo-bar')).to.equal(true);
     });
 
