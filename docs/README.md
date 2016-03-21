@@ -49,7 +49,7 @@
     * [setContext(context)](/docs/api/ShallowWrapper/setContext.md)
     * [setProps(nextProps)](/docs/api/ShallowWrapper/setProps.md)
     * [setState(nextState)](/docs/api/ShallowWrapper/setState.md)
-    * [shallow()](/docs/api/ShallowWrapper/shallow.md)
+    * [shallow([options])](/docs/api/ShallowWrapper/shallow.md)
     * [simulate(event[, data])](/docs/api/ShallowWrapper/simulate.md)
     * [some(selector)](/docs/api/ShallowWrapper/some.md)
     * [someWhere(predicate)](/docs/api/ShallowWrapper/someWhere.md)

@@ -1,9 +1,14 @@
-# `.shallow() => ShallowWrapper`
+# `.shallow([options]) => ShallowWrapper`
 
 Shallow renders the current node and returns a shallow wrapper around it.
 
 NOTE: can only be called on wrapper of a single node.
 
+
+#### Arguments
+
+1. `options` (`Object` [optional]):
+- `options.context`: (`Object` [optional]): Context to be passed into the component
 
 
 

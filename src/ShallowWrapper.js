@@ -464,10 +464,11 @@ export default class ShallowWrapper {
    *
    * NOTE: can only be called on wrapper of a single node.
    *
+   * @param options object
    * @returns {ShallowWrapper}
    */
-  shallow() {
-    return this.single((n) => new ShallowWrapper(n));
+  shallow(options) {
+    return this.single((n) => new ShallowWrapper(n, null, options));
   }
 
   /**
