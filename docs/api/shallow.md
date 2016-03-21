@@ -97,7 +97,7 @@ Get a wrapper with the direct parent of the current node.
 #### [`.closest(selector) => ShallowWrapper`](ShallowWrapper/closest.md)
 Get a wrapper with the first ancestor of the current node to match the provided selector.
 
-#### [`.shallow() => ShallowWrapper`](ShallowWrapper/shallow.md)
+#### [`.shallow([options]) => ShallowWrapper`](ShallowWrapper/shallow.md)
 Shallow renders the current node and returns a shallow wrapper around it.
 
 #### [`.render() => CheerioWrapper`](ShallowWrapper/render.md)

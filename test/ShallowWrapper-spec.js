@@ -1802,7 +1802,6 @@ describe('shallow', () => {
   });
 
   describe('.shallow()', () => {
-
     it('should return a shallow rendered instance of the current node', () => {
       class Bar extends React.Component {
         render() {
@@ -1828,6 +1827,80 @@ describe('shallow', () => {
       expect(wrapper.find(Bar).shallow().find('.in-bar')).to.have.length(1);
     });
 
+    describe('context', () => {
+      it('can pass in context', () => {
+        class Bar extends React.Component {
+          render() {
+            return <div>{this.context.name}</div>;
+          }
+        }
+        Bar.contextTypes = {
+          name: React.PropTypes.string,
+        };
+        class Foo extends React.Component {
+          render() {
+            return (
+              <div>
+                <Bar />
+              </div>
+            );
+          }
+        }
+
+        const context = { name: 'foo' };
+        const wrapper = shallow(<Foo />);
+        expect(wrapper.find(Bar)).to.have.length(1);
+        expect(wrapper.find(Bar).shallow({ context }).text()).to.equal('foo');
+      });
+
+      it('should not throw if context is passed in but contextTypes is missing', () => {
+        class Bar extends React.Component {
+          render() {
+            return <div>{this.context.name}</div>;
+          }
+        }
+        class Foo extends React.Component {
+          render() {
+            return (
+              <div>
+                <Bar />
+              </div>
+            );
+          }
+        }
+
+        const context = { name: 'foo' };
+        const wrapper = shallow(<Foo />);
+        expect(() => wrapper.find(Bar).shallow({ context })).to.not.throw(Error);
+      });
+
+      it('is instrospectable through context API', () => {
+        class Bar extends React.Component {
+          render() {
+            return <div>{this.context.name}</div>;
+          }
+        }
+        Bar.contextTypes = {
+          name: React.PropTypes.string,
+        };
+        class Foo extends React.Component {
+          render() {
+            return (
+              <div>
+                <Bar />
+              </div>
+            );
+          }
+        }
+
+        const context = { name: 'foo' };
+        const wrapper = shallow(<Foo />).find(Bar).shallow({ context });
+
+        expect(wrapper.context().name).to.equal(context.name);
+        expect(wrapper.context('name')).to.equal(context.name);
+      });
+    });
+
     describeIf(!REACT013, 'stateless function components', () => {
       it('should return a shallow rendered instance of the current node', () => {
         const Bar = () => (
@@ -1845,6 +1918,57 @@ describe('shallow', () => {
         expect(wrapper.find('.in-bar')).to.have.length(0);
         expect(wrapper.find(Bar)).to.have.length(1);
         expect(wrapper.find(Bar).shallow().find('.in-bar')).to.have.length(1);
+      });
+
+      describe('context', () => {
+        it('can pass in context', () => {
+          const Bar = (props, context) => (
+            <div>{context.name}</div>
+          );
+          Bar.contextTypes = { name: React.PropTypes.string };
+          const Foo = () => (
+            <div>
+              <Bar />
+            </div>
+          );
+
+          const context = { name: 'foo' };
+          const wrapper = shallow(<Foo />);
+          expect(wrapper.find(Bar).shallow({ context }).text()).to.equal('foo');
+        });
+
+        it('should not throw if context is passed in but contextTypes is missing', () => {
+          const Bar = (props, context) => (
+            <div>{context.name}</div>
+          );
+          const Foo = () => (
+            <div>
+              <Bar />
+            </div>
+          );
+
+          const context = { name: 'foo' };
+          const wrapper = shallow(<Foo />);
+          expect(() => wrapper.find(Bar).shallow({ context })).to.not.throw(Error);
+        });
+
+        it('is instrospectable through context API', () => {
+          const Bar = (props, context) => (
+            <div>{context.name}</div>
+          );
+          Bar.contextTypes = { name: React.PropTypes.string };
+          const Foo = () => (
+            <div>
+              <Bar />
+            </div>
+          );
+
+          const context = { name: 'foo' };
+          const wrapper = shallow(<Foo />).find(Bar).shallow({ context });
+
+          expect(wrapper.context().name).to.equal(context.name);
+          expect(wrapper.context('name')).to.equal(context.name);
+        });
       });
     });
 
