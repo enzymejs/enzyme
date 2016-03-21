@@ -5,6 +5,7 @@ import {
   coercePropValue,
   nodeEqual,
   propsOfNode,
+  isFunctionalComponent,
   isSimpleSelector,
   splitSelector,
   selectorError,
@@ -60,12 +61,17 @@ export function instHasId(inst, id) {
   return instId === id;
 }
 
+function isFunctionalComponentWithType(inst, func) {
+  return isFunctionalComponent(inst) && getNode(inst).type === func;
+}
+
 export function instHasType(inst, type) {
   switch (typeof type) {
     case 'string':
       return nodeHasType(getNode(inst), type);
     case 'function':
-      return isCompositeComponentWithType(inst, type);
+      return isCompositeComponentWithType(inst, type) ||
+        isFunctionalComponentWithType(inst, type);
     default:
       return false;
   }
@@ -249,8 +255,7 @@ function findAllInRenderedTreeInternal(inst, test) {
     const internal = internalInstance(inst);
     return findAllInRenderedTreeInternal(internal, test);
   }
-
-  const publicInst = inst.getPublicInstance();
+  const publicInst = inst.getPublicInstance() || inst._instance;
   let ret = test(publicInst) ? [publicInst] : [];
   const currentElement = inst._currentElement;
   if (isDOMComponent(publicInst)) {

@@ -128,6 +128,8 @@ describeWithDOM('mount', () => {
       const children = wrapper.find('.box').children();
       expect(children).to.have.length(3);
       expect(children.at(0).props().test).to.equal('123');
+      expect(wrapper.find(TestItem)).to.have.length(3);
+      expect(wrapper.find(TestItem).first().props().test).to.equal('123');
     });
   });
 
