@@ -1,5 +1,29 @@
 # Change Log
 
+## 2.2.0 (March 21, 2016)
+
+### Minor Changes
+
+- add `options` param to `ShallowWrapper::shallow` ([#275](https://github.com/airbnb/enzyme/pull/275))
+
+
+### Patches
+
+- make enzyme compatible with all React 15 RCs ([#272](https://github.com/airbnb/enzyme/pull/272))
+
+- increase coverage for Stateless Functional Components ([#267](https://github.com/airbnb/enzyme/pull/267))
+
+- improve context support for Stateless Functional Components ([#256](https://github.com/airbnb/enzyme/pull/256))
+
+- fix tree traversal for Stateless Functional Components ([#257](https://github.com/airbnb/enzyme/pull/257))
+
+- fix `.find` for nested Stateless Functional Components ([#274](https://github.com/airbnb/enzyme/pull/274))
+
+- fix `.props()` and `.debug()` methods for Stateless Functional Components ([#255](https://github.com/airbnb/enzyme/pull/255))
+
+- prevent falsy nodes from being counted as children ([#251](https://github.com/airbnb/enzyme/pull/251))
+
+
 ## 2.1.0 (March 10, 2016)
 
 ### Minor Changes
