@@ -92,6 +92,7 @@
     * [reduceRight(fn[, initialValue])](/docs/api/ReactWrapper/reduceRight.md)
     * [ref(refName)](/docs/api/ReactWrapper/ref.md)
     * [render()](/docs/api/ReactWrapper/render.md)
+    * [second()](/docs/api/ReactWrapper/second.md)
     * [setContext(context)](/docs/api/ReactWrapper/setContext.md)
     * [setProps(nextProps)](/docs/api/ReactWrapper/setProps.md)
     * [setState(nextState)](/docs/api/ReactWrapper/setState.md)

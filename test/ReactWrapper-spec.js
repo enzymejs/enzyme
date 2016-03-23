@@ -1625,6 +1625,20 @@ describeWithDOM('mount', () => {
     });
   });
 
+  describe('.second()', () => {
+    it('should return the second node in the current set', () => {
+      const wrapper = mount(
+        <div>
+          <div className="bar" />
+          <div className="bar baz" />
+          <div className="bar" />
+          <div className="bar" />
+        </div>
+      );
+      expect(wrapper.find('.bar').second().hasClass('baz')).to.equal(true);
+    });
+  });
+
   describe('.last()', () => {
     it('should return the last node in the current set', () => {
       const wrapper = mount(
