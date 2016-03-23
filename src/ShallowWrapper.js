@@ -661,6 +661,15 @@ export default class ShallowWrapper {
   }
 
   /**
+   * Returns a wrapper around the second node of the current wrapper.
+   *
+   * @returns {ShallowWrapper}
+   */
+  second() {
+    return this.at(1);
+  }
+
+  /**
    * Returns a wrapper around the last node of the current wrapper.
    *
    * @returns {ShallowWrapper}

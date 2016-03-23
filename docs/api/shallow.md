@@ -121,6 +121,9 @@ Returns a wrapper of the node at the provided index of the current wrapper.
 #### [`.first() => ShallowWrapper`](ShallowWrapper/first.md)
 Returns a wrapper of the first node of the current wrapper.
 
+#### [`.second() => ReactWrapper`](ReactWrapper/second.md)
+Returns a wrapper of the second node of the current wrapper.
+
 #### [`.last() => ShallowWrapper`](ShallowWrapper/last.md)
 Returns a wrapper of the last node of the current wrapper.
 
