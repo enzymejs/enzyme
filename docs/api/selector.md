@@ -1,7 +1,7 @@
 # Enzyme Selectors
 
 Many methods in Enzyme's API accept a *selector* as an argument. Selectors in Enzyme can fall into
-one of the following three categories:
+one of the following four categories:
 
 
 ### 1. A Valid CSS Selector
