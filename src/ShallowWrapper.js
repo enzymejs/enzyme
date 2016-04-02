@@ -310,7 +310,7 @@ export default class ShallowWrapper {
    * @returns {String}
    */
   html() {
-    return this.single(n => this.type() === null ? null : renderToStaticMarkup(n));
+    return this.single(n => (this.type() === null ? null : renderToStaticMarkup(n)));
   }
 
   /**
