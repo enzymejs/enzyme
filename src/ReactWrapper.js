@@ -676,6 +676,15 @@ export default class ReactWrapper {
   }
 
   /**
+   * Returns a wrapper around the second node of the current wrapper.
+   *
+   * @returns {ReactWrapper}
+   */
+  second() {
+    return this.at(1);
+  }
+
+  /**
    * Returns a wrapper around the last node of the current wrapper.
    *
    * @returns {ReactWrapper}
