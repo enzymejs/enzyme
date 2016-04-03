@@ -1,6 +1,6 @@
 # `.not(selector) => ShallowWrapper`
 
-Returns a new wrapper with only the nodes of the current wrapper that don't match the provided 
+Returns a new wrapper with only the nodes of the current wrapper that don't match the provided
 selector.
 
 This method is effectively the negation or inverse of [`filter`](filter.md).

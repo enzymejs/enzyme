@@ -3,7 +3,7 @@
 Discussion of additional features and support for enzyme should be initiated by opening a
 [Github issue](https://github.com/airbnb/enzyme/issues).
 
-There are several things we'd like to address with Enzyme that often get asked. Here are a couple 
+There are several things we'd like to address with Enzyme that often get asked. Here are a couple
 of projects that we plan on addressing in the near future:
 
 
@@ -17,7 +17,7 @@ we would like to provide a more complete subset of all valid CSS selectors.
 #### Improved event simulation and propagation support
 
 Event simulation is limited for Shallow rendering. Event propagation is not supported, and one must
-supply their own event objects. We would like to provide tools to more fully simulate real 
+supply their own event objects. We would like to provide tools to more fully simulate real
 interaction.
 
 

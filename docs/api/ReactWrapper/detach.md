@@ -8,7 +8,7 @@ This method will most commonly be used as a "cleanup" method if you decide to us
 The method is intentionally not "fluent" (in that it doesn't return `this`) because you should
 not be doing anything with this wrapper after this method is called.
 
-Using the `attachTo` is not generally recommended unless it is absolutely necessary to test 
+Using the `attachTo` is not generally recommended unless it is absolutely necessary to test
 something.  It is your responsibility to clean up after yourself at the end of the test if you do
 decide to use it, though.
 
@@ -28,7 +28,7 @@ expect(document.body.childNodes).to.have.length(1);
 // detach it to clean up after yourself
 wrapper.detach();
 
-// now we can see that 
+// now we can see that
 expect(document.body.childNodes).to.have.length(0);
 ```
 

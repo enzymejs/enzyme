@@ -11,7 +11,7 @@ NOTE: can only be called on a wrapper instance that is also the root instance.
 
 #### Arguments
 
-1. `state` (`Object`): An object containing new state to merge in with the current state 
+1. `state` (`Object`): An object containing new state to merge in with the current state
 
 
 

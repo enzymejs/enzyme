@@ -9,7 +9,7 @@ Note: can only be called on a wrapper of a single node.
 
 #### Returns
 
-`String`: The resulting string 
+`String`: The resulting string
 
 
 

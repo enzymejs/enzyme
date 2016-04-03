@@ -8,7 +8,7 @@ NOTE: can only be called on a wrapper instance that is also the root instance.
 
 #### Arguments
 
-1. `context` (`Object`): An object containing new props to merge in with the current state 
+1. `context` (`Object`): An object containing new props to merge in with the current state
 
 
 

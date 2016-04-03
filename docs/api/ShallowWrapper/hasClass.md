@@ -25,5 +25,5 @@ expect(wrapper.find('.my-button').hasClass('disabled')).to.equal(true);
 
 ### Common Gotchas
 
-- `.hasClass()` expects a class name, NOT a CSS selector. `.hasClass('.foo')` should be 
+- `.hasClass()` expects a class name, NOT a CSS selector. `.hasClass('.foo')` should be
 `.hasClass('foo')`

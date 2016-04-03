@@ -1,6 +1,6 @@
 # `.filterWhere(fn) => ShallowWrapper`
 
-Returns a new wrapper with only the nodes of the current wrapper that, when passed into the 
+Returns a new wrapper with only the nodes of the current wrapper that, when passed into the
 provided predicate function, return true.
 
 

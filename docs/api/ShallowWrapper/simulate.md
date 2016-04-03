@@ -6,7 +6,7 @@ Simulate events
 #### Arguments
 
 1. `event` (`String`): The event name to be simulated
-2. `...args` (`Any` [optional]): A mock event object that will get passed through to the event 
+2. `...args` (`Any` [optional]): A mock event object that will get passed through to the event
 handlers.
 
 

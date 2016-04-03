@@ -1,12 +1,12 @@
 # `.reduceRight(fn[, initialValue]) => Any`
 
-Applies the provided reducing function to every node in the wrapper to reduce to a single value. 
+Applies the provided reducing function to every node in the wrapper to reduce to a single value.
 Each node is passed in as a `ReactWrapper`, and is processed from right to left.
 
 
 #### Arguments
 
-1. `fn` (`Function`): A reducing function to be run for every node in the collection, with the 
+1. `fn` (`Function`): A reducing function to be run for every node in the collection, with the
 following arguments:
   - `value` (`T`): The value returned by the previous invocation of this function
   - `node` (`ReactWrapper`): A wrapper around the current node being processed

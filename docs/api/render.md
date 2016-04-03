@@ -1,15 +1,15 @@
 # Static Rendering API
 
-Enzyme's `render` function is used to render react components to static HTML and analyze the 
+Enzyme's `render` function is used to render react components to static HTML and analyze the
 resulting HTML structure.
 
-`render` returns a wrapper very similar to the other renderers in enzyme, [`mount`](mount.md) and 
-[`shallow`](shallow.md); however, `render` uses a third party HTML parsing and traversal library 
-[Cheerio](http://cheeriojs.github.io/cheerio/). We believe that Cheerio handles parsing and 
-traversing HTML extremely well, and duplicating this functionality ourselves would be a 
+`render` returns a wrapper very similar to the other renderers in enzyme, [`mount`](mount.md) and
+[`shallow`](shallow.md); however, `render` uses a third party HTML parsing and traversal library
+[Cheerio](http://cheeriojs.github.io/cheerio/). We believe that Cheerio handles parsing and
+traversing HTML extremely well, and duplicating this functionality ourselves would be a
 disservice.
- 
-For the purposes of this documentation, we will refer to Cheerio's constructor as 
+
+For the purposes of this documentation, we will refer to Cheerio's constructor as
 `CheerioWrapper`, which is to say that it is analogous to our `ReactWrapper` and `ShallowWrapper`
 constructors.
 

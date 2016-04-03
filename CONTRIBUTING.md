@@ -1,6 +1,6 @@
 # Contributing Guide
 
-Contributions are welcome and are greatly appreciated! Every little bit helps, and credit will 
+Contributions are welcome and are greatly appreciated! Every little bit helps, and credit will
 always be given.
 
 
@@ -54,7 +54,7 @@ npm run test:watch
 
 ### Style & Linting
 
-This codebase adheres to the [Airbnb Styleguide](https://github.com/airbnb/javascript) and is 
+This codebase adheres to the [Airbnb Styleguide](https://github.com/airbnb/javascript) and is
 enforced using [ESLint](http://eslint.org/).
 
 It is recommended that you install an eslint plugin for your editor of choice when working on this
@@ -86,8 +86,8 @@ Before you submit a pull request from your forked repo, check that it meets thes
 1. If the pull request fixes a bug, it should include tests that fail without the changes, and pass
 with them.
 1. If the pull request adds functionality, the docs should be updated as part of the same PR.
-1. The pull request should work for both React 0.14 and React 0.13. The CI server should run the 
-tests in both versions automatically when you push the PR, but if you'd like to check locally, you 
+1. The pull request should work for both React 0.14 and React 0.13. The CI server should run the
+tests in both versions automatically when you push the PR, but if you'd like to check locally, you
 can do so (see above).
 1. Please rebase and resolve all conflicts before submitting.
 

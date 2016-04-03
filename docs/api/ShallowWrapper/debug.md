@@ -1,6 +1,6 @@
 # `.debug() => String`
 
-Returns an HTML-like string of the wrapper for debugging purposes. Useful to print out to the 
+Returns an HTML-like string of the wrapper for debugging purposes. Useful to print out to the
 console when tests are not passing when you expect them to.
 
 
@@ -38,12 +38,12 @@ Outputs to console:
 
 ```jsx
 const wrapper = shallow(
-  <Book 
+  <Book
     title="Huckleberry Finn"
-    cover={{ 
-      url: 'http://some.url/to/img.png', 
-      width: 40, 
-      height: 80 
+    cover={{
+      url: 'http://some.url/to/img.png',
+      width: 40,
+      height: 80
     }}
   />
 );
