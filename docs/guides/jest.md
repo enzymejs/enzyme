@@ -11,6 +11,9 @@ react and enzyme to be unmocked in your `package.json`:
   "unmockedModulePathPatterns": [
     "react",
     "enzyme"
+  ],
+  "moduleFileExtensions": [
+    "json"
   ]
 }
 ```
