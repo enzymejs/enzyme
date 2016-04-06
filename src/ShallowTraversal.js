@@ -49,15 +49,20 @@ export function treeFilter(tree, fn) {
   return results;
 }
 
+function pathFilter(path, fn) {
+  return path.filter(tree => treeFilter(tree, fn).length !== 0);
+}
+
 export function pathToNode(node, root) {
   const queue = [root];
   const path = [];
 
+  const hasNode = (testNode) => node === testNode;
+
   while (queue.length) {
     const current = queue.pop();
     const children = childrenOfNode(current);
-
-    if (current === node) return path;
+    if (current === node) return pathFilter(path, hasNode);
 
     path.push(current);
 
