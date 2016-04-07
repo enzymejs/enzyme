@@ -1764,6 +1764,22 @@ describeWithDOM('mount', () => {
     });
   });
 
+  describe('.tap()', () => {
+    it('should call the passed function with current ShallowWrapper and returns itself', () => {
+      const spy = sinon.spy();
+      const wrapper = mount(
+        <ul>
+          <li>xxx</li>
+          <li>yyy</li>
+          <li>zzz</li>
+        </ul>
+      ).find('li');
+      const result = wrapper.tap(spy);
+      expect(spy.calledWith(wrapper)).to.equal(true);
+      expect(result).to.equal(wrapper);
+    });
+  });
+
   describe('attachTo option', () => {
     it('should attach and stuff', () => {
       class Foo extends React.Component {
