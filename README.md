@@ -19,6 +19,9 @@ should be able to extrapolate to your framework of choice.
 If you are interested in using enzyme with custom Chai.js assertions and convenience functions for
 testing your React components, you can consider using [chai-enzyme](https://github.com/producthunt/chai-enzyme).
 
+If you are interested in using enzyme with custom Jasmine/Jest assertions and convenience functions for
+testing your React components, you can consider using [jasmine-enzyme](https://github.com/blainekasten/jasmine-enzyme).
+
 
 [Using Enzyme with Mocha](/docs/guides/mocha.md)
 
