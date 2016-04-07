@@ -6,6 +6,7 @@ Organizations
  - [Pinterest](https://github.com/pinterest)
  - [Product Hunt](https://github.com/producthunt)
  - [Walmart Labs](https://github.com/walmartlabs)
+ - [Hudl](http://hudl.github.io/)
 
 Projects
 ----------
