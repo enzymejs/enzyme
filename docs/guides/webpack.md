@@ -15,6 +15,7 @@ labeled as "external", which means they will be ignored:
 
 ```
 cheerio
+react/addons
 react/lib/ReactContext
 react/lib/ExecutionEnvironment
 ```
@@ -26,6 +27,7 @@ Here is an example piece of configuration code marking these as external:
 // ...
 externals: {
   'cheerio': 'window',
+  'react/addons': true,
   'react/lib/ExecutionEnvironment': true,
   'react/lib/ReactContext': true
 }
