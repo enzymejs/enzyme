@@ -85,7 +85,7 @@ Remove nodes in the current wrapper that match the provided selector. (inverse o
 #### [`.children() => ShallowWrapper`](ShallowWrapper/children.md)
 Get a wrapper with all of the children nodes of the current wrapper.
 
-#### [`.childAt() => ShallowWrapper`](ShallowWrapper/childAt.md)
+#### [`.childAt(index) => ShallowWrapper`](ShallowWrapper/childAt.md)
 Returns a new wrapper with child at the specified index.
 
 #### [`.parents() => ShallowWrapper`](ShallowWrapper/parents.md)
