@@ -10,11 +10,12 @@ compatible with React 0.13 and React 0.14.
 Unfortunately, these conditional requires mean there is a bit of extra setup with bundlers like
 webpack.
 
-In your webpack configuration, you simply need to make sure that the following three files are
+In your webpack configuration, you simply need to make sure that the following files are
 labeled as "external", which means they will be ignored:
 
 ```
 cheerio
+react/addons
 react/lib/ReactContext
 react/lib/ExecutionEnvironment
 ```
@@ -26,6 +27,7 @@ Here is an example piece of configuration code marking these as external:
 // ...
 externals: {
   'cheerio': 'window',
+  'react/addons': true,
   'react/lib/ExecutionEnvironment': true,
   'react/lib/ReactContext': true
 }
