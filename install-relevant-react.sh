@@ -1,6 +1,6 @@
 #!/bin/sh
 
-REACT=${REACT:-0.14}
+REACT=${REACT:-15}
 
 echo "installing React $REACT"
 
