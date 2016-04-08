@@ -52,7 +52,7 @@
   "dependencies": {
     "cheerio": "^0.20.0",
     "is-subset": "^0.1.1",
-    "lodash": "^4.7.0",
+    "lodash": "^4.8.2",
     "object.assign": "^4.0.3",
     "object.values": "^1.0.3"
   },
