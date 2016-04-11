@@ -16,7 +16,7 @@ Note: can only be called on a wrapper of a single node.
 
 ```jsx
 const wrapper = shallow(<MyComponent />);
-expect(wrapper.find(Foo).closest('.bar)).to.have.length(1);
+expect(wrapper.find(Foo).closest('.bar')).to.have.length(1);
 ```
 
 #### Related Methods
