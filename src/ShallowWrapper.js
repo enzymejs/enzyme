@@ -68,6 +68,10 @@ export default class ShallowWrapper {
       this.unrendered = nodes;
       this.renderer = createShallowRenderer();
       this.renderer.render(nodes, options.context);
+      const instance = this.instance();
+      if (instance && typeof instance.componentDidMount === 'function') {
+        instance.componentDidMount();
+      }
       this.node = this.renderer.getRenderOutput();
       this.nodes = [this.node];
       this.length = 1;
@@ -105,7 +109,7 @@ export default class ShallowWrapper {
     if (this.root !== this) {
       throw new Error('ShallowWrapper::instance() can only be called on the root');
     }
-    return this.renderer._instance._instance;
+    return this.renderer._instance ? this.renderer._instance._instance : null;
   }
 
   /**
@@ -146,9 +150,21 @@ export default class ShallowWrapper {
     }
     this.single(() => {
       withSetStateAllowed(() => {
-        this.unrendered = React.cloneElement(this.unrendered, props);
-        this.renderer.render(this.unrendered, this.options.context);
-        this.update();
+        const prevProps = this.instance().props;
+        const prevState = this.instance().state;
+        const instance = this.instance();
+        let shouldRender = true;
+        if (instance && typeof instance.shouldComponentUpdate === 'function') {
+          shouldRender = instance.shouldComponentUpdate(props, null);
+        }
+        if (shouldRender) {
+          this.unrendered = React.cloneElement(this.unrendered, props);
+          this.renderer.render(this.unrendered, this.options.context);
+          if (instance && typeof instance.componentDidUpdate === 'function') {
+            instance.componentDidUpdate(prevProps, prevState);
+          }
+          this.update();
+        }
       });
     });
     return this;
