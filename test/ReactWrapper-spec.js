@@ -813,18 +813,21 @@ describeWithDOM('mount', () => {
     describe('Normalizing JS event names', () => {
       it('should convert lowercase events to React camelcase', () => {
         const spy = sinon.spy();
+        const clickSpy = sinon.spy();
         class Foo extends React.Component {
           render() {
             return (
-              <a onDoubleClick={spy}>foo</a>
+              <a onClick={clickSpy} onDoubleClick={spy}>foo</a>
             );
           }
         }
 
         const wrapper = mount(<Foo />);
 
-        wrapper.simulate('doubleclick');
+        wrapper.simulate('dblclick');
         expect(spy.calledOnce).to.equal(true);
+        wrapper.simulate('click');
+        expect(clickSpy.calledOnce).to.equal(true);
       });
 
       describeIf(!REACT013, 'normalizing mouseenter', () => {
