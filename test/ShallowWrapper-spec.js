@@ -2198,4 +2198,21 @@ describe('shallow', () => {
     expect(rendered.length).to.equal(0);
     expect(rendered.html()).to.equal(null);
   });
+
+  describe('.tap()', () => {
+    it('should call the passed function with current ShallowWrapper and returns itself', () => {
+      const spy = sinon.spy();
+      const wrapper = shallow(
+        <ul>
+          <li>xxx</li>
+          <li>yyy</li>
+          <li>zzz</li>
+        </ul>
+      ).find('li');
+      const result = wrapper.tap(spy);
+      expect(spy.calledWith(wrapper)).to.equal(true);
+      expect(result).to.equal(wrapper);
+    });
+  });
+
 });

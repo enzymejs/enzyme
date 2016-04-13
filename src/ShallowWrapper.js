@@ -721,4 +721,15 @@ export default class ShallowWrapper {
   debug() {
     return debugNodes(this.nodes);
   }
+
+  /**
+   * Invokes intercepter and returns itself. intercepter is called with itself.
+   * This is helpful when debugging nodes in method chains.
+   * @param fn
+   * @returns {ShallowWrapper}
+   */
+  tap(intercepter) {
+    intercepter(this);
+    return this;
+  }
 }

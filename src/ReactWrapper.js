@@ -734,6 +734,17 @@ export default class ReactWrapper {
   }
 
   /**
+   * Invokes intercepter and returns itself. intercepter is called with itself.
+   * This is helpful when debugging nodes in method chains.
+   * @param fn
+   * @returns {ReactWrapper}
+   */
+  tap(intercepter) {
+    intercepter(this);
+    return this;
+  }
+
+  /**
    * Detaches the react tree from the DOM. Runs `ReactDOM.unmountComponentAtNode()` under the hood.
    *
    * This method will most commonly be used as a "cleanup" method if you decide to use the
