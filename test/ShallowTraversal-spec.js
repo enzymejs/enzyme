@@ -9,6 +9,7 @@ import {
   nodeHasProperty,
   treeForEach,
   treeFilter,
+  pathToNode,
 } from '../src/ShallowTraversal';
 
 describe('ShallowTraversal', () => {
@@ -209,6 +210,45 @@ describe('ShallowTraversal', () => {
     it('should filter for truthiness', () => {
       expect(treeFilter(tree, node => node.type === 'nav').length).to.equal(1);
       expect(treeFilter(tree, node => node.type === 'button').length).to.equal(2);
+    });
+
+  });
+
+  describe('pathToNode', () => {
+    it('should return trees from the root node', () => {
+      const node = <label />;
+      const tree = (
+        <div>
+          <button />
+          <nav>
+            {node}
+            <input />
+          </nav>
+        </div>
+      );
+
+      const result = pathToNode(node, tree);
+      expect(result.length).to.equal(2);
+      expect(result[0].type).to.equal('div');
+      expect(result[1].type).to.equal('nav');
+    });
+
+    it('should return trees from the root node except the sibling node', () => {
+      const node = <label />;
+      const tree = (
+        <div>
+          <button />
+          <nav>
+            {node}
+            <div><input /></div>
+          </nav>
+        </div>
+      );
+
+      const result = pathToNode(node, tree);
+      expect(result.length).to.equal(2);
+      expect(result[0].type).to.equal('div');
+      expect(result[1].type).to.equal('nav');
     });
 
   });

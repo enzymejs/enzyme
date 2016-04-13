@@ -1475,6 +1475,23 @@ describe('shallow', () => {
       expect(wrapper.find('.baz').parent().hasClass('bar')).to.equal(true);
     });
 
+    it('should work when the sibling node has children', () => {
+      const wrapper = shallow(
+        <div className="bax">
+          <div className="foo">
+            <div className="bar">
+              <div className="baz" />
+              <div>
+                <div />
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+
+      expect(wrapper.find('.baz').parent().hasClass('bar')).to.equal(true);
+    });
+
     it('should work for multiple nodes', () => {
       const wrapper = shallow(
         <div>
