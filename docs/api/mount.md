@@ -129,6 +129,9 @@ Returns the props of the root component.
 #### [`.prop(key) => Any`](ReactWrapper/prop.md)
 Returns the named prop of the root component.
 
+#### [`.key() => String`](ReactWrapper/key.md)
+Returns the key of the root component.
+
 #### [`.simulate(event[, data]) => ReactWrapper`](ReactWrapper/simulate.md)
 Simulates an event on the current node.
 

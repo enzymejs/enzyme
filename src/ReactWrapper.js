@@ -498,7 +498,16 @@ export default class ReactWrapper {
   }
 
   /**
-   * Returns the type of the root ndoe of this wrapper. If it's a composite component, this will be
+   * Returns the key assigned to the current node.
+   *
+   * @returns {String}
+   */
+  key() {
+    return this.single((n) => getNode(n).key);
+  }
+
+  /**
+   * Returns the type of the root node of this wrapper. If it's a composite component, this will be
    * the component constructor. If it's native DOM node, it will be a string.
    *
    * @returns {String|Function}

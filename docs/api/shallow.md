@@ -136,6 +136,9 @@ Returns the props of the root component.
 #### [`.prop(key) => Any`](ShallowWrapper/prop.md)
 Returns the named prop of the root component.
 
+#### [`.key() => String`](ShallowWrapper/key.md)
+Returns the key of the root component.
+
 #### [`.simulate(event[, data]) => ShallowWrapper`](ShallowWrapper/simulate.md)
 Simulates an event on the current node.
 
