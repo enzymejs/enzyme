@@ -350,8 +350,11 @@ export default class ShallowWrapper {
     const handler = this.prop(propFromEvent(event));
     if (handler) {
       withSetStateAllowed(() => {
-        // TODO(lmr): create/use synthetic events
         // TODO(lmr): emulate React's event propagation
+        if (!args.length && window) {
+          args.push(new window.Event(event));
+        }
+
         handler(...args);
         this.root.update();
       });
