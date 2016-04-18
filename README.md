@@ -37,6 +37,7 @@ testing your React components, you can consider using [jasmine-enzyme](https://g
 
 [Using Enzyme with Jest](/docs/guides/jest.md)
 
+[Using Enzyme with Lab](/docs/guides/lab.md)
 
 ### [Installation](/docs/installation/README.md)
 
