@@ -184,7 +184,7 @@ Returns whether or not any of the nodes in the wrapper pass the provided predica
 Returns whether or not all of the nodes in the wrapper match the provided selector.
 
 #### [`.everyWhere(predicate) => Boolean`](/docs/api/ReactWrapper/everyWhere.md)
-Returns whether or not any of the nodes in the wrapper pass the provided predicate function.
+Returns whether or not all of the nodes in the wrapper pass the provided predicate function.
 
 #### [`.ref(refName) => ReactWrapper`](/docs/api/ReactWrapper/ref.md)
 Returns a wrapper of the node that matches the provided reference name.
