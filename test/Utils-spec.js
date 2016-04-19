@@ -11,6 +11,7 @@ import {
   SELECTOR,
   selectorType,
   mapNativeEventNames,
+  displayNameOfNode,
 } from '../src/Utils';
 
 describe('Utils', () => {
@@ -236,6 +237,36 @@ describe('Utils', () => {
       it('transforms it into the React capitalised event', () => {
         const result = mapNativeEventNames('dragenter');
         expect(result).to.equal('dragEnter');
+      });
+    });
+  });
+
+  describe('displayNameOfNode', () => {
+    describe('given a node with displayName', () => {
+      it('should return the displayName', () => {
+        class Foo extends React.Component {
+          render() { return <div />; }
+        }
+
+        Foo.displayName = 'CustomWrapper';
+
+        expect(displayNameOfNode(<Foo />)).to.equal('CustomWrapper');
+      });
+    });
+
+    describe('given a node without displayName', () => {
+      it('should return the name', () => {
+        class Foo extends React.Component {
+          render() { return <div />; }
+        }
+
+        expect(displayNameOfNode(<Foo />)).to.equal('Foo');
+      });
+    });
+
+    describe('given a DOM node', () => {
+      it('should return the type', () => {
+        expect(displayNameOfNode(<div />)).to.equal('div');
       });
     });
   });

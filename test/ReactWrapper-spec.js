@@ -2187,4 +2187,88 @@ describeWithDOM('mount', () => {
       expect(spy2.callCount).to.equal(0);
     });
   });
+
+  describe('.name()', () => {
+    describe('node with displayName', () => {
+      it('should return the displayName of the node', () => {
+        class Foo extends React.Component {
+          render() { return <div />; }
+        }
+
+        Foo.displayName = 'CustomWrapper';
+
+        const wrapper = mount(<Foo />);
+        expect(wrapper.name()).to.equal('CustomWrapper');
+      });
+
+      describeIf(!REACT013, 'stateless function components', () => {
+        it('should return the name of the node', () => {
+          function SFC() {
+            return <div />;
+          }
+
+          SFC.displayName = 'CustomWrapper';
+
+          const wrapper = mount(<SFC />);
+          expect(wrapper.name()).to.equal('CustomWrapper');
+        });
+      });
+
+      describe('React.createClass', () => {
+        it('should return the name of the node', () => {
+          const Foo = React.createClass({
+            displayName: 'CustomWrapper',
+            render() {
+              return <div />;
+            },
+          });
+
+          const wrapper = mount(<Foo />);
+          expect(wrapper.name()).to.equal('CustomWrapper');
+        });
+      });
+    });
+
+    describe('node without displayName', () => {
+      it('should return the name of the node', () => {
+        class Foo extends React.Component {
+          render() { return <div />; }
+        }
+
+        const wrapper = mount(<Foo />);
+        expect(wrapper.name()).to.equal('Foo');
+      });
+
+      describeIf(!REACT013, 'stateless function components', () => {
+        it('should return the name of the node', () => {
+          function SFC() {
+            return <div />;
+          }
+
+          const wrapper = mount(<SFC />);
+          expect(wrapper.name()).to.equal('SFC');
+        });
+      });
+
+      describe('React.createClass', () => {
+        it('should return the name of the node', () => {
+          const Foo = React.createClass({
+            render() {
+              return <div />;
+            },
+          });
+
+          const wrapper = mount(<Foo />);
+          expect(wrapper.name()).to.equal('Foo');
+        });
+      });
+    });
+
+    describe('DOM node', () => {
+      it('should return the name of the node', () => {
+        const wrapper = mount(<div />);
+        expect(wrapper.name()).to.equal('div');
+      });
+    });
+  });
 });

@@ -171,6 +171,9 @@ Returns a string representation of the current render tree for debugging purpose
 #### [`.type() => String|Function`](ReactWrapper/type.md)
 Returns the type of the current node of the wrapper.
 
+#### [`.name() => String`](ReactWrapper/name.md)
+Returns the name of the current node of the wrapper.
+
 #### [`.forEach(fn) => ReactWrapper`](ReactWrapper/forEach.md)
 Iterates through each node of the current wrapper and executes the provided function
 
