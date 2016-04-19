@@ -150,18 +150,19 @@ export default class ShallowWrapper {
     }
     this.single(() => {
       withSetStateAllowed(() => {
-        const prevProps = this.instance().props;
-        const prevState = this.instance().state;
         const instance = this.instance();
+        const prevProps = instance.props;
+        const state = instance.state;
+        const context = instance.context;
         let shouldRender = true;
         if (instance && typeof instance.shouldComponentUpdate === 'function') {
-          shouldRender = instance.shouldComponentUpdate(props, null);
+          shouldRender = instance.shouldComponentUpdate(props, state, context);
         }
         if (shouldRender) {
           this.unrendered = React.cloneElement(this.unrendered, props);
-          this.renderer.render(this.unrendered, this.options.context);
+          this.renderer.render(this.unrendered, context);
           if (instance && typeof instance.componentDidUpdate === 'function') {
-            instance.componentDidUpdate(prevProps, prevState);
+            instance.componentDidUpdate(prevProps, state, context);
           }
           this.update();
         }
@@ -217,8 +218,21 @@ export default class ShallowWrapper {
         'a context option'
       );
     }
-    this.renderer.render(this.unrendered, context);
-    this.update();
+    const instance = this.instance();
+    const props = instance.props;
+    const state = instance.state;
+    const prevContext = instance.context;
+    let shouldRender = true;
+    if (instance && typeof instance.shouldComponentUpdate === 'function') {
+      shouldRender = instance.shouldComponentUpdate(props, state, context);
+    }
+    if (shouldRender) {
+      this.renderer.render(this.unrendered, context);
+      if (instance && typeof instance.componentDidUpdate === 'function') {
+        instance.componentDidUpdate(props, state, prevContext);
+      }
+      this.update();
+    }
     return this;
   }
 
