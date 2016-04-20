@@ -371,6 +371,15 @@ export default class ShallowWrapper {
   }
 
   /**
+   * Returns true if the component rendered nothing, i.e., null or false.
+   *
+   * @returns {boolean}
+   */
+  isEmptyRender() {
+    return this.type() === null;
+  }
+
+  /**
    * Returns a new wrapper instance with only the nodes of the current wrapper instance that match
    * the provided predicate function. The predicate should receive a wrapped node as its first
    * argument.
