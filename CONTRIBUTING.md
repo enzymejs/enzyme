@@ -22,7 +22,7 @@ npm install && npm run react:14
 ```
 
 
-### Switching between React 0.14 and React 0.13
+### Switching between React 15, React 0.14 and React 0.13
 
 ```bash
 # switch to React 0.13
@@ -32,6 +32,11 @@ npm run react:13
 ```bash
 # switch to React 0.14
 npm run react:14
+```
+
+```bash
+# switch to React 15
+npm run react:15
 ```
 
 
@@ -86,8 +91,8 @@ Before you submit a pull request from your forked repo, check that it meets thes
 1. If the pull request fixes a bug, it should include tests that fail without the changes, and pass
 with them.
 1. If the pull request adds functionality, the docs should be updated as part of the same PR.
-1. The pull request should work for both React 0.14 and React 0.13. The CI server should run the
-tests in both versions automatically when you push the PR, but if you'd like to check locally, you
+1. The pull request should work for React 15, React 0.14 and React 0.13. The CI server should run the
+tests in all versions automatically when you push the PR, but if you'd like to check locally, you
 can do so (see above).
 1. Please rebase and resolve all conflicts before submitting.
 

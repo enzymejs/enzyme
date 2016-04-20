@@ -14,6 +14,7 @@ In your browserify configuration, you simply need to make sure that the followin
 labeled as "external", which means they will be ignored:
 
 ```
+react/addons
 react/lib/ReactContext
 react/lib/ExecutionEnvironment
 ```
@@ -26,6 +27,7 @@ var browserify = require('browserify');
 var b = browserify();
 
 // make sure to mark these as external!
+b.external('react/addons');
 b.external('react/lib/ReactContext');
 b.external('react/lib/ExecutionEnvironment');
 

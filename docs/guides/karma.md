@@ -30,6 +30,7 @@ webpack: { //kind of a copy of your webpack config
   },
   externals: {
     'cheerio': 'window',
+    'react/addons': true,
     'react/lib/ExecutionEnvironment': true,
     'react/lib/ReactContext': true
   }
@@ -49,6 +50,7 @@ browserify: {
   ],
   configure: function(bundle) {
     bundle.on('prebundle', function() {
+      bundle.external('react/addons');
       bundle.external('react/lib/ReactContext');
       bundle.external('react/lib/ExecutionEnvironment');
     });
