@@ -308,9 +308,15 @@ describe('shallow', () => {
       const wrapper = shallow(
         <div>
           <input className="foo" />
+          <button className="bar">Button</button>
+          <textarea className="magic"></textarea>
+          <select className="reality"></select>
         </div>
       );
       expect(wrapper.find('input').props().className).to.equal('foo');
+      expect(wrapper.find('button').props().className).to.equal('bar');
+      expect(wrapper.find('textarea').props().className).to.equal('magic');
+      expect(wrapper.find('select').props().className).to.equal('reality');
     });
 
     it('should find a component based on a constructor', () => {
