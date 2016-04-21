@@ -46,6 +46,20 @@ react-dom/server
 react-addons-test-utils
 ```
 
+## React 15 Compatability
+
+If you are using React 15, your config should include these externals:
+
+```js
+/* webpack.config.js */
+// ...
+externals: {
+  'react/addons': true,
+  'react/lib/ExecutionEnvironment': true,
+  'react/lib/ReactContext': true
+}
+// ...
+```
 
 ## Example Projects
 
