@@ -12,6 +12,7 @@ let renderWithOptions;
 let unmountComponentAtNode;
 
 const React = require('react');
+const batchedUpdates = require('react/lib/ReactUpdates').batchedUpdates;
 
 if (REACT013) {
   renderToStaticMarkup = React.renderToStaticMarkup;
@@ -163,4 +164,5 @@ export {
   childrenToArray,
   renderWithOptions,
   unmountComponentAtNode,
+  batchedUpdates,
 };

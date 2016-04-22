@@ -29,6 +29,7 @@ import {
 import {
   createShallowRenderer,
   renderToStaticMarkup,
+  batchedUpdates,
 } from './react-compat';
 
 /**
@@ -468,7 +469,9 @@ export default class ShallowWrapper {
       withSetStateAllowed(() => {
         // TODO(lmr): create/use synthetic events
         // TODO(lmr): emulate React's event propagation
-        handler(...args);
+        batchedUpdates(() => {
+          handler(...args);
+        });
         this.root.update();
       });
     }

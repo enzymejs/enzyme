@@ -1022,6 +1022,34 @@ describe('shallow', () => {
       });
     });
 
+    it('should be batched updates', () => {
+      let renderCount = 0;
+      class Foo extends React.Component {
+        constructor(props) {
+          super(props);
+          this.state = {
+            count: 0,
+          };
+          this.onClick = this.onClick.bind(this);
+        }
+        onClick() {
+          this.setState({ count: this.state.count + 1 });
+          this.setState({ count: this.state.count + 1 });
+        }
+        render() {
+          ++renderCount;
+          return (
+            <a onClick={this.onClick}>{this.state.count}</a>
+          );
+        }
+      }
+
+      const wrapper = shallow(<Foo />);
+      wrapper.simulate('click');
+      expect(wrapper.text()).to.equal('1');
+      expect(renderCount).to.equal(2);
+    });
+
   });
 
   describe('.setState(newState)', () => {
