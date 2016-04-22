@@ -10,6 +10,7 @@ import {
   treeForEach,
   treeFilter,
   pathToNode,
+  getTextFromNode,
 } from '../src/ShallowTraversal';
 
 describe('ShallowTraversal', () => {
@@ -249,6 +250,36 @@ describe('ShallowTraversal', () => {
       expect(result.length).to.equal(2);
       expect(result[0].type).to.equal('div');
       expect(result[1].type).to.equal('nav');
+    });
+
+  });
+
+  describe('getTextFromNode', () => {
+    it('should return displayName for functions that provides one', () => {
+      class Subject extends React.Component {
+        render() {
+          return (
+            <div />
+          );
+        }
+      }
+      Subject.displayName = 'CustomSubject';
+      const node = <Subject />;
+      const result = getTextFromNode(node);
+      expect(result).to.equal('<CustomSubject />');
+    });
+
+    it('should return function name if displayName is not provided', () => {
+      class Subject extends React.Component {
+        render() {
+          return (
+            <div />
+          );
+        }
+      }
+      const node = <Subject />;
+      const result = getTextFromNode(node);
+      expect(result).to.equal('<Subject />');
     });
 
   });
