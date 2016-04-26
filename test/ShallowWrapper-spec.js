@@ -1582,6 +1582,26 @@ describe('shallow', () => {
     });
   });
 
+  describe('.matchesClass(regex)', () => {
+    it('should match class names with a regular expression', () => {
+      const wrapper = shallow(
+        <div className="foo bar baz some-long-string FoOo bling-42" />
+      );
+
+      expect(wrapper.matchesClass(/foo/)).to.equal(true);
+      expect(wrapper.matchesClass(/bar/)).to.equal(true);
+      expect(wrapper.matchesClass(/baz/)).to.equal(true);
+      expect(wrapper.matchesClass(/some-long-string/)).to.equal(true);
+      expect(wrapper.matchesClass(/FoOo/)).to.equal(true);
+      expect(wrapper.matchesClass(/bling/)).to.equal(true);
+      expect(wrapper.matchesClass(/doesnt-exist/)).to.equal(false);
+    });
+    it('should throw if the argument is not a regular expression', () => {
+      const wrapper = shallow(<div className="foo" />);
+      expect(() => wrapper.matchesClass('string')).to.throw(Error);
+    });
+  });
+
   describe('.forEach(fn)', () => {
     it('should call a function for each node in the wrapper', () => {
       const wrapper = shallow(

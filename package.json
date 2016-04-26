@@ -51,6 +51,7 @@
   "license": "MIT",
   "dependencies": {
     "cheerio": "^0.20.0",
+    "is-regex": "^1.0.3",
     "is-subset": "^0.1.1",
     "lodash": "^4.8.2",
     "object.assign": "^4.0.3",
