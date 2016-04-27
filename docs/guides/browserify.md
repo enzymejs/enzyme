@@ -10,7 +10,7 @@ compatible with React 0.13 and React 0.14.
 Unfortunately, these conditional requires mean there is a bit of extra setup with bundlers like
 browserify.
 
-In your browserify configuration, you simply need to make sure that the following two files are
+In your browserify configuration, you simply need to make sure that the following files are
 labeled as "external", which means they will be ignored:
 
 ```
