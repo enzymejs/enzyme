@@ -51,7 +51,8 @@ export function instHasClassName(inst, className) {
   if (!isDOMComponent(inst)) {
     return false;
   }
-  const classes = findDOMNode(inst).className || '';
+  let classes = findDOMNode(inst).className || '';
+  classes = classes.replace(/\s/g, ' ');
   return ` ${classes} `.indexOf(` ${className} `) > -1;
 }
 

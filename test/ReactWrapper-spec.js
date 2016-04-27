@@ -900,6 +900,23 @@ describeWithDOM('mount', () => {
       expect(wrapper.is('.foo.bar')).to.equal(true);
     });
 
+    it('should ignore insignificant whitespace', () => {
+      const className = `
+      foo
+      `;
+      const wrapper = mount(<div className={className} />);
+      expect(wrapper.is('.foo')).to.equal(true);
+    });
+
+    it('should handle all significant whitespace', () => {
+      const className = `foo
+
+      bar
+      baz`;
+      const wrapper = mount(<div className={className} />);
+      expect(wrapper.is('.foo.bar.baz')).to.equal(true);
+    });
+
     it('should return false when selector does not match', () => {
       const wrapper = mount(<div className="bar baz" />);
       expect(wrapper.is('.foo')).to.equal(false);
