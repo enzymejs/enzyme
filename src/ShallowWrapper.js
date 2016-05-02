@@ -226,6 +226,32 @@ export default class ShallowWrapper {
 
   /**
    * Whether or not a given react element exists in the shallow render tree.
+   * Equality is based on expected element and not on rendered element
+   *
+   * Example:
+   * ```
+   * // MyComponent outputs <div><div class="foo">Hello</div></div>
+   * const wrapper = shallow(<MyComponent />);
+   * expect(wrapper.rightContains(<div>Hello</div>)).to.equal(true);
+   * ```
+   *
+   * @param {ReactElement|Array<ReactElement>} nodeOrNodes
+   * @returns {Boolean}
+   */
+  rightContains(nodeOrNodes) {
+    const predicate = Array.isArray(nodeOrNodes)
+      ? other => containsChildrenSubArray(
+          (n1, n2) => nodeEqual(n2, n1, (a, b) => a <= b),
+          other,
+          nodeOrNodes
+        )
+      : other => nodeEqual(nodeOrNodes, other, (a, b) => a <= b);
+
+    return findWhereUnwrapped(this, predicate).length > 0;
+  }
+
+  /**
+   * Whether or not a given react element exists in the shallow render tree.
    *
    * Example:
    * ```
@@ -238,6 +264,24 @@ export default class ShallowWrapper {
    */
   equals(node) {
     return this.single(() => nodeEqual(this.node, node));
+  }
+
+  /**
+   * Whether or not a given react element exists in the shallow render tree.
+   * Equality is based on expected element and not on rendered element
+   *
+   * Example:
+   * ```
+   * // MyComponent outputs <div class="foo">Hello</div>
+   * const wrapper = shallow(<MyComponent />);
+   * expect(wrapper.rightEquals(<div>Hello</div>)).to.equal(true);
+   * ```
+   *
+   * @param {ReactElement} node
+   * @returns {Boolean}
+   */
+  rightEquals(node) {
+    return this.single(() => nodeEqual(node, this.node, (a, b) => a <= b));
   }
 
   /**

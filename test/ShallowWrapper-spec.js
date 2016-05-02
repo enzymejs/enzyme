@@ -2262,4 +2262,49 @@ describe('shallow', () => {
     });
   });
 
+  describe('.rightEquals()', () => {
+    it('should match on the almost same node', () => {
+      const spy = sinon.spy();
+      const wrapper = shallow(
+        <div>
+          <div onClick={spy} style={{ fontSize: 12, color: 'red' }}>Hello World</div>
+        </div>
+      ).first();
+      expect(wrapper.rightEquals(<div><div>Hello World</div></div>)).to.equal(true);
+      expect(spy.callCount).to.equal(0);
+    });
+  });
+
+  describe('.rightContains()', () => {
+    it('should match on a single node', () => {
+      const spy1 = sinon.spy();
+      const spy2 = sinon.spy();
+      const wrapper = shallow(
+        <div>
+          <div onClick={spy1} style={{ fontSize: 12, color: 'red' }}>Hello World</div>
+          <div onClick={spy2} style={{ fontSize: 13, color: 'blue' }}>Goodbye World</div>
+        </div>
+      );
+      expect(wrapper.rightContains(<div>Hello World</div>)).to.equal(true);
+      expect(spy1.callCount).to.equal(0);
+      expect(spy2.callCount).to.equal(0);
+    });
+    it('should match on an array of nodes', () => {
+      const spy1 = sinon.spy();
+      const spy2 = sinon.spy();
+      const wrapper = shallow(
+        <div>
+          <div onClick={spy1} style={{ fontSize: 12, color: 'red' }}>Hello World</div>
+          <div onClick={spy2} style={{ fontSize: 13, color: 'blue' }}>Goodbye World</div>
+        </div>
+      );
+      expect(wrapper.rightContains([
+        <div>Hello World</div>,
+        <div>Goodbye World</div>,
+      ])).to.equal(true);
+      expect(spy1.callCount).to.equal(0);
+      expect(spy2.callCount).to.equal(0);
+    });
+  });
+
 });

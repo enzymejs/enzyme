@@ -11,6 +11,10 @@ import {
   REACT15,
 } from './version';
 
+function equality(a, b) {
+  return a === b;
+}
+
 function internalInstanceKey(node) {
   return Object.keys(Object(node)).filter(key => key.match(/^__reactInternalInstance\$/))[0];
 }
@@ -58,21 +62,21 @@ export function nodeHasType(node, type) {
   return node.type.name === type || node.type.displayName === type;
 }
 
-export function childrenEqual(a, b) {
+export function childrenEqual(a, b, lenComp) {
   if (a === b) return true;
   if (!Array.isArray(a) && !Array.isArray(b)) {
-    return nodeEqual(a, b);
+    return nodeEqual(a, b, lenComp);
   }
   if (!a && !b) return true;
   if (a.length !== b.length) return false;
   if (a.length === 0 && b.length === 0) return true;
   for (let i = 0; i < a.length; i++) {
-    if (!nodeEqual(a[i], b[i])) return false;
+    if (!nodeEqual(a[i], b[i], lenComp)) return false;
   }
   return true;
 }
 
-export function nodeEqual(a, b) {
+export function nodeEqual(a, b, lenComp = equality) {
   if (a === b) return true;
   if (!a || !b) return false;
   if (a.type !== b.type) return false;
@@ -83,7 +87,10 @@ export function nodeEqual(a, b) {
     const prop = leftKeys[i];
     if (!(prop in right)) return false;
     if (prop === 'children') {
-      if (!childrenEqual(childrenToArray(left.children), childrenToArray(right.children))) {
+      if (!childrenEqual(
+          childrenToArray(left.children),
+          childrenToArray(right.children),
+          lenComp)) {
         return false;
       }
     } else if (right[prop] === left[prop]) {
@@ -96,7 +103,7 @@ export function nodeEqual(a, b) {
   }
 
   if (!isTextualNode(a)) {
-    return leftKeys.length === Object.keys(right).length;
+    return lenComp(leftKeys.length, Object.keys(right).length);
   }
 
   return false;
