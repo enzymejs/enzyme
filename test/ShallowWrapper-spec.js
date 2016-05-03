@@ -2263,7 +2263,7 @@ describe('shallow', () => {
   });
 
   describe('.rightEquals()', () => {
-    it('should match on the almost same node', () => {
+    it('should match on a root node that looks like the rendered one', () => {
       const spy = sinon.spy();
       const wrapper = shallow(
         <div>
@@ -2271,12 +2271,27 @@ describe('shallow', () => {
         </div>
       ).first();
       expect(wrapper.rightEquals(<div><div>Hello World</div></div>)).to.equal(true);
+      expect(wrapper.rightEquals(
+        <div>
+          <div onClick={spy} style={{ fontSize: 12, color: 'red' }}>Hello World</div>
+        </div>
+      )).to.equal(true);
+      expect(wrapper.rightEquals(
+        <div>
+          <div onClick={spy}>Hello World</div>
+        </div>
+      )).to.equal(true);
+      expect(wrapper.rightEquals(
+        <div>
+          <div style={{ fontSize: 12, color: 'red' }}>Hello World</div>
+        </div>
+      )).to.equal(true);
       expect(spy.callCount).to.equal(0);
     });
   });
 
   describe('.rightContains()', () => {
-    it('should match on a single node', () => {
+    it('should match a root node that looks like the rendered one', () => {
       const spy1 = sinon.spy();
       const spy2 = sinon.spy();
       const wrapper = shallow(
@@ -2285,11 +2300,76 @@ describe('shallow', () => {
           <div onClick={spy2} style={{ fontSize: 13, color: 'blue' }}>Goodbye World</div>
         </div>
       );
-      expect(wrapper.rightContains(<div>Hello World</div>)).to.equal(true);
+      expect(wrapper.rightContains(
+        <div>
+          <div>Hello World</div>
+          <div>Goodbye World</div>
+        </div>
+      )).to.equal(true);
+      expect(wrapper.rightContains(
+        <div>
+          <div onClick={spy1} style={{ fontSize: 12, color: 'red' }}>Hello World</div>
+          <div onClick={spy2} style={{ fontSize: 13, color: 'blue' }}>Goodbye World</div>
+        </div>
+      )).to.equal(true);
+      expect(wrapper.rightContains(
+        <div>
+          <div onClick={spy1}>Hello World</div>
+          <div style={{ fontSize: 13, color: 'blue' }}>Goodbye World</div>
+        </div>
+      )).to.equal(true);
+      expect(wrapper.rightContains(
+        <div>
+          <div style={{ fontSize: 12, color: 'red' }}>Hello World</div>
+          <div onClick={spy2}>Goodbye World</div>
+        </div>
+      )).to.equal(true);
+      expect(wrapper.rightContains(
+        <div>
+          <div>Hello World</div>
+          <div onClick={spy2} style={{ fontSize: 13, color: 'blue' }}>Goodbye World</div>
+        </div>
+      )).to.equal(true);
+      expect(wrapper.rightContains(
+        <div>
+          <div>Hello World</div>
+          <div style={{ fontSize: 13, color: 'blue' }}>Goodbye World</div>
+        </div>
+      )).to.equal(true);
       expect(spy1.callCount).to.equal(0);
       expect(spy2.callCount).to.equal(0);
     });
-    it('should match on an array of nodes', () => {
+    it('should match on a single node that looks like a rendered on', () => {
+      const spy1 = sinon.spy();
+      const spy2 = sinon.spy();
+      const wrapper = shallow(
+        <div>
+          <div onClick={spy1} style={{ fontSize: 12, color: 'red' }}>Hello World</div>
+          <div onClick={spy2} style={{ fontSize: 13, color: 'blue' }}>Goodbye World</div>
+        </div>
+      );
+      expect(wrapper.rightContains(
+        <div>Hello World</div>
+      )).to.equal(true);
+      expect(wrapper.rightContains(
+        <div>Goodbye World</div>
+      )).to.equal(true);
+      expect(wrapper.rightContains(
+        <div onClick={spy1} style={{ fontSize: 12, color: 'red' }}>Hello World</div>
+      )).to.equal(true);
+      expect(wrapper.rightContains(
+        <div style={{ fontSize: 12, color: 'red' }}>Hello World</div>
+      )).to.equal(true);
+      expect(wrapper.rightContains(
+        <div onClick={spy2} style={{ fontSize: 13, color: 'blue' }}>Goodbye World</div>
+      )).to.equal(true);
+      expect(wrapper.rightContains(
+        <div onClick={spy2}>Goodbye World</div>
+      )).to.equal(true);
+      expect(spy1.callCount).to.equal(0);
+      expect(spy2.callCount).to.equal(0);
+    });
+    it('should match on an array of nodes that looks like some of rendered nodes', () => {
       const spy1 = sinon.spy();
       const spy2 = sinon.spy();
       const wrapper = shallow(
@@ -2301,6 +2381,34 @@ describe('shallow', () => {
       expect(wrapper.rightContains([
         <div>Hello World</div>,
         <div>Goodbye World</div>,
+      ])).to.equal(true);
+      expect(wrapper.rightContains([
+        <div onClick={spy1} style={{ fontSize: 12, color: 'red' }}>Hello World</div>,
+        <div>Goodbye World</div>,
+      ])).to.equal(true);
+      expect(wrapper.rightContains([
+        <div>Hello World</div>,
+        <div onClick={spy2} style={{ fontSize: 13, color: 'blue' }}>Goodbye World</div>,
+      ])).to.equal(true);
+      expect(wrapper.rightContains([
+        <div onClick={spy1} style={{ fontSize: 12, color: 'red' }}>Hello World</div>,
+        <div onClick={spy2} style={{ fontSize: 13, color: 'blue' }}>Goodbye World</div>,
+      ])).to.equal(true);
+      expect(wrapper.rightContains([
+        <div onClick={spy1}>Hello World</div>,
+        <div onClick={spy2} style={{ fontSize: 13, color: 'blue' }}>Goodbye World</div>,
+      ])).to.equal(true);
+      expect(wrapper.rightContains([
+        <div style={{ fontSize: 12, color: 'red' }}>Hello World</div>,
+        <div onClick={spy2} style={{ fontSize: 13, color: 'blue' }}>Goodbye World</div>,
+      ])).to.equal(true);
+      expect(wrapper.rightContains([
+        <div onClick={spy1} style={{ fontSize: 12, color: 'red' }}>Hello World</div>,
+        <div style={{ fontSize: 13, color: 'blue' }}>Goodbye World</div>,
+      ])).to.equal(true);
+      expect(wrapper.rightContains([
+        <div onClick={spy1} style={{ fontSize: 12, color: 'red' }}>Hello World</div>,
+        <div onClick={spy2}>Goodbye World</div>,
       ])).to.equal(true);
       expect(spy1.callCount).to.equal(0);
       expect(spy2.callCount).to.equal(0);

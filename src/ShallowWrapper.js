@@ -226,7 +226,10 @@ export default class ShallowWrapper {
 
   /**
    * Whether or not a given react element exists in the shallow render tree.
-   * Equality is based on expected element and not on rendered element
+   * Equality is based on the expected element and not on wrappers element.
+   * It will determine if one of the wrappers element "looks like" the expected
+   * element by checking if all props of the expected element are present
+   * on the wrappers element and equals to each other.
    *
    * Example:
    * ```
@@ -268,7 +271,10 @@ export default class ShallowWrapper {
 
   /**
    * Whether or not a given react element exists in the shallow render tree.
-   * Equality is based on expected element and not on rendered element
+   * Equality is based on the expected element and not on wrapper root node.
+   * It will determine if the wrapper root node "looks like" the expected
+   * element by checking if all props of the expected element are present
+   * on the wrapper root node and equals to each other.
    *
    * Example:
    * ```

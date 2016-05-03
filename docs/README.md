@@ -47,6 +47,8 @@
     * [reduce(fn[, initialValue])](/docs/api/ShallowWrapper/reduce.md)
     * [reduceRight(fn[, initialValue])](/docs/api/ShallowWrapper/reduceRight.md)
     * [render()](/docs/api/ShallowWrapper/render.md)
+    * [rightContains(nodeOrNodes)](/docs/api/ShallowWrapper/rightContains.md)
+    * [rightEquals(node)](/docs/api/ShallowWrapper/rightEquals.md)
     * [setContext(context)](/docs/api/ShallowWrapper/setContext.md)
     * [setProps(nextProps)](/docs/api/ShallowWrapper/setProps.md)
     * [setState(nextState)](/docs/api/ShallowWrapper/setState.md)

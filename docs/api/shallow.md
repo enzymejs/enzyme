@@ -70,7 +70,13 @@ Remove nodes in the current wrapper that do not return true for the provided pre
 #### [`.contains(nodeOrNodes) => Boolean`](ShallowWrapper/contains.md)
 Returns whether or not a given node or array of nodes is somewhere in the render tree.
 
+#### [`.rightContains(nodeOrNodes) => Boolean`](ShallowWrapper/righContains.md)
+Returns whether or not a given node or array of nodes is somewhere in the render tree, based on the expected value.
+
 #### [`.equals(node) => Boolean`](ShallowWrapper/equals.md)
+Returns whether or not the current render tree is equal to the given node, based on the expected value.
+
+#### [`.rightEquals(node) => Boolean`](ShallowWrapper/rightEquals.md)
 Returns whether or not the current render tree is equal to the given node.
 
 #### [`.hasClass(className) => Boolean`](ShallowWrapper/hasClass.md)
