@@ -226,7 +226,7 @@ export default class ShallowWrapper {
 
   /**
    * Whether or not a given react element exists in the shallow render tree.
-   * Equality is based on the expected element and not on wrappers element.
+   * Match is based on the expected element and not on wrappers element.
    * It will determine if one of the wrappers element "looks like" the expected
    * element by checking if all props of the expected element are present
    * on the wrappers element and equals to each other.
@@ -235,22 +235,70 @@ export default class ShallowWrapper {
    * ```
    * // MyComponent outputs <div><div class="foo">Hello</div></div>
    * const wrapper = shallow(<MyComponent />);
-   * expect(wrapper.rightContains(<div>Hello</div>)).to.equal(true);
+   * expect(wrapper.containsMatchingElement(<div>Hello</div>)).to.equal(true);
    * ```
    *
-   * @param {ReactElement|Array<ReactElement>} nodeOrNodes
+   * @param {ReactElement} node
    * @returns {Boolean}
    */
-  rightContains(nodeOrNodes) {
-    const predicate = Array.isArray(nodeOrNodes)
-      ? other => containsChildrenSubArray(
-          (n1, n2) => nodeEqual(n2, n1, (a, b) => a <= b),
-          other,
-          nodeOrNodes
-        )
-      : other => nodeEqual(nodeOrNodes, other, (a, b) => a <= b);
-
+  containsMatchingElement(node) {
+    const predicate = other => nodeEqual(node, other, (a, b) => a <= b);
     return findWhereUnwrapped(this, predicate).length > 0;
+  }
+
+  /**
+   * Whether or not all the given react elements exists in the shallow render tree.
+   * Match is based on the expected element and not on wrappers element.
+   * It will determine if one of the wrappers element "looks like" the expected
+   * element by checking if all props of the expected element are present
+   * on the wrappers element and equals to each other.
+   *
+   * Example:
+   * ```
+   * const wrapper = shallow(<MyComponent />);
+   * expect(wrapper.containsAllMatchingElements([
+   *   <div>Hello</div>,
+   *   <div>Goodbye</div>,
+   * ])).to.equal(true);
+   * ```
+   *
+   * @param {Array<ReactElement>} nodes
+   * @returns {Boolean}
+   */
+  containsAllMatchingElements(nodes) {
+    const invertedEquals = (n1, n2) => nodeEqual(n2, n1, (a, b) => a <= b);
+    const predicate = other => containsChildrenSubArray(invertedEquals, other, nodes);
+    return findWhereUnwrapped(this, predicate).length > 0;
+  }
+
+  /**
+   * Whether or not one of the given react elements exists in the shallow render tree.
+   * Match is based on the expected element and not on wrappers element.
+   * It will determine if one of the wrappers element "looks like" the expected
+   * element by checking if all props of the expected element are present
+   * on the wrappers element and equals to each other.
+   *
+   * Example:
+   * ```
+   * const wrapper = shallow(<MyComponent />);
+   * expect(wrapper.containsAnyMatchingElements([
+   *   <div>Hello</div>,
+   *   <div>Goodbye</div>,
+   * ])).to.equal(true);
+   * ```
+   *
+   * @param {Array<ReactElement>} nodes
+   * @returns {Boolean}
+   */
+  containsAnyMatchingElements(nodes) {
+    if (nodes.length <= 0) return false;
+    if (!Array.isArray(nodes)) return false;
+    for (let i = 0; i < nodes.length; i++) {
+      if (this.containsMatchingElement(nodes[i])) {
+        return true;
+      }
+    }
+    return false;
   }
 
   /**
@@ -270,8 +318,8 @@ export default class ShallowWrapper {
   }
 
   /**
-   * Whether or not a given react element exists in the shallow render tree.
-   * Equality is based on the expected element and not on wrapper root node.
+   * Whether or not a given react element matches the shallow render tree.
+   * Match is based on the expected element and not on wrapper root node.
    * It will determine if the wrapper root node "looks like" the expected
    * element by checking if all props of the expected element are present
    * on the wrapper root node and equals to each other.
@@ -280,13 +328,13 @@ export default class ShallowWrapper {
    * ```
    * // MyComponent outputs <div class="foo">Hello</div>
    * const wrapper = shallow(<MyComponent />);
-   * expect(wrapper.rightEquals(<div>Hello</div>)).to.equal(true);
+   * expect(wrapper.matchesElement(<div>Hello</div>)).to.equal(true);
    * ```
    *
    * @param {ReactElement} node
    * @returns {Boolean}
    */
-  rightEquals(node) {
+  matchesElement(node) {
     return this.single(() => nodeEqual(node, this.node, (a, b) => a <= b));
   }
 

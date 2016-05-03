@@ -70,14 +70,20 @@ Remove nodes in the current wrapper that do not return true for the provided pre
 #### [`.contains(nodeOrNodes) => Boolean`](ShallowWrapper/contains.md)
 Returns whether or not a given node or array of nodes is somewhere in the render tree.
 
-#### [`.rightContains(nodeOrNodes) => Boolean`](ShallowWrapper/righContains.md)
-Returns whether or not a given node or array of nodes is somewhere in the render tree, based on the expected value.
+#### [`.containsMatchingElement(node) => Boolean`](ShallowWrapper/containsMatchingElement.md)
+Returns whether or not a given react element exists in the shallow render tree.
+
+#### [`.containsAllMatchingElements(nodes) => Boolean`](ShallowWrapper/containsAllMatchingElements.md)
+Returns whether or not all the given react elements exists in the shallow render tree.
+
+#### [`.containsAnyMatchingElements(nodes) => Boolean`](ShallowWrapper/containsAnyMatchingElements.md)
+Returns whether or not one of the given react elements exists in the shallow render tree.
 
 #### [`.equals(node) => Boolean`](ShallowWrapper/equals.md)
 Returns whether or not the current render tree is equal to the given node, based on the expected value.
 
-#### [`.rightEquals(node) => Boolean`](ShallowWrapper/rightEquals.md)
-Returns whether or not the current render tree is equal to the given node.
+#### [`.matchesElement(node) => Boolean`](ShallowWrapper/matchesElement.md)
+Returns whether or not a given react element matches the shallow render tree.
 
 #### [`.hasClass(className) => Boolean`](ShallowWrapper/hasClass.md)
 Returns whether or not the current root node has the given class name or not.

@@ -1,6 +1,7 @@
 /* eslint no-use-before-define:0 */
 import isEqual from 'lodash/isEqual';
 import React from 'react';
+import is from 'object-is';
 import {
   isDOMComponent,
   findDOMNode,
@@ -10,10 +11,6 @@ import {
   REACT013,
   REACT15,
 } from './version';
-
-function equality(a, b) {
-  return a === b;
-}
 
 function internalInstanceKey(node) {
   return Object.keys(Object(node)).filter(key => key.match(/^__reactInternalInstance\$/))[0];
@@ -76,7 +73,7 @@ export function childrenEqual(a, b, lenComp) {
   return true;
 }
 
-export function nodeEqual(a, b, lenComp = equality) {
+export function nodeEqual(a, b, lenComp = is) {
   if (a === b) return true;
   if (!a || !b) return false;
   if (a.type !== b.type) return false;
