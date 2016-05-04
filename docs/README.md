@@ -91,6 +91,7 @@
     * [key()](/docs/api/ReactWrapper/key.md)
     * [last()](/docs/api/ReactWrapper/last.md)
     * [map(fn)](/docs/api/ReactWrapper/map.md)
+    * [matchesElement(node)](/docs/api/ReactWrapper/matchesElement.md)
     * [mount()](/docs/api/ReactWrapper/mount.md)
     * [not(selector)](/docs/api/ReactWrapper/not.md)
     * [parent()](/docs/api/ReactWrapper/parent.md)

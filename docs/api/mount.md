@@ -177,6 +177,9 @@ Iterates through each node of the current wrapper and executes the provided func
 #### [`.map(fn) => Array`](ReactWrapper/map.md)
 Maps the current array of nodes to another array.
 
+#### [`.matchesElement(node) => Boolean`](ReactWrapper/matchesElement.md)
+Returns whether or not a given react element matches the current render tree.
+
 #### [`.reduce(fn[, initialValue]) => Any`](/docs/api/ReactWrapper/reduce.md)
 Reduces the current array of nodes to a value
 
