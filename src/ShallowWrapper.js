@@ -291,8 +291,8 @@ export default class ShallowWrapper {
    * @returns {Boolean}
    */
   containsAnyMatchingElements(nodes) {
-    if (nodes.length <= 0) return false;
     if (!Array.isArray(nodes)) return false;
+    if (nodes.length <= 0) return false;
     for (let i = 0; i < nodes.length; i++) {
       if (this.containsMatchingElement(nodes[i])) {
         return true;
