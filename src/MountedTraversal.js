@@ -41,8 +41,8 @@ export function getNode(inst) {
   return inst;
 }
 
-export function instEqual(a, b) {
-  return nodeEqual(getNode(a), getNode(b));
+export function instEqual(a, b, lenComp) {
+  return nodeEqual(getNode(a), getNode(b), lenComp);
 }
 
 export function instHasClassName(inst, className) {
