@@ -37,6 +37,7 @@ import {
   batchedUpdates,
   isDOMComponentElement,
 } from './react-compat';
+import SyntheticEvent from 'react/lib/SyntheticEvent';
 
 /**
  * Finds all nodes in the current wrapper nodes' render trees that match the provided predicate
@@ -605,14 +606,15 @@ class ShallowWrapper {
    * @param {Array} args
    * @returns {ShallowWrapper}
    */
-  simulate(event, ...args) {
+  simulate(event, mock, ...args) {
     const handler = this.prop(propFromEvent(event));
+    const e = Object.assign(new SyntheticEvent(undefined, undefined, { type: event }), mock);
     if (handler) {
       withSetStateAllowed(() => {
         // TODO(lmr): create/use synthetic events
         // TODO(lmr): emulate React's event propagation
         batchedUpdates(() => {
-          handler(...args);
+          handler(e, ...args);
         });
         this.root.update();
       });
