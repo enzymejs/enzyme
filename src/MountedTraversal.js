@@ -6,9 +6,7 @@ import {
   nodeEqual,
   propsOfNode,
   isFunctionalComponent,
-  isSimpleSelector,
   splitSelector,
-  selectorError,
   selectorType,
   isCompoundSelector,
   AND,
@@ -208,9 +206,6 @@ export function buildInstPredicate(selector) {
       return inst => instHasType(inst, selector);
 
     case 'string':
-      if (!isSimpleSelector(selector)) {
-        throw selectorError(selector);
-      }
       if (isCompoundSelector.test(selector)) {
         return AND(splitSelector(selector).map(buildInstPredicate));
       }
