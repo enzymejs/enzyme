@@ -7,6 +7,7 @@
 */
 
 import objectAssign from 'object.assign';
+import SyntheticEvent from 'react/lib/SyntheticEvent';
 import { REACT013 } from './version';
 
 let TestUtils;
@@ -185,4 +186,5 @@ export {
   renderWithOptions,
   unmountComponentAtNode,
   batchedUpdates,
+  SyntheticEvent,
 };

@@ -1034,6 +1034,47 @@ describe('shallow', () => {
       expect(wrapper.find('.clicks-1').length).to.equal(1);
     });
 
+    it('should propagate events', () => {
+      const innerOnClick = sinon.spy();
+      const outerOnClick = sinon.spy();
+      class Foo extends React.Component {
+        render() {
+          return (
+            <div onClick={outerOnClick}>
+              <a onClick={innerOnClick}>foo</a>
+            </div>
+          );
+        }
+      }
+
+      const wrapper = shallow(<Foo />);
+
+      wrapper.find('a').simulate('click');
+      expect(innerOnClick.calledOnce).to.equal(true);
+      expect(outerOnClick.calledOnce).to.equal(true);
+    });
+
+    it('should respect event.stopPropagation()', () => {
+      const innerOnClick = sinon.spy(e => {
+        e.stopPropagation();
+      });
+      const outerOnClick = sinon.spy();
+      class Foo extends React.Component {
+        render() {
+          return (
+            <div onClick={outerOnClick}>
+              <a onClick={innerOnClick}>foo</a>
+            </div>
+          );
+        }
+      }
+
+      const wrapper = shallow(<Foo />);
+
+      wrapper.find('a').simulate('click');
+      expect(innerOnClick.calledOnce).to.equal(true);
+      expect(outerOnClick.calledOnce).to.equal(false);
+    });
 
     it('should pass in event data', () => {
       const spy = sinon.spy();
@@ -1046,11 +1087,11 @@ describe('shallow', () => {
       }
 
       const wrapper = shallow(<Foo />);
-      const a = {};
+      const a = { abc: {} };
       const b = {};
 
       wrapper.simulate('click', a, b);
-      expect(spy.args[0][0]).to.equal(a);
+      expect(spy.args[0][0].abc).to.equal(a.abc);
       expect(spy.args[0][1]).to.equal(b);
     });
 
@@ -1075,11 +1116,11 @@ describe('shallow', () => {
         );
 
         const wrapper = shallow(<Foo />);
-        const a = {};
+        const a = { abc: {} };
         const b = {};
 
         wrapper.simulate('click', a, b);
-        expect(spy.args[0][0]).to.equal(a);
+        expect(spy.args[0][0].abc).to.equal(a.abc);
         expect(spy.args[0][1]).to.equal(b);
       });
     });

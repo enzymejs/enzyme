@@ -1,4 +1,5 @@
 import React from 'react';
+import objectAssign from 'object.assign';
 import flatten from 'lodash/flatten';
 import unique from 'lodash/uniq';
 import compact from 'lodash/compact';
@@ -36,8 +37,8 @@ import {
   renderToStaticMarkup,
   batchedUpdates,
   isDOMComponentElement,
+  SyntheticEvent,
 } from './react-compat';
-import SyntheticEvent from 'react/lib/SyntheticEvent';
 
 /**
  * Finds all nodes in the current wrapper nodes' render trees that match the provided predicate
@@ -607,18 +608,24 @@ class ShallowWrapper {
    * @returns {ShallowWrapper}
    */
   simulate(event, mock, ...args) {
-    const handler = this.prop(propFromEvent(event));
-    const e = Object.assign(new SyntheticEvent(undefined, undefined, { type: event }), mock);
-    if (handler) {
-      withSetStateAllowed(() => {
-        // TODO(lmr): create/use synthetic events
-        // TODO(lmr): emulate React's event propagation
-        batchedUpdates(() => {
-          handler(e, ...args);
-        });
-        this.root.update();
+    const eventProp = propFromEvent(event);
+    const e = new SyntheticEvent(undefined, undefined, { type: event, target: {} });
+    objectAssign(e, mock);
+    withSetStateAllowed(() => {
+      batchedUpdates(() => {
+        for (let current = this; current.node !== undefined; current = current.parent()) {
+          const handler = current.prop(eventProp);
+          if (handler) {
+            handler(e, ...args);
+            if (e.isPropagationStopped()) {
+              break;
+            }
+          }
+        }
       });
-    }
+
+      this.root.update();
+    });
     return this;
   }
 
