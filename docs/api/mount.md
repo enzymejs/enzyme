@@ -72,6 +72,15 @@ Remove nodes in the current wrapper that do not return true for the provided pre
 #### [`.contains(nodeOrNodes) => Boolean`](ReactWrapper/contains.md)
 Returns whether or not a given node or array of nodes is somewhere in the render tree.
 
+#### [`.containsMatchingElement(node) => Boolean`](ReactWrapper/containsMatchingElement.md)
+Returns whether or not a given react element is somewhere in the render tree.
+
+#### [`.containsAllMatchingElements(nodes) => Boolean`](ReactWrapper/containsAllMatchingElements.md)
+Returns whether or not all the given react elements are somewhere in the render tree.
+
+#### [`.containsAnyMatchingElements(nodes) => Boolean`](ReactWrapper/containsAnyMatchingElements.md)
+Returns whether or not one of the given react elements is somewhere in the render tree.
+
 #### [`.hasClass(className) => Boolean`](ReactWrapper/hasClass.md)
 Returns whether or not the current root node has the given class name or not.
 
@@ -167,6 +176,9 @@ Iterates through each node of the current wrapper and executes the provided func
 
 #### [`.map(fn) => Array`](ReactWrapper/map.md)
 Maps the current array of nodes to another array.
+
+#### [`.matchesElement(node) => Boolean`](ReactWrapper/matchesElement.md)
+Returns whether or not a given react element matches the current render tree.
 
 #### [`.reduce(fn[, initialValue]) => Any`](/docs/api/ReactWrapper/reduce.md)
 Reduces the current array of nodes to a value

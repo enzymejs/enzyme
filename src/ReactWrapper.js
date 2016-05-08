@@ -252,6 +252,26 @@ export default class ReactWrapper {
   }
 
   /**
+   * Whether or not a given react element matches the current render tree.
+   * It will determine if the wrapper root node "looks like" the expected
+   * element by checking if all props of the expected element are present
+   * on the wrapper root node and equals to each other.
+   *
+   * Example:
+   * ```
+   * // MyComponent outputs <div class="foo">Hello</div>
+   * const wrapper = mount(<MyComponent />);
+   * expect(wrapper.matchesElement(<div>Hello</div>)).to.equal(true);
+   * ```
+   *
+   * @param {ReactElement} node
+   * @returns {Boolean}
+   */
+  matchesElement(node) {
+    return this.single(() => instEqual(node, this.node, (a, b) => a <= b));
+  }
+
+  /**
    * Whether or not a given react element exists in the mount render tree.
    *
    * Example:
@@ -268,6 +288,80 @@ export default class ReactWrapper {
       ? other => containsChildrenSubArray(instEqual, other, nodeOrNodes)
       : other => instEqual(nodeOrNodes, other);
     return findWhereUnwrapped(this, predicate).length > 0;
+  }
+
+  /**
+   * Whether or not a given react element exists in the current render tree.
+   * It will determine if one of the wrappers element "looks like" the expected
+   * element by checking if all props of the expected element are present
+   * on the wrappers element and equals to each other.
+   *
+   * Example:
+   * ```
+   * // MyComponent outputs <div><div class="foo">Hello</div></div>
+   * const wrapper = mount(<MyComponent />);
+   * expect(wrapper.atchingElement(<div>Hello</div>)).to.equal(true);
+   * ```
+   *
+   * @param {ReactElement} node
+   * @returns {Boolean}
+   */
+  containsMatchingElement(node) {
+    const predicate = other => instEqual(node, other, (a, b) => a <= b);
+    return findWhereUnwrapped(this, predicate).length > 0;
+  }
+
+  /**
+   * Whether or not all the given react elements exists in the current render tree.
+   * It will determine if one of the wrappers element "looks like" the expected
+   * element by checking if all props of the expected element are present
+   * on the wrappers element and equals to each other.
+   *
+   * Example:
+   * ```
+   * const wrapper = mount(<MyComponent />);
+   * expect(wrapper.containsAllMatchingElements([
+   *   <div>Hello</div>,
+   *   <div>Goodbye</div>,
+   * ])).to.equal(true);
+   * ```
+   *
+   * @param {Array<ReactElement>} nodes
+   * @returns {Boolean}
+   */
+  containsAllMatchingElements(nodes) {
+    const invertedEquals = (n1, n2) => instEqual(n2, n1, (a, b) => a <= b);
+    const predicate = other => containsChildrenSubArray(invertedEquals, other, nodes);
+    return findWhereUnwrapped(this, predicate).length > 0;
+  }
+
+  /**
+   * Whether or not one of the given react elements exists in the current render tree.
+   * It will determine if one of the wrappers element "looks like" the expected
+   * element by checking if all props of the expected element are present
+   * on the wrappers element and equals to each other.
+   *
+   * Example:
+   * ```
+   * const wrapper = mount(<MyComponent />);
+   * expect(wrapper.containsAnyMatchingElements([
+   *   <div>Hello</div>,
+   *   <div>Goodbye</div>,
+   * ])).to.equal(true);
+   * ```
+   *
+   * @param {Array<ReactElement>} nodes
+   * @returns {Boolean}
+   */
+  containsAnyMatchingElements(nodes) {
+    if (!Array.isArray(nodes)) return false;
+    if (nodes.length <= 0) return false;
+    for (let i = 0; i < nodes.length; i++) {
+      if (this.containsMatchingElement(nodes[i])) {
+        return true;
+      }
+    }
+    return false;
   }
 
   /**
