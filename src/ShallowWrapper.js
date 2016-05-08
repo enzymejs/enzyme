@@ -4,6 +4,7 @@ import flatten from 'lodash/flatten';
 import unique from 'lodash/uniq';
 import compact from 'lodash/compact';
 import cheerio from 'cheerio';
+import isRegex from 'is-regex';
 import {
   nodeEqual,
   containsChildrenSubArray,
@@ -18,6 +19,7 @@ import {
 import {
   getTextFromNode,
   hasClassName,
+  matchesClassName,
   childrenOfNode,
   parentsOfNode,
   treeFilter,
@@ -522,6 +524,24 @@ export default class ShallowWrapper {
       );
     }
     return this.single(n => hasClassName(n, className));
+  }
+
+  /**
+   * Returns whether or not the current root node has the given class name or not.
+   *
+   * NOTE: can only be called on a wrapper of a single node.
+   *
+   * @param className
+   * @returns {Boolean}
+   */
+  matchesClass(regex) {
+    if (!isRegex(regex)) {
+      throw new Error(
+        `ShallowWrapper::matchesClass() expects a regular expression
+         receieved a ${typeof regex} instead.`
+      );
+    }
+    return this.single(n => matchesClassName(n, regex));
   }
 
   /**

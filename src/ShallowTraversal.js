@@ -31,6 +31,11 @@ export function hasClassName(node, className) {
   return ` ${classes} `.indexOf(` ${className} `) > -1;
 }
 
+export function matchesClassName(node, regex) {
+  const classes = propsOfNode(node).className || '';
+  return regex.test(classes);
+}
+
 export function treeForEach(tree, fn) {
   if (tree !== null && tree !== false && typeof tree !== 'undefined') {
     fn(tree);

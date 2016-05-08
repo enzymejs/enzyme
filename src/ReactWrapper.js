@@ -4,9 +4,11 @@ import cheerio from 'cheerio';
 import flatten from 'lodash/flatten';
 import unique from 'lodash/uniq';
 import compact from 'lodash/compact';
+import isRegex from 'is-regex';
 import createWrapperComponent from './ReactWrapperComponent';
 import {
   instHasClassName,
+  instMatchesClassName,
   childrenOfInst,
   parentsOfInst,
   buildInstPredicate,
@@ -538,6 +540,25 @@ export default class ReactWrapper {
       );
     }
     return this.single(n => instHasClassName(n, className));
+  }
+
+  /**
+   * Returns whether or not the current root node has a class matching the
+   * passed regular expression
+   *
+   * NOTE: can only be called on a wrapper of a single node.
+   *
+   * @param {RegExp} regex
+   * @returns {Boolean}
+   */
+  matchesClass(regex) {
+    if (!isRegex(regex)) {
+      throw new Error(
+        `ReactWrapper::matchesClass() expects a regular expression,
+        receieved a ${typeof regex} instead.`
+      );
+    }
+    return this.single(n => instMatchesClassName(n, regex));
   }
 
   /**

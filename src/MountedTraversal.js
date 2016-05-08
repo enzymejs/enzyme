@@ -54,6 +54,14 @@ export function instHasClassName(inst, className) {
   return ` ${classes} `.indexOf(` ${className} `) > -1;
 }
 
+export function instMatchesClassName(inst, regex) {
+  if (!isDOMComponent(inst)) {
+    return false;
+  }
+  const classes = findDOMNode(inst).className || '';
+  return regex.test(classes);
+}
+
 export function instHasId(inst, id) {
   if (!isDOMComponent(inst)) return false;
   const instId = findDOMNode(inst).id || '';
