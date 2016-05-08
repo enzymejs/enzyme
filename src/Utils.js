@@ -1,5 +1,6 @@
 /* eslint no-use-before-define:0 */
 import isEqual from 'lodash/isEqual';
+import React from 'react';
 import {
   isDOMComponent,
   findDOMNode,
@@ -94,7 +95,7 @@ export function nodeEqual(a, b) {
     }
   }
 
-  if (typeof a !== 'string' && typeof a !== 'number') {
+  if (!isTextualNode(a)) {
     return leftKeys.length === Object.keys(right).length;
   }
 
@@ -117,6 +118,13 @@ function childrenOfNode(node) {
   return childrenToArray(children);
 }
 
+function isTextualNode(node) {
+  return typeof node === 'string' || typeof node === 'number';
+}
+
+export function isReactElementAlike(arg) {
+  return React.isValidElement(arg) || isTextualNode(arg) || Array.isArray(arg);
+}
 
 // 'click' => 'onClick'
 // 'mouseEnter' => 'onMouseEnter'

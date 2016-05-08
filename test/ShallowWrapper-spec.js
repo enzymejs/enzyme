@@ -193,6 +193,13 @@ describe('shallow', () => {
       expect(wrapper.contains(passes2)).to.equal(true);
     });
 
+    it('should throw on invalid argument', () => {
+      const wrapper = shallow(<div></div>);
+
+      expect(() => wrapper.contains({})).to.throw();
+      expect(() => wrapper.contains(() => ({}))).to.throw();
+    });
+
     describeIf(!REACT013, 'stateless function components', () => {
       it('should match composite components', () => {
         const Foo = () => (
