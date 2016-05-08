@@ -54,7 +54,7 @@ export default function createWrapperComponent(node, options = {}) {
       const component = this._reactInternalInstance._renderedComponent;
       const inst = component.getPublicInstance();
       if (inst === null) {
-        return component;
+        return component._instance;
       }
       return inst;
     },

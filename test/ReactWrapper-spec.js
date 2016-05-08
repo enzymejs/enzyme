@@ -113,6 +113,15 @@ describeWithDOM('mount', () => {
       expect(wrapper.find('.qoo').text()).to.equal('qux');
     });
 
+    it('supports findDOMNode with stateless components', () => {
+      const Foo = ({ foo }) => (
+        <div>{foo}</div>
+      );
+
+      const wrapper = mount(<Foo foo="qux" />);
+      expect(wrapper.text()).to.equal('qux');
+    });
+
     it('works with nested stateless', () => {
       const TestItem = () => (
         <div className="item">1</div>
