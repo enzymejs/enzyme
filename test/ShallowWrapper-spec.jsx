@@ -1034,7 +1034,7 @@ describe('shallow', () => {
       expect(wrapper.find('.clicks-1').length).to.equal(1);
     });
 
-    it('should propagate events', () => {
+    it('should propagate events triggered on native elements', () => {
       const innerOnClick = sinon.spy();
       const outerOnClick = sinon.spy();
       class Foo extends React.Component {
@@ -1050,6 +1050,32 @@ describe('shallow', () => {
       const wrapper = shallow(<Foo />);
 
       wrapper.find('a').simulate('click');
+      expect(innerOnClick.calledOnce).to.equal(true);
+      expect(outerOnClick.calledOnce).to.equal(true);
+    });
+
+    it('should propagate events triggered on composite elements', () => {
+      class Bar extends React.Component {
+        render() {
+          return <div>bar</div>;
+        }
+      }
+
+      const innerOnClick = sinon.spy();
+      const outerOnClick = sinon.spy();
+      class Foo extends React.Component {
+        render() {
+          return (
+            <div onClick={outerOnClick}>
+              <Bar onClick={innerOnClick} />
+            </div>
+          );
+        }
+      }
+
+      const wrapper = shallow(<Foo />);
+
+      wrapper.find(Bar).simulate('click');
       expect(innerOnClick.calledOnce).to.equal(true);
       expect(outerOnClick.calledOnce).to.equal(true);
     });
