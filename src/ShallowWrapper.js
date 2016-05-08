@@ -603,30 +603,33 @@ class ShallowWrapper {
    * Used to simulate events. Pass an eventname and (optionally) event arguments. This method of
    * testing events should be met with some skepticism.
    *
+   * NOTE: can only be called on a wrapper of a single node.
+   *
    * @param {String} event
    * @param {Array} args
    * @returns {ShallowWrapper}
    */
   simulate(event, mock, ...args) {
-    const eventProp = propFromEvent(event);
-    const e = new SyntheticEvent(undefined, undefined, { type: event, target: {} });
-    objectAssign(e, mock);
-    withSetStateAllowed(() => {
-      batchedUpdates(() => {
-        for (let current = this; current.node !== undefined; current = current.parent()) {
-          const handler = current.prop(eventProp);
-          if (handler) {
-            handler(e, ...args);
-            if (e.isPropagationStopped()) {
-              break;
+    return this.single(() => {
+      const eventProp = propFromEvent(event);
+      const e = new SyntheticEvent(undefined, undefined, { type: event, target: {} });
+      objectAssign(e, mock);
+      withSetStateAllowed(() => {
+        batchedUpdates(() => {
+          for (let current = this; current.node !== undefined; current = current.parent()) {
+            const handler = current.prop(eventProp);
+            if (handler) {
+              handler(e, ...args);
+              if (e.isPropagationStopped()) {
+                break;
+              }
             }
           }
-        }
+        });
+        this.root.update();
       });
-
-      this.root.update();
+      return this;
     });
-    return this;
   }
 
   /**
