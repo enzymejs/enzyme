@@ -175,6 +175,9 @@ Returns a string representation of the current shallow render tree for debugging
 #### [`.type() => String|Function`](ShallowWrapper/type.md)
 Returns the type of the current node of the wrapper.
 
+#### [`.name() => String`](ShallowWrapper/name.md)
+Returns the name of the current node of the wrapper.
+
 #### [`.forEach(fn) => ShallowWrapper`](ShallowWrapper/forEach.md)
 Iterates through each node of the current wrapper and executes the provided function
 

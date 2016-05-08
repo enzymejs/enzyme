@@ -25,6 +25,7 @@ import {
   containsChildrenSubArray,
   propsOfNode,
   typeOfNode,
+  displayNameOfNode,
 } from './Utils';
 import {
   debugInsts,
@@ -614,6 +615,17 @@ export default class ReactWrapper {
    */
   type() {
     return this.single(n => typeOfNode(getNode(n)));
+  }
+
+  /**
+   * Returns the name of the root node of this wrapper.
+   *
+   * In order of precedence => type.displayName -> type.name -> type.
+   *
+   * @returns {String}
+   */
+  name() {
+    return this.single(n => displayNameOfNode(getNode(n)));
   }
 
   /**

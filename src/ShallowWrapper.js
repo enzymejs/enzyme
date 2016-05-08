@@ -12,6 +12,7 @@ import {
   propsOfNode,
   typeOfNode,
   isReactElementAlike,
+  displayNameOfNode,
 } from './Utils';
 import {
   debugNodes,
@@ -610,6 +611,17 @@ export default class ShallowWrapper {
    */
   type() {
     return this.single(typeOfNode);
+  }
+
+  /**
+   * Returns the name of the root node of this wrapper.
+   *
+   * In order of precedence => type.displayName -> type.name -> type.
+   *
+   * @returns {String}
+   */
+  name() {
+    return this.single(displayNameOfNode);
   }
 
   /**

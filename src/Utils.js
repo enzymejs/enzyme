@@ -276,3 +276,11 @@ export function mapNativeEventNames(event) {
 
   return nativeToReactEventMap[event] || event;
 }
+
+export function displayNameOfNode(node) {
+  const { type } = node;
+
+  if (!type) return null;
+
+  return type.displayName || type.name || type;
+}

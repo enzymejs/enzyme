@@ -2539,4 +2539,108 @@ describe('shallow', () => {
       expect(spy2.callCount).to.equal(0);
     });
   });
+  describe('.name()', () => {
+    describe('node with displayName', () => {
+      it('should return the displayName of the node', () => {
+        class Foo extends React.Component {
+          render() { return <div />; }
+        }
+
+        class Wrapper extends React.Component {
+          render() { return <Foo />; }
+        }
+
+        Foo.displayName = 'CustomWrapper';
+
+        const wrapper = shallow(<Wrapper />);
+        expect(wrapper.name()).to.equal('CustomWrapper');
+      });
+
+      describeIf(!REACT013, 'stateless function components', () => {
+        it('should return the name of the node', () => {
+          function SFC() {
+            return <div />;
+          }
+          const Wrapper = () => <SFC />;
+
+          SFC.displayName = 'CustomWrapper';
+
+          const wrapper = shallow(<Wrapper />);
+          expect(wrapper.name()).to.equal('CustomWrapper');
+        });
+      });
+
+      describe('React.createClass', () => {
+        it('should return the name of the node', () => {
+          const Foo = React.createClass({
+            displayName: 'CustomWrapper',
+            render() {
+              return <div />;
+            },
+          });
+          const Wrapper = React.createClass({
+            render() {
+              return <Foo />;
+            },
+          });
+
+          const wrapper = shallow(<Wrapper />);
+          expect(wrapper.name()).to.equal('CustomWrapper');
+        });
+      });
+    });
+
+    describe('node without displayName', () => {
+      it('should return the name of the node', () => {
+        class Foo extends React.Component {
+          render() { return <div />; }
+        }
+
+        class Wrapper extends React.Component {
+          render() { return <Foo />; }
+        }
+
+        const wrapper = shallow(<Wrapper />);
+        expect(wrapper.name()).to.equal('Foo');
+      });
+
+      describeIf(!REACT013, 'stateless function components', () => {
+        it('should return the name of the node', () => {
+          function SFC() {
+            return <div />;
+          }
+          const Wrapper = () => <SFC />;
+
+          const wrapper = shallow(<Wrapper />);
+          expect(wrapper.name()).to.equal('SFC');
+        });
+      });
+
+      describe('React.createClass', () => {
+        it('should return the name of the node', () => {
+          const Foo = React.createClass({
+            render() {
+              return <div />;
+            },
+          });
+          const Wrapper = React.createClass({
+            render() {
+              return <Foo />;
+            },
+          });
+
+          const wrapper = shallow(<Wrapper />);
+          expect(wrapper.name()).to.equal('Foo');
+        });
+      });
+    });
+
+    describe('DOM node', () => {
+      it('should return the name of the node', () => {
+        const wrapper = shallow(<div />);
+        expect(wrapper.name()).to.equal('div');
+      });
+    });
+  });
+
 });
