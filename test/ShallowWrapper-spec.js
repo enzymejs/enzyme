@@ -864,7 +864,23 @@ describe('shallow', () => {
       expect(wrapper.find('.clicks-0').length).to.equal(1);
       wrapper.simulate('click');
       expect(wrapper.find('.clicks-1').length).to.equal(1);
+    });
 
+    it('should pass in default event data', () => {
+      const spy = sinon.spy();
+      class Foo extends React.Component {
+        render() {
+          return (
+            <a onClick={spy}>foo</a>
+          );
+        }
+      }
+
+      const wrapper = shallow(<Foo />);
+
+      wrapper.simulate('click');
+      expect(spy.args[0][0].type).to.equal('click');
+      expect(spy.args[0][0].preventDefault).to.a('function');
     });
 
 
