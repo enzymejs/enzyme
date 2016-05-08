@@ -46,16 +46,6 @@ matrix:
     env: EXAMPLE=karma-webpack
   - node_js: "4"
     env: EXAMPLE=jest
-  - node_js: "iojs"
-    env: EXAMPLE=mocha
-  - node_js: "iojs"
-    env: EXAMPLE=karma
-  - node_js: "iojs"
-    env: EXAMPLE=react-native
-  - node_js: "iojs"
-    env: EXAMPLE=karma-webpack
-  - node_js: "iojs"
-    env: EXAMPLE=jest
   - node_js: "0.12"
     env: EXAMPLE=mocha
   - node_js: "0.12"
