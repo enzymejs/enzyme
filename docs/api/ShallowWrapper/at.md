@@ -21,3 +21,9 @@ Returns a wrapper around the node at a given index of the current wrapper.
 const wrapper = shallow(<MyComponent />);
 expect(wrapper.find(Foo).at(0).props().foo).to.equal("bar");
 ```
+
+
+
+#### Related Methods
+
+- [`.get(index) => ReactElement`](get.md)
