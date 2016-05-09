@@ -1035,13 +1035,20 @@ describe('shallow', () => {
     });
 
     it('should propagate events triggered on native elements', () => {
-      const innerOnClick = sinon.spy();
-      const outerOnClick = sinon.spy();
+      const orderedCalls = [];
       class Foo extends React.Component {
         render() {
           return (
-            <div onClick={outerOnClick}>
-              <a onClick={innerOnClick}>foo</a>
+            <div
+              onClick={() => orderedCalls.push('div bubble')}
+              onClickCapture={() => orderedCalls.push('div capture')}
+            >
+              <a
+                onClick={() => orderedCalls.push('a bubble')}
+                onClickCapture={() => orderedCalls.push('a capture')}
+              >
+                foo
+              </a>
             </div>
           );
         }
@@ -1050,8 +1057,11 @@ describe('shallow', () => {
       const wrapper = shallow(<Foo />);
 
       wrapper.find('a').simulate('click');
-      expect(innerOnClick.calledOnce).to.equal(true);
-      expect(outerOnClick.calledOnce).to.equal(true);
+      expect(orderedCalls.length).to.equal(4);
+      expect(orderedCalls[0]).to.equal('div capture');
+      expect(orderedCalls[1]).to.equal('a capture');
+      expect(orderedCalls[2]).to.equal('a bubble');
+      expect(orderedCalls[3]).to.equal('div bubble');
     });
 
     it('should propagate events triggered on composite elements', () => {
@@ -1114,11 +1124,9 @@ describe('shallow', () => {
 
       const wrapper = shallow(<Foo />);
       const a = { abc: {} };
-      const b = {};
 
-      wrapper.simulate('click', a, b);
+      wrapper.simulate('click', a);
       expect(spy.args[0][0].abc).to.equal(a.abc);
-      expect(spy.args[0][1]).to.equal(b);
     });
 
     describeIf(!REACT013, 'stateless function components', () => {
@@ -1143,11 +1151,9 @@ describe('shallow', () => {
 
         const wrapper = shallow(<Foo />);
         const a = { abc: {} };
-        const b = {};
 
-        wrapper.simulate('click', a, b);
+        wrapper.simulate('click', a);
         expect(spy.args[0][0].abc).to.equal(a.abc);
-        expect(spy.args[0][1]).to.equal(b);
       });
     });
 

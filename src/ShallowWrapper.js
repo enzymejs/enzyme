@@ -609,23 +609,32 @@ class ShallowWrapper {
    * @param {Array} args
    * @returns {ShallowWrapper}
    */
-  simulate(event, mock, ...args) {
+  simulate(event, mock) {
     return this.single(() => {
-      const eventProp = propFromEvent(event);
+      const bubbleProp = propFromEvent(event);
+      const captureProp = `${bubbleProp}Capture`;
       const e = new SyntheticEvent(undefined, undefined, { type: event, target: {} });
       objectAssign(e, mock);
       withSetStateAllowed(() => {
+        const handlers = [
+          ...this.parents().map(n => n.prop(captureProp)).reverse(),
+          this.prop(captureProp),
+          this.prop(bubbleProp),
+          ...this.parents().map(n => n.prop(bubbleProp)),
+        ];
+
         batchedUpdates(() => {
-          for (let current = this; current.node !== undefined; current = current.parent()) {
-            const handler = current.prop(eventProp);
+          handlers.some((handler) => {
             if (handler) {
-              handler(e, ...args);
+              handler(e);
               if (e.isPropagationStopped()) {
-                break;
+                return true;
               }
             }
-          }
+            return false;
+          });
         });
+
         this.root.update();
       });
       return this;
