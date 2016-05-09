@@ -15,13 +15,37 @@ Note: can only be called on a wrapper of a single node.
 #### Examples
 
 ```jsx
-const wrapper = shallow(<div/>);
+class Foo extends React.Component {
+  render() {
+    return <div />;
+  }
+}
+const wrapper = shallow(<Foo />);
 expect(wrapper.type()).to.equal('div');
 ```
 
 ```jsx
+class Foo extends React.Component {
+  render() {
+    return (
+      <div>
+        <button className="btn">Button</a>
+      </div>
+    );
+  }
+}
 const wrapper = shallow(<Foo />);
-expect(wrapper.type()).to.equal(Foo);
+expect(wrapper.find('.btn').type()).to.equal('button');
+```
+
+```jsx
+class Foo extends React.Component {
+  render() {
+    return <Bar />;
+  }
+}
+const wrapper = shallow(<Foo />);
+expect(wrapper.type()).to.equal(Bar);
 ```
 
 ```jsx
