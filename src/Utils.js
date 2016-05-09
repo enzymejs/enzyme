@@ -82,14 +82,11 @@ export function nodeEqual(a, b, lenComp = is) {
   const right = propsOfNode(b);
   for (let i = 0; i < leftKeys.length; i++) {
     const prop = leftKeys[i];
-    if (!(prop in right)) return false;
+    // we will check children later
     if (prop === 'children') {
-      if (!childrenEqual(
-          childrenToArray(left.children),
-          childrenToArray(right.children),
-          lenComp)) {
-        return false;
-      }
+      // continue;
+    } else if (!(prop in right)) {
+      return false;
     } else if (right[prop] === left[prop]) {
       // continue;
     } else if (typeof right[prop] === typeof left[prop] && typeof left[prop] === 'object') {
@@ -99,8 +96,20 @@ export function nodeEqual(a, b, lenComp = is) {
     }
   }
 
+  const leftHasChildren = 'children' in left;
+  const rightHasChildren = 'children' in right;
+  if (leftHasChildren || rightHasChildren) {
+    if (!childrenEqual(
+        childrenToArray(left.children),
+        childrenToArray(right.children),
+        lenComp)) {
+      return false;
+    }
+  }
+
   if (!isTextualNode(a)) {
-    return lenComp(leftKeys.length, Object.keys(right).length);
+    const rightKeys = Object.keys(right);
+    return lenComp(leftKeys.length - leftHasChildren, rightKeys.length - rightHasChildren);
   }
 
   return false;

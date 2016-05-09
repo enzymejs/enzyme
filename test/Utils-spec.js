@@ -124,6 +124,103 @@ describe('Utils', () => {
 
     });
 
+    describe('children props', () => {
+      it('should match equal nodes', () => {
+        expect(nodeEqual(
+          <div>child</div>,
+          <div>child</div>
+        )).to.equal(true);
+      });
+
+      it('should not match not equal nodes', () => {
+        expect(nodeEqual(
+          <div>child</div>,
+          <div></div>
+        )).to.equal(false);
+
+        expect(nodeEqual(
+          <div></div>,
+          <div>child</div>
+        )).to.equal(false);
+      });
+
+      it('should skip null children', () => {
+        expect(nodeEqual(
+          <div>{null}</div>,
+          <div></div>
+        )).to.equal(true);
+      });
+
+      it('should skip undefined children', () => {
+        expect(nodeEqual(
+          <div>{undefined}</div>,
+          <div></div>
+        )).to.equal(true);
+      });
+
+      it('should skip empty children', () => {
+        expect(nodeEqual(
+          <div>{[]}</div>,
+          <div></div>
+        )).to.equal(true);
+      });
+
+      it('should skip array of null children', () => {
+        expect(nodeEqual(
+          <div>{[null, null, null]}</div>,
+          <div></div>
+        )).to.equal(true);
+      });
+
+    });
+
+    describe('basic props and children mixed', () => {
+
+      it('should match equal nodes', () => {
+        expect(nodeEqual(
+          <div className="foo">child</div>,
+          <div className="foo">child</div>
+        )).to.equal(true);
+      });
+
+      it('should not match when basic props are not equal', () => {
+        expect(nodeEqual(
+          <div className="foo">child</div>,
+          <div className="bar">child</div>
+        )).to.equal(false);
+
+        expect(nodeEqual(
+          <div children="child" className="foo" />,
+          <div children="child" className="bar" />
+        )).to.equal(false);
+      });
+
+      it('should not match when children are not equal', () => {
+        expect(nodeEqual(
+          <div className="foo">child</div>,
+          <div className="foo">other child</div>
+        )).to.equal(false);
+
+        expect(nodeEqual(
+          <div children="child" className="foo" />,
+          <div children="other child" className="foo" />
+        )).to.equal(false);
+      });
+
+      it('should match nodes when children are different but falsy', () => {
+        expect(nodeEqual(
+          <div className="foo">{null}</div>,
+          <div className="foo" />
+        )).to.equal(true);
+
+        expect(nodeEqual(
+          <div children={null} className="foo" />,
+          <div className="foo" />
+        )).to.equal(true);
+      });
+
+    });
+
   });
 
   describe('propFromEvent', () => {
