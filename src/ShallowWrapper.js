@@ -13,6 +13,7 @@ import {
   typeOfNode,
   isReactElementAlike,
   displayNameOfNode,
+  isFunctionalComponent,
 } from './Utils';
 import {
   debugNodes,
@@ -100,6 +101,9 @@ export default class ShallowWrapper {
    * @returns {ReactComponent}
    */
   instance() {
+    if (this.root !== this) {
+      throw new Error('ShallowWrapper::instance() can only be called on the root');
+    }
     return this.renderer._instance._instance;
   }
 
@@ -164,6 +168,9 @@ export default class ShallowWrapper {
   setState(state) {
     if (this.root !== this) {
       throw new Error('ShallowWrapper::setState() can only be called on the root');
+    }
+    if (isFunctionalComponent(this.instance())) {
+      throw new Error('ShallowWrapper::setState() can only be called on class components');
     }
     this.single(() => {
       withSetStateAllowed(() => {
@@ -492,6 +499,9 @@ export default class ShallowWrapper {
     if (this.root !== this) {
       throw new Error('ShallowWrapper::state() can only be called on the root');
     }
+    if (isFunctionalComponent(this.instance())) {
+      throw new Error('ShallowWrapper::state() can only be called on class components');
+    }
     const _state = this.single(() => this.instance().state);
     if (name !== undefined) {
       return _state[name];
@@ -511,6 +521,12 @@ export default class ShallowWrapper {
   context(name) {
     if (this.root !== this) {
       throw new Error('ShallowWrapper::context() can only be called on the root');
+    }
+    if (!this.options.context) {
+      throw new Error(
+        'ShallowWrapper::context() can only be called on a wrapper that was originally passed ' +
+        'a context option'
+      );
     }
     const _context = this.single(() => this.instance().context);
     if (name) {

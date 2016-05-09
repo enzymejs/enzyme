@@ -101,6 +101,31 @@ describe('shallow', () => {
     });
   });
 
+  describe('.instance()', () => {
+
+    it('should return the component instance', () => {
+      class Foo extends React.Component {
+        render() { return <div />; }
+      }
+
+      const wrapper = shallow(<Foo />);
+      expect(wrapper.instance()).to.be.instanceof(Foo);
+      expect(wrapper.instance().render).to.equal(Foo.prototype.render);
+    });
+
+    it('should throw if called on something other than the root node', () => {
+      class Foo extends React.Component {
+        render() { return <div><a /></div>; }
+      }
+
+      const wrapper = shallow(<Foo />);
+      const div = wrapper.find('div');
+
+      expect(() => div.instance()).to.throw();
+    });
+
+  });
+
   describe('.contains(node)', () => {
 
     it('should allow matches on the root node', () => {
@@ -989,6 +1014,28 @@ describe('shallow', () => {
       expect(wrapper.find('.foo').length).to.equal(1);
       wrapper.setState({ id: 'bar' });
       expect(wrapper.find('.bar').length).to.equal(1);
+    });
+
+    describeIf(!REACT013, 'stateless function components', () => {
+      it('should throw when trying to access state', () => {
+        const Foo = () => (
+          <div>abc</div>
+        );
+
+        const wrapper = shallow(<Foo />);
+
+        expect(() => wrapper.state()).to.throw();
+      });
+
+      it('should throw when trying to set state', () => {
+        const Foo = () => (
+          <div>abc</div>
+        );
+
+        const wrapper = shallow(<Foo />);
+
+        expect(() => wrapper.setState({ a: 1 })).to.throw();
+      });
     });
   });
 
