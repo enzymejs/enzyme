@@ -2483,6 +2483,33 @@ describe('shallow', () => {
         shallow(<Foo />);
         expect(spy.calledOnce).to.equal(true);
       });
+
+      it.skip('should be batching updates', () => {
+        const spy = sinon.spy();
+        class Foo extends React.Component {
+          constructor(props) {
+            super(props);
+            this.state = {
+              count: 0,
+            };
+          }
+          componentWillMount() {
+            this.setState({ count: this.state.count + 1 });
+            this.setState({ count: this.state.count + 1 });
+          }
+          componentDidMount() {
+            this.setState({ count: this.state.count + 1 });
+            this.setState({ count: this.state.count + 1 });
+          }
+          render() {
+            spy();
+            return <div>{this.state.count}</div>;
+          }
+        }
+        const result = shallow(<Foo />);
+        expect(result.state('count')).to.equal(2);
+        expect(spy.callCount).to.equal(2);
+      });
     });
 
     context('updating props', () => {
@@ -2637,6 +2664,89 @@ describe('shallow', () => {
         wrapper.setProps({ foo: 'baz' });
         expect(spy.callCount).to.equal(0);
       });
+
+      it('should be batching updates in componentWillReceiveProps', () => {
+        const spy = sinon.spy();
+        class Foo extends React.Component {
+          constructor(props) {
+            super(props);
+            this.state = {
+              count: 0,
+            };
+          }
+          componentWillReceiveProps() {
+            this.setState({ count: this.state.count + 1 });
+            this.setState({ count: this.state.count + 1 });
+          }
+          render() {
+            spy();
+            return <div>{this.props.foo}</div>;
+          }
+        }
+        const result = shallow(<Foo />);
+        result.setProps({ name: 'bar' });
+        expect(result.state('count')).to.equal(1);
+        expect(spy.callCount).to.equal(2);
+      });
+
+      it.skip('should be batching updates in componentWillUpdate', () => {
+        const spy = sinon.spy();
+        class Foo extends React.Component {
+          constructor(props) {
+            super(props);
+            this.updated = false;
+            this.state = {
+              count: 0,
+            };
+          }
+          componentWillUpdate() {
+            if (!this.updated) {
+              this.updated = true;
+              this.setState({ count: this.state.count + 1 });
+              this.setState({ count: this.state.count + 1 });
+            }
+          }
+          render() {
+            spy();
+            return <div>{this.props.foo}</div>;
+          }
+        }
+        const result = shallow(<Foo />);
+        result.setProps({ name: 'bar' });
+        expect(result.state('count')).to.equal(1);
+        expect(spy.callCount).to.equal(3);
+      });
+
+      it.skip('should be batching updates in componentDidUpdate', () => {
+        const spy = sinon.spy();
+        class Foo extends React.Component {
+          constructor(props) {
+            super(props);
+            this.updated = false;
+            this.state = {
+              count: 0,
+            };
+          }
+          componentDidUpdate() {
+            if (!this.updated) {
+              this.updated = true;
+              /* eslint-disable react/no-did-update-set-state */
+              this.setState({ count: this.state.count + 1 });
+              this.setState({ count: this.state.count + 1 });
+              /* eslint-enable react/no-did-update-set-state */
+            }
+          }
+          render() {
+            spy();
+            return <div>{this.props.foo}</div>;
+          }
+        }
+        const result = shallow(<Foo />);
+        result.setProps({ name: 'bar' });
+        expect(result.state('count')).to.equal(1);
+        expect(spy.callCount).to.equal(3);
+      });
+
     });
 
     context('updating state', () => {
@@ -2752,6 +2862,67 @@ describe('shallow', () => {
         wrapper.setState({ foo: 'baz' });
         expect(spy.callCount).to.equal(0);
       });
+
+      it('should be batching updates in componentWillUpdate', () => {
+        const spy = sinon.spy();
+        class Foo extends React.Component {
+          constructor(props) {
+            super(props);
+            this.updated = false;
+            this.state = {
+              name: 'foo',
+              count: 0,
+            };
+          }
+          componentWillUpdate() {
+            if (!this.updated) {
+              this.updated = true;
+              this.setState({ count: this.state.count + 1 });
+              this.setState({ count: this.state.count + 1 });
+            }
+          }
+          render() {
+            spy();
+            return <div>{this.state.name}</div>;
+          }
+        }
+        const result = shallow(<Foo />);
+        result.setState({ name: 'bar' });
+        expect(result.state('count')).to.equal(1);
+        expect(spy.callCount).to.equal(3);
+      });
+
+      it('should be batching updates in componentDidUpdate', () => {
+        const spy = sinon.spy();
+        class Foo extends React.Component {
+          constructor(props) {
+            super(props);
+            this.updated = false;
+            this.state = {
+              name: 'foo',
+              count: 0,
+            };
+          }
+          componentDidUpdate() {
+            if (!this.updated) {
+              this.updated = true;
+              /* eslint-disable react/no-did-update-set-state */
+              this.setState({ count: this.state.count + 1 });
+              this.setState({ count: this.state.count + 1 });
+              /* eslint-enable react/no-did-update-set-state */
+            }
+          }
+          render() {
+            spy();
+            return <div>{this.state.name}</div>;
+          }
+        }
+        const result = shallow(<Foo />);
+        result.setState({ name: 'bar' });
+        expect(result.state('count')).to.equal(1);
+        expect(spy.callCount).to.equal(3);
+      });
+
     });
 
     context('updating context', () => {
@@ -2834,6 +3005,65 @@ describe('shallow', () => {
         wrapper.setContext({ foo: 'baz' });
         expect(spy.callCount).to.equal(0);
       });
+
+      it.skip('should be batching updates in componentWillUpdate', () => {
+        const spy = sinon.spy();
+        class Foo extends React.Component {
+          constructor(props) {
+            super(props);
+            this.updated = false;
+            this.state = {
+              count: 0,
+            };
+          }
+          componentWillUpdate() {
+            if (!this.updated) {
+              this.updated = true;
+              this.setState({ count: this.state.count + 1 });
+              this.setState({ count: this.state.count + 1 });
+            }
+          }
+          render() {
+            spy();
+            return <div>{this.state.name}</div>;
+          }
+        }
+        const result = shallow(<Foo />, { context: { foo: 'bar' } });
+        result.setContext({ foo: 'baz' });
+        expect(result.state('count')).to.equal(1);
+        expect(spy.callCount).to.equal(3);
+      });
+
+      it.skip('should be batching updates in componentDidUpdate', () => {
+        const spy = sinon.spy();
+        class Foo extends React.Component {
+          constructor(props) {
+            super(props);
+            this.updated = false;
+            this.state = {
+              count: 0,
+            };
+          }
+          componentDidUpdate() {
+            if (!this.updated) {
+              this.updated = true;
+              /* eslint-disable react/no-did-update-set-state */
+              this.setState({ count: this.state.count + 1 });
+              this.setState({ count: this.state.count + 1 });
+              /* eslint-enable react/no-did-update-set-state */
+            }
+          }
+          render() {
+            spy();
+            return <div>{this.state.name}</div>;
+          }
+        }
+        const result = shallow(<Foo />, { context: { foo: 'bar' } });
+        result.setContext({ foo: 'baz' });
+        expect(result.state('count')).to.equal(1);
+        expect(spy.callCount).to.equal(3);
+      });
+
     });
 
     context('unmounting', () => {
