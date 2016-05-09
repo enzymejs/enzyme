@@ -101,6 +101,31 @@ describe('shallow', () => {
     });
   });
 
+  describe('.instance()', () => {
+
+    it('should return the component instance', () => {
+      class Foo extends React.Component {
+        render() { return <div />; }
+      }
+
+      const wrapper = shallow(<Foo />);
+      expect(wrapper.instance()).to.be.instanceof(Foo);
+      expect(wrapper.instance().render).to.equal(Foo.prototype.render);
+    });
+
+    it('should throw if called on something other than the root node', () => {
+      class Foo extends React.Component {
+        render() { return <div><a /></div>; }
+      }
+
+      const wrapper = shallow(<Foo />);
+      const div = wrapper.find('div');
+
+      expect(() => div.instance()).to.throw();
+    });
+
+  });
+
   describe('.contains(node)', () => {
 
     it('should allow matches on the root node', () => {
