@@ -990,6 +990,28 @@ describe('shallow', () => {
       wrapper.setState({ id: 'bar' });
       expect(wrapper.find('.bar').length).to.equal(1);
     });
+
+    describeIf(!REACT013, 'stateless function components', () => {
+      it('should throw when trying to access state', () => {
+        const Foo = () => (
+          <div>abc</div>
+        );
+
+        const wrapper = shallow(<Foo />);
+
+        expect(() => wrapper.state()).to.throw();
+      });
+
+      it('should throw when trying to set state', () => {
+        const Foo = () => (
+          <div>abc</div>
+        );
+
+        const wrapper = shallow(<Foo />);
+
+        expect(() => wrapper.setState({ a: 1 })).to.throw();
+      });
+    });
   });
 
   describe('.is(selector)', () => {
