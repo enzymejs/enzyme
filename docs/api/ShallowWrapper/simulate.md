@@ -55,6 +55,4 @@ expect in a real environment. As a result, one must call `.simulate()` on the ac
 the event handler set.
 - Even though the name would imply this simulates an actual event, `.simulate()` will in fact 
 target the component's prop based on the event you give it. For example, `.simulate('click')` will
-actually get the `onClick` prop and call it. This is important to keep in mind when using
-libraries such as MaterialUI where clicks are set on a `onTouchTap` prop. You will need to call
-`.simulate('touchTap')` for those.
+actually get the `onClick` prop and call it.
