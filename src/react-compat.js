@@ -10,9 +10,9 @@ let findDOMNode;
 let childrenToArray;
 let renderWithOptions;
 let unmountComponentAtNode;
+let batchedUpdates;
 
 const React = require('react');
-const batchedUpdates = require('react/lib/ReactUpdates').batchedUpdates;
 
 if (REACT013) {
   renderToStaticMarkup = React.renderToStaticMarkup;
@@ -21,6 +21,7 @@ if (REACT013) {
   unmountComponentAtNode = React.unmountComponentAtNode;
   /* eslint-enable react/no-deprecated */
   TestUtils = require('react/addons').addons.TestUtils;
+  batchedUpdates = require('react/addons').addons.batchedUpdates;
   const ReactContext = require('react/lib/ReactContext');
 
   // Shallow rendering in 0.13 did not properly support context. This function provides a shim
@@ -77,6 +78,7 @@ if (REACT013) {
   renderToStaticMarkup = require('react-dom/server').renderToStaticMarkup;
   findDOMNode = ReactDOM.findDOMNode;
   unmountComponentAtNode = ReactDOM.unmountComponentAtNode;
+  batchedUpdates = ReactDOM.unstable_batchedUpdates;
   // We require the testutils, but they don't come with 0.14 out of the box, so we
   // require them here through this node module. The bummer is that we are not able
   // to list this as a dependency in package.json and have 0.13 work properly.
