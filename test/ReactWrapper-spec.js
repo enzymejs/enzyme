@@ -426,6 +426,28 @@ describeWithDOM('mount', () => {
       expect(() => wrapper.find([])).to.throw(Error);
       expect(() => wrapper.find(null)).to.throw(Error);
     });
+
+    it('should support objects with multiple instances (?)', () => {
+
+      class MockLink extends React.Component {
+        render() {
+          const to = this.props.to;
+          const children = this.props.children;
+          return (
+            <a href={to}>{children}</a>
+          );
+        }
+      }
+
+      const wrapper = mount(
+        <div>
+          <MockLink to="/">First</MockLink>
+          <MockLink to="/second">Second</MockLink>
+        </div>
+      );
+
+      expect(wrapper.find({ to: '/' })).to.have.length(1);
+    });
   });
 
   describe('.findWhere(predicate)', () => {
