@@ -427,7 +427,7 @@ describeWithDOM('mount', () => {
       expect(() => wrapper.find(null)).to.throw(Error);
     });
 
-    it('should support objects with multiple instances (?)', () => {
+    it('should parse props for non-DOMComponent instances', () => {
 
       class MockLink extends React.Component {
         render() {
@@ -447,6 +447,7 @@ describeWithDOM('mount', () => {
       );
 
       expect(wrapper.find({ to: '/' })).to.have.length(1);
+
     });
   });
 

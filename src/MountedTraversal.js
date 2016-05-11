@@ -194,11 +194,7 @@ export function parentsOfInst(inst, root) {
 }
 
 export function instMatchesObjectProps(inst, props) {
-  if (!isDOMComponent(inst)) {
-    console.log({ inst });
-    return false;
-  }
-  const node = getNode(inst);
+  const node = isDOMComponent(inst) ? getNode(inst) : inst;
   return isSubset(propsOfNode(node), props);
 }
 
