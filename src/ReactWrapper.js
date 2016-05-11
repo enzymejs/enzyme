@@ -301,7 +301,7 @@ export default class ReactWrapper {
    * ```
    * // MyComponent outputs <div><div class="foo">Hello</div></div>
    * const wrapper = mount(<MyComponent />);
-   * expect(wrapper.atchingElement(<div>Hello</div>)).to.equal(true);
+   * expect(wrapper.containsMatchingElement(<div>Hello</div>)).to.equal(true);
    * ```
    *
    * @param {ReactElement} node
