@@ -471,7 +471,7 @@ export default class ReactWrapper {
    * @param {Array} args
    * @returns {ReactWrapper}
    */
-  simulate(event, mock) {
+  simulate(event, mock = {}) {
     this.single(n => {
       const mappedEvent = mapNativeEventNames(event);
       const eventFn = Simulate[mappedEvent];
