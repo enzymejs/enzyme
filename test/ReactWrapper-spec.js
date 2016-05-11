@@ -450,7 +450,7 @@ describeWithDOM('mount', () => {
       expect(wrapper.find({ to: '/second' })).to.have.length(1);
 
       expect(wrapper.find('[to="/"]')).to.have.length(1);
-      // expect(wrapper.find('[to="/second"]')).to.have.length(1);
+      expect(wrapper.find('[to="/second"]')).to.have.length(1);
 
     });
   });
