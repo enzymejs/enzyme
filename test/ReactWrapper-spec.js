@@ -224,6 +224,33 @@ describeWithDOM('mount', () => {
       expect(wrapper.find('input').props().className).to.equal('foo');
     });
 
+    it('should find an element based on a tag name and class name', () => {
+      const wrapper = mount(
+        <div>
+          <input className="foo" />
+        </div>
+      );
+      expect(wrapper.find('input.foo').length).to.equal(1);
+    });
+
+    it('should find an element based on a tag name and id', () => {
+      const wrapper = mount(
+        <div>
+          <input id="foo" />
+        </div>
+      );
+      expect(wrapper.find('input#foo').length).to.equal(1);
+    });
+
+    it('should find an element based on a tag name, id, and class name', () => {
+      const wrapper = mount(
+        <div>
+          <input id="foo" className="bar" />
+        </div>
+      );
+      expect(wrapper.find('input#foo.bar').length).to.equal(1);
+    });
+
     it('should find a component based on a constructor', () => {
       class Foo extends React.Component {
         render() { return <div />; }
