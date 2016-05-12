@@ -468,7 +468,7 @@ export default class ReactWrapper {
    * testing events should be met with some skepticism.
    *
    * @param {String} event
-   * @param {Array} args
+   * @param {Object} mock (optional)
    * @returns {ReactWrapper}
    */
   simulate(event, mock = {}) {
