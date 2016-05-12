@@ -483,7 +483,12 @@ export default class ShallowWrapper {
    * @returns {Object}
    */
   props() {
-    return this.single(propsOfNode);
+    const props = this.single(propsOfNode);
+    let defaultProps = {};
+    if (this.unrendered && this.unrendered.type) {
+      defaultProps = this.unrendered.type.defaultProps || defaultProps;
+    }
+    return Object.assign({}, defaultProps, props);
   }
 
   /**

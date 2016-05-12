@@ -1275,6 +1275,60 @@ describe('shallow', () => {
 
     });
 
+    it('should return defaultProps', () => {
+      const Foo = React.createClass({
+        getDefaultProps() {
+          return {
+            value: 'foo',
+          };
+        },
+        render() {
+          return (
+            <div>{this.props.value}</div>
+          );
+        },
+      });
+
+      const wrapper = shallow(<Foo />);
+      expect(wrapper.props().value).to.equal('foo');
+    });
+
+    it('should return defaultProps for nested components', () => {
+      const Foo = React.createClass({
+        getDefaultProps() {
+          return {
+            value: 'foo',
+          };
+        },
+        render() {
+          return (
+            <div>{this.props.children}</div>
+          );
+        },
+      });
+
+      const Bar = React.createClass({
+        getDefaultProps() {
+          return {
+            value: 'bar',
+          };
+        },
+        render() {
+          return (
+            <div>{this.props.value}</div>
+          );
+        },
+      });
+
+      const wrapper = shallow(<div>
+          <Foo>
+            <Bar />
+          </Foo>
+        </div>);
+      expect(wrapper.find(Foo).props().value).to.equal('foo');
+      expect(wrapper.find(Bar).props().value).to.equal('bar');
+    });
+
     it('should be allowed to be used on an inner node', () => {
       const fn = () => ({});
       const wrapper = shallow(
