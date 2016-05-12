@@ -1342,6 +1342,24 @@ describe('shallow', () => {
       expect(wrapper.props().value).to.equal('foo');
     });
 
+
+    it('should return defaultProps for class components', () => {
+      class Foo extends React.Component {
+        render() {
+          return (
+            <div>{this.props.value}</div>
+          );
+        }
+      }
+
+      Foo.defaultProps = {
+        value: 'foo',
+      };
+
+      const wrapper = shallow(<Foo />);
+      expect(wrapper.props().value).to.equal('foo');
+    });
+
     it('should be allowed to be used on an inner node', () => {
       const fn = () => ({});
       const wrapper = shallow(
