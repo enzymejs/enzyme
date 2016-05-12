@@ -468,10 +468,10 @@ export default class ReactWrapper {
    * testing events should be met with some skepticism.
    *
    * @param {String} event
-   * @param {Array} args
+   * @param {Object} mock (optional)
    * @returns {ReactWrapper}
    */
-  simulate(event, ...args) {
+  simulate(event, mock = {}) {
     this.single(n => {
       const mappedEvent = mapNativeEventNames(event);
       const eventFn = Simulate[mappedEvent];
@@ -479,7 +479,7 @@ export default class ReactWrapper {
         throw new TypeError(`ReactWrapper::simulate() event '${event}' does not exist`);
       }
 
-      eventFn(findDOMNode(n), ...args);
+      eventFn(findDOMNode(n), mock);
     });
     return this;
   }
