@@ -3,6 +3,7 @@ import ComplexSelector from './ComplexSelector';
 import flatten from 'lodash/flatten';
 import unique from 'lodash/uniq';
 import compact from 'lodash/compact';
+import assign from 'object.assign';
 import cheerio from 'cheerio';
 import {
   nodeEqual,
@@ -488,7 +489,7 @@ export default class ShallowWrapper {
     if (this.unrendered && this.unrendered.type) {
       defaultProps = this.unrendered.type.defaultProps || defaultProps;
     }
-    return Object.assign({}, defaultProps, props);
+    return assign({}, defaultProps, props);
   }
 
   /**

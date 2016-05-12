@@ -1329,6 +1329,19 @@ describe('shallow', () => {
       expect(wrapper.find(Bar).props().value).to.equal('bar');
     });
 
+    it('should return defaultProps for SFCs', () => {
+      const Foo = (props) => (
+        <div>{props.value}</div>
+      );
+
+      Foo.defaultProps = {
+        value: 'foo',
+      };
+
+      const wrapper = shallow(<Foo />);
+      expect(wrapper.props().value).to.equal('foo');
+    });
+
     it('should be allowed to be used on an inner node', () => {
       const fn = () => ({});
       const wrapper = shallow(
