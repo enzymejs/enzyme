@@ -1,4 +1,4 @@
-import { describeWithDOM } from './_helpers.js';
+import { describeWithDOM, describeIf } from './_helpers.js';
 import React from 'react';
 import { expect } from 'chai';
 import { mount } from '../src/';
@@ -13,6 +13,7 @@ import {
   mapNativeEventNames,
   displayNameOfNode,
 } from '../src/Utils';
+import { REACT013 } from '../src/version';
 
 describe('Utils', () => {
 
@@ -31,6 +32,13 @@ describe('Utils', () => {
       expect(getNode(foo)).to.equal(foo);
     });
 
+    describeIf(!REACT013, 'stateless function components', () => {
+      it('should return the component when a component is given', () => {
+        const Foo = () => <div />;
+        const foo = mount(<Foo />).node;
+        expect(getNode(foo)).to.equal(foo);
+      });
+    });
   });
 
   describe('nodeEqual', () => {
@@ -349,6 +357,15 @@ describe('Utils', () => {
 
         expect(displayNameOfNode(<Foo />)).to.equal('CustomWrapper');
       });
+
+      describeIf(!REACT013, 'stateless function components', () => {
+        it('should return the displayName', () => {
+          const Foo = () => <div />;
+          Foo.displayName = 'CustomWrapper';
+
+          expect(displayNameOfNode(<Foo />)).to.equal('CustomWrapper');
+        });
+      });
     });
 
     describe('given a node without displayName', () => {
@@ -358,6 +375,14 @@ describe('Utils', () => {
         }
 
         expect(displayNameOfNode(<Foo />)).to.equal('Foo');
+      });
+
+      describeIf(!REACT013, 'stateless function components', () => {
+        it('should return the name', () => {
+          const Foo = () => <div />;
+
+          expect(displayNameOfNode(<Foo />)).to.equal('Foo');
+        });
       });
     });
 
