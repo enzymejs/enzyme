@@ -336,6 +336,33 @@ describe('shallow', () => {
       expect(wrapper.find('.foo').type()).to.equal('input');
     });
 
+    it('should find an element based on a tag name and class name', () => {
+      const wrapper = shallow(
+        <div>
+          <input className="foo" />
+        </div>
+      );
+      expect(wrapper.find('input.foo').length).to.equal(1);
+    });
+
+    it('should find an element based on a tag name and id', () => {
+      const wrapper = shallow(
+        <div>
+          <input id="foo" />
+        </div>
+      );
+      expect(wrapper.find('input#foo').length).to.equal(1);
+    });
+
+    it('should find an element based on a tag name, id, and class name', () => {
+      const wrapper = shallow(
+        <div>
+          <input id="foo" className="bar" />
+        </div>
+      );
+      expect(wrapper.find('input#foo.bar').length).to.equal(1);
+    });
+
     it('should find an element based on a tag name', () => {
       const wrapper = shallow(
         <div>
