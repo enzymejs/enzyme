@@ -1,7 +1,7 @@
 # `.matchesElement(node) => Boolean`
 
 Returns whether or not a given react element matches the shallow render tree.
-It will determine if the the wrapper root node __looks like__ the expected element by checking if all props of the expected element are present on the wrapper root node and equals to each other.
+It will determine if the wrapper root node __looks like__ the expected element by checking if all props of the expected element are present on the wrapper root node and equals to each other.
 
 
 #### Arguments
