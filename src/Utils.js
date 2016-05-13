@@ -162,7 +162,7 @@ export function withSetStateAllowed(fn) {
 }
 
 export function splitSelector(selector) {
-  return selector.split(/(?=\.|\[.*\])/);
+  return selector.split(/(?=\.|\[.*\])|(?=#|\[#.*\])/);
 }
 
 export function isSimpleSelector(selector) {
@@ -176,7 +176,7 @@ export function selectorError(selector) {
   );
 }
 
-export const isCompoundSelector = /([a-z]\.[a-z]|[a-z]\[.*\])/i;
+export const isCompoundSelector = /([a-z]\.[a-z]|[a-z]\[.*\]|[a-z]#[a-z])/i;
 
 const isPropSelector = /^\[.*\]$/;
 
