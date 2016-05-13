@@ -18,6 +18,7 @@ import {
 } from './Utils';
 import {
   debugNodes,
+  typeName,
 } from './Debug';
 import {
   getTextFromNode,
@@ -31,6 +32,7 @@ import {
   createShallowRenderer,
   renderToStaticMarkup,
 } from './react-compat';
+
 
 /**
  * Finds all nodes in the current wrapper nodes' render trees that match the provided predicate
@@ -484,10 +486,13 @@ export default class ShallowWrapper {
    * @returns {Object}
    */
   props() {
-    const props = this.single(propsOfNode);
+    let props = this.single(propsOfNode);
     let defaultProps = {};
-    if (this.unrendered && this.unrendered.type) {
-      defaultProps = this.unrendered.type.defaultProps || defaultProps;
+    if (this.unrendered && this.unrendered.type.defaultProps) {
+      defaultProps = this.unrendered.type.defaultProps;
+      if (this === this.root) {
+        props = assign({}, props, this.unrendered.props);
+      }
     }
     return assign({}, defaultProps, props);
   }
