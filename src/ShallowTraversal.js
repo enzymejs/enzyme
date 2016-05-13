@@ -56,6 +56,17 @@ export function isRootCompositeWithProps(node) {
   );
 }
 
+export function hasDefaultProps(node) {
+  return (
+    node.unrendered &&
+    node.unrendered.type.defaultProps
+  );
+}
+
+export function getDefaultProps(node) {
+  return node.unrendered.type.defaultProps;
+}
+
 function pathFilter(path, fn) {
   return path.filter(tree => treeFilter(tree, fn).length !== 0);
 }

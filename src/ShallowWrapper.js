@@ -28,6 +28,8 @@ import {
   treeFilter,
   buildPredicate,
   isRootCompositeWithProps,
+  hasDefaultProps,
+  getDefaultProps,
 } from './ShallowTraversal';
 import {
   createShallowRenderer,
@@ -488,10 +490,9 @@ export default class ShallowWrapper {
    */
   props() {
     let props = this.single(propsOfNode);
-    let defaultProps = {};
-    if (this.unrendered && this.unrendered.type.defaultProps) {
-      defaultProps = this.unrendered.type.defaultProps;
-    }
+    const defaultProps = hasDefaultProps(this)
+          ? getDefaultProps(this)
+          : {};
 
     if (isRootCompositeWithProps(this)) {
       props = this.unrendered.props;
