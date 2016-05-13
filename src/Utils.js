@@ -241,6 +241,7 @@ export function coercePropValue(propName, propValue) {
 
 export function mapNativeEventNames(event) {
   const nativeToReactEventMap = {
+    blur: 'blur',
     compositionend: 'compositionEnd',
     compositionstart: 'compositionStart',
     compositionupdate: 'compositionUpdate',
