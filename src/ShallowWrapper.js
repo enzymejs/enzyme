@@ -18,7 +18,7 @@ import {
 } from './Utils';
 import {
   debugNodes,
-  typeName,
+  // typeName,
 } from './Debug';
 import {
   getTextFromNode,
@@ -27,6 +27,7 @@ import {
   parentsOfNode,
   treeFilter,
   buildPredicate,
+  isRootCompositeWithProps,
 } from './ShallowTraversal';
 import {
   createShallowRenderer,
@@ -490,10 +491,12 @@ export default class ShallowWrapper {
     let defaultProps = {};
     if (this.unrendered && this.unrendered.type.defaultProps) {
       defaultProps = this.unrendered.type.defaultProps;
-      if (this === this.root) {
-        props = assign({}, props, this.unrendered.props);
-      }
     }
+
+    if (isRootCompositeWithProps(this)) {
+      props = this.unrendered.props;
+    }
+
     return assign({}, defaultProps, props);
   }
 

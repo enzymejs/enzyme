@@ -48,6 +48,14 @@ export function treeFilter(tree, fn) {
   return results;
 }
 
+export function isRootCompositeWithProps(node) {
+  return (
+    node === node.root &&
+    node.unrendered.props &&
+    Object.keys(node.unrendered.props).length
+  );
+}
+
 function pathFilter(path, fn) {
   return path.filter(tree => treeFilter(tree, fn).length !== 0);
 }
