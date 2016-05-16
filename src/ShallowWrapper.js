@@ -67,12 +67,14 @@ export default class ShallowWrapper {
       this.root = this;
       this.unrendered = nodes;
       this.renderer = createShallowRenderer();
-      batchedUpdates(() => {
-        this.renderer.render(nodes, options.context);
-        const instance = this.instance();
-        if (instance && typeof instance.componentDidMount === 'function') {
-          instance.componentDidMount();
-        }
+      withSetStateAllowed(() => {
+        batchedUpdates(() => {
+          this.renderer.render(nodes, options.context);
+          const instance = this.instance();
+          if (instance && typeof instance.componentDidMount === 'function') {
+            instance.componentDidMount();
+          }
+        });
       });
       this.node = this.renderer.getRenderOutput();
       this.nodes = [this.node];
@@ -226,18 +228,20 @@ export default class ShallowWrapper {
     const props = instance.props;
     const state = instance.state;
     const prevContext = instance.context;
-    batchedUpdates(() => {
-      let shouldRender = true;
-      if (instance && typeof instance.shouldComponentUpdate === 'function') {
-        shouldRender = instance.shouldComponentUpdate(props, state, context);
-      }
-      if (shouldRender) {
-        this.renderer.render(this.unrendered, context);
-        if (instance && typeof instance.componentDidUpdate === 'function') {
-          instance.componentDidUpdate(props, state, prevContext);
+    withSetStateAllowed(() => {
+      batchedUpdates(() => {
+        let shouldRender = true;
+        if (instance && typeof instance.shouldComponentUpdate === 'function') {
+          shouldRender = instance.shouldComponentUpdate(props, state, context);
         }
-        this.update();
-      }
+        if (shouldRender) {
+          this.renderer.render(this.unrendered, context);
+          if (instance && typeof instance.componentDidUpdate === 'function') {
+            instance.componentDidUpdate(props, state, prevContext);
+          }
+          this.update();
+        }
+      });
     });
     return this;
   }
