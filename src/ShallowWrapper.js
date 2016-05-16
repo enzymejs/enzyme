@@ -67,11 +67,13 @@ export default class ShallowWrapper {
       this.root = this;
       this.unrendered = nodes;
       this.renderer = createShallowRenderer();
-      this.renderer.render(nodes, options.context);
-      const instance = this.instance();
-      if (instance && typeof instance.componentDidMount === 'function') {
-        instance.componentDidMount();
-      }
+      batchedUpdates(() => {
+        this.renderer.render(nodes, options.context);
+        const instance = this.instance();
+        if (instance && typeof instance.componentDidMount === 'function') {
+          instance.componentDidMount();
+        }
+      });
       this.node = this.renderer.getRenderOutput();
       this.nodes = [this.node];
       this.length = 1;
@@ -154,18 +156,20 @@ export default class ShallowWrapper {
         const prevProps = instance.props;
         const state = instance.state;
         const context = instance.context;
-        let shouldRender = true;
-        if (instance && typeof instance.shouldComponentUpdate === 'function') {
-          shouldRender = instance.shouldComponentUpdate(props, state, context);
-        }
-        if (shouldRender) {
-          this.unrendered = React.cloneElement(this.unrendered, props);
-          this.renderer.render(this.unrendered, context);
-          if (instance && typeof instance.componentDidUpdate === 'function') {
-            instance.componentDidUpdate(prevProps, state, context);
+        batchedUpdates(() => {
+          let shouldRender = true;
+          if (instance && typeof instance.shouldComponentUpdate === 'function') {
+            shouldRender = instance.shouldComponentUpdate(props, state, context);
           }
-          this.update();
-        }
+          if (shouldRender) {
+            this.unrendered = React.cloneElement(this.unrendered, props);
+            this.renderer.render(this.unrendered, context);
+            if (instance && typeof instance.componentDidUpdate === 'function') {
+              instance.componentDidUpdate(prevProps, state, context);
+            }
+            this.update();
+          }
+        });
       });
     });
     return this;
@@ -222,17 +226,19 @@ export default class ShallowWrapper {
     const props = instance.props;
     const state = instance.state;
     const prevContext = instance.context;
-    let shouldRender = true;
-    if (instance && typeof instance.shouldComponentUpdate === 'function') {
-      shouldRender = instance.shouldComponentUpdate(props, state, context);
-    }
-    if (shouldRender) {
-      this.renderer.render(this.unrendered, context);
-      if (instance && typeof instance.componentDidUpdate === 'function') {
-        instance.componentDidUpdate(props, state, prevContext);
+    batchedUpdates(() => {
+      let shouldRender = true;
+      if (instance && typeof instance.shouldComponentUpdate === 'function') {
+        shouldRender = instance.shouldComponentUpdate(props, state, context);
       }
-      this.update();
-    }
+      if (shouldRender) {
+        this.renderer.render(this.unrendered, context);
+        if (instance && typeof instance.componentDidUpdate === 'function') {
+          instance.componentDidUpdate(props, state, prevContext);
+        }
+        this.update();
+      }
+    });
     return this;
   }
 

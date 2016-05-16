@@ -2484,7 +2484,7 @@ describe('shallow', () => {
         expect(spy.calledOnce).to.equal(true);
       });
 
-      it.skip('should be batching updates', () => {
+      it('should be batching updates', () => {
         const spy = sinon.spy();
         class Foo extends React.Component {
           constructor(props) {
@@ -2689,7 +2689,7 @@ describe('shallow', () => {
         expect(spy.callCount).to.equal(2);
       });
 
-      it.skip('should be batching updates in componentWillUpdate', () => {
+      it('should be batching updates in componentWillUpdate', () => {
         const spy = sinon.spy();
         class Foo extends React.Component {
           constructor(props) {
@@ -2717,7 +2717,7 @@ describe('shallow', () => {
         expect(spy.callCount).to.equal(3);
       });
 
-      it.skip('should be batching updates in componentDidUpdate', () => {
+      it('should be batching updates in componentDidUpdate', () => {
         const spy = sinon.spy();
         class Foo extends React.Component {
           constructor(props) {
@@ -3006,7 +3006,7 @@ describe('shallow', () => {
         expect(spy.callCount).to.equal(0);
       });
 
-      it.skip('should be batching updates in componentWillUpdate', () => {
+      it('should be batching updates in componentWillUpdate', () => {
         const spy = sinon.spy();
         class Foo extends React.Component {
           constructor(props) {
@@ -3034,7 +3034,7 @@ describe('shallow', () => {
         expect(spy.callCount).to.equal(3);
       });
 
-      it.skip('should be batching updates in componentDidUpdate', () => {
+      it('should be batching updates in componentDidUpdate', () => {
         const spy = sinon.spy();
         class Foo extends React.Component {
           constructor(props) {
