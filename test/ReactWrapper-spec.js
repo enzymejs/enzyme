@@ -12,8 +12,6 @@ import { REACT013 } from '../src/version';
 describeWithDOM('mount', () => {
 
   describe('context', () => {
-    const context = { name: 'foo' };
-
     it('can pass in context', () => {
       const SimpleComponent = React.createClass({
         contextTypes: {
@@ -24,6 +22,7 @@ describeWithDOM('mount', () => {
         },
       });
 
+      const context = { name: 'foo' };
       const wrapper = mount(<SimpleComponent />, { context });
       expect(wrapper.text()).to.equal('foo');
     });
@@ -46,6 +45,7 @@ describeWithDOM('mount', () => {
       const childContextTypes = {
         name: React.PropTypes.string.isRequired,
       };
+      const context = { name: 'foo' };
       const wrapper = mount(<ComplexComponent />, { context, childContextTypes });
       expect(wrapper.find(SimpleComponent)).to.have.length(1);
     });
@@ -57,6 +57,7 @@ describeWithDOM('mount', () => {
         },
       });
 
+      const context = { name: 'foo' };
       expect(() => mount(<SimpleComponent />, { context })).to.not.throw(Error);
     });
 
@@ -70,6 +71,7 @@ describeWithDOM('mount', () => {
         },
       });
 
+      const context = { name: 'foo' };
       const wrapper = mount(<SimpleComponent />, { context });
 
       expect(wrapper.context().name).to.equal(context.name);
@@ -77,6 +79,59 @@ describeWithDOM('mount', () => {
     });
 
     describeIf(!REACT013, 'stateless components', () => {
+      it('can pass in context', () => {
+        const SimpleComponent = (props, context) => (
+          <div>{context.name}</div>
+        );
+        SimpleComponent.contextTypes = { name: React.PropTypes.string };
+
+        const context = { name: 'foo' };
+        const wrapper = mount(<SimpleComponent />, { context });
+        expect(wrapper.text()).to.equal('foo');
+      });
+
+      it('can pass context to the child of mounted component', () => {
+        const SimpleComponent = (props, context) => (
+          <div>{context.name}</div>
+        );
+        SimpleComponent.contextTypes = { name: React.PropTypes.string };
+
+        const ComplexComponent = () => (
+          <div><SimpleComponent /></div>
+        );
+
+        const childContextTypes = {
+          name: React.PropTypes.string.isRequired,
+        };
+
+        const context = { name: 'foo' };
+        const wrapper = mount(<ComplexComponent />, { context, childContextTypes });
+        expect(wrapper.find(SimpleComponent)).to.have.length(1);
+      });
+
+      it('should not throw if context is passed in but contextTypes is missing', () => {
+        const SimpleComponent = (props, context) => (
+          <div>{context.name}</div>
+        );
+
+        const context = { name: 'foo' };
+        expect(() => mount(<SimpleComponent />, { context })).to.not.throw(Error);
+      });
+
+      it('is instrospectable through context API', () => {
+        const SimpleComponent = (props, context) => (
+          <div>{context.name}</div>
+        );
+        SimpleComponent.contextTypes = { name: React.PropTypes.string };
+
+        const context = { name: 'foo' };
+        const wrapper = mount(<SimpleComponent />, { context });
+
+        expect(wrapper.context().name).to.equal(context.name);
+        expect(wrapper.context('name')).to.equal(context.name);
+      });
+
+
       it('works with stateless components', () => {
         const Foo = ({ foo }) => (
           <div>
@@ -202,6 +257,19 @@ describeWithDOM('mount', () => {
       expect(wrapper.contains(passes2)).to.equal(true);
     });
 
+    describeIf(!REACT013, 'stateless components', () => {
+
+      it('should match composite components', () => {
+        const Foo = () => <div />;
+        const wrapper = mount(
+          <div>
+            <Foo />
+          </div>
+        );
+        const b = <Foo />;
+        expect(wrapper.contains(b)).to.equal(true);
+      });
+    });
   });
 
   describe('.find(selector)', () => {
@@ -453,6 +521,44 @@ describeWithDOM('mount', () => {
       expect(() => wrapper.find([])).to.throw(Error);
       expect(() => wrapper.find(null)).to.throw(Error);
     });
+
+    describeIf(!REACT013, 'stateless function components', () => {
+      it('should find a component based on a constructor', () => {
+        const Foo = () => <div />;
+        const wrapper = mount(
+          <div>
+            <Foo className="foo" />
+          </div>
+        );
+        expect(wrapper.find(Foo).type()).to.equal(Foo);
+      });
+
+      it('should find a component based on a component displayName', () => {
+        const Foo = () => <div />;
+        const wrapper = mount(
+          <div>
+            <Foo className="foo" />
+          </div>
+        );
+        expect(wrapper.find('Foo').type()).to.equal(Foo);
+      });
+
+      it('should not find key via property selector', () => {
+        const Foo = () => {
+          const arrayOfComponents = [<div key="1" />, <div key="2" />];
+          return (
+            <div>
+              {arrayOfComponents}
+            </div>
+          );
+        };
+
+        const wrapper = mount(<Foo />);
+
+        expect(wrapper.find('div[key="1"]')).to.have.length(0);
+        expect(wrapper.find('[key]')).to.have.length(0);
+      });
+    });
   });
 
   describe('.findWhere(predicate)', () => {
@@ -498,6 +604,90 @@ describeWithDOM('mount', () => {
       expect(spy.args[1][0].hasClass('bar')).to.equal(true);
       expect(spy.args[2][0].hasClass('baz')).to.equal(true);
       expect(spy.args[3][0].hasClass('bux')).to.equal(true);
+    });
+
+    it('finds nodes', () => {
+      class Foo extends React.Component {
+        render() {
+          return (
+            <div>
+              <span data-foo={this.props.selector} />
+              <i data-foo={this.props.selector} />
+            </div>
+          );
+        }
+      }
+
+      const selector = 'blah';
+      const wrapper = mount(<Foo selector={selector} />);
+      const foundSpan = wrapper.findWhere(n => (
+        n.type() === 'span' && n.props()['data-foo'] === selector
+      ));
+      expect(foundSpan.type()).to.equal('span');
+
+      const foundNotSpan = wrapper.findWhere(n => (
+        n.type() !== 'span' && n.props()['data-foo'] === selector
+      ));
+      expect(foundNotSpan.type()).to.equal('i');
+    });
+
+    it('finds nodes when conditionally rendered', () => {
+      class Foo extends React.Component {
+        render() {
+          return (
+            <div>
+              <span data-foo={this.props.selector} />
+              {this.props.selector === 'baz' ? <i data-foo={this.props.selector} /> : null}
+            </div>
+          );
+        }
+      }
+
+      const selector = 'blah';
+      const wrapper = mount(<Foo selector={selector} />);
+      const foundSpan = wrapper.findWhere(n => (
+        n.type() === 'span' && n.props()['data-foo'] === selector
+      ));
+      expect(foundSpan.type()).to.equal('span');
+
+      const foundNotSpan = wrapper.findWhere(n => (
+        n.type() !== 'span' && n.props()['data-foo'] === selector
+      ));
+      expect(foundNotSpan).to.have.length(0);
+    });
+
+    it('should return props object when props() is called', () => {
+      class Foo extends React.Component {
+        render() {
+          return (
+            <div data-foo={this.props.data}>Test Component</div>
+          );
+        }
+      }
+
+      const content = 'blah';
+      const wrapper = mount(<Foo data={content} />);
+      expect(wrapper.props()).to.deep.equal({ data: content });
+    });
+
+    it('should return shallow rendered string when debug() is called', () => {
+      class Foo extends React.Component {
+        render() {
+          return (
+            <div data-foo={this.props.data}>Test Component</div>
+          );
+        }
+      }
+
+      const content = 'blah';
+      const wrapper = mount(<Foo data={content} />);
+      expect(wrapper.debug()).to.equal(
+`<Foo data="${content}">
+  <div data-foo="${content}">
+    Test Component
+  </div>
+</Foo>`
+      );
     });
 
     describeIf(!REACT013, 'stateless functional components', () => {
@@ -686,19 +876,72 @@ describeWithDOM('mount', () => {
       expect(setInvalidProps).to.throw();
     });
 
+    describeIf(!REACT013, 'stateless function components', () => {
+      it('should set props for a component multiple times', () => {
+        const Foo = (props) => (
+          <div className={props.id}>
+            {props.id}
+          </div>
+        );
+
+        const wrapper = mount(<Foo id="foo" />);
+        expect(wrapper.find('.foo').length).to.equal(1);
+        wrapper.setProps({ id: 'bar', foo: 'bla' });
+        expect(wrapper.find('.bar').length).to.equal(1);
+      });
+
+      it('should merge newProps with oldProps', () => {
+        const Foo = (props) => (
+          <div {...props} />
+        );
+
+        const wrapper = mount(<Foo a="a" b="b" />);
+        expect(wrapper.props().a).to.equal('a');
+        expect(wrapper.props().b).to.equal('b');
+
+        wrapper.setProps({ b: 'c', d: 'e' });
+        expect(wrapper.props().a).to.equal('a');
+        expect(wrapper.props().b).to.equal('c');
+        expect(wrapper.props().d).to.equal('e');
+      });
+
+      it('should throw if an exception occurs during render', () => {
+        const Trainwreck = ({ user }) => (
+          <div>
+            {user.name.givenName}
+          </div>
+        );
+
+        const validUser = {
+          name: {
+            givenName: 'Brian',
+          },
+        };
+
+        const wrapper = mount(<Trainwreck user={validUser} />);
+
+        const setInvalidProps = () => {
+          wrapper.setProps({
+            user: {},
+          });
+        };
+
+        expect(setInvalidProps).to.throw();
+      });
+    });
   });
 
   describe('.setContext(newContext)', () => {
-    const SimpleComponent = React.createClass({
-      contextTypes: {
-        name: React.PropTypes.string,
-      },
-      render() {
-        return <div>{this.context.name}</div>;
-      },
-    });
-
     it('should set context for a component multiple times', () => {
+      const SimpleComponent = React.createClass({
+        contextTypes: {
+          name: React.PropTypes.string,
+        },
+        render() {
+          return <div>{this.context.name}</div>;
+        },
+      });
+
       const context = { name: 'foo' };
       const wrapper = mount(<SimpleComponent />, { context });
       expect(wrapper.text()).to.equal('foo');
@@ -709,8 +952,44 @@ describeWithDOM('mount', () => {
     });
 
     it('should throw if it is called when shallow didnt include context', () => {
+      const SimpleComponent = React.createClass({
+        contextTypes: {
+          name: React.PropTypes.string,
+        },
+        render() {
+          return <div>{this.context.name}</div>;
+        },
+      });
+
       const wrapper = mount(<SimpleComponent />);
       expect(() => wrapper.setContext({ name: 'bar' })).to.throw(Error);
+    });
+
+    describeIf(!REACT013, 'stateless function components', () => {
+      it('should set context for a component multiple times', () => {
+        const SimpleComponent = (props, context) => (
+          <div>{context.name}</div>
+        );
+        SimpleComponent.contextTypes = { name: React.PropTypes.string };
+
+        const context = { name: 'foo' };
+        const wrapper = mount(<SimpleComponent />, { context });
+        expect(wrapper.text()).to.equal('foo');
+        wrapper.setContext({ name: 'bar' });
+        expect(wrapper.text()).to.equal('bar');
+        wrapper.setContext({ name: 'baz' });
+        expect(wrapper.text()).to.equal('baz');
+      });
+
+      it('should throw if it is called when shallow didnt include context', () => {
+        const SimpleComponent = (props, context) => (
+          <div>{context.name}</div>
+        );
+        SimpleComponent.contextTypes = { name: React.PropTypes.string };
+
+        const wrapper = mount(<SimpleComponent />);
+        expect(() => wrapper.setContext({ name: 'bar' })).to.throw(Error);
+      });
     });
   });
 
@@ -869,6 +1148,21 @@ describeWithDOM('mount', () => {
           wrapper.simulate('mouseenter');
           expect(spy.calledOnce).to.equal(true);
         });
+      });
+    });
+
+    describeIf(!REACT013, 'stateless function component', () => {
+      it('should pass in event data', () => {
+        const spy = sinon.spy();
+        const Foo = () => (
+          <a onClick={spy}>foo</a>
+        );
+
+        const wrapper = mount(<Foo />);
+
+        wrapper.simulate('click', { someSpecialData: 'foo' });
+        expect(spy.calledOnce).to.equal(true);
+        expect(spy.args[0][0].someSpecialData).to.equal('foo');
       });
     });
   });
@@ -1096,6 +1390,36 @@ describeWithDOM('mount', () => {
       matchesRender(<div>&gt;</div>);
     });
 
+    describeIf(!REACT013, 'stateless function components', () => {
+      it('should handle nodes with mapped children', () => {
+        const Foo = (props) => (
+          <div>{props.items.map(x => x)}</div>
+        );
+        matchesRender(<Foo items={['abc', 'def', 'hij']} />);
+        matchesRender(
+          <Foo
+            items={[
+              <i key={1}>abc</i>,
+              <i key={2}>def</i>,
+              <i key={3}>hij</i>,
+            ]}
+          />
+        );
+      });
+
+      it('should render composite components smartly', () => {
+        const Foo = () => (
+          <div>foo</div>
+        );
+        const wrapper = mount(
+          <div>
+            <Foo />
+            <div>test</div>
+          </div>
+        );
+        expect(wrapper.text()).to.equal('footest');
+      });
+    });
   });
 
   describe('.props()', () => {
@@ -1240,6 +1564,30 @@ describeWithDOM('mount', () => {
       expect(children.length).to.equal(2);
       expect(children.at(0).hasClass('bar')).to.equal(true);
       expect(children.at(1).hasClass('baz')).to.equal(true);
+    });
+
+    describeIf(!REACT013, 'stateless function components', () => {
+      it('should handle mixed children with and without arrays', () => {
+        const Foo = (props) => (
+          <div>
+            <span className="foo"></span>
+            {props.items.map(x => x)}
+          </div>
+        );
+
+        const wrapper = mount(
+          <Foo
+            items={[
+              <i key={1} className="bar">abc</i>,
+              <i key={2} className="baz">def</i>,
+            ]}
+          />
+        );
+        expect(wrapper.children().length).to.equal(3);
+        expect(wrapper.children().at(0).hasClass('foo')).to.equal(true);
+        expect(wrapper.children().at(1).hasClass('bar')).to.equal(true);
+        expect(wrapper.children().at(2).hasClass('baz')).to.equal(true);
+      });
     });
   });
 
@@ -1781,6 +2129,25 @@ describeWithDOM('mount', () => {
         '<div class="in-foo"></div>'
       );
     });
+
+    describeIf(!REACT013, 'stateless function components', () => {
+      it('should render out nested composite components', () => {
+        const Foo = () => <div className="in-foo" />;
+        const Bar = () => (
+          <div className="in-bar">
+            <Foo />
+          </div>
+        );
+
+        const wrapper = mount(<Bar />);
+        expect(wrapper.html()).to.equal(
+          '<div class="in-bar"><div class="in-foo"></div></div>'
+        );
+        expect(wrapper.find(Foo).html()).to.equal(
+          '<div class="in-foo"></div>'
+        );
+      });
+    });
   });
 
   describe('.render()', () => {
@@ -1801,6 +2168,19 @@ describeWithDOM('mount', () => {
       }
       const wrapper = mount(<Bar />);
       expect(wrapper.render().find('.in-foo')).to.have.length(1);
+    });
+
+    describeIf(!REACT013, 'stateless function components', () => {
+      it('should return a cheerio wrapper around the current node', () => {
+        const Foo = () => <div className="in-foo" />;
+        const Bar = () => (
+          <div className="in-bar">
+            <Foo />
+          </div>
+        );
+        const wrapper = mount(<Bar />);
+        expect(wrapper.render().find('.in-foo')).to.have.length(1);
+      });
     });
   });
 
@@ -1989,6 +2369,83 @@ describeWithDOM('mount', () => {
       )).to.equal(false);
       expect(spy.callCount).to.equal(0);
       expect(spy2.callCount).to.equal(0);
+    });
+
+    describeIf(!REACT013, 'stateless function components', () => {
+      it('should attach and stuff', () => {
+        const Foo = () => <div className="in-foo" />;
+
+        const div = global.document.createElement('div');
+        global.document.body.appendChild(div);
+
+        expect(document.body.childNodes).to.have.length(1);
+        expect(div.childNodes).to.have.length(0);
+
+        const wrapper = mount(<Foo />, { attachTo: div });
+
+        expect(wrapper.find('.in-foo')).to.have.length(1);
+        expect(document.body.childNodes).to.have.length(1);
+        expect(div.childNodes).to.have.length(1);
+
+        wrapper.detach();
+
+        expect(document.body.childNodes).to.have.length(1);
+        expect(div.childNodes).to.have.length(0);
+
+        global.document.body.removeChild(div);
+
+        expect(document.body.childNodes).to.have.length(0);
+        expect(div.childNodes).to.have.length(0);
+      });
+
+      it('should allow for multiple attaches/detaches on same node', () => {
+        const Foo = () => <div className="in-foo" />;
+        const Bar = () => <div className="in-bar" />;
+
+        let wrapper;
+        const div = global.document.createElement('div');
+        global.document.body.appendChild(div);
+
+        expect(document.body.childNodes).to.have.length(1);
+        expect(div.childNodes).to.have.length(0);
+
+        wrapper = mount(<Foo />, { attachTo: div });
+
+        expect(wrapper.find('.in-foo')).to.have.length(1);
+        expect(document.body.childNodes).to.have.length(1);
+        expect(div.childNodes).to.have.length(1);
+
+        wrapper.detach();
+
+        wrapper = mount(<Bar />, { attachTo: div });
+
+        expect(wrapper.find('.in-bar')).to.have.length(1);
+        expect(document.body.childNodes).to.have.length(1);
+        expect(div.childNodes).to.have.length(1);
+
+        wrapper.detach();
+
+        expect(document.body.childNodes).to.have.length(1);
+        expect(div.childNodes).to.have.length(0);
+
+        global.document.body.removeChild(div);
+
+        expect(document.body.childNodes).to.have.length(0);
+        expect(div.childNodes).to.have.length(0);
+      });
+
+      it('will attach to the body successfully', () => {
+        const Bar = () => <div className="in-bar" />;
+
+        const wrapper = mount(<Bar />, { attachTo: document.body });
+
+        expect(wrapper.find('.in-bar')).to.have.length(1);
+        expect(document.body.childNodes).to.have.length(1);
+
+        wrapper.detach();
+
+        expect(document.body.childNodes).to.have.length(0);
+      });
     });
   });
 
