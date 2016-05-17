@@ -1,5 +1,41 @@
 # Change Log
 
+## 2.3.0 (May 9, 2016)
+
+### Minor Changes
+
+- add `.tap()` method to `ShallowWrapper` and `ReactWrapper` ([#299](https://github.com/airbnb/enzyme/pull/299))
+
+- add `.key()` method to `ShallowWrapper` and `ReactWrapper ([#327](https://github.com/airbnb/enzyme/pull/327))
+
+- add support for descendent selectors, `>`, `~` and `+` ([#217](https://github.com/airbnb/enzyme/pull/217))
+
+- new `containsMatchingElement`, `containsAllMatchingElements`, and `containsAnyMatchingElements` APIs ([#362](https://github.com/airbnb/enzyme/pull/362))
+
+- new `.name()` method ([#335](https://github.com/airbnb/enzyme/pull/335))
+
+
+### Patches
+
+- add `dblclick` to eventType map for simulate ([#317](https://github.com/airbnb/enzyme/pull/317))
+
+- fix `pathToNode` bug with child-containing children ([#296](https://github.com/airbnb/enzyme/pull/296))
+
+- prioritize `displayName` over `name` for consistency in `.debug()` ([#332](https://github.com/airbnb/enzyme/pull/332))
+
+- handle insignificant whitespace in className ([#348](https://github.com/airbnb/enzyme/pull/348))
+
+- fix handling of SFC components and `.instance()` ([#359](https://github.com/airbnb/enzyme/pull/359))
+
+- reduce false positives by using argument validation for `.contains` ([#259](https://github.com/airbnb/enzyme/pull/259)) 
+
+- fix equality algorithm so that non-renderable nodes are equivalent ([#192](https://github.com/airbnb/enzyme/pull/192))
+
+- add better error handling for `state`, `setState`, and `context` ([#373](https://github.com/airbnb/enzyme/pull/373))
+
+
+
+
 ## 2.2.0 (March 21, 2016)
 
 ### Minor Changes

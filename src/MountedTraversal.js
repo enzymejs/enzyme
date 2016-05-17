@@ -6,9 +6,7 @@ import {
   nodeEqual,
   propsOfNode,
   isFunctionalComponent,
-  isSimpleSelector,
   splitSelector,
-  selectorError,
   selectorType,
   isCompoundSelector,
   AND,
@@ -43,8 +41,8 @@ export function getNode(inst) {
   return inst;
 }
 
-export function instEqual(a, b) {
-  return nodeEqual(getNode(a), getNode(b));
+export function instEqual(a, b, lenComp) {
+  return nodeEqual(getNode(a), getNode(b), lenComp);
 }
 
 export function instHasClassName(inst, className) {
@@ -208,9 +206,6 @@ export function buildInstPredicate(selector) {
       return inst => instHasType(inst, selector);
 
     case 'string':
-      if (!isSimpleSelector(selector)) {
-        throw selectorError(selector);
-      }
       if (isCompoundSelector.test(selector)) {
         return AND(splitSelector(selector).map(buildInstPredicate));
       }

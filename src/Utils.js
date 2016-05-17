@@ -1,5 +1,7 @@
 /* eslint no-use-before-define:0 */
 import isEqual from 'lodash/isEqual';
+import React from 'react';
+import is from 'object-is';
 import {
   isDOMComponent,
   findDOMNode,
@@ -57,21 +59,21 @@ export function nodeHasType(node, type) {
   return node.type.name === type || node.type.displayName === type;
 }
 
-export function childrenEqual(a, b) {
+export function childrenEqual(a, b, lenComp) {
   if (a === b) return true;
   if (!Array.isArray(a) && !Array.isArray(b)) {
-    return nodeEqual(a, b);
+    return nodeEqual(a, b, lenComp);
   }
   if (!a && !b) return true;
   if (a.length !== b.length) return false;
   if (a.length === 0 && b.length === 0) return true;
   for (let i = 0; i < a.length; i++) {
-    if (!nodeEqual(a[i], b[i])) return false;
+    if (!nodeEqual(a[i], b[i], lenComp)) return false;
   }
   return true;
 }
 
-export function nodeEqual(a, b) {
+export function nodeEqual(a, b, lenComp = is) {
   if (a === b) return true;
   if (!a || !b) return false;
   if (a.type !== b.type) return false;
@@ -80,11 +82,11 @@ export function nodeEqual(a, b) {
   const right = propsOfNode(b);
   for (let i = 0; i < leftKeys.length; i++) {
     const prop = leftKeys[i];
-    if (!(prop in right)) return false;
+    // we will check children later
     if (prop === 'children') {
-      if (!childrenEqual(childrenToArray(left.children), childrenToArray(right.children))) {
-        return false;
-      }
+      // continue;
+    } else if (!(prop in right)) {
+      return false;
     } else if (right[prop] === left[prop]) {
       // continue;
     } else if (typeof right[prop] === typeof left[prop] && typeof left[prop] === 'object') {
@@ -94,8 +96,20 @@ export function nodeEqual(a, b) {
     }
   }
 
-  if (typeof a !== 'string' && typeof a !== 'number') {
-    return leftKeys.length === Object.keys(right).length;
+  const leftHasChildren = 'children' in left;
+  const rightHasChildren = 'children' in right;
+  if (leftHasChildren || rightHasChildren) {
+    if (!childrenEqual(
+        childrenToArray(left.children),
+        childrenToArray(right.children),
+        lenComp)) {
+      return false;
+    }
+  }
+
+  if (!isTextualNode(a)) {
+    const rightKeys = Object.keys(right);
+    return lenComp(leftKeys.length - leftHasChildren, rightKeys.length - rightHasChildren);
   }
 
   return false;
@@ -117,6 +131,13 @@ function childrenOfNode(node) {
   return childrenToArray(children);
 }
 
+function isTextualNode(node) {
+  return typeof node === 'string' || typeof node === 'number';
+}
+
+export function isReactElementAlike(arg) {
+  return React.isValidElement(arg) || isTextualNode(arg) || Array.isArray(arg);
+}
 
 // 'click' => 'onClick'
 // 'mouseEnter' => 'onMouseEnter'
@@ -141,7 +162,7 @@ export function withSetStateAllowed(fn) {
 }
 
 export function splitSelector(selector) {
-  return selector.split(/(?=\.|\[.*\])/);
+  return selector.split(/(?=\.|\[.*\])|(?=#|\[#.*\])/);
 }
 
 export function isSimpleSelector(selector) {
@@ -155,7 +176,7 @@ export function selectorError(selector) {
   );
 }
 
-export const isCompoundSelector = /([a-z]\.[a-z]|[a-z]\[.*\])/i;
+export const isCompoundSelector = /([a-z]\.[a-z]|[a-z]\[.*\]|[a-z]#[a-z])/i;
 
 const isPropSelector = /^\[.*\]$/;
 
@@ -263,4 +284,12 @@ export function mapNativeEventNames(event) {
   }
 
   return nativeToReactEventMap[event] || event;
+}
+
+export function displayNameOfNode(node) {
+  const { type } = node;
+
+  if (!type) return null;
+
+  return type.displayName || type.name || type;
 }

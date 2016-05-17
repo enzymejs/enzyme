@@ -6,7 +6,11 @@ import {
   debugNode,
 } from '../src/Debug';
 import { mount } from '../src/';
-import { describeWithDOM, itIf } from './_helpers';
+import {
+  describeWithDOM,
+  describeIf,
+  itIf,
+} from './_helpers';
 import { REACT013 } from '../src/version';
 
 describe('debug', () => {
@@ -313,6 +317,110 @@ describe('debug', () => {
     </Foo>
   </div>
 </Bar>`);
+
+    });
+
+    describeIf(!REACT013, 'stateless function components', () => {
+      it('renders basic debug of mounted components', () => {
+        const Foo = () => (
+          <div className="foo">
+            <span>Foo</span>
+          </div>
+        );
+        expect(mount(<Foo id="2" />).debug()).to.eql(
+`<Foo id="2">
+  <div className="foo">
+    <span>
+      Foo
+    </span>
+  </div>
+</Foo>`);
+      });
+
+      it('renders debug of compositional components', () => {
+        const Foo = () => (
+          <div className="foo">
+            <span>Foo</span>
+          </div>
+        );
+        const Bar = () => (
+          <div className="bar">
+            <span>Non-Foo</span>
+            <Foo baz="bax" />
+          </div>
+        );
+        expect(mount(<Bar id="2" />).debug()).to.eql(
+        `<Bar id="2">
+  <div className="bar">
+    <span>
+      Non-Foo
+    </span>
+    <Foo baz="bax">
+      <div className="foo">
+        <span>
+          Foo
+        </span>
+      </div>
+    </Foo>
+  </div>
+</Bar>`);
+      });
+
+      it('renders a subtree of a mounted tree', () => {
+        const Foo = () => (
+          <div className="foo">
+            <span>Foo</span>
+          </div>
+        );
+        const Bar = () => (
+          <div className="bar">
+            <span>Non-Foo</span>
+            <Foo baz="bax" />
+          </div>
+        );
+        expect(mount(<Bar id="2" />).find(Foo).debug()).to.eql(
+        `<Foo baz="bax">
+  <div className="foo">
+    <span>
+      Foo
+    </span>
+  </div>
+</Foo>`);
+      });
+
+      it('renders passed children properly', () => {
+        const Foo = (props) => (
+          <div className="foo">
+            <span>From Foo</span>
+            {props.children}
+          </div>
+        );
+
+        const Bar = () => (
+          <div className="bar">
+            <Foo baz="bax">
+              <span>From Bar</span>
+            </Foo>
+          </div>
+        );
+
+        expect(mount(<Bar id="2" />).debug()).to.eql(
+`<Bar id="2">
+  <div className="bar">
+    <Foo baz="bax">
+      <div className="foo">
+        <span>
+          From Foo
+        </span>
+        <span>
+          From Bar
+        </span>
+      </div>
+    </Foo>
+  </div>
+</Bar>`);
+
+      });
 
     });
   });

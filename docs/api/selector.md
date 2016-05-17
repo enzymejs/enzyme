@@ -40,16 +40,15 @@ input#input-name
 label[foo=true]
 ```
 
-Are all valid selectors in enzyme.  At this time, however, any contextual CSS selector syntax that
-requires knowledge of a node's ancestors or siblings is not yet supported.  For instance:
+Enzyme also gives support for the following contextual selectors
 
 ```
 .foo .bar
 .foo > .bar
+.foo + .bar
+.foo ~ .bar
 .foo input
 ```
-
-Are all unsupported selectors in enzyme.
 
 
 **Want more CSS support?**

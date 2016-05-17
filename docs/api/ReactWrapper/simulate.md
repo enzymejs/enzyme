@@ -1,4 +1,4 @@
-# `.simulate(event[, ...args]) => Self`
+# `.simulate(event[, mock]) => Self`
 
 Simulate events
 
@@ -6,8 +6,7 @@ Simulate events
 #### Arguments
 
 1. `event` (`String`): The event name to be simulated
-2. `...args` (`Any` [optional]): A mock event object that will get passed through to the event
-handlers.
+2. `mock` (`Object` [optional]): A mock event object that will be merged with the event object passed to the handlers.
 
 
 
