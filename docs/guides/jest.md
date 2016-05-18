@@ -1,19 +1,15 @@
 # Using Jest with Enzyme
 
-If you are using Jest 0.9+ with enzyme and using Jest's "automocking" feature, you will need to mark
+If you are using Jest 0.9+ with enzyme and using Jest's automocking feature, you will need to mark
 react and enzyme to be unmocked in your `package.json`:
 
 ```js
 /* package.json */
 
 "jest": {
-  "scriptPreprocessor": "<rootDir>/node_modules/babel-jest",
   "unmockedModulePathPatterns": [
-    "react",
-    "enzyme"
-  ],
-  "moduleFileExtensions": [
-    "json"
+    "node_modules/react/",
+    "node_modules/enzyme/"
   ]
 }
 ```
