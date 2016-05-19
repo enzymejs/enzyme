@@ -1389,22 +1389,32 @@ describe('shallow', () => {
           this.state = {
             count: 0,
           };
-          this.onClick = this.onClick.bind(this);
         }
         onClick() {
+          this.setState({ count: this.state.count + 1 });
+          this.setState({ count: this.state.count + 1 });
+        }
+        outerOnClick() {
           this.setState({ count: this.state.count + 1 });
           this.setState({ count: this.state.count + 1 });
         }
         render() {
           renderCount += 1;
           return (
-            <a onClick={this.onClick}>{this.state.count}</a>
+            <div onClick={() => this.outerOnClick()}>
+              <a onClick={() => this.onClick()}>{this.state.count}</a>
+            </div>
           );
         }
       }
 
+      sinon.spy(Foo.prototype, 'outerOnClick');
+      sinon.spy(Foo.prototype, 'onClick');
+
       const wrapper = shallow(<Foo />);
-      wrapper.simulate('click');
+      wrapper.find('a').simulate('click');
+      expect(Foo.prototype.onClick.calledOnce).to.equal(true);
+      expect(Foo.prototype.outerOnClick.calledOnce).to.equal(true);
       expect(wrapper.text()).to.equal('1');
       expect(renderCount).to.equal(2);
     });
