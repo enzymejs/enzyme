@@ -606,7 +606,7 @@ class ShallowWrapper {
    * NOTE: can only be called on a wrapper of a single node.
    *
    * @param {String} event
-   * @param {Array} args
+   * @param {Object} mock (optional)
    * @returns {ShallowWrapper}
    */
   simulate(event, mock) {
