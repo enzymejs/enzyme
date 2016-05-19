@@ -1327,6 +1327,193 @@ describe('shallow', () => {
         wrapper.simulate('click', a);
         expect(spy.args[0][0].abc).to.equal(a.abc);
       });
+
+      it('should propagate events triggered on native elements', () => {
+        const Foo = ({ calls }) => (
+          <div
+            onClick={() => calls.push('div bubble')}
+            onClickCapture={() => calls.push('div capture')}
+          >
+            <span
+              onClick={() => calls.push('span bubble')}
+              onClickCapture={() => calls.push('span capture')}
+            >
+              <a
+                onClick={() => calls.push('a bubble')}
+                onClickCapture={() => calls.push('a capture')}
+              >
+                foo
+              </a>
+            </span>
+          </div>
+        );
+
+        const actualCalls = [];
+        const wrapper = shallow(<Foo calls={actualCalls} />);
+
+        wrapper.find('a').simulate('click');
+        expect(actualCalls.length).to.equal(6);
+        expect(actualCalls).to.eql([
+          'div capture',
+          'span capture',
+          'a capture',
+          'a bubble',
+          'span bubble',
+          'div bubble',
+        ]);
+      });
+
+      it('should propagate events triggered on composite elements', () => {
+        const Bar = () => (
+          <div>bar</div>
+        );
+
+        const Foo = ({ calls }) => (
+          <div
+            onClick={() => calls.push('div bubble')}
+            onClickCapture={() => calls.push('div capture')}
+          >
+            <span
+              onClick={() => calls.push('span bubble')}
+              onClickCapture={() => calls.push('span capture')}
+            >
+              <Bar
+                onClick={() => calls.push('a bubble')}
+                onClickCapture={() => calls.push('a capture')}
+              >
+                foo
+              </Bar>
+            </span>
+          </div>
+        );
+
+        const actualCalls = [];
+        const wrapper = shallow(<Foo calls={actualCalls} />);
+
+        wrapper.find(Bar).simulate('click');
+        expect(actualCalls.length).to.equal(6);
+        expect(actualCalls).to.eql([
+          'div capture',
+          'span capture',
+          'a capture',
+          'a bubble',
+          'span bubble',
+          'div bubble',
+        ]);
+      });
+
+      it('should skip over parent nodes without handlers', () => {
+        const Foo = ({ calls }) => (
+          <div
+            onClick={() => calls.push('div bubble')}
+          >
+            <span
+              onClickCapture={() => calls.push('span capture')}
+            >
+              <a
+                onClick={() => calls.push('a bubble')}
+                onClickCapture={() => calls.push('a capture')}
+              >
+                foo
+              </a>
+            </span>
+          </div>
+        );
+
+        const actualCalls = [];
+        const wrapper = shallow(<Foo calls={actualCalls} />);
+
+        wrapper.find('a').simulate('click');
+        expect(actualCalls.length).to.equal(4);
+        expect(actualCalls).to.eql([
+          'span capture',
+          'a capture',
+          'a bubble',
+          'div bubble',
+        ]);
+      });
+
+      it('should not call handlers for other events', () => {
+        const Foo = ({ calls }) => (
+          <div
+            onChange={() => calls.push('onChange')}
+            onClick={() => calls.push('div bubble')}
+            onClickCapture={() => calls.push('div capture')}
+          >
+            <span
+              onClick={() => calls.push('span bubble')}
+              onClickCapture={() => calls.push('span capture')}
+            >
+              <a
+                onClick={() => calls.push('a bubble')}
+                onClickCapture={() => calls.push('a capture')}
+              >
+                foo
+              </a>
+            </span>
+          </div>
+        );
+
+        const actualCalls = [];
+        const wrapper = shallow(<Foo calls={actualCalls} />);
+
+        wrapper.find('a').simulate('click');
+        expect(actualCalls.length).to.equal(6);
+        expect(actualCalls).to.eql([
+          'div capture',
+          'span capture',
+          'a capture',
+          'a bubble',
+          'span bubble',
+          'div bubble',
+        ]);
+      });
+
+      it('should respect stopPropagation called in the bubbling phase', () => {
+        const innerOnClick = sinon.spy(e => {
+          e.stopPropagation();
+        });
+        const outerOnClick = sinon.spy();
+        const outerOnClickCapture = sinon.spy();
+        const Foo = () => (
+          <div
+            onClickCapture={outerOnClickCapture}
+            onClick={outerOnClick}
+          >
+            <a onClick={innerOnClick}>foo</a>
+          </div>
+        );
+
+        const wrapper = shallow(<Foo />);
+
+        wrapper.find('a').simulate('click');
+        expect(outerOnClickCapture.calledOnce).to.equal(true);
+        expect(innerOnClick.calledOnce).to.equal(true);
+        expect(outerOnClick.calledOnce).to.equal(false);
+      });
+
+      it('should respect stopPropagation called in the capture phase', () => {
+        const innerOnClick = sinon.spy(e => {
+          e.stopPropagation();
+        });
+        const outerOnClick = sinon.spy();
+        const outerOnClickCapture = sinon.spy();
+        const Foo = () => (
+          <div
+            onClickCapture={outerOnClickCapture}
+            onClick={outerOnClick}
+          >
+            <a onClickCapture={innerOnClick}>foo</a>
+          </div>
+        );
+
+        const wrapper = shallow(<Foo />);
+
+        wrapper.find('a').simulate('click');
+        expect(outerOnClickCapture.calledOnce).to.equal(true);
+        expect(innerOnClick.calledOnce).to.equal(true);
+        expect(outerOnClick.calledOnce).to.equal(false);
+      });
     });
 
     describe('Normalizing JS event names', () => {
