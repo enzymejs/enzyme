@@ -72,6 +72,15 @@ Remove nodes in the current wrapper that do not return true for the provided pre
 #### [`.contains(nodeOrNodes) => Boolean`](ReactWrapper/contains.md)
 Returns whether or not a given node or array of nodes is somewhere in the render tree.
 
+#### [`.containsMatchingElement(node) => Boolean`](ReactWrapper/containsMatchingElement.md)
+Returns whether or not a given react element is somewhere in the render tree.
+
+#### [`.containsAllMatchingElements(nodes) => Boolean`](ReactWrapper/containsAllMatchingElements.md)
+Returns whether or not all the given react elements are somewhere in the render tree.
+
+#### [`.containsAnyMatchingElements(nodes) => Boolean`](ReactWrapper/containsAnyMatchingElements.md)
+Returns whether or not one of the given react elements is somewhere in the render tree.
+
 #### [`.hasClass(className) => Boolean`](ReactWrapper/hasClass.md)
 Returns whether or not the current root node has the given class name or not.
 
@@ -132,7 +141,7 @@ Returns the named prop of the root component.
 #### [`.key() => String`](ReactWrapper/key.md)
 Returns the key of the root component.
 
-#### [`.simulate(event[, data]) => ReactWrapper`](ReactWrapper/simulate.md)
+#### [`.simulate(event[, mock]) => ReactWrapper`](ReactWrapper/simulate.md)
 Simulates an event on the current node.
 
 #### [`.setState(nextState) => ReactWrapper`](ReactWrapper/setState.md)
@@ -162,11 +171,17 @@ Returns a string representation of the current render tree for debugging purpose
 #### [`.type() => String|Function`](ReactWrapper/type.md)
 Returns the type of the current node of the wrapper.
 
+#### [`.name() => String`](ReactWrapper/name.md)
+Returns the name of the current node of the wrapper.
+
 #### [`.forEach(fn) => ReactWrapper`](ReactWrapper/forEach.md)
 Iterates through each node of the current wrapper and executes the provided function
 
 #### [`.map(fn) => Array`](ReactWrapper/map.md)
 Maps the current array of nodes to another array.
+
+#### [`.matchesElement(node) => Boolean`](ReactWrapper/matchesElement.md)
+Returns whether or not a given react element matches the current render tree.
 
 #### [`.reduce(fn[, initialValue]) => Any`](/docs/api/ReactWrapper/reduce.md)
 Reduces the current array of nodes to a value

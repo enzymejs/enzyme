@@ -4,9 +4,7 @@ import isSubset from 'is-subset';
 import {
   coercePropValue,
   propsOfNode,
-  isSimpleSelector,
   splitSelector,
-  selectorError,
   isCompoundSelector,
   selectorType,
   AND,
@@ -28,7 +26,8 @@ export function childrenOfNode(node) {
 }
 
 export function hasClassName(node, className) {
-  const classes = propsOfNode(node).className || '';
+  let classes = propsOfNode(node).className || '';
+  classes = classes.replace(/\s/g, ' ');
   return ` ${classes} `.indexOf(` ${className} `) > -1;
 }
 
@@ -116,9 +115,6 @@ export function buildPredicate(selector) {
       return node => node && node.type === selector;
 
     case 'string':
-      if (!isSimpleSelector(selector)) {
-        throw selectorError(selector);
-      }
       if (isCompoundSelector.test(selector)) {
         return AND(splitSelector(selector).map(buildPredicate));
       }
@@ -165,7 +161,7 @@ export function getTextFromNode(node) {
   }
 
   if (node.type && typeof node.type === 'function') {
-    return `<${node.type.name || node.type.displayName} />`;
+    return `<${node.type.displayName || node.type.name} />`;
   }
 
   return childrenOfNode(node).map(getTextFromNode).join('').replace(/\s+/, ' ');

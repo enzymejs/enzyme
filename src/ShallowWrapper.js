@@ -1,4 +1,5 @@
 import React from 'react';
+import ComplexSelector from './ComplexSelector';
 import flatten from 'lodash/flatten';
 import unique from 'lodash/uniq';
 import compact from 'lodash/compact';
@@ -10,6 +11,9 @@ import {
   withSetStateAllowed,
   propsOfNode,
   typeOfNode,
+  isReactElementAlike,
+  displayNameOfNode,
+  isFunctionalComponent,
 } from './Utils';
 import {
   debugNodes,
@@ -25,6 +29,7 @@ import {
 import {
   createShallowRenderer,
   renderToStaticMarkup,
+  batchedUpdates,
 } from './react-compat';
 
 /**
@@ -33,10 +38,11 @@ import {
  *
  * @param {ShallowWrapper} wrapper
  * @param {Function} predicate
+ * @param {Function} filter
  * @returns {ShallowWrapper}
  */
-function findWhereUnwrapped(wrapper, predicate) {
-  return wrapper.flatMap(n => treeFilter(n.node, predicate));
+function findWhereUnwrapped(wrapper, predicate, filter = treeFilter) {
+  return wrapper.flatMap(n => filter(n.node, predicate));
 }
 
 /**
@@ -79,6 +85,7 @@ export default class ShallowWrapper {
       this.length = this.nodes.length;
     }
     this.options = options;
+    this.complexSelector = new ComplexSelector(buildPredicate, findWhereUnwrapped, childrenOfNode);
   }
 
   /**
@@ -95,6 +102,9 @@ export default class ShallowWrapper {
    * @returns {ReactComponent}
    */
   instance() {
+    if (this.root !== this) {
+      throw new Error('ShallowWrapper::instance() can only be called on the root');
+    }
     return this.renderer._instance._instance;
   }
 
@@ -160,6 +170,9 @@ export default class ShallowWrapper {
     if (this.root !== this) {
       throw new Error('ShallowWrapper::setState() can only be called on the root');
     }
+    if (isFunctionalComponent(this.instance())) {
+      throw new Error('ShallowWrapper::setState() can only be called on class components');
+    }
     this.single(() => {
       withSetStateAllowed(() => {
         this.instance().setState(state);
@@ -206,11 +219,95 @@ export default class ShallowWrapper {
    * @returns {Boolean}
    */
   contains(nodeOrNodes) {
+    if (!isReactElementAlike(nodeOrNodes)) {
+      throw new Error(
+        'ShallowWrapper::contains() can only be called with ReactElement (or array of them), ' +
+        'string or number as argument.'
+      );
+    }
+
     const predicate = Array.isArray(nodeOrNodes)
       ? other => containsChildrenSubArray(nodeEqual, other, nodeOrNodes)
       : other => nodeEqual(nodeOrNodes, other);
 
     return findWhereUnwrapped(this, predicate).length > 0;
+  }
+
+  /**
+   * Whether or not a given react element exists in the shallow render tree.
+   * Match is based on the expected element and not on wrappers element.
+   * It will determine if one of the wrappers element "looks like" the expected
+   * element by checking if all props of the expected element are present
+   * on the wrappers element and equals to each other.
+   *
+   * Example:
+   * ```
+   * // MyComponent outputs <div><div class="foo">Hello</div></div>
+   * const wrapper = shallow(<MyComponent />);
+   * expect(wrapper.containsMatchingElement(<div>Hello</div>)).to.equal(true);
+   * ```
+   *
+   * @param {ReactElement} node
+   * @returns {Boolean}
+   */
+  containsMatchingElement(node) {
+    const predicate = other => nodeEqual(node, other, (a, b) => a <= b);
+    return findWhereUnwrapped(this, predicate).length > 0;
+  }
+
+  /**
+   * Whether or not all the given react elements exists in the shallow render tree.
+   * Match is based on the expected element and not on wrappers element.
+   * It will determine if one of the wrappers element "looks like" the expected
+   * element by checking if all props of the expected element are present
+   * on the wrappers element and equals to each other.
+   *
+   * Example:
+   * ```
+   * const wrapper = shallow(<MyComponent />);
+   * expect(wrapper.containsAllMatchingElements([
+   *   <div>Hello</div>,
+   *   <div>Goodbye</div>,
+   * ])).to.equal(true);
+   * ```
+   *
+   * @param {Array<ReactElement>} nodes
+   * @returns {Boolean}
+   */
+  containsAllMatchingElements(nodes) {
+    const invertedEquals = (n1, n2) => nodeEqual(n2, n1, (a, b) => a <= b);
+    const predicate = other => containsChildrenSubArray(invertedEquals, other, nodes);
+    return findWhereUnwrapped(this, predicate).length > 0;
+  }
+
+  /**
+   * Whether or not one of the given react elements exists in the shallow render tree.
+   * Match is based on the expected element and not on wrappers element.
+   * It will determine if one of the wrappers element "looks like" the expected
+   * element by checking if all props of the expected element are present
+   * on the wrappers element and equals to each other.
+   *
+   * Example:
+   * ```
+   * const wrapper = shallow(<MyComponent />);
+   * expect(wrapper.containsAnyMatchingElements([
+   *   <div>Hello</div>,
+   *   <div>Goodbye</div>,
+   * ])).to.equal(true);
+   * ```
+   *
+   * @param {Array<ReactElement>} nodes
+   * @returns {Boolean}
+   */
+  containsAnyMatchingElements(nodes) {
+    if (!Array.isArray(nodes)) return false;
+    if (nodes.length <= 0) return false;
+    for (let i = 0; i < nodes.length; i++) {
+      if (this.containsMatchingElement(nodes[i])) {
+        return true;
+      }
+    }
+    return false;
   }
 
   /**
@@ -230,14 +327,34 @@ export default class ShallowWrapper {
   }
 
   /**
+   * Whether or not a given react element matches the shallow render tree.
+   * Match is based on the expected element and not on wrapper root node.
+   * It will determine if the wrapper root node "looks like" the expected
+   * element by checking if all props of the expected element are present
+   * on the wrapper root node and equals to each other.
+   *
+   * Example:
+   * ```
+   * // MyComponent outputs <div class="foo">Hello</div>
+   * const wrapper = shallow(<MyComponent />);
+   * expect(wrapper.matchesElement(<div>Hello</div>)).to.equal(true);
+   * ```
+   *
+   * @param {ReactElement} node
+   * @returns {Boolean}
+   */
+  matchesElement(node) {
+    return this.single(() => nodeEqual(node, this.node, (a, b) => a <= b));
+  }
+
+  /**
    * Finds every node in the render tree of the current wrapper that matches the provided selector.
    *
    * @param {String|Function} selector
    * @returns {ShallowWrapper}
    */
   find(selector) {
-    const predicate = buildPredicate(selector);
-    return findWhereUnwrapped(this, predicate);
+    return this.complexSelector.find(selector, this);
   }
 
   /**
@@ -352,7 +469,9 @@ export default class ShallowWrapper {
       withSetStateAllowed(() => {
         // TODO(lmr): create/use synthetic events
         // TODO(lmr): emulate React's event propagation
-        handler(...args);
+        batchedUpdates(() => {
+          handler(...args);
+        });
         this.root.update();
       });
     }
@@ -383,6 +502,9 @@ export default class ShallowWrapper {
     if (this.root !== this) {
       throw new Error('ShallowWrapper::state() can only be called on the root');
     }
+    if (isFunctionalComponent(this.instance())) {
+      throw new Error('ShallowWrapper::state() can only be called on class components');
+    }
     const _state = this.single(() => this.instance().state);
     if (name !== undefined) {
       return _state[name];
@@ -402,6 +524,12 @@ export default class ShallowWrapper {
   context(name) {
     if (this.root !== this) {
       throw new Error('ShallowWrapper::context() can only be called on the root');
+    }
+    if (!this.options.context) {
+      throw new Error(
+        'ShallowWrapper::context() can only be called on a wrapper that was originally passed ' +
+        'a context option'
+      );
     }
     const _context = this.single(() => this.instance().context);
     if (name) {
@@ -502,6 +630,17 @@ export default class ShallowWrapper {
    */
   type() {
     return this.single(typeOfNode);
+  }
+
+  /**
+   * Returns the name of the root node of this wrapper.
+   *
+   * In order of precedence => type.displayName -> type.name -> type.
+   *
+   * @returns {String}
+   */
+  name() {
+    return this.single(displayNameOfNode);
   }
 
   /**
@@ -629,7 +768,8 @@ export default class ShallowWrapper {
     const nodes = this.nodes.map((n, i) => fn.call(this, this.wrap(n), i));
     const flattened = flatten(nodes, true);
     const uniques = unique(flattened);
-    return this.wrap(uniques);
+    const compacted = compact(uniques);
+    return this.wrap(compacted);
   }
 
   /**

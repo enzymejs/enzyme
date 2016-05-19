@@ -10,7 +10,10 @@ import {
   treeForEach,
   treeFilter,
   pathToNode,
+  getTextFromNode,
 } from '../src/ShallowTraversal';
+import { describeIf } from './_helpers';
+import { REACT013 } from '../src/version';
 
 describe('ShallowTraversal', () => {
 
@@ -253,4 +256,52 @@ describe('ShallowTraversal', () => {
 
   });
 
+  describe('getTextFromNode', () => {
+    it('should return displayName for functions that provides one', () => {
+      class Subject extends React.Component {
+        render() {
+          return (
+            <div />
+          );
+        }
+      }
+      Subject.displayName = 'CustomSubject';
+      const node = <Subject />;
+      const result = getTextFromNode(node);
+      expect(result).to.equal('<CustomSubject />');
+    });
+
+    it('should return function name if displayName is not provided', () => {
+      class Subject extends React.Component {
+        render() {
+          return (
+            <div />
+          );
+        }
+      }
+      const node = <Subject />;
+      const result = getTextFromNode(node);
+      expect(result).to.equal('<Subject />');
+    });
+
+    describeIf(!REACT013, 'stateless function components', () => {
+
+      it('should return displayName for functions that provides one', () => {
+        const Subject = () => <div />;
+        Subject.displayName = 'CustomSubject';
+
+        const node = <Subject />;
+        const result = getTextFromNode(node);
+        expect(result).to.equal('<CustomSubject />');
+      });
+
+      it('should return function name if displayName is not provided', () => {
+        const Subject = () => <div />;
+
+        const node = <Subject />;
+        const result = getTextFromNode(node);
+        expect(result).to.equal('<Subject />');
+      });
+    });
+  });
 });

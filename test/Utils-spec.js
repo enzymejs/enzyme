@@ -1,4 +1,4 @@
-import { describeWithDOM } from './_helpers.js';
+import { describeWithDOM, describeIf } from './_helpers.js';
 import React from 'react';
 import { expect } from 'chai';
 import { mount } from '../src/';
@@ -11,7 +11,9 @@ import {
   SELECTOR,
   selectorType,
   mapNativeEventNames,
+  displayNameOfNode,
 } from '../src/Utils';
+import { REACT013 } from '../src/version';
 
 describe('Utils', () => {
 
@@ -30,6 +32,13 @@ describe('Utils', () => {
       expect(getNode(foo)).to.equal(foo);
     });
 
+    describeIf(!REACT013, 'stateless function components', () => {
+      it('should return the component when a component is given', () => {
+        const Foo = () => <div />;
+        const foo = mount(<Foo />).node;
+        expect(getNode(foo)).to.equal(foo);
+      });
+    });
   });
 
   describe('nodeEqual', () => {
@@ -120,6 +129,103 @@ describe('Utils', () => {
         <div foo={{ a: 2, b: 2 }} />,
         <div foo={{ a: 1, b: 2 }} />
       )).to.equal(false);
+
+    });
+
+    describe('children props', () => {
+      it('should match equal nodes', () => {
+        expect(nodeEqual(
+          <div>child</div>,
+          <div>child</div>
+        )).to.equal(true);
+      });
+
+      it('should not match not equal nodes', () => {
+        expect(nodeEqual(
+          <div>child</div>,
+          <div></div>
+        )).to.equal(false);
+
+        expect(nodeEqual(
+          <div></div>,
+          <div>child</div>
+        )).to.equal(false);
+      });
+
+      it('should skip null children', () => {
+        expect(nodeEqual(
+          <div>{null}</div>,
+          <div></div>
+        )).to.equal(true);
+      });
+
+      it('should skip undefined children', () => {
+        expect(nodeEqual(
+          <div>{undefined}</div>,
+          <div></div>
+        )).to.equal(true);
+      });
+
+      it('should skip empty children', () => {
+        expect(nodeEqual(
+          <div>{[]}</div>,
+          <div></div>
+        )).to.equal(true);
+      });
+
+      it('should skip array of null children', () => {
+        expect(nodeEqual(
+          <div>{[null, null, null]}</div>,
+          <div></div>
+        )).to.equal(true);
+      });
+
+    });
+
+    describe('basic props and children mixed', () => {
+
+      it('should match equal nodes', () => {
+        expect(nodeEqual(
+          <div className="foo">child</div>,
+          <div className="foo">child</div>
+        )).to.equal(true);
+      });
+
+      it('should not match when basic props are not equal', () => {
+        expect(nodeEqual(
+          <div className="foo">child</div>,
+          <div className="bar">child</div>
+        )).to.equal(false);
+
+        expect(nodeEqual(
+          <div children="child" className="foo" />,
+          <div children="child" className="bar" />
+        )).to.equal(false);
+      });
+
+      it('should not match when children are not equal', () => {
+        expect(nodeEqual(
+          <div className="foo">child</div>,
+          <div className="foo">other child</div>
+        )).to.equal(false);
+
+        expect(nodeEqual(
+          <div children="child" className="foo" />,
+          <div children="other child" className="foo" />
+        )).to.equal(false);
+      });
+
+      it('should match nodes when children are different but falsy', () => {
+        expect(nodeEqual(
+          <div className="foo">{null}</div>,
+          <div className="foo" />
+        )).to.equal(true);
+
+        expect(nodeEqual(
+          <div children={null} className="foo" />,
+          <div className="foo" />
+        )).to.equal(true);
+      });
 
     });
 
@@ -236,6 +342,53 @@ describe('Utils', () => {
       it('transforms it into the React capitalised event', () => {
         const result = mapNativeEventNames('dragenter');
         expect(result).to.equal('dragEnter');
+      });
+    });
+  });
+
+  describe('displayNameOfNode', () => {
+    describe('given a node with displayName', () => {
+      it('should return the displayName', () => {
+        class Foo extends React.Component {
+          render() { return <div />; }
+        }
+
+        Foo.displayName = 'CustomWrapper';
+
+        expect(displayNameOfNode(<Foo />)).to.equal('CustomWrapper');
+      });
+
+      describeIf(!REACT013, 'stateless function components', () => {
+        it('should return the displayName', () => {
+          const Foo = () => <div />;
+          Foo.displayName = 'CustomWrapper';
+
+          expect(displayNameOfNode(<Foo />)).to.equal('CustomWrapper');
+        });
+      });
+    });
+
+    describe('given a node without displayName', () => {
+      it('should return the name', () => {
+        class Foo extends React.Component {
+          render() { return <div />; }
+        }
+
+        expect(displayNameOfNode(<Foo />)).to.equal('Foo');
+      });
+
+      describeIf(!REACT013, 'stateless function components', () => {
+        it('should return the name', () => {
+          const Foo = () => <div />;
+
+          expect(displayNameOfNode(<Foo />)).to.equal('Foo');
+        });
+      });
+    });
+
+    describe('given a DOM node', () => {
+      it('should return the type', () => {
+        expect(displayNameOfNode(<div />)).to.equal('div');
       });
     });
   });

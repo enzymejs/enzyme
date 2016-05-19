@@ -1,4 +1,5 @@
 import React from 'react';
+import ComplexSelector from './ComplexSelector';
 import cheerio from 'cheerio';
 import flatten from 'lodash/flatten';
 import unique from 'lodash/uniq';
@@ -24,6 +25,7 @@ import {
   containsChildrenSubArray,
   propsOfNode,
   typeOfNode,
+  displayNameOfNode,
 } from './Utils';
 import {
   debugInsts,
@@ -35,10 +37,11 @@ import {
  *
  * @param {ReactWrapper} wrapper
  * @param {Function} predicate
+ * @param {Function} filter
  * @returns {ReactWrapper}
  */
-function findWhereUnwrapped(wrapper, predicate) {
-  return wrapper.flatMap(n => treeFilter(n.node, predicate));
+function findWhereUnwrapped(wrapper, predicate, filter = treeFilter) {
+  return wrapper.flatMap(n => filter(n.node, predicate));
 }
 
 /**
@@ -91,6 +94,11 @@ export default class ReactWrapper {
       this.length = this.nodes.length;
     }
     this.options = options;
+    this.complexSelector = new ComplexSelector(
+      buildInstPredicate,
+      findWhereUnwrapped,
+      childrenOfInst
+    );
   }
 
   /**
@@ -245,6 +253,26 @@ export default class ReactWrapper {
   }
 
   /**
+   * Whether or not a given react element matches the current render tree.
+   * It will determine if the wrapper root node "looks like" the expected
+   * element by checking if all props of the expected element are present
+   * on the wrapper root node and equals to each other.
+   *
+   * Example:
+   * ```
+   * // MyComponent outputs <div class="foo">Hello</div>
+   * const wrapper = mount(<MyComponent />);
+   * expect(wrapper.matchesElement(<div>Hello</div>)).to.equal(true);
+   * ```
+   *
+   * @param {ReactElement} node
+   * @returns {Boolean}
+   */
+  matchesElement(node) {
+    return this.single(() => instEqual(node, this.node, (a, b) => a <= b));
+  }
+
+  /**
    * Whether or not a given react element exists in the mount render tree.
    *
    * Example:
@@ -264,14 +292,87 @@ export default class ReactWrapper {
   }
 
   /**
+   * Whether or not a given react element exists in the current render tree.
+   * It will determine if one of the wrappers element "looks like" the expected
+   * element by checking if all props of the expected element are present
+   * on the wrappers element and equals to each other.
+   *
+   * Example:
+   * ```
+   * // MyComponent outputs <div><div class="foo">Hello</div></div>
+   * const wrapper = mount(<MyComponent />);
+   * expect(wrapper.containsMatchingElement(<div>Hello</div>)).to.equal(true);
+   * ```
+   *
+   * @param {ReactElement} node
+   * @returns {Boolean}
+   */
+  containsMatchingElement(node) {
+    const predicate = other => instEqual(node, other, (a, b) => a <= b);
+    return findWhereUnwrapped(this, predicate).length > 0;
+  }
+
+  /**
+   * Whether or not all the given react elements exists in the current render tree.
+   * It will determine if one of the wrappers element "looks like" the expected
+   * element by checking if all props of the expected element are present
+   * on the wrappers element and equals to each other.
+   *
+   * Example:
+   * ```
+   * const wrapper = mount(<MyComponent />);
+   * expect(wrapper.containsAllMatchingElements([
+   *   <div>Hello</div>,
+   *   <div>Goodbye</div>,
+   * ])).to.equal(true);
+   * ```
+   *
+   * @param {Array<ReactElement>} nodes
+   * @returns {Boolean}
+   */
+  containsAllMatchingElements(nodes) {
+    const invertedEquals = (n1, n2) => instEqual(n2, n1, (a, b) => a <= b);
+    const predicate = other => containsChildrenSubArray(invertedEquals, other, nodes);
+    return findWhereUnwrapped(this, predicate).length > 0;
+  }
+
+  /**
+   * Whether or not one of the given react elements exists in the current render tree.
+   * It will determine if one of the wrappers element "looks like" the expected
+   * element by checking if all props of the expected element are present
+   * on the wrappers element and equals to each other.
+   *
+   * Example:
+   * ```
+   * const wrapper = mount(<MyComponent />);
+   * expect(wrapper.containsAnyMatchingElements([
+   *   <div>Hello</div>,
+   *   <div>Goodbye</div>,
+   * ])).to.equal(true);
+   * ```
+   *
+   * @param {Array<ReactElement>} nodes
+   * @returns {Boolean}
+   */
+  containsAnyMatchingElements(nodes) {
+    if (!Array.isArray(nodes)) return false;
+    if (nodes.length <= 0) return false;
+    for (let i = 0; i < nodes.length; i++) {
+      if (this.containsMatchingElement(nodes[i])) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
    * Finds every node in the render tree of the current wrapper that matches the provided selector.
    *
    * @param {String|Function} selector
    * @returns {ReactWrapper}
    */
   find(selector) {
-    const predicate = buildInstPredicate(selector);
-    return findWhereUnwrapped(this, predicate);
+    return this.complexSelector.find(selector, this);
   }
 
   /**
@@ -367,10 +468,10 @@ export default class ReactWrapper {
    * testing events should be met with some skepticism.
    *
    * @param {String} event
-   * @param {Array} args
+   * @param {Object} mock (optional)
    * @returns {ReactWrapper}
    */
-  simulate(event, ...args) {
+  simulate(event, mock = {}) {
     this.single(n => {
       const mappedEvent = mapNativeEventNames(event);
       const eventFn = Simulate[mappedEvent];
@@ -378,7 +479,7 @@ export default class ReactWrapper {
         throw new TypeError(`ReactWrapper::simulate() event '${event}' does not exist`);
       }
 
-      eventFn(findDOMNode(n), ...args);
+      eventFn(findDOMNode(n), mock);
     });
     return this;
   }
@@ -517,6 +618,17 @@ export default class ReactWrapper {
   }
 
   /**
+   * Returns the name of the root node of this wrapper.
+   *
+   * In order of precedence => type.displayName -> type.name -> type.
+   *
+   * @returns {String}
+   */
+  name() {
+    return this.single(n => displayNameOfNode(getNode(n)));
+  }
+
+  /**
    * Returns whether or not the current root node has the given class name or not.
    *
    * NOTE: can only be called on a wrapper of a single node.
@@ -641,7 +753,8 @@ export default class ReactWrapper {
     const nodes = this.nodes.map((n, i) => fn.call(this, this.wrap(n), i));
     const flattened = flatten(nodes, true);
     const uniques = unique(flattened);
-    return this.wrap(uniques);
+    const compacted = compact(uniques);
+    return this.wrap(compacted);
   }
 
   /**

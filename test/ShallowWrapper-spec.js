@@ -101,6 +101,31 @@ describe('shallow', () => {
     });
   });
 
+  describe('.instance()', () => {
+
+    it('should return the component instance', () => {
+      class Foo extends React.Component {
+        render() { return <div />; }
+      }
+
+      const wrapper = shallow(<Foo />);
+      expect(wrapper.instance()).to.be.instanceof(Foo);
+      expect(wrapper.instance().render).to.equal(Foo.prototype.render);
+    });
+
+    it('should throw if called on something other than the root node', () => {
+      class Foo extends React.Component {
+        render() { return <div><a /></div>; }
+      }
+
+      const wrapper = shallow(<Foo />);
+      const div = wrapper.find('div');
+
+      expect(() => div.instance()).to.throw();
+    });
+
+  });
+
   describe('.contains(node)', () => {
 
     it('should allow matches on the root node', () => {
@@ -191,6 +216,13 @@ describe('shallow', () => {
       expect(wrapper.contains(fails)).to.equal(false);
       expect(wrapper.contains(passes1)).to.equal(true);
       expect(wrapper.contains(passes2)).to.equal(true);
+    });
+
+    it('should throw on invalid argument', () => {
+      const wrapper = shallow(<div></div>);
+
+      expect(() => wrapper.contains({})).to.throw();
+      expect(() => wrapper.contains(() => ({}))).to.throw();
     });
 
     describeIf(!REACT013, 'stateless function components', () => {
@@ -302,6 +334,33 @@ describe('shallow', () => {
         </div>
       );
       expect(wrapper.find('.foo').type()).to.equal('input');
+    });
+
+    it('should find an element based on a tag name and class name', () => {
+      const wrapper = shallow(
+        <div>
+          <input className="foo" />
+        </div>
+      );
+      expect(wrapper.find('input.foo').length).to.equal(1);
+    });
+
+    it('should find an element based on a tag name and id', () => {
+      const wrapper = shallow(
+        <div>
+          <input id="foo" />
+        </div>
+      );
+      expect(wrapper.find('input#foo').length).to.equal(1);
+    });
+
+    it('should find an element based on a tag name, id, and class name', () => {
+      const wrapper = shallow(
+        <div>
+          <input id="foo" className="bar" />
+        </div>
+      );
+      expect(wrapper.find('input#foo.bar').length).to.equal(1);
     });
 
     it('should find an element based on a tag name', () => {
@@ -461,17 +520,6 @@ describe('shallow', () => {
       );
       expect(wrapper.find('input').length).to.equal(2);
       expect(wrapper.find('button').length).to.equal(1);
-    });
-
-    it('should throw on a complex selector', () => {
-      const wrapper = shallow(
-        <div>
-          <input className="foo" />
-          <input />
-          <button />
-        </div>
-      );
-      expect(() => wrapper.find('.foo .foo')).to.throw(Error);
     });
 
     it('should support object property selectors', () => {
@@ -974,6 +1022,34 @@ describe('shallow', () => {
       });
     });
 
+    it('should be batched updates', () => {
+      let renderCount = 0;
+      class Foo extends React.Component {
+        constructor(props) {
+          super(props);
+          this.state = {
+            count: 0,
+          };
+          this.onClick = this.onClick.bind(this);
+        }
+        onClick() {
+          this.setState({ count: this.state.count + 1 });
+          this.setState({ count: this.state.count + 1 });
+        }
+        render() {
+          ++renderCount;
+          return (
+            <a onClick={this.onClick}>{this.state.count}</a>
+          );
+        }
+      }
+
+      const wrapper = shallow(<Foo />);
+      wrapper.simulate('click');
+      expect(wrapper.text()).to.equal('1');
+      expect(renderCount).to.equal(2);
+    });
+
   });
 
   describe('.setState(newState)', () => {
@@ -994,6 +1070,28 @@ describe('shallow', () => {
       wrapper.setState({ id: 'bar' });
       expect(wrapper.find('.bar').length).to.equal(1);
     });
+
+    describeIf(!REACT013, 'stateless function components', () => {
+      it('should throw when trying to access state', () => {
+        const Foo = () => (
+          <div>abc</div>
+        );
+
+        const wrapper = shallow(<Foo />);
+
+        expect(() => wrapper.state()).to.throw();
+      });
+
+      it('should throw when trying to set state', () => {
+        const Foo = () => (
+          <div>abc</div>
+        );
+
+        const wrapper = shallow(<Foo />);
+
+        expect(() => wrapper.setState({ a: 1 })).to.throw();
+      });
+    });
   });
 
   describe('.is(selector)', () => {
@@ -1005,6 +1103,22 @@ describe('shallow', () => {
     it('should allow for compound selectors', () => {
       const wrapper = shallow(<div className="foo bar baz" />);
       expect(wrapper.is('.foo.bar')).to.equal(true);
+    });
+
+    it('should ignore insignificant whitespace', () => {
+      const className = `foo
+      `;
+      const wrapper = shallow(<div className={className} />);
+      expect(wrapper.is('.foo')).to.equal(true);
+    });
+
+    it('should handle all significant whitespace', () => {
+      const className = `foo
+
+      bar
+      baz`;
+      const wrapper = shallow(<div className={className} />);
+      expect(wrapper.is('.foo.bar.baz')).to.equal(true);
     });
 
     it('should return false when selector does not match', () => {
@@ -2247,6 +2361,387 @@ describe('shallow', () => {
       ).find('li');
       expect(wrapper.at(0).key()).to.equal('foo');
       expect(wrapper.at(1).key()).to.equal('bar');
+    });
+  });
+
+  describe('.matchesElement(node)', () => {
+    it('should match on a root node that looks like the rendered one', () => {
+      const spy = sinon.spy();
+      const wrapper = shallow(
+        <div>
+          <div onClick={spy} style={{ fontSize: 12, color: 'red' }}>Hello World</div>
+        </div>
+      ).first();
+      expect(wrapper.matchesElement(<div><div>Hello World</div></div>)).to.equal(true);
+      expect(wrapper.matchesElement(
+        <div>
+          <div onClick={spy} style={{ fontSize: 12, color: 'red' }}>Hello World</div>
+        </div>
+      )).to.equal(true);
+      expect(wrapper.matchesElement(
+        <div>
+          <div onClick={spy}>Hello World</div>
+        </div>
+      )).to.equal(true);
+      expect(wrapper.matchesElement(
+        <div>
+          <div style={{ fontSize: 12, color: 'red' }}>Hello World</div>
+        </div>
+      )).to.equal(true);
+      expect(spy.callCount).to.equal(0);
+    });
+    it('should not match on a root node that doesn\'t looks like the rendered one', () => {
+      const spy = sinon.spy();
+      const spy2 = sinon.spy();
+      const wrapper = shallow(
+        <div>
+          <div onClick={spy} style={{ fontSize: 12, color: 'red' }}>Hello World</div>
+        </div>
+      ).first();
+      expect(wrapper.matchesElement(<div><div>Bonjour le monde</div></div>)).to.equal(false);
+      expect(wrapper.matchesElement(
+        <div>
+          <div onClick={spy} style={{ fontSize: 12, color: 'blue' }}>Hello World</div>
+        </div>
+      )).to.equal(false);
+      expect(wrapper.matchesElement(
+        <div>
+          <div onClick={spy2}>Hello World</div>
+        </div>
+      )).to.equal(false);
+      expect(wrapper.matchesElement(
+        <div>
+          <div style={{ fontSize: 13, color: 'red' }}>Hello World</div>
+        </div>
+      )).to.equal(false);
+      expect(spy.callCount).to.equal(0);
+      expect(spy2.callCount).to.equal(0);
+    });
+  });
+
+  describe('.containsMatchingElement(node)', () => {
+    it('should match a root node that looks like the rendered one', () => {
+      const spy1 = sinon.spy();
+      const spy2 = sinon.spy();
+      const wrapper = shallow(
+        <div>
+          <div onClick={spy1} style={{ fontSize: 12, color: 'red' }}>Hello World</div>
+          <div onClick={spy2} style={{ fontSize: 13, color: 'blue' }}>Goodbye World</div>
+        </div>
+      );
+      expect(wrapper.containsMatchingElement(
+        <div>
+          <div>Hello World</div>
+          <div>Goodbye World</div>
+        </div>
+      )).to.equal(true);
+      expect(wrapper.containsMatchingElement(
+        <div>
+          <div onClick={spy1} style={{ fontSize: 12, color: 'red' }}>Hello World</div>
+          <div onClick={spy2} style={{ fontSize: 13, color: 'blue' }}>Goodbye World</div>
+        </div>
+      )).to.equal(true);
+      expect(wrapper.containsMatchingElement(
+        <div>
+          <div onClick={spy1}>Hello World</div>
+          <div style={{ fontSize: 13, color: 'blue' }}>Goodbye World</div>
+        </div>
+      )).to.equal(true);
+      expect(wrapper.containsMatchingElement(
+        <div>
+          <div style={{ fontSize: 12, color: 'red' }}>Hello World</div>
+          <div onClick={spy2}>Goodbye World</div>
+        </div>
+      )).to.equal(true);
+      expect(wrapper.containsMatchingElement(
+        <div>
+          <div>Hello World</div>
+          <div onClick={spy2} style={{ fontSize: 13, color: 'blue' }}>Goodbye World</div>
+        </div>
+      )).to.equal(true);
+      expect(wrapper.containsMatchingElement(
+        <div>
+          <div>Hello World</div>
+          <div style={{ fontSize: 13, color: 'blue' }}>Goodbye World</div>
+        </div>
+      )).to.equal(true);
+      expect(spy1.callCount).to.equal(0);
+      expect(spy2.callCount).to.equal(0);
+    });
+    it('should match on a single node that looks like a rendered one', () => {
+      const spy1 = sinon.spy();
+      const spy2 = sinon.spy();
+      const wrapper = shallow(
+        <div>
+          <div onClick={spy1} style={{ fontSize: 12, color: 'red' }}>Hello World</div>
+          <div onClick={spy2} style={{ fontSize: 13, color: 'blue' }}>Goodbye World</div>
+        </div>
+      );
+      expect(wrapper.containsMatchingElement(
+        <div>Hello World</div>
+      )).to.equal(true);
+      expect(wrapper.containsMatchingElement(
+        <div>Goodbye World</div>
+      )).to.equal(true);
+      expect(wrapper.containsMatchingElement(
+        <div onClick={spy1} style={{ fontSize: 12, color: 'red' }}>Hello World</div>
+      )).to.equal(true);
+      expect(wrapper.containsMatchingElement(
+        <div style={{ fontSize: 12, color: 'red' }}>Hello World</div>
+      )).to.equal(true);
+      expect(wrapper.containsMatchingElement(
+        <div onClick={spy2} style={{ fontSize: 13, color: 'blue' }}>Goodbye World</div>
+      )).to.equal(true);
+      expect(wrapper.containsMatchingElement(
+        <div onClick={spy2}>Goodbye World</div>
+      )).to.equal(true);
+      expect(spy1.callCount).to.equal(0);
+      expect(spy2.callCount).to.equal(0);
+    });
+    it('should not match on a single node that doesn\'t looks like a rendered one', () => {
+      const spy1 = sinon.spy();
+      const spy2 = sinon.spy();
+      const wrapper = shallow(
+        <div>
+          <div onClick={spy1} style={{ fontSize: 12, color: 'red' }}>Hello World</div>
+          <div onClick={spy2} style={{ fontSize: 13, color: 'blue' }}>Goodbye World</div>
+        </div>
+      );
+      expect(wrapper.containsMatchingElement(
+        <div>Bonjour le monde</div>
+      )).to.equal(false);
+      expect(wrapper.containsMatchingElement(
+        <div onClick={spy2}>Au revoir le monde</div>
+      )).to.equal(false);
+    });
+  });
+  describe('.containsAllMatchingElements(nodes)', () => {
+    it('should match on an array of nodes that all looks like one of rendered nodes', () => {
+      const spy1 = sinon.spy();
+      const spy2 = sinon.spy();
+      const wrapper = shallow(
+        <div>
+          <div onClick={spy1} style={{ fontSize: 12, color: 'red' }}>Hello World</div>
+          <div onClick={spy2} style={{ fontSize: 13, color: 'blue' }}>Goodbye World</div>
+        </div>
+      );
+      expect(wrapper.containsAllMatchingElements([
+        <div>Hello World</div>,
+        <div>Goodbye World</div>,
+      ])).to.equal(true);
+      expect(wrapper.containsAllMatchingElements([
+        <div onClick={spy1} style={{ fontSize: 12, color: 'red' }}>Hello World</div>,
+        <div>Goodbye World</div>,
+      ])).to.equal(true);
+      expect(wrapper.containsAllMatchingElements([
+        <div>Hello World</div>,
+        <div onClick={spy2} style={{ fontSize: 13, color: 'blue' }}>Goodbye World</div>,
+      ])).to.equal(true);
+      expect(wrapper.containsAllMatchingElements([
+        <div onClick={spy1} style={{ fontSize: 12, color: 'red' }}>Hello World</div>,
+        <div onClick={spy2} style={{ fontSize: 13, color: 'blue' }}>Goodbye World</div>,
+      ])).to.equal(true);
+      expect(wrapper.containsAllMatchingElements([
+        <div onClick={spy1}>Hello World</div>,
+        <div onClick={spy2} style={{ fontSize: 13, color: 'blue' }}>Goodbye World</div>,
+      ])).to.equal(true);
+      expect(wrapper.containsAllMatchingElements([
+        <div style={{ fontSize: 12, color: 'red' }}>Hello World</div>,
+        <div onClick={spy2} style={{ fontSize: 13, color: 'blue' }}>Goodbye World</div>,
+      ])).to.equal(true);
+      expect(wrapper.containsAllMatchingElements([
+        <div onClick={spy1} style={{ fontSize: 12, color: 'red' }}>Hello World</div>,
+        <div style={{ fontSize: 13, color: 'blue' }}>Goodbye World</div>,
+      ])).to.equal(true);
+      expect(wrapper.containsAllMatchingElements([
+        <div onClick={spy1} style={{ fontSize: 12, color: 'red' }}>Hello World</div>,
+        <div onClick={spy2}>Goodbye World</div>,
+      ])).to.equal(true);
+      expect(spy1.callCount).to.equal(0);
+      expect(spy2.callCount).to.equal(0);
+    });
+    it('should not match on nodes that doesn\'t all looks like one of rendered nodes', () => {
+      const spy1 = sinon.spy();
+      const spy2 = sinon.spy();
+      const wrapper = shallow(
+        <div>
+          <div onClick={spy1} style={{ fontSize: 12, color: 'red' }}>Hello World</div>
+          <div onClick={spy2} style={{ fontSize: 13, color: 'blue' }}>Goodbye World</div>
+        </div>
+      );
+      expect(wrapper.containsAllMatchingElements([
+        <div onClick={spy1} style={{ fontSize: 12, color: 'red' }}>Hello World</div>,
+        <div onClick={spy1} style={{ fontSize: 12, color: 'red' }}>Bonjour le monde</div>,
+        <div onClick={spy2}>Goodbye World</div>,
+      ])).to.equal(false);
+      expect(spy1.callCount).to.equal(0);
+      expect(spy2.callCount).to.equal(0);
+    });
+  });
+
+  describe('.containsAnyMatchingElements(nodes)', () => {
+    it('should match on an array with at least one node that looks like a rendered nodes', () => {
+      const spy1 = sinon.spy();
+      const spy2 = sinon.spy();
+      const wrapper = shallow(
+        <div>
+          <div onClick={spy1} style={{ fontSize: 12, color: 'red' }}>Hello World</div>
+          <div onClick={spy2} style={{ fontSize: 13, color: 'blue' }}>Goodbye World</div>
+        </div>
+      );
+      expect(wrapper.containsAnyMatchingElements([
+        <div>Bonjour le monde</div>,
+        <div>Goodbye World</div>,
+      ])).to.equal(true);
+      expect(wrapper.containsAnyMatchingElements([
+        <div onClick={spy1} style={{ fontSize: 12, color: 'red' }}>Bonjour le monde</div>,
+        <div>Goodbye World</div>,
+      ])).to.equal(true);
+      expect(wrapper.containsAnyMatchingElements([
+        <div>Bonjour le monde</div>,
+        <div onClick={spy2} style={{ fontSize: 13, color: 'blue' }}>Goodbye World</div>,
+      ])).to.equal(true);
+      expect(wrapper.containsAnyMatchingElements([
+        <div onClick={spy1} style={{ fontSize: 12, color: 'red' }}>Bonjour le monde</div>,
+        <div onClick={spy2} style={{ fontSize: 13, color: 'blue' }}>Goodbye World</div>,
+      ])).to.equal(true);
+      expect(wrapper.containsAnyMatchingElements([
+        <div onClick={spy1}>Bonjour le monde</div>,
+        <div onClick={spy2} style={{ fontSize: 13, color: 'blue' }}>Goodbye World</div>,
+      ])).to.equal(true);
+      expect(wrapper.containsAnyMatchingElements([
+        <div style={{ fontSize: 12, color: 'red' }}>Bonjour le monde</div>,
+        <div onClick={spy2} style={{ fontSize: 13, color: 'blue' }}>Goodbye World</div>,
+      ])).to.equal(true);
+      expect(wrapper.containsAnyMatchingElements([
+        <div onClick={spy1} style={{ fontSize: 12, color: 'red' }}>Bonjour le monde</div>,
+        <div style={{ fontSize: 13, color: 'blue' }}>Goodbye World</div>,
+      ])).to.equal(true);
+      expect(wrapper.containsAnyMatchingElements([
+        <div onClick={spy1} style={{ fontSize: 12, color: 'red' }}>Bonjour le monde</div>,
+        <div onClick={spy2}>Goodbye World</div>,
+      ])).to.equal(true);
+      expect(spy1.callCount).to.equal(0);
+      expect(spy2.callCount).to.equal(0);
+    });
+    it('should not match on an array with no nodes that looks like a rendered nodes', () => {
+      const spy1 = sinon.spy();
+      const spy2 = sinon.spy();
+      const wrapper = shallow(
+        <div>
+          <div onClick={spy1} style={{ fontSize: 12, color: 'red' }}>Hello World</div>
+          <div onClick={spy2} style={{ fontSize: 13, color: 'blue' }}>Goodbye World</div>
+        </div>
+      );
+      expect(wrapper.containsAnyMatchingElements([
+        <div onClick={spy1} style={{ fontSize: 12, color: 'red' }}>Bonjour le monde</div>,
+        <div onClick={spy2}>Au revoir le monde</div>,
+      ])).to.equal(false);
+      expect(spy1.callCount).to.equal(0);
+      expect(spy2.callCount).to.equal(0);
+    });
+  });
+  describe('.name()', () => {
+    describe('node with displayName', () => {
+      it('should return the displayName of the node', () => {
+        class Foo extends React.Component {
+          render() { return <div />; }
+        }
+
+        class Wrapper extends React.Component {
+          render() { return <Foo />; }
+        }
+
+        Foo.displayName = 'CustomWrapper';
+
+        const wrapper = shallow(<Wrapper />);
+        expect(wrapper.name()).to.equal('CustomWrapper');
+      });
+
+      describeIf(!REACT013, 'stateless function components', () => {
+        it('should return the name of the node', () => {
+          function SFC() {
+            return <div />;
+          }
+          const Wrapper = () => <SFC />;
+
+          SFC.displayName = 'CustomWrapper';
+
+          const wrapper = shallow(<Wrapper />);
+          expect(wrapper.name()).to.equal('CustomWrapper');
+        });
+      });
+
+      describe('React.createClass', () => {
+        it('should return the name of the node', () => {
+          const Foo = React.createClass({
+            displayName: 'CustomWrapper',
+            render() {
+              return <div />;
+            },
+          });
+          const Wrapper = React.createClass({
+            render() {
+              return <Foo />;
+            },
+          });
+
+          const wrapper = shallow(<Wrapper />);
+          expect(wrapper.name()).to.equal('CustomWrapper');
+        });
+      });
+    });
+
+    describe('node without displayName', () => {
+      it('should return the name of the node', () => {
+        class Foo extends React.Component {
+          render() { return <div />; }
+        }
+
+        class Wrapper extends React.Component {
+          render() { return <Foo />; }
+        }
+
+        const wrapper = shallow(<Wrapper />);
+        expect(wrapper.name()).to.equal('Foo');
+      });
+
+      describeIf(!REACT013, 'stateless function components', () => {
+        it('should return the name of the node', () => {
+          function SFC() {
+            return <div />;
+          }
+          const Wrapper = () => <SFC />;
+
+          const wrapper = shallow(<Wrapper />);
+          expect(wrapper.name()).to.equal('SFC');
+        });
+      });
+
+      describe('React.createClass', () => {
+        it('should return the name of the node', () => {
+          const Foo = React.createClass({
+            render() {
+              return <div />;
+            },
+          });
+          const Wrapper = React.createClass({
+            render() {
+              return <Foo />;
+            },
+          });
+
+          const wrapper = shallow(<Wrapper />);
+          expect(wrapper.name()).to.equal('Foo');
+        });
+      });
+    });
+
+    describe('DOM node', () => {
+      it('should return the name of the node', () => {
+        const wrapper = shallow(<div />);
+        expect(wrapper.name()).to.equal('div');
+      });
     });
   });
 
