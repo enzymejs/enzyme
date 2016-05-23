@@ -6,7 +6,7 @@ wrapper around the corresponding node passed in as the first argument.
 
 #### Arguments
 
-1. `fn` (`Function ( ReactWrapper node )`): A callback to be run for every node in the collection.
+1. `fn` (`Function ( ReactWrapper node, Number index )`): A callback to be run for every node in the collection.
 Should expect a ReactWrapper as the first argument, and will be run with a context of the original
 instance.
 

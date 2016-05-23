@@ -6,7 +6,7 @@ to the map function.
 
 #### Arguments
 
-1. `fn` (`Function ( ReactWrapper node ) => Any`): A mapping function to be run for every node in
+1. `fn` (`Function ( ReactWrapper node, Number index ) => Any`): A mapping function to be run for every node in
 the collection, the results of which will be mapped to the returned array. Should expect a ReactWrapper as the first argument, and will be run with a context of
 the original instance.
 
