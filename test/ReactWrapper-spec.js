@@ -1817,10 +1817,13 @@ describeWithDOM('mount', () => {
       expect(spy.callCount).to.equal(3);
       expect(spy.args[0][0]).to.be.instanceOf(ReactWrapper);
       expect(spy.args[0][0].hasClass('bax')).to.equal(true);
+      expect(spy.args[0][1]).to.equal(0);
       expect(spy.args[1][0]).to.be.instanceOf(ReactWrapper);
       expect(spy.args[1][0].hasClass('bar')).to.equal(true);
+      expect(spy.args[1][1]).to.equal(1);
       expect(spy.args[2][0]).to.be.instanceOf(ReactWrapper);
       expect(spy.args[2][0].hasClass('baz')).to.equal(true);
+      expect(spy.args[2][1]).to.equal(2);
     });
   });
 
@@ -1840,10 +1843,13 @@ describeWithDOM('mount', () => {
       expect(spy.callCount).to.equal(3);
       expect(spy.args[0][0]).to.be.instanceOf(ReactWrapper);
       expect(spy.args[0][0].hasClass('bax')).to.equal(true);
+      expect(spy.args[0][1]).to.equal(0);
       expect(spy.args[1][0]).to.be.instanceOf(ReactWrapper);
       expect(spy.args[1][0].hasClass('bar')).to.equal(true);
+      expect(spy.args[1][1]).to.equal(1);
       expect(spy.args[2][0]).to.be.instanceOf(ReactWrapper);
       expect(spy.args[2][0].hasClass('baz')).to.equal(true);
+      expect(spy.args[2][1]).to.equal(2);
     });
 
     it('should return an array with the mapped values', () => {

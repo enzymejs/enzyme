@@ -91,6 +91,9 @@ Returns whether or not the current root node has the given class name or not.
 #### [`.is(selector) => Boolean`](ShallowWrapper/is.md)
 Returns whether or not the current node matches a provided selector.
 
+#### [`.isEmpty() => Boolean`](ShallowWrapper/isEmpty.md)
+Returns whether or not the current node is empty.
+
 #### [`.not(selector) => ShallowWrapper`](ShallowWrapper/not.md)
 Remove nodes in the current wrapper that match the provided selector. (inverse of `.filter()`)
 
