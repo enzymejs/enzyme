@@ -1022,6 +1022,34 @@ describe('shallow', () => {
       });
     });
 
+    it('should be batched updates', () => {
+      let renderCount = 0;
+      class Foo extends React.Component {
+        constructor(props) {
+          super(props);
+          this.state = {
+            count: 0,
+          };
+          this.onClick = this.onClick.bind(this);
+        }
+        onClick() {
+          this.setState({ count: this.state.count + 1 });
+          this.setState({ count: this.state.count + 1 });
+        }
+        render() {
+          ++renderCount;
+          return (
+            <a onClick={this.onClick}>{this.state.count}</a>
+          );
+        }
+      }
+
+      const wrapper = shallow(<Foo />);
+      wrapper.simulate('click');
+      expect(wrapper.text()).to.equal('1');
+      expect(renderCount).to.equal(2);
+    });
+
   });
 
   describe('.setState(newState)', () => {
@@ -2006,10 +2034,13 @@ describe('shallow', () => {
       expect(spy.callCount).to.equal(3);
       expect(spy.args[0][0]).to.be.instanceOf(ShallowWrapper);
       expect(spy.args[0][0].hasClass('bax')).to.equal(true);
+      expect(spy.args[0][1]).to.equal(0);
       expect(spy.args[1][0]).to.be.instanceOf(ShallowWrapper);
       expect(spy.args[1][0].hasClass('bar')).to.equal(true);
+      expect(spy.args[1][1]).to.equal(1);
       expect(spy.args[2][0]).to.be.instanceOf(ShallowWrapper);
       expect(spy.args[2][0].hasClass('baz')).to.equal(true);
+      expect(spy.args[2][1]).to.equal(2);
     });
   });
 
@@ -2029,10 +2060,13 @@ describe('shallow', () => {
       expect(spy.callCount).to.equal(3);
       expect(spy.args[0][0]).to.be.instanceOf(ShallowWrapper);
       expect(spy.args[0][0].hasClass('bax')).to.equal(true);
+      expect(spy.args[0][1]).to.equal(0);
       expect(spy.args[1][0]).to.be.instanceOf(ShallowWrapper);
       expect(spy.args[1][0].hasClass('bar')).to.equal(true);
+      expect(spy.args[1][1]).to.equal(1);
       expect(spy.args[2][0]).to.be.instanceOf(ShallowWrapper);
       expect(spy.args[2][0].hasClass('baz')).to.equal(true);
+      expect(spy.args[2][1]).to.equal(2);
     });
 
     it('should return an array with the mapped values', () => {
