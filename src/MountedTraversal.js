@@ -216,7 +216,7 @@ export function buildInstPredicate(selector) {
         case SELECTOR.ID_TYPE:
           return inst => instHasId(inst, selector.substr(1));
         case SELECTOR.PROP_TYPE: {
-          const propKey = selector.split(/\[([a-zA-Z\-\:]*?)(=|\])/)[1];
+          const propKey = selector.split(/\[([a-zA-Z\d\-\:]*?)(=|\])/)[1];
           const propValue = selector.split(/=(.*?)]/)[1];
 
           return node => instHasProperty(node, propKey, propValue);

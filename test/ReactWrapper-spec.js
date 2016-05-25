@@ -369,12 +369,13 @@ describeWithDOM('mount', () => {
     it('should support data prop selectors', () => {
       const wrapper = mount(
         <div>
-          <span data-foo="bar" />
+          <span data-foo="bar" data-foo123="bar" />
         </div>
       );
 
       expect(wrapper.find('[data-foo="bar"]')).to.have.length(1);
       expect(wrapper.find('[data-foo]')).to.have.length(1);
+      expect(wrapper.find('[data-foo123]')).to.have.length(1);
     });
 
     it('should find components with multiple matching props', () => {
