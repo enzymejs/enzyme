@@ -1,4 +1,4 @@
-import { describeWithDOM, describeIf } from './_helpers';
+import { describeWithDOM, describeIf, itWithData, generateEmptyRenderData } from './_helpers';
 import React from 'react';
 import { expect } from 'chai';
 import {
@@ -7,7 +7,7 @@ import {
   ReactWrapper,
 } from '../src/';
 import sinon from 'sinon';
-import { REACT013 } from '../src/version';
+import { REACT013, REACT15 } from '../src/version';
 
 describeWithDOM('mount', () => {
 
@@ -1237,6 +1237,45 @@ describeWithDOM('mount', () => {
     it('should return false when selector does not match', () => {
       const wrapper = mount(<div className="bar baz" />);
       expect(wrapper.is('.foo')).to.equal(false);
+    });
+  });
+
+  describe('.isEmptyRender()', () => {
+    const emptyRenderValues = generateEmptyRenderData();
+
+    itWithData(emptyRenderValues, 'when a React class component returns: ', (data) => {
+      const Foo = React.createClass({
+        render() {
+          return data.value;
+        },
+      });
+      const wrapper = mount(<Foo />);
+      expect(wrapper.isEmptyRender()).to.equal(data.expectResponse);
+    });
+
+    itWithData(emptyRenderValues, 'when an ES2015 class component returns: ', (data) => {
+      class Foo extends React.Component {
+        render() {
+          return data.value;
+        }
+      }
+      const wrapper = mount(<Foo />);
+      expect(wrapper.isEmptyRender()).to.equal(data.expectResponse);
+    });
+
+    it('should not return true for HTML elements', () => {
+      const wrapper = mount(<div className="bar baz" />);
+      expect(wrapper.isEmptyRender()).to.equal(false);
+    });
+
+    describeIf(REACT15, 'stateless function components', () => {
+      itWithData(emptyRenderValues, 'when a component returns: ', (data) => {
+        function Foo() {
+          return data.value;
+        }
+        const wrapper = mount(<Foo />);
+        expect(wrapper.isEmptyRender()).to.equal(data.expectResponse);
+      });
     });
   });
 

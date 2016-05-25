@@ -13,6 +13,7 @@ import {
   instEqual,
   treeFilter,
   getNode,
+  internalInstanceOrComponent,
 } from './MountedTraversal';
 import {
   renderWithOptions,
@@ -30,6 +31,7 @@ import {
 import {
   debugInsts,
 } from './Debug';
+import { REACT15 } from './version';
 
 /**
  * Finds all nodes in the current wrapper nodes' render trees that match the provided predicate
@@ -386,6 +388,24 @@ export default class ReactWrapper {
   is(selector) {
     const predicate = buildInstPredicate(selector);
     return this.single(n => predicate(n));
+  }
+
+  /**
+   * Returns true if the component rendered nothing, i.e., null or false.
+   *
+   * @returns {boolean}
+   */
+  isEmptyRender() {
+    return this.single((n) => {
+      // Stateful components and stateless function components have different internal structures,
+      // so we need to find the correct internal instance, and validate the rendered node type
+      // equals 2, which is the `ReactNodeTypes.EMPTY` value.
+      if (REACT15) {
+        return internalInstanceOrComponent(n)._renderedNodeType === 2;
+      }
+
+      return findDOMNode(n) === null;
+    });
   }
 
   /**
