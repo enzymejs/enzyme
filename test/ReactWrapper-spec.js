@@ -366,15 +366,42 @@ describeWithDOM('mount', () => {
 
     });
 
+    it('should not find components with invalid attributes', () => {
+      // Invalid attributes aren't valid JSX, so manual instantiation is necessary
+      const wrapper = mount(
+        React.createElement('div', null, React.createElement('span', {
+          '123-foo': 'bar',
+          '-foo': 'bar',
+          ':foo': 'bar',
+        }))
+      );
+
+      expect(wrapper.find('[-foo]')).to.have.length(0, '-foo');
+      expect(wrapper.find('[:foo]')).to.have.length(0, ':foo');
+      expect(wrapper.find('[123-foo]')).to.have.length(0, '123-foo');
+    });
+
     it('should support data prop selectors', () => {
       const wrapper = mount(
         <div>
           <span data-foo="bar" />
+          <span data-foo-123="bar2" />
+          <span data-123-foo="bar3" />
+          <span data-foo_bar="bar4" />
         </div>
       );
 
       expect(wrapper.find('[data-foo="bar"]')).to.have.length(1);
       expect(wrapper.find('[data-foo]')).to.have.length(1);
+
+      expect(wrapper.find('[data-foo-123]')).to.have.length(1);
+      expect(wrapper.find('[data-foo-123="bar2"]')).to.have.length(1);
+
+      expect(wrapper.find('[data-123-foo]')).to.have.length(1);
+      expect(wrapper.find('[data-123-foo="bar3"]')).to.have.length(1);
+
+      expect(wrapper.find('[data-foo_bar]')).to.have.length(1);
+      expect(wrapper.find('[data-foo_bar="bar4"]')).to.have.length(1);
     });
 
     it('should find components with multiple matching props', () => {
