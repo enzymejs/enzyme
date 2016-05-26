@@ -387,6 +387,7 @@ describeWithDOM('mount', () => {
           <span data-foo="bar" />
           <span data-foo-123="bar2" />
           <span data-123-foo="bar3" />
+          <span data-foo_bar="bar4" />
         </div>
       );
 
@@ -398,6 +399,9 @@ describeWithDOM('mount', () => {
 
       expect(wrapper.find('[data-123-foo]')).to.have.length(1);
       expect(wrapper.find('[data-123-foo="bar3"]')).to.have.length(1);
+
+      expect(wrapper.find('[data-foo_bar]')).to.have.length(1);
+      expect(wrapper.find('[data-foo_bar="bar4"]')).to.have.length(1);
     });
 
     it('should find components with multiple matching props', () => {
