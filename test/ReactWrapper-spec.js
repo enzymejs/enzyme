@@ -392,8 +392,12 @@ describeWithDOM('mount', () => {
 
       expect(wrapper.find('[data-foo="bar"]')).to.have.length(1);
       expect(wrapper.find('[data-foo]')).to.have.length(1);
+
       expect(wrapper.find('[data-foo-123]')).to.have.length(1);
+      expect(wrapper.find('[data-foo-123="bar2"]')).to.have.length(1);
+
       expect(wrapper.find('[data-123-foo]')).to.have.length(1);
+      expect(wrapper.find('[data-123-foo="bar3"]')).to.have.length(1);
     });
 
     it('should find components with multiple matching props', () => {
