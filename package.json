@@ -17,6 +17,7 @@
     "test:only": "mocha --recursive test --reporter dot",
     "test:single": "mocha --watch --reporter dot",
     "test:watch": "mocha --recursive test --watch --reporter dot",
+    "test:karma": "karma start",
     "test:env": "sh ./example-test.sh",
     "test:all": "npm run react:13 && npm run test:only && npm run react:14 && npm run test:only && npm run react:15 && npm run test:only",
     "react:clean": "rimraf node_modules/react node_modules/react-dom node_modules/react-addons-test-utils",
@@ -79,9 +80,15 @@
     "gitbook-cli": "^1.0.1",
     "istanbul": "^1.0.0-alpha.2",
     "jsdom": "^6.1.0",
+    "json-loader": "^0.5.4",
+    "karma": "^0.13.22",
+    "karma-chrome-launcher": "^1.0.1",
+    "karma-mocha": "^1.0.1",
+    "karma-webpack": "^1.7.0",
     "mocha": "^3.0.2",
     "rimraf": "^2.5.4",
-    "sinon": "^1.17.5"
+    "sinon": "^1.17.5",
+    "webpack": "^1.13.1"
   },
   "peerDependencies": {
     "react": "0.13.x || 0.14.x || ^15.0.0-0 || 15.x"
