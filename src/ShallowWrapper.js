@@ -632,8 +632,8 @@ export default class ShallowWrapper {
   }
 
   /**
-   * Returns the type of the current node of this wrapper. If it's a composite component, this will be
-   * the component constructor. If it's native DOM node, it will be a string.
+   * Returns the type of the current node of this wrapper. If it's a composite component, this will
+   * be the component constructor. If it's native DOM node, it will be a string.
    *
    * @returns {String|Function}
    */
