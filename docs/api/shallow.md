@@ -146,13 +146,13 @@ Returns the state of the root component.
 Returns the context of the root component.
 
 #### [`.props() => Object`](ShallowWrapper/props.md)
-Returns the props of the root component.
+Returns the props of the current node.
 
 #### [`.prop(key) => Any`](ShallowWrapper/prop.md)
-Returns the named prop of the root component.
+Returns the named prop of the current node.
 
 #### [`.key() => String`](ShallowWrapper/key.md)
-Returns the key of the root component.
+Returns the key of the current node.
 
 #### [`.simulate(event[, data]) => ShallowWrapper`](ShallowWrapper/simulate.md)
 Simulates an event on the current node.
