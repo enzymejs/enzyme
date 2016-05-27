@@ -653,7 +653,7 @@ export default class ShallowWrapper {
   }
 
   /**
-   * Returns whether or not the current root node has the given class name or not.
+   * Returns whether or not the current node has the given class name or not.
    *
    * NOTE: can only be called on a wrapper of a single node.
    *

@@ -86,7 +86,7 @@ Returns whether or not the current render tree is equal to the given node, based
 Returns whether or not a given react element matches the shallow render tree.
 
 #### [`.hasClass(className) => Boolean`](ShallowWrapper/hasClass.md)
-Returns whether or not the current root node has the given class name or not.
+Returns whether or not the current node has the given class name or not.
 
 #### [`.is(selector) => Boolean`](ShallowWrapper/is.md)
 Returns whether or not the current node matches a provided selector.
