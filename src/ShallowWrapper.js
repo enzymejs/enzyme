@@ -632,7 +632,7 @@ export default class ShallowWrapper {
   }
 
   /**
-   * Returns the type of the root node of this wrapper. If it's a composite component, this will be
+   * Returns the type of the current node of this wrapper. If it's a composite component, this will be
    * the component constructor. If it's native DOM node, it will be a string.
    *
    * @returns {String|Function}
@@ -642,7 +642,7 @@ export default class ShallowWrapper {
   }
 
   /**
-   * Returns the name of the root node of this wrapper.
+   * Returns the name of the current node of this wrapper.
    *
    * In order of precedence => type.displayName -> type.name -> type.
    *
