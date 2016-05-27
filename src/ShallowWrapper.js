@@ -488,7 +488,7 @@ export default class ShallowWrapper {
   }
 
   /**
-   * Returns the props hash for the root node of the wrapper.
+   * Returns the props hash for the current node of the wrapper.
    *
    * NOTE: can only be called on a wrapper of a single node.
    *
@@ -613,7 +613,7 @@ export default class ShallowWrapper {
   }
 
   /**
-   * Returns the value of  prop with the given name of the root node.
+   * Returns the value of prop with the given name of the current node.
    *
    * @param propName
    * @returns {*}
