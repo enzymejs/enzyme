@@ -488,7 +488,7 @@ export default class ShallowWrapper {
   }
 
   /**
-   * Returns the props hash for the root node of the wrapper.
+   * Returns the props hash for the current node of the wrapper.
    *
    * NOTE: can only be called on a wrapper of a single node.
    *
@@ -613,7 +613,7 @@ export default class ShallowWrapper {
   }
 
   /**
-   * Returns the value of  prop with the given name of the root node.
+   * Returns the value of prop with the given name of the current node.
    *
    * @param propName
    * @returns {*}
@@ -632,8 +632,8 @@ export default class ShallowWrapper {
   }
 
   /**
-   * Returns the type of the root node of this wrapper. If it's a composite component, this will be
-   * the component constructor. If it's native DOM node, it will be a string.
+   * Returns the type of the current node of this wrapper. If it's a composite component, this will
+   * be the component constructor. If it's native DOM node, it will be a string.
    *
    * @returns {String|Function}
    */
@@ -642,7 +642,7 @@ export default class ShallowWrapper {
   }
 
   /**
-   * Returns the name of the root node of this wrapper.
+   * Returns the name of the current node of this wrapper.
    *
    * In order of precedence => type.displayName -> type.name -> type.
    *
@@ -653,7 +653,7 @@ export default class ShallowWrapper {
   }
 
   /**
-   * Returns whether or not the current root node has the given class name or not.
+   * Returns whether or not the current node has the given class name or not.
    *
    * NOTE: can only be called on a wrapper of a single node.
    *
