@@ -71,7 +71,11 @@ export default class ShallowWrapper {
         batchedUpdates(() => {
           this.renderer.render(nodes, options.context);
           const instance = this.instance();
-          if (instance && typeof instance.componentDidMount === 'function') {
+          if (
+            options.lifecycleExperimental &&
+            instance &&
+            typeof instance.componentDidMount === 'function'
+          ) {
             instance.componentDidMount();
           }
         });
@@ -160,13 +164,21 @@ export default class ShallowWrapper {
         const context = instance.context;
         batchedUpdates(() => {
           let shouldRender = true;
-          if (instance && typeof instance.shouldComponentUpdate === 'function') {
+          if (
+            this.options.lifecycleExperimental &&
+            instance &&
+            typeof instance.shouldComponentUpdate === 'function'
+          ) {
             shouldRender = instance.shouldComponentUpdate(props, state, context);
           }
           if (shouldRender) {
             this.unrendered = React.cloneElement(this.unrendered, props);
             this.renderer.render(this.unrendered, context);
-            if (instance && typeof instance.componentDidUpdate === 'function') {
+            if (
+              this.options.lifecycleExperimental &&
+              instance &&
+              typeof instance.componentDidUpdate === 'function'
+            ) {
               instance.componentDidUpdate(prevProps, state, context);
             }
             this.update();
@@ -231,12 +243,20 @@ export default class ShallowWrapper {
     withSetStateAllowed(() => {
       batchedUpdates(() => {
         let shouldRender = true;
-        if (instance && typeof instance.shouldComponentUpdate === 'function') {
+        if (
+          this.options.lifecycleExperimental &&
+          instance &&
+          typeof instance.shouldComponentUpdate === 'function'
+        ) {
           shouldRender = instance.shouldComponentUpdate(props, state, context);
         }
         if (shouldRender) {
           this.renderer.render(this.unrendered, context);
-          if (instance && typeof instance.componentDidUpdate === 'function') {
+          if (
+            this.options.lifecycleExperimental &&
+            instance &&
+            typeof instance.componentDidUpdate === 'function'
+          ) {
             instance.componentDidUpdate(props, state, prevContext);
           }
           this.update();

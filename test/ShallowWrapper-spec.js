@@ -2455,7 +2455,7 @@ describe('shallow', () => {
 
   });
 
-  describe('Component Lifecycle methods', () => {
+  describe('lifecycleExperimental', () => {
     context('mounting', () => {
       it('should call componentWillMount', () => {
         const spy = sinon.spy();
@@ -2467,7 +2467,7 @@ describe('shallow', () => {
             return <div>foo</div>;
           }
         }
-        shallow(<Foo />);
+        shallow(<Foo />, { lifecycleExperimental: true });
         expect(spy.calledOnce).to.equal(true);
       });
       it('should call componentDidMount', () => {
@@ -2480,7 +2480,7 @@ describe('shallow', () => {
             return <div>foo</div>;
           }
         }
-        shallow(<Foo />);
+        shallow(<Foo />, { lifecycleExperimental: true });
         expect(spy.calledOnce).to.equal(true);
       });
 
@@ -2506,7 +2506,7 @@ describe('shallow', () => {
             return <div>{this.state.count}</div>;
           }
         }
-        const result = shallow(<Foo />);
+        const result = shallow(<Foo />, { lifecycleExperimental: true });
         expect(result.state('count')).to.equal(2);
         expect(spy.callCount).to.equal(2);
       });
@@ -2529,7 +2529,13 @@ describe('shallow', () => {
           foo: React.PropTypes.string,
         };
 
-        const wrapper = shallow(<Foo foo="bar" />, { context: { foo: 'context' } });
+        const wrapper = shallow(
+          <Foo foo="bar" />,
+          {
+            context: { foo: 'context' },
+            lifecycleExperimental: true,
+          }
+        );
         wrapper.setProps({ foo: 'baz' });
         expect(
           spy.calledWith({ foo: 'bar' }, { foo: 'baz' }, { foo: 'context' })
@@ -2553,7 +2559,7 @@ describe('shallow', () => {
           }
         }
 
-        const wrapper = shallow(<Foo foo="bar" />);
+        const wrapper = shallow(<Foo foo="bar" />, { lifecycleExperimental: true });
         wrapper.setProps({ foo: 'baz' });
         expect(wrapper.state('foo')).to.equal('baz');
       });
@@ -2580,7 +2586,13 @@ describe('shallow', () => {
           foo: React.PropTypes.string,
         };
 
-        const wrapper = shallow(<Foo foo="bar" />, { context: { foo: 'context' } });
+        const wrapper = shallow(
+          <Foo foo="bar" />,
+          {
+            context: { foo: 'context' },
+            lifecycleExperimental: true,
+          }
+        );
         wrapper.setProps({ foo: 'baz' });
         expect(
           spy.calledWith({ foo: 'bar' }, { foo: 'baz' }, { foo: 'state' }, { foo: 'context' })
@@ -2608,7 +2620,13 @@ describe('shallow', () => {
           foo: React.PropTypes.string,
         };
 
-        const wrapper = shallow(<Foo foo="bar" />, { context: { foo: 'context' } });
+        const wrapper = shallow(
+          <Foo foo="bar" />,
+          {
+            context: { foo: 'context' },
+            lifecycleExperimental: true,
+          }
+        );
         wrapper.setProps({ foo: 'baz' });
         expect(
           spy.calledWith({ foo: 'bar' }, { foo: 'baz' }, { foo: 'state' }, { foo: 'context' })
@@ -2635,7 +2653,13 @@ describe('shallow', () => {
           foo: React.PropTypes.string,
         };
 
-        const wrapper = shallow(<Foo foo="bar" />, { context: { foo: 'context' } });
+        const wrapper = shallow(
+          <Foo foo="bar" />,
+          {
+            context: { foo: 'context' },
+            lifecycleExperimental: true,
+          }
+        );
         wrapper.setProps({ foo: 'baz' });
         expect(
           spy.calledWith({ foo: 'bar' }, { foo: 'baz' }, { foo: 'state' }, { foo: 'context' })
@@ -2660,7 +2684,7 @@ describe('shallow', () => {
           }
         }
 
-        const wrapper = shallow(<Foo foo="bar" />);
+        const wrapper = shallow(<Foo foo="bar" />, { lifecycleExperimental: true });
         wrapper.setProps({ foo: 'baz' });
         expect(spy.callCount).to.equal(0);
       });
@@ -2683,7 +2707,7 @@ describe('shallow', () => {
             return <div>{this.props.foo}</div>;
           }
         }
-        const result = shallow(<Foo />);
+        const result = shallow(<Foo />, { lifecycleExperimental: true });
         result.setProps({ name: 'bar' });
         expect(result.state('count')).to.equal(1);
         expect(spy.callCount).to.equal(2);
@@ -2711,7 +2735,7 @@ describe('shallow', () => {
             return <div>{this.props.foo}</div>;
           }
         }
-        const result = shallow(<Foo />);
+        const result = shallow(<Foo />, { lifecycleExperimental: true });
         result.setProps({ name: 'bar' });
         expect(result.state('count')).to.equal(1);
         expect(spy.callCount).to.equal(3);
@@ -2741,7 +2765,7 @@ describe('shallow', () => {
             return <div>{this.props.foo}</div>;
           }
         }
-        const result = shallow(<Foo />);
+        const result = shallow(<Foo />, { lifecycleExperimental: true });
         result.setProps({ name: 'bar' });
         expect(result.state('count')).to.equal(1);
         expect(spy.callCount).to.equal(3);
@@ -2773,7 +2797,13 @@ describe('shallow', () => {
           foo: React.PropTypes.string,
         };
 
-        const wrapper = shallow(<Foo foo="props" />, { context: { foo: 'context' } });
+        const wrapper = shallow(
+          <Foo foo="props" />,
+          {
+            context: { foo: 'context' },
+            lifecycleExperimental: true,
+          }
+        );
         wrapper.setState({ foo: 'baz' });
         expect(
           spy.calledWith({ foo: 'props' }, { foo: 'bar' }, { foo: 'baz' }, { foo: 'context' })
@@ -2801,7 +2831,13 @@ describe('shallow', () => {
           foo: React.PropTypes.string,
         };
 
-        const wrapper = shallow(<Foo foo="props" />, { context: { foo: 'context' } });
+        const wrapper = shallow(
+          <Foo foo="props" />,
+          {
+            context: { foo: 'context' },
+            lifecycleExperimental: true,
+          }
+        );
         wrapper.setState({ foo: 'baz' });
         expect(
           spy.calledWith({ foo: 'props' }, { foo: 'bar' }, { foo: 'baz' }, { foo: 'context' })
@@ -2829,7 +2865,13 @@ describe('shallow', () => {
           foo: React.PropTypes.string,
         };
 
-        const wrapper = shallow(<Foo foo="props" />, { context: { foo: 'context' } });
+        const wrapper = shallow(
+          <Foo foo="props" />,
+          {
+            context: { foo: 'context' },
+            lifecycleExperimental: true,
+          }
+        );
         wrapper.setState({ foo: 'baz' });
         expect(
           spy.calledWith({ foo: 'props' }, { foo: 'bar' }, { foo: 'baz' }, { foo: 'context' })
@@ -2858,7 +2900,7 @@ describe('shallow', () => {
             return <div>foo</div>;
           }
         }
-        const wrapper = shallow(<Foo />);
+        const wrapper = shallow(<Foo />, { lifecycleExperimental: true });
         wrapper.setState({ foo: 'baz' });
         expect(spy.callCount).to.equal(0);
       });
@@ -2886,7 +2928,7 @@ describe('shallow', () => {
             return <div>{this.state.name}</div>;
           }
         }
-        const result = shallow(<Foo />);
+        const result = shallow(<Foo />, { lifecycleExperimental: true });
         result.setState({ name: 'bar' });
         expect(result.state('count')).to.equal(1);
         expect(spy.callCount).to.equal(3);
@@ -2917,7 +2959,7 @@ describe('shallow', () => {
             return <div>{this.state.name}</div>;
           }
         }
-        const result = shallow(<Foo />);
+        const result = shallow(<Foo />, { lifecycleExperimental: true });
         result.setState({ name: 'bar' });
         expect(result.state('count')).to.equal(1);
         expect(spy.callCount).to.equal(3);
@@ -2941,7 +2983,13 @@ describe('shallow', () => {
         Foo.contextTypes = {
           foo: React.PropTypes.string,
         };
-        const wrapper = shallow(<Foo />, { context: { foo: 'bar' } });
+        const wrapper = shallow(
+          <Foo />,
+          {
+            context: { foo: 'bar' },
+            lifecycleExperimental: true,
+          }
+        );
         wrapper.setContext({ foo: 'baz' });
         expect(spy.calledWith({ foo: 'bar' }, { foo: 'baz' })).to.equal(true);
       });
@@ -2959,7 +3007,13 @@ describe('shallow', () => {
         Foo.contextTypes = {
           foo: React.PropTypes.string,
         };
-        const wrapper = shallow(<Foo />, { context: { foo: 'bar' } });
+        const wrapper = shallow(
+          <Foo />,
+          {
+            context: { foo: 'bar' },
+            lifecycleExperimental: true,
+          }
+        );
         wrapper.setContext({ foo: 'baz' });
         expect(spy.calledWith({ foo: 'bar' }, { foo: 'baz' })).to.equal(true);
       });
@@ -2977,7 +3031,13 @@ describe('shallow', () => {
         Foo.contextTypes = {
           foo: React.PropTypes.string,
         };
-        const wrapper = shallow(<Foo />, { context: { foo: 'bar' } });
+        const wrapper = shallow(
+          <Foo />,
+          {
+            context: { foo: 'bar' },
+            lifecycleExperimental: true,
+          }
+        );
         wrapper.setContext({ foo: 'baz' });
         expect(spy.calledWith({ foo: 'bar' }, { foo: 'baz' })).to.equal(true);
       });
@@ -3001,7 +3061,13 @@ describe('shallow', () => {
         Foo.contextTypes = {
           foo: React.PropTypes.string,
         };
-        const wrapper = shallow(<Foo />, { context: { foo: 'bar' } });
+        const wrapper = shallow(
+          <Foo />,
+          {
+            context: { foo: 'bar' },
+            lifecycleExperimental: true,
+          }
+        );
         wrapper.setContext({ foo: 'baz' });
         expect(spy.callCount).to.equal(0);
       });
@@ -3028,7 +3094,13 @@ describe('shallow', () => {
             return <div>{this.state.name}</div>;
           }
         }
-        const result = shallow(<Foo />, { context: { foo: 'bar' } });
+        const result = shallow(
+          <Foo />,
+          {
+            context: { foo: 'bar' },
+            lifecycleExperimental: true,
+          }
+        );
         result.setContext({ foo: 'baz' });
         expect(result.state('count')).to.equal(1);
         expect(spy.callCount).to.equal(3);
@@ -3058,7 +3130,13 @@ describe('shallow', () => {
             return <div>{this.state.name}</div>;
           }
         }
-        const result = shallow(<Foo />, { context: { foo: 'bar' } });
+        const result = shallow(
+          <Foo />,
+          {
+            context: { foo: 'bar' },
+            lifecycleExperimental: true,
+          }
+        );
         result.setContext({ foo: 'baz' });
         expect(result.state('count')).to.equal(1);
         expect(spy.callCount).to.equal(3);
@@ -3078,10 +3156,24 @@ describe('shallow', () => {
             return <div>foo</div>;
           }
         }
-        const wrapper = shallow(<Foo />);
+        const wrapper = shallow(<Foo />, { lifecycleExperimental: true });
         wrapper.unmount();
         expect(spy.calledOnce).to.equal(true);
       });
+    });
+
+    it('should not call when lifecycleExperimental flag is false', () => {
+      const spy = sinon.spy();
+      class Foo extends React.Component {
+        componentDidMount() {
+          spy();
+        }
+        render() {
+          return <div>foo</div>;
+        }
+      }
+      shallow(<Foo />, { lifecycleExperimental: false });
+      expect(spy.calledOnce).to.equal(false);
     });
   });
 
