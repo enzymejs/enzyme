@@ -1533,7 +1533,7 @@ describeWithDOM('mount', () => {
       expect(wrapper.find('.foo').props().id).to.equal('fooId');
     });
 
-    it('should return props of root rendered node', () => {
+    it('called on root should return props of root node', () => {
       class Foo extends React.Component {
         render() {
           return (
@@ -1548,7 +1548,7 @@ describeWithDOM('mount', () => {
     });
 
     describeIf(!REACT013, 'stateless function components', () => {
-      it('should return props of root rendered node', () => {
+      it('called on root should return props of root node', () => {
         const Foo = ({ bar, foo }) => (
           <div className={bar} id={foo} />
         );
