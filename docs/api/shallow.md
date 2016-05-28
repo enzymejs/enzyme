@@ -193,6 +193,9 @@ Reduces the current array of nodes to a value
 #### [`.reduceRight(fn[, initialValue]) => Any`](/docs/api/ShallowWrapper/reduceRight.md)
 Reduces the current array of nodes to a value, from right to left.
 
+#### [`.tap(intercepter) => Self`](ShallowWrapper/tap.md)
+Taps into the wrapper method chain. Helpful for debugging.
+
 #### [`.some(selector) => Boolean`](/docs/api/ShallowWrapper/some.md)
 Returns whether or not any of the nodes in the wrapper match the provided selector.
 

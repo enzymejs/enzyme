@@ -192,6 +192,9 @@ Reduces the current array of nodes to a value
 #### [`.reduceRight(fn[, initialValue]) => Any`](/docs/api/ReactWrapper/reduceRight.md)
 Reduces the current array of nodes to a value, from right to left.
 
+#### [`.tap(intercepter) => Self`](ReactWrapper/tap.md)
+Taps into the wrapper method chain. Helpful for debugging.
+
 #### [`.some(selector) => Boolean`](/docs/api/ReactWrapper/some.md)
 Returns whether or not any of the nodes in the wrapper match the provided selector.
 
