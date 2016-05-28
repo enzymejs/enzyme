@@ -9,6 +9,7 @@ import {
 import sinon from 'sinon';
 import { REACT013, REACT15 } from '../src/version';
 
+
 describeWithDOM('mount', () => {
 
   describe('context', () => {
