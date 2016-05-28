@@ -23,6 +23,9 @@ env:
   - EXAMPLE=karma-webpack
   - EXAMPLE=jest
 sudo: false
+cache:
+  directories:
+    - node_modules
 matrix:
   fast_finish: true
   exclude:
