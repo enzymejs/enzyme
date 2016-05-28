@@ -6,6 +6,7 @@ module.exports = function karma(config) {
 
     plugins: [
       'karma-chrome-launcher',
+      'karma-firefox-launcher',
       'karma-mocha',
       'karma-webpack',
       'karma-sourcemap-loader',
@@ -23,6 +24,7 @@ module.exports = function karma(config) {
 
     browsers: [
       'Chrome',
+      'Firefox',
     ],
 
     preprocessors: {
