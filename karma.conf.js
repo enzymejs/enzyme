@@ -2,26 +2,35 @@ var webpack = require('webpack'); // eslint-disable-line no-var
 
 module.exports = function karma(config) {
   config.set({
+    basePath: '.',
+
     plugins: [
       'karma-chrome-launcher',
       'karma-mocha',
       'karma-webpack',
+      'karma-sourcemap-loader',
     ],
-    basePath: '.',
+
     frameworks: ['mocha'],
+
     files: [
       'test/*.js',
     ],
+
     exclude: [
       'test/_*.js',
     ],
+
     browsers: [
       'Chrome',
     ],
+
     preprocessors: {
-      'test/*.js': ['webpack'],
+      'test/*.js': ['webpack', 'sourcemap'],
     },
+
     webpack: {
+      devtool: 'inline-source-map',
       resolve: {
         extensions: ['', '.js', '.jsx', '.json'],
         alias: {
@@ -48,6 +57,10 @@ module.exports = function karma(config) {
         new webpack.IgnorePlugin(/react\/lib\/ReactContext/),
         new webpack.IgnorePlugin(/react\/lib\/ExecutionEnvironment/),
       ],
+    },
+
+    webpackServer: {
+      noInfo: true,
     },
   });
 };

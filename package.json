@@ -84,6 +84,7 @@
     "karma": "^0.13.22",
     "karma-chrome-launcher": "^1.0.1",
     "karma-mocha": "^1.0.1",
+    "karma-sourcemap-loader": "^0.3.7",
     "karma-webpack": "^1.7.0",
     "mocha": "^3.0.2",
     "rimraf": "^2.5.4",
