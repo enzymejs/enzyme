@@ -549,6 +549,15 @@ describeWithDOM('mount', () => {
       expect(() => wrapper.find(null)).to.throw(Error);
     });
 
+    it('Should query attributes with spaces in their values', () => {
+      const wrapper = mount(
+        <div>
+          <h1 data-foo="foo bar">Hello</h1>
+        </div>
+      );
+      expect(wrapper.find('[data-foo="foo bar"]')).to.have.length(1);
+    });
+
     describeIf(!REACT013, 'stateless function components', () => {
       it('should find a component based on a constructor', () => {
         const Foo = () => <div />;
