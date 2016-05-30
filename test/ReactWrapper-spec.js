@@ -556,6 +556,7 @@ describeWithDOM('mount', () => {
         </div>
       );
       expect(wrapper.find('[data-foo="foo bar"]')).to.have.length(1);
+      expect(wrapper.find('[data-foo]')).to.have.length(1);
     });
 
     describeIf(!REACT013, 'stateless function components', () => {
