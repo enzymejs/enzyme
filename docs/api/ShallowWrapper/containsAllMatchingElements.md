@@ -41,5 +41,5 @@ expect(wrapper.containsAllMatchingElements([
 
 - `.containsAllMatchingElements()` expects an array of ReactElement, not a selector (like many other methods). Make sure that
 when you are calling it you are calling it with an array of ReactElement or a JSX expression.
-- Keep in mind that this method determines mathcing based on the matching of the node's children as
+- Keep in mind that this method determines matching based on the matching of the node's children as
 well.
