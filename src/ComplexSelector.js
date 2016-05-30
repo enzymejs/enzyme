@@ -9,21 +9,7 @@ export default class ComplexSelector {
 
   getSelectors(selector) {
     const cleaned = selector.replace(/\s{2,}/g, ' ');
-    const selectors = split(cleaned, '"').reduce((p, c, i) => {
-      let ret;
-      if (i === 0) {
-        ret = split(c, ' ');
-      } else if (i % 2 === 1) {
-        ret = p;
-        ret[ret.length - 1] += `"${c}"`;
-      } else {
-        const tmp = split(c, ' ');
-        ret = p;
-        ret[ret.length - 1] += tmp.shift();
-        ret = ret.concat(tmp);
-      }
-      return ret;
-    }, []);
+    const selectors = split(cleaned, / (?=(?:(?:[^"]*"){2})*[^"]*$)/);
     return selectors.reduce((list, sel) => {
       if (sel === '+' || sel === '~') {
         const temp = list.pop();
