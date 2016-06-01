@@ -553,10 +553,15 @@ describeWithDOM('mount', () => {
       const wrapper = mount(
         <div>
           <h1 data-foo="foo bar">Hello</h1>
+          <h1 data-foo="bar baz quz">World</h1>
         </div>
       );
+      expect(wrapper.find('[data-foo]')).to.have.length(2);
       expect(wrapper.find('[data-foo="foo bar"]')).to.have.length(1);
-      expect(wrapper.find('[data-foo]')).to.have.length(1);
+      expect(wrapper.find('[data-foo="bar baz quz"]')).to.have.length(1);
+      expect(wrapper.find('[data-foo="bar baz"]')).to.have.length(0);
+      expect(wrapper.find('[data-foo="foo  bar"]')).to.have.length(0);
+      expect(wrapper.find('[data-foo="bar  baz quz"]')).to.have.length(0);
     });
 
     describeIf(!REACT013, 'stateless function components', () => {
