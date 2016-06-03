@@ -173,7 +173,11 @@ export default class ShallowWrapper {
           }
           if (shouldRender) {
             this.unrendered = React.cloneElement(this.unrendered, props);
+            // dirty hack: avoid calling shouldComponentUpdate twice
+            const originalShouldComponentUpdate = instance.shouldComponentUpdate;
+            instance.shouldComponentUpdate = () => true;
             this.renderer.render(this.unrendered, context);
+            instance.shouldComponentUpdate = originalShouldComponentUpdate;
             if (
               this.options.lifecycleExperimental &&
               instance &&
@@ -251,7 +255,11 @@ export default class ShallowWrapper {
           shouldRender = instance.shouldComponentUpdate(props, state, context);
         }
         if (shouldRender) {
+          // dirty hack: avoid calling shouldComponentUpdate twice
+          const originalShouldComponentUpdate = instance.shouldComponentUpdate;
+          instance.shouldComponentUpdate = () => true;
           this.renderer.render(this.unrendered, context);
+          instance.shouldComponentUpdate = originalShouldComponentUpdate;
           if (
             this.options.lifecycleExperimental &&
             instance &&

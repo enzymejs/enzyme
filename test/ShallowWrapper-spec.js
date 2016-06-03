@@ -2597,6 +2597,7 @@ describe('shallow', () => {
         expect(
           spy.calledWith({ foo: 'bar' }, { foo: 'baz' }, { foo: 'state' }, { foo: 'context' })
         ).to.equal(true);
+        expect(spy.callCount).to.equal(1);
       });
 
       it('should call componentWillUpdate', () => {
@@ -2808,6 +2809,7 @@ describe('shallow', () => {
         expect(
           spy.calledWith({ foo: 'props' }, { foo: 'bar' }, { foo: 'baz' }, { foo: 'context' })
         ).to.equal(true);
+        expect(spy.callCount).to.equal(1);
       });
 
       it('should call componentWillUpdate', () => {
@@ -2992,6 +2994,7 @@ describe('shallow', () => {
         );
         wrapper.setContext({ foo: 'baz' });
         expect(spy.calledWith({ foo: 'bar' }, { foo: 'baz' })).to.equal(true);
+        expect(spy.callCount).to.equal(1);
       });
 
       it('should call componentWillUpdate', () => {
