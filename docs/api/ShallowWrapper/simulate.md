@@ -1,4 +1,4 @@
-# `.simulate(event[, ...args]) => Self`
+# `.simulate(event[, mock]) => Self`
 
 Simulate events. The propagation behavior of browser events is simulated — however,
 this method does not emit an actual event. Event handlers are called with a SyntheticEvent object.
@@ -54,3 +54,7 @@ expect(wrapper.find('.clicks-1').length).to.equal(1);
 - Even though the name would imply this simulates an actual event, `.simulate()` will in fact
 target the component's prop based on the event you give it. For example, `.simulate('click')` will
 actually get the `onClick` prop and call it.
+
+#### Related Methods
+
+- [`.invoke(event[, ...args]) => Self`](invoke.md)

@@ -1004,6 +1004,176 @@ describe('shallow', () => {
     });
   });
 
+  describe('.invoke(eventName, data)', () => {
+
+    it('should invoke event handlers without propagation', () => {
+
+      class Foo extends React.Component {
+        constructor(props) {
+          super(props);
+          this.state = { count: 0 };
+          this.incrementCount = this.incrementCount.bind(this);
+        }
+
+        incrementCount() {
+          this.setState({ count: this.state.count + 1 });
+        }
+
+        render() {
+          return (
+            <div onClick={this.incrementCount}>
+              <a
+                className={`clicks-${this.state.count}`}
+                onClick={this.incrementCount}
+              >foo</a>
+            </div>
+          );
+        }
+      }
+
+      const wrapper = shallow(<Foo />);
+
+      expect(wrapper.find('.clicks-0').length).to.equal(1);
+      wrapper.find('a').invoke('click');
+      expect(wrapper.find('.clicks-1').length).to.equal(1);
+
+    });
+
+
+    it('should pass in arguments', () => {
+      const spy = sinon.spy();
+      class Foo extends React.Component {
+        render() {
+          return (
+            <a onClick={spy}>foo</a>
+          );
+        }
+      }
+
+      const wrapper = shallow(<Foo />);
+      const a = {};
+      const b = {};
+
+      wrapper.invoke('click', a, b);
+      expect(spy.args[0][0]).to.equal(a);
+      expect(spy.args[0][1]).to.equal(b);
+    });
+
+    describeIf(!REACT013, 'stateless function components', () => {
+      it('should invoke event handlers', () => {
+        const spy = sinon.spy();
+        const Foo = (props) => (
+          <div onClick={props.onClick}>
+            <a onClick={props.onClick}>foo</a>
+          </div>
+        );
+
+        const wrapper = shallow(<Foo onClick={spy} />);
+
+        expect(spy.calledOnce).to.equal(false);
+        wrapper.find('a').invoke('click');
+        expect(spy.calledOnce).to.equal(true);
+      });
+
+
+      it('should pass in arguments', () => {
+        const spy = sinon.spy();
+        const Foo = () => (
+          <a onClick={spy}>foo</a>
+        );
+
+        const wrapper = shallow(<Foo />);
+        const a = {};
+        const b = {};
+
+        wrapper.invoke('click', a, b);
+        expect(spy.args[0][0]).to.equal(a);
+        expect(spy.args[0][1]).to.equal(b);
+      });
+    });
+
+    describe('Normalizing JS event names', () => {
+      it('should convert lowercase events to React camelcase', () => {
+        const spy = sinon.spy();
+        const clickSpy = sinon.spy();
+        class Foo extends React.Component {
+          render() {
+            return (
+              <a onClick={clickSpy} onDoubleClick={spy}>foo</a>
+            );
+          }
+        }
+
+        const wrapper = shallow(<Foo />);
+
+        wrapper.invoke('dblclick');
+        expect(spy.calledOnce).to.equal(true);
+
+        wrapper.invoke('click');
+        expect(clickSpy.calledOnce).to.equal(true);
+      });
+
+      describeIf(!REACT013, 'normalizing mouseenter', () => {
+        it('should convert lowercase events to React camelcase', () => {
+          const spy = sinon.spy();
+          class Foo extends React.Component {
+            render() {
+              return (
+                <a onMouseEnter={spy}>foo</a>
+              );
+            }
+          }
+
+          const wrapper = shallow(<Foo />);
+
+          wrapper.invoke('mouseenter');
+          expect(spy.calledOnce).to.equal(true);
+        });
+
+        it('should convert lowercase events to React camelcase in stateless components', () => {
+          const spy = sinon.spy();
+          const Foo = () => (
+            <a onMouseEnter={spy}>foo</a>
+          );
+
+          const wrapper = shallow(<Foo />);
+
+          wrapper.invoke('mouseenter');
+          expect(spy.calledOnce).to.equal(true);
+        });
+      });
+    });
+
+    it('should be batched updates', () => {
+      let renderCount = 0;
+      class Foo extends React.Component {
+        constructor(props) {
+          super(props);
+          this.state = {
+            count: 0,
+          };
+          this.onClick = this.onClick.bind(this);
+        }
+        onClick() {
+          this.setState({ count: this.state.count + 1 });
+          this.setState({ count: this.state.count + 1 });
+        }
+        render() {
+          ++renderCount;
+          return (
+            <a onClick={this.onClick}>{this.state.count}</a>
+          );
+        }
+      }
+
+      const wrapper = shallow(<Foo />);
+      wrapper.invoke('click');
+      expect(wrapper.text()).to.equal('1');
+      expect(renderCount).to.equal(2);
+    });
+
+  });
+
   describe('.simulate(eventName, data)', () => {
     it('should simulate events', () => {
       class Foo extends React.Component {

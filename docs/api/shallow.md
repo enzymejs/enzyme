@@ -166,8 +166,11 @@ Returns the named prop of the current node.
 #### [`.key() => String`](ShallowWrapper/key.md)
 Returns the key of the current node.
 
-#### [`.simulate(event[, data]) => ShallowWrapper`](ShallowWrapper/simulate.md)
+#### [`.simulate(event[, mock]) => Self`](ShallowWrapper/simulate.md)
 Simulates an event on the current node.
+
+#### [`.invoke(event[, ...args]) => Self`](ShallowWrapper/invoke.md)
+Invokes an event handler on the current node.
 
 #### [`.setState(nextState) => ShallowWrapper`](ShallowWrapper/setState.md)
 Manually sets state of the root component.

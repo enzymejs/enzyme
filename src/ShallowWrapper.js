@@ -600,8 +600,33 @@ class ShallowWrapper {
   }
 
   /**
-   * Used to simulate events. Pass an eventname and (optionally) event arguments. This method of
-   * testing events should be met with some skepticism.
+   * Used to invoke event handlers. Pass an eventname and (optionally) event
+   * arguments. This method of testing events should be met with some
+   * skepticism.
+   *
+   * @param {String} event
+   * @param {Array} args
+   * @returns {ShallowWrapper}
+   */
+  invoke(event, ...args) {
+    return this.single(() => {
+      const handler = this.prop(propFromEvent(event));
+      if (handler) {
+        withSetStateAllowed(() => {
+          batchedUpdates(() => {
+            handler(...args);
+          });
+          this.root.update();
+        });
+      }
+      return this;
+    });
+  }
+
+  /**
+   * Used to simulate events with propagation.
+   * Pass an eventname and an object with properties to assign to the event object.
+   * This method of testing events should be met with some skepticism.
    *
    * NOTE: can only be called on a wrapper of a single node.
    *
