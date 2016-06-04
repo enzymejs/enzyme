@@ -1,4 +1,8 @@
-var webpack = require('webpack'); // eslint-disable-line no-var
+/* eslint-disable no-var,prefer-arrow-callback */
+
+var IgnorePlugin = require('webpack').IgnorePlugin;
+var REACT013 = require('./src/version').REACT013;
+
 
 module.exports = function karma(config) {
   config.set({
@@ -20,6 +24,8 @@ module.exports = function karma(config) {
     },
 
     frameworks: ['mocha'],
+
+    reporters: ['dots'],
 
     files: [
       'test/*.js',
@@ -65,9 +71,17 @@ module.exports = function karma(config) {
         ],
       },
       plugins: [
-        new webpack.IgnorePlugin(/react\/lib\/ReactContext/),
-        new webpack.IgnorePlugin(/react\/lib\/ExecutionEnvironment/),
-      ],
+        /*
+        this list of conditional IgnorePlugins mirrors the conditional
+        requires in src/react-compat.js and exists to avoid error
+        output from the webpack compilation
+        */
+        !REACT013 && new IgnorePlugin(/react\/lib\/ExecutionEnvironment/),
+        !REACT013 && new IgnorePlugin(/react\/lib\/ReactContext/),
+        !REACT013 && new IgnorePlugin(/react\/addons/),
+        REACT013 && new IgnorePlugin(/react-dom/),
+        REACT013 && new IgnorePlugin(/react-addons-test-utils/),
+      ].filter(function filterPlugins(plugin) { return plugin !== false; }),
     },
 
     webpackServer: {
