@@ -12,6 +12,13 @@ module.exports = function karma(config) {
       'karma-sourcemap-loader',
     ],
 
+    customLaunchers: {
+      Chrome_travis: {
+        base: 'Chrome',
+        flags: ['--no-sandbox'],
+      },
+    },
+
     frameworks: ['mocha'],
 
     files: [
@@ -23,7 +30,7 @@ module.exports = function karma(config) {
     ],
 
     browsers: [
-      'Chrome',
+      process.env.TRAVIS ? 'Chrome_travis' : 'Chrome',
       'Firefox',
     ],
 
@@ -36,11 +43,13 @@ module.exports = function karma(config) {
       resolve: {
         extensions: ['', '.js', '.jsx', '.json'],
         alias: {
+          // dynamic require calls in sinon confuse webpack so we ignore it
           sinon: 'sinon/pkg/sinon',
         },
       },
       module: {
         noParse: [
+          // dynamic require calls in sinon confuse webpack so we ignore it
           /node_modules\/sinon\//,
         ],
         loaders: [
