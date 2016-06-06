@@ -8,8 +8,7 @@ export default class ComplexSelector {
   }
 
   getSelectors(selector) {
-    const cleaned = selector.replace(/\s{2,}/g, ' ');
-    const selectors = split(cleaned, ' ');
+    const selectors = split(selector, / (?=(?:(?:[^"]*"){2})*[^"]*$)/);
     return selectors.reduce((list, sel) => {
       if (sel === '+' || sel === '~') {
         const temp = list.pop();
