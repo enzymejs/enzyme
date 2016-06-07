@@ -366,15 +366,42 @@ describeWithDOM('mount', () => {
 
     });
 
+    it('should not find components with invalid attributes', () => {
+      // Invalid attributes aren't valid JSX, so manual instantiation is necessary
+      const wrapper = mount(
+        React.createElement('div', null, React.createElement('span', {
+          '123-foo': 'bar',
+          '-foo': 'bar',
+          ':foo': 'bar',
+        }))
+      );
+
+      expect(wrapper.find('[-foo]')).to.have.length(0, '-foo');
+      expect(wrapper.find('[:foo]')).to.have.length(0, ':foo');
+      expect(wrapper.find('[123-foo]')).to.have.length(0, '123-foo');
+    });
+
     it('should support data prop selectors', () => {
       const wrapper = mount(
         <div>
           <span data-foo="bar" />
+          <span data-foo-123="bar2" />
+          <span data-123-foo="bar3" />
+          <span data-foo_bar="bar4" />
         </div>
       );
 
       expect(wrapper.find('[data-foo="bar"]')).to.have.length(1);
       expect(wrapper.find('[data-foo]')).to.have.length(1);
+
+      expect(wrapper.find('[data-foo-123]')).to.have.length(1);
+      expect(wrapper.find('[data-foo-123="bar2"]')).to.have.length(1);
+
+      expect(wrapper.find('[data-123-foo]')).to.have.length(1);
+      expect(wrapper.find('[data-123-foo="bar3"]')).to.have.length(1);
+
+      expect(wrapper.find('[data-foo_bar]')).to.have.length(1);
+      expect(wrapper.find('[data-foo_bar="bar4"]')).to.have.length(1);
     });
 
     it('should find components with multiple matching props', () => {
@@ -520,6 +547,21 @@ describeWithDOM('mount', () => {
       expect(() => wrapper.find({})).to.throw(Error);
       expect(() => wrapper.find([])).to.throw(Error);
       expect(() => wrapper.find(null)).to.throw(Error);
+    });
+
+    it('Should query attributes with spaces in their values', () => {
+      const wrapper = mount(
+        <div>
+          <h1 data-foo="foo bar">Hello</h1>
+          <h1 data-foo="bar baz quz">World</h1>
+        </div>
+      );
+      expect(wrapper.find('[data-foo]')).to.have.length(2);
+      expect(wrapper.find('[data-foo="foo bar"]')).to.have.length(1);
+      expect(wrapper.find('[data-foo="bar baz quz"]')).to.have.length(1);
+      expect(wrapper.find('[data-foo="bar baz"]')).to.have.length(0);
+      expect(wrapper.find('[data-foo="foo  bar"]')).to.have.length(0);
+      expect(wrapper.find('[data-foo="bar  baz quz"]')).to.have.length(0);
     });
 
     describeIf(!REACT013, 'stateless function components', () => {
@@ -1489,6 +1531,95 @@ describeWithDOM('mount', () => {
 
       expect(wrapper.find('.baz').props().onClick).to.equal(fn);
       expect(wrapper.find('.foo').props().id).to.equal('fooId');
+    });
+
+    it('called on root should return props of root node', () => {
+      class Foo extends React.Component {
+        render() {
+          return (
+            <div className={this.props.bar} id={this.props.foo} />
+          );
+        }
+      }
+
+      const wrapper = mount(<Foo foo="hi" bar="bye" />);
+
+      expect(wrapper.props()).to.eql({ bar: 'bye', foo: 'hi' });
+    });
+
+    describeIf(!REACT013, 'stateless function components', () => {
+      it('called on root should return props of root node', () => {
+        const Foo = ({ bar, foo }) => (
+          <div className={bar} id={foo} />
+        );
+
+        const wrapper = mount(<Foo foo="hi" bar="bye" />);
+
+        expect(wrapper.props()).to.eql({ bar: 'bye', foo: 'hi' });
+      });
+    });
+  });
+
+  describe('.prop(name)', () => {
+
+    it('should return the props of key `name`', () => {
+      const fn = () => ({});
+      const wrapper = mount(
+        <div id="fooId" className="bax" onClick={fn} >
+          <div className="baz" />
+          <div className="foo" />
+        </div>
+      );
+
+      expect(wrapper.prop('className')).to.equal('bax');
+      expect(wrapper.prop('onClick')).to.equal(fn);
+      expect(wrapper.prop('id')).to.equal('fooId');
+
+    });
+
+    it('should be allowed to be used on an inner node', () => {
+      const fn = () => ({});
+      const wrapper = mount(
+        <div className="bax">
+          <div className="baz" onClick={fn} />
+          <div className="foo" id="fooId" />
+        </div>
+      );
+
+      expect(wrapper.find('.baz').prop('onClick')).to.equal(fn);
+      expect(wrapper.find('.foo').prop('id')).to.equal('fooId');
+    });
+
+    it('should return props of root rendered node', () => {
+      class Foo extends React.Component {
+        render() {
+          return (
+            <div className={this.props.bar} id={this.props.foo} />
+          );
+        }
+      }
+
+      const wrapper = mount(<Foo foo="hi" bar="bye" />);
+
+      expect(wrapper.prop('className')).to.equal(undefined);
+      expect(wrapper.prop('id')).to.equal(undefined);
+      expect(wrapper.prop('foo')).to.equal('hi');
+      expect(wrapper.prop('bar')).to.equal('bye');
+    });
+
+    describeIf(!REACT013, 'stateless function components', () => {
+      it('should return props of root rendered node', () => {
+        const Foo = ({ bar, foo }) => (
+          <div className={bar} id={foo} />
+        );
+
+        const wrapper = mount(<Foo foo="hi" bar="bye" />);
+
+        expect(wrapper.prop('className')).to.equal(undefined);
+        expect(wrapper.prop('id')).to.equal(undefined);
+        expect(wrapper.prop('foo')).to.equal('hi');
+        expect(wrapper.prop('bar')).to.equal('bye');
+      });
     });
   });
 
