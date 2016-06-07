@@ -1381,6 +1381,95 @@ describe('shallow', () => {
       expect(wrapper.find('.baz').props().onClick).to.equal(fn);
       expect(wrapper.find('.foo').props().id).to.equal('fooId');
     });
+
+    it('should return props of root rendered node', () => {
+      class Foo extends React.Component {
+        render() {
+          return (
+            <div className={this.props.bar} id={this.props.foo} />
+          );
+        }
+      }
+
+      const wrapper = shallow(<Foo foo="hi" bar="bye" />);
+
+      expect(wrapper.props()).to.eql({ className: 'bye', id: 'hi' });
+    });
+
+    describeIf(!REACT013, 'stateless function components', () => {
+      it('should return props of root rendered node', () => {
+        const Foo = ({ bar, foo }) => (
+          <div className={bar} id={foo} />
+        );
+
+        const wrapper = shallow(<Foo foo="hi" bar="bye" />);
+
+        expect(wrapper.props()).to.eql({ className: 'bye', id: 'hi' });
+      });
+    });
+  });
+
+  describe('.prop(name)', () => {
+
+    it('should return the props of key `name`', () => {
+      const fn = () => ({});
+      const wrapper = shallow(
+        <div id="fooId" className="bax" onClick={fn} >
+          <div className="baz" />
+          <div className="foo" />
+        </div>
+      );
+
+      expect(wrapper.prop('className')).to.equal('bax');
+      expect(wrapper.prop('onClick')).to.equal(fn);
+      expect(wrapper.prop('id')).to.equal('fooId');
+
+    });
+
+    it('should be allowed to be used on an inner node', () => {
+      const fn = () => ({});
+      const wrapper = shallow(
+        <div className="bax">
+          <div className="baz" onClick={fn} />
+          <div className="foo" id="fooId" />
+        </div>
+      );
+
+      expect(wrapper.find('.baz').prop('onClick')).to.equal(fn);
+      expect(wrapper.find('.foo').prop('id')).to.equal('fooId');
+    });
+
+    it('should return props of root rendered node', () => {
+      class Foo extends React.Component {
+        render() {
+          return (
+            <div className={this.props.bar} id={this.props.foo} />
+          );
+        }
+      }
+
+      const wrapper = shallow(<Foo foo="hi" bar="bye" />);
+
+      expect(wrapper.prop('className')).to.equal('bye');
+      expect(wrapper.prop('id')).to.equal('hi');
+      expect(wrapper.prop('foo')).to.equal(undefined);
+      expect(wrapper.prop('bar')).to.equal(undefined);
+    });
+
+    describeIf(!REACT013, 'stateless function components', () => {
+      it('should return props of root rendered node', () => {
+        const Foo = ({ bar, foo }) => (
+          <div className={bar} id={foo} />
+        );
+
+        const wrapper = shallow(<Foo foo="hi" bar="bye" />);
+
+        expect(wrapper.prop('className')).to.equal('bye');
+        expect(wrapper.prop('id')).to.equal('hi');
+        expect(wrapper.prop('foo')).to.equal(undefined);
+        expect(wrapper.prop('bar')).to.equal(undefined);
+      });
+    });
   });
 
   describe('.state(name)', () => {
