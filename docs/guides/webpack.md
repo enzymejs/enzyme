@@ -4,7 +4,7 @@ If you are using a test runner that runs code in a browser-based environment, yo
 [webpack]() in order to bundle your React code.
 
 Webpack uses static analysis to create a dependency graph at build-time of your source code to
-build a bundle. Enzyme has a hand full of conditional `require()` calls in it in order to remain
+build a bundle. Enzyme has a handful of conditional `require()` calls in it in order to remain
 compatible with React 0.13 and React 0.14.
 
 Unfortunately, these conditional requires mean there is a bit of extra setup with bundlers like
