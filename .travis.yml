@@ -36,15 +36,15 @@ matrix:
     env: EXAMPLE=karma-webpack
   - node_js: "6"
     env: EXAMPLE=jest
-  - node_js: "4"
+  - node_js: "5"
     env: EXAMPLE=mocha
-  - node_js: "4"
+  - node_js: "5"
     env: EXAMPLE=karma
-  - node_js: "4"
+  - node_js: "5"
     env: EXAMPLE=react-native
-  - node_js: "4"
+  - node_js: "5"
     env: EXAMPLE=karma-webpack
-  - node_js: "4"
+  - node_js: "5"
     env: EXAMPLE=jest
   - node_js: "0.12"
     env: EXAMPLE=mocha
