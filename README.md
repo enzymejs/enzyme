@@ -67,7 +67,7 @@ Basic Usage
 
 ## [Shallow Rendering](/docs/api/shallow.md)
 
-```jsx
+```javascript
 import React from 'react';
 import { shallow } from 'enzyme';
 import sinon from 'sinon';
@@ -111,7 +111,7 @@ Read the full [API Documentation](/docs/api/shallow.md)
 
 ## [Full DOM Rendering](/docs/api/mount.md)
 
-```jsx
+```javascript
 import React from 'react';
 import sinon from 'sinon';
 import { mount } from 'enzyme';
@@ -149,7 +149,7 @@ Read the full [API Documentation](/docs/api/mount.md)
 
 ## [Static Rendered Markup](/docs/api/render.md)
 
-```jsx
+```javascript
 import React from 'react';
 import { render } from 'enzyme';
 
