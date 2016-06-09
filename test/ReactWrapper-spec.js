@@ -289,6 +289,15 @@ describeWithDOM('mount', () => {
       expect(wrapper.find('.foo').type()).to.equal('input');
     });
 
+    it('should find an SVG element based on a class name', () => {
+      const wrapper = mount(
+        <div>
+          <svg className="foo" />
+        </div>
+      );
+      expect(wrapper.find('.foo').type()).to.equal('svg');
+    });
+
     it('should find an element based on a tag name', () => {
       const wrapper = mount(
         <div>

@@ -49,7 +49,14 @@ export function instHasClassName(inst, className) {
   if (!isDOMComponent(inst)) {
     return false;
   }
-  let classes = findDOMNode(inst).className || '';
+  const node = findDOMNode(inst);
+  if (node.classList) {
+    return node.classList.contains(className);
+  }
+  let classes = node.className || '';
+  if (typeof classes === 'object') {
+    classes = classes.baseVal;
+  }
   classes = classes.replace(/\s/g, ' ');
   return ` ${classes} `.indexOf(` ${className} `) > -1;
 }
