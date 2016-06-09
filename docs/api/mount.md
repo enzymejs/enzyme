@@ -87,6 +87,9 @@ Returns whether or not the current root node has the given class name or not.
 #### [`.is(selector) => Boolean`](ReactWrapper/is.md)
 Returns whether or not the current node matches a provided selector.
 
+#### [`.isEmpty() => Boolean`](ReactWrapper/isEmpty.md)
+Returns whether or not the current node is empty.
+
 #### [`.not(selector) => ReactWrapper`](ReactWrapper/not.md)
 Remove nodes in the current wrapper that match the provided selector. (inverse of `.filter()`)
 
@@ -188,6 +191,9 @@ Reduces the current array of nodes to a value
 
 #### [`.reduceRight(fn[, initialValue]) => Any`](/docs/api/ReactWrapper/reduceRight.md)
 Reduces the current array of nodes to a value, from right to left.
+
+#### [`.tap(intercepter) => Self`](ReactWrapper/tap.md)
+Taps into the wrapper method chain. Helpful for debugging.
 
 #### [`.some(selector) => Boolean`](/docs/api/ReactWrapper/some.md)
 Returns whether or not any of the nodes in the wrapper match the provided selector.

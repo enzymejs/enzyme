@@ -29,7 +29,7 @@ class Foo extends React.Component {
   render() {
     return (
       <div>
-        <button className="btn">Button</a>
+        <button className="btn">Button</button>
       </div>
     );
   }

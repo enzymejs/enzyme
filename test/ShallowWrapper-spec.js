@@ -2,8 +2,8 @@ import React from 'react';
 import { expect } from 'chai';
 import { shallow, render, ShallowWrapper } from '../src/';
 import sinon from 'sinon';
-import { describeIf } from './_helpers';
-import { REACT013 } from '../src/version';
+import { describeIf, itWithData, generateEmptyRenderData } from './_helpers';
+import { REACT013, REACT15 } from '../src/version';
 
 describe('shallow', () => {
 
@@ -1022,6 +1022,34 @@ describe('shallow', () => {
       });
     });
 
+    it('should be batched updates', () => {
+      let renderCount = 0;
+      class Foo extends React.Component {
+        constructor(props) {
+          super(props);
+          this.state = {
+            count: 0,
+          };
+          this.onClick = this.onClick.bind(this);
+        }
+        onClick() {
+          this.setState({ count: this.state.count + 1 });
+          this.setState({ count: this.state.count + 1 });
+        }
+        render() {
+          ++renderCount;
+          return (
+            <a onClick={this.onClick}>{this.state.count}</a>
+          );
+        }
+      }
+
+      const wrapper = shallow(<Foo />);
+      wrapper.simulate('click');
+      expect(wrapper.text()).to.equal('1');
+      expect(renderCount).to.equal(2);
+    });
+
   });
 
   describe('.setState(newState)', () => {
@@ -1096,6 +1124,45 @@ describe('shallow', () => {
     it('should return false when selector does not match', () => {
       const wrapper = shallow(<div className="bar baz" />);
       expect(wrapper.is('.foo')).to.equal(false);
+    });
+  });
+
+  describe('.isEmptyRender()', () => {
+    const emptyRenderValues = generateEmptyRenderData();
+
+    itWithData(emptyRenderValues, 'when a React class component returns: ', (data) => {
+      const Foo = React.createClass({
+        render() {
+          return data.value;
+        },
+      });
+      const wrapper = shallow(<Foo />);
+      expect(wrapper.isEmptyRender()).to.equal(data.expectResponse);
+    });
+
+    itWithData(emptyRenderValues, 'when an ES2015 class component returns: ', (data) => {
+      class Foo extends React.Component {
+        render() {
+          return data.value;
+        }
+      }
+      const wrapper = shallow(<Foo />);
+      expect(wrapper.isEmptyRender()).to.equal(data.expectResponse);
+    });
+
+    it('should not return true for HTML elements', () => {
+      const wrapper = shallow(<div className="bar baz" />);
+      expect(wrapper.isEmptyRender()).to.equal(false);
+    });
+
+    describeIf(REACT15, 'stateless function components', () => {
+      itWithData(emptyRenderValues, 'when a component returns: ', (data) => {
+        function Foo() {
+          return data.value;
+        }
+        const wrapper = shallow(<Foo />);
+        expect(wrapper.isEmptyRender()).to.equal(data.expectResponse);
+      });
     });
   });
 
@@ -1313,6 +1380,95 @@ describe('shallow', () => {
 
       expect(wrapper.find('.baz').props().onClick).to.equal(fn);
       expect(wrapper.find('.foo').props().id).to.equal('fooId');
+    });
+
+    it('should return props of root rendered node', () => {
+      class Foo extends React.Component {
+        render() {
+          return (
+            <div className={this.props.bar} id={this.props.foo} />
+          );
+        }
+      }
+
+      const wrapper = shallow(<Foo foo="hi" bar="bye" />);
+
+      expect(wrapper.props()).to.eql({ className: 'bye', id: 'hi' });
+    });
+
+    describeIf(!REACT013, 'stateless function components', () => {
+      it('should return props of root rendered node', () => {
+        const Foo = ({ bar, foo }) => (
+          <div className={bar} id={foo} />
+        );
+
+        const wrapper = shallow(<Foo foo="hi" bar="bye" />);
+
+        expect(wrapper.props()).to.eql({ className: 'bye', id: 'hi' });
+      });
+    });
+  });
+
+  describe('.prop(name)', () => {
+
+    it('should return the props of key `name`', () => {
+      const fn = () => ({});
+      const wrapper = shallow(
+        <div id="fooId" className="bax" onClick={fn} >
+          <div className="baz" />
+          <div className="foo" />
+        </div>
+      );
+
+      expect(wrapper.prop('className')).to.equal('bax');
+      expect(wrapper.prop('onClick')).to.equal(fn);
+      expect(wrapper.prop('id')).to.equal('fooId');
+
+    });
+
+    it('should be allowed to be used on an inner node', () => {
+      const fn = () => ({});
+      const wrapper = shallow(
+        <div className="bax">
+          <div className="baz" onClick={fn} />
+          <div className="foo" id="fooId" />
+        </div>
+      );
+
+      expect(wrapper.find('.baz').prop('onClick')).to.equal(fn);
+      expect(wrapper.find('.foo').prop('id')).to.equal('fooId');
+    });
+
+    it('should return props of root rendered node', () => {
+      class Foo extends React.Component {
+        render() {
+          return (
+            <div className={this.props.bar} id={this.props.foo} />
+          );
+        }
+      }
+
+      const wrapper = shallow(<Foo foo="hi" bar="bye" />);
+
+      expect(wrapper.prop('className')).to.equal('bye');
+      expect(wrapper.prop('id')).to.equal('hi');
+      expect(wrapper.prop('foo')).to.equal(undefined);
+      expect(wrapper.prop('bar')).to.equal(undefined);
+    });
+
+    describeIf(!REACT013, 'stateless function components', () => {
+      it('should return props of root rendered node', () => {
+        const Foo = ({ bar, foo }) => (
+          <div className={bar} id={foo} />
+        );
+
+        const wrapper = shallow(<Foo foo="hi" bar="bye" />);
+
+        expect(wrapper.prop('className')).to.equal('bye');
+        expect(wrapper.prop('id')).to.equal('hi');
+        expect(wrapper.prop('foo')).to.equal(undefined);
+        expect(wrapper.prop('bar')).to.equal(undefined);
+      });
     });
   });
 
@@ -1684,10 +1840,13 @@ describe('shallow', () => {
       expect(spy.callCount).to.equal(3);
       expect(spy.args[0][0]).to.be.instanceOf(ShallowWrapper);
       expect(spy.args[0][0].hasClass('bax')).to.equal(true);
+      expect(spy.args[0][1]).to.equal(0);
       expect(spy.args[1][0]).to.be.instanceOf(ShallowWrapper);
       expect(spy.args[1][0].hasClass('bar')).to.equal(true);
+      expect(spy.args[1][1]).to.equal(1);
       expect(spy.args[2][0]).to.be.instanceOf(ShallowWrapper);
       expect(spy.args[2][0].hasClass('baz')).to.equal(true);
+      expect(spy.args[2][1]).to.equal(2);
     });
   });
 
@@ -1707,10 +1866,13 @@ describe('shallow', () => {
       expect(spy.callCount).to.equal(3);
       expect(spy.args[0][0]).to.be.instanceOf(ShallowWrapper);
       expect(spy.args[0][0].hasClass('bax')).to.equal(true);
+      expect(spy.args[0][1]).to.equal(0);
       expect(spy.args[1][0]).to.be.instanceOf(ShallowWrapper);
       expect(spy.args[1][0].hasClass('bar')).to.equal(true);
+      expect(spy.args[1][1]).to.equal(1);
       expect(spy.args[2][0]).to.be.instanceOf(ShallowWrapper);
       expect(spy.args[2][0].hasClass('baz')).to.equal(true);
+      expect(spy.args[2][1]).to.equal(2);
     });
 
     it('should return an array with the mapped values', () => {

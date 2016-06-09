@@ -86,10 +86,13 @@ Returns whether or not the current render tree is equal to the given node, based
 Returns whether or not a given react element matches the shallow render tree.
 
 #### [`.hasClass(className) => Boolean`](ShallowWrapper/hasClass.md)
-Returns whether or not the current root node has the given class name or not.
+Returns whether or not the current node has the given class name or not.
 
 #### [`.is(selector) => Boolean`](ShallowWrapper/is.md)
 Returns whether or not the current node matches a provided selector.
+
+#### [`.isEmpty() => Boolean`](ShallowWrapper/isEmpty.md)
+Returns whether or not the current node is empty.
 
 #### [`.not(selector) => ShallowWrapper`](ShallowWrapper/not.md)
 Remove nodes in the current wrapper that match the provided selector. (inverse of `.filter()`)
@@ -143,13 +146,13 @@ Returns the state of the root component.
 Returns the context of the root component.
 
 #### [`.props() => Object`](ShallowWrapper/props.md)
-Returns the props of the root component.
+Returns the props of the current node.
 
 #### [`.prop(key) => Any`](ShallowWrapper/prop.md)
-Returns the named prop of the root component.
+Returns the named prop of the current node.
 
 #### [`.key() => String`](ShallowWrapper/key.md)
-Returns the key of the root component.
+Returns the key of the current node.
 
 #### [`.simulate(event[, data]) => ShallowWrapper`](ShallowWrapper/simulate.md)
 Simulates an event on the current node.
@@ -189,6 +192,9 @@ Reduces the current array of nodes to a value
 
 #### [`.reduceRight(fn[, initialValue]) => Any`](/docs/api/ShallowWrapper/reduceRight.md)
 Reduces the current array of nodes to a value, from right to left.
+
+#### [`.tap(intercepter) => Self`](ShallowWrapper/tap.md)
+Taps into the wrapper method chain. Helpful for debugging.
 
 #### [`.some(selector) => Boolean`](/docs/api/ShallowWrapper/some.md)
 Returns whether or not any of the nodes in the wrapper match the provided selector.
