@@ -140,6 +140,56 @@ export default class ShallowWrapper {
   }
 
   /**
+   * A method is for re-render with new props and context.
+   * This calls componentDidUpdate method if lifecycleExperimental is enabled.
+   *
+   * NOTE: can only be called on a wrapper instance that is also the root instance.
+   *
+   * @param {Object} props
+   * @param {Object} context
+   * @returns {ShallowWrapper}
+   */
+  rerender(props, context) {
+    this.single(() => {
+      withSetStateAllowed(() => {
+        const instance = this.instance();
+        const state = instance.state;
+        const prevProps = instance.props;
+        const prevContext = instance.context;
+        const nextProps = props || prevProps;
+        const nextContext = context || prevContext;
+        batchedUpdates(() => {
+          let shouldRender = true;
+          if (
+            this.options.lifecycleExperimental &&
+            instance &&
+            typeof instance.shouldComponentUpdate === 'function'
+          ) {
+            shouldRender = instance.shouldComponentUpdate(nextProps, state, nextContext);
+          }
+          if (shouldRender) {
+            if (props) this.unrendered = React.cloneElement(this.unrendered, props);
+            // dirty hack: avoid calling shouldComponentUpdate twice
+            const originalShouldComponentUpdate = instance.shouldComponentUpdate;
+            instance.shouldComponentUpdate = () => true;
+            this.renderer.render(this.unrendered, nextContext);
+            instance.shouldComponentUpdate = originalShouldComponentUpdate;
+            if (
+              this.options.lifecycleExperimental &&
+              instance &&
+              typeof instance.componentDidUpdate === 'function'
+            ) {
+              instance.componentDidUpdate(prevProps, state, prevContext);
+            }
+            this.update();
+          }
+        });
+      });
+    });
+    return this;
+  }
+
+  /**
    * A method that sets the props of the root component, and re-renders. Useful for when you are
    * wanting to test how the component behaves over time with changing props. Calling this, for
    * instance, will call the `componentWillReceiveProps` lifecycle method.
@@ -156,41 +206,7 @@ export default class ShallowWrapper {
     if (this.root !== this) {
       throw new Error('ShallowWrapper::setProps() can only be called on the root');
     }
-    this.single(() => {
-      withSetStateAllowed(() => {
-        const instance = this.instance();
-        const prevProps = instance.props;
-        const state = instance.state;
-        const context = instance.context;
-        batchedUpdates(() => {
-          let shouldRender = true;
-          if (
-            this.options.lifecycleExperimental &&
-            instance &&
-            typeof instance.shouldComponentUpdate === 'function'
-          ) {
-            shouldRender = instance.shouldComponentUpdate(props, state, context);
-          }
-          if (shouldRender) {
-            this.unrendered = React.cloneElement(this.unrendered, props);
-            // dirty hack: avoid calling shouldComponentUpdate twice
-            const originalShouldComponentUpdate = instance.shouldComponentUpdate;
-            instance.shouldComponentUpdate = () => true;
-            this.renderer.render(this.unrendered, context);
-            instance.shouldComponentUpdate = originalShouldComponentUpdate;
-            if (
-              this.options.lifecycleExperimental &&
-              instance &&
-              typeof instance.componentDidUpdate === 'function'
-            ) {
-              instance.componentDidUpdate(prevProps, state, context);
-            }
-            this.update();
-          }
-        });
-      });
-    });
-    return this;
+    return this.rerender(props);
   }
 
   /**
@@ -240,38 +256,7 @@ export default class ShallowWrapper {
         'a context option'
       );
     }
-    const instance = this.instance();
-    const props = instance.props;
-    const state = instance.state;
-    const prevContext = instance.context;
-    withSetStateAllowed(() => {
-      batchedUpdates(() => {
-        let shouldRender = true;
-        if (
-          this.options.lifecycleExperimental &&
-          instance &&
-          typeof instance.shouldComponentUpdate === 'function'
-        ) {
-          shouldRender = instance.shouldComponentUpdate(props, state, context);
-        }
-        if (shouldRender) {
-          // dirty hack: avoid calling shouldComponentUpdate twice
-          const originalShouldComponentUpdate = instance.shouldComponentUpdate;
-          instance.shouldComponentUpdate = () => true;
-          this.renderer.render(this.unrendered, context);
-          instance.shouldComponentUpdate = originalShouldComponentUpdate;
-          if (
-            this.options.lifecycleExperimental &&
-            instance &&
-            typeof instance.componentDidUpdate === 'function'
-          ) {
-            instance.componentDidUpdate(props, state, prevContext);
-          }
-          this.update();
-        }
-      });
-    });
-    return this;
+    return this.rerender(null, context);
   }
 
   /**

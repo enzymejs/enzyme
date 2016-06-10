@@ -2456,32 +2456,25 @@ describe('shallow', () => {
   });
 
   describe('lifecycleExperimental', () => {
-    context('mounting', () => {
-      it('should call componentWillMount', () => {
-        const spy = sinon.spy();
+    context('mounting phase', () => {
+      it('should call componentWillMount and componentDidMount', () => {
+        const spyComponentWillMount = sinon.spy();
+        const spyComponentDidMount = sinon.spy();
         class Foo extends React.Component {
           componentWillMount() {
-            spy();
+            spyComponentWillMount();
           }
-          render() {
-            return <div>foo</div>;
-          }
-        }
-        shallow(<Foo />, { lifecycleExperimental: true });
-        expect(spy.calledOnce).to.equal(true);
-      });
-      it('should call componentDidMount', () => {
-        const spy = sinon.spy();
-        class Foo extends React.Component {
           componentDidMount() {
-            spy();
+            spyComponentDidMount();
           }
           render() {
             return <div>foo</div>;
           }
         }
         shallow(<Foo />, { lifecycleExperimental: true });
-        expect(spy.calledOnce).to.equal(true);
+        expect(spyComponentWillMount.calledOnce).to.equal(true);
+        expect(spyComponentDidMount.calledOnce).to.equal(true);
+
       });
 
       it('should be batching updates', () => {
@@ -2564,8 +2557,10 @@ describe('shallow', () => {
         expect(wrapper.state('foo')).to.equal('baz');
       });
 
-      it('should call shouldComponentUpdate', () => {
-        const spy = sinon.spy();
+      it('should call shouldComponentUpdate, componentWillUpdate and componentDidUpdate', () => {
+        const spyShouldComponentUpdate = sinon.spy();
+        const spyComponentWillUpdate = sinon.spy();
+        const spyComponentDidUpdate = sinon.spy();
 
         class Foo extends React.Component {
           constructor(...args) {
@@ -2575,76 +2570,14 @@ describe('shallow', () => {
             };
           }
           shouldComponentUpdate(nextProps, nextState, nextContext) {
-            spy(this.props, nextProps, nextState, nextContext);
+            spyShouldComponentUpdate(this.props, nextProps, nextState, nextContext);
             return true;
           }
-          render() {
-            return <div>foo</div>;
-          }
-        }
-        Foo.contextTypes = {
-          foo: React.PropTypes.string,
-        };
-
-        const wrapper = shallow(
-          <Foo foo="bar" />,
-          {
-            context: { foo: 'context' },
-            lifecycleExperimental: true,
-          }
-        );
-        wrapper.setProps({ foo: 'baz' });
-        expect(
-          spy.calledWith({ foo: 'bar' }, { foo: 'baz' }, { foo: 'state' }, { foo: 'context' })
-        ).to.equal(true);
-        expect(spy.callCount).to.equal(1);
-      });
-
-      it('should call componentWillUpdate', () => {
-        const spy = sinon.spy();
-
-        class Foo extends React.Component {
-          constructor(...args) {
-            super(...args);
-            this.state = {
-              foo: 'state',
-            };
-          }
           componentWillUpdate(nextProps, nextState, nextContext) {
-            spy(this.props, nextProps, nextState, nextContext);
-          }
-          render() {
-            return <div>foo</div>;
-          }
-        }
-        Foo.contextTypes = {
-          foo: React.PropTypes.string,
-        };
-
-        const wrapper = shallow(
-          <Foo foo="bar" />,
-          {
-            context: { foo: 'context' },
-            lifecycleExperimental: true,
-          }
-        );
-        wrapper.setProps({ foo: 'baz' });
-        expect(
-          spy.calledWith({ foo: 'bar' }, { foo: 'baz' }, { foo: 'state' }, { foo: 'context' })
-        ).to.equal(true);
-      });
-
-      it('should call componentDidUpdate', () => {
-        const spy = sinon.spy();
-        class Foo extends React.Component {
-          constructor(...args) {
-            super(...args);
-            this.state = {
-              foo: 'state',
-            };
+            spyComponentWillUpdate(this.props, nextProps, nextState, nextContext);
           }
           componentDidUpdate(prevProps, prevState, prevContext) {
-            spy(prevProps, this.props, prevState, prevContext);
+            spyComponentDidUpdate(prevProps, this.props, prevState, prevContext);
           }
           render() {
             return <div>foo</div>;
@@ -2663,7 +2596,22 @@ describe('shallow', () => {
         );
         wrapper.setProps({ foo: 'baz' });
         expect(
-          spy.calledWith({ foo: 'bar' }, { foo: 'baz' }, { foo: 'state' }, { foo: 'context' })
+          spyShouldComponentUpdate.calledWith(
+            { foo: 'bar' }, { foo: 'baz' }, { foo: 'state' }, { foo: 'context' }
+          )
+        ).to.equal(true);
+        expect(spyShouldComponentUpdate.callCount).to.equal(1);
+
+        expect(
+          spyComponentWillUpdate.calledWith(
+            { foo: 'bar' }, { foo: 'baz' }, { foo: 'state' }, { foo: 'context' }
+          )
+        ).to.equal(true);
+
+        expect(
+          spyComponentDidUpdate.calledWith(
+            { foo: 'bar' }, { foo: 'baz' }, { foo: 'state' }, { foo: 'context' }
+          )
         ).to.equal(true);
       });
 
@@ -2776,8 +2724,10 @@ describe('shallow', () => {
 
     context('updating state', () => {
 
-      it('should call shouldComponentUpdate', () => {
-        const spy = sinon.spy();
+      it('should call shouldComponentUpdate, componentWillUpdate and componentDidUpdate', () => {
+        const spyShouldComponentUpdate = sinon.spy();
+        const spyComponentWillUpdate = sinon.spy();
+        const spyComponentDidUpdate = sinon.spy();
 
         class Foo extends React.Component {
           constructor(...args) {
@@ -2787,77 +2737,14 @@ describe('shallow', () => {
             };
           }
           shouldComponentUpdate(nextProps, nextState, nextContext) {
-            spy(nextProps, this.state, nextState, nextContext);
+            spyShouldComponentUpdate(nextProps, this.state, nextState, nextContext);
             return true;
           }
-          render() {
-            return <div>foo</div>;
-          }
-        }
-        Foo.contextTypes = {
-          foo: React.PropTypes.string,
-        };
-
-        const wrapper = shallow(
-          <Foo foo="props" />,
-          {
-            context: { foo: 'context' },
-            lifecycleExperimental: true,
-          }
-        );
-        wrapper.setState({ foo: 'baz' });
-        expect(
-          spy.calledWith({ foo: 'props' }, { foo: 'bar' }, { foo: 'baz' }, { foo: 'context' })
-        ).to.equal(true);
-        expect(spy.callCount).to.equal(1);
-      });
-
-      it('should call componentWillUpdate', () => {
-        const spy = sinon.spy();
-
-        class Foo extends React.Component {
-          constructor(...args) {
-            super(...args);
-            this.state = {
-              foo: 'bar',
-            };
-          }
           componentWillUpdate(nextProps, nextState, nextContext) {
-            spy(nextProps, this.state, nextState, nextContext);
-          }
-          render() {
-            return <div>foo</div>;
-          }
-        }
-        Foo.contextTypes = {
-          foo: React.PropTypes.string,
-        };
-
-        const wrapper = shallow(
-          <Foo foo="props" />,
-          {
-            context: { foo: 'context' },
-            lifecycleExperimental: true,
-          }
-        );
-        wrapper.setState({ foo: 'baz' });
-        expect(
-          spy.calledWith({ foo: 'props' }, { foo: 'bar' }, { foo: 'baz' }, { foo: 'context' })
-        ).to.equal(true);
-      });
-
-      it('should call componentDidUpdate', () => {
-        const spy = sinon.spy();
-
-        class Foo extends React.Component {
-          constructor(...args) {
-            super(...args);
-            this.state = {
-              foo: 'bar',
-            };
+            spyComponentWillUpdate(nextProps, this.state, nextState, nextContext);
           }
           componentDidUpdate(prevProps, prevState, prevContext) {
-            spy(prevProps, prevState, this.state, prevContext);
+            spyComponentDidUpdate(prevProps, prevState, this.state, prevContext);
           }
           render() {
             return <div>foo</div>;
@@ -2876,7 +2763,22 @@ describe('shallow', () => {
         );
         wrapper.setState({ foo: 'baz' });
         expect(
-          spy.calledWith({ foo: 'props' }, { foo: 'bar' }, { foo: 'baz' }, { foo: 'context' })
+          spyShouldComponentUpdate.calledWith(
+            { foo: 'props' }, { foo: 'bar' }, { foo: 'baz' }, { foo: 'context' }
+          )
+        ).to.equal(true);
+        expect(spyShouldComponentUpdate.callCount).to.equal(1);
+
+        expect(
+          spyComponentWillUpdate.calledWith(
+            { foo: 'props' }, { foo: 'bar' }, { foo: 'baz' }, { foo: 'context' }
+          )
+        ).to.equal(true);
+
+        expect(
+          spyComponentDidUpdate.calledWith(
+            { foo: 'props' }, { foo: 'bar' }, { foo: 'baz' }, { foo: 'context' }
+          )
         ).to.equal(true);
       });
 
@@ -2971,61 +2873,20 @@ describe('shallow', () => {
 
     context('updating context', () => {
 
-      it('should call shouldComponentUpdate', () => {
-        const spy = sinon.spy();
+      it('should call shouldComponentUpdate, componentWillUpdate and componentDidUpdate', () => {
+        const spyShouldComponentUpdate = sinon.spy();
+        const spyComponentWillUpdate = sinon.spy();
+        const spyComponentDidUpdate = sinon.spy();
         class Foo extends React.Component {
           shouldComponentUpdate(nextProps, nextState, nextContext) {
-            spy(this.context, nextContext);
+            spyShouldComponentUpdate(this.context, nextContext);
             return true;
           }
-          render() {
-            return <div>foo</div>;
-          }
-        }
-        Foo.contextTypes = {
-          foo: React.PropTypes.string,
-        };
-        const wrapper = shallow(
-          <Foo />,
-          {
-            context: { foo: 'bar' },
-            lifecycleExperimental: true,
-          }
-        );
-        wrapper.setContext({ foo: 'baz' });
-        expect(spy.calledWith({ foo: 'bar' }, { foo: 'baz' })).to.equal(true);
-        expect(spy.callCount).to.equal(1);
-      });
-
-      it('should call componentWillUpdate', () => {
-        const spy = sinon.spy();
-        class Foo extends React.Component {
           componentWillUpdate(nextProps, nextState, nextContext) {
-            spy(this.context, nextContext);
+            spyComponentWillUpdate(this.context, nextContext);
           }
-          render() {
-            return <div>foo</div>;
-          }
-        }
-        Foo.contextTypes = {
-          foo: React.PropTypes.string,
-        };
-        const wrapper = shallow(
-          <Foo />,
-          {
-            context: { foo: 'bar' },
-            lifecycleExperimental: true,
-          }
-        );
-        wrapper.setContext({ foo: 'baz' });
-        expect(spy.calledWith({ foo: 'bar' }, { foo: 'baz' })).to.equal(true);
-      });
-
-      it('should call componentDidUpdate', () => {
-        const spy = sinon.spy();
-        class Foo extends React.Component {
           componentDidUpdate(prevProps, prevState, prevContext) {
-            spy(prevContext, this.context);
+            spyComponentDidUpdate(prevContext, this.context);
           }
           render() {
             return <div>foo</div>;
@@ -3042,7 +2903,19 @@ describe('shallow', () => {
           }
         );
         wrapper.setContext({ foo: 'baz' });
-        expect(spy.calledWith({ foo: 'bar' }, { foo: 'baz' })).to.equal(true);
+        expect(
+          spyShouldComponentUpdate.calledWith({ foo: 'bar' }, { foo: 'baz' })
+        ).to.equal(true);
+        expect(spyShouldComponentUpdate.callCount).to.equal(1);
+
+        expect(
+          spyComponentWillUpdate.calledWith({ foo: 'bar' }, { foo: 'baz' })
+        ).to.equal(true);
+
+        expect(
+          spyComponentDidUpdate.calledWith({ foo: 'bar' }, { foo: 'baz' })
+        ).to.equal(true);
+
       });
 
       it('should cancel rendering when Component returns false in shouldComponentUpdate', () => {
@@ -3147,7 +3020,7 @@ describe('shallow', () => {
 
     });
 
-    context('unmounting', () => {
+    context('unmounting phase', () => {
 
       it('should calll componentWillUnmount', () => {
         const spy = sinon.spy();
