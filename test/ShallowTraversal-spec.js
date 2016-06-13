@@ -59,6 +59,49 @@ describe('ShallowTraversal', () => {
       expect(hasClassName(node, 'foo-bar')).to.equal(true);
     });
 
+    it('should not throw with custom components', () => {
+
+      // Checks that a Error is not thrown if the component has a object as a className value
+      {
+        class CustomComp extends React.Component {
+          render() {
+            const classes = Object.keys(this.props.className)
+              .filter(k => this.props.className[k]).join(' ');
+            return React.createElement(
+              'div',
+              { className: classes },
+              this.props.children
+            );
+          }
+        }
+        CustomComp.defaultProps = { className: {} };
+
+        const node = (<CustomComp />);
+        expect(() => hasClassName(node, 'something')).to.not.throw(Error);
+
+        expect(hasClassName(node, 'something')).to.equal(false);
+      }
+
+      // Checks that if the component has a string as a className value
+      // it will still work (for backwards compatibility)
+      {
+        class CustomComp extends React.Component {
+          render() {
+            return React.createElement(
+              'div',
+              { className: this.props.className },
+              this.props.children
+            );
+          }
+        }
+        const node = (<CustomComp className="myClass" />);
+
+        expect(hasClassName(node, 'myClass')).to.equal(true);
+      }
+
+
+    });
+
   });
 
   describe('nodeHasProperty', () => {
