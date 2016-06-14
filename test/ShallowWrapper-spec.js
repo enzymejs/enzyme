@@ -2634,7 +2634,7 @@ describe('shallow', () => {
         expect(result.state('count')).to.equal(1);
       });
 
-      it('should provoke an another render to call setState in componentWillUpdate twice', () => {
+      it('should provoke an another render to call setState twice in componentWillUpdate', () => {
         const spy = sinon.spy();
         class Foo extends React.Component {
           constructor(props) {
@@ -2663,7 +2663,7 @@ describe('shallow', () => {
         expect(result.state('count')).to.equal(1);
       });
 
-      it('should provoke an another render to call setState in componentDidUpdate twice', () => {
+      it('should provoke an another render to call setState twice in componentDidUpdate', () => {
         const spy = sinon.spy();
         class Foo extends React.Component {
           constructor(props) {
@@ -2792,7 +2792,7 @@ describe('shallow', () => {
         expect(spy.args).to.deep.equal([['render'], ['shouldComponentUpdate']]);
       });
 
-      it('should provoke an another render to call setState in componentWillUpdate twice', () => {
+      it('should provoke an another render to call setState twice in componentWillUpdate', () => {
         const spy = sinon.spy();
         class Foo extends React.Component {
           constructor(props) {
@@ -2822,7 +2822,7 @@ describe('shallow', () => {
         expect(result.state('count')).to.equal(1);
       });
 
-      it('should provoke an another render to call setState in componentDidUpdate twice', () => {
+      it('should provoke an another render to call setState twice in componentDidUpdate', () => {
         const spy = sinon.spy();
         class Foo extends React.Component {
           constructor(props) {
@@ -2953,7 +2953,7 @@ describe('shallow', () => {
         expect(spy.args).to.deep.equal([['render'], ['shouldComponentUpdate']]);
       });
 
-      it('should provoke an another render to call setState in componentWillUpdate twice', () => {
+      it('should provoke an another render to call setState twice in componentWillUpdate', () => {
         const spy = sinon.spy();
         class Foo extends React.Component {
           constructor(props) {
@@ -2988,7 +2988,7 @@ describe('shallow', () => {
         expect(result.state('count')).to.equal(1);
       });
 
-      it('should provoke an another render to call setState in componentDidUpdate twice', () => {
+      it('should provoke an another render to call setState twice in componentDidUpdate', () => {
         const spy = sinon.spy();
         class Foo extends React.Component {
           constructor(props) {
