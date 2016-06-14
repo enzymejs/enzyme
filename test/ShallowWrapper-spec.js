@@ -3056,7 +3056,7 @@ describe('shallow', () => {
         }
       }
       shallow(<Foo />, { lifecycleExperimental: false });
-      expect(spy.calledOnce).to.equal(false);
+      expect(spy.called).to.equal(false);
     });
   });
 
