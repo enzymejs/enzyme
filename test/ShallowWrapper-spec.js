@@ -2467,12 +2467,14 @@ describe('shallow', () => {
             spy('componentDidMount');
           }
           render() {
+            spy('render');
             return <div>foo</div>;
           }
         }
         shallow(<Foo />, { lifecycleExperimental: true });
         expect(spy.args).to.deep.equal([
           ['componentWillMount'],
+          ['render'],
           ['componentDidMount'],
         ]);
       });
@@ -2531,6 +2533,7 @@ describe('shallow', () => {
             spy('componentDidUpdate', prevProps, this.props, prevState, this.state, prevContext);
           }
           render() {
+            spy('render');
             return <div>foo</div>;
           }
         }
@@ -2549,6 +2552,9 @@ describe('shallow', () => {
         expect(spy.args).to.deep.equal(
           [
             [
+              'render',
+            ],
+            [
               'shouldComponentUpdate',
               { foo: 'bar' }, { foo: 'baz' },
               { foo: 'state' }, { foo: 'state' },
@@ -2564,6 +2570,9 @@ describe('shallow', () => {
               { foo: 'bar' }, { foo: 'baz' },
               { foo: 'state' }, { foo: 'state' },
               { foo: 'context' },
+            ],
+            [
+              'render',
             ],
             [
               'componentDidUpdate',
@@ -2705,6 +2714,7 @@ describe('shallow', () => {
             spy('componentDidUpdate', prevProps, this.props, prevState, this.state, prevContext);
           }
           render() {
+            spy('render');
             return <div>foo</div>;
           }
         }
@@ -2722,6 +2732,9 @@ describe('shallow', () => {
         wrapper.setState({ foo: 'baz' });
         expect(spy.args).to.deep.equal([
           [
+            'render',
+          ],
+          [
             'shouldComponentUpdate',
             { foo: 'props' }, { foo: 'props' },
             { foo: 'bar' }, { foo: 'baz' },
@@ -2732,6 +2745,9 @@ describe('shallow', () => {
             { foo: 'props' }, { foo: 'props' },
             { foo: 'bar' }, { foo: 'baz' },
             { foo: 'context' },
+          ],
+          [
+            'render',
           ],
           [
             'componentDidUpdate',
@@ -2853,6 +2869,7 @@ describe('shallow', () => {
             spy('componentDidUpdate', prevProps, this.props, prevState, this.state, prevContext);
           }
           render() {
+            spy('render');
             return <div>foo</div>;
           }
         }
@@ -2869,6 +2886,9 @@ describe('shallow', () => {
         wrapper.setContext({ foo: 'baz' });
         expect(spy.args).to.deep.equal([
           [
+            'render',
+          ],
+          [
             'shouldComponentUpdate',
             { foo: 'props' }, { foo: 'props' },
             { foo: 'state' }, { foo: 'state' },
@@ -2879,6 +2899,9 @@ describe('shallow', () => {
             { foo: 'props' }, { foo: 'props' },
             { foo: 'state' }, { foo: 'state' },
             { foo: 'baz' },
+          ],
+          [
+            'render',
           ],
           [
             'componentDidUpdate',
