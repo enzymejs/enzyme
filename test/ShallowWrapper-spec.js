@@ -2607,7 +2607,7 @@ describe('shallow', () => {
         expect(spy.callCount).to.equal(0);
       });
 
-      it('should be batching updates in componentWillReceiveProps', () => {
+      it('should not provoke another renders to call setState in componentWillReceiveProps', () => {
         const spy = sinon.spy();
         class Foo extends React.Component {
           constructor(props) {
@@ -2632,7 +2632,7 @@ describe('shallow', () => {
         expect(result.state('count')).to.equal(1);
       });
 
-      it('should be batching updates in componentWillUpdate', () => {
+      it('should provoke an another render to call setState in componentWillUpdate twice', () => {
         const spy = sinon.spy();
         class Foo extends React.Component {
           constructor(props) {
@@ -2661,7 +2661,7 @@ describe('shallow', () => {
         expect(result.state('count')).to.equal(1);
       });
 
-      it('should be batching updates in componentDidUpdate', () => {
+      it('should provoke an another render to call setState in componentDidUpdate twice', () => {
         const spy = sinon.spy();
         class Foo extends React.Component {
           constructor(props) {
@@ -2788,7 +2788,7 @@ describe('shallow', () => {
         expect(spy.callCount).to.equal(0);
       });
 
-      it('should be batching updates in componentWillUpdate', () => {
+      it('should provoke an another render to call setState in componentWillUpdate twice', () => {
         const spy = sinon.spy();
         class Foo extends React.Component {
           constructor(props) {
@@ -2818,7 +2818,7 @@ describe('shallow', () => {
         expect(result.state('count')).to.equal(1);
       });
 
-      it('should be batching updates in componentDidUpdate', () => {
+      it('should provoke an another render to call setState in componentDidUpdate twice', () => {
         const spy = sinon.spy();
         class Foo extends React.Component {
           constructor(props) {
@@ -2947,7 +2947,7 @@ describe('shallow', () => {
         expect(spy.callCount).to.equal(0);
       });
 
-      it('should be batching updates in componentWillUpdate', () => {
+      it('should provoke an another render to call setState in componentWillUpdate twice', () => {
         const spy = sinon.spy();
         class Foo extends React.Component {
           constructor(props) {
@@ -2982,7 +2982,7 @@ describe('shallow', () => {
         expect(result.state('count')).to.equal(1);
       });
 
-      it('should be batching updates in componentDidUpdate', () => {
+      it('should provoke an another render to call setState in componentDidUpdate twice', () => {
         const spy = sinon.spy();
         class Foo extends React.Component {
           constructor(props) {
