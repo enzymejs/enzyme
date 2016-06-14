@@ -2626,9 +2626,10 @@ describe('shallow', () => {
           }
         }
         const result = shallow(<Foo />, { lifecycleExperimental: true });
+        expect(spy).to.have.property('callCount', 1);
         result.setProps({ name: 'bar' });
+        expect(spy).to.have.property('callCount', 2);
         expect(result.state('count')).to.equal(1);
-        expect(spy.callCount).to.equal(2);
       });
 
       it('should be batching updates in componentWillUpdate', () => {
@@ -2654,9 +2655,10 @@ describe('shallow', () => {
           }
         }
         const result = shallow(<Foo />, { lifecycleExperimental: true });
+        expect(spy).to.have.property('callCount', 1);
         result.setProps({ name: 'bar' });
+        expect(spy).to.have.property('callCount', 3);
         expect(result.state('count')).to.equal(1);
-        expect(spy.callCount).to.equal(3);
       });
 
       it('should be batching updates in componentDidUpdate', () => {
@@ -2684,9 +2686,10 @@ describe('shallow', () => {
           }
         }
         const result = shallow(<Foo />, { lifecycleExperimental: true });
+        expect(spy).to.have.property('callCount', 1);
         result.setProps({ name: 'bar' });
+        expect(spy).to.have.property('callCount', 3);
         expect(result.state('count')).to.equal(1);
-        expect(spy.callCount).to.equal(3);
       });
 
     });
@@ -2809,9 +2812,10 @@ describe('shallow', () => {
           }
         }
         const result = shallow(<Foo />, { lifecycleExperimental: true });
+        expect(spy).to.have.property('callCount', 1);
         result.setState({ name: 'bar' });
+        expect(spy).to.have.property('callCount', 3);
         expect(result.state('count')).to.equal(1);
-        expect(spy.callCount).to.equal(3);
       });
 
       it('should be batching updates in componentDidUpdate', () => {
@@ -2840,9 +2844,10 @@ describe('shallow', () => {
           }
         }
         const result = shallow(<Foo />, { lifecycleExperimental: true });
+        expect(spy).to.have.property('callCount', 1);
         result.setState({ name: 'bar' });
+        expect(spy).to.have.property('callCount', 3);
         expect(result.state('count')).to.equal(1);
-        expect(spy.callCount).to.equal(3);
       });
 
     });
@@ -2971,9 +2976,10 @@ describe('shallow', () => {
             lifecycleExperimental: true,
           }
         );
+        expect(spy).to.have.property('callCount', 1);
         result.setContext({ foo: 'baz' });
+        expect(spy).to.have.property('callCount', 3);
         expect(result.state('count')).to.equal(1);
-        expect(spy.callCount).to.equal(3);
       });
 
       it('should be batching updates in componentDidUpdate', () => {
@@ -3007,9 +3013,10 @@ describe('shallow', () => {
             lifecycleExperimental: true,
           }
         );
+        expect(spy).to.have.property('callCount', 1);
         result.setContext({ foo: 'baz' });
+        expect(spy).to.have.property('callCount', 3);
         expect(result.state('count')).to.equal(1);
-        expect(spy.callCount).to.equal(3);
       });
 
     });
