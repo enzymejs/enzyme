@@ -2589,22 +2589,24 @@ describe('shallow', () => {
 
         class Foo extends React.Component {
           shouldComponentUpdate() {
+            spy('shouldComponentUpdate');
             return false;
           }
           componentWillUpdate() {
-            spy();
+            spy('componentWillUpdate');
           }
           componentDidUpdate() {
-            spy();
+            spy('componentDidUpdate');
           }
           render() {
+            spy('render');
             return <div>foo</div>;
           }
         }
 
         const wrapper = shallow(<Foo foo="bar" />, { lifecycleExperimental: true });
         wrapper.setProps({ foo: 'baz' });
-        expect(spy.callCount).to.equal(0);
+        expect(spy.args).to.deep.equal([['render'], ['shouldComponentUpdate']]);
       });
 
       it('should not provoke another renders to call setState in componentWillReceiveProps', () => {
@@ -2771,21 +2773,23 @@ describe('shallow', () => {
             };
           }
           shouldComponentUpdate() {
+            spy('shouldComponentUpdate');
             return false;
           }
           componentWillUpdate() {
-            spy();
+            spy('componentWillUpdate');
           }
           componentDidUpdate() {
-            spy();
+            spy('componentDidUpdate');
           }
           render() {
+            spy('render');
             return <div>foo</div>;
           }
         }
         const wrapper = shallow(<Foo />, { lifecycleExperimental: true });
         wrapper.setState({ foo: 'baz' });
-        expect(spy.callCount).to.equal(0);
+        expect(spy.args).to.deep.equal([['render'], ['shouldComponentUpdate']]);
       });
 
       it('should provoke an another render to call setState in componentWillUpdate twice', () => {
@@ -2921,15 +2925,17 @@ describe('shallow', () => {
         const spy = sinon.spy();
         class Foo extends React.Component {
           shouldComponentUpdate() {
+            spy('shouldComponentUpdate');
             return false;
           }
           componentWillUpdate() {
-            spy();
+            spy('componentWillUpdate');
           }
           componentDidUpdate() {
-            spy();
+            spy('componentDidUpdate');
           }
           render() {
+            spy('render');
             return <div>foo</div>;
           }
         }
@@ -2944,7 +2950,7 @@ describe('shallow', () => {
           }
         );
         wrapper.setContext({ foo: 'baz' });
-        expect(spy.callCount).to.equal(0);
+        expect(spy.args).to.deep.equal([['render'], ['shouldComponentUpdate']]);
       });
 
       it('should provoke an another render to call setState in componentWillUpdate twice', () => {
