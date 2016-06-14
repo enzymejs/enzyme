@@ -3041,7 +3041,7 @@ describe('shallow', () => {
         }
         const wrapper = shallow(<Foo />, { lifecycleExperimental: true });
         wrapper.unmount();
-        expect(spy.calledOnce).to.equal(true);
+        expect(spy).to.have.property('callCount', 1);
       });
     });
 
@@ -3056,7 +3056,7 @@ describe('shallow', () => {
         }
       }
       shallow(<Foo />, { lifecycleExperimental: false });
-      expect(spy.called).to.equal(false);
+      expect(spy).to.have.property('callCount', 0);
     });
   });
 
