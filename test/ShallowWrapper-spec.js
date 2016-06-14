@@ -2555,14 +2555,14 @@ describe('shallow', () => {
               'render',
             ],
             [
-              'shouldComponentUpdate',
+              'componentWillReceiveProps',
               { foo: 'bar' }, { foo: 'baz' },
-              { foo: 'state' }, { foo: 'state' },
               { foo: 'context' },
             ],
             [
-              'componentWillReceiveProps',
+              'shouldComponentUpdate',
               { foo: 'bar' }, { foo: 'baz' },
+              { foo: 'state' }, { foo: 'state' },
               { foo: 'context' },
             ],
             [

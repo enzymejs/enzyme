@@ -160,6 +160,18 @@ export default class ShallowWrapper {
         const nextContext = context || prevContext;
         batchedUpdates(() => {
           let shouldRender = true;
+          // dirty hack:
+          // make sure that componentWillReceiveProps is called before shouldComponentUpdate
+          let originalComponentWillReceiveProps;
+          if (
+            this.options.lifecycleExperimental &&
+            instance &&
+            typeof instance.componentWillReceiveProps === 'function'
+          ) {
+            instance.componentWillReceiveProps(nextProps, nextContext);
+            originalComponentWillReceiveProps = instance.componentWillReceiveProps;
+            instance.componentWillReceiveProps = () => {};
+          }
           if (
             this.options.lifecycleExperimental &&
             instance &&
@@ -182,6 +194,9 @@ export default class ShallowWrapper {
               instance.componentDidUpdate(prevProps, state, prevContext);
             }
             this.update();
+          }
+          if (originalComponentWillReceiveProps) {
+            instance.componentWillReceiveProps = originalComponentWillReceiveProps;
           }
         });
       });
