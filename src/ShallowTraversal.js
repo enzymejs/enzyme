@@ -4,12 +4,10 @@ import isSubset from 'is-subset';
 import {
   coercePropValue,
   propsOfNode,
-  splitSelector,
-  isCompoundSelector,
-  selectorType,
+  getAst,
   AND,
-  SELECTOR,
   nodeHasType,
+  selectorError,
 } from './Utils';
 
 
@@ -108,6 +106,24 @@ export function nodeMatchesObjectProps(node, props) {
   return isSubset(propsOfNode(node), props);
 }
 
+function buildSelectorPredicate(selector) {
+  const nodes = getAst(selector).nodes[0];
+  return AND(nodes.map(node => {
+    switch (node.type) {
+      case 'class':
+        return element => hasClassName(element, node.value);
+      case 'id':
+        return element => nodeHasId(element, node.value);
+      case 'attribute':
+        return element => nodeHasProperty(element, node.attribute, node.value);
+      case 'tag':
+        return element => nodeHasType(element, node.value);
+      default:
+        throw selectorError(selector);
+    }
+  }));
+}
+
 export function buildPredicate(selector) {
   switch (typeof selector) {
     case 'function':
@@ -115,27 +131,7 @@ export function buildPredicate(selector) {
       return node => node && node.type === selector;
 
     case 'string':
-      if (isCompoundSelector.test(selector)) {
-        return AND(splitSelector(selector).map(buildPredicate));
-      }
-
-      switch (selectorType(selector)) {
-        case SELECTOR.CLASS_TYPE:
-          return node => hasClassName(node, selector.substr(1));
-
-        case SELECTOR.ID_TYPE:
-          return node => nodeHasId(node, selector.substr(1));
-
-        case SELECTOR.PROP_TYPE: {
-          const propKey = selector.split(/\[([a-zA-Z\-]*?)(=|\])/)[1];
-          const propValue = selector.split(/=(.*?)\]/)[1];
-
-          return node => nodeHasProperty(node, propKey, propValue);
-        }
-        default:
-          // selector is a string. match to DOM tag or constructor displayName
-          return node => nodeHasType(node, selector);
-      }
+      return buildSelectorPredicate(selector);
 
     case 'object':
       if (!Array.isArray(selector) && selector !== null && !isEmpty(selector)) {

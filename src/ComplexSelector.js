@@ -1,4 +1,4 @@
-import split from 'lodash/split';
+import { getAst } from './Utils';
 
 export default class ComplexSelector {
   constructor(buildPredicate, findWhereUnwrapped, childrenOfNode) {
@@ -7,31 +7,31 @@ export default class ComplexSelector {
     this.childrenOfNode = childrenOfNode;
   }
 
-  getSelectors(selector) {
-    const selectors = split(selector, / (?=(?:(?:[^"]*"){2})*[^"]*$)/);
-    return selectors.reduce((list, sel) => {
-      if (sel === '+' || sel === '~') {
+  getSelectors(selectorNodes) {
+    return selectorNodes.reduce((list, node) => {
+      if (node.type === 'combinator' && (node.value === '+' || node.value === '~')) {
         const temp = list.pop();
-        list.push(sel, temp);
+        list.push(node, temp);
         return list;
+      } else if (node.type !== 'combinator' || node.value !== ' ') {
+        list.push(node);
       }
 
-      list.push(sel);
       return list;
     }, []);
   }
 
   handleSelectors(selectors, wrapper) {
     const recurseSelector = (offset, fn, pre) => {
-      const predicate = pre || this.buildPredicate(selectors[offset]);
+      const predicate = pre || this.buildPredicate(selectors[offset].toString());
       const nextWrapper = this.findWhereUnwrapped(wrapper, predicate, fn);
       const nextSelectors = selectors.slice(offset + 1);
       return this.handleSelectors(nextSelectors, nextWrapper);
     };
 
     const buildSiblingPredicate = (first, second) => {
-      const firstPredicate = this.buildPredicate(first);
-      const secondPredicate = this.buildPredicate(second);
+      const firstPredicate = this.buildPredicate(first.toString());
+      const secondPredicate = this.buildPredicate(second.toString());
 
       return (child) => {
         if (firstPredicate(child)) {
@@ -46,7 +46,7 @@ export default class ComplexSelector {
     let selectSiblings;
 
     if (selectors.length) {
-      switch (selectors[0]) {
+      switch (selectors[0].value) {
         case '>':
           return recurseSelector(1, this.treeFilterDirect());
         case '+':
@@ -75,7 +75,9 @@ export default class ComplexSelector {
 
   find(selector, wrapper) {
     if (typeof selector === 'string') {
-      const selectors = this.getSelectors(selector);
+      // Note: ignores compound selectors (e.g. 'a, b')
+      const selectorNodes = getAst(selector).nodes[0];
+      const selectors = this.getSelectors(selectorNodes);
 
       return this.handleSelectors(selectors, wrapper);
     }

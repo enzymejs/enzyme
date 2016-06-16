@@ -2,9 +2,6 @@ import React from 'react';
 import sinon from 'sinon';
 import { expect } from 'chai';
 import {
-  splitSelector,
-} from '../src/Utils';
-import {
   hasClassName,
   nodeHasProperty,
   treeForEach,
@@ -16,27 +13,6 @@ import { describeIf } from './_helpers';
 import { REACT013 } from '../src/version';
 
 describe('ShallowTraversal', () => {
-
-  describe('splitSelector', () => {
-    const fn = splitSelector;
-    it('splits multiple class names', () => {
-      expect(fn('.foo.bar')).to.eql(['.foo', '.bar']);
-      expect(fn('.foo.bar.baz')).to.eql(['.foo', '.bar', '.baz']);
-    });
-
-    it('splits tag names and class names', () => {
-      expect(fn('input.bar')).to.eql(['input', '.bar']);
-      expect(fn('div.bar.baz')).to.eql(['div', '.bar', '.baz']);
-      expect(fn('Foo.bar')).to.eql(['Foo', '.bar']);
-    });
-
-    it('splits tag names and attributes', () => {
-      expect(fn('input[type="text"]')).to.eql(['input', '[type="text"]']);
-      expect(
-        fn('div[title="title"][data-value="foo"]')
-      ).to.eql(['div', '[title="title"]', '[data-value="foo"]']);
-    });
-  });
 
   describe('hasClassName', () => {
 

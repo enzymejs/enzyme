@@ -363,7 +363,6 @@ describeWithDOM('mount', () => {
 
       expect(wrapper.find('span[htmlFor="foo"]')).to.have.length(1);
       expect(wrapper.find('span[htmlFor]')).to.have.length(1);
-
     });
 
     it('should not find components with invalid attributes', () => {
@@ -402,6 +401,29 @@ describeWithDOM('mount', () => {
 
       expect(wrapper.find('[data-foo_bar]')).to.have.length(1);
       expect(wrapper.find('[data-foo_bar="bar4"]')).to.have.length(1);
+    });
+
+    it('should allow multiple prop selectors', () => {
+      const wrapper = mount(
+        <div>
+          <span data-a="foo" data-b="bar" />
+        </div>
+      );
+
+      expect(wrapper.find('[data-a="foo"][data-b="bar"]')).to.have.length(1);
+      expect(wrapper.find('[data-a="foo"][data-b]')).to.have.length(1);
+      expect(wrapper.find('[data-a][data-b="bar"]')).to.have.length(1);
+      expect(wrapper.find('[data-a][data-b]')).to.have.length(1);
+    });
+
+    it('should allow square brackets in prop selectors', () => {
+      const wrapper = mount(
+        <div>
+          <input type="checkbox" name="allergies[]" value="peanuts" />
+        </div>
+      );
+
+      expect(wrapper.find('[name="allergies[]"]')).to.have.length(1);
     });
 
     it('should find components with multiple matching props', () => {
