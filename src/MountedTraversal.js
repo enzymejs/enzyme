@@ -7,6 +7,7 @@ import {
   propsOfNode,
   isFunctionalComponent,
   getAst,
+  isValidPropName,
   AND,
   nodeHasType,
   selectorError,
@@ -206,7 +207,9 @@ function buildSelectorPredicate(selector) {
       case 'id':
         return inst => instHasId(inst, node.value);
       case 'attribute':
-        return inst => instHasProperty(inst, node.attribute, node.value);
+        return isValidPropName(node.attribute)
+          ? inst => instHasProperty(inst, node.attribute, node.value)
+          : () => false;
       case 'tag':
         return inst => instHasType(inst, node.value);
       default:

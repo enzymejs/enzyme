@@ -168,6 +168,10 @@ export function getAst(selector) {
   return value;
 }
 
+export function isValidPropName(propName) {
+  return /^[$A-Z_][0-9A-Z_$-:]*$/i.test(propName);
+}
+
 export function selectorError(selector) {
   return new TypeError(
     `Enzyme received a complex CSS selector ('${selector}') that it does not currently support`

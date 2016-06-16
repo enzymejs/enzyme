@@ -5,6 +5,7 @@ import {
   coercePropValue,
   propsOfNode,
   getAst,
+  isValidPropName,
   AND,
   nodeHasType,
   selectorError,
@@ -115,7 +116,9 @@ function buildSelectorPredicate(selector) {
       case 'id':
         return element => nodeHasId(element, node.value);
       case 'attribute':
-        return element => nodeHasProperty(element, node.attribute, node.value);
+        return isValidPropName(node.attribute)
+          ? element => nodeHasProperty(element, node.attribute, node.value)
+          : () => false;
       case 'tag':
         return element => nodeHasType(element, node.value);
       default:
