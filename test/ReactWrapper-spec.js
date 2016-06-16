@@ -1209,6 +1209,94 @@ describeWithDOM('mount', () => {
     });
   });
 
+  describe('.click(data)', () => {
+    it('should simulate click event', () => {
+      class Foo extends React.Component {
+        constructor(props) {
+          super(props);
+          this.state = { count: 0 };
+          this.incrementCount = this.incrementCount.bind(this);
+        }
+
+        incrementCount() {
+          this.setState({ count: this.state.count + 1 });
+        }
+
+        render() {
+          return (
+              <a
+                className={`clicks-${this.state.count}`}
+                onClick={this.incrementCount}
+              >foo</a>
+          );
+        }
+      }
+
+      const wrapper = mount(<Foo />);
+
+      expect(wrapper.find('.clicks-0').length).to.equal(1);
+      wrapper.click();
+      expect(wrapper.find('.clicks-1').length).to.equal(1);
+    });
+
+    it('should pass in event data', () => {
+      const spy = sinon.spy();
+      class Foo extends React.Component {
+        render() { return (<a onClick={spy}>foo</a>); }
+      }
+
+      const wrapper = mount(<Foo />);
+
+      wrapper.click({ someSpecialData: 'foo' });
+      expect(spy.calledOnce).to.equal(true);
+      expect(spy.args[0][0].someSpecialData).to.equal('foo');
+    });
+  });
+
+  describe('.val(data)', () => {
+    it('should simulate change value event', () => {
+      class Foo extends React.Component {
+        constructor(props) {
+          super(props);
+          this.state = { value: 'original value' };
+          this.handleChange = this.handleChange.bind(this);
+        }
+
+        handleChange(event) {
+          this.setState({ value: event.target.value });
+        }
+
+        render() {
+          return (
+              <input type="text"
+                value={this.state.value}
+                onChange={this.handleChange}
+              />
+          );
+        }
+      }
+
+      const wrapper = mount(<Foo />);
+
+      expect(wrapper.find('input').props().value).to.equal('original value');
+      wrapper.val('new value');
+      expect(wrapper.find('input').props().value).to.equal('new value');
+    });
+
+    it('should pass in event data', () => {
+      const spy = sinon.spy();
+      class Foo extends React.Component {
+        render() { return (<input type="text" onChange={spy} />); }
+      }
+
+      const wrapper = mount(<Foo />);
+
+      wrapper.val('', { someSpecialData: 'foo' });
+      expect(spy.calledOnce).to.equal(true);
+      expect(spy.args[0][0].someSpecialData).to.equal('foo');
+    });
+  });
+
   describe('.setState(newState)', () => {
     it('should set the state of the root node', () => {
       class Foo extends React.Component {
@@ -1246,6 +1334,7 @@ describeWithDOM('mount', () => {
       const wrapper = mount(<MySharona />);
       expect(wrapper.find('div').text()).to.equal('a');
     });
+
   });
 
   describe('.is(selector)', () => {

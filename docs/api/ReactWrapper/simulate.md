@@ -45,3 +45,10 @@ expect(wrapper.find('.clicks-0').length).to.equal(1);
 wrapper.find('a').simulate('click');
 expect(wrapper.find('.clicks-1').length).to.equal(1);
 ```
+
+
+
+#### Related Methods
+
+- [`.click([mock] => Self`](click.md)
+- [`.val(value[, mock]) => Self`](val.md)

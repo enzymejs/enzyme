@@ -504,6 +504,32 @@ export default class ReactWrapper {
     return this;
   }
 
+
+  /**
+   * Used to simulate click events. Pass (optionally) event arguments. This method of
+   * testing events should be met with some skepticism.
+   *
+   * @param {Object} data (optional)
+   * @returns {ReactWrapper}
+   */
+  click(mock = {}) {
+    this.simulate('click', mock);
+    return this;
+  }
+
+  /**
+   * Used to simulate change value events. Pass (optionally) event arguments. This method of
+   * testing events should be met with some skepticism.
+   *
+   * @param {String} value
+   * @param {Object} data (optional)
+   * @returns {ReactWrapper}
+   */
+  val(value, mock = {}) {
+    this.simulate('change', Object.assign({ }, mock, { target: { value } }));
+    return this;
+  }
+
   /**
    * Returns the props hash for the root node of the wrapper.
    *
