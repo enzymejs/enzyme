@@ -1,4 +1,4 @@
-import { getAst } from './Utils';
+import { getSelectorAST } from './Utils';
 
 export default class ComplexSelector {
   constructor(buildPredicate, findWhereUnwrapped, childrenOfNode) {
@@ -23,15 +23,15 @@ export default class ComplexSelector {
 
   handleSelectors(selectors, wrapper) {
     const recurseSelector = (offset, fn, pre) => {
-      const predicate = pre || this.buildPredicate(selectors[offset].toString());
+      const predicate = pre || this.buildPredicate(String(selectors[offset]));
       const nextWrapper = this.findWhereUnwrapped(wrapper, predicate, fn);
       const nextSelectors = selectors.slice(offset + 1);
       return this.handleSelectors(nextSelectors, nextWrapper);
     };
 
     const buildSiblingPredicate = (first, second) => {
-      const firstPredicate = this.buildPredicate(first.toString());
-      const secondPredicate = this.buildPredicate(second.toString());
+      const firstPredicate = this.buildPredicate(String(first));
+      const secondPredicate = this.buildPredicate(String(second));
 
       return (child) => {
         if (firstPredicate(child)) {
@@ -76,7 +76,7 @@ export default class ComplexSelector {
   find(selector, wrapper) {
     if (typeof selector === 'string') {
       // Note: ignores compound selectors (e.g. 'a, b')
-      const selectorNodes = getAst(selector).nodes[0];
+      const selectorNodes = getSelectorAST(selector).nodes[0];
       const selectors = this.getSelectors(selectorNodes);
 
       return this.handleSelectors(selectors, wrapper);

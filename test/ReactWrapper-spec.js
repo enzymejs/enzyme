@@ -310,13 +310,25 @@ describeWithDOM('mount', () => {
       expect(wrapper.find('input#foo').length).to.equal(1);
     });
 
-    it('should find an element based on a tag name, id, and class name', () => {
+    it('should find an id with a class name and leading underscore', () => {
       const wrapper = mount(
         <div>
-          <input id="foo" className="bar" />
+          <input id="_bar" className="foo" />
         </div>
       );
-      expect(wrapper.find('input#foo.bar').length).to.equal(1);
+      expect(wrapper.find('.foo#_bar').length).to.equal(1);
+    });
+
+    it('should find an element based on a tag name, id, class names, and prop selectors', () => {
+      const wrapper = mount(
+        <div>
+          <input id="foo" className="bar" value="baz" />
+        </div>
+      );
+      expect(wrapper.find('input#foo.bar[value="baz"]').length).to.equal(1);
+      expect(wrapper.find('input#foo[value="baz"].bar').length).to.equal(1);
+      expect(wrapper.find('input[value="baz"]#foo.bar').length).to.equal(1);
+      expect(wrapper.find('input[value="baz"].bar#foo').length).to.equal(1);
     });
 
     it('should find a component based on a constructor', () => {

@@ -6,7 +6,7 @@ import {
   nodeEqual,
   propsOfNode,
   isFunctionalComponent,
-  getAst,
+  getSelectorAST,
   isValidPropName,
   AND,
   nodeHasType,
@@ -199,7 +199,7 @@ export function instMatchesObjectProps(inst, props) {
 }
 
 function buildSelectorPredicate(selector) {
-  const nodes = getAst(selector).nodes[0];
+  const nodes = getSelectorAST(selector).nodes[0];
   return AND(nodes.map(node => {
     switch (node.type) {
       case 'class':

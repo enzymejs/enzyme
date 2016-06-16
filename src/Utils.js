@@ -162,14 +162,14 @@ export function withSetStateAllowed(fn) {
   }
 }
 
-export function getAst(selector) {
+export function getSelectorAST(selector) {
   let value;
   parser(ast => { value = ast; }).process(selector);
   return value;
 }
 
 export function isValidPropName(propName) {
-  return /^[$A-Z_][0-9A-Z_$-:]*$/i.test(propName);
+  return /^[$A-Za-z_][0-9A-Za-z_$-:]*$/.test(propName);
 }
 
 export function selectorError(selector) {
