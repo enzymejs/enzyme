@@ -186,6 +186,27 @@ describe('ComplexSelector', () => {
 
         expect(wrapper.find('.foo + div > span').length).to.equal(1);
       });
+
+      it('th:not([scope="row"])', () => {
+        const wrapper = renderMethod(
+          <table>
+            <thead>
+              <tr>
+                <th></th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row"></th>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+        );
+
+        expect(wrapper.find('th:not([scope="row"])').length).to.equal(2);
+      });
     });
   });
 });

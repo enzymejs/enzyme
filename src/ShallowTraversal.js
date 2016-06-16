@@ -132,6 +132,15 @@ export function buildPredicate(selector) {
 
           return node => nodeHasProperty(node, propKey, propValue);
         }
+
+        case SELECTOR.NEGATE_PROP_TYPE: {
+          const prop = selector.match(/not\((.*)\)/)[1];
+          const propKey = prop.split(/\[([a-zA-Z\-]*?)(=|\])/)[1];
+          const propValue = prop.split(/=(.*?)\]/)[1];
+
+          return node => !nodeHasProperty(node, propKey, propValue);
+        }
+
         default:
           // selector is a string. match to DOM tag or constructor displayName
           return node => nodeHasType(node, selector);
