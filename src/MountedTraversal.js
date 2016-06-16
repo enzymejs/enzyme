@@ -93,7 +93,7 @@ export function instHasProperty(inst, propKey, stringifiedPropValue) {
     return false;
   }
 
-  if (propValue) {
+  if (propValue !== undefined) {
     return nodePropValue === propValue;
   }
 
