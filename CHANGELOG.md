@@ -6,7 +6,7 @@
 
 - add `.tap()` method to `ShallowWrapper` and `ReactWrapper` ([#299](https://github.com/airbnb/enzyme/pull/299))
 
-- add `.key()` method to `ShallowWrapper` and `ReactWrapper ([#327](https://github.com/airbnb/enzyme/pull/327))
+- add `.key()` method to `ShallowWrapper` and `ReactWrapper` ([#327](https://github.com/airbnb/enzyme/pull/327))
 
 - add support for descendent selectors, `>`, `~` and `+` ([#217](https://github.com/airbnb/enzyme/pull/217))
 
