@@ -8,6 +8,7 @@ Organizations
  - [Walmart Labs](https://github.com/walmartlabs)
  - [Hudl](http://hudl.github.io/)
  - [NET-A-PORTER](https://github.com/NET-A-PORTER)
+ - [Rangle.io](https://github.com/rangle)
 
 Projects
 ----------
