@@ -61,6 +61,17 @@ describe('debug', () => {
       );
     });
 
+    it('should render mixed children', () => {
+      expect(debugNode(
+        <div>hello{'world'}</div>
+      )).to.equal(
+        `<div>
+  hello
+  world
+</div>`
+      );
+    });
+
     it('should render props on root and children', () => {
       expect(debugNode(
         <div id="foo">
