@@ -212,6 +212,23 @@ describe('debug', () => {
 </Foo>`);
     });
 
+    it('renders basic debug of components with mixed children', () => {
+      class Foo extends React.Component {
+        render() {
+          return (
+            <div>hello{'world'}</div>
+          );
+        }
+      }
+      expect(mount(<Foo id="2" />).debug()).to.eql(
+`<Foo id="2">
+  <div>
+    hello
+    world
+  </div>
+</Foo>`);
+    });
+
     it('renders debug of compositional components', () => {
       class Foo extends React.Component {
         render() {

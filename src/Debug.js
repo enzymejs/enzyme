@@ -81,6 +81,10 @@ export function debugInst(inst, indentLength = 2) {
   if (typeof inst === 'string' || typeof inst === 'number') return escape(inst);
   if (!inst) return '';
 
+  if (inst._stringText) {
+    return inst._stringText;
+  }
+
   if (!inst.getPublicInstance) {
     const internal = internalInstance(inst);
     return debugInst(internal, indentLength);
