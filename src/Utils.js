@@ -2,6 +2,7 @@
 import isEqual from 'lodash/isEqual';
 import React from 'react';
 import is from 'object-is';
+import parser from 'postcss-selector-parser';
 import {
   isDOMComponent,
   findDOMNode,
@@ -161,40 +162,20 @@ export function withSetStateAllowed(fn) {
   }
 }
 
-export function splitSelector(selector) {
-  return selector.split(/(?=\.|\[.*\])|(?=#|\[#.*\])/);
+export function getSelectorAST(selector) {
+  let value;
+  parser(ast => { value = ast; }).process(selector);
+  return value;
 }
 
-export function isSimpleSelector(selector) {
-  // any of these characters pretty much guarantee it's a complex selector
-  return !/[~\s:>]/.test(selector);
+export function isValidPropName(propName) {
+  return /^[$A-Za-z_][0-9A-Za-z_$-:]*$/.test(propName);
 }
 
 export function selectorError(selector) {
   return new TypeError(
     `Enzyme received a complex CSS selector ('${selector}') that it does not currently support`
   );
-}
-
-export const isCompoundSelector = /([a-z]\.[a-z]|[a-z]\[.*\]|[a-z]#[a-z])/i;
-
-const isPropSelector = /^\[.*\]$/;
-
-export const SELECTOR = {
-  CLASS_TYPE: 0,
-  ID_TYPE: 1,
-  PROP_TYPE: 2,
-};
-
-export function selectorType(selector) {
-  if (selector[0] === '.') {
-    return SELECTOR.CLASS_TYPE;
-  } else if (selector[0] === '#') {
-    return SELECTOR.ID_TYPE;
-  } else if (isPropSelector.test(selector)) {
-    return SELECTOR.PROP_TYPE;
-  }
-  return undefined;
 }
 
 export function AND(fns) {

@@ -6,12 +6,11 @@ import {
   nodeEqual,
   propsOfNode,
   isFunctionalComponent,
-  splitSelector,
-  selectorType,
-  isCompoundSelector,
+  getSelectorAST,
+  isValidPropName,
   AND,
-  SELECTOR,
   nodeHasType,
+  selectorError,
 } from './Utils';
 import {
   isDOMComponent,
@@ -199,6 +198,26 @@ export function instMatchesObjectProps(inst, props) {
   return isSubset(propsOfNode(node), props);
 }
 
+function buildSelectorPredicate(selector) {
+  const nodes = getSelectorAST(selector).nodes[0];
+  return AND(nodes.map(node => {
+    switch (node.type) {
+      case 'class':
+        return inst => instHasClassName(inst, node.value);
+      case 'id':
+        return inst => instHasId(inst, node.value);
+      case 'attribute':
+        return isValidPropName(node.attribute)
+          ? inst => instHasProperty(inst, node.attribute, node.value)
+          : () => false;
+      case 'tag':
+        return inst => instHasType(inst, node.value);
+      default:
+        throw selectorError(selector);
+    }
+  }));
+}
+
 export function buildInstPredicate(selector) {
   switch (typeof selector) {
     case 'function':
@@ -206,25 +225,7 @@ export function buildInstPredicate(selector) {
       return inst => instHasType(inst, selector);
 
     case 'string':
-      if (isCompoundSelector.test(selector)) {
-        return AND(splitSelector(selector).map(buildInstPredicate));
-      }
-
-      switch (selectorType(selector)) {
-        case SELECTOR.CLASS_TYPE:
-          return inst => instHasClassName(inst, selector.substr(1));
-        case SELECTOR.ID_TYPE:
-          return inst => instHasId(inst, selector.substr(1));
-        case SELECTOR.PROP_TYPE: {
-          const propKey = selector.split(/\[([a-zA-Z][a-zA-Z_\d\-\:]*?)(=|\])/)[1];
-          const propValue = selector.split(/=(.*?)]/)[1];
-
-          return node => instHasProperty(node, propKey, propValue);
-        }
-        default:
-          // selector is a string. match to DOM tag or constructor displayName
-          return inst => instHasType(inst, selector);
-      }
+      return buildSelectorPredicate(selector);
 
     case 'object':
       if (!Array.isArray(selector) && selector !== null && !isEmpty(selector)) {

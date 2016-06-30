@@ -6,10 +6,7 @@ import {
   coercePropValue,
   getNode,
   nodeEqual,
-  isSimpleSelector,
   propFromEvent,
-  SELECTOR,
-  selectorType,
   mapNativeEventNames,
   displayNameOfNode,
 } from '../src/Utils';
@@ -238,69 +235,6 @@ describe('Utils', () => {
     it('should work', () => {
       expect(fn('click')).to.equal('onClick');
       expect(fn('mouseEnter')).to.equal('onMouseEnter');
-    });
-
-  });
-
-
-  describe('isSimpleSelector', () => {
-
-    describe('prohibited selectors', () => {
-      function isComplex(selector) {
-        it(selector, () => {
-          expect(isSimpleSelector(selector)).to.equal(false);
-        });
-      }
-
-      isComplex('.foo .bar');
-      isComplex(':visible');
-      isComplex('.foo>.bar');
-      isComplex('.foo > .bar');
-      isComplex('.foo~.bar');
-
-    });
-
-    describe('allowed selectors', () => {
-      function isSimple(selector) {
-        it(selector, () => {
-          expect(isSimpleSelector(selector)).to.equal(true);
-        });
-      }
-
-      isSimple('.foo');
-      isSimple('.foo-and-foo');
-      isSimple('input[foo="bar"]');
-      isSimple('input[foo="bar"][bar="baz"][baz="foo"]');
-      isSimple('.FoOaNdFoO');
-      isSimple('tag');
-      isSimple('.foo.bar');
-      isSimple('input.foo');
-
-    });
-
-  });
-
-  describe('selectorType', () => {
-
-    it('returns CLASS_TYPE for a prefixed .', () => {
-      const type = selectorType('.foo');
-
-      expect(type).to.be.equal(SELECTOR.CLASS_TYPE);
-    });
-
-    it('returns ID_TYPE for a prefixed #', () => {
-      const type = selectorType('#foo');
-
-      expect(type).to.be.equal(SELECTOR.ID_TYPE);
-    });
-
-    it('returns PROP_TYPE for []', () => {
-      function isProp(selector) {
-        expect(selectorType(selector)).to.be.equal(SELECTOR.PROP_TYPE);
-      }
-
-      isProp('[foo]');
-      isProp('[foo="bar"]');
     });
 
   });

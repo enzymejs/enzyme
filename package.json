@@ -56,7 +56,8 @@
     "lodash": "^4.13.1",
     "object-is": "^1.0.1",
     "object.assign": "^4.0.3",
-    "object.values": "^1.0.3"
+    "object.values": "^1.0.3",
+    "postcss-selector-parser": "^2.0.0"
   },
   "devDependencies": {
     "babel-cli": "^6.10.1",
