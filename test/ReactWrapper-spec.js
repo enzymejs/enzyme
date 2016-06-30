@@ -1,4 +1,10 @@
-import { describeWithDOM, describeIf, itWithData, generateEmptyRenderData } from './_helpers';
+import {
+  describeWithDOM,
+  describeIf,
+  itIf,
+  itWithData,
+  generateEmptyRenderData,
+} from './_helpers';
 import React from 'react';
 import { expect } from 'chai';
 import {
@@ -2466,12 +2472,24 @@ describeWithDOM('mount', () => {
     });
   });
 
-  it('works with components that return null', () => {
+  it('works with class components that return null', () => {
     class Foo extends React.Component {
       render() {
         return null;
       }
     }
+    const wrapper = mount(<Foo />);
+    expect(wrapper).to.have.length(1);
+    expect(wrapper.type()).to.equal(Foo);
+    expect(wrapper.html()).to.equal(null);
+    const rendered = wrapper.render();
+    expect(rendered.length).to.equal(0);
+    expect(rendered.html()).to.equal(null);
+  });
+
+  itIf(REACT15, 'works with SFCs that return null', () => {
+    const Foo = () => null;
+
     const wrapper = mount(<Foo />);
     expect(wrapper).to.have.length(1);
     expect(wrapper.type()).to.equal(Foo);

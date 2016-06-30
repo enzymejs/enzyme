@@ -2,7 +2,7 @@ import React from 'react';
 import { expect } from 'chai';
 import { shallow, render, ShallowWrapper } from '../src/';
 import sinon from 'sinon';
-import { describeIf, itWithData, generateEmptyRenderData } from './_helpers';
+import { describeIf, itIf, itWithData, generateEmptyRenderData } from './_helpers';
 import { REACT013, REACT15 } from '../src/version';
 
 describe('shallow', () => {
@@ -2461,6 +2461,18 @@ describe('shallow', () => {
         return null;
       }
     }
+    const wrapper = shallow(<Foo />);
+    expect(wrapper).to.have.length(1);
+    expect(wrapper.html()).to.equal(null);
+    expect(wrapper.type()).to.equal(null);
+    const rendered = wrapper.render();
+    expect(rendered.length).to.equal(0);
+    expect(rendered.html()).to.equal(null);
+  });
+
+  itIf(REACT15, 'works with SFCs that return null', () => {
+    const Foo = () => null;
+
     const wrapper = shallow(<Foo />);
     expect(wrapper).to.have.length(1);
     expect(wrapper.html()).to.equal(null);
