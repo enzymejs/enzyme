@@ -2502,9 +2502,9 @@ describeWithDOM('mount', () => {
   describe('.key()', () => {
     it('should return the key of the node', () => {
       const wrapper = mount(
-          <ul>
-            {['foo', 'bar'].map(s => <li key={s}>{s}</li>)}
-          </ul>
+        <ul>
+          {['foo', 'bar'].map(s => <li key={s}>{s}</li>)}
+        </ul>
       ).find('li');
       expect(wrapper.at(0).key()).to.equal('foo');
       expect(wrapper.at(1).key()).to.equal('bar');

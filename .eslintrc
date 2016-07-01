@@ -8,6 +8,12 @@
   "rules": {
     "id-length": 0,
     "new-cap": 0,
-    "no-console": 0
+    "no-console": 0,
+    "react/jsx-pascal-case": [2, { "allowAllCaps": true }],
+    "no-underscore-dangle": 1,
+    "global-require": 1,
+    "import/no-mutable-exports": 1,
+    "import/no-unresolved": 1,
+    "no-restricted-syntax": 1,
   }
 }
