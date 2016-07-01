@@ -120,23 +120,18 @@ export function childrenOfInstInternal(inst) {
   const publicInst = inst.getPublicInstance();
   const currentElement = inst._currentElement;
   if (isDOMComponent(publicInst)) {
-    const children = [];
     const renderedChildren = renderedChildrenOfInst(inst);
-    let key;
-    for (key in renderedChildren) {
-      if (!renderedChildren.hasOwnProperty(key)) {
-        continue;
-      }
+    return Object.keys(renderedChildren || {}).filter((key) => {
       if (REACT013 && !renderedChildren[key].getPublicInstance) {
-        continue;
+        return false;
       }
+      return true;
+    }).map(key => {
       if (!REACT013 && typeof renderedChildren[key]._currentElement.type === 'function') {
-        children.push(renderedChildren[key]._instance);
-        continue;
+        return renderedChildren[key]._instance;
       }
-      children.push(renderedChildren[key].getPublicInstance());
-    }
-    return children;
+      return renderedChildren[key].getPublicInstance();
+    });
   } else if (
     !REACT013 &&
     isElement(currentElement) &&
@@ -256,18 +251,16 @@ function findAllInRenderedTreeInternal(inst, test) {
   const currentElement = inst._currentElement;
   if (isDOMComponent(publicInst)) {
     const renderedChildren = renderedChildrenOfInst(inst);
-    let key;
-    for (key in renderedChildren) {
-      if (!renderedChildren.hasOwnProperty(key)) {
-        continue;
-      }
+    Object.keys(renderedChildren || {}).filter((key) => {
       if (REACT013 && !renderedChildren[key].getPublicInstance) {
-        continue;
+        return false;
       }
+      return true;
+    }).forEach((key) => {
       ret = ret.concat(
         findAllInRenderedTreeInternal(renderedChildren[key], test)
       );
-    }
+    });
   } else if (
     !REACT013 &&
     isElement(currentElement) &&

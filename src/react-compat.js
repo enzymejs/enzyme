@@ -1,4 +1,10 @@
-/* eslint react/no-deprecated: 0 */
+/* eslint
+  global-require: 0,
+  import/no-mutable-exports: 0,
+  import/no-unresolved: 0,
+  react/no-deprecated: 0
+*/
+
 import { REACT013 } from './version';
 import objectAssign from 'object.assign';
 
@@ -67,6 +73,7 @@ if (REACT013) {
   try {
     ReactDOM = require('react-dom');
   } catch (e) {
+    // eslint-disable-next-line no-console
     console.error(
       'react-dom is an implicit dependency in order to support react@0.13-14. ' +
       'Please add the appropriate version to your devDependencies. ' +
@@ -86,6 +93,7 @@ if (REACT013) {
   try {
     TestUtils = require('react-addons-test-utils');
   } catch (e) {
+    // eslint-disable-next-line no-console
     console.error(
       'react-addons-test-utils is an implicit dependency in order to support react@0.13-14. ' +
       'Please add the appropriate version to your devDependencies. ' +
@@ -106,13 +114,13 @@ if (REACT013) {
     const originalRender = renderer.render;
     const originalRenderOutput = renderer.getRenderOutput;
     let isDOM = false;
-    let _node;
+    let cachedNode;
     return objectAssign(renderer, {
       render(node, context) {
         /* eslint consistent-return: 0 */
         if (typeof node.type === 'string') {
           isDOM = true;
-          _node = node;
+          cachedNode = node;
         } else {
           isDOM = false;
           return originalRender.call(this, node, context);
@@ -120,7 +128,7 @@ if (REACT013) {
       },
       getRenderOutput() {
         if (isDOM) {
-          return _node;
+          return cachedNode;
         }
         return originalRenderOutput.call(this);
       },
