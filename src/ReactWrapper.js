@@ -658,7 +658,8 @@ export default class ReactWrapper {
    */
   hasClass(className) {
     if (className && className.indexOf('.') !== -1) {
-      console.log(
+      // eslint-disable-next-line no-console
+      console.warn(
         'It looks like you\'re calling `ReactWrapper::hasClass()` with a CSS selector. ' +
         'hasClass() expects a class name, not a CSS selector.'
       );
