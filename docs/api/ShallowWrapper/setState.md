@@ -3,7 +3,7 @@
 A method to invoke `setState()` on the root component instance similar to how you might in the
 definition of the component, and re-renders.  This method is useful for testing your component
 in hard to achieve states, however should be used sparingly. If possible, you should utilize
-your component's external API in order to get it into whatever state you want to test, in order
+your component's external API (which is [accessible via `.instance()`](http://airbnb.io/enzyme/docs/api/ShallowWrapper/instance.html)) in order to get it into whatever state you want to test, in order
 to be as accurate of a test as possible. This is not always practical, however.
 
 NOTE: can only be called on a wrapper instance that is also the root instance.
