@@ -488,6 +488,8 @@ describe('shallow', () => {
           <a value={1} />
           <a value={false} />
           <a value />
+          <a value="" />
+          <a value="string" />
         </div>
       );
 
@@ -497,6 +499,11 @@ describe('shallow', () => {
 
       expect(wrapper.find('[value=false]')).to.have.length(1);
       expect(wrapper.find('[value=true]')).to.have.length(1);
+
+      expect(wrapper.find('[value=""]')).to.have.length(1);
+      expect(wrapper.find('[value="string"]')).to.have.length(1);
+
+      expect(wrapper.find('[value]')).to.have.length(6);
 
       expect(wrapper.find('[value="0"]')).to.have.length(0);
       expect(wrapper.find('[value="1"]')).to.have.length(0);
