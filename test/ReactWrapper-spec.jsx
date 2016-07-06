@@ -282,6 +282,15 @@ describeWithDOM('mount', () => {
   });
 
   describe('.find(selector)', () => {
+    let sandbox;
+
+    beforeEach(() => {
+      sandbox = sinon.sandbox.create();
+    });
+
+    afterEach(() => {
+      sandbox.restore();
+    });
 
     it('should find an element based on a class name', () => {
       const wrapper = mount(
@@ -384,7 +393,9 @@ describeWithDOM('mount', () => {
 
     });
 
-    it.skip('should not find components with invalid attributes', () => {
+    it('should not find components with invalid attributes', () => {
+      // React 15.2 warns when setting a non valid prop to an DOM element
+      sandbox.stub(console, 'error');
       // Invalid attributes aren't valid JSX, so manual instantiation is necessary
       const wrapper = mount(
         React.createElement('div', null, React.createElement('span', {
@@ -514,50 +525,50 @@ describeWithDOM('mount', () => {
       expect(wrapper.find('button').length).to.equal(1);
     });
 
-    it.skip('should support object property selectors', () => {
-      class Foo extends React.Component {
-        render() {
-          return <span data-test="ref" />;
-        }
-      }
+    it('should support object property selectors', () => {
       const wrapper = mount(
         <div>
           <input data-test="ref" className="foo" type="text" />
           <input data-test="ref" type="text" />
-          <Foo prop={undefined} />
-          <Foo prop={null} />
-          <Foo prop={123} />
-          <Foo prop={false} />
-          <Foo prop />
+          <button data-test="ref" data-prop={undefined} />
+          <span data-test="ref" data-prop={null} />
+          <div data-test="ref" data-prop={123} />
+          <input data-test="ref" data-prop={false} />
+          <a data-test="ref" data-prop />
         </div>
       );
       expect(wrapper.find({ a: 1 })).to.have.length(0);
       expect(wrapper.find({ 'data-test': 'ref' })).to.have.length(7);
       expect(wrapper.find({ className: 'foo' })).to.have.length(1);
-      expect(wrapper.find({ prop: undefined })).to.have.length(1);
-      expect(wrapper.find({ prop: null })).to.have.length(1);
-      expect(wrapper.find({ prop: 123 })).to.have.length(1);
-      expect(wrapper.find({ prop: false })).to.have.length(1);
-      expect(wrapper.find({ prop: true })).to.have.length(1);
+      expect(wrapper.find({ 'data-prop': undefined })).to.have.length(1);
+      expect(wrapper.find({ 'data-prop': null })).to.have.length(1);
+      expect(wrapper.find({ 'data-prop': 123 })).to.have.length(1);
+      expect(wrapper.find({ 'data-prop': false })).to.have.length(1);
+      expect(wrapper.find({ 'data-prop': true })).to.have.length(1);
     });
 
     it('should support complex and nested object property selectors', () => {
       const testFunction = () => ({});
       const wrapper = mount(
         <div>
-          <span style={[{ id: 1 }]} data-test="ref" id="3" onChange={testFunction} />
-          <a style={[{ id: 1 }]} data-test="ref" />
-          <div style={{ item: { id: 1 } }} data-test="ref" />
-          <input style={{ height: 20 }} data-test="ref" />
+          <span data-more={[{ id: 1 }]} data-test="ref" data-prop onChange={testFunction} />
+          <a data-more={[{ id: 1 }]} data-test="ref" />
+          <div data-more={{ item: { id: 1 } }} data-test="ref" />
+          <input data-more={{ height: 20 }} data-test="ref" />
         </div>
       );
       expect(wrapper.find({ 'data-test': 'ref' })).to.have.length(4);
-      expect(wrapper.find({ style: { a: 1 } })).to.have.length(0);
-      expect(wrapper.find({ style: [{ id: 1 }] })).to.have.length(2);
-      expect(wrapper.find({ style: { item: { id: 1 } } })).to.have.length(1);
-      expect(wrapper.find({ style: { height: 20 } })).to.have.length(1);
+      expect(wrapper.find({ 'data-more': { a: 1 } })).to.have.length(0);
+      expect(wrapper.find({ 'data-more': [{ id: 1 }] })).to.have.length(2);
+      expect(wrapper.find({ 'data-more': { item: { id: 1 } } })).to.have.length(1);
+      expect(wrapper.find({ 'data-more': { height: 20 } })).to.have.length(1);
       expect(wrapper
-        .find({ style: [{ id: 1 }], 'data-test': 'ref', id: '3', onChange: testFunction })
+        .find({
+          'data-more': [{ id: 1 }],
+          'data-test': 'ref',
+          'data-prop': true,
+          onChange: testFunction,
+        })
       ).to.have.length(1);
     });
 
@@ -2333,15 +2344,15 @@ describeWithDOM('mount', () => {
         render() {
           return (
             <div>
-              <span ref="firstRef" className="2">First</span>
-              <span ref="secondRef" className="4">Second</span>
-              <span ref="thirdRef" className="8">Third</span>
+              <span ref="firstRef" data-amount={2}>First</span>
+              <span ref="secondRef" data-amount={4}>Second</span>
+              <span ref="thirdRef" data-amount={8}>Third</span>
             </div>
           );
         }
       }
       const wrapper = mount(<Foo />);
-      expect(wrapper.ref('secondRef').prop('className')).to.equal('4');
+      expect(wrapper.ref('secondRef').prop('data-amount')).to.equal(4);
       expect(wrapper.ref('secondRef').text()).to.equal('Second');
     });
   });
