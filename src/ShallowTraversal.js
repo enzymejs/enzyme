@@ -164,5 +164,7 @@ export function getTextFromNode(node) {
     return `<${node.type.displayName || node.type.name} />`;
   }
 
-  return childrenOfNode(node).map(getTextFromNode).join('').replace(/\s+/, ' ');
+  return childrenOfNode(node).map(getTextFromNode)
+    .join('')
+    .replace(/\s+/, ' ');
 }

@@ -1,4 +1,10 @@
-import { describeWithDOM, describeIf, itWithData, generateEmptyRenderData } from './_helpers';
+import {
+  describeWithDOM,
+  describeIf,
+  itIf,
+  itWithData,
+  generateEmptyRenderData,
+} from './_helpers';
 import React from 'react';
 import { expect } from 'chai';
 import {
@@ -281,6 +287,15 @@ describeWithDOM('mount', () => {
         </div>
       );
       expect(wrapper.find('.foo').type()).to.equal('input');
+    });
+
+    it('should find an SVG element based on a class name', () => {
+      const wrapper = mount(
+        <div>
+          <svg className="foo" />
+        </div>
+      );
+      expect(wrapper.find('.foo').type()).to.equal('svg');
     });
 
     it('should find an element based on a tag name', () => {
@@ -2482,7 +2497,7 @@ describeWithDOM('mount', () => {
     });
   });
 
-  it('works with components that return null', () => {
+  it('works with class components that return null', () => {
     class Foo extends React.Component {
       render() {
         return null;
@@ -2497,12 +2512,24 @@ describeWithDOM('mount', () => {
     expect(rendered.html()).to.equal(null);
   });
 
+  itIf(REACT15, 'works with SFCs that return null', () => {
+    const Foo = () => null;
+
+    const wrapper = mount(<Foo />);
+    expect(wrapper).to.have.length(1);
+    expect(wrapper.type()).to.equal(Foo);
+    expect(wrapper.html()).to.equal(null);
+    const rendered = wrapper.render();
+    expect(rendered.length).to.equal(0);
+    expect(rendered.html()).to.equal(null);
+  });
+
   describe('.key()', () => {
     it('should return the key of the node', () => {
       const wrapper = mount(
-          <ul>
-            {['foo', 'bar'].map(s => <li key={s}>{s}</li>)}
-          </ul>
+        <ul>
+          {['foo', 'bar'].map(s => <li key={s}>{s}</li>)}
+        </ul>
       ).find('li');
       expect(wrapper.at(0).key()).to.equal('foo');
       expect(wrapper.at(1).key()).to.equal('bar');

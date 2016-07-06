@@ -61,6 +61,17 @@ describe('debug', () => {
       );
     });
 
+    it('should render mixed children', () => {
+      expect(debugNode(
+        <div>hello{'world'}</div>
+      )).to.equal(
+        `<div>
+  hello
+  world
+</div>`
+      );
+    });
+
     it('should render props on root and children', () => {
       expect(debugNode(
         <div id="foo">
@@ -208,6 +219,23 @@ describe('debug', () => {
     <span>
       Foo
     </span>
+  </div>
+</Foo>`);
+    });
+
+    it('renders basic debug of components with mixed children', () => {
+      class Foo extends React.Component {
+        render() {
+          return (
+            <div>hello{'world'}</div>
+          );
+        }
+      }
+      expect(mount(<Foo id="2" />).debug()).to.eql(
+`<Foo id="2">
+  <div>
+    hello
+    world
   </div>
 </Foo>`);
     });

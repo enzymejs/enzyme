@@ -49,7 +49,14 @@ export function instHasClassName(inst, className) {
   if (!isDOMComponent(inst)) {
     return false;
   }
-  let classes = findDOMNode(inst).className || '';
+  const node = findDOMNode(inst);
+  if (node.classList) {
+    return node.classList.contains(className);
+  }
+  let classes = node.className || '';
+  if (typeof classes === 'object') {
+    classes = classes.baseVal;
+  }
   classes = classes.replace(/\s/g, ' ');
   return ` ${classes} `.indexOf(` ${className} `) > -1;
 }
@@ -120,23 +127,18 @@ export function childrenOfInstInternal(inst) {
   const publicInst = inst.getPublicInstance();
   const currentElement = inst._currentElement;
   if (isDOMComponent(publicInst)) {
-    const children = [];
     const renderedChildren = renderedChildrenOfInst(inst);
-    let key;
-    for (key in renderedChildren) {
-      if (!renderedChildren.hasOwnProperty(key)) {
-        continue;
-      }
+    return Object.keys(renderedChildren || {}).filter((key) => {
       if (REACT013 && !renderedChildren[key].getPublicInstance) {
-        continue;
+        return false;
       }
+      return true;
+    }).map(key => {
       if (!REACT013 && typeof renderedChildren[key]._currentElement.type === 'function') {
-        children.push(renderedChildren[key]._instance);
-        continue;
+        return renderedChildren[key]._instance;
       }
-      children.push(renderedChildren[key].getPublicInstance());
-    }
-    return children;
+      return renderedChildren[key].getPublicInstance();
+    });
   } else if (
     !REACT013 &&
     isElement(currentElement) &&
@@ -216,7 +218,7 @@ export function buildInstPredicate(selector) {
         case SELECTOR.ID_TYPE:
           return inst => instHasId(inst, selector.substr(1));
         case SELECTOR.PROP_TYPE: {
-          const propKey = selector.split(/\[([a-zA-Z][a-zA-Z_\d\-\:]*?)(=|\])/)[1];
+          const propKey = selector.split(/\[([a-zA-Z][a-zA-Z_\d\-:]*?)(=|\])/)[1];
           const propValue = selector.split(/=(.*?)]/)[1];
 
           return node => instHasProperty(node, propKey, propValue);
@@ -256,18 +258,16 @@ function findAllInRenderedTreeInternal(inst, test) {
   const currentElement = inst._currentElement;
   if (isDOMComponent(publicInst)) {
     const renderedChildren = renderedChildrenOfInst(inst);
-    let key;
-    for (key in renderedChildren) {
-      if (!renderedChildren.hasOwnProperty(key)) {
-        continue;
-      }
+    Object.keys(renderedChildren || {}).filter((key) => {
       if (REACT013 && !renderedChildren[key].getPublicInstance) {
-        continue;
+        return false;
       }
+      return true;
+    }).forEach((key) => {
       ret = ret.concat(
         findAllInRenderedTreeInternal(renderedChildren[key], test)
       );
-    }
+    });
   } else if (
     !REACT013 &&
     isElement(currentElement) &&

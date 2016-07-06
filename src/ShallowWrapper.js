@@ -662,6 +662,7 @@ export default class ShallowWrapper {
    */
   hasClass(className) {
     if (className && className.indexOf('.') !== -1) {
+      // eslint-disable-next-line no-console
       console.warn(
         'It looks like you\'re calling `ShallowWrapper::hasClass()` with a CSS selector. ' +
         'hasClass() expects a class name, not a CSS selector.'

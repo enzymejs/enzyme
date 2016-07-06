@@ -72,8 +72,10 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import sinon from 'sinon';
 
-describe('<MyComponent />', () => {
+import MyComponent from './MyComponent';
+import Foo from './Foo';
 
+describe('<MyComponent />', () => {
   it('renders three <Foo /> components', () => {
     const wrapper = shallow(<MyComponent />);
     expect(wrapper.find(Foo)).to.have.length(3);
@@ -99,9 +101,8 @@ describe('<MyComponent />', () => {
       <Foo onButtonClick={onButtonClick} />
     );
     wrapper.find('button').simulate('click');
-    expect(onButtonClick.calledOnce).to.equal(true);
+    expect(onButtonClick).to.have.property('callCount', 1);
   });
-
 });
 ```
 
@@ -116,13 +117,15 @@ import React from 'react';
 import sinon from 'sinon';
 import { mount } from 'enzyme';
 
-describe('<Foo />', () => {
+import MyComponent from './MyComponent';
+import Foo from './Foo';
 
+describe('<Foo />', () => {
   it('allows us to set props', () => {
     const wrapper = mount(<Foo bar="baz" />);
-    expect(wrapper.props().bar).to.equal("baz");
-    wrapper.setProps({ bar: "foo" });
-    expect(wrapper.props().bar).to.equal("foo");
+    expect(wrapper.props().bar).to.equal('baz');
+    wrapper.setProps({ bar: 'foo' });
+    expect(wrapper.props().bar).to.equal('foo');
   });
 
   it('simulates click events', () => {
@@ -131,16 +134,15 @@ describe('<Foo />', () => {
       <Foo onButtonClick={onButtonClick} />
     );
     wrapper.find('button').simulate('click');
-    expect(onButtonClick.calledOnce).to.equal(true);
+    expect(onButtonClick).to.have.property('callCount', 1);
   });
 
   it('calls componentDidMount', () => {
     sinon.spy(Foo.prototype, 'componentDidMount');
     const wrapper = mount(<Foo />);
-    expect(Foo.prototype.componentDidMount.calledOnce).to.be.true;
+    expect(Foo.prototype.componentDidMount).to.have.property('callCount', 1);
     Foo.prototype.componentDidMount.restore();
   });
-
 });
 ```
 
@@ -153,8 +155,9 @@ Read the full [API Documentation](/docs/api/mount.md)
 import React from 'react';
 import { render } from 'enzyme';
 
-describe('<Foo />', () => {
+import Foo from './Foo';
 
+describe('<Foo />', () => {
   it('renders three `.foo-bar`s', () => {
     const wrapper = render(<Foo />);
     expect(wrapper.find('.foo-bar').length).to.equal(3);
@@ -162,9 +165,8 @@ describe('<Foo />', () => {
 
   it('renders the title', () => {
     const wrapper = render(<Foo title="unique" />);
-    expect(wrapper.text()).to.contain("unique");
+    expect(wrapper.text()).to.contain('unique');
   });
-
 });
 ```
 
