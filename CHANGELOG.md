@@ -1,5 +1,29 @@
 # Change Log
 
+## 2.4.0 (July 7, 2016)
+
+### Minor Changes
+
+- Support all Component Lifecycle methods in ShallowRenderer (behind an experimental flag) ([#318](https://github.com/airbnb/enzyme/pull/318))
+
+- Add an `isEmptyRender()` method to both `ShallowWrapper` and `ReactWrapper` ([#339](https://github.com/airbnb/enzyme/pull/339))
+
+- Add support for batched updates with `ShallowRender.simulate` ([#342](https://github.com/airbnb/enzyme/pull/342))
+
+
+### Patches
+
+- Switch to using classList instead of className ([#448](https://github.com/airbnb/enzyme/pull/448))
+
+- fixes mount().debug() output with mixed children ([#476](https://github.com/airbnb/enzyme/pull/476))
+
+- Support additional characters in attribute selectors ([#412](https://github.com/airbnb/enzyme/pull/412))
+
+- fix id selector not working when combined with a tag selector ([#387](https://github.com/airbnb/enzyme/pull/387))
+
+
+
+
 ## 2.3.0 (May 9, 2016)
 
 ### Minor Changes
