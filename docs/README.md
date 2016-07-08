@@ -9,6 +9,7 @@
   * [Karma](/docs/guides/karma.md)
   * [Mocha](/docs/guides/mocha.md)
   * [React Native](/docs/guides/react-native.md)
+  * [Lab](/docs/guides/lab.md)
 * [Installation](/docs/installation/README.md)
   * [Working with React 0.13.x](/docs/installation/react-013.md)
   * [Working with React 0.14.x](/docs/installation/react-014.md)
