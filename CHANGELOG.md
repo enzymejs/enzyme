@@ -1,5 +1,12 @@
 # Change Log
 
+## 2.4.1 (July 8, 2016)
+
+### Patches
+
+- Fix backwards incompatible `shouldComponentUpdate` call ([#491](https://github.com/airbnb/enzyme/pull/491))
+
+
 ## 2.4.0 (July 7, 2016)
 
 ### Minor Changes
