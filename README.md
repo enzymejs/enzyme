@@ -32,6 +32,8 @@ testing your React components, you can consider using [jasmine-enzyme](https://g
 
 [Using Enzyme with Browserify](/docs/guides/browserify.md)
 
+[Using Enzyme with SystemJS](/docs/guides/systemjs.md)
+
 [Using Enzyme with WebPack](/docs/guides/webpack.md)
 
 [Using Enzyme with JSDOM](/docs/guides/jsdom.md)
