@@ -2455,6 +2455,611 @@ describe('shallow', () => {
 
   });
 
+  describe('lifecycleExperimental', () => {
+    context('mounting phase', () => {
+      it('should call componentWillMount and componentDidMount', () => {
+        const spy = sinon.spy();
+        class Foo extends React.Component {
+          componentWillMount() {
+            spy('componentWillMount');
+          }
+          componentDidMount() {
+            spy('componentDidMount');
+          }
+          render() {
+            spy('render');
+            return <div>foo</div>;
+          }
+        }
+        shallow(<Foo />, { lifecycleExperimental: true });
+        expect(spy.args).to.deep.equal([
+          ['componentWillMount'],
+          ['render'],
+          ['componentDidMount'],
+        ]);
+      });
+
+      it('should be batching updates', () => {
+        const spy = sinon.spy();
+        class Foo extends React.Component {
+          constructor(props) {
+            super(props);
+            this.state = {
+              count: 0,
+            };
+          }
+          componentWillMount() {
+            this.setState({ count: this.state.count + 1 });
+            this.setState({ count: this.state.count + 1 });
+          }
+          componentDidMount() {
+            this.setState({ count: this.state.count + 1 });
+            this.setState({ count: this.state.count + 1 });
+          }
+          render() {
+            spy();
+            return <div>{this.state.count}</div>;
+          }
+        }
+        const result = shallow(<Foo />, { lifecycleExperimental: true });
+        expect(result.state('count')).to.equal(2);
+        expect(spy.callCount).to.equal(2);
+      });
+    });
+
+    context('updating props', () => {
+
+      it('should call shouldComponentUpdate, componentWillUpdate and componentDidUpdate', () => {
+        const spy = sinon.spy();
+
+        class Foo extends React.Component {
+          constructor(...args) {
+            super(...args);
+            this.state = {
+              foo: 'state',
+            };
+          }
+          componentWillReceiveProps(nextProps, nextContext) {
+            spy('componentWillReceiveProps', this.props, nextProps, nextContext);
+          }
+          shouldComponentUpdate(nextProps, nextState, nextContext) {
+            spy('shouldComponentUpdate', this.props, nextProps, this.state, nextState, nextContext);
+            return true;
+          }
+          componentWillUpdate(nextProps, nextState, nextContext) {
+            spy('componentWillUpdate', this.props, nextProps, this.state, nextState, nextContext);
+          }
+          componentDidUpdate(prevProps, prevState, prevContext) {
+            spy('componentDidUpdate', prevProps, this.props, prevState, this.state, prevContext);
+          }
+          render() {
+            spy('render');
+            return <div>foo</div>;
+          }
+        }
+        Foo.contextTypes = {
+          foo: React.PropTypes.string,
+        };
+
+        const wrapper = shallow(
+          <Foo foo="bar" />,
+          {
+            context: { foo: 'context' },
+            lifecycleExperimental: true,
+          }
+        );
+        wrapper.setProps({ foo: 'baz' });
+        expect(spy.args).to.deep.equal(
+          [
+            [
+              'render',
+            ],
+            [
+              'componentWillReceiveProps',
+              { foo: 'bar' }, { foo: 'baz' },
+              { foo: 'context' },
+            ],
+            [
+              'shouldComponentUpdate',
+              { foo: 'bar' }, { foo: 'baz' },
+              { foo: 'state' }, { foo: 'state' },
+              { foo: 'context' },
+            ],
+            [
+              'componentWillUpdate',
+              { foo: 'bar' }, { foo: 'baz' },
+              { foo: 'state' }, { foo: 'state' },
+              { foo: 'context' },
+            ],
+            [
+              'render',
+            ],
+            [
+              'componentDidUpdate',
+              { foo: 'bar' }, { foo: 'baz' },
+              { foo: 'state' }, { foo: 'state' },
+              { foo: 'context' },
+            ],
+          ]
+        );
+      });
+
+      it('should cancel rendering when Component returns false in shouldComponentUpdate', () => {
+        const spy = sinon.spy();
+
+        class Foo extends React.Component {
+          shouldComponentUpdate() {
+            spy('shouldComponentUpdate');
+            return false;
+          }
+          componentWillUpdate() {
+            spy('componentWillUpdate');
+          }
+          componentDidUpdate() {
+            spy('componentDidUpdate');
+          }
+          render() {
+            spy('render');
+            return <div>foo</div>;
+          }
+        }
+
+        const wrapper = shallow(<Foo foo="bar" />, { lifecycleExperimental: true });
+        wrapper.setProps({ foo: 'baz' });
+        expect(spy.args).to.deep.equal([['render'], ['shouldComponentUpdate']]);
+      });
+
+      it('should not provoke another renders to call setState in componentWillReceiveProps', () => {
+        const spy = sinon.spy();
+        class Foo extends React.Component {
+          constructor(props) {
+            super(props);
+            this.state = {
+              count: 0,
+            };
+          }
+          componentWillReceiveProps() {
+            this.setState({ count: this.state.count + 1 });
+            this.setState({ count: this.state.count + 1 });
+          }
+          render() {
+            spy();
+            return <div>{this.props.foo}</div>;
+          }
+        }
+        const result = shallow(<Foo />, { lifecycleExperimental: true });
+        expect(spy).to.have.property('callCount', 1);
+        result.setProps({ name: 'bar' });
+        expect(spy).to.have.property('callCount', 2);
+        expect(result.state('count')).to.equal(1);
+      });
+
+      it('should provoke an another render to call setState twice in componentWillUpdate', () => {
+        const spy = sinon.spy();
+        class Foo extends React.Component {
+          constructor(props) {
+            super(props);
+            this.updated = false;
+            this.state = {
+              count: 0,
+            };
+          }
+          componentWillUpdate() {
+            if (!this.updated) {
+              this.updated = true;
+              this.setState({ count: this.state.count + 1 });
+              this.setState({ count: this.state.count + 1 });
+            }
+          }
+          render() {
+            spy();
+            return <div>{this.props.foo}</div>;
+          }
+        }
+        const result = shallow(<Foo />, { lifecycleExperimental: true });
+        expect(spy).to.have.property('callCount', 1);
+        result.setProps({ name: 'bar' });
+        expect(spy).to.have.property('callCount', 3);
+        expect(result.state('count')).to.equal(1);
+      });
+
+      it('should provoke an another render to call setState twice in componentDidUpdate', () => {
+        const spy = sinon.spy();
+        class Foo extends React.Component {
+          constructor(props) {
+            super(props);
+            this.updated = false;
+            this.state = {
+              count: 0,
+            };
+          }
+          componentDidUpdate() {
+            if (!this.updated) {
+              this.updated = true;
+              /* eslint-disable react/no-did-update-set-state */
+              this.setState({ count: this.state.count + 1 });
+              this.setState({ count: this.state.count + 1 });
+              /* eslint-enable react/no-did-update-set-state */
+            }
+          }
+          render() {
+            spy();
+            return <div>{this.props.foo}</div>;
+          }
+        }
+        const result = shallow(<Foo />, { lifecycleExperimental: true });
+        expect(spy).to.have.property('callCount', 1);
+        result.setProps({ name: 'bar' });
+        expect(spy).to.have.property('callCount', 3);
+        expect(result.state('count')).to.equal(1);
+      });
+
+    });
+
+    context('updating state', () => {
+
+      it('should call shouldComponentUpdate, componentWillUpdate and componentDidUpdate', () => {
+        const spy = sinon.spy();
+
+        class Foo extends React.Component {
+          constructor(...args) {
+            super(...args);
+            this.state = {
+              foo: 'bar',
+            };
+          }
+          shouldComponentUpdate(nextProps, nextState, nextContext) {
+            spy('shouldComponentUpdate', this.props, nextProps, this.state, nextState, nextContext);
+            return true;
+          }
+          componentWillUpdate(nextProps, nextState, nextContext) {
+            spy('componentWillUpdate', this.props, nextProps, this.state, nextState, nextContext);
+          }
+          componentDidUpdate(prevProps, prevState, prevContext) {
+            spy('componentDidUpdate', prevProps, this.props, prevState, this.state, prevContext);
+          }
+          render() {
+            spy('render');
+            return <div>foo</div>;
+          }
+        }
+        Foo.contextTypes = {
+          foo: React.PropTypes.string,
+        };
+
+        const wrapper = shallow(
+          <Foo foo="props" />,
+          {
+            context: { foo: 'context' },
+            lifecycleExperimental: true,
+          }
+        );
+        wrapper.setState({ foo: 'baz' });
+        expect(spy.args).to.deep.equal([
+          [
+            'render',
+          ],
+          [
+            'shouldComponentUpdate',
+            { foo: 'props' }, { foo: 'props' },
+            { foo: 'bar' }, { foo: 'baz' },
+            { foo: 'context' },
+          ],
+          [
+            'componentWillUpdate',
+            { foo: 'props' }, { foo: 'props' },
+            { foo: 'bar' }, { foo: 'baz' },
+            { foo: 'context' },
+          ],
+          [
+            'render',
+          ],
+          [
+            'componentDidUpdate',
+            { foo: 'props' }, { foo: 'props' },
+            { foo: 'bar' }, { foo: 'baz' },
+            { foo: 'context' },
+          ],
+        ]);
+      });
+
+      it('should cancel rendering when Component returns false in shouldComponentUpdate', () => {
+        const spy = sinon.spy();
+        class Foo extends React.Component {
+          constructor(props) {
+            super(props);
+            this.state = {
+              foo: 'bar',
+            };
+          }
+          shouldComponentUpdate() {
+            spy('shouldComponentUpdate');
+            return false;
+          }
+          componentWillUpdate() {
+            spy('componentWillUpdate');
+          }
+          componentDidUpdate() {
+            spy('componentDidUpdate');
+          }
+          render() {
+            spy('render');
+            return <div>foo</div>;
+          }
+        }
+        const wrapper = shallow(<Foo />, { lifecycleExperimental: true });
+        wrapper.setState({ foo: 'baz' });
+        expect(spy.args).to.deep.equal([['render'], ['shouldComponentUpdate']]);
+      });
+
+      it('should provoke an another render to call setState twice in componentWillUpdate', () => {
+        const spy = sinon.spy();
+        class Foo extends React.Component {
+          constructor(props) {
+            super(props);
+            this.updated = false;
+            this.state = {
+              name: 'foo',
+              count: 0,
+            };
+          }
+          componentWillUpdate() {
+            if (!this.updated) {
+              this.updated = true;
+              this.setState({ count: this.state.count + 1 });
+              this.setState({ count: this.state.count + 1 });
+            }
+          }
+          render() {
+            spy();
+            return <div>{this.state.name}</div>;
+          }
+        }
+        const result = shallow(<Foo />, { lifecycleExperimental: true });
+        expect(spy).to.have.property('callCount', 1);
+        result.setState({ name: 'bar' });
+        expect(spy).to.have.property('callCount', 3);
+        expect(result.state('count')).to.equal(1);
+      });
+
+      it('should provoke an another render to call setState twice in componentDidUpdate', () => {
+        const spy = sinon.spy();
+        class Foo extends React.Component {
+          constructor(props) {
+            super(props);
+            this.updated = false;
+            this.state = {
+              name: 'foo',
+              count: 0,
+            };
+          }
+          componentDidUpdate() {
+            if (!this.updated) {
+              this.updated = true;
+              /* eslint-disable react/no-did-update-set-state */
+              this.setState({ count: this.state.count + 1 });
+              this.setState({ count: this.state.count + 1 });
+              /* eslint-enable react/no-did-update-set-state */
+            }
+          }
+          render() {
+            spy();
+            return <div>{this.state.name}</div>;
+          }
+        }
+        const result = shallow(<Foo />, { lifecycleExperimental: true });
+        expect(spy).to.have.property('callCount', 1);
+        result.setState({ name: 'bar' });
+        expect(spy).to.have.property('callCount', 3);
+        expect(result.state('count')).to.equal(1);
+      });
+
+    });
+
+    context('updating context', () => {
+
+      it('should call shouldComponentUpdate, componentWillUpdate and componentDidUpdate', () => {
+        const spy = sinon.spy();
+        class Foo extends React.Component {
+          constructor(...args) {
+            super(...args);
+            this.state = {
+              foo: 'state',
+            };
+          }
+          shouldComponentUpdate(nextProps, nextState, nextContext) {
+            spy('shouldComponentUpdate', this.props, nextProps, this.state, nextState, nextContext);
+            return true;
+          }
+          componentWillUpdate(nextProps, nextState, nextContext) {
+            spy('componentWillUpdate', this.props, nextProps, this.state, nextState, nextContext);
+          }
+          componentDidUpdate(prevProps, prevState, prevContext) {
+            spy('componentDidUpdate', prevProps, this.props, prevState, this.state, prevContext);
+          }
+          render() {
+            spy('render');
+            return <div>foo</div>;
+          }
+        }
+        Foo.contextTypes = {
+          foo: React.PropTypes.string,
+        };
+        const wrapper = shallow(
+          <Foo foo="props" />,
+          {
+            context: { foo: 'bar' },
+            lifecycleExperimental: true,
+          }
+        );
+        wrapper.setContext({ foo: 'baz' });
+        expect(spy.args).to.deep.equal([
+          [
+            'render',
+          ],
+          [
+            'shouldComponentUpdate',
+            { foo: 'props' }, { foo: 'props' },
+            { foo: 'state' }, { foo: 'state' },
+            { foo: 'baz' },
+          ],
+          [
+            'componentWillUpdate',
+            { foo: 'props' }, { foo: 'props' },
+            { foo: 'state' }, { foo: 'state' },
+            { foo: 'baz' },
+          ],
+          [
+            'render',
+          ],
+          [
+            'componentDidUpdate',
+            { foo: 'props' }, { foo: 'props' },
+            { foo: 'state' }, { foo: 'state' },
+            { foo: 'bar' },
+          ],
+        ]);
+      });
+
+      it('should cancel rendering when Component returns false in shouldComponentUpdate', () => {
+        const spy = sinon.spy();
+        class Foo extends React.Component {
+          shouldComponentUpdate() {
+            spy('shouldComponentUpdate');
+            return false;
+          }
+          componentWillUpdate() {
+            spy('componentWillUpdate');
+          }
+          componentDidUpdate() {
+            spy('componentDidUpdate');
+          }
+          render() {
+            spy('render');
+            return <div>foo</div>;
+          }
+        }
+        Foo.contextTypes = {
+          foo: React.PropTypes.string,
+        };
+        const wrapper = shallow(
+          <Foo />,
+          {
+            context: { foo: 'bar' },
+            lifecycleExperimental: true,
+          }
+        );
+        wrapper.setContext({ foo: 'baz' });
+        expect(spy.args).to.deep.equal([['render'], ['shouldComponentUpdate']]);
+      });
+
+      it('should provoke an another render to call setState twice in componentWillUpdate', () => {
+        const spy = sinon.spy();
+        class Foo extends React.Component {
+          constructor(props) {
+            super(props);
+            this.updated = false;
+            this.state = {
+              count: 0,
+            };
+          }
+          componentWillUpdate() {
+            if (!this.updated) {
+              this.updated = true;
+              this.setState({ count: this.state.count + 1 });
+              this.setState({ count: this.state.count + 1 });
+            }
+          }
+          render() {
+            spy();
+            return <div>{this.state.name}</div>;
+          }
+        }
+        const result = shallow(
+          <Foo />,
+          {
+            context: { foo: 'bar' },
+            lifecycleExperimental: true,
+          }
+        );
+        expect(spy).to.have.property('callCount', 1);
+        result.setContext({ foo: 'baz' });
+        expect(spy).to.have.property('callCount', 3);
+        expect(result.state('count')).to.equal(1);
+      });
+
+      it('should provoke an another render to call setState twice in componentDidUpdate', () => {
+        const spy = sinon.spy();
+        class Foo extends React.Component {
+          constructor(props) {
+            super(props);
+            this.updated = false;
+            this.state = {
+              count: 0,
+            };
+          }
+          componentDidUpdate() {
+            if (!this.updated) {
+              this.updated = true;
+              /* eslint-disable react/no-did-update-set-state */
+              this.setState({ count: this.state.count + 1 });
+              this.setState({ count: this.state.count + 1 });
+              /* eslint-enable react/no-did-update-set-state */
+            }
+          }
+          render() {
+            spy();
+            return <div>{this.state.name}</div>;
+          }
+        }
+        const result = shallow(
+          <Foo />,
+          {
+            context: { foo: 'bar' },
+            lifecycleExperimental: true,
+          }
+        );
+        expect(spy).to.have.property('callCount', 1);
+        result.setContext({ foo: 'baz' });
+        expect(spy).to.have.property('callCount', 3);
+        expect(result.state('count')).to.equal(1);
+      });
+
+    });
+
+    context('unmounting phase', () => {
+
+      it('should calll componentWillUnmount', () => {
+        const spy = sinon.spy();
+        class Foo extends React.Component {
+          componentWillUnmount() {
+            spy();
+          }
+          render() {
+            return <div>foo</div>;
+          }
+        }
+        const wrapper = shallow(<Foo />, { lifecycleExperimental: true });
+        wrapper.unmount();
+        expect(spy).to.have.property('callCount', 1);
+      });
+    });
+
+    it('should not call when lifecycleExperimental flag is false', () => {
+      const spy = sinon.spy();
+      class Foo extends React.Component {
+        componentDidMount() {
+          spy();
+        }
+        render() {
+          return <div>foo</div>;
+        }
+      }
+      shallow(<Foo />, { lifecycleExperimental: false });
+      expect(spy).to.have.property('callCount', 0);
+    });
+  });
+
   it('works with class components that return null', () => {
     class Foo extends React.Component {
       render() {
