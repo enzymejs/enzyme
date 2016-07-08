@@ -3058,6 +3058,39 @@ describe('shallow', () => {
       shallow(<Foo />, { lifecycleExperimental: false });
       expect(spy).to.have.property('callCount', 0);
     });
+
+    it('should call shouldComponentUpdate when lifecycleExperimental flag is false', () => {
+      const spy = sinon.spy();
+      class Foo extends React.Component {
+        constructor(props) {
+          super(props);
+          this.state = {
+            foo: 'bar',
+          };
+        }
+        shouldComponentUpdate() {
+          spy();
+          return false;
+        }
+        render() {
+          return <div>foo</div>;
+        }
+      }
+      const wrapper = shallow(
+        <Foo foo="foo" />,
+        {
+          context: { foo: 'foo' },
+          lifecycleExperimental: false,
+        }
+      );
+      expect(spy).to.have.property('callCount', 0);
+      wrapper.setProps({ foo: 'bar' });
+      expect(spy).to.have.property('callCount', 1);
+      wrapper.setState({ foo: 'bar' });
+      expect(spy).to.have.property('callCount', 2);
+      wrapper.setContext({ foo: 'bar' });
+      expect(spy).to.have.property('callCount', 3);
+    });
   });
 
   it('works with class components that return null', () => {

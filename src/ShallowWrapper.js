@@ -172,20 +172,27 @@ export default class ShallowWrapper {
             originalComponentWillReceiveProps = instance.componentWillReceiveProps;
             instance.componentWillReceiveProps = () => {};
           }
+          // dirty hack: avoid calling shouldComponentUpdate twice
+          let originalShouldComponentUpdate;
           if (
             this.options.lifecycleExperimental &&
             instance &&
             typeof instance.shouldComponentUpdate === 'function'
           ) {
             shouldRender = instance.shouldComponentUpdate(nextProps, state, nextContext);
+            originalShouldComponentUpdate = instance.shouldComponentUpdate;
           }
           if (shouldRender) {
             if (props) this.unrendered = React.cloneElement(this.unrendered, props);
-            // dirty hack: avoid calling shouldComponentUpdate twice
-            const originalShouldComponentUpdate = instance.shouldComponentUpdate;
-            instance.shouldComponentUpdate = () => true;
+            if (originalShouldComponentUpdate) {
+              instance.shouldComponentUpdate = () => true;
+            }
+
             this.renderer.render(this.unrendered, nextContext);
-            instance.shouldComponentUpdate = originalShouldComponentUpdate;
+
+            if (originalShouldComponentUpdate) {
+              instance.shouldComponentUpdate = originalShouldComponentUpdate;
+            }
             if (
               this.options.lifecycleExperimental &&
               instance &&
