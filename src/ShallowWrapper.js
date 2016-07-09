@@ -84,8 +84,16 @@ class ShallowWrapper {
           }
         });
       });
-      this.node = this.renderer.getRenderOutput();
-      this.nodes = [this.node];
+      Object.defineProperty(this, 'node', {
+        get() {
+          return this.renderer.getRenderOutput();
+        },
+      });
+      Object.defineProperty(this, 'nodes', {
+        get() {
+          return [this.renderer.getRenderOutput()];
+        },
+      });
       this.length = 1;
     } else {
       this.root = root;
@@ -125,21 +133,10 @@ class ShallowWrapper {
   }
 
   /**
-   * Forces a re-render. Useful to run before checking the render output if something external
-   * may be updating the state of the component somewhere.
-   *
-   * NOTE: can only be called on a wrapper instance that is also the root instance.
-   *
+   * @deprecated
    * @returns {ShallowWrapper}
    */
   update() {
-    if (this.root !== this) {
-      throw new Error('ShallowWrapper::update() can only be called on the root');
-    }
-    this.single('update', () => {
-      this.node = this.renderer.getRenderOutput();
-      this.nodes = [this.node];
-    });
     return this;
   }
 

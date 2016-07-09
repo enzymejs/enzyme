@@ -4,7 +4,7 @@ import sinon from 'sinon';
 
 import { shallow, render, ShallowWrapper } from '../src/';
 import { describeIf, itIf, itWithData, generateEmptyRenderData } from './_helpers';
-import { ITERATOR_SYMBOL } from '../src/Utils';
+import { ITERATOR_SYMBOL, withSetStateAllowed } from '../src/Utils';
 import { REACT013, REACT15 } from '../src/version';
 
 describe('shallow', () => {
@@ -3715,6 +3715,53 @@ describe('shallow', () => {
       expect(b1).to.equal(b);
       expect(c1).to.equal(c);
       expect(d1).to.equal(d);
+    });
+  });
+
+  describe('out-of-band state updates', () => {
+    class Child extends React.Component {
+      render() {
+        return <span />;
+      }
+    }
+
+    class Test extends React.Component {
+      safeSetState(newState) {
+        withSetStateAllowed(() => {
+          this.setState(newState);
+        });
+      }
+
+      asyncUpdate() {
+        setImmediate(() => {
+          this.safeSetState({ showSpan: true });
+        });
+      }
+
+      render() {
+        return (
+          <div>
+            {this.state && this.state.showSpan && <span className="show-me" />}
+            <button className="async-btn" onClick={() => this.asyncUpdate()} />
+            <Child callback={() => this.safeSetState({ showSpan: true })} />
+          </div>
+        );
+      }
+    }
+
+    it('should have updated output after an asynchronous setState', done => {
+      const wrapper = shallow(<Test />);
+      wrapper.find('.async-btn').simulate('click');
+      setImmediate(() => {
+        expect(wrapper.find('.show-me').length).to.equal(1);
+        done();
+      });
+    });
+
+    it('should have updated output after child prop callback invokes setState', () => {
+      const wrapper = shallow(<Test />);
+      wrapper.find(Child).props().callback();
+      expect(wrapper.find('.show-me').length).to.equal(1);
     });
   });
 
