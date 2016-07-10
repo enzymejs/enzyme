@@ -108,6 +108,24 @@ class ReactWrapper {
   }
 
   /**
+   * Returns the wrapper's underlying node.
+   *
+   * @return {ReactElement}
+   */
+  getNode() {
+    return this.node;
+  }
+
+  /**
+   * Returns the wrapper's underlying nodes.
+   *
+   * @return {Array<ReactElement>}
+   */
+  getNodes() {
+    return this.nodes;
+  }
+
+  /**
    * If the root component contained a ref, you can access it here
    * and get a wrapper around it.
    *
