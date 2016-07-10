@@ -145,10 +145,23 @@ class ShallowWrapper {
   }
 
   /**
-   * @deprecated
+   * Forces a re-render. Useful to run before checking the render output if something external
+   * may be updating the state of the component somewhere.
+   *
+   * NOTE: can only be called on a wrapper instance that is also the root instance.
+   *
    * @returns {ShallowWrapper}
    */
   update() {
+    if (this.root !== this) {
+      throw new Error('ShallowWrapper::update() can only be called on the root');
+    }
+    this.single(() => {
+      const instance = this.instance();
+      if (instance) {
+        instance.forceUpdate();
+      }
+    });
     return this;
   }
 

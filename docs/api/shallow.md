@@ -169,6 +169,9 @@ Manually sets context of the root component.
 #### [`.instance() => ReactComponent`](ShallowWrapper/instance.md)
 Returns the instance of the root component.
 
+#### [`.update() => ShallowWrapper`](ShallowWrapper/update.md)
+Calls `.forceUpdate()` on the root component instance.
+
 #### [`.debug() => String`](ShallowWrapper/debug.md)
 Returns a string representation of the current shallow render tree for debugging purposes.
 
