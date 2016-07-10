@@ -44,6 +44,8 @@ testing your React components, you can consider using [jasmine-enzyme](https://g
 
 [Using Enzyme with Lab](/docs/guides/lab.md)
 
+[Using Enzyme with Tape and AVA](/docs/guides/tape-ava.md)
+
 ### [Installation](/docs/installation/README.md)
 
 To get started with enzyme, you can simply install it with npm:
