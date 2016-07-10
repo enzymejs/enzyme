@@ -155,7 +155,9 @@ class ShallowWrapper {
     this.single(() => {
       const instance = this.instance();
       if (instance) {
-        instance.forceUpdate();
+        withSetStateAllowed(() => {
+          instance.forceUpdate();
+        });
       }
     });
     return this;
