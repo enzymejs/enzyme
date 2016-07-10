@@ -2308,7 +2308,7 @@ describeWithDOM('mount', () => {
         </div>
       );
 
-      const nodes = wrapper.find('.foo').flatMap(w => w.children().nodes);
+      const nodes = wrapper.find('.foo').flatMap(w => w.children().getNodes());
 
       expect(nodes.length).to.equal(6);
       expect(nodes.at(0).hasClass('bar')).to.equal(true);
@@ -2385,10 +2385,10 @@ describeWithDOM('mount', () => {
           <div className="bar baz" />
         </div>
       );
-      expect(wrapper.find('.bar').get(0)).to.equal(wrapper.find('.foo').node);
-      expect(wrapper.find('.bar').get(1)).to.equal(wrapper.find('.bax').node);
-      expect(wrapper.find('.bar').get(2)).to.equal(wrapper.find('.bux').node);
-      expect(wrapper.find('.bar').get(3)).to.equal(wrapper.find('.baz').node);
+      expect(wrapper.find('.bar').get(0)).to.equal(wrapper.find('.foo').getNode());
+      expect(wrapper.find('.bar').get(1)).to.equal(wrapper.find('.bax').getNode());
+      expect(wrapper.find('.bar').get(2)).to.equal(wrapper.find('.bux').getNode());
+      expect(wrapper.find('.bar').get(3)).to.equal(wrapper.find('.baz').getNode());
     });
   });
 

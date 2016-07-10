@@ -103,9 +103,7 @@ class ShallowWrapper {
   }
 
   /**
-   * If the current wrapper is wrapping the root component, returns the
-   * root component's latest render output. Otherwise, returns the node
-   * the wrapper was created with.
+   * Returns the wrapped ReactElement.
    *
    * @return {ReactElement}
    */
@@ -114,9 +112,7 @@ class ShallowWrapper {
   }
 
   /**
-   * If the current wrapper is wrapping the root component, returns the
-   * root component's latest render output wrapped in an array. Otherwise,
-   * returns the nodes the wrapper was created with.
+   * Returns the wrapped ReactElements.
    *
    * @return {Array<ReactElement>}
    */

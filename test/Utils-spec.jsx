@@ -23,7 +23,7 @@ describe('Utils', () => {
   describeWithDOM('getNode', () => {
 
     it('should return a DOMNode when a DOMComponent is given', () => {
-      const div = mount(<div />).node;
+      const div = mount(<div />).getNode();
       expect(getNode(div)).to.be.instanceOf(window.HTMLElement);
     });
 
@@ -31,14 +31,14 @@ describe('Utils', () => {
       class Foo extends React.Component {
         render() { return <div />; }
       }
-      const foo = mount(<Foo />).node;
+      const foo = mount(<Foo />).getNode();
       expect(getNode(foo)).to.equal(foo);
     });
 
     describeIf(!REACT013, 'stateless function components', () => {
       it('should return the component when a component is given', () => {
         const Foo = () => <div />;
-        const foo = mount(<Foo />).node;
+        const foo = mount(<Foo />).getNode();
         expect(getNode(foo)).to.equal(foo);
       });
     });

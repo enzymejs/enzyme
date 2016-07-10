@@ -45,7 +45,7 @@ import { REACT15 } from './version';
  * @returns {ReactWrapper}
  */
 function findWhereUnwrapped(wrapper, predicate, filter = treeFilter) {
-  return wrapper.flatMap(n => filter(n.node, predicate));
+  return wrapper.flatMap(n => filter(n.getNode(), predicate));
 }
 
 /**
@@ -57,7 +57,7 @@ function findWhereUnwrapped(wrapper, predicate, filter = treeFilter) {
  * @returns {ReactWrapper}
  */
 function filterWhereUnwrapped(wrapper, predicate) {
-  return wrapper.wrap(compact(wrapper.nodes.filter(predicate)));
+  return wrapper.wrap(compact(wrapper.getNodes().filter(predicate)));
 }
 
 /**
@@ -82,22 +82,21 @@ class ReactWrapper {
         />,
       options);
       this.root = this;
-      this.node = this.component.getWrappedComponent();
-      this.nodes = [this.node];
+      this.wrappedComponent = this.component.getWrappedComponent();
       this.length = 1;
     } else {
       this.component = null;
       this.root = root;
       if (!nodes) {
-        this.nodes = [];
+        this.initialNodes = [];
       } else if (!Array.isArray(nodes)) {
-        this.node = nodes;
-        this.nodes = [nodes];
+        this.initialNode = nodes;
+        this.initialNodes = [nodes];
       } else {
-        this.node = nodes[0];
-        this.nodes = nodes;
+        this.initialNode = nodes[0];
+        this.initialNodes = nodes;
       }
-      this.length = this.nodes.length;
+      this.length = this.initialNodes.length;
     }
     this.options = options;
     this.complexSelector = new ComplexSelector(
@@ -108,21 +107,21 @@ class ReactWrapper {
   }
 
   /**
-   * Returns the wrapper's underlying node.
+   * Returns the wrapped component.
    *
-   * @return {ReactElement}
+   * @return {ReactComponent}
    */
   getNode() {
-    return this.node;
+    return this.initialNode || this.wrappedComponent;
   }
 
   /**
-   * Returns the wrapper's underlying nodes.
+   * Returns the the wrapped components.
    *
-   * @return {Array<ReactElement>}
+   * @return {Array<ReactComponent>}
    */
   getNodes() {
-    return this.nodes;
+    return this.initialNodes || [this.wrappedComponent];
   }
 
   /**
@@ -295,7 +294,7 @@ class ReactWrapper {
    * @returns {Boolean}
    */
   matchesElement(node) {
-    return this.single('matchesElement', () => instEqual(node, this.node, (a, b) => a <= b));
+    return this.single('matchesElement', () => instEqual(node, this.getNode(), (a, b) => a <= b));
   }
 
   /**
@@ -579,7 +578,7 @@ class ReactWrapper {
    * @returns {ReactWrapper}
    */
   children(selector) {
-    const allChildren = this.flatMap(n => childrenOfInst(n.node));
+    const allChildren = this.flatMap(n => childrenOfInst(n.getNode()));
     return selector ? allChildren.filter(selector) : allChildren;
   }
 
@@ -603,7 +602,7 @@ class ReactWrapper {
    * @returns {ReactWrapper}
    */
   parents(selector) {
-    const allParents = this.wrap(this.single('parents', n => parentsOfInst(n, this.root.node)));
+    const allParents = this.wrap(this.single('parents', n => parentsOfInst(n, this.root.getNode())));
     return selector ? allParents.filter(selector) : allParents;
   }
 
@@ -692,7 +691,7 @@ class ReactWrapper {
    * @returns {ReactWrapper}
    */
   forEach(fn) {
-    this.nodes.forEach((n, i) => fn.call(this, this.wrap(n), i));
+    this.getNodes().forEach((n, i) => fn.call(this, this.wrap(n), i));
     return this;
   }
 
@@ -704,7 +703,7 @@ class ReactWrapper {
    * @returns {Array}
    */
   map(fn) {
-    return this.nodes.map((n, i) => fn.call(this, this.wrap(n), i));
+    return this.getNodes().map((n, i) => fn.call(this, this.wrap(n), i));
   }
 
   /**
@@ -716,7 +715,7 @@ class ReactWrapper {
    * @returns {*}
    */
   reduce(fn, initialValue) {
-    return this.nodes.reduce(
+    return this.getNodes().reduce(
       (accum, n, i) => fn.call(this, accum, this.wrap(n), i),
       initialValue
     );
@@ -731,7 +730,7 @@ class ReactWrapper {
    * @returns {*}
    */
   reduceRight(fn, initialValue) {
-    return this.nodes.reduceRight(
+    return this.getNodes().reduceRight(
       (accum, n, i) => fn.call(this, accum, this.wrap(n), i),
       initialValue
     );
@@ -748,7 +747,7 @@ class ReactWrapper {
       throw new Error('ReactWrapper::some() can not be called on the root');
     }
     const predicate = buildInstPredicate(selector);
-    return this.nodes.some(predicate);
+    return this.getNodes().some(predicate);
   }
 
   /**
@@ -758,7 +757,7 @@ class ReactWrapper {
    * @returns {Boolean}
    */
   someWhere(predicate) {
-    return this.nodes.some((n, i) => predicate.call(this, this.wrap(n), i));
+    return this.getNodes().some((n, i) => predicate.call(this, this.wrap(n), i));
   }
 
   /**
@@ -769,7 +768,7 @@ class ReactWrapper {
    */
   every(selector) {
     const predicate = buildInstPredicate(selector);
-    return this.nodes.every(predicate);
+    return this.getNodes().every(predicate);
   }
 
   /**
@@ -779,7 +778,7 @@ class ReactWrapper {
    * @returns {Boolean}
    */
   everyWhere(predicate) {
-    return this.nodes.every((n, i) => predicate.call(this, this.wrap(n), i));
+    return this.getNodes().every((n, i) => predicate.call(this, this.wrap(n), i));
   }
 
   /**
@@ -791,7 +790,7 @@ class ReactWrapper {
    * @returns {ReactWrapper}
    */
   flatMap(fn) {
-    const nodes = this.nodes.map((n, i) => fn.call(this, this.wrap(n), i));
+    const nodes = this.getNodes().map((n, i) => fn.call(this, this.wrap(n), i));
     const flattened = flatten(nodes, true);
     const uniques = unique(flattened);
     const compacted = compact(uniques);
@@ -816,7 +815,7 @@ class ReactWrapper {
    * @returns {ReactElement}
    */
   get(index) {
-    return this.nodes[index];
+    return this.getNodes()[index];
   }
 
   /**
@@ -826,7 +825,7 @@ class ReactWrapper {
    * @returns {ReactWrapper}
    */
   at(index) {
-    return this.wrap(this.nodes[index]);
+    return this.wrap(this.getNodes()[index]);
   }
 
   /**
@@ -872,7 +871,7 @@ class ReactWrapper {
         `Method “${fnName}” is only meant to be run on a single node. ${this.length} found instead.`
       );
     }
-    return callback.call(this, this.node);
+    return callback.call(this, this.getNode());
   }
 
   /**
@@ -895,7 +894,7 @@ class ReactWrapper {
    * @returns {String}
    */
   debug() {
-    return debugInsts(this.nodes);
+    return debugInsts(this.getNodes());
   }
 
   /**
