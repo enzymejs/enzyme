@@ -2747,6 +2747,26 @@ describeWithDOM('mount', () => {
         <div onClick={spy2}>Au revoir le monde</div>
       )).to.equal(false);
     });
+    it('should match custom component that looks like the rendered one', () => {
+      class TestComponent extends React.Component {
+        render() {
+          return (<div>Hello World</div>);
+        }
+      }
+
+      TestComponent.defaultProps = {
+        foo: 'bar',
+      };
+
+      const wrapper = mount(
+        <div>
+          <TestComponent foo="buzz" />
+        </div>
+      );
+      expect(wrapper.containsMatchingElement(
+        <TestComponent />
+      )).to.equal(true);
+    });
   });
   describe('.containsAllMatchingElements(nodes)', () => {
     it('should match on an array of nodes that all looks like one of rendered nodes', () => {
