@@ -21,7 +21,7 @@ render tree.
 
 
 ```jsx
-onst MyComponent = React.createClass({
+const MyComponent = React.createClass({
   handleClick() {
     ...
   },
