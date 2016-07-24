@@ -7,6 +7,7 @@ import { describeWithDOM, describeIf } from './_helpers';
 import { mount } from '../src';
 import {
   coercePropValue,
+  childrenToSimplifiedArray,
   getNode,
   nodeEqual,
   nodeMatches,
@@ -143,6 +144,13 @@ describe('Utils', () => {
           <div />,
           <div>child</div>,
         )).to.equal(false);
+      });
+
+      it('should match children before and after interpolation', () => {
+        expect(nodeEqual(
+          <div>{2}{' children'}{<span />} abc {'hey'}</div>,
+          <div>2 children<span /> abc hey</div>,
+        )).to.equal(true);
       });
 
       it('should skip null children', () => {
@@ -606,4 +614,24 @@ describe('Utils', () => {
     });
   });
 
+  describe('childrenToSimplifiedArray', () => {
+    function expectEqualArrays(a, b) {
+      expect(a.length).to.be.equal(b.length);
+
+      const nodesAreEqual = a.every((n, i) => nodeEqual(a[i], b[i]));
+      expect(nodesAreEqual).to.equal(true);
+    }
+
+    it('should join string and numerical children as a string', () => {
+      const children = [3, 'textual', 'children'];
+      const simplified = ['3textualchildren'];
+      expectEqualArrays(childrenToSimplifiedArray(children), simplified);
+    });
+
+    it('should handle non-textual nodes', () => {
+      const children = ['with', 1, <div />, 'other node'];
+      const simplified = ['with1', <div />, 'other node'];
+      expectEqualArrays(childrenToSimplifiedArray(children), simplified);
+    });
+  });
 });
