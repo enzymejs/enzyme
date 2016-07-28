@@ -27,6 +27,9 @@ export function childrenOfNode(node) {
 
 export function hasClassName(node, className) {
   let classes = propsOfNode(node).className || '';
+  if (typeof classes !== 'string') {
+    classes = classes.toString();
+	}
   classes = classes.replace(/\s/g, ' ');
   return ` ${classes} `.indexOf(` ${className} `) > -1;
 }
