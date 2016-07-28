@@ -59,6 +59,12 @@ describe('ShallowTraversal', () => {
       expect(hasClassName(node, 'foo-bar')).to.equal(true);
     });
 
+    it('should work if className has a function in toString property', () => {
+      function classes() {}
+      classes.toString = () => 'foo-bar';
+      const node = (<div className={classes} />);
+      expect(hasClassName(node, 'foo-bar')).to.equal(true);
+    });
   });
 
   describe('nodeHasProperty', () => {
