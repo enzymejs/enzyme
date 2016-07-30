@@ -1,0 +1,68 @@
+language: node_js
+node_js:
+  - "6"
+  - "5"
+  - "4"
+  - "0.12"
+  - "0.10"
+before_install:
+  - 'if [ "${TRAVIS_NODE_VERSION}" != "0.9" ]; then case "$(npm --version)" in 1.*) npm install -g npm@1.4.28 ;; 2.*) npm install -g npm@2 ;; esac ; fi'
+  - 'if [ "${TRAVIS_NODE_VERSION}" != "0.6" ] && [ "${TRAVIS_NODE_VERSION}" != "0.9" ]; then npm install -g npm; fi'
+before_script: "sh install-relevant-react.sh"
+script:
+  - 'if [ -z "$REACT" ] && [ "${TRAVIS_NODE_VERSION}" = "4" ]; then npm run test:env -- "${EXAMPLE}" ; elif [ -z "$REACT" ]; then echo "Test Skipped" ; elif [ "${TRAVIS_NODE_VERSION}" = "4" ]; then npm run lint && npm run travis ; elif [ "${TRAVIS_NODE_VERSION}" = "0.12" ]; then npm run travis ; else npm test ; fi'
+after_script:
+  - 'if [ "${TRAVIS_NODE_VERSION}" = "4" ] || [ "${TRAVIS_NODE_VERSION}" = "0.12" ]; then cat ./coverage/lcov.info | ./node_modules/.bin/coveralls ; fi'
+env:
+  - REACT=0.13
+  - REACT=0.14
+  - REACT=15
+  - EXAMPLE=mocha
+  - EXAMPLE=karma
+  - EXAMPLE=react-native
+  - EXAMPLE=karma-webpack
+  - EXAMPLE=jest
+sudo: false
+matrix:
+  fast_finish: true
+  exclude:
+  - node_js: "5"
+    env: EXAMPLE=mocha
+  - node_js: "5"
+    env: EXAMPLE=karma
+  - node_js: "5"
+    env: EXAMPLE=react-native
+  - node_js: "5"
+    env: EXAMPLE=karma-webpack
+  - node_js: "5"
+    env: EXAMPLE=jest
+  - node_js: "4"
+    env: EXAMPLE=mocha
+  - node_js: "4"
+    env: EXAMPLE=karma
+  - node_js: "4"
+    env: EXAMPLE=react-native
+  - node_js: "4"
+    env: EXAMPLE=karma-webpack
+  - node_js: "4"
+    env: EXAMPLE=jest
+  - node_js: "0.12"
+    env: EXAMPLE=mocha
+  - node_js: "0.12"
+    env: EXAMPLE=karma
+  - node_js: "0.12"
+    env: EXAMPLE=react-native
+  - node_js: "0.12"
+    env: EXAMPLE=karma-webpack
+  - node_js: "0.12"
+    env: EXAMPLE=jest
+  - node_js: "0.10"
+    env: EXAMPLE=mocha
+  - node_js: "0.10"
+    env: EXAMPLE=karma
+  - node_js: "0.10"
+    env: EXAMPLE=react-native
+  - node_js: "0.10"
+    env: EXAMPLE=karma-webpack
+  - node_js: "0.10"
+    env: EXAMPLE=jest
