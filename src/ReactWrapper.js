@@ -727,6 +727,9 @@ export default class ReactWrapper {
    * @returns {Boolean}
    */
   some(selector) {
+    if (this.root === this) {
+      throw new Error('ReactWrapper::some() can not be called on the root');
+    }
     const predicate = buildInstPredicate(selector);
     return this.nodes.some(predicate);
   }
