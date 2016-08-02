@@ -7,3 +7,4 @@
 - [*Using Enzyme with Jest*](guides/jest.md)
 - [*Using Enzyme with Karma*](guides/karma.md)
 - [*Using Enzyme with Mocha*](guides/mocha.md)
+- [*Using Enzyme with Tape and AVA*](guides/tape-ava.md)
