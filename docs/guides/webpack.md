@@ -46,7 +46,7 @@ react-dom/server
 react-addons-test-utils
 ```
 
-## React 15 Compatability
+## React 15 Compatibility
 
 If you are using React 15, your config should include these externals:
 
