@@ -2115,6 +2115,16 @@ describeWithDOM('mount', () => {
       expect(wrapper.find('.foo').some('.foo')).to.equal(true);
       expect(wrapper.find('.foo').some('.bar')).to.equal(false);
     });
+    it('should throw if called on root', () => {
+      const wrapper = mount(
+        <div>
+          <div className="foo" />
+        </div>
+      );
+      expect(() => wrapper.some('.foo')).to.throw(
+        'ReactWrapper::some() can not be called on the root'
+      );
+    });
   });
 
   describe('.someWhere(predicate)', () => {

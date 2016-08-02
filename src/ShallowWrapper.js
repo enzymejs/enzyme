@@ -806,6 +806,9 @@ export default class ShallowWrapper {
    * @returns {Boolean}
    */
   some(selector) {
+    if (this.root === this) {
+      throw new Error('ShallowWrapper::some() can not be called on the root');
+    }
     const predicate = buildPredicate(selector);
     return this.nodes.some(predicate);
   }
