@@ -17,7 +17,7 @@ class Book extends React.Component {
     const { title, cover } = this.props;
     return (
       <div>
-        <h1 className="title"">{title}</h1>
+        <h1 className="title">{title}</h1>
         {cover && <BookCover cover={cover} />}
       </div>
     );
