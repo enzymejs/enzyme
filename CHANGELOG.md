@@ -28,6 +28,7 @@
 
 - fix id selector not working when combined with a tag selector ([#387](https://github.com/airbnb/enzyme/pull/387))
 
+- Support spaces in attribute selector values ([#427](https://github.com/airbnb/enzyme/pull/427))
 
 
 
