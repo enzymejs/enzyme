@@ -223,6 +223,13 @@ export function buildInstPredicate(selector) {
 
           return node => instHasProperty(node, propKey, propValue);
         }
+        case SELECTOR.NEGATE_PROP_TYPE: {
+          const prop = selector.match(/not\((.*)\)/)[1];
+          const propKey = prop.split(/\[([a-zA-Z\-]*?)(=|\])/)[1];
+          const propValue = prop.split(/=(.*?)\]/)[1];
+
+          return node => !instHasProperty(node, propKey, propValue);
+        }
         default:
           // selector is a string. match to DOM tag or constructor displayName
           return inst => instHasType(inst, selector);

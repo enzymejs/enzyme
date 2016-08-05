@@ -162,7 +162,13 @@ export function withSetStateAllowed(fn) {
 }
 
 export function splitSelector(selector) {
-  return selector.split(/(?=\.|\[.*\])|(?=#|\[#.*\])/);
+  const splitter = /(?=\.|\[.*\])|(?=#|\[#.*\])/;
+  const negate = /(.*):not\((\[.*\])\)/.exec(selector);
+  if (negate) {
+    const negates = negate[2].split(splitter).map((no) => `not(${no})`);
+    return [negate[1]].concat(negates);
+  }
+  return selector.split(splitter);
 }
 
 export function isSimpleSelector(selector) {
@@ -176,14 +182,16 @@ export function selectorError(selector) {
   );
 }
 
-export const isCompoundSelector = /([a-z]\.[a-z]|[a-z]\[.*\]|[a-z]#[a-z])/i;
+export const isCompoundSelector = /([a-z]\.[a-z]|[a-z]\[.*\]|[a-z]:not\(\[.*\]\)|[a-z]#[a-z])/;
 
 const isPropSelector = /^\[.*\]$/;
+const isNegatePropSelector = /^not\(\[.*\]\)$/;
 
 export const SELECTOR = {
   CLASS_TYPE: 0,
   ID_TYPE: 1,
   PROP_TYPE: 2,
+  NEGATE_PROP_TYPE: 3,
 };
 
 export function selectorType(selector) {
@@ -193,6 +201,8 @@ export function selectorType(selector) {
     return SELECTOR.ID_TYPE;
   } else if (isPropSelector.test(selector)) {
     return SELECTOR.PROP_TYPE;
+  } else if (isNegatePropSelector.test(selector)) {
+    return SELECTOR.NEGATE_PROP_TYPE;
   }
   return undefined;
 }
