@@ -564,6 +564,72 @@ describeWithDOM('mount', () => {
       expect(() => wrapper.find(null)).to.throw(Error);
     });
 
+    it('should query props from composites when using an object query', () => {
+      class MockLink extends React.Component {
+        render() {
+          const to = this.props.to;
+          const children = this.props.children;
+          return (
+            <a href={to}>{children}</a>
+          );
+        }
+      }
+
+      const wrapper = mount(
+        <div>
+          <MockLink to="/">First</MockLink>
+          <MockLink to="/second">Second</MockLink>
+        </div>
+      );
+
+      expect(wrapper.find({ to: '/' })).to.have.length(1);
+      expect(wrapper.find({ to: '/second' })).to.have.length(1);
+    });
+
+    it('should query props from DOM nodes when using an object query', () => {
+      class MockLink extends React.Component {
+        render() {
+          const to = this.props.to;
+          const children = this.props.children;
+          return (
+            <a href={to}>{children}</a>
+          );
+        }
+      }
+
+      const wrapper = mount(
+        <div>
+          <MockLink to="/">First</MockLink>
+          <MockLink to="/second">Second</MockLink>
+        </div>
+      );
+
+      expect(wrapper.find({ href: '/' })).to.have.length(1);
+      expect(wrapper.find({ href: '/second' })).to.have.length(1);
+    });
+
+    it('shouldnt query props from composites when using a CSS selector', () => {
+      class MockLink extends React.Component {
+        render() {
+          const to = this.props.to;
+          const children = this.props.children;
+          return (
+            <a href={to}>{children}</a>
+          );
+        }
+      }
+
+      const wrapper = mount(
+        <div>
+          <MockLink to="/">First</MockLink>
+          <MockLink to="/second">Second</MockLink>
+        </div>
+      );
+
+      expect(wrapper.find('[to="/"]')).to.have.length(0);
+      expect(wrapper.find('[to="/second"]')).to.have.length(0);
+    });
+
     it('Should query attributes with spaces in their values', () => {
       const wrapper = mount(
         <div>
