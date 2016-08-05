@@ -1369,6 +1369,328 @@ describe('shallow', () => {
 
     });
 
+    it('should return the defaultProps object', () => {
+      class Foo extends React.Component {
+        render() {
+          return (
+            <div id={this.props.foo}>
+              <div className={this.props.bar}></div>
+            </div>
+          );
+        }
+      }
+
+      Foo.defaultProps = {
+        foo: 'foo',
+        bar: 'bar',
+      };
+
+      const wrapper = shallow(<Foo />);
+      expect(wrapper.props().foo).to.equal('foo');
+      expect(wrapper.props().bar).to.equal('bar');
+    });
+
+    it('should overwrite defaultProps with new props', () => {
+      class Foo extends React.Component {
+        render() {
+          return (
+            <div id={this.props.foo}>
+              <div className={this.props.bar}></div>
+            </div>
+          );
+        }
+      }
+
+      Foo.defaultProps = {
+        foo: 'foo',
+        bar: 'bar',
+      };
+
+      const wrapper = shallow(<Foo foo="foo2" />);
+      expect(wrapper.props().foo).to.equal('foo2');
+      expect(wrapper.props().bar).to.equal('bar');
+      wrapper.setProps({ bar: 'bar2' });
+      expect(wrapper.props().foo).to.equal('foo2');
+      expect(wrapper.props().bar).to.equal('bar2');
+    });
+
+    it('should overwrite defaultProps for nested components', () => {
+      class Foo extends React.Component {
+        render() {
+          return (
+            <div id={this.props.foo}>
+              <div className={this.props.bar}></div>
+            </div>
+          );
+        }
+      }
+
+      class Bar extends React.Component {
+        render() {
+          return (
+            <div>
+              <Foo baz={this.props.baz} />
+            </div>
+          );
+        }
+      }
+
+      Foo.defaultProps = {
+        foo: 'foo',
+        bar: 'bar',
+      };
+
+      Bar.defaultProps = {
+        baz: 'baz',
+        qux: 'qux',
+      };
+
+      const wrapper = shallow(<Bar />);
+      expect(wrapper.props().baz).to.equal('baz');
+      expect(wrapper.props().qux).to.equal('qux');
+      expect(wrapper.find(Foo).props().foo).to.equal('foo');
+      expect(wrapper.find(Foo).props().bar).to.equal('bar');
+      expect(wrapper.find(Foo).props().baz).to.equal('baz');
+
+      wrapper.setProps({
+        baz: 'baz2',
+        foo: 'foo2',
+      });
+
+      expect(wrapper.props().baz).to.equal('baz2');
+      expect(wrapper.props().qux).to.equal('qux');
+      expect(wrapper.find(Foo).props().foo).to.equal('foo');
+      expect(wrapper.find(Foo).props().bar).to.equal('bar');
+      expect(wrapper.find(Foo).props().baz).to.equal('baz2');
+
+    });
+
+
+    describe('React.createClass', () => {
+      it('should return the defaultProps object', () => {
+
+        const Foo = React.createClass({
+          getDefaultProps() {
+            return {
+              foo: 'foo',
+              bar: 'bar',
+            };
+          },
+          render() {
+            return (
+              <div id={this.props.foo}>
+                <div className={this.props.bar}></div>
+              </div>
+            );
+          },
+        });
+
+        const wrapper = shallow(<Foo />);
+        expect(wrapper.props().foo).to.equal('foo');
+        expect(wrapper.props().bar).to.equal('bar');
+      });
+
+      it('should overwrite defaultProps with new props', () => {
+
+        const Foo = React.createClass({
+          getDefaultProps() {
+            return {
+              foo: 'foo',
+              bar: 'bar',
+            };
+          },
+          render() {
+            return (
+              <div id={this.props.foo}>
+                <div className={this.props.bar}></div>
+              </div>
+            );
+          },
+        });
+
+        const wrapper = shallow(<Foo foo="foo2" />);
+        expect(wrapper.props().foo).to.equal('foo2');
+        expect(wrapper.props().bar).to.equal('bar');
+        wrapper.setProps({ bar: 'bar2' });
+        expect(wrapper.props().foo).to.equal('foo2');
+        expect(wrapper.props().bar).to.equal('bar2');
+      });
+
+      it('should overwrite defaultProps for nested components', () => {
+
+
+        const Foo = React.createClass({
+          getDefaultProps() {
+            return {
+              foo: 'foo',
+              bar: 'bar',
+            };
+          },
+          render() {
+            return (
+              <div id={this.props.foo}>
+                <div className={this.props.bar}></div>
+              </div>
+            );
+          },
+        });
+
+        const Bar = React.createClass({
+          getDefaultProps() {
+            return {
+              baz: 'baz',
+              qux: 'qux',
+            };
+          },
+          render() {
+            return (
+              <div>
+                <Foo baz={this.props.baz} />
+              </div>
+            );
+          },
+        });
+
+        const wrapper = shallow(<Bar />);
+        expect(wrapper.props().baz).to.equal('baz');
+        expect(wrapper.props().qux).to.equal('qux');
+        expect(wrapper.find(Foo).props().foo).to.equal('foo');
+        expect(wrapper.find(Foo).props().bar).to.equal('bar');
+        expect(wrapper.find(Foo).props().baz).to.equal('baz');
+
+        wrapper.setProps({
+          baz: 'baz2',
+          foo: 'foo2',
+        });
+
+        expect(wrapper.props().baz).to.equal('baz2');
+        expect(wrapper.props().qux).to.equal('qux');
+        expect(wrapper.find(Foo).props().foo).to.equal('foo');
+        expect(wrapper.find(Foo).props().bar).to.equal('bar');
+        expect(wrapper.find(Foo).props().baz).to.equal('baz2');
+
+      });
+    });
+
+
+    describeIf(!REACT013, 'stateless function components', () => {
+
+      it('should return the props object', () => {
+        const fn = () => ({});
+        const Foo = ({ id, onClick, className }) => (
+          <div id={id} className={className} onClick={onClick} >
+            <div className="baz" />
+            <div className="foo" />
+          </div>
+        );
+
+        const wrapper = shallow(
+          <Foo onClick={fn} className="bax" id="fooId" />
+        );
+        expect(wrapper.props().className).to.equal('bax');
+        expect(wrapper.props().onClick).to.equal(fn);
+        expect(wrapper.props().id).to.equal('fooId');
+
+      });
+
+      it('should return defaultProps', () => {
+        const Foo = (props) => (
+          <div id={props.foo}>
+            <div></div>
+          </div>
+        );
+
+        const Bar = (props) => (
+          <div id={props.bar}><Foo {...props} /></div>
+        );
+
+        Bar.defaultProps = {
+          bar: 'bar',
+        };
+
+        Foo.defaultProps = {
+          foo: 'foo',
+        };
+
+        let wrapper = shallow(<Bar />);
+        expect(wrapper.props().bar).to.equal('bar');
+        wrapper = shallow(<Bar bar="qux" />);
+        expect(wrapper.props().bar).to.equal('qux');
+      });
+
+      it('should overwrite defaultProps with new props', () => {
+        const Foo = (props) => (
+          <div id={props.foo}>
+            <div className={props.bar}></div>
+          </div>
+        );
+
+        Foo.defaultProps = {
+          foo: 'foo',
+          bar: 'bar',
+        };
+
+        const wrapper = shallow(<Foo foo="foo2" />);
+        expect(wrapper.props().foo).to.equal('foo2');
+        expect(wrapper.props().bar).to.equal('bar');
+        wrapper.setProps({ bar: 'bar2' });
+        expect(wrapper.props().foo).to.equal('foo2');
+        expect(wrapper.props().bar).to.equal('bar2');
+      });
+
+      it('should only return root level props for root queries', () => {
+        const Foo = ({ foo }) => (
+          <div className={foo} />
+        );
+        const wrapper = shallow(<Foo foo="foo" />);
+        expect(wrapper.props()).to.deep.equal({
+          foo: 'foo',
+        });
+      });
+
+      it('should overwrite defaultProps for nested components', () => {
+        const Foo = (props) => (
+          <div id={props.foo}>
+            <div className={props.bar}></div>
+          </div>
+        );
+
+        const Bar = (props) => (
+          <div>
+            <Foo baz={props.baz} />
+          </div>
+        );
+
+        Foo.defaultProps = {
+          foo: 'foo',
+          bar: 'bar',
+        };
+
+        Bar.defaultProps = {
+          baz: 'baz',
+          qux: 'qux',
+        };
+
+        const wrapper = shallow(<Bar />);
+        expect(wrapper.props().baz).to.equal('baz');
+        expect(wrapper.props().qux).to.equal('qux');
+        expect(wrapper.find(Foo).props().foo).to.equal('foo');
+        expect(wrapper.find(Foo).props().bar).to.equal('bar');
+        expect(wrapper.find(Foo).props().baz).to.equal('baz');
+
+        wrapper.setProps({
+          baz: 'baz2',
+          foo: 'foo2',
+        });
+
+        expect(wrapper.props().baz).to.equal('baz2');
+        expect(wrapper.props().qux).to.equal('qux');
+        expect(wrapper.find(Foo).props().foo).to.equal('foo');
+        expect(wrapper.find(Foo).props().bar).to.equal('bar');
+        expect(wrapper.find(Foo).props().baz).to.equal('baz2');
+      });
+    });
+
     it('should be allowed to be used on an inner node', () => {
       const fn = () => ({});
       const wrapper = shallow(

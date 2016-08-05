@@ -3,6 +3,7 @@ import ComplexSelector from './ComplexSelector';
 import flatten from 'lodash/flatten';
 import unique from 'lodash/uniq';
 import compact from 'lodash/compact';
+import assign from 'object.assign';
 import cheerio from 'cheerio';
 import {
   nodeEqual,
@@ -17,6 +18,7 @@ import {
 } from './Utils';
 import {
   debugNodes,
+  // typeName,
 } from './Debug';
 import {
   getTextFromNode,
@@ -25,12 +27,16 @@ import {
   parentsOfNode,
   treeFilter,
   buildPredicate,
+  isRootCompositeWithProps,
+  hasDefaultProps,
+  getDefaultProps,
 } from './ShallowTraversal';
 import {
   createShallowRenderer,
   renderToStaticMarkup,
   batchedUpdates,
 } from './react-compat';
+
 
 /**
  * Finds all nodes in the current wrapper nodes' render trees that match the provided predicate
@@ -570,7 +576,16 @@ export default class ShallowWrapper {
    * @returns {Object}
    */
   props() {
-    return this.single(propsOfNode);
+    let props = this.single(propsOfNode);
+    const defaultProps = hasDefaultProps(this)
+          ? getDefaultProps(this)
+          : {};
+
+    if (isRootCompositeWithProps(this)) {
+      props = this.unrendered.props;
+    }
+
+    return assign({}, defaultProps, props);
   }
 
   /**
