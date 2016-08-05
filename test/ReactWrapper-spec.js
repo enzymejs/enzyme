@@ -444,15 +444,31 @@ describeWithDOM('mount', () => {
     it('should support boolean and numeric values for matching props', () => {
       const wrapper = mount(
         <div>
-          <span value={1} />
+          <a value={0} />
+          <a value={1} />
           <a value={false} />
+          <a value />
+          <a value="" />
+          <a value="string" />
         </div>
       );
 
-      expect(wrapper.find('span[value=1]')).to.have.length(1);
-      expect(wrapper.find('span[value=2]')).to.have.length(0);
-      expect(wrapper.find('a[value=false]')).to.have.length(1);
-      expect(wrapper.find('a[value=true]')).to.have.length(0);
+      expect(wrapper.find('[value=0]')).to.have.length(1);
+      expect(wrapper.find('[value=1]')).to.have.length(1);
+      expect(wrapper.find('[value=2]')).to.have.length(0);
+
+      expect(wrapper.find('[value=false]')).to.have.length(1);
+      expect(wrapper.find('[value=true]')).to.have.length(1);
+
+      expect(wrapper.find('[value=""]')).to.have.length(1);
+      expect(wrapper.find('[value="string"]')).to.have.length(1);
+
+      expect(wrapper.find('[value]')).to.have.length(6);
+
+      expect(wrapper.find('[value="0"]')).to.have.length(0);
+      expect(wrapper.find('[value="1"]')).to.have.length(0);
+      expect(wrapper.find('[value="false"]')).to.have.length(0);
+      expect(wrapper.find('[value="true"]')).to.have.length(0);
     });
 
     it('should not find key or ref via property selector', () => {
