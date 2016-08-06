@@ -31,7 +31,7 @@ describe('shallow', () => {
       });
 
       const context = { name: 'foo' };
-      expect(() => shallow(<SimpleComponent />, { context })).to.not.throw(Error);
+      expect(() => shallow(<SimpleComponent />, { context })).to.not.throw();
     });
 
     it('is instrospectable through context API', () => {
@@ -121,7 +121,10 @@ describe('shallow', () => {
       const wrapper = shallow(<Foo />);
       const div = wrapper.find('div');
 
-      expect(() => div.instance()).to.throw();
+      expect(() => div.instance()).to.throw(
+        Error,
+        'ShallowWrapper::instance() can only be called on the root'
+      );
     });
 
   });
@@ -221,8 +224,14 @@ describe('shallow', () => {
     it('should throw on invalid argument', () => {
       const wrapper = shallow(<div></div>);
 
-      expect(() => wrapper.contains({})).to.throw();
-      expect(() => wrapper.contains(() => ({}))).to.throw();
+      expect(() => wrapper.contains({})).to.throw(
+        Error,
+        'ShallowWrapper::contains() can only be called with ReactElement (or array of them), string or number as argument.' // eslint-disable-line max-len
+      );
+      expect(() => wrapper.contains(() => ({}))).to.throw(
+        Error,
+        'ShallowWrapper::contains() can only be called with ReactElement (or array of them), string or number as argument.' // eslint-disable-line max-len
+      );
     });
 
     describeIf(!REACT013, 'stateless function components', () => {
@@ -443,7 +452,10 @@ describe('shallow', () => {
         </div>
       );
 
-      expect(() => wrapper.find('[type=text]')).to.throw();
+      expect(() => wrapper.find('[type=text]')).to.throw(
+        TypeError,
+        'Enzyme::Unable to parse selector \'[type=text]\'. Perhaps you forgot to escape a string? Try \'[type="text"]\' instead.' // eslint-disable-line max-len
+      );
     });
 
     it('should compound tag and prop selector', () => {
@@ -570,9 +582,18 @@ describe('shallow', () => {
           <input className="foo" type="text" />
         </div>
       );
-      expect(() => wrapper.find({})).to.throw(Error);
-      expect(() => wrapper.find([])).to.throw(Error);
-      expect(() => wrapper.find(null)).to.throw(Error);
+      expect(() => wrapper.find({})).to.throw(
+        TypeError,
+        'Enzyme::Selector does not support an array, null, or empty object as a selector'
+      );
+      expect(() => wrapper.find([])).to.throw(
+        TypeError,
+        'Enzyme::Selector does not support an array, null, or empty object as a selector'
+      );
+      expect(() => wrapper.find(null)).to.throw(
+        TypeError,
+        'Enzyme::Selector does not support an array, null, or empty object as a selector'
+      );
     });
 
     describeIf(!REACT013, 'stateless function components', () => {
@@ -858,12 +879,15 @@ describe('shallow', () => {
       expect(wrapper.text()).to.equal('baz');
     });
 
-    it('should throw if it is called when shallow didnt include context', () => {
+    it('should throw if it is called when shallow didn’t include context', () => {
       const wrapper = shallow(<SimpleComponent />);
-      expect(() => wrapper.setContext({ name: 'bar' })).to.throw(Error);
+      expect(() => wrapper.setContext({ name: 'bar' })).to.throw(
+        Error,
+        'ShallowWrapper::setContext() can only be called on a wrapper that was originally passed a context option' // eslint-disable-line max-len
+      );
     });
 
-    describeIf(!REACT013, 'stateless function components', () => {
+    describeIf(!REACT013, 'stateless functional components', () => {
       const SFC = (props, context) => (
         <div>{context.name}</div>
       );
@@ -879,9 +903,12 @@ describe('shallow', () => {
         expect(wrapper.text()).to.equal('baz');
       });
 
-      it('should throw if it is called when shallow didnt include context', () => {
+      it('should throw if it is called when shallow didn’t include context', () => {
         const wrapper = shallow(<SFC />);
-        expect(() => wrapper.setContext({ name: 'bar' })).to.throw(Error);
+        expect(() => wrapper.setContext({ name: 'bar' })).to.throw(
+          Error,
+          'ShallowWrapper::setContext() can only be called on a wrapper that was originally passed a context option' // eslint-disable-line max-len
+        );
       });
     });
   });
@@ -1079,7 +1106,10 @@ describe('shallow', () => {
 
         const wrapper = shallow(<Foo />);
 
-        expect(() => wrapper.state()).to.throw();
+        expect(() => wrapper.state()).to.throw(
+          Error,
+          'ShallowWrapper::state() can only be called on class components'
+        );
       });
 
       it('should throw when trying to set state', () => {
@@ -1089,7 +1119,10 @@ describe('shallow', () => {
 
         const wrapper = shallow(<Foo />);
 
-        expect(() => wrapper.setState({ a: 1 })).to.throw();
+        expect(() => wrapper.setState({ a: 1 })).to.throw(
+          Error,
+          'ShallowWrapper::setState() can only be called on class components'
+        );
       });
     });
   });
@@ -2005,6 +2038,7 @@ describe('shallow', () => {
         </div>
       );
       expect(() => wrapper.some('.foo')).to.throw(
+        Error,
         'ShallowWrapper::some() can not be called on the root'
       );
     });
@@ -2156,7 +2190,7 @@ describe('shallow', () => {
 
         const context = { name: 'foo' };
         const wrapper = shallow(<Foo />);
-        expect(() => wrapper.find(Bar).shallow({ context })).to.not.throw(Error);
+        expect(() => wrapper.find(Bar).shallow({ context })).to.not.throw();
       });
 
       it('is instrospectable through context API', () => {
@@ -2234,7 +2268,7 @@ describe('shallow', () => {
 
           const context = { name: 'foo' };
           const wrapper = shallow(<Foo />);
-          expect(() => wrapper.find(Bar).shallow({ context })).to.not.throw(Error);
+          expect(() => wrapper.find(Bar).shallow({ context })).to.not.throw();
         });
 
         it('is instrospectable through context API', () => {

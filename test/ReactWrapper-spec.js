@@ -64,7 +64,7 @@ describeWithDOM('mount', () => {
       });
 
       const context = { name: 'foo' };
-      expect(() => mount(<SimpleComponent />, { context })).to.not.throw(Error);
+      expect(() => mount(<SimpleComponent />, { context })).to.not.throw();
     });
 
     it('is instrospectable through context API', () => {
@@ -121,7 +121,7 @@ describeWithDOM('mount', () => {
         );
 
         const context = { name: 'foo' };
-        expect(() => mount(<SimpleComponent />, { context })).to.not.throw(Error);
+        expect(() => mount(<SimpleComponent />, { context })).to.not.throw();
       });
 
       it('is instrospectable through context API', () => {
@@ -559,9 +559,18 @@ describeWithDOM('mount', () => {
           <input className="foo" type="text" />
         </div>
       );
-      expect(() => wrapper.find({})).to.throw(Error);
-      expect(() => wrapper.find([])).to.throw(Error);
-      expect(() => wrapper.find(null)).to.throw(Error);
+      expect(() => wrapper.find({})).to.throw(
+        TypeError,
+        'Enzyme::Selector does not support an array, null, or empty object as a selector'
+      );
+      expect(() => wrapper.find([])).to.throw(
+        TypeError,
+        'Enzyme::Selector does not support an array, null, or empty object as a selector'
+      );
+      expect(() => wrapper.find(null)).to.throw(
+        TypeError,
+        'Enzyme::Selector does not support an array, null, or empty object as a selector'
+      );
     });
 
     it('Should query attributes with spaces in their values', () => {
@@ -916,6 +925,14 @@ describeWithDOM('mount', () => {
         }
       }
 
+      const similarException = ((() => {
+        try {
+          return undefined.givenName;
+        } catch (e) {
+          return e;
+        }
+      })());
+
       const validUser = {
         name: {
           givenName: 'Brian',
@@ -930,7 +947,7 @@ describeWithDOM('mount', () => {
         });
       };
 
-      expect(setInvalidProps).to.throw();
+      expect(setInvalidProps).to.throw(TypeError, similarException.message);
     });
 
     describeIf(!REACT013, 'stateless function components', () => {
@@ -975,6 +992,14 @@ describeWithDOM('mount', () => {
           },
         };
 
+        const similarException = ((() => {
+          try {
+            return undefined.givenName;
+          } catch (e) {
+            return e;
+          }
+        })());
+
         const wrapper = mount(<Trainwreck user={validUser} />);
 
         const setInvalidProps = () => {
@@ -983,7 +1008,10 @@ describeWithDOM('mount', () => {
           });
         };
 
-        expect(setInvalidProps).to.throw();
+        expect(setInvalidProps).to.throw(
+          TypeError,
+          similarException.message
+        );
       });
     });
   });
@@ -1008,7 +1036,7 @@ describeWithDOM('mount', () => {
       expect(wrapper.text()).to.equal('baz');
     });
 
-    it('should throw if it is called when shallow didnt include context', () => {
+    it('should throw if it is called when shallow didn’t include context', () => {
       const SimpleComponent = React.createClass({
         contextTypes: {
           name: React.PropTypes.string,
@@ -1019,7 +1047,10 @@ describeWithDOM('mount', () => {
       });
 
       const wrapper = mount(<SimpleComponent />);
-      expect(() => wrapper.setContext({ name: 'bar' })).to.throw(Error);
+      expect(() => wrapper.setContext({ name: 'bar' })).to.throw(
+        Error,
+        'ShallowWrapper::setContext() can only be called on a wrapper that was originally passed a context option' // eslint-disable-line max-len
+      );
     });
 
     describeIf(!REACT013, 'stateless function components', () => {
@@ -1038,14 +1069,17 @@ describeWithDOM('mount', () => {
         expect(wrapper.text()).to.equal('baz');
       });
 
-      it('should throw if it is called when shallow didnt include context', () => {
+      it('should throw if it is called when shallow didn’t include context', () => {
         const SimpleComponent = (props, context) => (
           <div>{context.name}</div>
         );
         SimpleComponent.contextTypes = { name: React.PropTypes.string };
 
         const wrapper = mount(<SimpleComponent />);
-        expect(() => wrapper.setContext({ name: 'bar' })).to.throw(Error);
+        expect(() => wrapper.setContext({ name: 'bar' })).to.throw(
+          Error,
+          'ShallowWrapper::setContext() can only be called on a wrapper that was originally passed a context option' // eslint-disable-line max-len
+        );
       });
     });
   });
@@ -2122,6 +2156,7 @@ describeWithDOM('mount', () => {
         </div>
       );
       expect(() => wrapper.some('.foo')).to.throw(
+        Error,
         'ReactWrapper::some() can not be called on the root'
       );
     });
