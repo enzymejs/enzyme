@@ -1,7 +1,8 @@
 import React from 'react';
 import { expect } from 'chai';
-import { shallow, render, ShallowWrapper } from '../src/';
 import sinon from 'sinon';
+
+import { shallow, render, ShallowWrapper } from '../src/';
 import { describeIf, itIf, itWithData, generateEmptyRenderData } from './_helpers';
 import { REACT013, REACT15 } from '../src/version';
 
@@ -222,7 +223,7 @@ describe('shallow', () => {
     });
 
     it('should throw on invalid argument', () => {
-      const wrapper = shallow(<div></div>);
+      const wrapper = shallow(<div />);
 
       expect(() => wrapper.contains({})).to.throw(
         Error,
@@ -377,8 +378,8 @@ describe('shallow', () => {
         <div>
           <input className="foo" />
           <button className="bar">Button</button>
-          <textarea className="magic"></textarea>
-          <select className="reality"></select>
+          <textarea className="magic" />
+          <select className="reality" />
         </div>
       );
       expect(wrapper.find('input').props().className).to.equal('foo');
@@ -509,6 +510,7 @@ describe('shallow', () => {
 
     it('should not find key or ref via property selector', () => {
       const arrayOfComponents = [<div key="1" />, <div key="2" />];
+
       const wrapper = shallow(
         <div>
           <div ref="foo" />
@@ -1609,7 +1611,7 @@ describe('shallow', () => {
         render() {
           return (
             <div>
-              <span className="foo"></span>
+              <span className="foo" />
               {this.props.items.map(x => x)}
             </div>
           );
@@ -1647,7 +1649,7 @@ describe('shallow', () => {
       it('should handle mixed children with and without arrays', () => {
         const Foo = (props) => (
           <div>
-            <span className="foo"></span>
+            <span className="foo" />
             {props.items.map(x => x)}
           </div>
         );

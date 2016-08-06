@@ -225,13 +225,13 @@ describe('ShallowTraversal', () => {
 
   describe('pathToNode', () => {
     it('should return trees from the root node', () => {
-      const node = <label />;
+      const node = <label htmlFor="foo" />;
       const tree = (
         <div>
           <button />
           <nav>
             {node}
-            <input />
+            <input id="foo" />
           </nav>
         </div>
       );
@@ -243,13 +243,13 @@ describe('ShallowTraversal', () => {
     });
 
     it('should return trees from the root node except the sibling node', () => {
-      const node = <label />;
+      const node = <label htmlFor="foo" />;
       const tree = (
         <div>
           <button />
           <nav>
             {node}
-            <div><input /></div>
+            <div><input id="foo" /></div>
           </nav>
         </div>
       );

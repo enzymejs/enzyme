@@ -2,11 +2,12 @@
   global-require: 0,
   import/no-mutable-exports: 0,
   import/no-unresolved: 0,
-  react/no-deprecated: 0
+  react/no-deprecated: 0,
+  react/no-render-return-value: 0,
 */
 
-import { REACT013 } from './version';
 import objectAssign from 'object.assign';
+import { REACT013 } from './version';
 
 let TestUtils;
 let createShallowRenderer;
@@ -71,6 +72,7 @@ if (REACT013) {
   let ReactDOM;
 
   try {
+    // eslint-disable-next-line import/no-extraneous-dependencies
     ReactDOM = require('react-dom');
   } catch (e) {
     // eslint-disable-next-line no-console
@@ -82,7 +84,9 @@ if (REACT013) {
     throw e;
   }
 
+  // eslint-disable-next-line import/no-extraneous-dependencies
   renderToStaticMarkup = require('react-dom/server').renderToStaticMarkup;
+
   findDOMNode = ReactDOM.findDOMNode;
   unmountComponentAtNode = ReactDOM.unmountComponentAtNode;
   batchedUpdates = ReactDOM.unstable_batchedUpdates;
@@ -91,6 +95,7 @@ if (REACT013) {
   // to list this as a dependency in package.json and have 0.13 work properly.
   // As a result, right now this is basically an implicit dependency.
   try {
+    // eslint-disable-next-line import/no-extraneous-dependencies
     TestUtils = require('react-addons-test-utils');
   } catch (e) {
     // eslint-disable-next-line no-console

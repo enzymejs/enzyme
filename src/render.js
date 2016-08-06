@@ -1,5 +1,5 @@
-import { renderToStaticMarkup } from './react-compat';
 import cheerio from 'cheerio';
+import { renderToStaticMarkup } from './react-compat';
 
 /**
  * Renders a react component into static HTML and provides a cheerio wrapper around it. This is

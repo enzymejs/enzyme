@@ -1,9 +1,10 @@
 import React from 'react';
-import ComplexSelector from './ComplexSelector';
 import flatten from 'lodash/flatten';
 import unique from 'lodash/uniq';
 import compact from 'lodash/compact';
 import cheerio from 'cheerio';
+
+import ComplexSelector from './ComplexSelector';
 import {
   nodeEqual,
   containsChildrenSubArray,

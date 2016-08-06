@@ -1,3 +1,9 @@
+/* globals document */
+
+import React from 'react';
+import { expect } from 'chai';
+import sinon from 'sinon';
+
 import {
   describeWithDOM,
   describeIf,
@@ -5,14 +11,11 @@ import {
   itWithData,
   generateEmptyRenderData,
 } from './_helpers';
-import React from 'react';
-import { expect } from 'chai';
 import {
   mount,
   render,
   ReactWrapper,
-} from '../src/';
-import sinon from 'sinon';
+} from '../src';
 import { REACT013, REACT15 } from '../src/version';
 
 describeWithDOM('mount', () => {
@@ -1751,7 +1754,7 @@ describeWithDOM('mount', () => {
         render() {
           return (
             <div>
-              <span className="foo"></span>
+              <span className="foo" />
               {this.props.items.map(x => x)}
             </div>
           );
@@ -1789,7 +1792,7 @@ describeWithDOM('mount', () => {
       it('should handle mixed children with and without arrays', () => {
         const Foo = (props) => (
           <div>
-            <span className="foo"></span>
+            <span className="foo" />
             {props.items.map(x => x)}
           </div>
         );
