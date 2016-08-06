@@ -104,7 +104,7 @@ export function instHasProperty(inst, propKey, stringifiedPropValue) {
     return nodePropValue === propValue;
   }
 
-  return nodeProps.hasOwnProperty(propKey);
+  return Object.prototype.hasOwnProperty.call(nodeProps, propKey);
 }
 
 // called with private inst
@@ -185,7 +185,7 @@ export function pathToNode(node, root) {
       // leaf node. if it isn't the node we are looking for, we pop.
       path.pop();
     }
-    queue.push.apply(queue, children);
+    queue.push(...children);
   }
 
   return null;

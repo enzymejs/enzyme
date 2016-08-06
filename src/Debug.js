@@ -1,3 +1,8 @@
+import without from 'lodash/without';
+import escape from 'lodash/escape';
+import compact from 'lodash/compact';
+import objectValues from 'object.values';
+
 import {
   childrenOfNode,
 } from './ShallowTraversal';
@@ -13,11 +18,7 @@ import {
   internalInstance,
   propsOfNode,
 } from './Utils';
-import without from 'lodash/without';
-import escape from 'lodash/escape';
-import compact from 'lodash/compact';
 import { REACT013 } from './version';
-import objectValues from 'object.values';
 
 export function typeName(node) {
   return typeof node.type === 'function'

@@ -1,7 +1,10 @@
-import { describeWithDOM, describeIf } from './_helpers.js';
+/* globals window */
+
 import React from 'react';
 import { expect } from 'chai';
-import { mount } from '../src/';
+
+import { describeWithDOM, describeIf } from './_helpers';
+import { mount } from '../src';
 import {
   coercePropValue,
   getNode,
@@ -143,11 +146,11 @@ describe('Utils', () => {
       it('should not match not equal nodes', () => {
         expect(nodeEqual(
           <div>child</div>,
-          <div></div>
+          <div />
         )).to.equal(false);
 
         expect(nodeEqual(
-          <div></div>,
+          <div />,
           <div>child</div>
         )).to.equal(false);
       });
@@ -155,28 +158,28 @@ describe('Utils', () => {
       it('should skip null children', () => {
         expect(nodeEqual(
           <div>{null}</div>,
-          <div></div>
+          <div />
         )).to.equal(true);
       });
 
       it('should skip undefined children', () => {
         expect(nodeEqual(
           <div>{undefined}</div>,
-          <div></div>
+          <div />
         )).to.equal(true);
       });
 
       it('should skip empty children', () => {
         expect(nodeEqual(
           <div>{[]}</div>,
-          <div></div>
+          <div />
         )).to.equal(true);
       });
 
       it('should skip array of null children', () => {
         expect(nodeEqual(
           <div>{[null, null, null]}</div>,
-          <div></div>
+          <div />
         )).to.equal(true);
       });
 
