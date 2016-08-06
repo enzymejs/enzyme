@@ -442,7 +442,7 @@ export default class ShallowWrapper {
    */
   is(selector) {
     const predicate = buildPredicate(selector);
-    return this.single(predicate);
+    return this.single(n => predicate(n));
   }
 
   /**
@@ -684,7 +684,7 @@ export default class ShallowWrapper {
    * @returns {ShallowWrapper}
    */
   shallow(options) {
-    return this.single((n) => new ShallowWrapper(n, null, options));
+    return this.single(n => new ShallowWrapper(n, null, options));
   }
 
   /**
@@ -703,7 +703,7 @@ export default class ShallowWrapper {
    * @returns {String}
    */
   key() {
-    return this.single((n) => n.key);
+    return this.single(n => n.key);
   }
 
   /**

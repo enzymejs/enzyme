@@ -624,7 +624,7 @@ export default class ReactWrapper {
    * @returns {String}
    */
   key() {
-    return this.single((n) => getNode(n).key);
+    return this.single(n => getNode(n).key);
   }
 
   /**
