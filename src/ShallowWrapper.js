@@ -132,7 +132,7 @@ export default class ShallowWrapper {
     if (this.root !== this) {
       throw new Error('ShallowWrapper::update() can only be called on the root');
     }
-    this.single(() => {
+    this.single('update', () => {
       this.node = this.renderer.getRenderOutput();
       this.nodes = [this.node];
     });
@@ -150,7 +150,7 @@ export default class ShallowWrapper {
    * @returns {ShallowWrapper}
    */
   rerender(props, context) {
-    this.single(() => {
+    this.single('rerender', () => {
       withSetStateAllowed(() => {
         const instance = this.instance();
         const state = instance.state;
@@ -250,7 +250,7 @@ export default class ShallowWrapper {
     if (isFunctionalComponent(this.instance())) {
       throw new Error('ShallowWrapper::setState() can only be called on class components');
     }
-    this.single(() => {
+    this.single('setState', () => {
       withSetStateAllowed(() => {
         this.instance().setState(state);
         this.update();
@@ -398,7 +398,7 @@ export default class ShallowWrapper {
    * @returns {Boolean}
    */
   equals(node) {
-    return this.single(() => nodeEqual(this.node, node));
+    return this.single('equals', () => nodeEqual(this.node, node));
   }
 
   /**
@@ -419,7 +419,7 @@ export default class ShallowWrapper {
    * @returns {Boolean}
    */
   matchesElement(node) {
-    return this.single(() => nodeEqual(node, this.node, (a, b) => a <= b));
+    return this.single('matchesElement', () => nodeEqual(node, this.node, (a, b) => a <= b));
   }
 
   /**
@@ -442,7 +442,7 @@ export default class ShallowWrapper {
    */
   is(selector) {
     const predicate = buildPredicate(selector);
-    return this.single(n => predicate(n));
+    return this.single('is', n => predicate(n));
   }
 
   /**
@@ -500,7 +500,7 @@ export default class ShallowWrapper {
    * @returns {String}
    */
   text() {
-    return this.single(getTextFromNode);
+    return this.single('text', getTextFromNode);
   }
 
   /**
@@ -511,7 +511,7 @@ export default class ShallowWrapper {
    * @returns {String}
    */
   html() {
-    return this.single(n => {
+    return this.single('html', n => {
       // NOTE: splitting this into two statements is required to make the linter happy.
       const isNull = this.type() === null;
       return isNull ? null : renderToStaticMarkup(n);
@@ -570,7 +570,7 @@ export default class ShallowWrapper {
    * @returns {Object}
    */
   props() {
-    return this.single(propsOfNode);
+    return this.single('props', propsOfNode);
   }
 
   /**
@@ -589,7 +589,7 @@ export default class ShallowWrapper {
     if (isFunctionalComponent(this.instance())) {
       throw new Error('ShallowWrapper::state() can only be called on class components');
     }
-    const _state = this.single(() => this.instance().state);
+    const _state = this.single('state', () => this.instance().state);
     if (name !== undefined) {
       return _state[name];
     }
@@ -615,7 +615,7 @@ export default class ShallowWrapper {
         'a context option'
       );
     }
-    const _context = this.single(() => this.instance().context);
+    const _context = this.single('context', () => this.instance().context);
     if (name) {
       return _context[name];
     }
@@ -640,7 +640,7 @@ export default class ShallowWrapper {
    * @returns {ShallowWrapper}
    */
   childAt(index) {
-    return this.single(() => this.children().at(index));
+    return this.single('childAt', () => this.children().at(index));
   }
 
   /**
@@ -653,7 +653,7 @@ export default class ShallowWrapper {
    * @returns {ShallowWrapper}
    */
   parents(selector) {
-    const allParents = this.wrap(this.single(n => parentsOfNode(n, this.root.node)));
+    const allParents = this.wrap(this.single('parents', n => parentsOfNode(n, this.root.node)));
     return selector ? allParents.filter(selector) : allParents;
   }
 
@@ -684,7 +684,7 @@ export default class ShallowWrapper {
    * @returns {ShallowWrapper}
    */
   shallow(options) {
-    return this.single(n => new ShallowWrapper(n, null, options));
+    return this.single('shallow', n => new ShallowWrapper(n, null, options));
   }
 
   /**
@@ -703,7 +703,7 @@ export default class ShallowWrapper {
    * @returns {String}
    */
   key() {
-    return this.single(n => n.key);
+    return this.single('key', n => n.key);
   }
 
   /**
@@ -713,7 +713,7 @@ export default class ShallowWrapper {
    * @returns {String|Function}
    */
   type() {
-    return this.single(typeOfNode);
+    return this.single('type', typeOfNode);
   }
 
   /**
@@ -724,7 +724,7 @@ export default class ShallowWrapper {
    * @returns {String}
    */
   name() {
-    return this.single(displayNameOfNode);
+    return this.single('name', displayNameOfNode);
   }
 
   /**
@@ -743,7 +743,7 @@ export default class ShallowWrapper {
         'hasClass() expects a class name, not a CSS selector.'
       );
     }
-    return this.single(n => hasClassName(n, className));
+    return this.single('hasClass', n => hasClassName(n, className));
   }
 
   /**
@@ -927,10 +927,10 @@ export default class ShallowWrapper {
    * @param fn
    * @returns {*}
    */
-  single(fn) {
+  single(name, fn) {
     if (this.length !== 1) {
       throw new Error(
-        `This method is only meant to be run on single node. ${this.length} found instead.`
+        `Method “${name}” is only meant to be run on a single node. ${this.length} found instead.`
       );
     }
     return fn.call(this, this.node);
