@@ -84,7 +84,6 @@ export function instHasType(inst, type) {
 }
 
 export function instHasProperty(inst, propKey, stringifiedPropValue) {
-  if (!isDOMComponent(inst)) return false;
   const node = getNode(inst);
   const nodeProps = propsOfNode(node);
   const descriptor = Object.getOwnPropertyDescriptor(nodeProps, propKey);

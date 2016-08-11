@@ -384,6 +384,20 @@ describeWithDOM('mount', () => {
 
     });
 
+    it('should find React Component based on a components prop via css selector', () => {
+      class Foo extends React.Component {
+        render() { return <div />; }
+      }
+      const wrapper = mount(
+        <div>
+          <Foo bar="baz" />
+        </div>
+      );
+
+      expect(wrapper.find('[bar]')).to.have.length(1);
+      expect(wrapper.find('Foo[bar="baz"]')).to.have.length(1);
+    });
+
     it('should not find components with invalid attributes', () => {
       // Invalid attributes aren't valid JSX, so manual instantiation is necessary
       const wrapper = mount(

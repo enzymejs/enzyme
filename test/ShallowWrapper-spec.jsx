@@ -481,6 +481,20 @@ describe('shallow', () => {
       expect(wrapper.find('[data-foo]')).to.have.length(1);
     });
 
+    it('should find a React Component based on a components prop via css selector', () => {
+      class Foo extends React.Component {
+        render() { return <div />; }
+      }
+      const wrapper = shallow(
+        <div>
+          <Foo bar="baz" />
+        </div>
+      );
+
+      expect(wrapper.find('[bar]')).to.have.length(1);
+      expect(wrapper.find('Foo[bar="baz"]')).to.have.length(1);
+    });
+
     it('should find components with multiple matching react props', () => {
       function noop() {}
       const wrapper = shallow(
