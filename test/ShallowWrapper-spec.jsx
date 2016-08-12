@@ -2373,6 +2373,83 @@ describe('shallow', () => {
     });
   });
 
+  describe('.json()', () => {
+    it('should return json of straight components with children', () => {
+      const wrapper = shallow(
+        <div className="test">
+          <span>Hello</span>
+          <span>World!</span>
+        </div>
+      );
+
+      expect(wrapper.json()).to.deep.equal({
+        type: 'div',
+        props: { className: 'test' },
+        $$typeof: Symbol.for('react.test.json'),
+        children: [
+          {
+            type: 'span',
+            props: {},
+            children: ['Hello'],
+            $$typeof: Symbol.for('react.test.json'),
+          },
+          {
+            type: 'span',
+            props: {},
+            children: ['World!'],
+            $$typeof: Symbol.for('react.test.json'),
+          },
+        ],
+      });
+    });
+
+    it('should return json of straight components without children', () => {
+      const wrapper = shallow(
+        <input className="test" />
+      );
+
+      expect(wrapper.json()).to.deep.equal({
+        type: 'input',
+        props: { className: 'test' },
+        $$typeof: Symbol.for('react.test.json'),
+        children: null,
+      });
+    });
+
+
+    it('should return shallow json of nested composite components', () => {
+      class Foo extends React.Component {
+        render() {
+          return (<div className="in-foo" />);
+        }
+      }
+      class Bar extends React.Component {
+        render() {
+          return (
+            <div className="in-bar">
+              <Foo fooProp={'value'} />
+            </div>
+          );
+        }
+      }
+
+      const wrapper = shallow(<Bar />);
+      expect(wrapper.json()).to.deep.equal({
+        type: 'div',
+        props: { className: 'in-bar' },
+        $$typeof: Symbol.for('react.test.json'),
+        children: [
+          {
+            type: 'Foo',
+            props: { fooProp: 'value' },
+            children: null,
+            $$typeof: Symbol.for('react.test.json'),
+          },
+        ],
+      });
+    });
+  });
+
   describe('.html()', () => {
     it('should return html of straight DOM elements', () => {
       const wrapper = shallow(

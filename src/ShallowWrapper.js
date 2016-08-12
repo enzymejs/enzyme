@@ -2,6 +2,7 @@ import React from 'react';
 import flatten from 'lodash/flatten';
 import unique from 'lodash/uniq';
 import compact from 'lodash/compact';
+import omit from 'lodash/omit';
 import cheerio from 'cheerio';
 
 import ComplexSelector from './ComplexSelector';
@@ -516,6 +517,29 @@ export default class ShallowWrapper {
       // NOTE: splitting this into two statements is required to make the linter happy.
       const isNull = this.type() === null;
       return isNull ? null : renderToStaticMarkup(n);
+    });
+  }
+
+  /**
+   * Return a JSON representation of the node.
+   *
+   * NOTE: can only be called on a wrapper of a single node.
+   *
+   * @returns {Object}
+   */
+  json() {
+    return this.single('json', () => {
+      if (this.type() == null) {
+        return this.node;
+      }
+
+      const childrens = compact(this.children().map(c => c.json()));
+      return {
+        type: this.name(),
+        props: omit(this.props(), 'children'),
+        children: (childrens.length) ? childrens : null,
+        $$typeof: Symbol.for('react.test.json'),
+      };
     });
   }
 
