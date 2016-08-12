@@ -2405,11 +2405,11 @@ describe('shallow', () => {
 
     it('should return json of straight components without children', () => {
       const wrapper = shallow(
-        <input className="test" />
+        <div className="test" />
       );
 
       expect(wrapper.json()).to.deep.equal({
-        type: 'input',
+        type: 'div',
         props: { className: 'test' },
         $$typeof: Symbol.for('react.test.json'),
         children: null,
