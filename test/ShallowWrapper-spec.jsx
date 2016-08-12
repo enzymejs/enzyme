@@ -483,16 +483,16 @@ describe('shallow', () => {
 
     it('should find a React Component based on a components prop via css selector', () => {
       class Foo extends React.Component {
-        render() { return <div />; }
+        render() { return <div {...this.props} />; }
       }
       const wrapper = shallow(
         <div>
-          <Foo bar="baz" />
+          <Foo role="button" />
         </div>
       );
 
-      expect(wrapper.find('[bar]')).to.have.length(1);
-      expect(wrapper.find('Foo[bar="baz"]')).to.have.length(1);
+      expect(wrapper.find('[role]')).to.have.length(1);
+      expect(wrapper.find('Foo[role="button"]')).to.have.length(1);
     });
 
     it('should find components with multiple matching react props', () => {
