@@ -9,6 +9,7 @@ npm i --save-dev enzyme
 
 ```jsx
 import React from 'react';
+import { expect } from 'chai';
 import { mount, shallow } from 'enzyme';
 
 describe('<Foo />', () => {
