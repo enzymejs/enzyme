@@ -16,7 +16,7 @@ import {
   render,
   ReactWrapper,
 } from '../src';
-import { REACT013, REACT15 } from '../src/version';
+import { REACT013, REACT014, REACT15 } from '../src/version';
 
 describeWithDOM('mount', () => {
 
@@ -282,15 +282,6 @@ describeWithDOM('mount', () => {
   });
 
   describe('.find(selector)', () => {
-    let sandbox;
-
-    beforeEach(() => {
-      sandbox = sinon.sandbox.create();
-    });
-
-    afterEach(() => {
-      sandbox.restore();
-    });
 
     it('should find an element based on a class name', () => {
       const wrapper = mount(
@@ -393,21 +384,23 @@ describeWithDOM('mount', () => {
 
     });
 
-    it('should not find components with invalid attributes', () => {
-      // React 15.2 warns when setting a non valid prop to an DOM element
-      sandbox.stub(console, 'error');
-      // Invalid attributes aren't valid JSX, so manual instantiation is necessary
-      const wrapper = mount(
-        React.createElement('div', null, React.createElement('span', {
-          '123-foo': 'bar',
-          '-foo': 'bar',
-          '+foo': 'bar',
-        }))
-      );
+    // React 15.2 warns when setting a non valid prop to an DOM element
+    describeIf(REACT013 || REACT014, 'unauthorized dom props', () => {
 
-      expect(wrapper.find('[-foo]')).to.have.length(0, '-foo');
-      expect(wrapper.find('[+foo]')).to.have.length(0, '+foo');
-      expect(wrapper.find('[123-foo]')).to.have.length(0, '123-foo');
+      it('should not find components with invalid attributes', () => {
+        // Invalid attributes aren't valid JSX, so manual instantiation is necessary
+        const wrapper = mount(
+          React.createElement('div', null, React.createElement('span', {
+            '123-foo': 'bar',
+            '-foo': 'bar',
+            '+foo': 'bar',
+          }))
+        );
+
+        expect(wrapper.find('[-foo]')).to.have.length(0, '-foo');
+        expect(wrapper.find('[+foo]')).to.have.length(0, '+foo');
+        expect(wrapper.find('[123-foo]')).to.have.length(0, '123-foo');
+      });
     });
 
     it('should support data prop selectors', () => {
