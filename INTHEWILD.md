@@ -19,3 +19,4 @@ Projects
  - [Reactstrap](https://github.com/reactstrap/reactstrap)
  - [Recompose](https://github.com/acdlite/recompose)
  - [Reapop](https://github.com/LouisBarranqueiro/reapop)
+ - [React Dates](https://github.com/airbnb/react-dates)
