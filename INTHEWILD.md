@@ -10,6 +10,7 @@ Organizations
  - [Hudl](http://hudl.github.io/)
  - [NET-A-PORTER](https://github.com/NET-A-PORTER)
  - [Rangle.io](https://github.com/rangle)
+ - [GoDaddy](https://github.com/godaddy)
 
 Projects
 ----------
