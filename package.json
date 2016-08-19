@@ -71,19 +71,19 @@
     "enzyme-example-karma-webpack": "^0.1.4",
     "enzyme-example-mocha": "^0.1.0",
     "enzyme-example-react-native": "^0.1.0",
-    "eslint": "^3.2.2",
-    "eslint-config-airbnb": "^10.0.0",
-    "eslint-plugin-import": "^1.12.0",
-    "eslint-plugin-jsx-a11y": "^2.0.1",
-    "eslint-plugin-react": "^6.0.0",
+    "eslint": "^3.3.1",
+    "eslint-config-airbnb": "^10.0.1",
+    "eslint-plugin-import": "^1.13.0",
+    "eslint-plugin-jsx-a11y": "^2.1.0",
+    "eslint-plugin-react": "^6.1.2",
     "gitbook-cli": "^1.0.1",
     "istanbul": "^1.0.0-alpha.2",
     "jsdom": "^6.1.0",
-    "mocha": "^3.0.1",
+    "mocha": "^3.0.2",
     "rimraf": "^2.5.4",
     "sinon": "^1.17.5"
   },
   "peerDependencies": {
-    "react": "0.13.x || 0.14.x || ^15.0.0-0"
+    "react": "0.13.x || 0.14.x || ^15.0.0-0 || 15.x"
   }
 }
