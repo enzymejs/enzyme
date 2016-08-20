@@ -1,7 +1,7 @@
 # Full Rendering API (`mount(...)`)
 
-Full DOM rendering is ideal for use cases where you have components that may interact with DOM apis,
-or may require the full lifecycle in order to fully test the component (ie, `componentDidMount`
+Full DOM rendering is ideal for use cases where you have components that may interact with DOM APIs,
+or may require the full lifecycle in order to fully test the component (i.e., `componentDidMount`
 etc.)
 
 Full DOM rendering requires that a full DOM API be available at the global scope. This means that
