@@ -186,28 +186,28 @@ Maps the current array of nodes to another array.
 #### [`.matchesElement(node) => Boolean`](ReactWrapper/matchesElement.md)
 Returns whether or not a given react element matches the current render tree.
 
-#### [`.reduce(fn[, initialValue]) => Any`](/docs/api/ReactWrapper/reduce.md)
+#### [`.reduce(fn[, initialValue]) => Any`](ReactWrapper/reduce.md)
 Reduces the current array of nodes to a value
 
-#### [`.reduceRight(fn[, initialValue]) => Any`](/docs/api/ReactWrapper/reduceRight.md)
+#### [`.reduceRight(fn[, initialValue]) => Any`](ReactWrapper/reduceRight.md)
 Reduces the current array of nodes to a value, from right to left.
 
 #### [`.tap(intercepter) => Self`](ReactWrapper/tap.md)
 Taps into the wrapper method chain. Helpful for debugging.
 
-#### [`.some(selector) => Boolean`](/docs/api/ReactWrapper/some.md)
+#### [`.some(selector) => Boolean`](ReactWrapper/some.md)
 Returns whether or not any of the nodes in the wrapper match the provided selector.
 
-#### [`.someWhere(predicate) => Boolean`](/docs/api/ReactWrapper/someWHere.md)
+#### [`.someWhere(predicate) => Boolean`](ReactWrapper/someWhere.md)
 Returns whether or not any of the nodes in the wrapper pass the provided predicate function.
 
-#### [`.every(selector) => Boolean`](/docs/api/ReactWrapper/every.md)
+#### [`.every(selector) => Boolean`](ReactWrapper/every.md)
 Returns whether or not all of the nodes in the wrapper match the provided selector.
 
-#### [`.everyWhere(predicate) => Boolean`](/docs/api/ReactWrapper/everyWhere.md)
+#### [`.everyWhere(predicate) => Boolean`](ReactWrapper/everyWhere.md)
 Returns whether or not all of the nodes in the wrapper pass the provided predicate function.
 
-#### [`.ref(refName) => ReactWrapper`](/docs/api/ReactWrapper/ref.md)
+#### [`.ref(refName) => ReactWrapper`](ReactWrapper/ref.md)
 Returns a wrapper of the node that matches the provided reference name.
 
 #### [`.detach() => void`](ReactWrapper/detach.md)
