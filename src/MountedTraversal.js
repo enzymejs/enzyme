@@ -100,7 +100,7 @@ export function instHasProperty(inst, propKey, stringifiedPropValue) {
     return false;
   }
 
-  if (propValue) {
+  if (propValue || propValue === 0) {
     return nodePropValue === propValue;
   }
 
