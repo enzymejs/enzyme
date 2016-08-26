@@ -2,7 +2,6 @@ import isEmpty from 'lodash/isEmpty';
 import isSubset from 'is-subset';
 import {
   internalInstance,
-  coercePropValue,
   nodeEqual,
   propsOfNode,
   isFunctionalComponent,
@@ -13,6 +12,9 @@ import {
   SELECTOR,
   nodeHasType,
 } from './Utils';
+import {
+  nodeHasProperty,
+} from './ShallowTraversal';
 import {
   isDOMComponent,
   isCompositeComponent,
@@ -85,26 +87,10 @@ export function instHasType(inst, type) {
 
 export function instHasProperty(inst, propKey, stringifiedPropValue) {
   if (!isDOMComponent(inst)) return false;
+
   const node = getNode(inst);
-  const nodeProps = propsOfNode(node);
-  const descriptor = Object.getOwnPropertyDescriptor(nodeProps, propKey);
-  if (descriptor && descriptor.get) {
-    return false;
-  }
-  const nodePropValue = nodeProps[propKey];
 
-  const propValue = coercePropValue(propKey, stringifiedPropValue);
-
-  // intentionally not matching node props that are undefined
-  if (nodePropValue === undefined) {
-    return false;
-  }
-
-  if (propValue || propValue === 0) {
-    return nodePropValue === propValue;
-  }
-
-  return Object.prototype.hasOwnProperty.call(nodeProps, propKey);
+  return nodeHasProperty(node, propKey, stringifiedPropValue);
 }
 
 // called with private inst

@@ -86,12 +86,13 @@ export function nodeHasId(node, id) {
 
 export function nodeHasProperty(node, propKey, stringifiedPropValue) {
   const nodeProps = propsOfNode(node);
-  const propValue = coercePropValue(propKey, stringifiedPropValue);
   const descriptor = Object.getOwnPropertyDescriptor(nodeProps, propKey);
   if (descriptor && descriptor.get) {
     return false;
   }
   const nodePropValue = nodeProps[propKey];
+
+  const propValue = coercePropValue(propKey, stringifiedPropValue);
 
   if (nodePropValue === undefined) {
     return false;
