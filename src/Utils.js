@@ -222,6 +222,10 @@ export function coercePropValue(propName, propValue) {
     return NaN;
   }
 
+  if (propValue === 'null') {
+    return null;
+  }
+
   const trimmedValue = propValue.trim();
 
   // if propValue includes quotes, it should be

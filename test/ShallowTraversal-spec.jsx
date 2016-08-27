@@ -131,6 +131,16 @@ describe('ShallowTraversal', () => {
       expect(nodeHasProperty(<div foo={0} />, 'foo', 'NaN')).to.equal(false);
     });
 
+    it('should work with null', () => {
+      expect(nodeHasProperty(<div foo={null} />, 'foo', 'null')).to.equal(true);
+      expect(nodeHasProperty(<div foo={0} />, 'foo', 'null')).to.equal(false);
+    });
+
+    it('should work with false', () => {
+      expect(nodeHasProperty(<div foo={false} />, 'foo', 'false')).to.equal(true);
+      expect(nodeHasProperty(<div foo={0} />, 'foo', 'false')).to.equal(false);
+    });
+
     it('should throw when un unquoted string is passed in', () => {
       const node = (<div title="foo" />);
 

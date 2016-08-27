@@ -99,7 +99,7 @@ export function nodeHasProperty(node, propKey, stringifiedPropValue) {
     return false;
   }
 
-  if (propValue || propValue === 0 || propValue === '' || is(NaN, propValue)) {
+  if (propValue !== undefined) {
     return is(nodePropValue, propValue);
   }
 
