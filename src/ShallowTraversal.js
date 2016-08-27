@@ -1,6 +1,7 @@
 import React from 'react';
 import isEmpty from 'lodash/isEmpty';
 import isSubset from 'is-subset';
+import is from 'object-is';
 import {
   coercePropValue,
   propsOfNode,
@@ -98,8 +99,8 @@ export function nodeHasProperty(node, propKey, stringifiedPropValue) {
     return false;
   }
 
-  if (propValue || propValue === 0 || propValue === '') {
-    return nodePropValue === propValue;
+  if (propValue || propValue === 0 || propValue === '' || is(NaN, propValue)) {
+    return is(nodePropValue, propValue);
   }
 
   return Object.prototype.hasOwnProperty.call(nodeProps, propKey);

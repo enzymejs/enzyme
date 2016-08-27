@@ -218,6 +218,10 @@ export function coercePropValue(propName, propValue) {
     return propValue;
   }
 
+  if (propValue === 'NaN') {
+    return NaN;
+  }
+
   const trimmedValue = propValue.trim();
 
   // if propValue includes quotes, it should be
@@ -229,7 +233,7 @@ export function coercePropValue(propName, propValue) {
   const numericPropValue = +trimmedValue;
 
   // if parseInt is not NaN, then we've wanted a number
-  if (!isNaN(numericPropValue)) {
+  if (!is(NaN, numericPropValue)) {
     return numericPropValue;
   }
 
