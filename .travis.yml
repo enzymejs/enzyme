@@ -10,7 +10,7 @@ before_install:
   - 'if [ "${TRAVIS_NODE_VERSION}" != "0.6" ] && [ "${TRAVIS_NODE_VERSION}" != "0.9" ]; then npm install -g npm; fi'
 before_script: "sh install-relevant-react.sh"
 script:
-  - 'if [ -n "${EXAMPLE-}" ]; then npm run test:env -- "${EXAMPLE}" ; elif [ -n "${LINT-}" ]; then npm run lint; elif [ -n "${REACT-}" ]; then npm run travis; else echo "Test Skipped" ; fi'
+  - 'if [ -n "${EXAMPLE-}" ]; then npm run test:env -- "${EXAMPLE}" ; elif [ -n "${LINT-}" ]; then npm run lint; elif [ -n "${REACT-}" ]; then npm run travis; else false ; fi'
 after_script:
   - 'if [ "${TRAVIS_NODE_VERSION}" = "4" ] || [ "${TRAVIS_NODE_VERSION}" = "0.12" ]; then cat ./coverage/lcov.info | ./node_modules/.bin/coveralls ; fi'
 sudo: false
