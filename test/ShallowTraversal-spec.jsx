@@ -110,10 +110,20 @@ describe('ShallowTraversal', () => {
       expect(nodeHasProperty(<div foo={2e8} />, 'foo', '2e8')).to.equal(true);
       expect(nodeHasProperty(<div foo={Infinity} />, 'foo', 'Infinity')).to.equal(true);
       expect(nodeHasProperty(<div foo={-Infinity} />, 'foo', '-Infinity')).to.equal(true);
+    });
+
+    it('should parse zeroes properly', () => {
       expect(nodeHasProperty(<div foo={0} />, 'foo', '0')).to.equal(true);
       expect(nodeHasProperty(<div foo={-0} />, 'foo', '-0')).to.equal(true);
       expect(nodeHasProperty(<div foo={1} />, 'foo', '0')).to.equal(false);
       expect(nodeHasProperty(<div foo={2} />, 'foo', '-0')).to.equal(false);
+    });
+
+    it('should work with empty strings', () => {
+      expect(nodeHasProperty(<div foo={''} />, 'foo', '')).to.equal(true);
+      expect(nodeHasProperty(<div foo={''} />, 'foo', '""')).to.equal(true);
+      expect(nodeHasProperty(<div foo={'bar'} />, 'foo', '')).to.equal(false);
+      expect(nodeHasProperty(<div foo={'bar'} />, 'foo', '""')).to.equal(false);
     });
 
     it('should throw when un unquoted string is passed in', () => {

@@ -98,7 +98,7 @@ export function nodeHasProperty(node, propKey, stringifiedPropValue) {
     return false;
   }
 
-  if (propValue || propValue === 0) {
+  if (propValue || propValue === 0 || propValue === '') {
     return nodePropValue === propValue;
   }
 

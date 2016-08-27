@@ -213,6 +213,11 @@ export function coercePropValue(propName, propValue) {
     return propValue;
   }
 
+  // can be the empty string
+  if (propValue === '') {
+    return propValue;
+  }
+
   const trimmedValue = propValue.trim();
 
   // if propValue includes quotes, it should be
