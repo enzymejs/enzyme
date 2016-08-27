@@ -1,8 +1,9 @@
-/* eslint-disable no-var,prefer-arrow-callback */
+/* eslint-disable no-var,prefer-arrow-callback,vars-on-top */
+
+require('babel-register');
 
 var IgnorePlugin = require('webpack').IgnorePlugin;
 var REACT013 = require('./src/version').REACT013;
-
 
 module.exports = function karma(config) {
   config.set({
