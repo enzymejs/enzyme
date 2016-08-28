@@ -213,6 +213,19 @@ export function coercePropValue(propName, propValue) {
     return propValue;
   }
 
+  // can be the empty string
+  if (propValue === '') {
+    return propValue;
+  }
+
+  if (propValue === 'NaN') {
+    return NaN;
+  }
+
+  if (propValue === 'null') {
+    return null;
+  }
+
   const trimmedValue = propValue.trim();
 
   // if propValue includes quotes, it should be
@@ -224,7 +237,7 @@ export function coercePropValue(propName, propValue) {
   const numericPropValue = +trimmedValue;
 
   // if parseInt is not NaN, then we've wanted a number
-  if (!isNaN(numericPropValue)) {
+  if (!is(NaN, numericPropValue)) {
     return numericPropValue;
   }
 
@@ -237,6 +250,27 @@ export function coercePropValue(propName, propValue) {
     `Enzyme::Unable to parse selector '[${propName}=${propValue}]'. ` +
     `Perhaps you forgot to escape a string? Try '[${propName}="${trimmedValue}"]' instead.`
   );
+}
+
+export function nodeHasProperty(node, propKey, stringifiedPropValue) {
+  const nodeProps = propsOfNode(node);
+  const descriptor = Object.getOwnPropertyDescriptor(nodeProps, propKey);
+  if (descriptor && descriptor.get) {
+    return false;
+  }
+  const nodePropValue = nodeProps[propKey];
+
+  const propValue = coercePropValue(propKey, stringifiedPropValue);
+
+  if (nodePropValue === undefined) {
+    return false;
+  }
+
+  if (propValue !== undefined) {
+    return is(nodePropValue, propValue);
+  }
+
+  return Object.prototype.hasOwnProperty.call(nodeProps, propKey);
 }
 
 export function mapNativeEventNames(event) {
