@@ -11,10 +11,8 @@ import {
   AND,
   SELECTOR,
   nodeHasType,
-} from './Utils';
-import {
   nodeHasProperty,
-} from './ShallowTraversal';
+} from './Utils';
 import {
   isDOMComponent,
   isCompositeComponent,

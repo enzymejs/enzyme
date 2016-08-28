@@ -252,6 +252,27 @@ export function coercePropValue(propName, propValue) {
   );
 }
 
+export function nodeHasProperty(node, propKey, stringifiedPropValue) {
+  const nodeProps = propsOfNode(node);
+  const descriptor = Object.getOwnPropertyDescriptor(nodeProps, propKey);
+  if (descriptor && descriptor.get) {
+    return false;
+  }
+  const nodePropValue = nodeProps[propKey];
+
+  const propValue = coercePropValue(propKey, stringifiedPropValue);
+
+  if (nodePropValue === undefined) {
+    return false;
+  }
+
+  if (propValue !== undefined) {
+    return is(nodePropValue, propValue);
+  }
+
+  return Object.prototype.hasOwnProperty.call(nodeProps, propKey);
+}
+
 export function mapNativeEventNames(event) {
   const nativeToReactEventMap = {
     compositionend: 'compositionEnd',

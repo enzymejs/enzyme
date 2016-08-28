@@ -1,9 +1,7 @@
 import React from 'react';
 import isEmpty from 'lodash/isEmpty';
 import isSubset from 'is-subset';
-import is from 'object-is';
 import {
-  coercePropValue,
   propsOfNode,
   splitSelector,
   isCompoundSelector,
@@ -11,6 +9,7 @@ import {
   AND,
   SELECTOR,
   nodeHasType,
+  nodeHasProperty,
 } from './Utils';
 
 
@@ -85,26 +84,7 @@ export function nodeHasId(node, id) {
 }
 
 
-export function nodeHasProperty(node, propKey, stringifiedPropValue) {
-  const nodeProps = propsOfNode(node);
-  const descriptor = Object.getOwnPropertyDescriptor(nodeProps, propKey);
-  if (descriptor && descriptor.get) {
-    return false;
-  }
-  const nodePropValue = nodeProps[propKey];
-
-  const propValue = coercePropValue(propKey, stringifiedPropValue);
-
-  if (nodePropValue === undefined) {
-    return false;
-  }
-
-  if (propValue !== undefined) {
-    return is(nodePropValue, propValue);
-  }
-
-  return Object.prototype.hasOwnProperty.call(nodeProps, propKey);
-}
+export { nodeHasProperty };
 
 export function nodeMatchesObjectProps(node, props) {
   return isSubset(propsOfNode(node), props);
