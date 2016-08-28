@@ -141,6 +141,13 @@ describe('ShallowTraversal', () => {
       expect(nodeHasProperty(<div foo={0} />, 'foo', 'false')).to.equal(false);
     });
 
+    it('should work with ±Infinity', () => {
+      expect(nodeHasProperty(<div foo={Infinity} />, 'foo', 'Infinity')).to.equal(true);
+      expect(nodeHasProperty(<div foo={0} />, 'foo', 'Infinity')).to.equal(false);
+      expect(nodeHasProperty(<div foo={-Infinity} />, 'foo', '-Infinity')).to.equal(true);
+      expect(nodeHasProperty(<div foo={0} />, 'foo', '-Infinity')).to.equal(false);
+    });
+
     it('should throw when un unquoted string is passed in', () => {
       const node = (<div title="foo" />);
 
