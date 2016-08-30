@@ -12,6 +12,7 @@ Organizations
  - [Rangle.io](https://github.com/rangle)
  - [GoDaddy](https://github.com/godaddy)
  - [Airware](https://github.com/airware)
+ - [Flatiron School](https://github.com/flatiron-labs)
 
 Projects
 ----------
