@@ -87,7 +87,9 @@ export default class ReactWrapper {
     } else {
       this.component = null;
       this.root = root;
-      if (!Array.isArray(nodes)) {
+      if (!nodes) {
+        this.nodes = [];
+      } else if (!Array.isArray(nodes)) {
         this.node = nodes;
         this.nodes = [nodes];
       } else {
