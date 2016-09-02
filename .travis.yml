@@ -40,8 +40,6 @@ matrix:
   allow_failures:
     - node_js: "node"
       env: EXAMPLE=react-native
-    - node_js: "node"
-      env: EXAMPLE=karma-webpack
 env:
   - REACT=0.13
   - REACT=0.14
