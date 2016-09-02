@@ -29,11 +29,11 @@ module.exports = function karma(config) {
     reporters: ['dots'],
 
     files: [
-      'test/*.jsx',
+      'test/*.{jsx,js}',
     ],
 
     exclude: [
-      'test/_*.jsx',
+      'test/_*.{jsx,js}',
     ],
 
     browsers: [
@@ -42,7 +42,7 @@ module.exports = function karma(config) {
     ],
 
     preprocessors: {
-      'test/*.jsx': ['webpack', 'sourcemap'],
+      'test/*.{jsx,js}': ['webpack', 'sourcemap'],
     },
 
     webpack: {
