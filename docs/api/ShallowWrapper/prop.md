@@ -2,7 +2,7 @@
 
 Returns the prop value for the node of the current wrapper with the provided key.
 
-NOTE: can only be called on a wrapper of a single node. In contrast to a mounted component's `.prop()`, this one operates on the **root element** of the component, not the component itself.
+NOTE: can only be called on a wrapper of a single node. In contrast to a mounted component's `.prop()`, this one operates on the **root node** of the component, not the component itself.
 
 #### Arguments
 
