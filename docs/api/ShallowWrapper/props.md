@@ -1,11 +1,12 @@
 # `.props() => Object`
 
-Returns the props hash for the root node of the wrapper. `.props()` can only be called on a wrapper of a single node.
+Returns the props hash for the root node of the wrapper. `.props()` can only be
+called on a wrapper of a single node.
 
-NOTE: When called on a shallow wrapper, `.props()` will only return the
-props for the parent element in the component, not the whole React component. To return the props for the
-entire React component, use `wrapper.instance().props`. See [`.instance() =>
-ReactComponent`](instance.md)
+NOTE: When called on a shallow wrapper, `.props()` will return values for
+props on the root node that the component *renders*, not the component itself.
+To return the props for the entire React component, use `wrapper.instance().props`.
+See [`.instance() => ReactComponent`](instance.md)
 
 
 #### Example
@@ -22,7 +23,7 @@ const MyComponent = React.createClass({
 const wrapper = shallow(<MyComponent includedProp="Success!" excludedProp="I'm not included" />);
 expect(wrapper.props().includedProp).to.equal("Success!");
 
-// Warning: .props() only returns props that are passed to the parent element,
+// Warning: .props() only returns props that are passed to the root node,
 // which does not include excludedProp in this example.
 // See the note above about wrapper.instance().props.
 
