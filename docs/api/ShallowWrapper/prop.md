@@ -2,23 +2,20 @@
 
 Returns the prop value for the node of the current wrapper with the provided key.
 
-NOTE: can only be called on a wrapper of a single node.
+NOTE: can only be called on a wrapper of a single node. Cannot be called on the root wrapper because that represents what the component renders, not the component itself.
 
 #### Arguments
 
 1. `key` (`String`): The prop name such that this will return value will be the `this.props[key]`
 of the component instance.
 
-
-
 #### Example
 
 
 ```jsx
-const wrapper = shallow(<MyComponent foo={10} />);
-expect(wrapper.prop('foo')).to.equal(10);
+const wrapper = shallow(<div><MyComponent foo={10} /></div>);
+expect(wrapper.find('MyComponent').prop('foo')).to.equal(10);
 ```
-
 
 #### Related Methods
 
