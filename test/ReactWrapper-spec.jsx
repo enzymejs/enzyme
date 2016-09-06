@@ -3005,5 +3005,18 @@ describeWithDOM('mount', () => {
         expect(wrapper.name()).to.equal('div');
       });
     });
+
+    describe('.ref()', () => {
+      it('unavailable ref should return empty nodes', () => {
+        class WithoutRef extends React.Component {
+          render() { return <div />; }
+        }
+        const wrapper = mount(<WithoutRef />);
+        const ref = wrapper.ref('not-a-ref');
+
+        expect(ref.length).to.equal(0);
+        expect(ref.isEmpty()).to.equal(true);
+      });
+    });
   });
 });
