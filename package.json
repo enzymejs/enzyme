@@ -8,7 +8,7 @@
     "preversion": "npm run clean && npm run check",
     "postversion": "git push && git push --tags && npm run clean && npm run docs:publish",
     "version": "npm run build",
-    "clean": "rimraf build dist",
+    "clean": "rimraf build",
     "lint": "eslint src/**",
     "test": "mocha --compilers js:babel/register --recursive src/**/__tests__/*.js",
     "check": "npm run lint && npm run test:all",
@@ -52,8 +52,11 @@
     "underscore": "^1.8.3"
   },
   "devDependencies": {
-    "babel": "^5.8.21",
-    "babel-eslint": "^4.1.4",
+    "babel-cli": "^6.14.0",
+    "babel-eslint": "^6.1.2",
+    "babel-preset-es2015": "^6.14.0",
+    "babel-preset-react": "^6.11.1",
+    "babel-plugin-transform-es2015-modules-umd": "^6.12.0",
     "chai": "^3.2.0",
     "coveralls": "^2.11.4",
     "eslint": "^1.9.0",
@@ -62,9 +65,7 @@
     "gitbook-cli": "^1.0.0",
     "istanbul": "^0.4.0",
     "mocha": "^2.2.5",
-    "rimraf": "^2.4.3",
-    "webpack": "^1.12.10",
-    "json-loader": "^0.5.4"
+    "rimraf": "^2.4.3"
   },
   "peerDependencies": {
     "react": "0.13.x || 0.14.x"
