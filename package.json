@@ -13,7 +13,6 @@
     "test": "mocha --compilers js:babel/register --recursive src/**/__tests__/*.js",
     "check": "npm run lint && npm run test:all",
     "build": "babel src --out-dir build",
-    "build:amd": "webpack",
     "test:watch": "mocha --compilers js:babel/register --recursive src/**/__tests__/*.js --watch",
     "test:all": "npm run react:13 && npm test && npm run react:14 && npm test",
     "react:clean": "rimraf node_modules/react node_modules/react-dom node_modules/react-addons-test-utils",
