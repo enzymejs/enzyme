@@ -9,7 +9,7 @@ import {
   coercePropValue,
   getNode,
   nodeEqual,
-  isPsuedoClassSelector,
+  isPseudoClassSelector,
   propFromEvent,
   SELECTOR,
   selectorType,
@@ -246,43 +246,43 @@ describe('Utils', () => {
   });
 
 
-  describe('isPsuedoClassSelector', () => {
+  describe('isPseudoClassSelector', () => {
 
 
     describe('prohibited selectors', () => {
-      function isNotPsuedo(selector) {
+      function isNotPseudo(selector) {
         it(selector, () => {
-          expect(isPsuedoClassSelector(selector)).to.equal(false);
+          expect(isPseudoClassSelector(selector)).to.equal(false);
         });
       }
-      isNotPsuedo('.foo');
-      isNotPsuedo('div');
-      isNotPsuedo('.foo .bar');
-      isNotPsuedo('[hover]');
-      isNotPsuedo('[checked=""]');
-      isNotPsuedo('[checked=":checked"]');
-      isNotPsuedo('[checked=\':checked\']');
-      isNotPsuedo('.foo>.bar');
-      isNotPsuedo('.foo > .bar');
-      isNotPsuedo('.foo~.bar');
-      isNotPsuedo('#foo');
+      isNotPseudo('.foo');
+      isNotPseudo('div');
+      isNotPseudo('.foo .bar');
+      isNotPseudo('[hover]');
+      isNotPseudo('[checked=""]');
+      isNotPseudo('[checked=":checked"]');
+      isNotPseudo('[checked=\':checked\']');
+      isNotPseudo('.foo>.bar');
+      isNotPseudo('.foo > .bar');
+      isNotPseudo('.foo~.bar');
+      isNotPseudo('#foo');
     });
 
     describe('allowed selectors', () => {
-      function isPsuedo(selector) {
+      function isPseudo(selector) {
         it(selector, () => {
-          expect(isPsuedoClassSelector(selector)).to.equal(true);
+          expect(isPseudoClassSelector(selector)).to.equal(true);
         });
       }
-      isPsuedo(':checked');
-      isPsuedo(':focus');
-      isPsuedo(':hover');
-      isPsuedo(':disabled');
-      isPsuedo(':any');
-      isPsuedo(':last-child');
-      isPsuedo(':nth-child(1)');
-      isPsuedo('div:checked');
-      isPsuedo('[data-foo=":hover"]:hover');
+      isPseudo(':checked');
+      isPseudo(':focus');
+      isPseudo(':hover');
+      isPseudo(':disabled');
+      isPseudo(':any');
+      isPseudo(':last-child');
+      isPseudo(':nth-child(1)');
+      isPseudo('div:checked');
+      isPseudo('[data-foo=":hover"]:hover');
     });
 
   });

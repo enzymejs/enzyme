@@ -170,19 +170,15 @@ const containsQuotes = /'|"/;
 const containsColon = /:/;
 
 
-export function isPsuedoClassSelector(selector) {
+export function isPseudoClassSelector(selector) {
   if (containsColon.test(selector)) {
     if (!containsQuotes.test(selector)) {
       return true;
     }
     const tokens = selector.split(containsQuotes);
-    for (let i = 0; i < tokens.length; i++) {
-      const token = tokens[i];
-      if (containsColon.test(token) && i % 2 === 0) {
-        return true;
-      }
-    }
-    return false;
+    return tokens.some((token, i) =>
+      containsColon.test(token) && i % 2 === 0
+    );
   }
   return false;
 }
@@ -204,8 +200,8 @@ export const SELECTOR = {
 };
 
 export function selectorType(selector) {
-  if (isPsuedoClassSelector(selector)) {
-    throw selectorError(selector, 'psudo-class');
+  if (isPseudoClassSelector(selector)) {
+    throw selectorError(selector, 'pseudo-class');
   }
   if (selector[0] === '.') {
     return SELECTOR.CLASS_TYPE;
