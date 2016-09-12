@@ -340,6 +340,50 @@ describe('shallow', () => {
       expect(wrapper.find('.foo').type()).to.equal('input');
     });
 
+    it('should find an element that has dot in attribute', () => {
+      const wrapper = shallow(
+        <div>
+          <div data-baz="foo.bar" />
+        </div>
+      );
+
+      const elements = wrapper.find('[data-baz="foo.bar"]');
+      expect(elements.length).to.equal(1);
+    });
+
+    it('should find an element that with class and attribute', () => {
+      const wrapper = shallow(
+        <div>
+          <div data-baz="bar" className="classBar" />
+        </div>
+      );
+
+      const elements = wrapper.find('.classBar[data-baz="bar"]');
+      expect(elements.length).to.equal(1);
+    });
+
+    it('should find an element that with multiple classes and one attribute', () => {
+      const wrapper = shallow(
+        <div>
+          <div data-baz="bar" className="classBar classFoo" />
+        </div>
+      );
+
+      const elements = wrapper.find('.classBar.classFoo[data-baz="bar"]');
+      expect(elements.length).to.equal(1);
+    });
+
+    it('should find an element that with class and class with hyphen', () => {
+      const wrapper = shallow(
+        <div>
+          <div data-baz="bar" className="classBar class-Foo" />
+        </div>
+      );
+
+      const elements = wrapper.find('.classBar.class-Foo');
+      expect(elements.length).to.equal(1);
+    });
+
     it('should find an element based on a tag name and class name', () => {
       const wrapper = shallow(
         <div>
