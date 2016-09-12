@@ -63,7 +63,7 @@ function filterWhereUnwrapped(wrapper, predicate) {
 /**
  * @class ReactWrapper
  */
-export default class ReactWrapper {
+class ReactWrapper {
 
   constructor(nodes, root, options = {}) {
     if (!global.window && !global.document) {
@@ -105,26 +105,6 @@ export default class ReactWrapper {
       findWhereUnwrapped,
       childrenOfInst
     );
-  }
-
-  /**
-   * Makes a wrapper iterable, which is useful when using destructive
-   * assignment with `find()`
-   * @example
-   * const wrapper = shallow(<MyComponent />)
-   * const [fistLink, secondLink] = wrapper.find('a')
-   * @returns {Object}
-   */
-  [ITERATOR_SYMBOL]() {
-    let index = 0;
-    return {
-      next: () => {
-        if (index >= this.nodes.length) {
-          return { done: true };
-        }
-        return { done: false, value: this.nodes[index++] };
-      },
-    };
   }
 
   /**
@@ -929,3 +909,12 @@ export default class ReactWrapper {
     unmountComponentAtNode(this.options.attachTo);
   }
 }
+
+
+if (ITERATOR_SYMBOL) {
+  ReactWrapper.prototype[ITERATOR_SYMBOL] = function iterator() {
+    return this.nodes[ITERATOR_SYMBOL]();
+  };
+}
+
+export default ReactWrapper;

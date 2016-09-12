@@ -64,7 +64,7 @@ function filterWhereUnwrapped(wrapper, predicate) {
 /**
  * @class ShallowWrapper
  */
-export default class ShallowWrapper {
+class ShallowWrapper {
 
   constructor(nodes, root, options = {}) {
     if (!root) {
@@ -102,26 +102,6 @@ export default class ShallowWrapper {
     }
     this.options = options;
     this.complexSelector = new ComplexSelector(buildPredicate, findWhereUnwrapped, childrenOfNode);
-  }
-
-  /**
-   * Makes a wrapper iterable, which is useful when using destructive
-   * assignment with `find()`
-   * @example
-   * const wrapper = shallow(<MyComponent />)
-   * const [fistLink, secondLink] = wrapper.find('a')
-   * @returns {Object}
-   */
-  [ITERATOR_SYMBOL]() {
-    let index = 0;
-    return {
-      next: () => {
-        if (index >= this.nodes.length) {
-          return { done: true };
-        }
-        return { done: false, value: this.nodes[index++] };
-      },
-    };
   }
 
   /**
@@ -1003,3 +983,11 @@ export default class ShallowWrapper {
     });
   }
 }
+
+if (ITERATOR_SYMBOL) {
+  ShallowWrapper.prototype[ITERATOR_SYMBOL] = function iterator() {
+    return this.nodes[ITERATOR_SYMBOL]();
+  };
+}
+
+export default ShallowWrapper;

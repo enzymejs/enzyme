@@ -12,9 +12,7 @@ import {
   REACT15,
 } from './version';
 
-export const ITERATOR_SYMBOL = (
-  typeof Symbol === 'function' && Symbol.iterator
-) || '@@iterator';
+export const ITERATOR_SYMBOL = typeof Symbol === 'function' && Symbol.iterator;
 
 function internalInstanceKey(node) {
   return Object.keys(Object(node)).filter(key => key.match(/^__reactInternalInstance\$/))[0];
