@@ -985,9 +985,11 @@ class ShallowWrapper {
 }
 
 if (ITERATOR_SYMBOL) {
-  ShallowWrapper.prototype[ITERATOR_SYMBOL] = function iterator() {
-    return this.nodes[ITERATOR_SYMBOL]();
-  };
+  Object.defineProperty(ShallowWrapper.prototype, ITERATOR_SYMBOL, {
+    value: function iterator() {
+      return this.nodes[ITERATOR_SYMBOL]();
+    },
+  });
 }
 
 export default ShallowWrapper;

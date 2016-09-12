@@ -912,9 +912,11 @@ class ReactWrapper {
 
 
 if (ITERATOR_SYMBOL) {
-  ReactWrapper.prototype[ITERATOR_SYMBOL] = function iterator() {
-    return this.nodes[ITERATOR_SYMBOL]();
-  };
+  Object.defineProperty(ReactWrapper.prototype, ITERATOR_SYMBOL, {
+    value: function iterator() {
+      return this.nodes[ITERATOR_SYMBOL]();
+    },
+  });
 }
 
 export default ReactWrapper;
