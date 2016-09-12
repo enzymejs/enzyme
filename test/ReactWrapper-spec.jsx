@@ -390,12 +390,12 @@ describeWithDOM('mount', () => {
         React.createElement('div', null, React.createElement('span', {
           '123-foo': 'bar',
           '-foo': 'bar',
-          ':foo': 'bar',
+          '+foo': 'bar',
         }))
       );
 
       expect(wrapper.find('[-foo]')).to.have.length(0, '-foo');
-      expect(wrapper.find('[:foo]')).to.have.length(0, ':foo');
+      expect(wrapper.find('[+foo]')).to.have.length(0, '+foo');
       expect(wrapper.find('[123-foo]')).to.have.length(0, '123-foo');
     });
 
