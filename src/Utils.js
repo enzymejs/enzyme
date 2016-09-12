@@ -165,14 +165,27 @@ export function splitSelector(selector) {
   return selector.split(/(?=\.|\[.*\])|(?=#|\[#.*\])/);
 }
 
-export function isSimpleSelector(selector) {
-  // any of these characters pretty much guarantee it's a complex selector
-  return !/[~\s:>]/.test(selector);
+
+const containsQuotes = /'|"/;
+const containsColon = /:/;
+
+
+export function isPseudoClassSelector(selector) {
+  if (containsColon.test(selector)) {
+    if (!containsQuotes.test(selector)) {
+      return true;
+    }
+    const tokens = selector.split(containsQuotes);
+    return tokens.some((token, i) =>
+      containsColon.test(token) && i % 2 === 0
+    );
+  }
+  return false;
 }
 
-export function selectorError(selector) {
+export function selectorError(selector, type = '') {
   return new TypeError(
-    `Enzyme received a complex CSS selector ('${selector}') that it does not currently support`
+    `Enzyme received a ${type} CSS selector ('${selector}') that it does not currently support`
   );
 }
 
@@ -187,6 +200,9 @@ export const SELECTOR = {
 };
 
 export function selectorType(selector) {
+  if (isPseudoClassSelector(selector)) {
+    throw selectorError(selector, 'pseudo-class');
+  }
   if (selector[0] === '.') {
     return SELECTOR.CLASS_TYPE;
   } else if (selector[0] === '#') {
