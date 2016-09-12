@@ -3626,4 +3626,31 @@ describe('shallow', () => {
       expect(underwater.is(RendersDOM)).to.equal(true);
     });
   });
+
+  describe('@@iterator', () => {
+    it('should be iterable', () => {
+      class Foo extends React.Component {
+        render() {
+          return (
+            <div>
+              <a href="#1">Hello</a>
+              <a href="#2">Hello</a>
+              <a href="#3">Hello</a>
+              <a href="#4">Hello</a>
+            </div>
+          );
+        }
+      }
+      const wrapper = shallow(<Foo />);
+      const [a, b, c, d] = wrapper.find('a');
+      const a1 = wrapper.find('a').get(0);
+      const b1 = wrapper.find('a').get(1);
+      const c1 = wrapper.find('a').get(2);
+      const d1 = wrapper.find('a').get(3);
+      expect(a1).to.equal(a);
+      expect(b1).to.equal(b);
+      expect(c1).to.equal(c);
+      expect(d1).to.equal(d);
+    });
+  });
 });

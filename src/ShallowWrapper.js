@@ -16,6 +16,7 @@ import {
   displayNameOfNode,
   isFunctionalComponent,
   isCustomComponentElement,
+  ITERATOR_SYMBOL,
 } from './Utils';
 import {
   debugNodes,
@@ -101,6 +102,26 @@ export default class ShallowWrapper {
     }
     this.options = options;
     this.complexSelector = new ComplexSelector(buildPredicate, findWhereUnwrapped, childrenOfNode);
+  }
+
+  /**
+   * Makes a wrapper iterable, which is useful when using destructive
+   * assignment with `find()`
+   * @example
+   * const wrapper = shallow(<MyComponent />)
+   * const [fistLink, secondLink] = wrapper.find('a')
+   * @returns {Object}
+   */
+  [ITERATOR_SYMBOL]() {
+    let index = 0;
+    return {
+      next: () => {
+        if (index >= this.nodes.length) {
+          return { done: true };
+        }
+        return { done: false, value: this.nodes[index++] };
+      },
+    };
   }
 
   /**
