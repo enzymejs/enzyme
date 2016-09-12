@@ -9,7 +9,7 @@ import {
   coercePropValue,
   getNode,
   nodeEqual,
-  isSimpleSelector,
+  isPsuedoClassSelector,
   propFromEvent,
   SELECTOR,
   selectorType,
@@ -246,39 +246,43 @@ describe('Utils', () => {
   });
 
 
-  describe('isSimpleSelector', () => {
+  describe('isPsuedoClassSelector', () => {
+
 
     describe('prohibited selectors', () => {
-      function isComplex(selector) {
+      function isNotPsuedo(selector) {
         it(selector, () => {
-          expect(isSimpleSelector(selector)).to.equal(false);
+          expect(isPsuedoClassSelector(selector)).to.equal(false);
         });
       }
-
-      isComplex('.foo .bar');
-      isComplex(':visible');
-      isComplex('.foo>.bar');
-      isComplex('.foo > .bar');
-      isComplex('.foo~.bar');
-
+      isNotPsuedo('.foo');
+      isNotPsuedo('div');
+      isNotPsuedo('.foo .bar');
+      isNotPsuedo('[hover]');
+      isNotPsuedo('[checked=""]');
+      isNotPsuedo('[checked=":checked"]');
+      isNotPsuedo('[checked=\':checked\']');
+      isNotPsuedo('.foo>.bar');
+      isNotPsuedo('.foo > .bar');
+      isNotPsuedo('.foo~.bar');
+      isNotPsuedo('#foo');
     });
 
     describe('allowed selectors', () => {
-      function isSimple(selector) {
+      function isPsuedo(selector) {
         it(selector, () => {
-          expect(isSimpleSelector(selector)).to.equal(true);
+          expect(isPsuedoClassSelector(selector)).to.equal(true);
         });
       }
-
-      isSimple('.foo');
-      isSimple('.foo-and-foo');
-      isSimple('input[foo="bar"]');
-      isSimple('input[foo="bar"][bar="baz"][baz="foo"]');
-      isSimple('.FoOaNdFoO');
-      isSimple('tag');
-      isSimple('.foo.bar');
-      isSimple('input.foo');
-
+      isPsuedo(':checked');
+      isPsuedo(':focus');
+      isPsuedo(':hover');
+      isPsuedo(':disabled');
+      isPsuedo(':any');
+      isPsuedo(':last-child');
+      isPsuedo(':nth-child(1)');
+      isPsuedo('div:checked');
+      isPsuedo('[data-foo=":hover"]:hover');
     });
 
   });
