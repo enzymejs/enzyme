@@ -195,7 +195,7 @@ export function selectorError(selector, type = '') {
   );
 }
 
-export const isCompoundSelector = /([a-z]\.[a-z]|[a-z]\[.*\]|[a-z]#[a-z])/i;
+export const isCompoundSelector = /^[\.#]?-?[_a-z]+[_a-z0-9-]*[\.\[#]/i;
 
 const isPropSelector = /^\[.*\]$/;
 
