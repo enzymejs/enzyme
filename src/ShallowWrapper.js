@@ -986,6 +986,7 @@ class ShallowWrapper {
 
 if (ITERATOR_SYMBOL) {
   Object.defineProperty(ShallowWrapper.prototype, ITERATOR_SYMBOL, {
+    configurable: true,
     value: function iterator() {
       return this.nodes[ITERATOR_SYMBOL]();
     },

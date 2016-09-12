@@ -913,6 +913,7 @@ class ReactWrapper {
 
 if (ITERATOR_SYMBOL) {
   Object.defineProperty(ReactWrapper.prototype, ITERATOR_SYMBOL, {
+    configurable: true,
     value: function iterator() {
       return this.nodes[ITERATOR_SYMBOL]();
     },
