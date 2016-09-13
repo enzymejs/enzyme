@@ -782,7 +782,14 @@ describe('shallow', () => {
       class Foo extends React.Component {
         render() {
           return (
-            <div {...this.props} />
+            <Bar {...this.props} />
+          );
+        }
+      }
+      class Bar extends React.Component {
+        render() {
+          return (
+            <div />
           );
         }
       }
@@ -832,7 +839,10 @@ describe('shallow', () => {
 
       it('should merge newProps with oldProps', () => {
         const Foo = (props) => (
-          <div {...props} />
+          <Bar {...props} />
+        );
+        const Bar = () => (
+          <div />
         );
 
         const wrapper = shallow(<Foo a="a" b="b" />);

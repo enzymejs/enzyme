@@ -16,7 +16,7 @@ import {
   render,
   ReactWrapper,
 } from '../src';
-import { REACT013, REACT15 } from '../src/version';
+import { REACT013, REACT014, REACT15 } from '../src/version';
 
 describeWithDOM('mount', () => {
 
@@ -384,19 +384,23 @@ describeWithDOM('mount', () => {
 
     });
 
-    it('should not find components with invalid attributes', () => {
-      // Invalid attributes aren't valid JSX, so manual instantiation is necessary
-      const wrapper = mount(
-        React.createElement('div', null, React.createElement('span', {
-          '123-foo': 'bar',
-          '-foo': 'bar',
-          '+foo': 'bar',
-        }))
-      );
+    // React 15.2 warns when setting a non valid prop to an DOM element
+    describeIf(REACT013 || REACT014, 'unauthorized dom props', () => {
 
-      expect(wrapper.find('[-foo]')).to.have.length(0, '-foo');
-      expect(wrapper.find('[+foo]')).to.have.length(0, '+foo');
-      expect(wrapper.find('[123-foo]')).to.have.length(0, '123-foo');
+      it('should not find components with invalid attributes', () => {
+        // Invalid attributes aren't valid JSX, so manual instantiation is necessary
+        const wrapper = mount(
+          React.createElement('div', null, React.createElement('span', {
+            '123-foo': 'bar',
+            '-foo': 'bar',
+            '+foo': 'bar',
+          }))
+        );
+
+        expect(wrapper.find('[-foo]')).to.have.length(0, '-foo');
+        expect(wrapper.find('[+foo]')).to.have.length(0, '+foo');
+        expect(wrapper.find('[123-foo]')).to.have.length(0, '123-foo');
+      });
     });
 
     it('should support data prop selectors', () => {
@@ -519,40 +523,45 @@ describeWithDOM('mount', () => {
         <div>
           <input data-test="ref" className="foo" type="text" />
           <input data-test="ref" type="text" />
-          <button data-test="ref" prop={undefined} />
-          <span data-test="ref" prop={null} />
-          <div data-test="ref" prop={123} />
-          <input data-test="ref" prop={false} />
-          <a data-test="ref" prop />
+          <button data-test="ref" data-prop={undefined} />
+          <span data-test="ref" data-prop={null} />
+          <div data-test="ref" data-prop={123} />
+          <input data-test="ref" data-prop={false} />
+          <a data-test="ref" data-prop />
         </div>
       );
       expect(wrapper.find({ a: 1 })).to.have.length(0);
       expect(wrapper.find({ 'data-test': 'ref' })).to.have.length(7);
       expect(wrapper.find({ className: 'foo' })).to.have.length(1);
-      expect(wrapper.find({ prop: undefined })).to.have.length(1);
-      expect(wrapper.find({ prop: null })).to.have.length(1);
-      expect(wrapper.find({ prop: 123 })).to.have.length(1);
-      expect(wrapper.find({ prop: false })).to.have.length(1);
-      expect(wrapper.find({ prop: true })).to.have.length(1);
+      expect(wrapper.find({ 'data-prop': undefined })).to.have.length(1);
+      expect(wrapper.find({ 'data-prop': null })).to.have.length(1);
+      expect(wrapper.find({ 'data-prop': 123 })).to.have.length(1);
+      expect(wrapper.find({ 'data-prop': false })).to.have.length(1);
+      expect(wrapper.find({ 'data-prop': true })).to.have.length(1);
     });
 
     it('should support complex and nested object property selectors', () => {
       const testFunction = () => ({});
       const wrapper = mount(
         <div>
-          <span more={[{ id: 1 }]} data-test="ref" prop onChange={testFunction} />
-          <a more={[{ id: 1 }]} data-test="ref" />
-          <div more={{ item: { id: 1 } }} data-test="ref" />
-          <input style={{ height: 20 }} data-test="ref" />
+          <span data-more={[{ id: 1 }]} data-test="ref" data-prop onChange={testFunction} />
+          <a data-more={[{ id: 1 }]} data-test="ref" />
+          <div data-more={{ item: { id: 1 } }} data-test="ref" />
+          <input data-more={{ height: 20 }} data-test="ref" />
         </div>
       );
       expect(wrapper.find({ 'data-test': 'ref' })).to.have.length(4);
-      expect(wrapper.find({ more: { a: 1 } })).to.have.length(0);
-      expect(wrapper.find({ more: [{ id: 1 }] })).to.have.length(2);
-      expect(wrapper.find({ more: { item: { id: 1 } } })).to.have.length(1);
-      expect(wrapper.find({ style: { height: 20 } })).to.have.length(1);
+      expect(wrapper.find({ 'data-more': { a: 1 } })).to.have.length(0);
+      expect(wrapper.find({ 'data-more': [{ id: 1 }] })).to.have.length(2);
+      expect(wrapper.find({ 'data-more': { item: { id: 1 } } })).to.have.length(1);
+      expect(wrapper.find({ 'data-more': { height: 20 } })).to.have.length(1);
       expect(wrapper
-        .find({ more: [{ id: 1 }], 'data-test': 'ref', prop: true, onChange: testFunction })
+        .find({
+          'data-more': [{ id: 1 }],
+          'data-test': 'ref',
+          'data-prop': true,
+          onChange: testFunction,
+        })
       ).to.have.length(1);
     });
 
@@ -901,8 +910,13 @@ describeWithDOM('mount', () => {
       class Foo extends React.Component {
         render() {
           return (
-            <div {...this.props} />
+            <Bar {...this.props} />
           );
+        }
+      }
+      class Bar extends React.Component {
+        render() {
+          return <div />;
         }
       }
 
@@ -969,7 +983,10 @@ describeWithDOM('mount', () => {
 
       it('should merge newProps with oldProps', () => {
         const Foo = (props) => (
-          <div {...props} />
+          <Bar {...props} />
+        );
+        const Bar = () => (
+          <div />
         );
 
         const wrapper = mount(<Foo a="a" b="b" />);
@@ -2320,15 +2337,15 @@ describeWithDOM('mount', () => {
         render() {
           return (
             <div>
-              <span ref="firstRef" amount={2}>First</span>
-              <span ref="secondRef" amount={4}>Second</span>
-              <span ref="thirdRef" amount={8}>Third</span>
+              <span ref="firstRef" data-amount={2}>First</span>
+              <span ref="secondRef" data-amount={4}>Second</span>
+              <span ref="thirdRef" data-amount={8}>Third</span>
             </div>
           );
         }
       }
       const wrapper = mount(<Foo />);
-      expect(wrapper.ref('secondRef').prop('amount')).to.equal(4);
+      expect(wrapper.ref('secondRef').prop('data-amount')).to.equal(4);
       expect(wrapper.ref('secondRef').text()).to.equal('Second');
     });
   });
