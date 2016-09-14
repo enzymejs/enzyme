@@ -16,6 +16,7 @@ import {
   render,
   ReactWrapper,
 } from '../src';
+import { ITERATOR_SYMBOL } from '../src/Utils';
 import { REACT013, REACT014, REACT15 } from '../src/version';
 
 describeWithDOM('mount', () => {
@@ -3025,7 +3026,7 @@ describeWithDOM('mount', () => {
     });
   });
 
-  describe('@@iterator', () => {
+  describeIf(ITERATOR_SYMBOL, '@@iterator', () => {
     it('should be iterable', () => {
       class Foo extends React.Component {
         render() {

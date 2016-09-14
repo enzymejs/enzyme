@@ -4,6 +4,7 @@ import sinon from 'sinon';
 
 import { shallow, render, ShallowWrapper } from '../src/';
 import { describeIf, itIf, itWithData, generateEmptyRenderData } from './_helpers';
+import { ITERATOR_SYMBOL } from '../src/Utils';
 import { REACT013, REACT15 } from '../src/version';
 
 describe('shallow', () => {
@@ -3627,7 +3628,7 @@ describe('shallow', () => {
     });
   });
 
-  describe('@@iterator', () => {
+  describeIf(ITERATOR_SYMBOL, '@@iterator', () => {
     it('should be iterable', () => {
       class Foo extends React.Component {
         render() {
