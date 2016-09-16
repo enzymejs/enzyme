@@ -12,11 +12,13 @@ implemented completely in JS.
 
 ```jsx
 import { mount } from 'enzyme';
+import sinon from 'sinon';
+import Foo from './Foo';
 
 describe('<Foo />', () => {
 
   it('calls componentDidMount', () => {
-    spy(Foo.prototype, 'componentDidMount');
+    sinon.spy(Foo.prototype, 'componentDidMount');
     const wrapper = mount(<Foo />);
     expect(Foo.prototype.componentDidMount.calledOnce).to.equal(true);
   });
@@ -29,7 +31,7 @@ describe('<Foo />', () => {
   });
 
   it('simulates click events', () => {
-    const onButtonClick = spy();
+    const onButtonClick = sinon.spy();
     const wrapper = mount(
       <Foo onButtonClick={onButtonClick} />
     );
