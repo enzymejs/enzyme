@@ -152,7 +152,7 @@ class ShallowWrapper {
     if (this.root !== this) {
       throw new Error('ShallowWrapper::update() can only be called on the root');
     }
-    this.single(() => {
+    this.single('update', () => {
       const instance = this.instance();
       if (instance) {
         withSetStateAllowed(() => {
@@ -664,7 +664,9 @@ class ShallowWrapper {
    * @returns {ShallowWrapper}
    */
   parents(selector) {
-    const allParents = this.wrap(this.single('parents', n => parentsOfNode(n, this.root.getNode())));
+    const allParents = this.wrap(
+        this.single('parents', n => parentsOfNode(n, this.root.getNode()))
+    );
     return selector ? allParents.filter(selector) : allParents;
   }
 
