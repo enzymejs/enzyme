@@ -90,10 +90,8 @@ class ReactWrapper {
       if (!nodes) {
         this.initialNodes = [];
       } else if (!Array.isArray(nodes)) {
-        this.initialNode = nodes;
         this.initialNodes = [nodes];
       } else {
-        this.initialNode = nodes[0];
         this.initialNodes = nodes;
       }
       this.length = this.initialNodes.length;
@@ -112,7 +110,12 @@ class ReactWrapper {
    * @return {ReactComponent}
    */
   getNode() {
-    return this.initialNode || this.wrappedComponent;
+    if (this.length !== 1) {
+      throw new Error(
+        'ReactWrapper::getNode() can only be called when wrapping one node'
+      );
+    }
+    return this.initialNodes ? this.initialNodes[0] : this.wrappedComponent;
   }
 
   /**

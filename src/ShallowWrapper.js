@@ -90,10 +90,8 @@ class ShallowWrapper {
       this.unrendered = null;
       this.renderer = null;
       if (!Array.isArray(nodes)) {
-        this.initialNode = nodes;
         this.initialNodes = [nodes];
       } else {
-        this.initialNode = nodes[0];
         this.initialNodes = nodes;
       }
       this.length = this.initialNodes.length;
@@ -108,7 +106,12 @@ class ShallowWrapper {
    * @return {ReactElement}
    */
   getNode() {
-    return this.initialNode || this.renderer.getRenderOutput();
+    if (this.length !== 1) {
+      throw new Error(
+        'ShallowWrapper::getNode() can only be called when wrapping one node'
+      );
+    }
+    return this.initialNodes ? this.initialNodes[0] : this.renderer.getRenderOutput();
   }
 
   /**
