@@ -609,7 +609,7 @@ class ShallowWrapper {
    * @returns {ShallowWrapper}
    */
   invoke(event, ...args) {
-    return this.single(() => {
+    return this.single('invoke', () => {
       const handler = this.prop(propFromEvent(event));
       if (handler) {
         withSetStateAllowed(() => {
@@ -635,7 +635,7 @@ class ShallowWrapper {
    * @returns {ShallowWrapper}
    */
   simulate(event, mock) {
-    return this.single(() => {
+    return this.single('simulate', () => {
       const bubbleProp = propFromEvent(event);
       const captureProp = `${bubbleProp}Capture`;
       const e = new SyntheticEvent(undefined, undefined, { type: event, target: {} });
