@@ -124,6 +124,9 @@ export function childrenOfInstInternal(inst) {
       if (REACT013 && !node.getPublicInstance) {
         return false;
       }
+      if (typeof renderedChildren[key]._stringText !== 'undefined') {
+        return false;
+      }
       return true;
     }).map((node) => {
       if (!REACT013 && typeof node._currentElement.type === 'function') {

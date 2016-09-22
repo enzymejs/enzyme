@@ -1910,6 +1910,12 @@ describeWithDOM('mount', () => {
       expect(children.at(1).hasClass('baz')).to.equal(true);
     });
 
+    it('should not attempt to get an instance for text nodes', () => {
+      const wrapper = mount(<div>B<span />C</div>);
+      const children = wrapper.children();
+      expect(children.length).to.equal(1);
+    });
+
     describeIf(!REACT013, 'stateless function components', () => {
       it('should handle mixed children with and without arrays', () => {
         const Foo = props => (
