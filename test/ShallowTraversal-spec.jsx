@@ -206,7 +206,7 @@ describe('ShallowTraversal', () => {
       const spy = sinon.spy();
       const node = (
         <div>
-          <p>{""}</p>
+          <p>{''}</p>
         </div>
       );
       treeForEach(node, spy);
