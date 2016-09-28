@@ -3788,10 +3788,6 @@ describe('shallow', () => {
         });
       }
 
-      mutateState() {
-        this.state.showSpan = true;
-      }
-
       callbackSetState() {
         this.safeSetState({ showSpan: true });
       }
@@ -3801,7 +3797,6 @@ describe('shallow', () => {
           <div>
             {this.state && this.state.showSpan && <span className="show-me" />}
             <button className="async-btn" onClick={() => this.asyncSetState()} />
-            <button className="mutates-btn" onClick={() => this.mutateState()} />
             <Child callback={() => this.callbackSetState()} />
           </div>
         );
@@ -3820,13 +3815,6 @@ describe('shallow', () => {
     it('should have updated output after child prop callback invokes setState', () => {
       const wrapper = shallow(<Test />);
       wrapper.find(Child).props().callback();
-      expect(wrapper.find('.show-me').length).to.equal(1);
-    });
-
-    it('should have updated output after state mutation when .update() is called', () => {
-      const wrapper = shallow(<Test />);
-      wrapper.find('.mutates-btn').simulate('click');
-      wrapper.update();
       expect(wrapper.find('.show-me').length).to.equal(1);
     });
   });

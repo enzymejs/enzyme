@@ -84,17 +84,21 @@ class ShallowWrapper {
           }
         });
       });
+      this.node = this.renderer.getRenderOutput();
+      this.nodes = [this.node];
       this.length = 1;
     } else {
       this.root = root;
       this.unrendered = null;
       this.renderer = null;
       if (!Array.isArray(nodes)) {
-        this.initialNodes = [nodes];
+        this.node = nodes;
+        this.nodes = [nodes];
       } else {
-        this.initialNodes = nodes;
+        this.node = nodes[0];
+        this.nodes = nodes;
       }
-      this.length = this.initialNodes.length;
+      this.length = this.nodes.length;
     }
     this.options = options;
     this.complexSelector = new ComplexSelector(buildPredicate, findWhereUnwrapped, childrenOfNode);
@@ -111,7 +115,7 @@ class ShallowWrapper {
         'ShallowWrapper::getNode() can only be called when wrapping one node'
       );
     }
-    return this.initialNodes ? this.initialNodes[0] : this.renderer.getRenderOutput();
+    return this.root === this ? this.renderer.getRenderOutput() : this.node;
   }
 
   /**
@@ -120,7 +124,7 @@ class ShallowWrapper {
    * @return {Array<ReactElement>}
    */
   getNodes() {
-    return this.initialNodes || [this.renderer.getRenderOutput()];
+    return this.root === this ? [this.renderer.getRenderOutput()] : this.nodes;
   }
 
   /**
@@ -156,12 +160,8 @@ class ShallowWrapper {
       throw new Error('ShallowWrapper::update() can only be called on the root');
     }
     this.single('update', () => {
-      const instance = this.instance();
-      if (instance) {
-        withSetStateAllowed(() => {
-          instance.forceUpdate();
-        });
-      }
+      this.node = this.renderer.getRenderOutput();
+      this.nodes = [this.node];
     });
     return this;
   }
@@ -227,6 +227,7 @@ class ShallowWrapper {
             ) {
               instance.componentDidUpdate(prevProps, state, prevContext);
             }
+            this.update();
           }
           if (originalComponentWillReceiveProps) {
             instance.componentWillReceiveProps = originalComponentWillReceiveProps;
@@ -280,6 +281,7 @@ class ShallowWrapper {
     this.single('setState', () => {
       withSetStateAllowed(() => {
         this.instance().setState(state, callback);
+        this.update();
       });
     });
     return this;
@@ -571,6 +573,7 @@ class ShallowWrapper {
         batchedUpdates(() => {
           handler(...args);
         });
+        this.root.update();
       });
     }
     return this;

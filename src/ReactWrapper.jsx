@@ -82,19 +82,22 @@ class ReactWrapper {
         />,
       options);
       this.root = this;
-      this.wrappedComponent = this.component.getWrappedComponent();
+      this.node = this.component.getWrappedComponent();
+      this.nodes = [this.node];
       this.length = 1;
     } else {
       this.component = null;
       this.root = root;
       if (!nodes) {
-        this.initialNodes = [];
+        this.nodes = [];
       } else if (!Array.isArray(nodes)) {
-        this.initialNodes = [nodes];
+        this.node = nodes;
+        this.nodes = [nodes];
       } else {
-        this.initialNodes = nodes;
+        this.node = nodes[0];
+        this.nodes = nodes;
       }
-      this.length = this.initialNodes.length;
+      this.length = this.nodes.length;
     }
     this.options = options;
     this.complexSelector = new ComplexSelector(
@@ -115,7 +118,7 @@ class ReactWrapper {
         'ReactWrapper::getNode() can only be called when wrapping one node'
       );
     }
-    return this.initialNodes ? this.initialNodes[0] : this.wrappedComponent;
+    return this.nodes[0];
   }
 
   /**
@@ -124,7 +127,7 @@ class ReactWrapper {
    * @return {Array<ReactComponent>}
    */
   getNodes() {
-    return this.initialNodes || [this.wrappedComponent];
+    return this.nodes;
   }
 
   /**
