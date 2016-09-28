@@ -3718,6 +3718,52 @@ describe('shallow', () => {
     });
   });
 
+  describe('.getNode()', () => {
+    const element = (
+      <div>
+        <span />
+        <span />
+      </div>
+    );
+
+    class Test extends React.Component {
+      render() {
+        return element;
+      }
+    }
+
+    it('should return the wrapped element', () => {
+      const wrapper = shallow(<Test />);
+      expect(wrapper.getNode()).to.equal(element);
+    });
+
+    it('should throw when wrapping multiple elements', () => {
+      const wrapper = shallow(<Test />).find('span');
+      expect(() => wrapper.getNode()).to.throw(Error);
+    });
+  });
+
+  describe('.getNodes()', () => {
+    it('should return the wrapped elements', () => {
+      const one = <span />;
+      const two = <span />;
+
+      class Test extends React.Component {
+        render() {
+          return (
+            <div>
+              { one }
+              { two }
+            </div>
+          );
+        }
+      }
+
+      const wrapper = shallow(<Test />);
+      expect(wrapper.find('span').getNodes()).to.deep.equal([one, two]);
+    });
+  });
+
   describe('out-of-band state updates', () => {
     class Child extends React.Component {
       render() {

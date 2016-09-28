@@ -3132,6 +3132,47 @@ describeWithDOM('mount', () => {
     });
   });
 
+  describe('.getNode()', () => {
+    class Test extends React.Component {
+      render() {
+        return (
+          <div>
+            <span />
+            <span />
+          </div>
+        );
+      }
+    }
+
+    it('should return the wrapped component instance', () => {
+      const wrapper = mount(<Test />);
+      expect(wrapper.getNode()).to.be.an.instanceof(Test);
+    });
+
+    it('should throw when wrapping multiple elements', () => {
+      const wrapper = mount(<Test />).find('span');
+      expect(() => wrapper.getNode()).to.throw(Error);
+    });
+  });
+
+  describe('.getNodes()', () => {
+    it('should return the wrapped elements', () => {
+      class Test extends React.Component {
+        render() {
+          return (
+            <div>
+              <span />
+              <span />
+            </div>
+          );
+        }
+      }
+
+      const wrapper = mount(<Test />);
+      expect(wrapper.find('span').getNodes()).to.have.lengthOf(2);
+    });
+  });
+
   describe('#single()', () => {
     it('throws if run on multiple nodes', () => {
       const wrapper = mount(<div><i /><i /></div>).children();
