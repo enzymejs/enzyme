@@ -1078,7 +1078,7 @@ describe('shallow', () => {
     });
   });
 
-  describe('.setState(newState)', () => {
+  describe('.setState(newState[, cb])', () => {
     it('should set the state of the root node', () => {
       class Foo extends React.Component {
         constructor(props) {
@@ -1095,6 +1095,25 @@ describe('shallow', () => {
       expect(wrapper.find('.foo').length).to.equal(1);
       wrapper.setState({ id: 'bar' });
       expect(wrapper.find('.bar').length).to.equal(1);
+    });
+
+    it('should call the callback when setState has completed', () => {
+      class Foo extends React.Component {
+        constructor(props) {
+          super(props);
+          this.state = { id: 'foo' };
+        }
+        render() {
+          return (
+            <div className={this.state.id} />
+          );
+        }
+      }
+      const wrapper = shallow(<Foo />);
+      expect(wrapper.state()).to.eql({ id: 'foo' });
+      wrapper.setState({ id: 'bar' }, () => {
+        expect(wrapper.state()).to.eql({ id: 'bar' });
+      });
     });
 
     describeIf(!REACT013, 'stateless function components', () => {
