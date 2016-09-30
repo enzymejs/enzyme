@@ -1341,6 +1341,44 @@ describeWithDOM('mount', () => {
         expect(wrapper.state()).to.eql({ id: 'bar' });
       });
     });
+
+    it('should throw error when cb is not a function', () => {
+      class Foo extends React.Component {
+        constructor(props) {
+          super(props);
+          this.state = { id: 'foo' };
+        }
+        render() {
+          return (
+            <div className={this.state.id} />
+          );
+        }
+      }
+      const wrapper = mount(<Foo />);
+      expect(wrapper.state()).to.eql({ id: 'foo' });
+      expect(() => wrapper.setState({ id: 'bar' }, 1)).to.throw(Error);
+    });
+
+    itIf(REACT15, 'should throw error when cb is not a function', () => {
+      class Foo extends React.Component {
+        constructor(props) {
+          super(props);
+          this.state = { id: 'foo' };
+        }
+        render() {
+          return (
+            <div className={this.state.id} />
+          );
+        }
+      }
+      const wrapper = mount(<Foo />);
+      expect(wrapper.state()).to.eql({ id: 'foo' });
+      expect(() => wrapper.setState({ id: 'bar' }, 1)).to.throw(
+        Error,
+        'setState(...): Expected the last optional `callback` argument ' +
+        'to be a function. Instead received: number.'
+      );
+    });
   });
 
   describe('.is(selector)', () => {
