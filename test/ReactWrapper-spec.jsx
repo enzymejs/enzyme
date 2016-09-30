@@ -857,7 +857,7 @@ describeWithDOM('mount', () => {
 
   });
 
-  describe('.setProps(newProps)', () => {
+  describe('.setProps(newProps[, cb])', () => {
     it('should set props for a component multiple times', () => {
       class Foo extends React.Component {
         render() {
@@ -958,6 +958,23 @@ describeWithDOM('mount', () => {
       };
 
       expect(setInvalidProps).to.throw(TypeError, similarException.message);
+    });
+
+    it('should call the callback when setProps has completed', () => {
+      class Foo extends React.Component {
+        render() {
+          return (
+            <div className={this.props.id}>
+              {this.props.id}
+            </div>
+          );
+        }
+      }
+      const wrapper = mount(<Foo id="foo" />);
+      expect(wrapper.find('.foo').length).to.equal(1);
+      wrapper.setProps({ id: 'bar', foo: 'bla' }, () => {
+        expect(wrapper.find('.bar').length).to.equal(1);
+      });
     });
 
     describeIf(!REACT013, 'stateless function components', () => {
@@ -1268,7 +1285,7 @@ describeWithDOM('mount', () => {
     });
   });
 
-  describe('.setState(newState)', () => {
+  describe('.setState(newState[, cb])', () => {
     it('should set the state of the root node', () => {
       class Foo extends React.Component {
         constructor(props) {
@@ -1304,6 +1321,25 @@ describeWithDOM('mount', () => {
       }
       const wrapper = mount(<MySharona />);
       expect(wrapper.find('div').text()).to.equal('a');
+    });
+
+    it('should call the callback when setState has completed', () => {
+      class Foo extends React.Component {
+        constructor(props) {
+          super(props);
+          this.state = { id: 'foo' };
+        }
+        render() {
+          return (
+            <div className={this.state.id} />
+          );
+        }
+      }
+      const wrapper = mount(<Foo />);
+      expect(wrapper.state()).to.eql({ id: 'foo' });
+      wrapper.setState({ id: 'bar' }, () => {
+        expect(wrapper.state()).to.eql({ id: 'bar' });
+      });
     });
   });
 
