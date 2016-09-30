@@ -825,7 +825,7 @@ describe('shallow', () => {
 
     describeIf(!REACT013, 'stateless function components', () => {
       it('should set props for a component multiple times', () => {
-        const Foo = (props) => (
+        const Foo = props => (
           <div className={props.id}>
             {props.id}
           </div>
@@ -838,7 +838,7 @@ describe('shallow', () => {
       });
 
       it('should merge newProps with oldProps', () => {
-        const Foo = (props) => (
+        const Foo = props => (
           <Bar {...props} />
         );
         const Bar = () => (
@@ -981,7 +981,7 @@ describe('shallow', () => {
     describeIf(!REACT013, 'stateless function components', () => {
       it('should simulate events', () => {
         const spy = sinon.spy();
-        const Foo = (props) => (
+        const Foo = props => (
           <a onClick={props.onClick}>foo</a>
         );
 
@@ -1076,7 +1076,7 @@ describe('shallow', () => {
           this.setState({ count: this.state.count + 1 });
         }
         render() {
-          ++renderCount;
+          renderCount += 1;
           return (
             <a onClick={this.onClick}>{this.state.count}</a>
           );
@@ -1363,7 +1363,7 @@ describe('shallow', () => {
 
     describeIf(!REACT013, 'stateless function components', () => {
       it('should handle nodes with mapped children', () => {
-        const Foo = (props) => (
+        const Foo = props => (
           <div>
             {props.items.map(x => x)}
           </div>
@@ -1657,7 +1657,7 @@ describe('shallow', () => {
 
     describeIf(!REACT013, 'stateless function components', () => {
       it('should handle mixed children with and without arrays', () => {
-        const Foo = (props) => (
+        const Foo = props => (
           <div>
             <span className="foo" />
             {props.items.map(x => x)}

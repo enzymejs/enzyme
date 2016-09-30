@@ -17,7 +17,7 @@ export function childrenOfNode(node) {
   if (!node) return [];
   const maybeArray = propsOfNode(node).children;
   const result = [];
-  React.Children.forEach(maybeArray, child => {
+  React.Children.forEach(maybeArray, (child) => {
     if (child !== null && child !== false && typeof child !== 'undefined') {
       result.push(child);
     }
@@ -40,7 +40,7 @@ export function treeForEach(tree, fn) {
 
 export function treeFilter(tree, fn) {
   const results = [];
-  treeForEach(tree, node => {
+  treeForEach(tree, (node) => {
     if (fn(node)) {
       results.push(node);
     }
@@ -56,7 +56,7 @@ export function pathToNode(node, root) {
   const queue = [root];
   const path = [];
 
-  const hasNode = (testNode) => node === testNode;
+  const hasNode = testNode => node === testNode;
 
   while (queue.length) {
     const current = queue.pop();

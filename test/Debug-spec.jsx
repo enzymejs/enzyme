@@ -417,7 +417,7 @@ describe('debug', () => {
       });
 
       it('renders passed children properly', () => {
-        const Foo = (props) => (
+        const Foo = props => (
           <div className="foo">
             <span>From Foo</span>
             {props.children}

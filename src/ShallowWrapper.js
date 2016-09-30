@@ -376,14 +376,7 @@ export default class ShallowWrapper {
    * @returns {Boolean}
    */
   containsAnyMatchingElements(nodes) {
-    if (!Array.isArray(nodes)) return false;
-    if (nodes.length <= 0) return false;
-    for (let i = 0; i < nodes.length; i++) {
-      if (this.containsMatchingElement(nodes[i])) {
-        return true;
-      }
-    }
-    return false;
+    return Array.isArray(nodes) && nodes.some(node => this.containsMatchingElement(node));
   }
 
   /**
@@ -512,11 +505,7 @@ export default class ShallowWrapper {
    * @returns {String}
    */
   html() {
-    return this.single('html', n => {
-      // NOTE: splitting this into two statements is required to make the linter happy.
-      const isNull = this.type() === null;
-      return isNull ? null : renderToStaticMarkup(n);
-    });
+    return this.single('html', n => (this.type() === null ? null : renderToStaticMarkup(n)));
   }
 
   /**

@@ -360,14 +360,7 @@ export default class ReactWrapper {
    * @returns {Boolean}
    */
   containsAnyMatchingElements(nodes) {
-    if (!Array.isArray(nodes)) return false;
-    if (nodes.length <= 0) return false;
-    for (let i = 0; i < nodes.length; i++) {
-      if (this.containsMatchingElement(nodes[i])) {
-        return true;
-      }
-    }
-    return false;
+    return Array.isArray(nodes) && nodes.some(node => this.containsMatchingElement(node));
   }
 
   /**
@@ -467,7 +460,7 @@ export default class ReactWrapper {
    * @returns {String}
    */
   html() {
-    return this.single('html', n => {
+    return this.single('html', (n) => {
       const node = findDOMNode(n);
       return node === null ? null :
         node.outerHTML.replace(/\sdata-(reactid|reactroot)+="([^"]*)+"/g, '');
@@ -495,7 +488,7 @@ export default class ReactWrapper {
    * @returns {ReactWrapper}
    */
   simulate(event, mock = {}) {
-    this.single('simulate', n => {
+    this.single('simulate', (n) => {
       const mappedEvent = mapNativeEventNames(event);
       const eventFn = Simulate[mappedEvent];
       if (!eventFn) {

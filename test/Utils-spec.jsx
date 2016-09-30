@@ -201,8 +201,8 @@ describe('Utils', () => {
         )).to.equal(false);
 
         expect(nodeEqual(
-          <div children="child" className="foo" />,
-          <div children="child" className="bar" />
+          <div className="foo">child</div>,
+          <div className="bar">child</div>,
         )).to.equal(false);
       });
 
@@ -213,8 +213,8 @@ describe('Utils', () => {
         )).to.equal(false);
 
         expect(nodeEqual(
-          <div children="child" className="foo" />,
-          <div children="other child" className="foo" />
+          <div className="foo">child</div>,
+          <div className="foo">other child</div>,
         )).to.equal(false);
       });
 
@@ -225,7 +225,7 @@ describe('Utils', () => {
         )).to.equal(true);
 
         expect(nodeEqual(
-          <div children={null} className="foo" />,
+          <div children={null} className="foo" />, // eslint-disable-line react/no-children-prop
           <div className="foo" />
         )).to.equal(true);
       });

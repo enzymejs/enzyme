@@ -1,6 +1,8 @@
 import React, { PropTypes } from 'react';
 import objectAssign from 'object.assign';
 
+/* eslint react/forbid-prop-types: 0 */
+
 /**
  * This is a utility component to wrap around the nodes we are
  * passing in to `mount()`. Theoretically, you could do everything

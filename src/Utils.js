@@ -67,7 +67,7 @@ export function childrenEqual(a, b, lenComp) {
   if (!a && !b) return true;
   if (a.length !== b.length) return false;
   if (a.length === 0 && b.length === 0) return true;
-  for (let i = 0; i < a.length; i++) {
+  for (let i = 0; i < a.length; i += 1) {
     if (!nodeEqual(a[i], b[i], lenComp)) return false;
   }
   return true;
@@ -80,7 +80,7 @@ export function nodeEqual(a, b, lenComp = is) {
   const left = propsOfNode(a);
   const leftKeys = Object.keys(left);
   const right = propsOfNode(b);
-  for (let i = 0; i < leftKeys.length; i++) {
+  for (let i = 0; i < leftKeys.length; i += 1) {
     const prop = leftKeys[i];
     // we will check children later
     if (prop === 'children') {
@@ -214,13 +214,8 @@ export function selectorType(selector) {
 }
 
 export function AND(fns) {
-  return x => {
-    let i = fns.length;
-    while (i--) {
-      if (!fns[i](x)) return false;
-    }
-    return true;
-  };
+  const fnsReversed = fns.slice().reverse();
+  return x => fnsReversed.every(fn => fn(x));
 }
 
 export function coercePropValue(propName, propValue) {

@@ -117,7 +117,7 @@ export function childrenOfInstInternal(inst) {
         return false;
       }
       return true;
-    }).map(key => {
+    }).map((key) => {
       if (!REACT013 && typeof renderedChildren[key]._currentElement.type === 'function') {
         return renderedChildren[key]._instance;
       }

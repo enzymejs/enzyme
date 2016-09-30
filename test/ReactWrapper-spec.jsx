@@ -970,7 +970,7 @@ describeWithDOM('mount', () => {
 
     describeIf(!REACT013, 'stateless function components', () => {
       it('should set props for a component multiple times', () => {
-        const Foo = (props) => (
+        const Foo = props => (
           <div className={props.id}>
             {props.id}
           </div>
@@ -983,7 +983,7 @@ describeWithDOM('mount', () => {
       });
 
       it('should merge newProps with oldProps', () => {
-        const Foo = (props) => (
+        const Foo = props => (
           <Bar {...props} />
         );
         const Bar = () => (
@@ -1544,7 +1544,7 @@ describeWithDOM('mount', () => {
 
     describeIf(!REACT013, 'stateless function components', () => {
       it('should handle nodes with mapped children', () => {
-        const Foo = (props) => (
+        const Foo = props => (
           <div>{props.items.map(x => x)}</div>
         );
         matchesRender(<Foo items={['abc', 'def', 'hij']} />);
@@ -1809,7 +1809,7 @@ describeWithDOM('mount', () => {
 
     describeIf(!REACT013, 'stateless function components', () => {
       it('should handle mixed children with and without arrays', () => {
-        const Foo = (props) => (
+        const Foo = props => (
           <div>
             <span className="foo" />
             {props.items.map(x => x)}
