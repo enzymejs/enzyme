@@ -248,7 +248,7 @@ class ShallowWrapper {
    * @param {Function} cb - callback function
    * @returns {ShallowWrapper}
    */
-  setState(state, cb) {
+  setState(state, cb = undefined) {
     if (this.root !== this) {
       throw new Error('ShallowWrapper::setState() can only be called on the root');
     }
