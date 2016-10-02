@@ -3,6 +3,7 @@
 import React from 'react';
 import { expect } from 'chai';
 import sinon from 'sinon';
+import { batchedUpdates } from '../src/react-compat';
 
 import {
   describeWithDOM,
@@ -972,8 +973,12 @@ describeWithDOM('mount', () => {
       }
       const wrapper = mount(<Foo id="foo" />);
       expect(wrapper.find('.foo').length).to.equal(1);
-      wrapper.setProps({ id: 'bar', foo: 'bla' }, () => {
-        expect(wrapper.find('.bar').length).to.equal(1);
+
+      batchedUpdates(() => {
+        wrapper.setProps({ id: 'bar', foo: 'bla' }, () => {
+          expect(wrapper.find('.bar').length).to.equal(1);
+        });
+        expect(wrapper.find('.bar').length).to.equal(0);
       });
     });
 
