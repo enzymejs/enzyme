@@ -7,7 +7,6 @@ import { describeIf, itIf, itWithData, generateEmptyRenderData } from './_helper
 import { REACT013, REACT15 } from '../src/version';
 
 describe('shallow', () => {
-
   describe('context', () => {
     it('can pass in context', () => {
       const SimpleComponent = React.createClass({
@@ -103,7 +102,6 @@ describe('shallow', () => {
   });
 
   describe('.instance()', () => {
-
     it('should return the component instance', () => {
       class Foo extends React.Component {
         render() { return <div />; }
@@ -127,11 +125,9 @@ describe('shallow', () => {
         'ShallowWrapper::instance() can only be called on the root'
       );
     });
-
   });
 
   describe('.contains(node)', () => {
-
     it('should allow matches on the root node', () => {
       const a = <div className="foo" />;
       const b = <div className="foo" />;
@@ -253,7 +249,6 @@ describe('shallow', () => {
   });
 
   describe('.equals(node)', () => {
-
     it('should allow matches on the root node', () => {
       const a = <div className="foo" />;
       const b = <div className="foo" />;
@@ -326,11 +321,9 @@ describe('shallow', () => {
         expect(shallow(<Foo />).equals(<Foo />)).to.equal(false);
       });
     });
-
   });
 
   describe('.find(selector)', () => {
-
     it('should be able to match the root DOM element', () => {
       const wrapper = shallow(<div id="ttt" className="ttt">hello</div>);
       expect(wrapper.find('#ttt')).to.have.length(1);
@@ -626,7 +619,6 @@ describe('shallow', () => {
   });
 
   describe('.findWhere(predicate)', () => {
-
     it('should return all elements for a truthy test', () => {
       const wrapper = shallow(
         <div>
@@ -732,7 +724,6 @@ describe('shallow', () => {
       wrapper.findWhere(spy);
       expect(spy.callCount).to.equal(2);
     });
-
   });
 
   describe('.setProps(newProps)', () => {
@@ -926,9 +917,7 @@ describe('shallow', () => {
   });
 
   describe('.simulate(eventName, data)', () => {
-
     it('should simulate events', () => {
-
       class Foo extends React.Component {
         constructor(props) {
           super(props);
@@ -955,7 +944,6 @@ describe('shallow', () => {
       expect(wrapper.find('.clicks-0').length).to.equal(1);
       wrapper.simulate('click');
       expect(wrapper.find('.clicks-1').length).to.equal(1);
-
     });
 
 
@@ -991,7 +979,6 @@ describe('shallow', () => {
         wrapper.find('a').simulate('click');
         expect(spy.calledOnce).to.equal(true);
       });
-
 
       it('should pass in event data', () => {
         const spy = sinon.spy();
@@ -1088,7 +1075,6 @@ describe('shallow', () => {
       expect(wrapper.text()).to.equal('1');
       expect(renderCount).to.equal(2);
     });
-
   });
 
   describe('.setState(newState)', () => {
@@ -1308,7 +1294,6 @@ describe('shallow', () => {
   });
 
   describe('.text()', () => {
-
     const matchesRender = function matchesRender(node) {
       const actual = shallow(node).text();
       const expected = render(node).text();
@@ -1394,11 +1379,9 @@ describe('shallow', () => {
         expect(wrapper.text()).to.equal('<Foo />test');
       });
     });
-
   });
 
   describe('.props()', () => {
-
     it('should return the props object', () => {
       const fn = () => ({});
       const wrapper = shallow(
@@ -1455,7 +1438,6 @@ describe('shallow', () => {
   });
 
   describe('.prop(name)', () => {
-
     it('should return the props of key `name`', () => {
       const fn = () => ({});
       const wrapper = shallow(
@@ -2302,7 +2284,6 @@ describe('shallow', () => {
         });
       });
     });
-
   });
 
   describe('.first()', () => {
@@ -2439,7 +2420,6 @@ describe('shallow', () => {
         );
       });
     });
-
   });
 
   describe('.unmount()', () => {
@@ -2467,7 +2447,6 @@ describe('shallow', () => {
   });
 
   describe('.render()', () => {
-
     it('should return a cheerio wrapper around the current node', () => {
       class Foo extends React.Component {
         render() {
@@ -2508,7 +2487,6 @@ describe('shallow', () => {
         expect(renderedFoo.find('.in-bar')).to.have.length(0);
       });
     });
-
   });
 
   describe('lifecycleExperimental', () => {
@@ -2564,7 +2542,6 @@ describe('shallow', () => {
     });
 
     context('updating props', () => {
-
       it('should call shouldComponentUpdate, componentWillUpdate and componentDidUpdate', () => {
         const spy = sinon.spy();
 
@@ -2749,11 +2726,9 @@ describe('shallow', () => {
         expect(spy).to.have.property('callCount', 3);
         expect(result.state('count')).to.equal(1);
       });
-
     });
 
     context('updating state', () => {
-
       it('should call shouldComponentUpdate, componentWillUpdate and componentDidUpdate', () => {
         const spy = sinon.spy();
 
@@ -2909,11 +2884,9 @@ describe('shallow', () => {
         expect(spy).to.have.property('callCount', 3);
         expect(result.state('count')).to.equal(1);
       });
-
     });
 
     context('updating context', () => {
-
       it('should call shouldComponentUpdate, componentWillUpdate and componentDidUpdate', () => {
         const spy = sinon.spy();
         class Foo extends React.Component {
@@ -3080,12 +3053,10 @@ describe('shallow', () => {
         expect(spy).to.have.property('callCount', 3);
         expect(result.state('count')).to.equal(1);
       });
-
     });
 
     context('unmounting phase', () => {
-
-      it('should calll componentWillUnmount', () => {
+      it('should call componentWillUnmount', () => {
         const spy = sinon.spy();
         class Foo extends React.Component {
           componentWillUnmount() {
@@ -3355,6 +3326,7 @@ describe('shallow', () => {
       )).to.equal(false);
     });
   });
+
   describe('.containsAllMatchingElements(nodes)', () => {
     it('should match on an array of nodes that all looks like one of rendered nodes', () => {
       const spy1 = sinon.spy();
@@ -3481,6 +3453,7 @@ describe('shallow', () => {
       expect(spy2.callCount).to.equal(0);
     });
   });
+
   describe('.name()', () => {
     describe('node with displayName', () => {
       it('should return the displayName of the node', () => {

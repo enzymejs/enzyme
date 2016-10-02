@@ -19,7 +19,6 @@ import {
 import { REACT013, REACT014, REACT15 } from '../src/version';
 
 describeWithDOM('mount', () => {
-
   describe('context', () => {
     it('can pass in context', () => {
       const SimpleComponent = React.createClass({
@@ -140,7 +139,6 @@ describeWithDOM('mount', () => {
         expect(wrapper.context('name')).to.equal(context.name);
       });
 
-
       it('works with stateless components', () => {
         const Foo = ({ foo }) => (
           <div>
@@ -207,7 +205,6 @@ describeWithDOM('mount', () => {
   });
 
   describe('.contains(node)', () => {
-
     it('should allow matches on the root node', () => {
       const a = <div className="foo" />;
       const b = <div className="foo" />;
@@ -267,7 +264,6 @@ describeWithDOM('mount', () => {
     });
 
     describeIf(!REACT013, 'stateless components', () => {
-
       it('should match composite components', () => {
         const Foo = () => <div />;
         const wrapper = mount(
@@ -282,7 +278,6 @@ describeWithDOM('mount', () => {
   });
 
   describe('.find(selector)', () => {
-
     it('should find an element based on a class name', () => {
       const wrapper = mount(
         <div>
@@ -386,7 +381,6 @@ describeWithDOM('mount', () => {
 
     // React 15.2 warns when setting a non valid prop to an DOM element
     describeIf(REACT013 || REACT014, 'unauthorized dom props', () => {
-
       it('should not find components with invalid attributes', () => {
         // Invalid attributes aren't valid JSX, so manual instantiation is necessary
         const wrapper = mount(
@@ -640,7 +634,6 @@ describeWithDOM('mount', () => {
   });
 
   describe('.findWhere(predicate)', () => {
-
     it('should return all elements for a truthy test', () => {
       const wrapper = mount(
         <div>
@@ -864,7 +857,6 @@ describeWithDOM('mount', () => {
   });
 
   describe('.setProps(newProps)', () => {
-
     it('should set props for a component multiple times', () => {
       class Foo extends React.Component {
         render() {
@@ -882,7 +874,6 @@ describeWithDOM('mount', () => {
     });
 
     it('should call componentWillReceiveProps for new renders', () => {
-
       const spy = sinon.spy();
 
       class Foo extends React.Component {
@@ -1164,13 +1155,10 @@ describeWithDOM('mount', () => {
       wrapper.unmount();
       expect(spy.calledOnce).to.equal(true);
     });
-
   });
 
   describe('.simulate(eventName, data)', () => {
-
     it('should simulate events', () => {
-
       class Foo extends React.Component {
         constructor(props) {
           super(props);
@@ -1199,7 +1187,6 @@ describeWithDOM('mount', () => {
       expect(wrapper.find('.clicks-0').length).to.equal(1);
       wrapper.simulate('click');
       expect(wrapper.find('.clicks-1').length).to.equal(1);
-
     });
 
     it('should pass in event data', () => {
@@ -1489,7 +1476,6 @@ describeWithDOM('mount', () => {
   });
 
   describe('.text()', () => {
-
     const matchesRender = function matchesRender(node) {
       const actual = mount(node).text();
       const expected = render(node).text();
@@ -1575,7 +1561,6 @@ describeWithDOM('mount', () => {
   });
 
   describe('.props()', () => {
-
     it('should return the props object', () => {
       const fn = () => ({});
       const wrapper = mount(
@@ -1588,7 +1573,6 @@ describeWithDOM('mount', () => {
       expect(wrapper.props().className).to.equal('bax');
       expect(wrapper.props().onClick).to.equal(fn);
       expect(wrapper.props().id).to.equal('fooId');
-
     });
 
     it('should be allowed to be used on an inner node', () => {
@@ -1632,7 +1616,6 @@ describeWithDOM('mount', () => {
   });
 
   describe('.prop(name)', () => {
-
     it('should return the props of key `name`', () => {
       const fn = () => ({});
       const wrapper = mount(
@@ -1645,7 +1628,6 @@ describeWithDOM('mount', () => {
       expect(wrapper.prop('className')).to.equal('bax');
       expect(wrapper.prop('onClick')).to.equal(fn);
       expect(wrapper.prop('id')).to.equal('fooId');
-
     });
 
     it('should be allowed to be used on an inner node', () => {
@@ -1695,7 +1677,6 @@ describeWithDOM('mount', () => {
   });
 
   describe('.state(name)', () => {
-
     it('should return the state object', () => {
       class Foo extends React.Component {
         constructor(props) {
@@ -1864,7 +1845,6 @@ describeWithDOM('mount', () => {
       expect(parents.at(0).hasClass('bar')).to.equal(true);
       expect(parents.at(1).hasClass('foo')).to.equal(true);
       expect(parents.at(2).hasClass('bax')).to.equal(true);
-
     });
 
     it('should work for non-leaf nodes as well', () => {
