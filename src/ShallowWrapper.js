@@ -15,6 +15,7 @@ import {
   isReactElementAlike,
   displayNameOfNode,
   isFunctionalComponent,
+  isCustomComponentElement,
 } from './Utils';
 import {
   debugNodes,
@@ -31,6 +32,7 @@ import {
   createShallowRenderer,
   renderToStaticMarkup,
   batchedUpdates,
+  isDOMComponentElement,
 } from './react-compat';
 
 /**
@@ -698,7 +700,7 @@ export default class ShallowWrapper {
 
   /**
    * Returns the type of the current node of this wrapper. If it's a composite component, this will
-   * be the component constructor. If it's native DOM node, it will be a string.
+   * be the component constructor. If it's a native DOM node, it will be a string.
    *
    * @returns {String|Function}
    */
@@ -958,5 +960,25 @@ export default class ShallowWrapper {
   tap(intercepter) {
     intercepter(this);
     return this;
+  }
+
+  /**
+   * Primarily useful for HOCs (higher-order components), this method may only be
+   * run on a single, non-DOM node, and will return the node, shallow-rendered.
+   *
+   * @param options object
+   * @returns {ShallowWrapper}
+   */
+  dive(options) {
+    const name = 'dive';
+    return this.single(name, (n) => {
+      if (isDOMComponentElement(n)) {
+        throw new TypeError(`ShallowWrapper::${name}() can not be called on DOM components`);
+      }
+      if (!isCustomComponentElement(n)) {
+        throw new TypeError(`ShallowWrapper::${name}() can only be called on components`);
+      }
+      return new ShallowWrapper(n, null, options);
+    });
   }
 }

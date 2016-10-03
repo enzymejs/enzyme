@@ -69,7 +69,7 @@ describe('shallow', () => {
         );
 
         const context = { name: 'foo' };
-        expect(() => shallow(<SimpleComponent />, { context })).not.to.throw(Error);
+        expect(() => shallow(<SimpleComponent />, { context })).not.to.throw();
       });
 
       it('is instrospectable through context API', () => {
@@ -3558,4 +3558,72 @@ describe('shallow', () => {
     });
   });
 
+  describe('.dive()', () => {
+    class RendersDOM extends React.Component {
+      render() {
+        return <div><i /></div>;
+      }
+    }
+    class RendersNull extends React.Component {
+      render() {
+        return null;
+      }
+    }
+    class RendersMultiple extends React.Component {
+      render() {
+        return (
+          <div>
+            <RendersNull />
+            <RendersDOM />
+          </div>
+        );
+      }
+    }
+    class WrapsRendersDOM extends React.Component {
+      render() {
+        return <RendersDOM />;
+      }
+    }
+    class DoubleWrapsRendersDOM extends React.Component {
+      render() {
+        return <WrapsRendersDOM />;
+      }
+    }
+
+    it('throws on a DOM node', () => {
+      const wrapper = shallow(<RendersDOM />);
+      expect(wrapper.is('div')).to.equal(true);
+
+      expect(() => { wrapper.dive(); }).to.throw(
+        TypeError,
+        'ShallowWrapper::dive() can not be called on DOM components'
+      );
+    });
+
+    it('throws on a non-component', () => {
+      const wrapper = shallow(<RendersNull />);
+      expect(wrapper.type()).to.equal(null);
+
+      expect(() => { wrapper.dive(); }).to.throw(
+        TypeError,
+        'ShallowWrapper::dive() can only be called on components'
+      );
+    });
+
+    it('throws on multiple children found', () => {
+      const wrapper = shallow(<RendersMultiple />).find('div').children();
+      expect(() => { wrapper.dive(); }).to.throw(
+        Error,
+        'Method “dive” is only meant to be run on a single node. 2 found instead.'
+      );
+    });
+
+    it('dives + shallow-renders when there is one component child', () => {
+      const wrapper = shallow(<DoubleWrapsRendersDOM />);
+      expect(wrapper.is(WrapsRendersDOM)).to.equal(true);
+
+      const underwater = wrapper.dive();
+      expect(underwater.is(RendersDOM)).to.equal(true);
+    });
+  });
 });

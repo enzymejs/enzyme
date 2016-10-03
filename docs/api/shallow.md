@@ -207,3 +207,6 @@ Returns whether or not all of the nodes in the wrapper match the provided select
 
 #### [`.everyWhere(predicate) => Boolean`](ShallowWrapper/everyWhere.md)
 Returns whether or not all of the nodes in the wrapper pass the provided predicate function.
+
+#### [`.dive([options]) => ShallowWrapper`](ShallowWrapper/dive.md)
+Shallow render the one non-DOM child of the current wrapper, and return a wrapper around the result.

@@ -22,7 +22,11 @@ export function internalInstance(inst) {
 }
 
 export function isFunctionalComponent(inst) {
-  return inst && inst.constructor && inst.constructor.name === 'StatelessComponent';
+  return !!inst && !!inst.constructor && inst.constructor.name === 'StatelessComponent';
+}
+
+export function isCustomComponentElement(inst) {
+  return !!inst && React.isValidElement(inst) && typeof inst.type === 'function';
 }
 
 export function propsOfNode(node) {

@@ -150,6 +150,10 @@ if (REACT013) {
   };
 }
 
+function isDOMComponentElement(inst) {
+  return React.isValidElement(inst) && typeof inst.type === 'string';
+}
+
 const {
   mockComponent,
   isElement,
@@ -170,6 +174,7 @@ export {
   isElement,
   isElementOfType,
   isDOMComponent,
+  isDOMComponentElement,
   isCompositeComponent,
   isCompositeComponentWithType,
   isCompositeComponentElement,
