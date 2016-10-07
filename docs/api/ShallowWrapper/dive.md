@@ -48,5 +48,5 @@ class Foo extends React.Component {
 const wrapper = shallow(<Foo />);
 expect(wrapper.find('.in-bar')).to.have.length(0);
 expect(wrapper.find(Bar)).to.have.length(1);
-expect(wrapper.dive().find('.in-bar')).to.have.length(1);
+expect(wrapper.find(Bar).dive().find('.in-bar')).to.have.length(1);
 ```
