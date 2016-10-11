@@ -1,4 +1,4 @@
-# `.setProps(props[, cb]) => Self`
+# `.setProps(props[, callback]) => Self`
 
 A method that sets the props of the root component, and re-renders. Useful for when you are
 wanting to test how the component behaves over time with changing props. Calling this, for
@@ -13,7 +13,7 @@ NOTE: can only be called on a wrapper instance that is also the root instance.
 #### Arguments
 
 1. `props` (`Object`): An object containing new props to merge in with the current state
-2. `cb` (`Function` [optional]): If provided, the callback function will be executed once setProps has completed
+2. `callback` (`Function` [optional]): If provided, the callback function will be executed once setProps has completed
 
 
 #### Returns

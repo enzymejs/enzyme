@@ -858,7 +858,7 @@ describeWithDOM('mount', () => {
 
   });
 
-  describe('.setProps(newProps[, cb])', () => {
+  describe('.setProps(newProps[, callback])', () => {
     it('should set props for a component multiple times', () => {
       class Foo extends React.Component {
         render() {
@@ -1290,7 +1290,7 @@ describeWithDOM('mount', () => {
     });
   });
 
-  describe('.setState(newState[, cb])', () => {
+  describe('.setState(newState[, callback])', () => {
     it('should set the state of the root node', () => {
       class Foo extends React.Component {
         constructor(props) {

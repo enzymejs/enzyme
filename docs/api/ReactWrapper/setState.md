@@ -1,4 +1,4 @@
-# `.setState(state[, cb]) => Self`
+# `.setState(state[, callback]) => Self`
 
 A method to invoke `setState()` on the root component instance similar to how you might in the
 definition of the component, and re-renders.  This method is useful for testing your component
@@ -12,7 +12,7 @@ NOTE: can only be called on a wrapper instance that is also the root instance.
 #### Arguments
 
 1. `state` (`Object`): An object containing new state to merge in with the current state
-2. `cb` (`Function` [optional]): If provided, the callback function will be executed once setState has completed
+2. `callback` (`Function` [optional]): If provided, the callback function will be executed once setState has completed
 
 
 #### Returns
