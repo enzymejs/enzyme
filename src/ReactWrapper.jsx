@@ -28,6 +28,7 @@ import {
   propsOfNode,
   typeOfNode,
   displayNameOfNode,
+  ITERATOR_SYMBOL,
 } from './Utils';
 import {
   debugInsts,
@@ -62,7 +63,7 @@ function filterWhereUnwrapped(wrapper, predicate) {
 /**
  * @class ReactWrapper
  */
-export default class ReactWrapper {
+class ReactWrapper {
 
   constructor(nodes, root, options = {}) {
     if (!global.window && !global.document) {
@@ -908,3 +909,15 @@ export default class ReactWrapper {
     unmountComponentAtNode(this.options.attachTo);
   }
 }
+
+
+if (ITERATOR_SYMBOL) {
+  Object.defineProperty(ReactWrapper.prototype, ITERATOR_SYMBOL, {
+    configurable: true,
+    value: function iterator() {
+      return this.nodes[ITERATOR_SYMBOL]();
+    },
+  });
+}
+
+export default ReactWrapper;

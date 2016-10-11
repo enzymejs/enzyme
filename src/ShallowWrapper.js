@@ -16,6 +16,7 @@ import {
   displayNameOfNode,
   isFunctionalComponent,
   isCustomComponentElement,
+  ITERATOR_SYMBOL,
 } from './Utils';
 import {
   debugNodes,
@@ -63,7 +64,7 @@ function filterWhereUnwrapped(wrapper, predicate) {
 /**
  * @class ShallowWrapper
  */
-export default class ShallowWrapper {
+class ShallowWrapper {
 
   constructor(nodes, root, options = {}) {
     if (!root) {
@@ -982,3 +983,14 @@ export default class ShallowWrapper {
     });
   }
 }
+
+if (ITERATOR_SYMBOL) {
+  Object.defineProperty(ShallowWrapper.prototype, ITERATOR_SYMBOL, {
+    configurable: true,
+    value: function iterator() {
+      return this.nodes[ITERATOR_SYMBOL]();
+    },
+  });
+}
+
+export default ShallowWrapper;

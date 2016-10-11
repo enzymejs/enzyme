@@ -4,6 +4,7 @@ import sinon from 'sinon';
 
 import { shallow, render, ShallowWrapper } from '../src/';
 import { describeIf, itIf, itWithData, generateEmptyRenderData } from './_helpers';
+import { ITERATOR_SYMBOL } from '../src/Utils';
 import { REACT013, REACT15 } from '../src/version';
 
 describe('shallow', () => {
@@ -3624,6 +3625,33 @@ describe('shallow', () => {
 
       const underwater = wrapper.dive();
       expect(underwater.is(RendersDOM)).to.equal(true);
+    });
+  });
+
+  describeIf(ITERATOR_SYMBOL, '@@iterator', () => {
+    it('should be iterable', () => {
+      class Foo extends React.Component {
+        render() {
+          return (
+            <div>
+              <a href="#1">Hello</a>
+              <a href="#2">Hello</a>
+              <a href="#3">Hello</a>
+              <a href="#4">Hello</a>
+            </div>
+          );
+        }
+      }
+      const wrapper = shallow(<Foo />);
+      const [a, b, c, d] = wrapper.find('a');
+      const a1 = wrapper.find('a').get(0);
+      const b1 = wrapper.find('a').get(1);
+      const c1 = wrapper.find('a').get(2);
+      const d1 = wrapper.find('a').get(3);
+      expect(a1).to.equal(a);
+      expect(b1).to.equal(b);
+      expect(c1).to.equal(c);
+      expect(d1).to.equal(d);
     });
   });
 });
