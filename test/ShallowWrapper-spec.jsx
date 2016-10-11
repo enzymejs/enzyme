@@ -3803,7 +3803,7 @@ describe('shallow', () => {
       }
     }
 
-    it('should have updated output after an asynchronous setState', done => {
+    it('should have updated output after an asynchronous setState', (done) => {
       const wrapper = shallow(<Test />);
       wrapper.find('.async-btn').simulate('click');
       setImmediate(() => {
