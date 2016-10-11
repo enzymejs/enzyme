@@ -208,11 +208,11 @@ class ReactWrapper {
    * @param {Function} cb - callback function
    * @returns {ReactWrapper}
    */
-  setProps(props, cb = undefined) {
+  setProps(props, callback = undefined) {
     if (this.root !== this) {
       throw new Error('ReactWrapper::setProps() can only be called on the root');
     }
-    this.component.setChildProps(props, cb);
+    this.component.setChildProps(props, callback);
     return this;
   }
 
@@ -229,11 +229,11 @@ class ReactWrapper {
    * @param {Function} cb - callback function
    * @returns {ReactWrapper}
    */
-  setState(state, cb = undefined) {
+  setState(state, callback = undefined) {
     if (this.root !== this) {
       throw new Error('ReactWrapper::setState() can only be called on the root');
     }
-    this.instance().setState(state, cb);
+    this.instance().setState(state, callback);
     return this;
   }
 

@@ -1078,7 +1078,7 @@ describe('shallow', () => {
     });
   });
 
-  describe('.setState(newState[, cb])', () => {
+  describe('.setState(newState[, callback])', () => {
     it('should set the state of the root node', () => {
       class Foo extends React.Component {
         constructor(props) {
