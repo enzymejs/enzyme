@@ -7,7 +7,7 @@ Note: can only be called on a wrapper of a single node.
 
 #### Returns
 
-`String`: The resulting HTML string
+`CheerioWrapper`: The resulting Cheerio object
 
 
 
