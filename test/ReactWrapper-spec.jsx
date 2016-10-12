@@ -3117,6 +3117,38 @@ describeWithDOM('mount', () => {
   });
 
   describe('.containsAllMatchingElements(nodes)', () => {
+    it('should throw TypeError if non-array passed in', () => {
+      const wrapper = mount(
+        <div>
+          Hello
+        </div>,
+      );
+
+      expect(() => wrapper.containsAllMatchingElements(
+        <div>
+          Hello
+        </div>,
+      )).to.throw(TypeError, 'nodes should be an Array');
+    });
+
+    it('should match on array of nodes that each look like rendered nodes, with nested elements', () => {
+      const wrapper = mount(
+        <div>
+          <div>
+            <p>Hello</p>
+          </div>
+          <div>
+            <p>Goodbye</p>
+          </div>
+        </div>,
+      );
+
+      expect(wrapper.containsAllMatchingElements([
+        <p>Hello</p>,
+        <p>Goodbye</p>,
+      ])).to.equal(true);
+    });
+
     it('should match on an array of nodes that all looks like one of rendered nodes', () => {
       const spy1 = sinon.spy();
       const spy2 = sinon.spy();
