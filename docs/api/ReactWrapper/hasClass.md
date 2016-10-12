@@ -11,7 +11,7 @@ Returns whether or not the current node has a `className` prop including the pas
 
 #### Returns
 
-`Boolean`: whether or not the current node has the class or not.
+`Boolean`: whether or not the current node has the class.
 
 
 
