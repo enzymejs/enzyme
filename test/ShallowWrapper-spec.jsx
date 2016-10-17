@@ -3717,4 +3717,29 @@ describe('shallow', () => {
       expect(d1).to.equal(d);
     });
   });
+
+  describe('#single()', () => {
+    it('throws if run on multiple nodes', () => {
+      const wrapper = shallow(<div><i /><i /></div>).children();
+      expect(wrapper).to.have.lengthOf(2);
+      expect(() => wrapper.single('name!')).to.throw(
+        Error,
+        'Method “name!” is only meant to be run on a single node. 2 found instead.',
+      );
+    });
+
+    it('works with a name', () => {
+      const wrapper = shallow(<div />);
+      wrapper.single('foo', (node) => {
+        expect(node).to.equal(wrapper.get(0));
+      });
+    });
+
+    it('works without a name', () => {
+      const wrapper = shallow(<div />);
+      wrapper.single((node) => {
+        expect(node).to.equal(wrapper.get(0));
+      });
+    });
+  });
 });
