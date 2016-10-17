@@ -1,5 +1,29 @@
 # Change Log
 
+## 2.5.0 (October 17, 2016)
+
+### Minor Changes
+
+- pass callback on setState and setProps ([#617](https://github.com/airbnb/enzyme/pull/617))
+
+- Make ReactWrapper and ShallowWrapper iterable ([#594](https://github.com/airbnb/enzyme/pull/594))
+
+- add `.dive()` method to `shallow` ([#618](https://github.com/airbnb/enzyme/pull/618))
+
+
+### Patches
+
+- Warn if selector contains a pseudo-class ([#591](https://github.com/airbnb/enzyme/pull/591))
+
+- change isCompoundSelector to not match prop selector ([#595](https://github.com/airbnb/enzyme/pull/595))
+
+- fixed hasClassName in case className is not a string and has toString method ([#518](https://github.com/airbnb/enzyme/pull/518))
+
+- Throw if some() is called on a root wrapper ([#523](https://github.com/airbnb/enzyme/pull/523))
+
+- Fix valid + falsy propvalues ([#563](https://github.com/airbnb/enzyme/pull/563))
+
+
 ## 2.4.1 (July 8, 2016)
 
 ### Patches
