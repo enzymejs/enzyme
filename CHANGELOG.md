@@ -1,5 +1,12 @@
 # Change Log
 
+## 2.5.1 (October 17, 2016)
+
+### Patches
+
+- continue to support one-argument `single` ([#632](https://github.com/airbnb/enzyme/pull/632))
+
+
 ## 2.5.0 (October 17, 2016)
 
 ### Minor Changes
