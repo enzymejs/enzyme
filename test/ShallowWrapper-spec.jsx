@@ -4,7 +4,7 @@ import sinon from 'sinon';
 
 import { shallow, render, ShallowWrapper } from '../src/';
 import { describeIf, itIf, itWithData, generateEmptyRenderData } from './_helpers';
-import { ITERATOR_SYMBOL } from '../src/Utils';
+import { ITERATOR_SYMBOL, withSetStateAllowed } from '../src/Utils';
 import { REACT013, REACT15 } from '../src/version';
 
 describe('shallow', () => {
@@ -2166,7 +2166,7 @@ describe('shallow', () => {
         </div>
       );
 
-      const nodes = wrapper.find('.foo').flatMap(w => w.children().nodes);
+      const nodes = wrapper.find('.foo').flatMap(w => w.children().getNodes());
 
       expect(nodes.length).to.equal(6);
       expect(nodes.at(0).hasClass('bar')).to.equal(true);
@@ -2415,10 +2415,10 @@ describe('shallow', () => {
           <div className="bar baz" />
         </div>
       );
-      expect(wrapper.find('.bar').get(0)).to.equal(wrapper.find('.foo').node);
-      expect(wrapper.find('.bar').get(1)).to.equal(wrapper.find('.bax').node);
-      expect(wrapper.find('.bar').get(2)).to.equal(wrapper.find('.bux').node);
-      expect(wrapper.find('.bar').get(3)).to.equal(wrapper.find('.baz').node);
+      expect(wrapper.find('.bar').get(0)).to.equal(wrapper.find('.foo').getNode());
+      expect(wrapper.find('.bar').get(1)).to.equal(wrapper.find('.bax').getNode());
+      expect(wrapper.find('.bar').get(2)).to.equal(wrapper.find('.bux').getNode());
+      expect(wrapper.find('.bar').get(3)).to.equal(wrapper.find('.baz').getNode());
     });
   });
 
@@ -3715,6 +3715,107 @@ describe('shallow', () => {
       expect(b1).to.equal(b);
       expect(c1).to.equal(c);
       expect(d1).to.equal(d);
+    });
+  });
+
+  describe('.getNode()', () => {
+    const element = (
+      <div>
+        <span />
+        <span />
+      </div>
+    );
+
+    class Test extends React.Component {
+      render() {
+        return element;
+      }
+    }
+
+    it('should return the wrapped element', () => {
+      const wrapper = shallow(<Test />);
+      expect(wrapper.getNode()).to.equal(element);
+    });
+
+    it('should throw when wrapping multiple elements', () => {
+      const wrapper = shallow(<Test />).find('span');
+      expect(() => wrapper.getNode()).to.throw(Error);
+    });
+  });
+
+  describe('.getNodes()', () => {
+    it('should return the wrapped elements', () => {
+      const one = <span />;
+      const two = <span />;
+
+      class Test extends React.Component {
+        render() {
+          return (
+            <div>
+              { one }
+              { two }
+            </div>
+          );
+        }
+      }
+
+      const wrapper = shallow(<Test />);
+      expect(wrapper.find('span').getNodes()).to.deep.equal([one, two]);
+    });
+  });
+
+  describe('out-of-band state updates', () => {
+    class Child extends React.Component {
+      render() {
+        return <span />;
+      }
+    }
+
+    class Test extends React.Component {
+      componentWillMount() {
+        this.state = {};
+      }
+
+      safeSetState(newState) {
+        withSetStateAllowed(() => {
+          this.setState(newState);
+        });
+      }
+
+      asyncSetState() {
+        setImmediate(() => {
+          this.safeSetState({ showSpan: true });
+        });
+      }
+
+      callbackSetState() {
+        this.safeSetState({ showSpan: true });
+      }
+
+      render() {
+        return (
+          <div>
+            {this.state && this.state.showSpan && <span className="show-me" />}
+            <button className="async-btn" onClick={() => this.asyncSetState()} />
+            <Child callback={() => this.callbackSetState()} />
+          </div>
+        );
+      }
+    }
+
+    it('should have updated output after an asynchronous setState', (done) => {
+      const wrapper = shallow(<Test />);
+      wrapper.find('.async-btn').simulate('click');
+      setImmediate(() => {
+        expect(wrapper.find('.show-me').length).to.equal(1);
+        done();
+      });
+    });
+
+    it('should have updated output after child prop callback invokes setState', () => {
+      const wrapper = shallow(<Test />);
+      wrapper.find(Child).props().callback();
+      expect(wrapper.find('.show-me').length).to.equal(1);
     });
   });
 
