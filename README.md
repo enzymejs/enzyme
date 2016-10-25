@@ -19,11 +19,11 @@ compatible with all major test runners and assertion libraries out there. The do
 examples for enzyme use [mocha](https://mochajs.org/) and [chai](http://chaijs.com/), but you
 should be able to extrapolate to your framework of choice.
 
-If you are interested in using enzyme with custom Chai.js assertions and convenience functions for
-testing your React components, you can consider using [chai-enzyme](https://github.com/producthunt/chai-enzyme).
-
-If you are interested in using enzyme with custom Jasmine/Jest assertions and convenience functions for
-testing your React components, you can consider using [jasmine-enzyme](https://github.com/blainekasten/jasmine-enzyme).
+If you are interested in using enzyme with custom assertions and convenience functions for
+testing your React components, you can consider using:
+* [`chai-enzyme`](https://github.com/producthunt/chai-enzyme) with Mocha/Chai.
+* [`jasmine-enzyme`](https://github.com/blainekasten/enzyme-matchers/tree/master/packages/jasmine-enzyme) with Jasmine.
+* [`jest-enzyme`](https://github.com/blainekasten/enzyme-matchers/tree/master/packages/jest-enzyme) with Jest.
 
 
 [Using Enzyme with Mocha](/docs/guides/mocha.md)
