@@ -60,12 +60,12 @@
     "object.values": "^1.0.3"
   },
   "devDependencies": {
-    "babel-cli": "^6.16.0",
-    "babel-core": "^6.17.0",
+    "babel-cli": "^6.18.0",
+    "babel-core": "^6.18.0",
     "babel-eslint": "^7.0.0",
     "babel-loader": "^6.2.5",
     "babel-preset-airbnb": "^2.1.1",
-    "babel-register": "^6.16.3",
+    "babel-register": "^6.18.0",
     "chai": "^3.5.0",
     "coveralls": "^2.11.14",
     "enzyme-example-jest": "^0.1.0",
