@@ -19,26 +19,26 @@ sudo: false
 matrix:
   fast_finish: true
   include:
-   - node_js: "node"
+   - node_js: "6"
      env: LINT=true
-   - node_js: "node"
+   - node_js: "6"
      env: EXAMPLE=mocha
-   - node_js: "node"
+   - node_js: "6"
      env: EXAMPLE=karma
-   - node_js: "node"
+   - node_js: "6"
      env: EXAMPLE=react-native
-   - node_js: "node"
+   - node_js: "6"
      env: EXAMPLE=karma-webpack
-   - node_js: "node"
+   - node_js: "6"
      env: EXAMPLE=jest
-   - node_js: "node"
+   - node_js: "6"
      env: KARMA=true REACT=0.13
-   - node_js: "node"
+   - node_js: "6"
      env: KARMA=true REACT=0.14
-   - node_js: "node"
+   - node_js: "6"
      env: KARMA=true REACT=15
   allow_failures:
-    - node_js: "node"
+    - node_js: "6"
       env: EXAMPLE=react-native
 env:
   - REACT=0.13
