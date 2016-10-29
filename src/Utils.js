@@ -168,7 +168,7 @@ export function withSetStateAllowed(fn) {
 }
 
 export function splitSelector(selector) {
-  return selector.split(/(?=\.|\[.*\])|(?=#|\[#.*\])/);
+  return selector.split(/(?=\.|\[.*])|(?=#|\[#.*])/);
 }
 
 
@@ -195,9 +195,9 @@ export function selectorError(selector, type = '') {
   );
 }
 
-export const isCompoundSelector = /^[\.#]?-?[_a-z]+[_a-z0-9-]*[\.\[#]/i;
+export const isCompoundSelector = /^[.#]?-?[_a-z]+[_a-z0-9-]*[.[#]/i;
 
-const isPropSelector = /^\[.*\]$/;
+const isPropSelector = /^\[.*]$/;
 
 export const SELECTOR = {
   CLASS_TYPE: 0,
@@ -247,6 +247,8 @@ export function coercePropValue(propName, propValue) {
 
   // if propValue includes quotes, it should be
   // treated as a string
+  // eslint override pending https://github.com/eslint/eslint/issues/7472
+  // eslint-disable-next-line no-useless-escape
   if (/^(['"]).*\1$/.test(trimmedValue)) {
     return trimmedValue.slice(1, -1);
   }

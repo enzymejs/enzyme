@@ -109,8 +109,8 @@ export function buildPredicate(selector) {
           return node => nodeHasId(node, selector.substr(1));
 
         case SELECTOR.PROP_TYPE: {
-          const propKey = selector.split(/\[([a-zA-Z\-]*?)(=|\])/)[1];
-          const propValue = selector.split(/=(.*?)\]/)[1];
+          const propKey = selector.split(/\[([a-zA-Z-]*?)(=|])/)[1];
+          const propValue = selector.split(/=(.*?)]/)[1];
 
           return node => nodeHasProperty(node, propKey, propValue);
         }
