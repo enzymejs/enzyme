@@ -13,6 +13,7 @@ import {
   internalInstance,
   propsOfNode,
 } from './Utils';
+import functionName from 'function.prototype.name';
 import without from 'lodash/without';
 import escape from 'lodash/escape';
 import compact from 'lodash/compact';
@@ -21,7 +22,7 @@ import objectValues from 'object.values';
 
 export function typeName(node) {
   return typeof node.type === 'function'
-    ? (node.type.displayName || node.type.name || 'Component')
+    ? (node.type.displayName || functionName(node.type) || 'Component')
     : node.type;
 }
 

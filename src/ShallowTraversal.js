@@ -1,6 +1,7 @@
 import React from 'react';
 import isEmpty from 'lodash/isEmpty';
 import isSubset from 'is-subset';
+import functionName from 'function.prototype.name';
 import {
   coercePropValue,
   propsOfNode,
@@ -161,7 +162,7 @@ export function getTextFromNode(node) {
   }
 
   if (node.type && typeof node.type === 'function') {
-    return `<${node.type.displayName || node.type.name} />`;
+    return `<${node.type.displayName || functionName(node.type)} />`;
   }
 
   return childrenOfNode(node).map(getTextFromNode)
