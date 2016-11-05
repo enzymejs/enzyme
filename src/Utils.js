@@ -2,6 +2,7 @@
 import isEqual from 'lodash/isEqual';
 import React from 'react';
 import is from 'object-is';
+import functionName from 'function.prototype.name';
 import {
   isDOMComponent,
   findDOMNode,
@@ -24,7 +25,8 @@ export function internalInstance(inst) {
 }
 
 export function isFunctionalComponent(inst) {
-  return !!inst && !!inst.constructor && inst.constructor.name === 'StatelessComponent';
+  return !!inst && !!inst.constructor && typeof inst.constructor === 'function' &&
+    functionName(inst.constructor) === 'StatelessComponent';
 }
 
 export function isCustomComponentElement(inst) {
@@ -62,7 +64,8 @@ export function nodeHasType(node, type) {
   if (!type || !node) return false;
   if (!node.type) return false;
   if (typeof node.type === 'string') return node.type === type;
-  return node.type.name === type || node.type.displayName === type;
+  return (typeof node.type === 'function' ?
+    functionName(node.type) === type : node.type.name === type) || node.type.displayName === type;
 }
 
 export function childrenEqual(a, b, lenComp) {
@@ -342,5 +345,5 @@ export function displayNameOfNode(node) {
 
   if (!type) return null;
 
-  return type.displayName || type.name || type;
+  return type.displayName || (typeof type === 'function' ? functionName(type) : type.name) || type;
 }
