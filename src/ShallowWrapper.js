@@ -819,6 +819,18 @@ class ShallowWrapper {
   }
 
   /**
+   * Returns a new wrapper with a subset of the nodes of the original wrapper, according to the
+   * rules of `Array#slice`.
+   *
+   * @param {Number} begin
+   * @param {Number} end
+   * @returns {ShallowWrapper}
+   */
+  slice(begin, end) {
+    return this.wrap(this.getNodes().slice(begin, end));
+  }
+
+  /**
    * Returns whether or not any of the nodes in the wrapper match the provided selector.
    *
    * @param {Function|String} selector

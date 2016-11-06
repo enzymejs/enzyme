@@ -2100,6 +2100,56 @@ describe('shallow', () => {
     });
   });
 
+  describe('.slice([begin[, end]])', () => {
+    it('should return an identical wrapper if no params are set', () => {
+      const wrapper = shallow(
+        <div>
+          <div className="foo bax" />
+          <div className="foo bar" />
+          <div className="foo baz" />
+        </div>,
+      );
+      expect(wrapper.find('.foo').slice()).to.have.length(3);
+      expect(wrapper.find('.foo').slice().at(0).hasClass('bax')).to.equal(true);
+      expect(wrapper.find('.foo').slice().at(1).hasClass('bar')).to.equal(true);
+      expect(wrapper.find('.foo').slice().at(2).hasClass('baz')).to.equal(true);
+    });
+    it('should return a new wrapper if begin is set', () => {
+      const wrapper = shallow(
+        <div>
+          <div className="foo bax" />
+          <div className="foo bar" />
+          <div className="foo baz" />
+        </div>,
+      );
+      expect(wrapper.find('.foo').slice(1)).to.have.length(2);
+      expect(wrapper.find('.foo').slice(1).at(0).hasClass('bar')).to.equal(true);
+      expect(wrapper.find('.foo').slice(1).at(1).hasClass('baz')).to.equal(true);
+    });
+    it('should return a new wrapper if begin and end are set', () => {
+      const wrapper = shallow(
+        <div>
+          <div className="foo bax" />
+          <div className="foo bar" />
+          <div className="foo baz" />
+        </div>,
+      );
+      expect(wrapper.find('.foo').slice(1, 2)).to.have.length(1);
+      expect(wrapper.find('.foo').slice(1, 2).at(0).hasClass('bar')).to.equal(true);
+    });
+    it('should return a new wrapper if begin and end are set (negative)', () => {
+      const wrapper = shallow(
+        <div>
+          <div className="foo bax" />
+          <div className="foo bar" />
+          <div className="foo baz" />
+        </div>,
+      );
+      expect(wrapper.find('.foo').slice(-2, -1)).to.have.length(1);
+      expect(wrapper.find('.foo').slice(-2, -1).at(0).hasClass('bar')).to.equal(true);
+    });
+  });
+
   describe('.some(selector)', () => {
     it('should return if a node matches a selector', () => {
       const wrapper = shallow(
