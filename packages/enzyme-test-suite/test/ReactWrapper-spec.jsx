@@ -469,6 +469,19 @@ describeWithDOM('mount', () => {
       expect(wrapper.find('[htmlFor]')).to.have.length(2);
     });
 
+    it('should error sensibly if any of the search props are undefined', () => {
+      const wrapper = mount((
+        <div>
+          <input type={undefined} />
+        </div>
+      ));
+
+      expect(() => wrapper.find({ type: undefined })).to.throw(
+        TypeError,
+        'Enzyme::Props can’t have `undefined` values. Try using ‘findWhere()’ instead.',
+      );
+    });
+
     it('should compound tag and prop selector', () => {
       const wrapper = mount(
         <div>
@@ -655,7 +668,6 @@ describeWithDOM('mount', () => {
       expect(wrapper.find({ a: 1 })).to.have.length(0);
       expect(wrapper.find({ 'data-test': 'ref' })).to.have.length(7);
       expect(wrapper.find({ className: 'foo' })).to.have.length(1);
-      expect(wrapper.find({ 'data-prop': undefined })).to.have.length(1);
       expect(wrapper.find({ 'data-prop': null })).to.have.length(1);
       expect(wrapper.find({ 'data-prop': 123 })).to.have.length(1);
       expect(wrapper.find({ 'data-prop': false })).to.have.length(1);

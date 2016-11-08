@@ -603,6 +603,19 @@ describe('shallow', () => {
       );
     });
 
+    it('should error sensibly if any of the search props are undefined', () => {
+      const wrapper = shallow(
+        <div>
+          <input type={undefined} />
+        </div>,
+      );
+
+      expect(() => wrapper.find({ type: undefined })).to.throw(
+        TypeError,
+        'Enzyme::Props can’t have `undefined` values. Try using ‘findWhere()’ instead.',
+      );
+    });
+
     it('should compound tag and prop selector', () => {
       const wrapper = shallow(
         <div>
@@ -695,7 +708,6 @@ describe('shallow', () => {
       expect(wrapper.find({ a: 1 })).to.have.length(0);
       expect(wrapper.find({ 'data-test': 'ref' })).to.have.length(7);
       expect(wrapper.find({ className: 'foo' })).to.have.length(1);
-      expect(wrapper.find({ prop: undefined })).to.have.length(1);
       expect(wrapper.find({ prop: null })).to.have.length(1);
       expect(wrapper.find({ prop: 123 })).to.have.length(1);
       expect(wrapper.find({ prop: false })).to.have.length(1);

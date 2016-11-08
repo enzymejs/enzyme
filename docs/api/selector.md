@@ -85,10 +85,10 @@ a string can be used to find it:
 function MyComponent() {
   return <div />;
 }
-MyComponent.displayName = 'MyComponent!';
+MyComponent.displayName = 'My Component';
 
 // find instances of MyComponent
-const myComponents = wrapper.find('MyComponent!');
+const myComponents = wrapper.find('My Component');
 ```
 
 NOTE: This will *only* work if the selector (and thus the component's `displayName`) is a string
@@ -113,3 +113,14 @@ wrapper.find({ foo: 3 });
 wrapper.find({ bar: false });
 wrapper.find({ title: 'baz' });
 ```
+
+**Note - undefined properties**
+are not allowed in the object property selector and will cause an error:
+
+
+```jsx
+wrapper.find({ foo: 3, bar: undefined });
+// => TypeError: Enzyme::Props can't have 'undefined' values. Try using 'findWhere()' instead.
+```
+
+If you have to search by `undefined` property value, use [.findWhere()](ShallowWrapper/findWhere.md).

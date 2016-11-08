@@ -1,4 +1,5 @@
 import flatten from 'lodash/flatten';
+import entries from 'object.entries';
 import isSubset from 'is-subset';
 import functionName from 'function.prototype.name';
 import { nodeHasProperty } from './Utils';
@@ -98,8 +99,17 @@ export function nodeHasId(node, id) {
 
 export { nodeHasProperty };
 
+const CAN_NEVER_MATCH = {};
+function replaceUndefined(v) {
+  return typeof v !== 'undefined' ? v : CAN_NEVER_MATCH;
+}
+function replaceUndefinedValues(obj) {
+  return entries(obj)
+    .reduce((acc, [k, v]) => ({ ...acc, [k]: replaceUndefined(v) }), {});
+}
+
 export function nodeMatchesObjectProps(node, props) {
-  return isSubset(propsOfNode(node), props);
+  return isSubset(propsOfNode(node), replaceUndefinedValues(props));
 }
 
 export function getTextFromNode(node) {
