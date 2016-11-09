@@ -2,6 +2,9 @@
 import isEqual from 'lodash/isEqual';
 import React from 'react';
 import is from 'object-is';
+import uuid from 'uuid';
+import entries from 'object.entries';
+import assign from 'object.assign';
 import functionName from 'function.prototype.name';
 import {
   isDOMComponent,
@@ -171,7 +174,24 @@ export function withSetStateAllowed(fn) {
 }
 
 export function splitSelector(selector) {
-  return selector.split(/(?=\.|\[.*])|(?=#|\[#.*])/);
+  // step 1: make a map of all quoted strings with a uuid
+  const quotedSegments = selector.split(/[^" ]+|("[^"]*")|.*/g)
+    .filter(Boolean)
+    .reduce((obj, match) => assign({}, obj, { [match]: uuid.v4() }), {});
+
+  return selector
+    // step 2: replace all quoted strings with the uuid, so we don't have to properly parse them
+    .replace(/[^" ]+|("[^"]*")|.*/g, x => quotedSegments[x] || x)
+    // step 3: split as best we can without a proper parser
+    .split(/(?=\.|\[.*])|(?=#|\[#.*])/)
+    // step 4: restore the quoted strings by swapping back the uuid's for the original segments
+    .map((selectorSegment) => {
+      let restoredSegment = selectorSegment;
+      entries(quotedSegments).forEach(([k, v]) => {
+        restoredSegment = restoredSegment.replace(v, k);
+      });
+      return restoredSegment;
+    });
 }
 
 
