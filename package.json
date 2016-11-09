@@ -59,7 +59,9 @@
     "lodash": "^4.15.0",
     "object-is": "^1.0.1",
     "object.assign": "^4.0.4",
-    "object.values": "^1.0.3"
+    "object.entries": "^1.0.3",
+    "object.values": "^1.0.3",
+    "uuid": "^2.0.3"
   },
   "devDependencies": {
     "babel-cli": "^6.16.0",
