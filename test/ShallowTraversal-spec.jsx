@@ -33,7 +33,7 @@ describe('ShallowTraversal', () => {
     it('splits tag names and attributes', () => {
       expect(fn('input[type="text"]')).to.eql(['input', '[type="text"]']);
       expect(
-        fn('div[title="title"][data-value="foo"]')
+        fn('div[title="title"][data-value="foo"]'),
       ).to.eql(['div', '[title="title"]', '[data-value="foo"]']);
     });
   });

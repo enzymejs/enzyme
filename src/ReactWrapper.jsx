@@ -68,7 +68,7 @@ class ReactWrapper {
   constructor(nodes, root, options = {}) {
     if (!global.window && !global.document) {
       throw new Error(
-        'It looks like you called `mount()` without a global document being loaded.'
+        'It looks like you called `mount()` without a global document being loaded.',
       );
     }
 
@@ -103,7 +103,7 @@ class ReactWrapper {
     this.complexSelector = new ComplexSelector(
       buildInstPredicate,
       findWhereUnwrapped,
-      childrenOfInst
+      childrenOfInst,
     );
   }
 
@@ -253,7 +253,7 @@ class ReactWrapper {
     if (!this.options.context) {
       throw new Error(
         'ShallowWrapper::setContext() can only be called on a wrapper that was originally passed ' +
-        'a context option'
+        'a context option',
       );
     }
     this.component.setChildContext(context);
@@ -660,7 +660,7 @@ class ReactWrapper {
       // eslint-disable-next-line no-console
       console.warn(
         'It looks like you\'re calling `ReactWrapper::hasClass()` with a CSS selector. ' +
-        'hasClass() expects a class name, not a CSS selector.'
+        'hasClass() expects a class name, not a CSS selector.',
       );
     }
     return this.single('hasClass', n => instHasClassName(n, className));
@@ -700,7 +700,7 @@ class ReactWrapper {
   reduce(fn, initialValue) {
     return this.nodes.reduce(
       (accum, n, i) => fn.call(this, accum, this.wrap(n), i),
-      initialValue
+      initialValue,
     );
   }
 
@@ -715,7 +715,7 @@ class ReactWrapper {
   reduceRight(fn, initialValue) {
     return this.nodes.reduceRight(
       (accum, n, i) => fn.call(this, accum, this.wrap(n), i),
-      initialValue
+      initialValue,
     );
   }
 
@@ -851,7 +851,7 @@ class ReactWrapper {
     const callback = typeof fn === 'function' ? fn : name;
     if (this.length !== 1) {
       throw new Error(
-        `Method “${fnName}” is only meant to be run on a single node. ${this.length} found instead.`
+        `Method “${fnName}” is only meant to be run on a single node. ${this.length} found instead.`,
       );
     }
     return callback.call(this, this.node);
@@ -907,7 +907,7 @@ class ReactWrapper {
     if (!this.options.attachTo) {
       throw new Error(
         'ReactWrapper::detach() can only be called on when the `attachTo` option was passed into ' +
-        '`mount()`.'
+        '`mount()`.',
       );
     }
     unmountComponentAtNode(this.options.attachTo);

@@ -206,7 +206,7 @@ export function isPseudoClassSelector(selector) {
     }
     const tokens = selector.split(containsQuotes);
     return tokens.some((token, i) =>
-      containsColon.test(token) && i % 2 === 0
+      containsColon.test(token) && i % 2 === 0,
     );
   }
   return false;
@@ -214,7 +214,7 @@ export function isPseudoClassSelector(selector) {
 
 export function selectorError(selector, type = '') {
   return new TypeError(
-    `Enzyme received a ${type} CSS selector ('${selector}') that it does not currently support`
+    `Enzyme received a ${type} CSS selector ('${selector}') that it does not currently support`,
   );
 }
 
@@ -288,7 +288,7 @@ export function coercePropValue(propName, propValue) {
   // user provided an unquoted string value
   throw new TypeError(
     `Enzyme::Unable to parse selector '[${propName}=${propValue}]'. ` +
-    `Perhaps you forgot to escape a string? Try '[${propName}="${trimmedValue}"]' instead.`
+    `Perhaps you forgot to escape a string? Try '[${propName}="${trimmedValue}"]' instead.`,
   );
 }
 

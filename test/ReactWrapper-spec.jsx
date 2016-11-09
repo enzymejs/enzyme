@@ -219,7 +219,7 @@ describeWithDOM('mount', () => {
       const wrapper = mount(
         <div>
           <div className="foo" />
-        </div>
+        </div>,
       );
       const b = <div className="foo" />;
       expect(wrapper.contains(b)).to.equal(true);
@@ -232,7 +232,7 @@ describeWithDOM('mount', () => {
       const wrapper = mount(
         <div>
           <Foo />
-        </div>
+        </div>,
       );
       const b = <Foo />;
       expect(wrapper.contains(b)).to.equal(true);
@@ -244,7 +244,7 @@ describeWithDOM('mount', () => {
           <span>Hello</span>
           <div>Goodbye</div>
           <span>More</span>
-        </div>
+        </div>,
       );
       const fails = [
         <span>wrong</span>,
@@ -271,7 +271,7 @@ describeWithDOM('mount', () => {
         const wrapper = mount(
           <div>
             <Foo />
-          </div>
+          </div>,
         );
         const b = <Foo />;
         expect(wrapper.contains(b)).to.equal(true);
@@ -284,7 +284,7 @@ describeWithDOM('mount', () => {
       const wrapper = mount(
         <div>
           <input className="foo" />
-        </div>
+        </div>,
       );
       expect(wrapper.find('.foo').type()).to.equal('input');
     });
@@ -293,7 +293,7 @@ describeWithDOM('mount', () => {
       const wrapper = mount(
         <div>
           <svg className="foo" />
-        </div>
+        </div>,
       );
       expect(wrapper.find('.foo').type()).to.equal('svg');
     });
@@ -302,7 +302,7 @@ describeWithDOM('mount', () => {
       const wrapper = mount(
         <div>
           <input className="foo" />
-        </div>
+        </div>,
       );
       expect(wrapper.find('input').props().className).to.equal('foo');
     });
@@ -311,7 +311,7 @@ describeWithDOM('mount', () => {
       const wrapper = mount(
         <div>
           <input className="foo" />
-        </div>
+        </div>,
       );
       expect(wrapper.find('input.foo').length).to.equal(1);
     });
@@ -320,7 +320,7 @@ describeWithDOM('mount', () => {
       const wrapper = mount(
         <div>
           <input id="foo" />
-        </div>
+        </div>,
       );
       expect(wrapper.find('input#foo').length).to.equal(1);
     });
@@ -329,7 +329,7 @@ describeWithDOM('mount', () => {
       const wrapper = mount(
         <div>
           <input id="foo" className="bar" />
-        </div>
+        </div>,
       );
       expect(wrapper.find('input#foo.bar').length).to.equal(1);
     });
@@ -341,7 +341,7 @@ describeWithDOM('mount', () => {
       const wrapper = mount(
         <div>
           <Foo className="foo" />
-        </div>
+        </div>,
       );
       expect(wrapper.find(Foo).type()).to.equal(Foo);
     });
@@ -353,7 +353,7 @@ describeWithDOM('mount', () => {
       const wrapper = mount(
         <div>
           <Foo className="foo" />
-        </div>
+        </div>,
       );
       expect(wrapper.find('Foo').type()).to.equal(Foo);
     });
@@ -362,7 +362,7 @@ describeWithDOM('mount', () => {
       const wrapper = mount(
         <div>
           <span htmlFor="foo" />
-        </div>
+        </div>,
       );
 
       expect(wrapper.find('[htmlFor="foo"]')).to.have.length(1);
@@ -373,7 +373,7 @@ describeWithDOM('mount', () => {
       const wrapper = mount(
         <div>
           <span htmlFor="foo" />
-        </div>
+        </div>,
       );
 
       expect(wrapper.find('span[htmlFor="foo"]')).to.have.length(1);
@@ -390,7 +390,7 @@ describeWithDOM('mount', () => {
             '123-foo': 'bar',
             '-foo': 'bar',
             '+foo': 'bar',
-          }))
+          })),
         );
 
         expect(wrapper.find('[-foo]')).to.have.length(0, '-foo');
@@ -406,7 +406,7 @@ describeWithDOM('mount', () => {
           <span data-foo-123="bar2" />
           <span data-123-foo="bar3" />
           <span data-foo_bar="bar4" />
-        </div>
+        </div>,
       );
 
       expect(wrapper.find('[data-foo="bar"]')).to.have.length(1);
@@ -427,7 +427,7 @@ describeWithDOM('mount', () => {
       const wrapper = mount(
         <div>
           <span htmlFor="foo" onChange={onChange} preserveAspectRatio="xMaxYMax" />
-        </div>
+        </div>,
       );
 
       expect(wrapper.find('span[htmlFor="foo"][onChange]')).to.have.length(1);
@@ -438,7 +438,7 @@ describeWithDOM('mount', () => {
       const wrapper = mount(
         <div>
           <span data-foo={undefined} />
-        </div>
+        </div>,
       );
 
       expect(wrapper.find('[data-foo]')).to.have.length(0);
@@ -449,7 +449,7 @@ describeWithDOM('mount', () => {
         <div>
           <span value={1} />
           <a value={false} />
-        </div>
+        </div>,
       );
 
       expect(wrapper.find('span[value=1]')).to.have.length(1);
@@ -485,7 +485,7 @@ describeWithDOM('mount', () => {
         <div>
           <input className="foo" />
           <button className="foo" />
-        </div>
+        </div>,
       );
       expect(wrapper.find('.foo').length).to.equal(2);
     });
@@ -496,7 +496,7 @@ describeWithDOM('mount', () => {
           <input className="foo" />
           <input />
           <button />
-        </div>
+        </div>,
       );
       expect(wrapper.find('input').length).to.equal(2);
       expect(wrapper.find('button').length).to.equal(1);
@@ -508,7 +508,7 @@ describeWithDOM('mount', () => {
           <input className="foo" />
           <input />
           <button />
-        </div>
+        </div>,
       );
       expect(wrapper.find('input').length).to.equal(2);
       expect(wrapper.find('button').length).to.equal(1);
@@ -524,7 +524,7 @@ describeWithDOM('mount', () => {
           <div data-test="ref" data-prop={123} />
           <input data-test="ref" data-prop={false} />
           <a data-test="ref" data-prop />
-        </div>
+        </div>,
       );
       expect(wrapper.find({ a: 1 })).to.have.length(0);
       expect(wrapper.find({ 'data-test': 'ref' })).to.have.length(7);
@@ -544,7 +544,7 @@ describeWithDOM('mount', () => {
           <a data-more={[{ id: 1 }]} data-test="ref" />
           <div data-more={{ item: { id: 1 } }} data-test="ref" />
           <input data-more={{ height: 20 }} data-test="ref" />
-        </div>
+        </div>,
       );
       expect(wrapper.find({ 'data-test': 'ref' })).to.have.length(4);
       expect(wrapper.find({ 'data-more': { a: 1 } })).to.have.length(0);
@@ -557,7 +557,7 @@ describeWithDOM('mount', () => {
           'data-test': 'ref',
           'data-prop': true,
           onChange: testFunction,
-        })
+        }),
       ).to.have.length(1);
     });
 
@@ -565,19 +565,19 @@ describeWithDOM('mount', () => {
       const wrapper = mount(
         <div>
           <input className="foo" type="text" />
-        </div>
+        </div>,
       );
       expect(() => wrapper.find({})).to.throw(
         TypeError,
-        'Enzyme::Selector does not support an array, null, or empty object as a selector'
+        'Enzyme::Selector does not support an array, null, or empty object as a selector',
       );
       expect(() => wrapper.find([])).to.throw(
         TypeError,
-        'Enzyme::Selector does not support an array, null, or empty object as a selector'
+        'Enzyme::Selector does not support an array, null, or empty object as a selector',
       );
       expect(() => wrapper.find(null)).to.throw(
         TypeError,
-        'Enzyme::Selector does not support an array, null, or empty object as a selector'
+        'Enzyme::Selector does not support an array, null, or empty object as a selector',
       );
     });
 
@@ -586,7 +586,7 @@ describeWithDOM('mount', () => {
         <div>
           <h1 data-foo="foo bar">Hello</h1>
           <h1 data-foo="bar baz quz">World</h1>
-        </div>
+        </div>,
       );
       expect(wrapper.find('[data-foo]')).to.have.length(2);
       expect(wrapper.find('[data-foo="foo bar"]')).to.have.length(1);
@@ -602,7 +602,7 @@ describeWithDOM('mount', () => {
         const wrapper = mount(
           <div>
             <Foo className="foo" />
-          </div>
+          </div>,
         );
         expect(wrapper.find(Foo).type()).to.equal(Foo);
       });
@@ -612,7 +612,7 @@ describeWithDOM('mount', () => {
         const wrapper = mount(
           <div>
             <Foo className="foo" />
-          </div>
+          </div>,
         );
         expect(wrapper.find('Foo').type()).to.equal(Foo);
       });
@@ -641,7 +641,7 @@ describeWithDOM('mount', () => {
           <div>
             <a id="test" href="/page">Hello</a>
             <a href="/page#anchor">World</a>
-          </div>
+          </div>,
         );
       });
 
@@ -665,7 +665,7 @@ describeWithDOM('mount', () => {
         <div>
           <input className="foo" />
           <input />
-        </div>
+        </div>,
       );
       expect(wrapper.findWhere(() => true).length).to.equal(3);
     });
@@ -675,7 +675,7 @@ describeWithDOM('mount', () => {
         <div>
           <input className="foo" />
           <input />
-        </div>
+        </div>,
       );
       expect(wrapper.findWhere(() => false).length).to.equal(0);
     });
@@ -686,7 +686,7 @@ describeWithDOM('mount', () => {
           <div className="foo bar" />
           <div className="foo baz" />
           <div className="foo bux" />
-        </div>
+        </div>,
       );
 
       const stub = sinon.stub();
@@ -783,7 +783,7 @@ describeWithDOM('mount', () => {
   <div data-foo="${content}">
     Test Component
   </div>
-</Foo>`
+</Foo>`,
       );
     });
 
@@ -860,7 +860,7 @@ describeWithDOM('mount', () => {
   <div data-foo="${content}">
     Test SFC
   </div>
-</SFC>`
+</SFC>`,
         );
       });
     });
@@ -871,7 +871,7 @@ describeWithDOM('mount', () => {
           <div className="foo bar" />
           {null}
           {false}
-        </div>
+        </div>,
       );
       const stub = sinon.stub();
       stub.returns(true);
@@ -1070,7 +1070,7 @@ describeWithDOM('mount', () => {
 
         expect(setInvalidProps).to.throw(
           TypeError,
-          similarException.message
+          similarException.message,
         );
       });
     });
@@ -1109,7 +1109,7 @@ describeWithDOM('mount', () => {
       const wrapper = mount(<SimpleComponent />);
       expect(() => wrapper.setContext({ name: 'bar' })).to.throw(
         Error,
-        'ShallowWrapper::setContext() can only be called on a wrapper that was originally passed a context option' // eslint-disable-line max-len
+        'ShallowWrapper::setContext() can only be called on a wrapper that was originally passed a context option', // eslint-disable-line max-len
       );
     });
 
@@ -1138,7 +1138,7 @@ describeWithDOM('mount', () => {
         const wrapper = mount(<SimpleComponent />);
         expect(() => wrapper.setContext({ name: 'bar' })).to.throw(
           Error,
-          'ShallowWrapper::setContext() can only be called on a wrapper that was originally passed a context option' // eslint-disable-line max-len
+          'ShallowWrapper::setContext() can only be called on a wrapper that was originally passed a context option', // eslint-disable-line max-len
         );
       });
     });
@@ -1405,7 +1405,7 @@ describeWithDOM('mount', () => {
       expect(() => wrapper.setState({ id: 'bar' }, 1)).to.throw(
         Error,
         'setState(...): Expected the last optional `callback` argument ' +
-        'to be a function. Instead received: number.'
+        'to be a function. Instead received: number.',
       );
     });
   });
@@ -1492,7 +1492,7 @@ describeWithDOM('mount', () => {
           <div className="bar baz" />
           <div className="baz" />
           <div className="foo bar" />
-        </div>
+        </div>,
       );
 
       expect(wrapper.find('.foo').not('.bar').length).to.equal(1);
@@ -1513,7 +1513,7 @@ describeWithDOM('mount', () => {
           </div>
           <div className="baz" />
           <div className="foo bar" />
-        </div>
+        </div>,
       );
 
       expect(wrapper.find('.foo').filter('.bar').length).to.equal(3);
@@ -1529,7 +1529,7 @@ describeWithDOM('mount', () => {
             <div className="bar" />
           </div>
           <div className="foo bar" />
-        </div>
+        </div>,
       );
 
       expect(wrapper.find('.foo').filter('.bar').length).to.equal(1);
@@ -1543,7 +1543,7 @@ describeWithDOM('mount', () => {
           <div className="foo bar" />
           <div className="foo baz" />
           <div className="foo bux" />
-        </div>
+        </div>,
       );
 
       const stub = sinon.stub();
@@ -1562,7 +1562,7 @@ describeWithDOM('mount', () => {
           <div className="foo bar" />
           <div className="foo baz" />
           <div className="foo bux" />
-        </div>
+        </div>,
       );
 
       const stub = sinon.stub();
@@ -1588,7 +1588,7 @@ describeWithDOM('mount', () => {
 
     it('should handle simple text nodes', () => {
       const wrapper = mount(
-        <div>some text</div>
+        <div>some text</div>,
       );
       expect(wrapper.text()).to.equal('some text');
     });
@@ -1611,7 +1611,7 @@ describeWithDOM('mount', () => {
             <i key={2}>def</i>,
             <i key={3}>hij</i>,
           ]}
-        />
+        />,
       );
     });
 
@@ -1623,7 +1623,7 @@ describeWithDOM('mount', () => {
         <div>
           <Foo />
           <div>test</div>
-        </div>
+        </div>,
       );
       expect(wrapper.text()).to.equal('footest');
     });
@@ -1645,7 +1645,7 @@ describeWithDOM('mount', () => {
               <i key={2}>def</i>,
               <i key={3}>hij</i>,
             ]}
-          />
+          />,
         );
       });
 
@@ -1657,7 +1657,7 @@ describeWithDOM('mount', () => {
           <div>
             <Foo />
             <div>test</div>
-          </div>
+          </div>,
         );
         expect(wrapper.text()).to.equal('footest');
       });
@@ -1671,7 +1671,7 @@ describeWithDOM('mount', () => {
         <div id="fooId" className="bax" onClick={fn} >
           <div className="baz" />
           <div className="foo" />
-        </div>
+        </div>,
       );
 
       expect(wrapper.props().className).to.equal('bax');
@@ -1685,7 +1685,7 @@ describeWithDOM('mount', () => {
         <div className="bax">
           <div className="baz" onClick={fn} />
           <div className="foo" id="fooId" />
-        </div>
+        </div>,
       );
 
       expect(wrapper.find('.baz').props().onClick).to.equal(fn);
@@ -1726,7 +1726,7 @@ describeWithDOM('mount', () => {
         <div id="fooId" className="bax" onClick={fn} >
           <div className="baz" />
           <div className="foo" />
-        </div>
+        </div>,
       );
 
       expect(wrapper.prop('className')).to.equal('bax');
@@ -1740,7 +1740,7 @@ describeWithDOM('mount', () => {
         <div className="bax">
           <div className="baz" onClick={fn} />
           <div className="foo" id="fooId" />
-        </div>
+        </div>,
       );
 
       expect(wrapper.find('.baz').prop('onClick')).to.equal(fn);
@@ -1831,7 +1831,7 @@ describeWithDOM('mount', () => {
           <div className="foo" />
           <div className="bar" />
           <div className="baz" />
-        </div>
+        </div>,
       );
       expect(wrapper.children().length).to.equal(3);
       expect(wrapper.children().at(0).hasClass('foo')).to.equal(true);
@@ -1846,7 +1846,7 @@ describeWithDOM('mount', () => {
             <div className="bar" />
           </div>
           <div className="baz" />
-        </div>
+        </div>,
       );
       expect(wrapper.children().length).to.equal(2);
       expect(wrapper.children().at(0).hasClass('foo')).to.equal(true);
@@ -1870,7 +1870,7 @@ describeWithDOM('mount', () => {
             <i key={1} className="bar">abc</i>,
             <i key={2} className="baz">def</i>,
           ]}
-        />
+        />,
       );
       expect(wrapper.children().length).to.equal(3);
       expect(wrapper.children().at(0).hasClass('foo')).to.equal(true);
@@ -1884,7 +1884,7 @@ describeWithDOM('mount', () => {
           <div className="foo" />
           <div className="bar bip" />
           <div className="baz bip" />
-        </div>
+        </div>,
       );
       const children = wrapper.children('.bip');
       expect(children.length).to.equal(2);
@@ -1907,7 +1907,7 @@ describeWithDOM('mount', () => {
               <i key={1} className="bar">abc</i>,
               <i key={2} className="baz">def</i>,
             ]}
-          />
+          />,
         );
         expect(wrapper.children().length).to.equal(3);
         expect(wrapper.children().at(0).hasClass('foo')).to.equal(true);
@@ -1923,7 +1923,7 @@ describeWithDOM('mount', () => {
         <div>
           <div className="bar" />
           <div className="baz" />
-        </div>
+        </div>,
       );
 
       expect(wrapper.childAt(0).hasClass('bar')).to.equal(true);
@@ -1940,7 +1940,7 @@ describeWithDOM('mount', () => {
               <div className="baz" />
             </div>
           </div>
-        </div>
+        </div>,
       );
 
       const parents = wrapper.find('.baz').parents();
@@ -1959,7 +1959,7 @@ describeWithDOM('mount', () => {
               <div className="baz" />
             </div>
           </div>
-        </div>
+        </div>,
       );
 
       const parents = wrapper.find('.bar').parents();
@@ -1977,7 +1977,7 @@ describeWithDOM('mount', () => {
               <div className="baz" />
             </div>
           </div>
-        </div>
+        </div>,
       );
 
       const parents = wrapper.find('.baz').parents('.foo');
@@ -1997,7 +1997,7 @@ describeWithDOM('mount', () => {
               <div className="baz" />
             </div>
           </div>
-        </div>
+        </div>,
       );
 
       expect(wrapper.find('.baz').parent().hasClass('bar')).to.equal(true);
@@ -2015,7 +2015,7 @@ describeWithDOM('mount', () => {
           <div className="bax">
             <div className="baz" />
           </div>
-        </div>
+        </div>,
       );
 
       const parents = wrapper.find('.baz').parent();
@@ -2035,7 +2035,7 @@ describeWithDOM('mount', () => {
               <div className="bar" />
             </div>
           </div>
-        </div>
+        </div>,
       );
 
       const closestFoo = wrapper.find('.bar').closest('.foo');
@@ -2051,7 +2051,7 @@ describeWithDOM('mount', () => {
               <div className="baz" />
             </div>
           </div>
-        </div>
+        </div>,
       );
 
       expect(wrapper.find('.baz').parent().hasClass('bar')).to.equal(true);
@@ -2065,7 +2065,7 @@ describeWithDOM('mount', () => {
               <div className="bux baz" />
             </div>
           </div>
-        </div>
+        </div>,
       );
 
       expect(wrapper.find('.bux').closest('.baz').hasClass('bux')).to.equal(true);
@@ -2075,7 +2075,7 @@ describeWithDOM('mount', () => {
   describe('.hasClass(className)', () => {
     it('should return whether or not node has a certain class', () => {
       const wrapper = mount(
-        <div className="foo bar baz some-long-string FoOo" />
+        <div className="foo bar baz some-long-string FoOo" />,
       );
 
       expect(wrapper.hasClass('foo')).to.equal(true);
@@ -2094,7 +2094,7 @@ describeWithDOM('mount', () => {
           <div className="foo bax" />
           <div className="foo bar" />
           <div className="foo baz" />
-        </div>
+        </div>,
       );
       const spy = sinon.spy();
 
@@ -2120,7 +2120,7 @@ describeWithDOM('mount', () => {
           <div className="foo bax" />
           <div className="foo bar" />
           <div className="foo baz" />
-        </div>
+        </div>,
       );
       const spy = sinon.spy();
 
@@ -2144,7 +2144,7 @@ describeWithDOM('mount', () => {
           <div className="foo bax" />
           <div className="foo bar" />
           <div className="foo baz" />
-        </div>
+        </div>,
       );
       const result = wrapper.find('.foo').map(w => w.props().className);
 
@@ -2163,7 +2163,7 @@ describeWithDOM('mount', () => {
           <div className="foo bax" />
           <div className="foo bar" />
           <div className="foo baz" />
-        </div>
+        </div>,
       );
       const spy = sinon.spy(n => n + 1);
 
@@ -2184,7 +2184,7 @@ describeWithDOM('mount', () => {
           <div id="bax" className="foo qoo" />
           <div id="bar" className="foo boo" />
           <div id="baz" className="foo hoo" />
-        </div>
+        </div>,
       );
       const result = wrapper.find('.foo').reduce((obj, n) => {
         obj[n.prop('id')] = n.prop('className');
@@ -2206,7 +2206,7 @@ describeWithDOM('mount', () => {
           <div className="foo bax" />
           <div className="foo bar" />
           <div className="foo baz" />
-        </div>
+        </div>,
       );
       const spy = sinon.spy(n => n + 1);
 
@@ -2227,7 +2227,7 @@ describeWithDOM('mount', () => {
           <div id="bax" className="foo qoo" />
           <div id="bar" className="foo boo" />
           <div id="baz" className="foo hoo" />
-        </div>
+        </div>,
       );
       const result = wrapper.find('.foo').reduceRight((obj, n) => {
         obj[n.prop('id')] = n.prop('className');
@@ -2249,7 +2249,7 @@ describeWithDOM('mount', () => {
           <div className="foo qoo" />
           <div className="foo boo" />
           <div className="foo hoo" />
-        </div>
+        </div>,
       );
       expect(wrapper.find('.foo').some('.qoo')).to.equal(true);
       expect(wrapper.find('.foo').some('.foo')).to.equal(true);
@@ -2259,11 +2259,11 @@ describeWithDOM('mount', () => {
       const wrapper = mount(
         <div>
           <div className="foo" />
-        </div>
+        </div>,
       );
       expect(() => wrapper.some('.foo')).to.throw(
         Error,
-        'ReactWrapper::some() can not be called on the root'
+        'ReactWrapper::some() can not be called on the root',
       );
     });
   });
@@ -2275,7 +2275,7 @@ describeWithDOM('mount', () => {
           <div className="foo qoo" />
           <div className="foo boo" />
           <div className="foo hoo" />
-        </div>
+        </div>,
       );
       expect(wrapper.find('.foo').someWhere(n => n.hasClass('qoo'))).to.equal(true);
       expect(wrapper.find('.foo').someWhere(n => n.hasClass('foo'))).to.equal(true);
@@ -2290,7 +2290,7 @@ describeWithDOM('mount', () => {
           <div className="foo qoo" />
           <div className="foo boo" />
           <div className="foo hoo" />
-        </div>
+        </div>,
       );
       expect(wrapper.find('.foo').every('.foo')).to.equal(true);
       expect(wrapper.find('.foo').every('.qoo')).to.equal(false);
@@ -2305,7 +2305,7 @@ describeWithDOM('mount', () => {
           <div className="foo qoo" />
           <div className="foo boo" />
           <div className="foo hoo" />
-        </div>
+        </div>,
       );
       expect(wrapper.find('.foo').everyWhere(n => n.hasClass('foo'))).to.equal(true);
       expect(wrapper.find('.foo').everyWhere(n => n.hasClass('qoo'))).to.equal(false);
@@ -2329,7 +2329,7 @@ describeWithDOM('mount', () => {
             <div className="bax" />
             <div className="bax" />
           </div>
-        </div>
+        </div>,
       );
 
       const nodes = wrapper.find('.foo').flatMap(w => w.children().nodes);
@@ -2352,7 +2352,7 @@ describeWithDOM('mount', () => {
           <div className="bar" />
           <div className="bar" />
           <div className="bar" />
-        </div>
+        </div>,
       );
       expect(wrapper.find('.bar').first().hasClass('baz')).to.equal(true);
     });
@@ -2366,7 +2366,7 @@ describeWithDOM('mount', () => {
           <div className="bar" />
           <div className="bar" />
           <div className="bar baz" />
-        </div>
+        </div>,
       );
       expect(wrapper.find('.bar').last().hasClass('baz')).to.equal(true);
     });
@@ -2375,7 +2375,7 @@ describeWithDOM('mount', () => {
   describe('.isEmpty()', () => {
     it('should return true iff wrapper is empty', () => {
       const wrapper = mount(
-        <div className="foo" />
+        <div className="foo" />,
       );
       expect(wrapper.find('.bar').isEmpty()).to.equal(true);
       expect(wrapper.find('.foo').isEmpty()).to.equal(false);
@@ -2390,7 +2390,7 @@ describeWithDOM('mount', () => {
           <div className="bar bax" />
           <div className="bar bux" />
           <div className="bar baz" />
-        </div>
+        </div>,
       );
       expect(wrapper.find('.bar').at(0).hasClass('foo')).to.equal(true);
       expect(wrapper.find('.bar').at(1).hasClass('bax')).to.equal(true);
@@ -2407,7 +2407,7 @@ describeWithDOM('mount', () => {
           <div className="bar bax" />
           <div className="bar bux" />
           <div className="bar baz" />
-        </div>
+        </div>,
       );
       expect(wrapper.find('.bar').get(0)).to.equal(wrapper.find('.foo').node);
       expect(wrapper.find('.bar').get(1)).to.equal(wrapper.find('.bax').node);
@@ -2441,10 +2441,10 @@ describeWithDOM('mount', () => {
       const wrapper = mount(
         <div className="test">
           <span>Hello World!</span>
-        </div>
+        </div>,
       );
       expect(wrapper.html()).to.equal(
-        '<div class="test"><span>Hello World!</span></div>'
+        '<div class="test"><span>Hello World!</span></div>',
       );
     });
 
@@ -2465,10 +2465,10 @@ describeWithDOM('mount', () => {
       }
       const wrapper = mount(<Bar />);
       expect(wrapper.html()).to.equal(
-        '<div class="in-bar"><div class="in-foo"></div></div>'
+        '<div class="in-bar"><div class="in-foo"></div></div>',
       );
       expect(wrapper.find(Foo).html()).to.equal(
-        '<div class="in-foo"></div>'
+        '<div class="in-foo"></div>',
       );
     });
 
@@ -2483,10 +2483,10 @@ describeWithDOM('mount', () => {
 
         const wrapper = mount(<Bar />);
         expect(wrapper.html()).to.equal(
-          '<div class="in-bar"><div class="in-foo"></div></div>'
+          '<div class="in-bar"><div class="in-foo"></div></div>',
         );
         expect(wrapper.find(Foo).html()).to.equal(
-          '<div class="in-foo"></div>'
+          '<div class="in-foo"></div>',
         );
       });
     });
@@ -2534,7 +2534,7 @@ describeWithDOM('mount', () => {
           <li>xxx</li>
           <li>yyy</li>
           <li>zzz</li>
-        </ul>
+        </ul>,
       ).find('li');
       const result = wrapper.tap(spy);
       expect(spy.calledWith(wrapper)).to.equal(true);
@@ -2668,7 +2668,7 @@ describeWithDOM('mount', () => {
       const wrapper = mount(
         <ul>
           {['foo', 'bar'].map(s => <li key={s}>{s}</li>)}
-        </ul>
+        </ul>,
       ).find('li');
       expect(wrapper.at(0).key()).to.equal('foo');
       expect(wrapper.at(1).key()).to.equal('bar');
@@ -2681,23 +2681,23 @@ describeWithDOM('mount', () => {
       const wrapper = mount(
         <div>
           <div onClick={spy} style={{ fontSize: 12, color: 'red' }}>Hello World</div>
-        </div>
+        </div>,
       ).first();
       expect(wrapper.matchesElement(<div><div>Hello World</div></div>)).to.equal(true);
       expect(wrapper.matchesElement(
         <div>
           <div onClick={spy} style={{ fontSize: 12, color: 'red' }}>Hello World</div>
-        </div>
+        </div>,
       )).to.equal(true);
       expect(wrapper.matchesElement(
         <div>
           <div onClick={spy}>Hello World</div>
-        </div>
+        </div>,
       )).to.equal(true);
       expect(wrapper.matchesElement(
         <div>
           <div style={{ fontSize: 12, color: 'red' }}>Hello World</div>
-        </div>
+        </div>,
       )).to.equal(true);
       expect(spy.callCount).to.equal(0);
     });
@@ -2707,23 +2707,23 @@ describeWithDOM('mount', () => {
       const wrapper = mount(
         <div>
           <div onClick={spy} style={{ fontSize: 12, color: 'red' }}>Hello World</div>
-        </div>
+        </div>,
       ).first();
       expect(wrapper.matchesElement(<div><div>Bonjour le monde</div></div>)).to.equal(false);
       expect(wrapper.matchesElement(
         <div>
           <div onClick={spy} style={{ fontSize: 12, color: 'blue' }}>Hello World</div>
-        </div>
+        </div>,
       )).to.equal(false);
       expect(wrapper.matchesElement(
         <div>
           <div onClick={spy2}>Hello World</div>
-        </div>
+        </div>,
       )).to.equal(false);
       expect(wrapper.matchesElement(
         <div>
           <div style={{ fontSize: 13, color: 'red' }}>Hello World</div>
-        </div>
+        </div>,
       )).to.equal(false);
       expect(spy.callCount).to.equal(0);
       expect(spy2.callCount).to.equal(0);
@@ -2817,43 +2817,43 @@ describeWithDOM('mount', () => {
         <div>
           <div onClick={spy1} style={{ fontSize: 12, color: 'red' }}>Hello World</div>
           <div onClick={spy2} style={{ fontSize: 13, color: 'blue' }}>Goodbye World</div>
-        </div>
+        </div>,
       );
       expect(wrapper.containsMatchingElement(
         <div>
           <div>Hello World</div>
           <div>Goodbye World</div>
-        </div>
+        </div>,
       )).to.equal(true);
       expect(wrapper.containsMatchingElement(
         <div>
           <div onClick={spy1} style={{ fontSize: 12, color: 'red' }}>Hello World</div>
           <div onClick={spy2} style={{ fontSize: 13, color: 'blue' }}>Goodbye World</div>
-        </div>
+        </div>,
       )).to.equal(true);
       expect(wrapper.containsMatchingElement(
         <div>
           <div onClick={spy1}>Hello World</div>
           <div style={{ fontSize: 13, color: 'blue' }}>Goodbye World</div>
-        </div>
+        </div>,
       )).to.equal(true);
       expect(wrapper.containsMatchingElement(
         <div>
           <div style={{ fontSize: 12, color: 'red' }}>Hello World</div>
           <div onClick={spy2}>Goodbye World</div>
-        </div>
+        </div>,
       )).to.equal(true);
       expect(wrapper.containsMatchingElement(
         <div>
           <div>Hello World</div>
           <div onClick={spy2} style={{ fontSize: 13, color: 'blue' }}>Goodbye World</div>
-        </div>
+        </div>,
       )).to.equal(true);
       expect(wrapper.containsMatchingElement(
         <div>
           <div>Hello World</div>
           <div style={{ fontSize: 13, color: 'blue' }}>Goodbye World</div>
-        </div>
+        </div>,
       )).to.equal(true);
       expect(spy1.callCount).to.equal(0);
       expect(spy2.callCount).to.equal(0);
@@ -2865,25 +2865,25 @@ describeWithDOM('mount', () => {
         <div>
           <div onClick={spy1} style={{ fontSize: 12, color: 'red' }}>Hello World</div>
           <div onClick={spy2} style={{ fontSize: 13, color: 'blue' }}>Goodbye World</div>
-        </div>
+        </div>,
       );
       expect(wrapper.containsMatchingElement(
-        <div>Hello World</div>
+        <div>Hello World</div>,
       )).to.equal(true);
       expect(wrapper.containsMatchingElement(
-        <div>Goodbye World</div>
+        <div>Goodbye World</div>,
       )).to.equal(true);
       expect(wrapper.containsMatchingElement(
-        <div onClick={spy1} style={{ fontSize: 12, color: 'red' }}>Hello World</div>
+        <div onClick={spy1} style={{ fontSize: 12, color: 'red' }}>Hello World</div>,
       )).to.equal(true);
       expect(wrapper.containsMatchingElement(
-        <div style={{ fontSize: 12, color: 'red' }}>Hello World</div>
+        <div style={{ fontSize: 12, color: 'red' }}>Hello World</div>,
       )).to.equal(true);
       expect(wrapper.containsMatchingElement(
-        <div onClick={spy2} style={{ fontSize: 13, color: 'blue' }}>Goodbye World</div>
+        <div onClick={spy2} style={{ fontSize: 13, color: 'blue' }}>Goodbye World</div>,
       )).to.equal(true);
       expect(wrapper.containsMatchingElement(
-        <div onClick={spy2}>Goodbye World</div>
+        <div onClick={spy2}>Goodbye World</div>,
       )).to.equal(true);
       expect(spy1.callCount).to.equal(0);
       expect(spy2.callCount).to.equal(0);
@@ -2895,13 +2895,13 @@ describeWithDOM('mount', () => {
         <div>
           <div onClick={spy1} style={{ fontSize: 12, color: 'red' }}>Hello World</div>
           <div onClick={spy2} style={{ fontSize: 13, color: 'blue' }}>Goodbye World</div>
-        </div>
+        </div>,
       );
       expect(wrapper.containsMatchingElement(
-        <div>Bonjour le monde</div>
+        <div>Bonjour le monde</div>,
       )).to.equal(false);
       expect(wrapper.containsMatchingElement(
-        <div onClick={spy2}>Au revoir le monde</div>
+        <div onClick={spy2}>Au revoir le monde</div>,
       )).to.equal(false);
     });
   });
@@ -2913,7 +2913,7 @@ describeWithDOM('mount', () => {
         <div>
           <div onClick={spy1} style={{ fontSize: 12, color: 'red' }}>Hello World</div>
           <div onClick={spy2} style={{ fontSize: 13, color: 'blue' }}>Goodbye World</div>
-        </div>
+        </div>,
       );
       expect(wrapper.containsAllMatchingElements([
         <div>Hello World</div>,
@@ -2957,7 +2957,7 @@ describeWithDOM('mount', () => {
         <div>
           <div onClick={spy1} style={{ fontSize: 12, color: 'red' }}>Hello World</div>
           <div onClick={spy2} style={{ fontSize: 13, color: 'blue' }}>Goodbye World</div>
-        </div>
+        </div>,
       );
       expect(wrapper.containsAllMatchingElements([
         <div onClick={spy1} style={{ fontSize: 12, color: 'red' }}>Hello World</div>,
@@ -2977,7 +2977,7 @@ describeWithDOM('mount', () => {
         <div>
           <div onClick={spy1} style={{ fontSize: 12, color: 'red' }}>Hello World</div>
           <div onClick={spy2} style={{ fontSize: 13, color: 'blue' }}>Goodbye World</div>
-        </div>
+        </div>,
       );
       expect(wrapper.containsAnyMatchingElements([
         <div>Bonjour le monde</div>,
@@ -3021,7 +3021,7 @@ describeWithDOM('mount', () => {
         <div>
           <div onClick={spy1} style={{ fontSize: 12, color: 'red' }}>Hello World</div>
           <div onClick={spy2} style={{ fontSize: 13, color: 'blue' }}>Goodbye World</div>
-        </div>
+        </div>,
       );
       expect(wrapper.containsAnyMatchingElements([
         <div onClick={spy1} style={{ fontSize: 12, color: 'red' }}>Bonjour le monde</div>,

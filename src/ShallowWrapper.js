@@ -280,7 +280,7 @@ class ShallowWrapper {
     if (!this.options.context) {
       throw new Error(
         'ShallowWrapper::setContext() can only be called on a wrapper that was originally passed ' +
-        'a context option'
+        'a context option',
       );
     }
     return this.rerender(null, context);
@@ -302,7 +302,7 @@ class ShallowWrapper {
     if (!isReactElementAlike(nodeOrNodes)) {
       throw new Error(
         'ShallowWrapper::contains() can only be called with ReactElement (or array of them), ' +
-        'string or number as argument.'
+        'string or number as argument.',
       );
     }
 
@@ -606,7 +606,7 @@ class ShallowWrapper {
     if (!this.options.context) {
       throw new Error(
         'ShallowWrapper::context() can only be called on a wrapper that was originally passed ' +
-        'a context option'
+        'a context option',
       );
     }
     const _context = this.single('context', () => this.instance().context);
@@ -734,7 +734,7 @@ class ShallowWrapper {
       // eslint-disable-next-line no-console
       console.warn(
         'It looks like you\'re calling `ShallowWrapper::hasClass()` with a CSS selector. ' +
-        'hasClass() expects a class name, not a CSS selector.'
+        'hasClass() expects a class name, not a CSS selector.',
       );
     }
     return this.single('hasClass', n => hasClassName(n, className));
@@ -774,7 +774,7 @@ class ShallowWrapper {
   reduce(fn, initialValue) {
     return this.nodes.reduce(
       (accum, n, i) => fn.call(this, accum, this.wrap(n), i),
-      initialValue
+      initialValue,
     );
   }
 
@@ -789,7 +789,7 @@ class ShallowWrapper {
   reduceRight(fn, initialValue) {
     return this.nodes.reduceRight(
       (accum, n, i) => fn.call(this, accum, this.wrap(n), i),
-      initialValue
+      initialValue,
     );
   }
 
@@ -926,7 +926,7 @@ class ShallowWrapper {
     const callback = typeof fn === 'function' ? fn : name;
     if (this.length !== 1) {
       throw new Error(
-        `Method “${fnName}” is only meant to be run on a single node. ${this.length} found instead.`
+        `Method “${fnName}” is only meant to be run on a single node. ${this.length} found instead.`,
       );
     }
     return callback.call(this, this.node);

@@ -50,7 +50,7 @@ describe('Utils', () => {
 
       expect(nodeEqual(
         <div />,
-        <div />
+        <div />,
       )).to.equal(true);
 
     });
@@ -59,7 +59,7 @@ describe('Utils', () => {
 
       expect(nodeEqual(
         <div />,
-        <nav />
+        <nav />,
       )).to.equal(false);
 
     });
@@ -68,17 +68,17 @@ describe('Utils', () => {
 
       expect(nodeEqual(
         <div className="foo" />,
-        <div className="foo" />
+        <div className="foo" />,
       )).to.equal(true);
 
       expect(nodeEqual(
         <div id="foo" className="bar" />,
-        <div id="foo" className="bar" />
+        <div id="foo" className="bar" />,
       )).to.equal(true);
 
       expect(nodeEqual(
         <div id="foo" className="baz" />,
-        <div id="foo" className="bar" />
+        <div id="foo" className="bar" />,
       )).to.equal(false);
 
     });
@@ -89,7 +89,7 @@ describe('Utils', () => {
         <div>
           <div />
         </div>,
-        <div />
+        <div />,
       )).to.equal(false);
 
       expect(nodeEqual(
@@ -98,7 +98,7 @@ describe('Utils', () => {
         </div>,
         <div>
           <div />
-        </div>
+        </div>,
       )).to.equal(true);
 
       expect(nodeEqual(
@@ -107,7 +107,7 @@ describe('Utils', () => {
         </div>,
         <div>
           <div className="foo" />
-        </div>
+        </div>,
       )).to.equal(true);
 
       expect(nodeEqual(
@@ -116,7 +116,7 @@ describe('Utils', () => {
         </div>,
         <div>
           <div />
-        </div>
+        </div>,
       )).to.equal(false);
 
     });
@@ -125,12 +125,12 @@ describe('Utils', () => {
 
       expect(nodeEqual(
         <div foo={{ a: 1, b: 2 }} />,
-        <div foo={{ a: 1, b: 2 }} />
+        <div foo={{ a: 1, b: 2 }} />,
       )).to.equal(true);
 
       expect(nodeEqual(
         <div foo={{ a: 2, b: 2 }} />,
-        <div foo={{ a: 1, b: 2 }} />
+        <div foo={{ a: 1, b: 2 }} />,
       )).to.equal(false);
 
     });
@@ -139,47 +139,47 @@ describe('Utils', () => {
       it('should match equal nodes', () => {
         expect(nodeEqual(
           <div>child</div>,
-          <div>child</div>
+          <div>child</div>,
         )).to.equal(true);
       });
 
       it('should not match not equal nodes', () => {
         expect(nodeEqual(
           <div>child</div>,
-          <div />
+          <div />,
         )).to.equal(false);
 
         expect(nodeEqual(
           <div />,
-          <div>child</div>
+          <div>child</div>,
         )).to.equal(false);
       });
 
       it('should skip null children', () => {
         expect(nodeEqual(
           <div>{null}</div>,
-          <div />
+          <div />,
         )).to.equal(true);
       });
 
       it('should skip undefined children', () => {
         expect(nodeEqual(
           <div>{undefined}</div>,
-          <div />
+          <div />,
         )).to.equal(true);
       });
 
       it('should skip empty children', () => {
         expect(nodeEqual(
           <div>{[]}</div>,
-          <div />
+          <div />,
         )).to.equal(true);
       });
 
       it('should skip array of null children', () => {
         expect(nodeEqual(
           <div>{[null, null, null]}</div>,
-          <div />
+          <div />,
         )).to.equal(true);
       });
 
@@ -190,14 +190,14 @@ describe('Utils', () => {
       it('should match equal nodes', () => {
         expect(nodeEqual(
           <div className="foo">child</div>,
-          <div className="foo">child</div>
+          <div className="foo">child</div>,
         )).to.equal(true);
       });
 
       it('should not match when basic props are not equal', () => {
         expect(nodeEqual(
           <div className="foo">child</div>,
-          <div className="bar">child</div>
+          <div className="bar">child</div>,
         )).to.equal(false);
 
         expect(nodeEqual(
@@ -209,7 +209,7 @@ describe('Utils', () => {
       it('should not match when children are not equal', () => {
         expect(nodeEqual(
           <div className="foo">child</div>,
-          <div className="foo">other child</div>
+          <div className="foo">other child</div>,
         )).to.equal(false);
 
         expect(nodeEqual(
@@ -221,12 +221,12 @@ describe('Utils', () => {
       it('should match nodes when children are different but falsy', () => {
         expect(nodeEqual(
           <div className="foo">{null}</div>,
-          <div className="foo" />
+          <div className="foo" />,
         )).to.equal(true);
 
         expect(nodeEqual(
           <div children={null} className="foo" />, // eslint-disable-line react/no-children-prop
-          <div className="foo" />
+          <div className="foo" />,
         )).to.equal(true);
       });
 

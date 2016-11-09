@@ -9,6 +9,7 @@
     "jsx": true
   },
   "rules": {
+    "no-useless-escape": 1,
     "id-length": 0,
     "new-cap": [2, { "capIsNewExceptions": ["AND"] }],
     "react/jsx-pascal-case": [2, { "allowAllCaps": true }],
