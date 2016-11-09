@@ -1,5 +1,16 @@
 # Change Log
 
+## 2.6.0 (November 9, 2016)
+
+### New Stuff
+
+- ensure ShallowWrapper render output can't get stale ([#490](https://github.com/airbnb/enzyme/pull/490))
+
+### Fixes
+
+- Use shim to detect constructor function name ([#659](https://github.com/airbnb/enzyme/pull/659))
+- `mount`/`shallow`: fix ID selectors ([#670](https://github.com/airbnb/enzyme/pull/670))
+
 ## 2.5.1 (October 17, 2016)
 
 ### Patches
