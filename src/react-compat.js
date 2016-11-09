@@ -79,7 +79,7 @@ if (REACT013) {
     console.error(
       'react-dom is an implicit dependency in order to support react@0.13-14. ' +
       'Please add the appropriate version to your devDependencies. ' +
-      'See https://github.com/airbnb/enzyme#installation'
+      'See https://github.com/airbnb/enzyme#installation',
     );
     throw e;
   }
@@ -102,7 +102,7 @@ if (REACT013) {
     console.error(
       'react-addons-test-utils is an implicit dependency in order to support react@0.13-14. ' +
       'Please add the appropriate version to your devDependencies. ' +
-      'See https://github.com/airbnb/enzyme#installation'
+      'See https://github.com/airbnb/enzyme#installation',
     );
     throw e;
   }

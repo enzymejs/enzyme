@@ -125,7 +125,7 @@ export function buildPredicate(selector) {
         return node => nodeMatchesObjectProps(node, selector);
       }
       throw new TypeError(
-        'Enzyme::Selector does not support an array, null, or empty object as a selector'
+        'Enzyme::Selector does not support an array, null, or empty object as a selector',
       );
 
     default:

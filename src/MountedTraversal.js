@@ -217,7 +217,7 @@ export function buildInstPredicate(selector) {
         return node => instMatchesObjectProps(node, selector);
       }
       throw new TypeError(
-        'Enzyme::Selector does not support an array, null, or empty object as a selector'
+        'Enzyme::Selector does not support an array, null, or empty object as a selector',
       );
 
     default:
@@ -249,7 +249,7 @@ function findAllInRenderedTreeInternal(inst, test) {
       return true;
     }).forEach((key) => {
       ret = ret.concat(
-        findAllInRenderedTreeInternal(renderedChildren[key], test)
+        findAllInRenderedTreeInternal(renderedChildren[key], test),
       );
     });
   } else if (
@@ -260,8 +260,8 @@ function findAllInRenderedTreeInternal(inst, test) {
     ret = ret.concat(
       findAllInRenderedTreeInternal(
         inst._renderedComponent,
-        test
-      )
+        test,
+      ),
     );
   } else if (
     REACT013 &&
@@ -270,8 +270,8 @@ function findAllInRenderedTreeInternal(inst, test) {
     ret = ret.concat(
       findAllInRenderedTreeInternal(
         inst._renderedComponent,
-        test
-      )
+        test,
+      ),
     );
   }
   return ret;

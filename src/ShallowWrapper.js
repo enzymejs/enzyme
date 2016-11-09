@@ -112,7 +112,7 @@ class ShallowWrapper {
   getNode() {
     if (this.length !== 1) {
       throw new Error(
-        'ShallowWrapper::getNode() can only be called when wrapping one node'
+        'ShallowWrapper::getNode() can only be called when wrapping one node',
       );
     }
     return this.root === this ? this.renderer.getRenderOutput() : this.node;
@@ -303,7 +303,7 @@ class ShallowWrapper {
     if (!this.options.context) {
       throw new Error(
         'ShallowWrapper::setContext() can only be called on a wrapper that was originally passed ' +
-        'a context option'
+        'a context option',
       );
     }
     return this.rerender(null, context);
@@ -325,7 +325,7 @@ class ShallowWrapper {
     if (!isReactElementAlike(nodeOrNodes)) {
       throw new Error(
         'ShallowWrapper::contains() can only be called with ReactElement (or array of them), ' +
-        'string or number as argument.'
+        'string or number as argument.',
       );
     }
 
@@ -629,7 +629,7 @@ class ShallowWrapper {
     if (!this.options.context) {
       throw new Error(
         'ShallowWrapper::context() can only be called on a wrapper that was originally passed ' +
-        'a context option'
+        'a context option',
       );
     }
     const _context = this.single('context', () => this.instance().context);
@@ -671,7 +671,7 @@ class ShallowWrapper {
    */
   parents(selector) {
     const allParents = this.wrap(
-        this.single('parents', n => parentsOfNode(n, this.root.getNode()))
+        this.single('parents', n => parentsOfNode(n, this.root.getNode())),
     );
     return selector ? allParents.filter(selector) : allParents;
   }
@@ -759,7 +759,7 @@ class ShallowWrapper {
       // eslint-disable-next-line no-console
       console.warn(
         'It looks like you\'re calling `ShallowWrapper::hasClass()` with a CSS selector. ' +
-        'hasClass() expects a class name, not a CSS selector.'
+        'hasClass() expects a class name, not a CSS selector.',
       );
     }
     return this.single('hasClass', n => hasClassName(n, className));
@@ -799,7 +799,7 @@ class ShallowWrapper {
   reduce(fn, initialValue) {
     return this.getNodes().reduce(
       (accum, n, i) => fn.call(this, accum, this.wrap(n), i),
-      initialValue
+      initialValue,
     );
   }
 
@@ -814,7 +814,7 @@ class ShallowWrapper {
   reduceRight(fn, initialValue) {
     return this.getNodes().reduceRight(
       (accum, n, i) => fn.call(this, accum, this.wrap(n), i),
-      initialValue
+      initialValue,
     );
   }
 
@@ -951,7 +951,7 @@ class ShallowWrapper {
     const callback = typeof fn === 'function' ? fn : name;
     if (this.length !== 1) {
       throw new Error(
-        `Method “${fnName}” is only meant to be run on a single node. ${this.length} found instead.`
+        `Method “${fnName}” is only meant to be run on a single node. ${this.length} found instead.`,
       );
     }
     return callback.call(this, this.getNode());

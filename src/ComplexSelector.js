@@ -59,7 +59,7 @@ export default class ComplexSelector {
           predicate = buildSiblingPredicate(selectors[1], selectors[2]);
           selectSiblings = (children, pre, results, idx) =>
             children.slice(idx + 1).map(child =>
-              (pre(child) ? results.push(child) : null)
+              (pre(child) ? results.push(child) : null),
             );
 
           return recurseSelector(2, this.treeFindSiblings(selectSiblings), predicate);
