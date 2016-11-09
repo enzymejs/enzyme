@@ -600,6 +600,30 @@ describe('shallow', () => {
         expect(wrapper.find('Foo').type()).to.equal(Foo);
       });
     });
+
+    describe('works with attribute selectors containing #', () => {
+      let wrapper;
+      beforeEach(() => {
+        wrapper = shallow(
+          <div>
+            <a id="test" href="/page">Hello</a>
+            <a href="/page#anchor">World</a>
+          </div>
+        );
+      });
+
+      it('works with an ID', () => {
+        expect(wrapper.find('a#test')).to.have.lengthOf(1);
+      });
+
+      it('works with a normal attribute', () => {
+        expect(wrapper.find('a[href="/page"]')).to.have.lengthOf(1);
+      });
+
+      it('works with an attribute with a #', () => {
+        expect(wrapper.find('a[href="/page#anchor"]')).to.have.lengthOf(1);
+      });
+    });
   });
 
   describe('.findWhere(predicate)', () => {
