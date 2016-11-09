@@ -41,8 +41,8 @@ class Foo extends React.Component {
 
 ```jsx
 const wrapper = mount(<Foo />);
-const total = wrapper.find(Bar).reduceRight((amount, n) => amount + n.prop('amount'));
-expect(total).to.equal(16);
+const total = wrapper.find(Bar).reduceRight((amount, n) => amount ? amount + n.prop('amount') : n.prop('amount'));
+expect(total).to.equal(14); // 8 + 4 + 2
 ```
 
 
