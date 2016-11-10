@@ -472,11 +472,8 @@ class ShallowWrapper {
 
       if (result.length === 0) return null;
       if (result.length === 1) return new ShallowWrapper(result[0], this.root);
-      if (result.length > 1) {
-        throw new Error('There is more than one component own by the tree root with the same ref string');
-      }
 
-      return false;
+      throw new Error('There is more than one component own by the tree root with the same ref string');
     });
   }
 
