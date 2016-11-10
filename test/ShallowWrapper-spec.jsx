@@ -770,12 +770,12 @@ describe('shallow', () => {
 
     it('returns false if no element is found with the requested ref', () => {
       const result = wrapper.ref(anUnexistingRef);
-      expect(result).to.equal(false);
+      expect(result).to.equal(null);
     });
 
     it('returns false if a ref owned by a child React component is requested', () => {
       const result = wrapper.ref(aRefOwnedByChild);
-      expect(result).to.equal(false);
+      expect(result).to.equal(null);
     });
 
     it('throws an error if it find more than one ref', () => {

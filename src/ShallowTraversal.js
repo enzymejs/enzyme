@@ -12,6 +12,9 @@ import {
   nodeHasType,
   nodeHasProperty,
 } from './Utils';
+import {
+  isDOMComponentElement,
+} from './react-compat';
 
 
 export function childrenOfNode(node) {
@@ -152,8 +155,6 @@ export function getTextFromNode(node) {
     .replace(/\s+/, ' ');
 }
 
-export const isAReactComponentNode = node => typeof node.type === 'function';
-
 export const findRefInOwnedChildren = (node, ref, isRootNode) => {
   const result = [];
 
@@ -161,7 +162,7 @@ export const findRefInOwnedChildren = (node, ref, isRootNode) => {
     result.push(node);
   }
 
-  if (!isAReactComponentNode(node) || isRootNode) {
+  if (isDOMComponentElement(node) || isRootNode) {
     const children = childrenOfNode(node);
 
     children.forEach((c) => {

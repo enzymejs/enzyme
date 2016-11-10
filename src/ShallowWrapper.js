@@ -28,7 +28,6 @@ import {
   parentsOfNode,
   treeFilter,
   buildPredicate,
-  isAReactComponentNode,
   findRefInOwnedChildren,
 } from './ShallowTraversal';
 import {
@@ -465,13 +464,13 @@ class ShallowWrapper {
    */
   ref(ref) {
     return this.single('ref', (node) => {
-      if (!isAReactComponentNode(this.unrendered)) {
+      if (isDOMComponentElement(this.unrendered)) {
         throw new Error('The current node must be a React component.');
       }
 
       const result = findRefInOwnedChildren(node, ref, true);
 
-      if (result.length === 0) return false;
+      if (result.length === 0) return null;
       if (result.length === 1) return new ShallowWrapper(result[0], this.root);
       if (result.length > 1) {
         throw new Error('There is more than one component own by the tree root with the same ref string');
