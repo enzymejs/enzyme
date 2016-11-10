@@ -706,6 +706,83 @@ describe('shallow', () => {
     });
   });
 
+  describe('ref', () => {
+    const aReactComponentRef = 'aReactComponentRef';
+    const aReactComponentChildRef = 'childrenRef';
+    const aDOMElementChildRef = 'childrenRef2';
+    const aFirstLevelRef = 'aFirstLevelRef';
+    const anUnexistingRef = 'aSillyRef';
+    const aDoubleRef = 'imUsedTwiceForTheSameComponent';
+    const rootElementRef = 'rootElementRef';
+    const aRefOwnedByChild = 'aRefOwnedByChild';
+
+    const ComponentWithChildrenRefs = React.createClass({
+      render: () => <h1 ref={aReactComponentChildRef}>Allo</h1>,
+    });
+
+    const RootComponent = React.createClass({
+      render: () => (
+        <div ref={rootElementRef}>
+          <ComponentWithChildrenRefs
+            ref={aReactComponentRef}
+            aProp="something"
+          >
+            <p ref={aRefOwnedByChild} />
+          </ComponentWithChildrenRefs>
+
+          <p ref={aDoubleRef} />
+          <p ref={aDoubleRef} />
+
+          <div ref={aFirstLevelRef}>
+            <p ref={aDOMElementChildRef} />
+          </div>
+
+        </div>
+      ),
+    });
+
+    const wrapper = shallow(<RootComponent />);
+
+    it('throws if called with a dom node as root', () => {
+      const domWrapper = shallow(<div><p>banana</p></div>);
+      expect(() => domWrapper.ref('noMatterWhat')).to.throw();
+    });
+
+    it('returns the wrapper on the react component and not on the dom node when the requested ref is on a react component', () => {
+      const result = wrapper.ref(aReactComponentRef);
+      expect(result.props().aProp).to.equal('something');
+    });
+
+    it('returns the wrapper of the requested ref when it is the one of the containing element', () => {
+      const result = wrapper.ref(rootElementRef);
+      expect(result.node.ref).to.equal(rootElementRef);
+    });
+
+    it('returns the wrapper of the requested ref at first level', () => {
+      const result = wrapper.ref(aFirstLevelRef);
+      expect(result.node.ref).to.equal(aFirstLevelRef);
+    });
+
+    it('returns the wrapper of the requested ref even at DOM-nested-level', () => {
+      const result = wrapper.ref(aDOMElementChildRef);
+      expect(result.node.ref).to.equal(aDOMElementChildRef);
+    });
+
+    it('returns false if no element is found with the requested ref', () => {
+      const result = wrapper.ref(anUnexistingRef);
+      expect(result).to.equal(false);
+    });
+
+    it('returns false if a ref owned by a child React component is requested', () => {
+      const result = wrapper.ref(aRefOwnedByChild);
+      expect(result).to.equal(false);
+    });
+
+    it('throws an error if it find more than one ref', () => {
+      expect(() => wrapper.ref(aDoubleRef)).to.throw();
+    });
+  });
+
   describe('.findWhere(predicate)', () => {
     it('should return all elements for a truthy test', () => {
       const wrapper = shallow(

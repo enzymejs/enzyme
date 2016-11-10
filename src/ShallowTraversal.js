@@ -151,3 +151,23 @@ export function getTextFromNode(node) {
     .join('')
     .replace(/\s+/, ' ');
 }
+
+export const isAReactComponentNode = node => typeof node.type === 'function';
+
+export const findRefInOwnedChildren = (node, ref, isRootNode) => {
+  const result = [];
+
+  if (node.ref === ref) {
+    result.push(node);
+  }
+
+  if (!isAReactComponentNode(node) || isRootNode) {
+    const children = childrenOfNode(node);
+
+    children.forEach((c) => {
+      result.push(...findRefInOwnedChildren(c, ref));
+    });
+  }
+
+  return result;
+};
