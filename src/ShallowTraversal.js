@@ -155,7 +155,7 @@ export function getTextFromNode(node) {
     .replace(/\s+/, ' ');
 }
 
-export const findRefInOwnedChildren = (node, ref, isRootNode) => {
+const findRef = (node, ref, isRootNode) => {
   const result = [];
 
   if (node.ref === ref) {
@@ -166,9 +166,11 @@ export const findRefInOwnedChildren = (node, ref, isRootNode) => {
     const children = childrenOfNode(node);
 
     children.forEach((c) => {
-      result.push(...findRefInOwnedChildren(c, ref));
+      result.push(...findRef(c, ref));
     });
   }
 
   return result;
 };
+
+export const findRefInOwnedChildren = (node, ref) => findRef(node, ref, true);
