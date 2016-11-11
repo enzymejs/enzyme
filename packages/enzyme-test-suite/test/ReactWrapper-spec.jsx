@@ -21,6 +21,9 @@ import {
 import { ITERATOR_SYMBOL, sym } from 'enzyme/build/Utils';
 import { REACT013, REACT014, REACT16, is } from './_helpers/version';
 
+const getElementPropSelector = prop => x => x.props[prop];
+const getWrapperPropSelector = prop => x => x.prop(prop);
+
 describeWithDOM('mount', () => {
   describe('top level wrapper', () => {
     it('does what i expect', () => {
@@ -2348,6 +2351,10 @@ describeWithDOM('mount', () => {
   });
 
   describe('.reduce(fn[, initialValue])', () => {
+    it('has the right length', () => {
+      expect(ReactWrapper.prototype.reduce).to.have.lengthOf(1);
+    });
+
     it('should call a function with a wrapper for each node in the wrapper', () => {
       const wrapper = mount(
         <div>
@@ -2388,9 +2395,33 @@ describeWithDOM('mount', () => {
         baz: 'foo hoo',
       });
     });
+
+    it('allows the initialValue to be omitted', () => {
+      const one = (<div id="bax" className="foo qoo" />);
+      const two = (<div id="bar" className="foo boo" />);
+      const three = (<div id="baz" className="foo hoo" />);
+      const wrapper = mount(
+        <div>
+          {one}
+          {two}
+          {three}
+        </div>,
+      );
+      const counter = (<noscript id="counter" />);
+      const result = wrapper
+        .find('.foo')
+        .reduce((acc, n) => [].concat(acc, n, new ReactWrapper(counter)))
+        .map(getWrapperPropSelector('id'));
+
+      expect(result).to.eql([one, two, counter, three, counter].map(getElementPropSelector('id')));
+    });
   });
 
   describe('.reduceRight(fn[, initialValue])', () => {
+    it('has the right length', () => {
+      expect(ReactWrapper.prototype.reduceRight).to.have.lengthOf(1);
+    });
+
     it('should call a function with a wrapper for each node in the wrapper in reverse', () => {
       const wrapper = mount(
         <div>
@@ -2430,6 +2461,27 @@ describeWithDOM('mount', () => {
         bar: 'foo boo',
         baz: 'foo hoo',
       });
+    });
+
+    it('allows the initialValue to be omitted', () => {
+      const one = (<div id="bax" className="foo qoo" />);
+      const two = (<div id="bar" className="foo boo" />);
+      const three = (<div id="baz" className="foo hoo" />);
+      const wrapper = mount(
+        <div>
+          {one}
+          {two}
+          {three}
+        </div>,
+      );
+
+      const counter = (<noscript id="counter" />);
+      const result = wrapper
+        .find('.foo')
+        .reduceRight((acc, n) => [].concat(acc, n, new ReactWrapper(counter)))
+        .map(getWrapperPropSelector('id'));
+
+      expect(result).to.eql([three, two, counter, one, counter].map(getElementPropSelector('id')));
     });
   });
 
