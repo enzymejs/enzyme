@@ -2073,17 +2073,37 @@ describeWithDOM('mount', () => {
   });
 
   describe('.hasClass(className)', () => {
-    it('should return whether or not node has a certain class', () => {
-      const wrapper = mount(
-        <div className="foo bar baz some-long-string FoOo" />,
-      );
+    context('When using a DOM component', () => {
+      it('should return whether or not node has a certain class', () => {
+        const wrapper = mount(
+          <div className="foo bar baz some-long-string FoOo" />,
+        );
 
-      expect(wrapper.hasClass('foo')).to.equal(true);
-      expect(wrapper.hasClass('bar')).to.equal(true);
-      expect(wrapper.hasClass('baz')).to.equal(true);
-      expect(wrapper.hasClass('some-long-string')).to.equal(true);
-      expect(wrapper.hasClass('FoOo')).to.equal(true);
-      expect(wrapper.hasClass('doesnt-exist')).to.equal(false);
+        expect(wrapper.hasClass('foo')).to.equal(true);
+        expect(wrapper.hasClass('bar')).to.equal(true);
+        expect(wrapper.hasClass('baz')).to.equal(true);
+        expect(wrapper.hasClass('some-long-string')).to.equal(true);
+        expect(wrapper.hasClass('FoOo')).to.equal(true);
+        expect(wrapper.hasClass('doesnt-exist')).to.equal(false);
+      });
+    });
+
+    context('When using a Composite component', () => {
+      it('should return whether or not node has a certain class', () => {
+        class Foo extends React.Component {
+          render() {
+            return (<div className="foo bar baz some-long-string FoOo" />);
+          }
+        }
+        const wrapper = mount(<Foo />);
+
+        expect(wrapper.hasClass('foo')).to.equal(true);
+        expect(wrapper.hasClass('bar')).to.equal(true);
+        expect(wrapper.hasClass('baz')).to.equal(true);
+        expect(wrapper.hasClass('some-long-string')).to.equal(true);
+        expect(wrapper.hasClass('FoOo')).to.equal(true);
+        expect(wrapper.hasClass('doesnt-exist')).to.equal(false);
+      });
     });
   });
 

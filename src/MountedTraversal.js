@@ -46,9 +46,6 @@ export function instEqual(a, b, lenComp) {
 }
 
 export function instHasClassName(inst, className) {
-  if (!isDOMComponent(inst)) {
-    return false;
-  }
   const node = findDOMNode(inst);
   if (node.classList) {
     return node.classList.contains(className);
@@ -59,6 +56,13 @@ export function instHasClassName(inst, className) {
   }
   classes = classes.replace(/\s/g, ' ');
   return ` ${classes} `.indexOf(` ${className} `) > -1;
+}
+
+function hasClassName(inst, className) {
+  if (!isDOMComponent(inst)) {
+    return false;
+  }
+  return instHasClassName(inst, className);
 }
 
 export function instHasId(inst, id) {
@@ -198,7 +202,7 @@ export function buildInstPredicate(selector) {
 
       switch (selectorType(selector)) {
         case SELECTOR.CLASS_TYPE:
-          return inst => instHasClassName(inst, selector.substr(1));
+          return inst => hasClassName(inst, selector.substr(1));
         case SELECTOR.ID_TYPE:
           return inst => instHasId(inst, selector.substr(1));
         case SELECTOR.PROP_TYPE: {
