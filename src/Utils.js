@@ -155,7 +155,7 @@ export function isReactElementAlike(arg) {
 // 'mouseEnter' => 'onMouseEnter'
 export function propFromEvent(event) {
   const nativeEvent = mapNativeEventNames(event);
-  return `on${nativeEvent[0].toUpperCase()}${nativeEvent.substring(1)}`;
+  return `on${nativeEvent[0].toUpperCase()}${nativeEvent.slice(1)}`;
 }
 
 export function withSetStateAllowed(fn) {

@@ -202,9 +202,9 @@ export function buildInstPredicate(selector) {
 
       switch (selectorType(selector)) {
         case SELECTOR.CLASS_TYPE:
-          return inst => hasClassName(inst, selector.substr(1));
+          return inst => hasClassName(inst, selector.slice(1));
         case SELECTOR.ID_TYPE:
-          return inst => instHasId(inst, selector.substr(1));
+          return inst => instHasId(inst, selector.slice(1));
         case SELECTOR.PROP_TYPE: {
           const propKey = selector.split(/\[([a-zA-Z][a-zA-Z_\d\-:]*?)(=|])/)[1];
           const propValue = selector.split(/=(.*?)]/)[1];
