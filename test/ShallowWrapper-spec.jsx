@@ -1062,7 +1062,7 @@ describe('shallow', () => {
     describeIf(!REACT013, 'stateless function components', () => {
       it('should invoke event handlers', () => {
         const spy = sinon.spy();
-        const Foo = (props) => (
+        const Foo = props => (
           <div onClick={props.onClick}>
             <a onClick={props.onClick}>foo</a>
           </div>
@@ -1159,7 +1159,7 @@ describe('shallow', () => {
           this.setState({ count: this.state.count + 1 });
         }
         render() {
-          ++renderCount;
+          renderCount += 1;
           return (
             <a onClick={this.onClick}>{this.state.count}</a>
           );
@@ -1381,7 +1381,7 @@ describe('shallow', () => {
     });
 
     it('should respect stopPropagation called in the bubbling phase', () => {
-      const innerOnClick = sinon.spy(e => {
+      const innerOnClick = sinon.spy((e) => {
         e.stopPropagation();
       });
       const outerOnClick = sinon.spy();
@@ -1408,7 +1408,7 @@ describe('shallow', () => {
     });
 
     it('should respect stopPropagation called in the capture phase', () => {
-      const innerOnClick = sinon.spy(e => {
+      const innerOnClick = sinon.spy((e) => {
         e.stopPropagation();
       });
       const outerOnClick = sinon.spy();
@@ -1640,7 +1640,7 @@ describe('shallow', () => {
       });
 
       it('should respect stopPropagation called in the bubbling phase', () => {
-        const innerOnClick = sinon.spy(e => {
+        const innerOnClick = sinon.spy((e) => {
           e.stopPropagation();
         });
         const outerOnClick = sinon.spy();
@@ -1663,7 +1663,7 @@ describe('shallow', () => {
       });
 
       it('should respect stopPropagation called in the capture phase', () => {
-        const innerOnClick = sinon.spy(e => {
+        const innerOnClick = sinon.spy((e) => {
           e.stopPropagation();
         });
         const outerOnClick = sinon.spy();

@@ -1,10 +1,7 @@
-import { describeWithDOM } from './_helpers';
 import React from 'react';
 import { expect } from 'chai';
-import {
-  mount,
-  shallow,
-} from '../src/';
+import { describeWithDOM } from './_helpers';
+import { mount, shallow } from '../src/';
 
 const renderers = [shallow, mount];
 
@@ -35,7 +32,7 @@ describeWithDOM('shallow-mount parity', () => {
         }
       }
 
-      renderers.forEach(renderer => {
+      renderers.forEach((renderer) => {
         const actualCalls = [];
         const wrapper = renderer(<Foo calls={actualCalls} />);
 
