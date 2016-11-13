@@ -2720,6 +2720,7 @@ describe('shallow', () => {
           },
         );
         wrapper.setProps({ foo: 'baz' });
+        wrapper.setProps({ foo: 'bax' });
         expect(spy.args).to.deep.equal(
           [
             [
@@ -2751,6 +2752,32 @@ describe('shallow', () => {
               { foo: 'state' }, { foo: 'state' },
               { foo: 'context' },
             ],
+            [
+              'componentWillReceiveProps',
+              { foo: 'baz' }, { foo: 'bax' },
+              { foo: 'context' },
+            ],
+            [
+              'shouldComponentUpdate',
+              { foo: 'baz' }, { foo: 'bax' },
+              { foo: 'state' }, { foo: 'state' },
+              { foo: 'context' },
+            ],
+            [
+              'componentWillUpdate',
+              { foo: 'baz' }, { foo: 'bax' },
+              { foo: 'state' }, { foo: 'state' },
+              { foo: 'context' },
+            ],
+            [
+              'render',
+            ],
+            [
+              'componentDidUpdate',
+              { foo: 'baz' }, { foo: 'bax' },
+              { foo: 'state' }, { foo: 'state' },
+              { foo: 'context' },
+            ],
           ],
         );
       });
@@ -2759,6 +2786,9 @@ describe('shallow', () => {
         const spy = sinon.spy();
 
         class Foo extends React.Component {
+          componentWillReceiveProps() {
+            spy('componentWillReceiveProps');
+          }
           shouldComponentUpdate() {
             spy('shouldComponentUpdate');
             return false;
@@ -2777,7 +2807,14 @@ describe('shallow', () => {
 
         const wrapper = shallow(<Foo foo="bar" />, { lifecycleExperimental: true });
         wrapper.setProps({ foo: 'baz' });
-        expect(spy.args).to.deep.equal([['render'], ['shouldComponentUpdate']]);
+        wrapper.setProps({ foo: 'bax' });
+        expect(spy.args).to.deep.equal([
+          ['render'],
+          ['componentWillReceiveProps'],
+          ['shouldComponentUpdate'],
+          ['componentWillReceiveProps'],
+          ['shouldComponentUpdate'],
+        ]);
       });
 
       it('should not provoke another renders to call setState in componentWillReceiveProps', () => {
