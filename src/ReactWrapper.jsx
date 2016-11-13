@@ -29,6 +29,7 @@ import {
   typeOfNode,
   displayNameOfNode,
   ITERATOR_SYMBOL,
+  isFunctionalComponent,
 } from './Utils';
 import {
   debugInsts,
@@ -128,6 +129,23 @@ class ReactWrapper {
    */
   getNodes() {
     return this.nodes;
+  }
+
+  /**
+   * Returns the outer most DOMComponent of the current wrapper.
+   *
+   * NOTE: can only be called on a wrapper of a single node.
+   *
+   * @returns {DOMComponent}
+   */
+  getDOMNode() {
+    return this.single('getDOMNode', (n) => {
+      if (isFunctionalComponent(n)) {
+        throw new TypeError('Method “getDOMNode” cannot be used on functional components.');
+      }
+
+      return findDOMNode(n);
+    });
   }
 
   /**

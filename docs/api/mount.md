@@ -122,6 +122,9 @@ Returns a static HTML rendering of the current node.
 #### [`.get(index) => ReactElement`](ReactWrapper/get.md)
 Returns the node at the provided index of the current wrapper.
 
+#### [`.getDOMNode() => DOMComponent`](ReactWrapper/getDOMNode.md)
+Returns the outer most DOMComponent of the current wrapper.
+
 #### [`.at(index) => ReactWrapper`](ReactWrapper/at.md)
 Returns a wrapper of the node at the provided index of the current wrapper.
 

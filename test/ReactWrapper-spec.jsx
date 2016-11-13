@@ -3285,6 +3285,45 @@ describeWithDOM('mount', () => {
     });
   });
 
+  describe('.getDOMNode', () => {
+    class Test extends React.Component {
+      render() {
+        return (
+          <div className="outer">
+            <div className="inner">
+              <span />
+              <span />
+            </div>
+          </div>
+        );
+      }
+    }
+
+    it('should return the outer most DOMComponent of the root wrapper', () => {
+      const wrapper = mount(<Test />);
+      expect(wrapper.getDOMNode()).to.have.property('className', 'outer');
+    });
+
+    it('should return the outer most DOMComponent of the inner div wrapper', () => {
+      const wrapper = mount(<Test />);
+      expect(wrapper.find('.inner').getDOMNode()).to.have.property('className', 'inner');
+    });
+
+    it('should throw when wrapping multiple elements', () => {
+      const wrapper = mount(<Test />).find('span');
+      expect(() => wrapper.getDOMNode()).to.throw(Error);
+    });
+
+    describeIf(!REACT013, 'stateless components', () => {
+      const SFC = () => (<div />);
+
+      it('should throw when wrapping an SFC', () => {
+        const wrapper = mount(<SFC />);
+        expect(() => wrapper.getDOMNode()).to.throw(TypeError, 'Method “getDOMNode” cannot be used on functional components.');
+      });
+    });
+  });
+
   describe('#single()', () => {
     it('throws if run on multiple nodes', () => {
       const wrapper = mount(<div><i /><i /></div>).children();
