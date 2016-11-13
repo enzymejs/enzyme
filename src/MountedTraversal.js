@@ -48,6 +48,9 @@ export function instEqual(a, b, lenComp) {
 
 export function instHasClassName(inst, className) {
   const node = findDOMNode(inst);
+  if (!node) { // inst renders null
+    return false;
+  }
   if (node.classList) {
     return node.classList.contains(className);
   }
