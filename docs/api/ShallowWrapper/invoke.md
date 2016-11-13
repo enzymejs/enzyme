@@ -28,7 +28,7 @@ class Foo extends React.Component {
     const { count } = this.state;
     return (
       <div>
-        <div className={`clicks-${count}`}>
+        <div data-clicks={count}>
           {count} clicks
         </div>
         <a onClick={() => this.setState({ count: count + 1 })}>
@@ -41,9 +41,9 @@ class Foo extends React.Component {
 
 const wrapper = shallow(<Foo />);
 
-expect(wrapper.find('.clicks-0').length).to.equal(1);
+expect(wrapper.find('[data-clicks=0]').length).to.equal(1);
 wrapper.find('a').invoke('click');
-expect(wrapper.find('.clicks-1').length).to.equal(1);
+expect(wrapper.find('[data-clicks=1]').length).to.equal(1);
 ```
 
 #### Related Methods
