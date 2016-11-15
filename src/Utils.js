@@ -2,6 +2,10 @@
 import isEqual from 'lodash/isEqual';
 import React from 'react';
 import is from 'object-is';
+import uuid from 'uuid';
+import entries from 'object.entries';
+import assign from 'object.assign';
+import functionName from 'function.prototype.name';
 import {
   isDOMComponent,
   findDOMNode,
@@ -24,7 +28,8 @@ export function internalInstance(inst) {
 }
 
 export function isFunctionalComponent(inst) {
-  return !!inst && !!inst.constructor && inst.constructor.name === 'StatelessComponent';
+  return !!inst && !!inst.constructor && typeof inst.constructor === 'function' &&
+    functionName(inst.constructor) === 'StatelessComponent';
 }
 
 export function isCustomComponentElement(inst) {
@@ -62,7 +67,8 @@ export function nodeHasType(node, type) {
   if (!type || !node) return false;
   if (!node.type) return false;
   if (typeof node.type === 'string') return node.type === type;
-  return node.type.name === type || node.type.displayName === type;
+  return (typeof node.type === 'function' ?
+    functionName(node.type) === type : node.type.name === type) || node.type.displayName === type;
 }
 
 export function childrenEqual(a, b, lenComp) {
@@ -149,7 +155,7 @@ export function isReactElementAlike(arg) {
 // 'mouseEnter' => 'onMouseEnter'
 export function propFromEvent(event) {
   const nativeEvent = mapNativeEventNames(event);
-  return `on${nativeEvent[0].toUpperCase()}${nativeEvent.substring(1)}`;
+  return `on${nativeEvent[0].toUpperCase()}${nativeEvent.slice(1)}`;
 }
 
 export function withSetStateAllowed(fn) {
@@ -168,7 +174,24 @@ export function withSetStateAllowed(fn) {
 }
 
 export function splitSelector(selector) {
-  return selector.split(/(?=\.|\[.*])|(?=#|\[#.*])/);
+  // step 1: make a map of all quoted strings with a uuid
+  const quotedSegments = selector.split(/[^" ]+|("[^"]*")|.*/g)
+    .filter(Boolean)
+    .reduce((obj, match) => assign({}, obj, { [match]: uuid.v4() }), {});
+
+  return selector
+    // step 2: replace all quoted strings with the uuid, so we don't have to properly parse them
+    .replace(/[^" ]+|("[^"]*")|.*/g, x => quotedSegments[x] || x)
+    // step 3: split as best we can without a proper parser
+    .split(/(?=\.|\[.*])|(?=#|\[#.*])/)
+    // step 4: restore the quoted strings by swapping back the uuid's for the original segments
+    .map((selectorSegment) => {
+      let restoredSegment = selectorSegment;
+      entries(quotedSegments).forEach(([k, v]) => {
+        restoredSegment = restoredSegment.replace(v, k);
+      });
+      return restoredSegment;
+    });
 }
 
 
@@ -183,7 +206,7 @@ export function isPseudoClassSelector(selector) {
     }
     const tokens = selector.split(containsQuotes);
     return tokens.some((token, i) =>
-      containsColon.test(token) && i % 2 === 0
+      containsColon.test(token) && i % 2 === 0,
     );
   }
   return false;
@@ -191,7 +214,7 @@ export function isPseudoClassSelector(selector) {
 
 export function selectorError(selector, type = '') {
   return new TypeError(
-    `Enzyme received a ${type} CSS selector ('${selector}') that it does not currently support`
+    `Enzyme received a ${type} CSS selector ('${selector}') that it does not currently support`,
   );
 }
 
@@ -267,7 +290,7 @@ export function coercePropValue(propName, propValue) {
   // user provided an unquoted string value
   throw new TypeError(
     `Enzyme::Unable to parse selector '[${propName}=${propValue}]'. ` +
-    `Perhaps you forgot to escape a string? Try '[${propName}="${trimmedValue}"]' instead.`
+    `Perhaps you forgot to escape a string? Try '[${propName}="${trimmedValue}"]' instead.`,
   );
 }
 
@@ -344,5 +367,5 @@ export function displayNameOfNode(node) {
 
   if (!type) return null;
 
-  return type.displayName || type.name || type;
+  return type.displayName || (typeof type === 'function' ? functionName(type) : type.name) || type;
 }

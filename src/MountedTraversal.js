@@ -46,9 +46,6 @@ export function instEqual(a, b, lenComp) {
 }
 
 export function instHasClassName(inst, className) {
-  if (!isDOMComponent(inst)) {
-    return false;
-  }
   const node = findDOMNode(inst);
   if (node.classList) {
     return node.classList.contains(className);
@@ -59,6 +56,13 @@ export function instHasClassName(inst, className) {
   }
   classes = classes.replace(/\s/g, ' ');
   return ` ${classes} `.indexOf(` ${className} `) > -1;
+}
+
+function hasClassName(inst, className) {
+  if (!isDOMComponent(inst)) {
+    return false;
+  }
+  return instHasClassName(inst, className);
 }
 
 export function instHasId(inst, id) {
@@ -198,9 +202,9 @@ export function buildInstPredicate(selector) {
 
       switch (selectorType(selector)) {
         case SELECTOR.CLASS_TYPE:
-          return inst => instHasClassName(inst, selector.substr(1));
+          return inst => hasClassName(inst, selector.slice(1));
         case SELECTOR.ID_TYPE:
-          return inst => instHasId(inst, selector.substr(1));
+          return inst => instHasId(inst, selector.slice(1));
         case SELECTOR.PROP_TYPE: {
           const propKey = selector.split(/\[([a-zA-Z][a-zA-Z_\d\-:]*?)(=|])/)[1];
           const propValue = selector.split(/=(.*?)]/)[1];
@@ -217,7 +221,7 @@ export function buildInstPredicate(selector) {
         return node => instMatchesObjectProps(node, selector);
       }
       throw new TypeError(
-        'Enzyme::Selector does not support an array, null, or empty object as a selector'
+        'Enzyme::Selector does not support an array, null, or empty object as a selector',
       );
 
     default:
@@ -249,7 +253,7 @@ function findAllInRenderedTreeInternal(inst, test) {
       return true;
     }).forEach((key) => {
       ret = ret.concat(
-        findAllInRenderedTreeInternal(renderedChildren[key], test)
+        findAllInRenderedTreeInternal(renderedChildren[key], test),
       );
     });
   } else if (
@@ -260,8 +264,8 @@ function findAllInRenderedTreeInternal(inst, test) {
     ret = ret.concat(
       findAllInRenderedTreeInternal(
         inst._renderedComponent,
-        test
-      )
+        test,
+      ),
     );
   } else if (
     REACT013 &&
@@ -270,8 +274,8 @@ function findAllInRenderedTreeInternal(inst, test) {
     ret = ret.concat(
       findAllInRenderedTreeInternal(
         inst._renderedComponent,
-        test
-      )
+        test,
+      ),
     );
   }
   return ret;

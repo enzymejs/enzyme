@@ -1,6 +1,7 @@
 import React from 'react';
 import isEmpty from 'lodash/isEmpty';
 import isSubset from 'is-subset';
+import functionName from 'function.prototype.name';
 import {
   propsOfNode,
   splitSelector,
@@ -103,10 +104,10 @@ export function buildPredicate(selector) {
 
       switch (selectorType(selector)) {
         case SELECTOR.CLASS_TYPE:
-          return node => hasClassName(node, selector.substr(1));
+          return node => hasClassName(node, selector.slice(1));
 
         case SELECTOR.ID_TYPE:
-          return node => nodeHasId(node, selector.substr(1));
+          return node => nodeHasId(node, selector.slice(1));
 
         case SELECTOR.PROP_TYPE: {
           const propKey = selector.split(/\[([a-zA-Z-]*?)(=|])/)[1];
@@ -124,7 +125,7 @@ export function buildPredicate(selector) {
         return node => nodeMatchesObjectProps(node, selector);
       }
       throw new TypeError(
-        'Enzyme::Selector does not support an array, null, or empty object as a selector'
+        'Enzyme::Selector does not support an array, null, or empty object as a selector',
       );
 
     default:
@@ -143,7 +144,7 @@ export function getTextFromNode(node) {
   }
 
   if (node.type && typeof node.type === 'function') {
-    return `<${node.type.displayName || node.type.name} />`;
+    return `<${node.type.displayName || functionName(node.type)} />`;
   }
 
   return childrenOfNode(node).map(getTextFromNode)

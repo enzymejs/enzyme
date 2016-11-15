@@ -1,7 +1,7 @@
 # `.containsMatchingElement(node) => Boolean`
 
-Returns whether or not a given react element is matching one element in the shallow render tree.
-It will determine if an element in the wrapper __looks like__ the expected element by checking if all props of the expected element are present on the wrappers element and equals to each other.
+Returns whether or not a given react element matches one element in the render tree.
+It will determine if an element in the wrapper matches the expected element by checking if all props of the expected element are present on the wrapper's element and equals to each other.
 
 
 #### Arguments
@@ -13,8 +13,8 @@ render tree.
 
 #### Returns
 
-`Boolean`: whether or not the current wrapper has a node anywhere in its render tree that looks
-like the one passed in.
+`Boolean`: whether or not the current wrapper has a node anywhere in its render tree that matches
+the one passed in.
 
 
 
@@ -22,26 +22,28 @@ like the one passed in.
 
 
 ```jsx
-const MyComponent = React.createClass({
-  handleClick() {
-    ...
-  },
-  render() {
-    return (
-      <div>
-        <div onClick={this.handleClick} className="foo bar">Hello</div>
-      </div>
-    );
-  }
-});
+const wrapper = shallow(
+  <div>
+    <div data-foo="foo" data-bar="bar">Hello</div>
+  </div>
+);
 
-const wrapper = shallow(<MyComponent />);
 expect(wrapper.containsMatchingElement(
-  <div>Hello</div>
+  <div data-foo="foo" data-bar="bar">Hello</div>
 )).to.equal(true);
 expect(wrapper.containsMatchingElement(
-  <div className="foo bar">Hello</div>
+  <div data-foo="foo">Hello</div>
 )).to.equal(true);
+
+expect(wrapper.containsMatchingElement(
+  <div data-foo="foo" data-bar="bar" data-baz="baz">Hello</div>
+)).to.equal(false);
+expect(wrapper.containsMatchingElement(
+  <div data-foo="foo" data-bar="Hello">Hello</div>
+)).to.equal(false);
+expect(wrapper.containsMatchingElement(
+  <div data-foo="foo" data-bar="bar" />
+)).to.equal(false);
 ```
 
 #### Common Gotchas

@@ -1,5 +1,25 @@
 # Change Log
 
+## 2.6.0 (November 9, 2016)
+
+### New Stuff
+
+- ensure ShallowWrapper render output can't get stale ([#490](https://github.com/airbnb/enzyme/pull/490))
+
+### Fixes
+
+- Use shim to detect constructor function name ([#659](https://github.com/airbnb/enzyme/pull/659))
+- `mount`/`shallow`: fix ID selectors ([#670](https://github.com/airbnb/enzyme/pull/670))
+
+
+## 2.5.2 (November 9, 2016)
+
+### Fixes
+
+- Use shim to detect constructor function name ([#659](https://github.com/airbnb/enzyme/pull/659))
+- `mount`/`shallow`: fix ID selectors ([#670](https://github.com/airbnb/enzyme/pull/670))
+
+
 ## 2.5.1 (October 17, 2016)
 
 ### Patches
@@ -29,6 +49,14 @@
 - Throw if some() is called on a root wrapper ([#523](https://github.com/airbnb/enzyme/pull/523))
 
 - Fix valid + falsy propvalues ([#563](https://github.com/airbnb/enzyme/pull/563))
+
+
+## 2.4.2 (November 9, 2016)
+
+### Fixes
+
+- Use shim to detect constructor function name ([#659](https://github.com/airbnb/enzyme/pull/659))
+- `mount`/`shallow`: fix ID selectors ([#670](https://github.com/airbnb/enzyme/pull/670))
 
 
 ## 2.4.1 (July 8, 2016)

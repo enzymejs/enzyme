@@ -1,7 +1,7 @@
 # `.contains(nodeOrNodes) => Boolean`
 
-Returns whether or not the current wrapper has a node anywhere in it's render tree that looks like
-the one passed in.
+Returns whether or not all given react elements match elements in the render tree.
+It will determine if an element in the wrapper matches the expected element by checking if the expected element has the same props as the wrapper's element and share the same values.
 
 
 #### Arguments
@@ -13,8 +13,8 @@ render tree.
 
 #### Returns
 
-`Boolean`: whether or not the current wrapper has a node anywhere in it's render tree that looks
-like the one passed in.
+`Boolean`: whether or not the current wrapper has nodes anywhere in its render tree that match
+the ones passed in.
 
 
 
@@ -22,8 +22,18 @@ like the one passed in.
 
 
 ```jsx
-const wrapper = mount(<MyComponent />);
-expect(wrapper.contains(<div className="foo bar" />)).to.equal(true);
+const wrapper = mount(
+  <div>
+    <div data-foo="foo" data-bar="bar">Hello</div>
+  </div>
+);
+
+expect(wrapper.contains(<div data-foo="foo" data-bar="bar">Hello</div>)).to.equal(true);
+
+expect(wrapper.contains(<div data-foo="foo">Hello</div>)).to.equal(false);
+expect(wrapper.contains(<div data-foo="foo" data-bar="bar" data-baz="baz">Hello</div>)).to.equal(false);
+expect(wrapper.contains(<div data-foo="foo" data-bar="Hello">Hello</div>)).to.equal(false);
+expect(wrapper.contains(<div data-foo="foo" data-bar="bar" />)).to.equal(false);
 ```
 
 ```jsx
@@ -39,6 +49,11 @@ expect(wrapper.contains([
   <span>Hello</span>,
   <div>Goodbye</div>,
 ])).to.equal(true);
+
+expect(wrapper.contains([
+  <span>Hello</span>,
+  <div>World</div>,
+])).to.equal(false);
 ```
 
 

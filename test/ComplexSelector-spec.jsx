@@ -32,7 +32,7 @@ describe('ComplexSelector', () => {
 
             <div className="bottom-div" />
             <span />
-          </div>
+          </div>,
         );
 
         expect(wrapper.find('span').length).to.equal(2);
@@ -51,7 +51,7 @@ describe('ComplexSelector', () => {
               </div>
             </div>
             <h1>heading</h1>
-          </div>
+          </div>,
         );
 
         expect(wrapper.find('h1').length).to.equal(3);
@@ -71,7 +71,7 @@ describe('ComplexSelector', () => {
               </div>
             </div>
             <h1>heading</h1>
-          </div>
+          </div>,
         );
 
         expect(wrapper.find('h1').length).to.equal(2);
@@ -88,7 +88,7 @@ describe('ComplexSelector', () => {
               </div>
             </div>
             <div className="to-find">Outside</div>
-          </div>
+          </div>,
         );
 
         expect(wrapper.find('.to-find').length).to.equal(3);
@@ -103,7 +103,7 @@ describe('ComplexSelector', () => {
             <div className="to-find" />
             <div className="sibling">Adjacent</div>
             <div className="sibling">Not Adjacent</div>
-          </div>
+          </div>,
         );
 
         expect(wrapper.find('.sibling').length).to.equal(2);
@@ -125,7 +125,7 @@ describe('ComplexSelector', () => {
               </div>
               <div className="to-find">Not Adjacent</div>
             </div>
-          </div>
+          </div>,
         );
 
         expect(wrapper.find('.to-find').length).to.equal(3);
@@ -144,7 +144,7 @@ describe('ComplexSelector', () => {
             <div>
               <span />
             </div>
-          </div>
+          </div>,
         );
 
         expect(wrapper.find('.to-find ~ span').length).to.equal(3);
@@ -163,7 +163,7 @@ describe('ComplexSelector', () => {
                 <span />
               </div>
             </div>
-          </div>
+          </div>,
         );
 
         const spans = wrapper.find('span');
@@ -182,7 +182,7 @@ describe('ComplexSelector', () => {
             <div>
               <span />
             </div>
-          </div>
+          </div>,
         );
 
         expect(wrapper.find('.foo + div > span').length).to.equal(1);

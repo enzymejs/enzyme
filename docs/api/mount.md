@@ -194,6 +194,9 @@ Reduces the current array of nodes to a value
 #### [`.reduceRight(fn[, initialValue]) => Any`](ReactWrapper/reduceRight.md)
 Reduces the current array of nodes to a value, from right to left.
 
+#### [`.slice([begin[, end]]) => ReactWrapper`](ReactWrapper/slice.md)
+Returns a new wrapper with a subset of the nodes of the original wrapper, according to the rules of `Array#slice`.
+
 #### [`.tap(intercepter) => Self`](ReactWrapper/tap.md)
 Taps into the wrapper method chain. Helpful for debugging.
 
