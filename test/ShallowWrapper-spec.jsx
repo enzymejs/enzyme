@@ -483,6 +483,25 @@ describe('shallow', () => {
       expect(wrapper.find('[title]')).to.have.length(1);
     });
 
+    it('works with an adjacent sibling selector', () => {
+      const a = 'some';
+      const b = 'text';
+      const wrapper = shallow(
+        <div>
+          <div className="row">
+            {a}
+            {b}
+          </div>
+          <div className="row">
+            {a}
+            {b}
+          </div>
+        </div>,
+      );
+      expect(wrapper.find('.row')).to.have.lengthOf(2);
+      expect(wrapper.find('.row + .row')).to.have.lengthOf(1);
+    });
+
     it('should error sensibly if prop selector without quotes', () => {
       const wrapper = shallow(
         <div>

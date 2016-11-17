@@ -378,7 +378,25 @@ describeWithDOM('mount', () => {
 
       expect(wrapper.find('span[htmlFor="foo"]')).to.have.length(1);
       expect(wrapper.find('span[htmlFor]')).to.have.length(1);
+    });
 
+    it('works with an adjacent sibling selector', () => {
+      const a = 'some';
+      const b = 'text';
+      const wrapper = mount(
+        <div>
+          <div className="row">
+            {a}
+            {b}
+          </div>
+          <div className="row">
+            {a}
+            {b}
+          </div>
+        </div>,
+      );
+      expect(wrapper.find('.row')).to.have.lengthOf(2);
+      expect(wrapper.find('.row + .row')).to.have.lengthOf(1);
     });
 
     // React 15.2 warns when setting a non valid prop to an DOM element

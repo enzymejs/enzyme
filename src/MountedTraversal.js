@@ -126,6 +126,9 @@ export function childrenOfInstInternal(inst) {
       if (!REACT013 && typeof node._currentElement.type === 'function') {
         return node._instance;
       }
+      if (typeof node._stringText === 'string') {
+        return node;
+      }
       return node.getPublicInstance();
     });
   } else if (
@@ -253,9 +256,7 @@ function findAllInRenderedTreeInternal(inst, test) {
       }
       return true;
     }).forEach((node) => {
-      ret = ret.concat(
-        findAllInRenderedTreeInternal(node, test),
-      );
+      ret = ret.concat(findAllInRenderedTreeInternal(node, test));
     });
   } else if (
     !REACT013 &&
