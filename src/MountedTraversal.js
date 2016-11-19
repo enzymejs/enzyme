@@ -1,4 +1,5 @@
 import isEmpty from 'lodash/isEmpty';
+import values from 'object.values';
 import isSubset from 'is-subset';
 import {
   internalInstance,
@@ -116,16 +117,16 @@ export function childrenOfInstInternal(inst) {
   const currentElement = inst._currentElement;
   if (isDOMComponent(publicInst)) {
     const renderedChildren = renderedChildrenOfInst(inst);
-    return Object.keys(renderedChildren || {}).filter((key) => {
-      if (REACT013 && !renderedChildren[key].getPublicInstance) {
+    return values(renderedChildren || {}).filter((node) => {
+      if (REACT013 && !node.getPublicInstance) {
         return false;
       }
       return true;
-    }).map((key) => {
-      if (!REACT013 && typeof renderedChildren[key]._currentElement.type === 'function') {
-        return renderedChildren[key]._instance;
+    }).map((node) => {
+      if (!REACT013 && typeof node._currentElement.type === 'function') {
+        return node._instance;
       }
-      return renderedChildren[key].getPublicInstance();
+      return node.getPublicInstance();
     });
   } else if (
     !REACT013 &&
@@ -246,14 +247,14 @@ function findAllInRenderedTreeInternal(inst, test) {
   const currentElement = inst._currentElement;
   if (isDOMComponent(publicInst)) {
     const renderedChildren = renderedChildrenOfInst(inst);
-    Object.keys(renderedChildren || {}).filter((key) => {
-      if (REACT013 && !renderedChildren[key].getPublicInstance) {
+    values(renderedChildren || {}).filter((node) => {
+      if (REACT013 && !node.getPublicInstance) {
         return false;
       }
       return true;
-    }).forEach((key) => {
+    }).forEach((node) => {
       ret = ret.concat(
-        findAllInRenderedTreeInternal(renderedChildren[key], test),
+        findAllInRenderedTreeInternal(node, test),
       );
     });
   } else if (
