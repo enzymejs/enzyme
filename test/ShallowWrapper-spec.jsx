@@ -565,6 +565,36 @@ describe('shallow', () => {
       expect(wrapper.find('a[value=true]')).to.have.length(0);
     });
 
+    it('should support attributes with numbers', () => {
+      const wrapper = shallow(
+        <div>
+          <span value-1={1} />
+          <a value-1={false} />
+        </div>,
+      );
+
+      expect(wrapper.find('span[value-1=1]')).to.have.length(1);
+      expect(wrapper.find('a[value-1=false]')).to.have.length(1);
+    });
+
+    it('throws if when selector is invalid', () => {
+      const wrapper = shallow(
+        <div />,
+      );
+      expect(() => wrapper.find('span[1-foo=1]')).to.throw(
+        TypeError,
+        'Enzyme::Invalid attribute selector',
+      );
+      expect(() => wrapper.find('span[1foo=1]')).to.throw(
+        TypeError,
+        'Enzyme::Invalid attribute selector',
+      );
+      expect(() => wrapper.find('span[^^^=1]')).to.throw(
+        TypeError,
+        'Enzyme::Invalid attribute selector',
+      );
+    });
+
     it('should not find key or ref via property selector', () => {
       const arrayOfComponents = [<div key="1" />, <div key="2" />];
 
