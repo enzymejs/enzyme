@@ -15,7 +15,7 @@ import Foo from '../Foo';
 
 You do **not** need to include Jest's own renderer, unless you want to use it _only_ for Jest snapshot testing.
 
-## Example Project for Jest prior to version 15
+## Example Project for Jest version 15+
 
 - [Example test for Jest 15+](https://github.com/vjwilson/enzyme-example-jest)
 
