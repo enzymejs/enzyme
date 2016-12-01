@@ -33,7 +33,7 @@ export function getClassesArray(node) {
 }
 
 export function hasClassName(node, className) {
-  let classes = getClassesArray(node);
+  const classes = getClassesArray(node);
   return classes.indexOf(className) > -1;
 }
 
