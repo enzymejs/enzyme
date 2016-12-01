@@ -1943,6 +1943,20 @@ describe('shallow', () => {
     });
   });
 
+  describe('.getClasses()', () => {
+    it('should return an array of class names for the current node', () => {
+      const wrapper = shallow(
+        <div className="foo bar baz some-long-string FoOo" />,
+      );
+
+      expect(wrapper.getClasses()).to.include('foo');
+      expect(wrapper.getClasses()).to.include('bar');
+      expect(wrapper.getClasses()).to.include('baz');
+      expect(wrapper.getClasses()).to.include('some-long-string');
+      expect(wrapper.getClasses()).to.include('FoOo');
+    });
+  });
+
   describe('.hasClass(className)', () => {
     it('should return whether or not node has a certain class', () => {
       const wrapper = shallow(
