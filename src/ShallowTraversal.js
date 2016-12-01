@@ -26,10 +26,15 @@ export function childrenOfNode(node) {
   return result;
 }
 
-export function hasClassName(node, className) {
+export function getClassesArray(node) {
   let classes = propsOfNode(node).className || '';
   classes = String(classes).replace(/\s/g, ' ');
-  return ` ${classes} `.indexOf(` ${className} `) > -1;
+  return classes.split(' ');
+}
+
+export function hasClassName(node, className) {
+  let classes = getClassesArray(node);
+  return classes.indexOf(className) > -1;
 }
 
 export function treeForEach(tree, fn) {

@@ -5,6 +5,7 @@ import {
   splitSelector,
 } from '../src/Utils';
 import {
+  getClassesArray,
   hasClassName,
   nodeHasProperty,
   treeForEach,
@@ -65,6 +66,17 @@ describe('ShallowTraversal', () => {
       const node = (<div className={classes} />);
       expect(hasClassName(node, 'foo-bar')).to.equal(true);
     });
+  });
+
+  describe('getClassesArray', () => {
+
+    it('should return an array of classes', () => {
+      const node = (<div className="foo bar baz" />);
+      expect(getClassesArray(node)).to.include('foo');
+      expect(getClassesArray(node)).to.include('bar');
+      expect(getClassesArray(node)).to.include('baz');
+    });
+
   });
 
   describe('nodeHasProperty', () => {
