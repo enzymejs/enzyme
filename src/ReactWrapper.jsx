@@ -8,6 +8,7 @@ import ComplexSelector from './ComplexSelector';
 import createWrapperComponent from './ReactWrapperComponent';
 import {
   instHasClassName,
+  instGetClasses,
   childrenOfInst,
   parentsOfInst,
   buildInstPredicate,
@@ -707,6 +708,17 @@ class ReactWrapper {
       );
     }
     return this.single('hasClass', n => instHasClassName(n, className));
+  }
+
+  /**
+   * Returns an array of class names.
+   *
+   * NOTE: can only be called on a wrapper of a single node.
+   *
+   * @returns {Array<String>}
+   */
+  getClasses() {
+    return this.single('getClasses', n => instGetClasses(n));
   }
 
   /**

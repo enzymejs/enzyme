@@ -2125,6 +2125,39 @@ describeWithDOM('mount', () => {
     });
   });
 
+  describe('.getClasses()', () => {
+    context('When using a DOM component', () => {
+      it('should return whether or not node has a certain class', () => {
+        const wrapper = mount(
+          <div className="foo bar baz some-long-string FoOo" />,
+        );
+
+        expect(wrapper.getClasses()).to.include('foo');
+        expect(wrapper.getClasses()).to.include('bar');
+        expect(wrapper.getClasses()).to.include('baz');
+        expect(wrapper.getClasses()).to.include('some-long-string');
+        expect(wrapper.getClasses()).to.include('FoOo');
+      });
+    });
+
+    context('When using a Composite component', () => {
+      it('should return whether or not node has a certain class', () => {
+        class Foo extends React.Component {
+          render() {
+            return (<div className="foo bar baz some-long-string FoOo" />);
+          }
+        }
+        const wrapper = mount(<Foo />);
+
+        expect(wrapper.getClasses()).to.include('foo');
+        expect(wrapper.getClasses()).to.include('bar');
+        expect(wrapper.getClasses()).to.include('baz');
+        expect(wrapper.getClasses()).to.include('some-long-string');
+        expect(wrapper.getClasses()).to.include('FoOo');
+      });
+    });
+  });
+
   describe('.forEach(fn)', () => {
     it('should call a function for each node in the wrapper', () => {
       const wrapper = mount(
