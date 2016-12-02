@@ -5,50 +5,28 @@ If you are using a test runner that runs code in a browser-based environment, yo
 
 Webpack uses static analysis to create a dependency graph at build-time of your source code to
 build a bundle. Enzyme has a handful of conditional `require()` calls in it in order to remain
-compatible with React 0.13 and React 0.14.
+compatible with React 0.13 and React 0.14+.
 
 Unfortunately, these conditional requires mean there is a bit of extra setup with bundlers like
 webpack.
 
-In your webpack configuration, you simply need to make sure that the following files are
-labeled as "external", which means they will be ignored:
+In your webpack configuration, you simply need to make sure that the following requirements are
+labeled as "external", which prevents Webpack from shimming the requirements for them:
 
-```
-cheerio
-react/addons
-react/lib/ReactContext
-react/lib/ExecutionEnvironment
-```
-
-Here is an example piece of configuration code marking these as external:
+## React 0.13 Compatibility
 
 ```js
 /* webpack.config.js */
 // ...
 externals: {
-  'cheerio': 'window',
-  'react/addons': true,
-  'react/lib/ExecutionEnvironment': true,
-  'react/lib/ReactContext': true
+  'react-dom': true,
+  'react-dom/server': true,
+  'react-addons-test-utils': true
 }
 // ...
 ```
 
-## React 0.14 Compatibility
-
-If you are using React 0.14, the instructions above will be the same but with a different list of
-externals:
-
-```
-cheerio
-react-dom
-react-dom/server
-react-addons-test-utils
-```
-
-## React 15 Compatibility
-
-If you are using React 15, your config should include these externals:
+## React 0.14+ Compatibility
 
 ```js
 /* webpack.config.js */
@@ -59,6 +37,20 @@ externals: {
   'react/lib/ReactContext': true
 }
 // ...
+```
+
+Alternatively, you can use the [IgnorePlugin](http://webpack.github.io/docs/list-of-plugins.html#ignoreplugin) to make this more explicit.
+
+```js
+/* webpack.config.js */
+// ...
+plugins: [
+  // change the requirement request regexs if you are using React 0.13
+  // and want to ignore the React 0.14+ modules instead.
+  new webpack.IgnorePlugin(/react\/addons/),
+  new webpack.IgnorePlugin(/react\/lib\/ReactContext/),
+  new webpack.IgnorePlugin(/react\/lib\/ExecutionEnvironment/)
+]// ...
 ```
 
 ## Example Projects
