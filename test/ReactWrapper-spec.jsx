@@ -1950,13 +1950,16 @@ describeWithDOM('mount', () => {
   });
 
   describe('.parents([selector])', () => {
-    it('should return an array of current nodes ancestors', () => {
+    it('should return an array of current node’s ancestors', () => {
       const wrapper = mount(
         <div className="bax">
           <div className="foo">
             <div className="bar">
               <div className="baz" />
             </div>
+          </div>
+          <div className="qux">
+            <div className="qoo" />
           </div>
         </div>,
       );

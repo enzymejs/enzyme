@@ -1785,13 +1785,16 @@ describe('shallow', () => {
   });
 
   describe('.parents([selector])', () => {
-    it('should return an array of current nodes ancestors', () => {
+    it('should return an array of current node’s ancestors', () => {
       const wrapper = shallow(
         <div className="bax">
           <div className="foo">
             <div className="bar">
               <div className="baz" />
             </div>
+          </div>
+          <div className="qux">
+            <div className="qoo" />
           </div>
         </div>,
       );
@@ -1802,7 +1805,6 @@ describe('shallow', () => {
       expect(parents.at(0).hasClass('bar')).to.equal(true);
       expect(parents.at(1).hasClass('foo')).to.equal(true);
       expect(parents.at(2).hasClass('bax')).to.equal(true);
-
     });
 
     it('should work for non-leaf nodes as well', () => {

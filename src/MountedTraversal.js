@@ -161,15 +161,77 @@ export function childrenOfInst(node) {
   return childrenOfInstInternal(internalInstanceOrComponent(node));
 }
 
+// This function should be called with an "internal instance". Nevertheless, if it is
+// called with a "public instance" instead, the function will call itself with the
+// internal instance and return the proper result.
+function findAllInRenderedTreeInternal(inst, test) {
+  if (!inst) {
+    return [];
+  }
+
+  if (!inst.getPublicInstance) {
+    const internal = internalInstance(inst);
+    return findAllInRenderedTreeInternal(internal, test);
+  }
+  const publicInst = inst.getPublicInstance() || inst._instance;
+  let ret = test(publicInst) ? [publicInst] : [];
+  const currentElement = inst._currentElement;
+  if (isDOMComponent(publicInst)) {
+    const renderedChildren = renderedChildrenOfInst(inst);
+    values(renderedChildren || {}).filter((node) => {
+      if (REACT013 && !node.getPublicInstance) {
+        return false;
+      }
+      return true;
+    }).forEach((node) => {
+      ret = ret.concat(findAllInRenderedTreeInternal(node, test));
+    });
+  } else if (
+    !REACT013 &&
+    isElement(currentElement) &&
+    typeof currentElement.type === 'function'
+  ) {
+    ret = ret.concat(
+      findAllInRenderedTreeInternal(
+        inst._renderedComponent,
+        test,
+      ),
+    );
+  } else if (
+    REACT013 &&
+    isCompositeComponent(publicInst)
+  ) {
+    ret = ret.concat(
+      findAllInRenderedTreeInternal(
+        inst._renderedComponent,
+        test,
+      ),
+    );
+  }
+  return ret;
+}
+
+// This function could be called with a number of different things technically, so we need to
+// pass the *right* thing to our internal helper.
+export function treeFilter(node, test) {
+  return findAllInRenderedTreeInternal(internalInstanceOrComponent(node), test);
+}
+
+function pathFilter(path, fn) {
+  return path.filter(tree => treeFilter(tree, fn).length !== 0);
+}
+
 export function pathToNode(node, root) {
   const queue = [root];
   const path = [];
+
+  const hasNode = testNode => node === testNode;
 
   while (queue.length) {
     const current = queue.pop();
     const children = childrenOfInst(current);
 
-    if (current === node) return path;
+    if (current === node) return pathFilter(path, hasNode);
 
     path.push(current);
 
@@ -231,60 +293,4 @@ export function buildInstPredicate(selector) {
     default:
       throw new TypeError('Enzyme::Selector expects a string, object, or Component Constructor');
   }
-}
-
-// This function should be called with an "internal instance". Nevertheless, if it is
-// called with a "public instance" instead, the function will call itself with the
-// internal instance and return the proper result.
-function findAllInRenderedTreeInternal(inst, test) {
-  if (!inst) {
-    return [];
-  }
-
-  if (!inst.getPublicInstance) {
-    const internal = internalInstance(inst);
-    return findAllInRenderedTreeInternal(internal, test);
-  }
-  const publicInst = inst.getPublicInstance() || inst._instance;
-  let ret = test(publicInst) ? [publicInst] : [];
-  const currentElement = inst._currentElement;
-  if (isDOMComponent(publicInst)) {
-    const renderedChildren = renderedChildrenOfInst(inst);
-    values(renderedChildren || {}).filter((node) => {
-      if (REACT013 && !node.getPublicInstance) {
-        return false;
-      }
-      return true;
-    }).forEach((node) => {
-      ret = ret.concat(findAllInRenderedTreeInternal(node, test));
-    });
-  } else if (
-    !REACT013 &&
-    isElement(currentElement) &&
-    typeof currentElement.type === 'function'
-  ) {
-    ret = ret.concat(
-      findAllInRenderedTreeInternal(
-        inst._renderedComponent,
-        test,
-      ),
-    );
-  } else if (
-    REACT013 &&
-    isCompositeComponent(publicInst)
-  ) {
-    ret = ret.concat(
-      findAllInRenderedTreeInternal(
-        inst._renderedComponent,
-        test,
-      ),
-    );
-  }
-  return ret;
-}
-
-// This function could be called with a number of different things technically, so we need to
-// pass the *right* thing to our internal helper.
-export function treeFilter(node, test) {
-  return findAllInRenderedTreeInternal(internalInstanceOrComponent(node), test);
 }
