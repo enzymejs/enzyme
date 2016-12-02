@@ -627,7 +627,7 @@ class ReactWrapper {
    */
   parents(selector) {
     const allParents = this.wrap(
-        this.single('parents', n => parentsOfInst(n, this.root.getNode())),
+      this.single('parents', n => parentsOfInst(n, this.root.getNode())),
     );
     return selector ? allParents.filter(selector) : allParents;
   }
