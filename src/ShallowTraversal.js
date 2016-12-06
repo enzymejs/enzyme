@@ -155,22 +155,50 @@ export function getTextFromNode(node) {
     .replace(/\s+/, ' ');
 }
 
-const findRef = (node, ref, isRootNode) => {
-  const result = [];
+const getOwnedReferenceNodes = (node, isRootNode) => {
+  const referencedNodes = [];
 
-  if (node.ref === ref) {
-    result.push(node);
+  if (!node) {
+    return referencedNodes;
+  }
+
+  if (node.ref) {
+    referencedNodes.push(node);
   }
 
   if (isDOMComponentElement(node) || isRootNode) {
     const children = childrenOfNode(node);
 
     children.forEach((c) => {
-      result.push(...findRef(c, ref));
+      const recursiveNodes = getOwnedReferenceNodes(c);
+      referencedNodes.push(...recursiveNodes);
     });
   }
 
-  return result;
+  return referencedNodes;
 };
 
-export const findRefInOwnedChildren = (node, ref) => findRef(node, ref, true);
+export const getNodeRefs = (node) => {
+  const callbackNodes = [];
+  const stringNodes = [];
+
+  const referencedNodes = getOwnedReferenceNodes(node, true);
+
+  referencedNodes.forEach((n) => {
+    switch (typeof n.ref) {
+      case 'function':
+        callbackNodes.push(n);
+        break;
+      case 'string':
+        stringNodes.push(n);
+        break;
+      default:
+        throw new Error(`${n.ref} is an invalid ref. Valid refs are string or function type`);
+    }
+  });
+
+  return {
+    callbackNodes,
+    stringNodes,
+  };
+};

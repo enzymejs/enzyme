@@ -707,79 +707,107 @@ describe('shallow', () => {
   });
 
   describe('ref', () => {
-    const aReactComponentRef = 'aReactComponentRef';
-    const aReactComponentChildRef = 'childrenRef';
-    const aDOMElementChildRef = 'childrenRef2';
-    const aFirstLevelRef = 'aFirstLevelRef';
-    const anUnexistingRef = 'aSillyRef';
-    const aDoubleRef = 'imUsedTwiceForTheSameComponent';
-    const rootElementRef = 'rootElementRef';
-    const aRefOwnedByChild = 'aRefOwnedByChild';
-
-    const ComponentWithChildrenRefs = React.createClass({
-      render: () => <h1 ref={aReactComponentChildRef}>Allo</h1>,
-    });
-
-    const RootComponent = React.createClass({
-      render: () => (
-        <div ref={rootElementRef}>
-          <ComponentWithChildrenRefs
-            ref={aReactComponentRef}
-            aProp="something"
-          >
-            <p ref={aRefOwnedByChild} />
-          </ComponentWithChildrenRefs>
-
-          <p ref={aDoubleRef} />
-          <p ref={aDoubleRef} />
-
-          <div ref={aFirstLevelRef}>
-            <p ref={aDOMElementChildRef} />
-          </div>
-
-        </div>
-      ),
-    });
-
-    const wrapper = shallow(<RootComponent />);
-
-    it('throws if called with a dom node as root', () => {
+    it('handle a dom node as root', () => {
       const domWrapper = shallow(<div><p>banana</p></div>);
       expect(() => domWrapper.ref('noMatterWhat')).to.throw();
     });
 
-    it('returns the wrapper on the react component and not on the dom node when the requested ref is on a react component', () => {
-      const result = wrapper.ref(aReactComponentRef);
-      expect(result.props().aProp).to.equal('something');
+    it('has a string ref in instance.refs', () => {
+      const RootComponent = React.createClass({
+        render: () => (
+          <div>
+            <p ref="aRef" />
+          </div>
+        ),
+      });
+
+      const wrapper = shallow(<RootComponent />);
+      expect(wrapper.instance().refs).to.include.keys('aRef');
     });
 
-    it('returns the wrapper of the requested ref when it is the one of the containing element', () => {
-      const result = wrapper.ref(rootElementRef);
-      expect(result.node.ref).to.equal(rootElementRef);
+    it('throws an error if it find more than one string-ref', () => {
+      const aDoubleRef = 'imUsedTwiceForTheSameComponent';
+      const RootComponent = React.createClass({
+        render: () => (
+          <div>
+            <p ref={aDoubleRef} />
+            <p ref={aDoubleRef} />
+          </div>
+        ),
+      });
+      expect(() => shallow(<RootComponent />)).to.throw();
     });
 
-    it('returns the wrapper of the requested ref at first level', () => {
-      const result = wrapper.ref(aFirstLevelRef);
-      expect(result.node.ref).to.equal(aFirstLevelRef);
+    it('has a callback ref on the instance', () => {
+      class AComponent extends React.Component {
+        render() {
+          return (
+            <div>
+              <p ref={(n) => { this.cbRef = n; }} />
+            </div>
+          );
+        }
+      }
+
+      const wrapper = shallow(<AComponent />);
+      expect(wrapper.instance()).to.ownProperty('cbRef');
     });
 
-    it('returns the wrapper of the requested ref even at DOM-nested-level', () => {
-      const result = wrapper.ref(aDOMElementChildRef);
-      expect(result.node.ref).to.equal(aDOMElementChildRef);
-    });
+    describe('with conditional rendering', () => {
+      class ConditionalComponent extends React.Component {
+        constructor() {
+          super();
+          this.state = { clicked: false };
+          this.handleButtonClick = this.handleButtonClick.bind(this);
+        }
 
-    it('returns false if no element is found with the requested ref', () => {
-      const result = wrapper.ref(anUnexistingRef);
-      expect(result).to.equal(null);
-    });
+        handleButtonClick() {
+          this.setState({ clicked: true });
+        }
 
-    it('returns false if a ref owned by a child React component is requested', () => {
-      const result = wrapper.ref(aRefOwnedByChild);
-      expect(result).to.equal(null);
-    });
+        render() {
+          if (this.state.clicked) {
+            return (
+              <div>
+                <p ref={(c) => { this.cbClickedRef = c; }}>foo</p>
+                <p ref="clicked">bar</p>
+              </div>
+            );
+          }
 
-    it('throws an error if it find more than one ref', () => {
-      expect(() => wrapper.ref(aDoubleRef)).to.throw();
+          return (
+            <div ref={(c) => { this.buttonContainerCbRef = c; }}>
+              <button ref="theButton" onClick={this.handleButtonClick} />
+            </div>
+          );
+        }
+      }
+
+      let instance;
+
+      beforeEach(() => {
+        const wrapper = shallow(<ConditionalComponent />);
+        instance = wrapper.instance();
+
+        const theButton = wrapper.find('button');
+        theButton.simulate('click');
+      });
+
+      it('should not have unmounted string refs on update', () => {
+        expect(instance.refs.theButton).to.be.equal(undefined);
+      });
+
+      it('should not have unmounted callback refs on update', () => {
+        expect(instance.buttonContainerCbRef).to.be.equal(null);
+      });
+
+      it('should have the newly monted string ref available', () => {
+        expect(!!instance.refs.clicked).to.be.equal(true);
+      });
+
+      it('should have the newly monted callback ref available', () => {
+        expect(!!instance.cbClickedRef).to.be.equal(true);
+      });
     });
   });
 

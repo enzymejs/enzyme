@@ -28,7 +28,7 @@ import {
   parentsOfNode,
   treeFilter,
   buildPredicate,
-  findRefInOwnedChildren,
+  getNodeRefs,
 } from './ShallowTraversal';
 import {
   createShallowRenderer,
@@ -103,6 +103,65 @@ class ShallowWrapper {
     }
     this.options = options;
     this.complexSelector = new ComplexSelector(buildPredicate, findWhereUnwrapped, childrenOfNode);
+
+    if (isCustomComponentElement(this.unrendered)) {
+      this.attachRefListener();
+    }
+  }
+
+  attachRefListener() {
+    const instance = this.instance();
+    const oldComponentDidUpdate = instance.componentDidUpdate;
+
+    instance.componentDidUpdate = (...args) => {
+      this.clearRefs();
+      this.attachRefs(instance);
+      if (typeof oldComponentDidUpdate === 'function') {
+        oldComponentDidUpdate.call(instance, ...args);
+      }
+    };
+
+    this.attachRefs(instance);
+  }
+
+  clearRefs() {
+    const instance = this.instance();
+    instance.refs = [];
+  }
+
+  attachRefs(componentInstance) {
+    /* eslint-disable no-underscore-dangle */
+    const internalInstance = componentInstance._reactInternalInstance;
+    const renderedOutput = internalInstance._renderedComponent._renderedOutput;
+    /* eslint-enable no-underscore-dangle */
+
+    const { callbackNodes, stringNodes } = getNodeRefs(renderedOutput);
+
+    this.attachCallbackRefs(callbackNodes);
+    this.attachStringRefs(stringNodes);
+  }
+
+
+  attachCallbackRefs(nodes) {
+    nodes.map(n => n.ref.call(this, n));
+  }
+
+  attachStringRefs(nodes) {
+    const refs = nodes.reduce(
+      (refObject, n) => {
+        if (refObject[n.ref]) {
+          throw new Error('There is more than one component own by the tree root with the same ref string');
+        }
+
+        return {
+          ...refObject,
+          [n.ref]: n,
+        };
+      },
+      {},
+    );
+
+    this.instance().refs = refs;
   }
 
   /**
@@ -452,29 +511,6 @@ class ShallowWrapper {
    */
   find(selector) {
     return this.complexSelector.find(selector, this);
-  }
-
-  /**
-   * Finds ref of the current wrapper.
-   *
-   * NOTE: can only be called on a wrapper of a single node.
-   *
-   * @param {String} ref
-   * @returns {ShallowWrapper}
-   */
-  ref(ref) {
-    return this.single('ref', (node) => {
-      if (isDOMComponentElement(this.unrendered)) {
-        throw new Error('The current node must be a React component.');
-      }
-
-      const result = findRefInOwnedChildren(node, ref, true);
-
-      if (result.length === 0) return null;
-      if (result.length === 1) return new ShallowWrapper(result[0], this.root);
-
-      throw new Error('There is more than one component own by the tree root with the same ref string');
-    });
   }
 
   /**
