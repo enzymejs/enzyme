@@ -94,6 +94,9 @@ Returns whether or not the current node matches a provided selector.
 #### [`.isEmpty() => Boolean`](ShallowWrapper/isEmpty.md)
 Returns whether or not the current node is empty.
 
+#### [`.isEmptyRender() => Boolean`](ShallowWrapper/isEmptyRender.md)
+Returns true if the component rendered nothing.
+
 #### [`.not(selector) => ShallowWrapper`](ShallowWrapper/not.md)
 Remove nodes in the current wrapper that match the provided selector. (inverse of `.filter()`)
 
