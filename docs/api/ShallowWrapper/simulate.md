@@ -55,4 +55,4 @@ expect in a real environment. As a result, one must call `.simulate()` on the ac
 the event handler set.
 - Even though the name would imply this simulates an actual event, `.simulate()` will in fact 
 target the component's prop based on the event you give it. For example, `.simulate('click')` will
-actually get the `onClick` prop and call it.
+actually get the `onClick` prop and call it. Because of this, you can also use `.simulate()` on any prop you like. For example, if you have a prop named `onResourceCreated`, calling `.simulate('resourceCreated')` will target this prop.
