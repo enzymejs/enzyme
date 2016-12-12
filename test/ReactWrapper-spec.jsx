@@ -2109,7 +2109,21 @@ describeWithDOM('mount', () => {
       });
     });
 
-    context('When using a Composite component', () => {
+    describeIf(!REACT013, 'with stateless components', () => {
+      it('should return whether or not node has a certain class', () => {
+        const Foo = () => <div className="foo bar baz some-long-string FoOo" />;
+        const wrapper = mount(<Foo />);
+
+        expect(wrapper.hasClass('foo')).to.equal(true);
+        expect(wrapper.hasClass('bar')).to.equal(true);
+        expect(wrapper.hasClass('baz')).to.equal(true);
+        expect(wrapper.hasClass('some-long-string')).to.equal(true);
+        expect(wrapper.hasClass('FoOo')).to.equal(true);
+        expect(wrapper.hasClass('doesnt-exist')).to.equal(false);
+      });
+    });
+
+    context('When using a Composite class component', () => {
       it('should return whether or not node has a certain class', () => {
         class Foo extends React.Component {
           render() {
@@ -3389,11 +3403,28 @@ describeWithDOM('mount', () => {
     });
 
     describeIf(!REACT013, 'stateless components', () => {
-      const SFC = () => (<div />);
+      const SFC = () => (
+        <div className="outer">
+          <div className="inner">
+            <span />
+            <span />
+          </div>
+        </div>
+      );
 
-      it('should throw when wrapping an SFC', () => {
+      it('should return the outer most DOMComponent of the root wrapper', () => {
         const wrapper = mount(<SFC />);
-        expect(() => wrapper.getDOMNode()).to.throw(TypeError, 'Method “getDOMNode” cannot be used on functional components.');
+        expect(wrapper.getDOMNode()).to.have.property('className', 'outer');
+      });
+
+      it('should return the outer most DOMComponent of the inner div wrapper', () => {
+        const wrapper = mount(<SFC />);
+        expect(wrapper.find('.inner').getDOMNode()).to.have.property('className', 'inner');
+      });
+
+      it('should throw when wrapping multiple elements', () => {
+        const wrapper = mount(<SFC />).find('span');
+        expect(() => wrapper.getDOMNode()).to.throw(Error);
       });
     });
   });
