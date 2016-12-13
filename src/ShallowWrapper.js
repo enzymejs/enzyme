@@ -942,12 +942,23 @@ class ShallowWrapper {
   }
 
   /**
-   * Returns true if the current wrapper has no nodes. False otherwise.
+   * Delegates to exists()
    *
    * @returns {boolean}
    */
   isEmpty() {
-    return this.length === 0;
+    // eslint-disable-next-line no-console
+    console.warn('Enzyme::Deprecated method isEmpty() called, use exists() instead.');
+    return !this.exists();
+  }
+
+  /**
+   * Returns true if the current wrapper has nodes. False otherwise.
+   *
+   * @returns {boolean}
+   */
+  exists() {
+    return this.length > 0;
   }
 
   /**

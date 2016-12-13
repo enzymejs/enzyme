@@ -89,8 +89,11 @@ Returns whether or not the current root node has the given class name or not.
 #### [`.is(selector) => Boolean`](ReactWrapper/is.md)
 Returns whether or not the current node matches a provided selector.
 
+#### [`.exists() => Boolean`](ReactWrapper/exists.md)
+Returns whether or not the current node exists.
+
 #### [`.isEmpty() => Boolean`](ReactWrapper/isEmpty.md)
-Returns whether or not the current node is empty.
+*Deprecated*: Use [.exists()](ReactWrapper/exists.md) instead.
 
 #### [`.not(selector) => ReactWrapper`](ReactWrapper/not.md)
 Remove nodes in the current wrapper that match the provided selector. (inverse of `.filter()`)

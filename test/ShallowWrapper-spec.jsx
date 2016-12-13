@@ -2474,12 +2474,47 @@ describe('shallow', () => {
   });
 
   describe('.isEmpty()', () => {
-    it('should return true iff wrapper is empty', () => {
+    let warningStub;
+    let fooNode;
+    let missingNode;
+
+    beforeEach(() => {
+      warningStub = sinon.stub(console, 'warn');
       const wrapper = shallow(
         <div className="foo" />,
       );
-      expect(wrapper.find('.bar').isEmpty()).to.equal(true);
-      expect(wrapper.find('.foo').isEmpty()).to.equal(false);
+      fooNode = wrapper.find('.foo');
+      missingNode = wrapper.find('.missing');
+    });
+    afterEach(() => {
+      warningStub.restore();
+    });
+
+    it('should display a deprecation warning', () => {
+      fooNode.isEmpty();
+      expect(warningStub.calledWith('Enzyme::Deprecated method isEmpty() called, use exists() instead.')).to.equal(true);
+    });
+
+    it('calls exists() instead', () => {
+      const existsSpy = sinon.spy();
+      fooNode.exists = existsSpy;
+      fooNode.isEmpty();
+      expect(existsSpy.called).to.equal(true);
+    });
+
+    it('should return true if wrapper is empty', () => {
+      expect(fooNode.isEmpty()).to.equal(false);
+      expect(missingNode.isEmpty()).to.equal(true);
+    });
+  });
+
+  describe('.exists()', () => {
+    it('should return true if node exists in wrapper', () => {
+      const wrapper = shallow(
+        <div className="foo" />,
+      );
+      expect(wrapper.find('.bar').exists()).to.equal(false);
+      expect(wrapper.find('.foo').exists()).to.equal(true);
     });
   });
 
