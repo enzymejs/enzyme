@@ -3387,12 +3387,12 @@ describeWithDOM('mount', () => {
       }
     }
 
-    it('should return the outer most DOMComponent of the root wrapper', () => {
+    it('should return the outermost DOMComponent of the root wrapper', () => {
       const wrapper = mount(<Test />);
       expect(wrapper.getDOMNode()).to.have.property('className', 'outer');
     });
 
-    it('should return the outer most DOMComponent of the inner div wrapper', () => {
+    it('should return the outermost DOMComponent of the inner div wrapper', () => {
       const wrapper = mount(<Test />);
       expect(wrapper.find('.inner').getDOMNode()).to.have.property('className', 'inner');
     });
@@ -3412,12 +3412,12 @@ describeWithDOM('mount', () => {
         </div>
       );
 
-      it('should return the outer most DOMComponent of the root wrapper', () => {
+      it('should return the outermost DOMComponent of the root wrapper', () => {
         const wrapper = mount(<SFC />);
         expect(wrapper.getDOMNode()).to.have.property('className', 'outer');
       });
 
-      it('should return the outer most DOMComponent of the inner div wrapper', () => {
+      it('should return the outermost DOMComponent of the inner div wrapper', () => {
         const wrapper = mount(<SFC />);
         expect(wrapper.find('.inner').getDOMNode()).to.have.property('className', 'inner');
       });
