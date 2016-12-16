@@ -121,7 +121,6 @@ import React from 'react';
 import sinon from 'sinon';
 import { mount } from 'enzyme';
 
-import MyComponent from './MyComponent';
 import Foo from './Foo';
 
 describe('<Foo />', () => {
