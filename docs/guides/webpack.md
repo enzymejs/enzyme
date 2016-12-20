@@ -31,7 +31,9 @@ externals: {
   'cheerio': 'window',
   'react/addons': true,
   'react/lib/ExecutionEnvironment': true,
-  'react/lib/ReactContext': true
+  'react/lib/ReactContext': true,
+  'react-dom/server': true,
+  'react-dom/lib/ReactTestUtils': true
 }
 // ...
 ```
@@ -44,7 +46,9 @@ externals: {
   'react/addons': 'react',
   'react/lib/ExecutionEnvironment': 'react',
   'react/lib/ReactContext': 'react',
-},
+  'react-dom/server': 'react',
+  'react-dom/lib/ReactTestUtils': 'react'
+}
 ```
 
 
@@ -70,7 +74,9 @@ If you are using React 15, your config should include these externals:
 externals: {
   'react/addons': true,
   'react/lib/ExecutionEnvironment': true,
-  'react/lib/ReactContext': true
+  'react/lib/ReactContext': true,
+  'react-dom/server': true,
+  'react-dom/lib/ReactTestUtils': true
 }
 // ...
 ```
