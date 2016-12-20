@@ -130,4 +130,5 @@
   * [Selectors](/docs/api/selector.md)
 * [Change Log](/CHANGELOG.md)
 * [Future](/docs/future.md)
+  * [Adapter & Compatibility Proposal](/docs/future/compatibility.md)
 * [Contributing Guide](/CONTRIBUTING.md)
