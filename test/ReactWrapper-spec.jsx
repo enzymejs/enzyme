@@ -3399,7 +3399,10 @@ describeWithDOM('mount', () => {
 
     it('should throw when wrapping multiple elements', () => {
       const wrapper = mount(<Test />).find('span');
-      expect(() => wrapper.getDOMNode()).to.throw(Error);
+      expect(() => wrapper.getDOMNode()).to.throw(
+        Error,
+        'Method “getDOMNode” is only meant to be run on a single node. 2 found instead.',
+      );
     });
 
     describeIf(!REACT013, 'stateless components', () => {
@@ -3424,7 +3427,10 @@ describeWithDOM('mount', () => {
 
       it('should throw when wrapping multiple elements', () => {
         const wrapper = mount(<SFC />).find('span');
-        expect(() => wrapper.getDOMNode()).to.throw(Error);
+        expect(() => wrapper.getDOMNode()).to.throw(
+          Error,
+          'Method “getDOMNode” is only meant to be run on a single node. 2 found instead.',
+        );
       });
     });
   });
