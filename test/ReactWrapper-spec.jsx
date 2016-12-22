@@ -2109,7 +2109,21 @@ describeWithDOM('mount', () => {
       });
     });
 
-    context('When using a Composite component', () => {
+    describeIf(!REACT013, 'with stateless components', () => {
+      it('should return whether or not node has a certain class', () => {
+        const Foo = () => <div className="foo bar baz some-long-string FoOo" />;
+        const wrapper = mount(<Foo />);
+
+        expect(wrapper.hasClass('foo')).to.equal(true);
+        expect(wrapper.hasClass('bar')).to.equal(true);
+        expect(wrapper.hasClass('baz')).to.equal(true);
+        expect(wrapper.hasClass('some-long-string')).to.equal(true);
+        expect(wrapper.hasClass('FoOo')).to.equal(true);
+        expect(wrapper.hasClass('doesnt-exist')).to.equal(false);
+      });
+    });
+
+    context('When using a Composite class component', () => {
       it('should return whether or not node has a certain class', () => {
         class Foo extends React.Component {
           render() {
@@ -2124,6 +2138,42 @@ describeWithDOM('mount', () => {
         expect(wrapper.hasClass('some-long-string')).to.equal(true);
         expect(wrapper.hasClass('FoOo')).to.equal(true);
         expect(wrapper.hasClass('doesnt-exist')).to.equal(false);
+      });
+    });
+
+    context('When using nested composite components', () => {
+      it('should return whether or not node has a certain class', () => {
+        class Foo extends React.Component {
+          render() {
+            return (<div className="foo bar baz some-long-string FoOo" />);
+          }
+        }
+        class Bar extends React.Component {
+          render() {
+            return <Foo />;
+          }
+        }
+        const wrapper = mount(<Bar />);
+
+        expect(wrapper.hasClass('foo')).to.equal(true);
+        expect(wrapper.hasClass('bar')).to.equal(true);
+        expect(wrapper.hasClass('baz')).to.equal(true);
+        expect(wrapper.hasClass('some-long-string')).to.equal(true);
+        expect(wrapper.hasClass('FoOo')).to.equal(true);
+        expect(wrapper.hasClass('doesnt-exist')).to.equal(false);
+      });
+    });
+
+    context('When using a Composite component that renders null', () => {
+      it('should return whether or not node has a certain class', () => {
+        class Foo extends React.Component {
+          render() {
+            return null;
+          }
+        }
+        const wrapper = mount(<Foo />);
+
+        expect(wrapper.hasClass('foo')).to.equal(false);
       });
     });
   });
@@ -3337,27 +3387,50 @@ describeWithDOM('mount', () => {
       }
     }
 
-    it('should return the outer most DOMComponent of the root wrapper', () => {
+    it('should return the outermost DOMComponent of the root wrapper', () => {
       const wrapper = mount(<Test />);
       expect(wrapper.getDOMNode()).to.have.property('className', 'outer');
     });
 
-    it('should return the outer most DOMComponent of the inner div wrapper', () => {
+    it('should return the outermost DOMComponent of the inner div wrapper', () => {
       const wrapper = mount(<Test />);
       expect(wrapper.find('.inner').getDOMNode()).to.have.property('className', 'inner');
     });
 
     it('should throw when wrapping multiple elements', () => {
       const wrapper = mount(<Test />).find('span');
-      expect(() => wrapper.getDOMNode()).to.throw(Error);
+      expect(() => wrapper.getDOMNode()).to.throw(
+        Error,
+        'Method “getDOMNode” is only meant to be run on a single node. 2 found instead.',
+      );
     });
 
     describeIf(!REACT013, 'stateless components', () => {
-      const SFC = () => (<div />);
+      const SFC = () => (
+        <div className="outer">
+          <div className="inner">
+            <span />
+            <span />
+          </div>
+        </div>
+      );
 
-      it('should throw when wrapping an SFC', () => {
+      it('should return the outermost DOMComponent of the root wrapper', () => {
         const wrapper = mount(<SFC />);
-        expect(() => wrapper.getDOMNode()).to.throw(TypeError, 'Method “getDOMNode” cannot be used on functional components.');
+        expect(wrapper.getDOMNode()).to.have.property('className', 'outer');
+      });
+
+      it('should return the outermost DOMComponent of the inner div wrapper', () => {
+        const wrapper = mount(<SFC />);
+        expect(wrapper.find('.inner').getDOMNode()).to.have.property('className', 'inner');
+      });
+
+      it('should throw when wrapping multiple elements', () => {
+        const wrapper = mount(<SFC />).find('span');
+        expect(() => wrapper.getDOMNode()).to.throw(
+          Error,
+          'Method “getDOMNode” is only meant to be run on a single node. 2 found instead.',
+        );
       });
     });
   });

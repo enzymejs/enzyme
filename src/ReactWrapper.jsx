@@ -29,7 +29,6 @@ import {
   typeOfNode,
   displayNameOfNode,
   ITERATOR_SYMBOL,
-  isFunctionalComponent,
 } from './Utils';
 import {
   debugInsts,
@@ -139,13 +138,7 @@ class ReactWrapper {
    * @returns {DOMComponent}
    */
   getDOMNode() {
-    return this.single('getDOMNode', (n) => {
-      if (isFunctionalComponent(n)) {
-        throw new TypeError('Method “getDOMNode” cannot be used on functional components.');
-      }
-
-      return findDOMNode(n);
-    });
+    return this.single('getDOMNode', findDOMNode);
   }
 
   /**
