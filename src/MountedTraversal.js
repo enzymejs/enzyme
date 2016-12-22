@@ -46,17 +46,22 @@ export function instEqual(a, b, lenComp) {
   return nodeEqual(getNode(a), getNode(b), lenComp);
 }
 
-export function instHasClassName(inst, className) {
-  const node = findDOMNode(inst);
-  if (node.classList) {
-    return node.classList.contains(className);
-  }
+export function instGetClasses(inst, foundNode) {
+  const node = foundNode || findDOMNode(inst);
   let classes = node.className || '';
   if (typeof classes === 'object') {
     classes = classes.baseVal;
   }
   classes = classes.replace(/\s/g, ' ');
-  return ` ${classes} `.indexOf(` ${className} `) > -1;
+  return classes.split(' ');
+}
+
+export function instHasClassName(inst, className) {
+  const node = findDOMNode(inst);
+  if (node.classList) {
+    return node.classList.contains(className);
+  }
+  return instGetClasses(inst, node).indexOf(className) > -1;
 }
 
 function hasClassName(inst, className) {

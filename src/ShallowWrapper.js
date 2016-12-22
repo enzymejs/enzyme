@@ -22,6 +22,7 @@ import {
   debugNodes,
 } from './Debug';
 import {
+  getClassesArray,
   getTextFromNode,
   hasClassName,
   childrenOfNode,
@@ -744,6 +745,17 @@ class ShallowWrapper {
    */
   name() {
     return this.single('name', displayNameOfNode);
+  }
+
+  /**
+   * Returns an array of class names.
+   *
+   * NOTE: can only be called on a wrapper of a single node.
+   *
+   * @returns {Array<String>}
+   */
+  getClasses() {
+    return this.single('getClasses', n => getClassesArray(n));
   }
 
   /**
