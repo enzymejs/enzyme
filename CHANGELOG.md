@@ -1,5 +1,20 @@
 # Change Log
 
+## 2.7.0 (December 21, 2016)
+
+### New Stuff
+
+- `shallow`/`mount`: Add `.slice()` method ([#661](https://github.com/airbnb/enzyme/pull/661))
+- `mount`: implement ReactWrapper#getDOMNode ([#679](https://github.com/airbnb/enzyme/pull/679))
+- `shallow`/`mount`: Add `exists`; deprecate isEmpty() ([#722](https://github.com/airbnb/enzyme/pull/722))
+
+### Fixes
+
+- `mount`: extract MountedTraversal.hasClassName from MountedTraversal.instHasClassName, which allows ReactWrapper.hasClass to bypass the !isDOMComponent(inst) call ([#677](https://github.com/airbnb/enzyme/pull/677)
+- `withDom`: Display a useful error when `withDom` fails to find "jsdom" ([#686](https://github.com/airbnb/enzyme/pull/686))
+- `mount`: ensure that `react-text` comment nodes don’t break `.find` ([#691](https://github.com/airbnb/enzyme/pull/691))
+- `mount`: `.parents()` now filters out sibling path trees ([#713](https://github.com/airbnb/enzyme/pull/713))
+
 ## 2.6.0 (November 9, 2016)
 
 ### New Stuff
