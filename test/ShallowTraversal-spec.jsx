@@ -383,16 +383,16 @@ describe('ShallowTraversal', () => {
       stringNodes = refs.stringNodes;
     });
 
+    const matchRefs = (nodes, ref) => nodes.filter(n => n.ref === ref);
+
     const expectNodesToContain = (nodes, ref) => {
-      expect(nodes).to.satisfy(
-        _nodes => _nodes.find(n => n.ref === ref),
-      );
+      const matchingRefs = matchRefs(nodes, ref);
+      expect(matchingRefs).to.have.length.above(0);
     };
 
     const expectNodesToNotContain = (nodes, ref) => {
-      expect(nodes).to.satisfy(
-        _nodes => !_nodes.find(n => n.ref === ref),
-      );
+      const matchingRefs = matchRefs(nodes, ref);
+      expect(matchingRefs).to.have.lengthOf(0);
     };
 
     it('contains the ref of the containing element', () => {

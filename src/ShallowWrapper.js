@@ -153,8 +153,7 @@ class ShallowWrapper {
           throw new Error('There is more than one component own by the tree root with the same ref string');
         }
 
-        refObject[n.ref] = n
-        return refObject
+        return Object.assign({}, refObject, { [n.ref]: n });
       },
       {},
     );
