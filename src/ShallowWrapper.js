@@ -153,10 +153,8 @@ class ShallowWrapper {
           throw new Error('There is more than one component own by the tree root with the same ref string');
         }
 
-        return {
-          ...refObject,
-          [n.ref]: n,
-        };
+        refObject[n.ref] = n
+        return refObject
       },
       {},
     );
