@@ -3,6 +3,7 @@ import flatten from 'lodash/flatten';
 import unique from 'lodash/uniq';
 import compact from 'lodash/compact';
 import cheerio from 'cheerio';
+import assign from 'object.assign';
 
 import ComplexSelector from './ComplexSelector';
 import {
@@ -153,7 +154,7 @@ class ShallowWrapper {
           throw new Error('There is more than one component own by the tree root with the same ref string');
         }
 
-        return Object.assign({}, refObject, { [n.ref]: n });
+        return assign({}, refObject, { [n.ref]: n });
       },
       {},
     );
