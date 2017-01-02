@@ -2,7 +2,7 @@
   "name": "enzyme",
   "version": "2.7.0",
   "description": "JavaScript Testing utilities for React",
-  "main": "build",
+  "main": "build/index.js",
   "scripts": {
     "prepublish": "not-in-publish || (npm run clean && npm run build && safe-publish-latest)",
     "preversion": "npm run clean && npm run check",
