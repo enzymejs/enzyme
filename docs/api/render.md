@@ -10,7 +10,7 @@ disservice.
 
 For the purposes of this documentation, we will refer to Cheerio's constructor as
 `CheerioWrapper`, which is to say that it is analogous to our `ReactWrapper` and `ShallowWrapper`
-constructors.
+constructors. You can reference the [Cheerio API docs](https://github.com/cheeriojs/cheerio#api) for methods available on a `CheerioWrapper` instance.
 
 ### Example Usage
 
@@ -28,6 +28,11 @@ describe('<Foo />', () => {
   it('rendered the title', () => {
     const wrapper = render(<Foo title="unique" />);
     expect(wrapper.text()).to.contain('unique');
+  });
+
+  it('renders a div', () => {
+    const wrapper = render(<div className="myClass" />);
+    expect(wrapper.html()).to.contain('div');
   });
 
   it('can pass in context', () => {
