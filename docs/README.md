@@ -27,6 +27,7 @@
     * [containsAnyMatchingElements(nodes)](/docs/api/ShallowWrapper/containsAnyMatchingElements.md)
     * [context([key])](/docs/api/ShallowWrapper/context.md)
     * [debug()](/docs/api/ShallowWrapper/debug.md)
+    * [dive()](/docs/api/ShallowWrapper/dive.md)
     * [equals(node)](/docs/api/ShallowWrapper/equals.md)
     * [every(selector)](/docs/api/ShallowWrapper/every.md)
     * [everyWhere(predicate)](/docs/api/ShallowWrapper/everyWhere.md)
