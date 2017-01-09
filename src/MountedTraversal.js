@@ -124,7 +124,7 @@ export function childrenOfInstInternal(inst) {
       if (REACT013 && !node.getPublicInstance) {
         return false;
       }
-      if (typeof renderedChildren[key]._stringText !== 'undefined') {
+      if (typeof node._stringText !== 'undefined') {
         return false;
       }
       return true;
