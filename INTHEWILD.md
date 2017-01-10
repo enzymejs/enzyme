@@ -15,6 +15,7 @@ Organizations
  - [Flatiron School](https://github.com/flatiron-labs)
  - [Outreach.io](https://github.com/getoutreach)
  - [crowdSPRING](https://crowdspring.com)
+ - [nteract](https://nteract.io)
 
 Projects
 ----------
@@ -24,3 +25,4 @@ Projects
  - [Recompose](https://github.com/acdlite/recompose)
  - [Reapop](https://github.com/LouisBarranqueiro/reapop)
  - [React Dates](https://github.com/airbnb/react-dates)
+ - [nteract notebook](https://github.com/nteract/nteract)
