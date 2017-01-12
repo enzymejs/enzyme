@@ -2422,6 +2422,20 @@ describeWithDOM('mount', () => {
       expect(parents.at(0).hasClass('foo')).to.equal(true);
       expect(parents.at(1).hasClass('bax')).to.equal(true);
     });
+
+    it('should work with components in the tree', () => {
+      const Foo = createClass({
+        render() {
+          return <div className="bar" />;
+        },
+      });
+      const wrapper = mount((
+        <div className="root">
+          <Foo />
+        </div>
+      ));
+      expect(wrapper.find('.bar').parents('.root')).to.have.length(1);
+    });
   });
 
   describe('.parent()', () => {

@@ -2282,6 +2282,17 @@ describe('shallow', () => {
       expect(parents.at(1).hasClass('bar')).to.equal(true);
       expect(parents.at(2).hasClass('bax')).to.equal(true);
     });
+
+    it('should work with component', () => {
+      const Foo = createClass({
+        render() {
+          return <div className="bar" />;
+        },
+      });
+      const wrapper = shallow(<Foo />);
+      expect(wrapper.find('.bar')).to.have.length(1);
+      expect(wrapper.find('.bar').parent()).to.have.length(0);
+    });
   });
 
   describe('.closest(selector)', () => {
