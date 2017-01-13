@@ -16,6 +16,7 @@ Organizations
  - [Outreach.io](https://github.com/getoutreach)
  - [crowdSPRING](https://crowdspring.com)
  - [nteract](https://nteract.io)
+ - [Brave](https://brave.com)
 
 Projects
 ----------
