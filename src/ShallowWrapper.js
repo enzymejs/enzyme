@@ -3,6 +3,7 @@ import flatten from 'lodash/flatten';
 import unique from 'lodash/uniq';
 import compact from 'lodash/compact';
 import cheerio from 'cheerio';
+import assign from 'object.assign';
 
 import ComplexSelector from './ComplexSelector';
 import {
@@ -1022,7 +1023,7 @@ class ShallowWrapper {
    * @param options object
    * @returns {ShallowWrapper}
    */
-  dive(options) {
+  dive(options = {}) {
     const name = 'dive';
     return this.single(name, (n) => {
       if (isDOMComponentElement(n)) {
@@ -1031,7 +1032,7 @@ class ShallowWrapper {
       if (!isCustomComponentElement(n)) {
         throw new TypeError(`ShallowWrapper::${name}() can only be called on components`);
       }
-      return new ShallowWrapper(n, null, options);
+      return new ShallowWrapper(n, null, assign({}, this.options, options));
     });
   }
 }
