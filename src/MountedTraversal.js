@@ -4,6 +4,7 @@ import isSubset from 'is-subset';
 import {
   internalInstance,
   nodeEqual,
+  nodeMatches,
   propsOfNode,
   isFunctionalComponent,
   splitSelector,
@@ -44,6 +45,10 @@ export function getNode(inst) {
 
 export function instEqual(a, b, lenComp) {
   return nodeEqual(getNode(a), getNode(b), lenComp);
+}
+
+export function instMatches(a, b, lenComp) {
+  return nodeMatches(getNode(a), getNode(b), lenComp);
 }
 
 export function instHasClassName(inst, className) {
