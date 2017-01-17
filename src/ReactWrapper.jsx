@@ -12,6 +12,7 @@ import {
   parentsOfInst,
   buildInstPredicate,
   instEqual,
+  instMatches,
   treeFilter,
   getNode,
   internalInstanceOrComponent,
@@ -311,7 +312,7 @@ class ReactWrapper {
    * @returns {Boolean}
    */
   matchesElement(node) {
-    return this.single('matchesElement', () => instEqual(node, this.getNode(), (a, b) => a <= b));
+    return this.single('matchesElement', () => instMatches(node, this.getNode(), (a, b) => a <= b));
   }
 
   /**
@@ -350,7 +351,7 @@ class ReactWrapper {
    * @returns {Boolean}
    */
   containsMatchingElement(node) {
-    const predicate = other => instEqual(node, other, (a, b) => a <= b);
+    const predicate = other => instMatches(node, other, (a, b) => a <= b);
     return findWhereUnwrapped(this, predicate).length > 0;
   }
 
@@ -373,7 +374,7 @@ class ReactWrapper {
    * @returns {Boolean}
    */
   containsAllMatchingElements(nodes) {
-    const invertedEquals = (n1, n2) => instEqual(n2, n1, (a, b) => a <= b);
+    const invertedEquals = (n1, n2) => instMatches(n2, n1, (a, b) => a <= b);
     const predicate = other => containsChildrenSubArray(invertedEquals, other, nodes);
     return findWhereUnwrapped(this, predicate).length > 0;
   }

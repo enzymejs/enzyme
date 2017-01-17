@@ -7,6 +7,7 @@ import cheerio from 'cheerio';
 import ComplexSelector from './ComplexSelector';
 import {
   nodeEqual,
+  nodeMatches,
   containsChildrenSubArray,
   propFromEvent,
   withSetStateAllowed,
@@ -354,7 +355,7 @@ class ShallowWrapper {
    * @returns {Boolean}
    */
   containsMatchingElement(node) {
-    const predicate = other => nodeEqual(node, other, (a, b) => a <= b);
+    const predicate = other => nodeMatches(node, other, (a, b) => a <= b);
     return findWhereUnwrapped(this, predicate).length > 0;
   }
 
@@ -378,7 +379,7 @@ class ShallowWrapper {
    * @returns {Boolean}
    */
   containsAllMatchingElements(nodes) {
-    const invertedEquals = (n1, n2) => nodeEqual(n2, n1, (a, b) => a <= b);
+    const invertedEquals = (n1, n2) => nodeMatches(n2, n1, (a, b) => a <= b);
     const predicate = other => containsChildrenSubArray(invertedEquals, other, nodes);
     return findWhereUnwrapped(this, predicate).length > 0;
   }
@@ -440,7 +441,7 @@ class ShallowWrapper {
    * @returns {Boolean}
    */
   matchesElement(node) {
-    return this.single('matchesElement', () => nodeEqual(node, this.getNode(), (a, b) => a <= b));
+    return this.single('matchesElement', () => nodeMatches(node, this.getNode(), (a, b) => a <= b));
   }
 
   /**

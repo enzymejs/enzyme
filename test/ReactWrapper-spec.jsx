@@ -3040,6 +3040,7 @@ describeWithDOM('mount', () => {
       expect(spy1.callCount).to.equal(0);
       expect(spy2.callCount).to.equal(0);
     });
+
     it('should match on a single node that looks like a rendered one', () => {
       const spy1 = sinon.spy();
       const spy2 = sinon.spy();
@@ -3070,6 +3071,7 @@ describeWithDOM('mount', () => {
       expect(spy1.callCount).to.equal(0);
       expect(spy2.callCount).to.equal(0);
     });
+
     it('should not match on a single node that doesn\'t looks like a rendered one', () => {
       const spy1 = sinon.spy();
       const spy2 = sinon.spy();
@@ -3086,7 +3088,32 @@ describeWithDOM('mount', () => {
         <div onClick={spy2}>Au revoir le monde</div>,
       )).to.equal(false);
     });
+
+    it('should not differentiate between absence, null, or undefined', () => {
+      const wrapper = mount((
+        <div>
+          <div className="a" id={null} />
+          <div className="b" id={undefined} />
+          <div className="c" />
+        </div>
+      ));
+
+      expect(wrapper.containsMatchingElement(<div />)).to.equal(true);
+
+      expect(wrapper.containsMatchingElement(<div className="a" />)).to.equal(true);
+      expect(wrapper.containsMatchingElement(<div className="a" id={null} />)).to.equal(true);
+      expect(wrapper.containsMatchingElement(<div className="a" id={undefined} />)).to.equal(true);
+
+      expect(wrapper.containsMatchingElement(<div className="b" />)).to.equal(true);
+      expect(wrapper.containsMatchingElement(<div className="b" id={null} />)).to.equal(true);
+      expect(wrapper.containsMatchingElement(<div className="b" id={undefined} />)).to.equal(true);
+
+      expect(wrapper.containsMatchingElement(<div className="c" />)).to.equal(true);
+      expect(wrapper.containsMatchingElement(<div className="c" id={null} />)).to.equal(true);
+      expect(wrapper.containsMatchingElement(<div className="c" id={undefined} />)).to.equal(true);
+    });
   });
+
   describe('.containsAllMatchingElements(nodes)', () => {
     it('should match on an array of nodes that all looks like one of rendered nodes', () => {
       const spy1 = sinon.spy();
