@@ -2434,7 +2434,14 @@ describeWithDOM('mount', () => {
           <Foo />
         </div>
       ));
-      expect(wrapper.find('.bar').parents('.root')).to.have.length(1);
+      const root = wrapper.find('.root');
+      expect(root).to.have.lengthOf(1);
+      expect(root.hasClass('root')).to.equal(true);
+      expect(root.hasClass('bar')).to.equal(false);
+
+      const bar = root.find('.bar');
+      expect(bar).to.have.lengthOf(1);
+      expect(bar.parents('.root')).to.have.lengthOf(1);
     });
   });
 
