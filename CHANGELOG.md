@@ -1,5 +1,18 @@
 # Change Log
 
+## 2.7.1 (January 22, 2017)
+
+### Fixes
+
+- `mount`: Fix bug from ([#677](https://github.com/airbnb/enzyme/pull/677) ([#680](https://github.com/airbnb/enzyme/pull/680)
+- `mount`: ignore text nodes in childrenOfInst ([#604](https://github.com/airbnb/enzyme/pull/604)
+
+### Documentation
+
+- Update Docs for .getNode and .getNodes ([#743](https://github.com/airbnb/enzyme/pull/743)
+- Add a link for `ShallowWrapper#dive()` ([#759](https://github.com/airbnb/enzyme/pull/759)
+- Fix alphabetical order of API lists ([#761](https://github.com/airbnb/enzyme/pull/761)
+
 ## 2.7.0 (December 21, 2016)
 
 ### New Stuff
