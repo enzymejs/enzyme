@@ -53,49 +53,55 @@ type LiteralValue = string | number
 // A "node" in an RST is either a LiteralValue, or an RSTNode
 type Node = LiteralValue | RSTNode
 
+// if node.type
+type RenderedNode = RSTNode | [Node]
+
+type SourceLocation = {| 
+  fileName: string
+  lineNumber: number 
+|}
+
 // An RSTNode has this specific shape
 type RSTNode = {|
   // Either a string or a function. A string is considered a "host" node, and
   // a function would be a composite component. It would be the component constructor or
   // an SFC in the case of a function.
-  type: string | function
-  
+  type: string | function;
+
+  // Whether or not this node is a "Host" node.
+  host: boolean;
+
   // The props object passed to the node, which will include `children` in its raw form,
   // exactly as it was passed to the component.
-  props: object
-  
+  props: object;
+
   // The backing instance to the node. Can be null in the case of "host" nodes and SFCs.
-  // React alternative libs can choose to provide whatever concept here applies.  If it is
-  // provided, Enzyme will expect it to follow the ComponentInterface type specified below
-  instance: ComponentInstance?
-  
-  // This is a transformed version of `props.children`. It is an array or null. If it's an array,
-  // it's an array of Nodes, meaning that they are LiteralNodes or RSTNodes. This means that 
-  // non-rendering values such as `false`, `null`, and `[]` wouldn't make it in here. This is also
-  // a "flat" array.
-  children: [Node]?
-  
-  // This can feel similar to children, but it's not the same thing at all. For a given node,
-  // this corresponds to the result of the `render` function with the provided props, but transformed
-  // into an RST.  For "host" nodes, this will always be `null`.
-  rendered: Node?
+  // Enzyme will expect instances to have the _public interface_ of a React Component, as would
+  // be expected in the corresponding React release returned by `getTargetVersion` of the
+  // renderer. Alternative React libraries can choose to provide an object here that implements 
+  // the same interface, and Enzyme functionality that uses this will continue to work (An example 
+  // of this would be the `setState()` prototype method).
+  instance: ComponentInstance?;
+
+  // For a given node, this corresponds roughly to the result of the `render` function with the 
+  // provided props, but transformed into an RST. For "host" nodes, this will always be `null` or
+  // an Array. For "composite" nodes, this will always be `null` or an `RSTNode`.
+  rendered: RenderedNode?;
+
+  // an optional property with source information (useful in debug messages) that would be provided
+  // by this babel transform: https://babeljs.io/docs/plugins/transform-react-jsx-source/
+  __source?: SourceLocation;
 |}
 ```
 
+Thoughts:
 
-A `ComponentInstance` is going to be expected by enzyme to follow a certain interface in order
-for certain API methods to actually work, but they don't *need* to. Those methods just won't be
-guaranteed to work in those cases.
-
-
-So far, that interface is:
-```js
-type ComponentInstance = {
-  state: object?
-  context: object?
-  setState: function
-}
-```
+- If an `RSTNode` has `host: true`, `rendered` will always be an `Array` or `null`. (though this 
+might change with Fiber I guess).
+- `rendered` is a better property name than `children`, as the meaning of `children` is ambiguous
+here since it is defined on props/elements etc.
+- If a node has `host: true`, loosely speaking that means that an instance of that component
+- For "host" nodes, can `instance` ever be non-null? Could it be the DOM element? Yes/No?
 
 
 ### Enzyme Adapter Protocol
@@ -108,28 +114,40 @@ react case, this would be the data structure returned from `React.createElement`
 
 ```js
 type RendererOptions = {
-  // I'm not 100% sure about this, but I think with an API like this, we could implement
-  // `mount` and `shallow` with the same renderer.
-  ?isLeaf(Element): bool
+  // An optional predicate function that takes in an `Element` and returns
+  // whether or not the underlying Renderer should treat it as a "Host" node
+  // or not. This function should only be called with elements that are 
+  // not required to be considered "host" nodes (ie, with a string `type`),
+  // so the default implementation of `isHost` is just a function that returns
+  // false.
+  ?isHost(Element): boolean;
 }
 
 type EnzymeAdapter = {
+  // This is a method that will return a semver version string for the _react_ version that
+  // it expects enzyme to target. This will allow enzyme to know what to expect in the `instance`
+  // that it finds on an RSTNode, as well as intelligently toggle behavior across react versions
+  // etc. For react adapters, this will likely just be `() => React.Version`, but for other
+  // adapters for libraries like inferno or preact, it will allow those libraries to specify
+  // a version of the API that they are committing to.
+  getTargetApiVersion(): string;
+
   // Provided a bag of options, return an `EnzymeRenderer`. Some options can be implementation
   // specific, like `attach` etc. for React, but not part of this interface explicitly.
-  createRenderer(RendererOptions?): EnzymeRenderer
+  createRenderer(?options: RendererOptions): EnzymeRenderer;
 
   // converts an RSTNode to the corresponding JSX Pragma Element. This will be needed
   // in order to implement the `Wrapper.mount()` and `Wrapper.shallow()` methods, but should
   // be pretty straightforward for people to implement.
-  nodeToElement(RSTNode): Element
+  nodeToElement(RSTNode): Element;
 }
 
 type EnzymeRenderer = {
   // both initial render and updates for the renderer.
-  render(Element): void
+  render(Element): void;
   
   // retrieve a frozen-in-time copy of the RST.
-  getNode(): RSTNode?
+  getNode(): RSTNode?;
 }
 ```
 
@@ -150,8 +168,7 @@ Enzyme.configure({ adapter: ThirdPartyEnzymeAdapter });
 Additionally, each wrapper Enzyme exposes will allow for an overriding `adapter` option that will use a
 given adapter for just that wrapper:
 
-```js
-
+```jsx
 import { shallow } from 'enzyme';
 import ThirdPartyEnzymeAdapter from 'third-party-enzyme-adapter';
 
