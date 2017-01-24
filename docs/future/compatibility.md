@@ -3,8 +3,8 @@
 
 ## Motivation
 
-This proposal is attempting to address a hand full of pain points that Enzyme has been
-suspect to for quite a while.  This proposal has resulted mostly [#715](https://github.com/airbnb/enzyme/issues/715),
+This proposal is attempting to address a handful of pain points that Enzyme has been
+subject to for quite a while.  This proposal has resulted mostly [#715](https://github.com/airbnb/enzyme/issues/715),
 and a resulting discussion among core maintainers of this project.
 
 The desired results of this proposal are the following:
@@ -94,16 +94,6 @@ type RSTNode = {|
 |}
 ```
 
-Thoughts:
-
-- If an `RSTNode` has `host: true`, `rendered` will always be an `Array` or `null`. (though this 
-might change with Fiber I guess).
-- `rendered` is a better property name than `children`, as the meaning of `children` is ambiguous
-here since it is defined on props/elements etc.
-- If a node has `host: true`, loosely speaking that means that an instance of that component
-- For "host" nodes, can `instance` ever be non-null? Could it be the DOM element? Yes/No?
-
-
 ### Enzyme Adapter Protocol
 
 **Definitions:**
@@ -175,7 +165,8 @@ import ThirdPartyEnzymeAdapter from 'third-party-enzyme-adapter';
 shallow(<Foo />, { adapter: ThirdPartyEnzymeAdapter });
 ```
 
-By default, Enzyme will ship with adapters for all major versions of React since React 0.13:
+Enzyme will build adapters for all major versions of React since React 0.13, though will deprecate
+adapters as usage of a particular major version fades.
 
 ```js
 import React13Adapter from 'enzyme-adapter-react-13';
