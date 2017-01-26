@@ -3842,11 +3842,18 @@ describe('shallow', () => {
         return <RendersDOM />;
       }
     }
+    WrapsRendersDOM.contextTypes = { foo: React.PropTypes.string };
     class DoubleWrapsRendersDOM extends React.Component {
       render() {
         return <WrapsRendersDOM />;
       }
     }
+    class ContextWrapsRendersDOM extends React.Component {
+      render() {
+        return <WrapsRendersDOM />;
+      }
+    }
+    ContextWrapsRendersDOM.contextTypes = { foo: React.PropTypes.string };
 
     it('throws on a DOM node', () => {
       const wrapper = shallow(<RendersDOM />);
@@ -3882,6 +3889,17 @@ describe('shallow', () => {
 
       const underwater = wrapper.dive();
       expect(underwater.is(RendersDOM)).to.equal(true);
+    });
+
+    it('should merge and pass options through', () => {
+      const wrapper = shallow(<ContextWrapsRendersDOM />, { context: { foo: 'hello' } });
+      expect(wrapper.context()).to.deep.equal({ foo: 'hello' });
+
+      let underwater = wrapper.dive();
+      expect(underwater.context()).to.deep.equal({ foo: 'hello' });
+
+      underwater = wrapper.dive({ context: { foo: 'enzyme!' } });
+      expect(underwater.context()).to.deep.equal({ foo: 'enzyme!' });
     });
   });
 
