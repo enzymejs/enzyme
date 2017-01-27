@@ -61,6 +61,8 @@ type SourceLocation = {|
   lineNumber: number 
 |}
 
+type NodeType = 'class' | 'function' | 'host';
+
 // An RSTNode has this specific shape
 type RSTNode = {|
   // Either a string or a function. A string is considered a "host" node, and
@@ -68,8 +70,8 @@ type RSTNode = {|
   // an SFC in the case of a function.
   type: string | function;
 
-  // Whether or not this node is a "Host" node.
-  host: boolean;
+  // This node's type
+  nodeType: NodeType;
 
   // The props object passed to the node, which will include `children` in its raw form,
   // exactly as it was passed to the component.

@@ -65,11 +65,11 @@ renderer.render(<Qoo />);
 // tree = renderer.getNode();
 tree = {
   type: Qoo,
-  host: false,
+  nodeType: 'function',
   props: {},
   rendered: {
     type: 'span',
-    host: true,
+    nodeType: 'host',
     props: { className: 'Qoo' },
     rendered: ['Hello World!'],
   },
@@ -104,34 +104,34 @@ renderer.render(<Bam />);
 // tree = renderer.getNode();
 tree = {
   type: Bam,
-  host: false,
+  nodeType: 'function',
   props: {},
   rendered: {
     type: Bar,
-    host: false,
+    nodeType: 'function',
     props: { special: true },
     rendered: {
       type: Foo,
-      host: false,
+      nodeType: 'function',
       props: { className: 'special' },
       rendered: {
         type: 'div',
-        host: true,
+        nodeType: 'host',
         props: { className: 'Foo special' },
         rendered: [
           {
             type: 'span',
-            host: true,
+            nodeType: 'host',
             props: { className: 'Foo2' },
             rendered: ['Literal'],
           },
           {
             type: Qoo,
-            host: false,
+            nodeType: 'function',
             props: {},
             rendered: {
               type: 'span',
-              host: true,
+              nodeType: 'host',
               props: { className: 'Qoo' },
               rendered: ['Hello World!'],
             },
@@ -164,16 +164,16 @@ renderer.render(<Bam />);
 // tree = renderer.getNode();
 tree = {
   type: Bam,
-  host: false,
+  nodeType: 'function',
   props: {},
   rendered: {
     type: Bar,
-    host: true,
+    nodeType: 'host',
     props: { special: true },
     rendered: [
       {
         type: Qoo,
-        host: true,
+        nodeType: 'host',
         props: {},
         rendered: null,
       },
@@ -197,13 +197,13 @@ renderer.render(
 // tree = renderer.getNode();
 tree = {
   type: 'div',
-  host: true,
+  nodeType: 'host',
   props: {},
   rendered: [
     {
       type: Foo,
       props: {},
-      host: true,
+      nodeType: 'host',
       rendered: null,
     },
   ],
@@ -230,20 +230,20 @@ renderer.render(<Bam />);
 // tree = renderer.getNode();
 tree = {
   type: Bam,
-  host: false,
+  nodeType: 'function',
   props: {},
   rendered: {
     type: Bar,
-    host: true,
+    nodeType: 'host',
     props: { special: true },
     rendered: [
       {
         type: Qoo,
-        host: false,
+        nodeType: 'function',
         props: {},
         rendered: {
           type: 'span',
-          host: true,
+          nodeType: 'host',
           props: { className: 'Qoo' },
           rendered: ['Hello World!'],
         },
