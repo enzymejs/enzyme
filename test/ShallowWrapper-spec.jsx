@@ -2684,6 +2684,18 @@ describe('shallow', () => {
   });
 
   describe('lifecycleExperimental', () => {
+    it('throws when used with disableLifecycleMethods in invalid combinations', () => {
+      expect(() => shallow(<div />, {
+        lifecycleExperimental: true,
+        disableLifecycleMethods: true,
+      })).to.throw(/same value/);
+
+      expect(() => shallow(<div />, {
+        lifecycleExperimental: false,
+        disableLifecycleMethods: false,
+      })).to.throw(/same value/);
+    });
+
     context('mounting phase', () => {
       it('should call componentWillMount and componentDidMount', () => {
         const spy = sinon.spy();

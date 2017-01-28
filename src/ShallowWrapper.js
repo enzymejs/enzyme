@@ -63,12 +63,24 @@ function filterWhereUnwrapped(wrapper, predicate) {
   return wrapper.wrap(compact(wrapper.getNodes().filter(predicate)));
 }
 
+function validateOptions(options) {
+  if (
+    options.lifecycleExperimental != null &&
+    options.lifecycleExperimental === options.disableLifecycleMethods
+  ) {
+    throw new Error(
+      'lifecycleExperimental and disableLifecycleMethods cannot be set to the same value',
+    );
+  }
+}
+
 /**
  * @class ShallowWrapper
  */
 class ShallowWrapper {
 
   constructor(nodes, root, options = {}) {
+    validateOptions(options);
     if (!root) {
       this.root = this;
       this.unrendered = nodes;
