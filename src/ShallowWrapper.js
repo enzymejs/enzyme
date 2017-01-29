@@ -63,10 +63,34 @@ function filterWhereUnwrapped(wrapper, predicate) {
   return wrapper.wrap(compact(wrapper.getNodes().filter(predicate)));
 }
 
+/**
+ * Ensure options passed to ShallowWrapper are valid. Throws otherwise.
+ * @param {Object} options
+ */
 function validateOptions(options) {
+  const { lifecycleExperimental, disableLifecycleMethods } = options;
   if (
-    options.lifecycleExperimental != null &&
-    options.lifecycleExperimental === options.disableLifecycleMethods
+    typeof lifecycleExperimental !== 'undefined' &&
+    lifecycleExperimental !== !!lifecycleExperimental
+  ) {
+    throw new Error(
+      'lifecycleExperimental must be either true or false if provided',
+    );
+  }
+
+  if (
+    typeof disableLifecycleMethods !== 'undefined' &&
+    disableLifecycleMethods !== !!disableLifecycleMethods
+  ) {
+    throw new Error(
+      'disableLifecycleMethods must be either true or false if provided',
+    );
+  }
+
+  if (
+    lifecycleExperimental != null &&
+    disableLifecycleMethods != null &&
+    lifecycleExperimental === disableLifecycleMethods
   ) {
     throw new Error(
       'lifecycleExperimental and disableLifecycleMethods cannot be set to the same value',

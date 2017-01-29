@@ -2683,17 +2683,129 @@ describe('shallow', () => {
     });
   });
 
-  describe('lifecycleExperimental', () => {
-    it('throws when used with disableLifecycleMethods in invalid combinations', () => {
-      expect(() => shallow(<div />, {
-        lifecycleExperimental: true,
-        disableLifecycleMethods: true,
-      })).to.throw(/same value/);
+  describe('disableLifecycleMethods', () => {
+    describe('validation', () => {
+      it('throws for a non-boolean value', () => {
+        ['value', 42, null].forEach((value) => {
+          expect(() => shallow(<div />, {
+            disableLifecycleMethods: value,
+          })).to.throw(/true or false/);
+        });
+      });
 
-      expect(() => shallow(<div />, {
-        lifecycleExperimental: false,
-        disableLifecycleMethods: false,
-      })).to.throw(/same value/);
+      it('does not throw for a boolean value or undefined', () => {
+        [true, false, undefined].forEach((value) => {
+          expect(() => shallow(<div />, {
+            disableLifecycleMethods: value,
+          })).not.to.throw();
+        });
+      });
+
+      it('does not throw when no lifecycle flags are provided in options', () => {
+        expect(() => shallow(<div />, {})).not.to.throw();
+      });
+
+      it('throws when used with lifecycleExperimental in invalid combinations', () => {
+        [true, false].forEach((value) => {
+          expect(() => shallow(<div />, {
+            lifecycleExperimental: value,
+            disableLifecycleMethods: value,
+          })).to.throw(/same value/);
+        });
+      });
+    });
+
+    describe('when set to true', () => {
+      let wrapper;
+      const spy = sinon.spy();
+      class Foo extends React.Component {
+        componentWillMount() {
+          spy('componentWillMount');
+        }
+        componentDidMount() {
+          spy('componentDidMount');
+        }
+        componentWillReceiveProps() {
+          spy('componentWillReceiveProps');
+        }
+        shouldComponentUpdate() {
+          spy('shouldComponentUpdate');
+          return true;
+        }
+        componentWillUpdate() {
+          spy('componentWillUpdate');
+        }
+        componentDidUpdate() {
+          spy('componentDidUpdate');
+        }
+        componentWillUnmount() {
+          spy('componentWillUnmount');
+        }
+        render() {
+          spy('render');
+          return <div>foo</div>;
+        }
+      }
+
+      beforeEach(() => {
+        wrapper = shallow(<Foo />, { disableLifecycleMethods: true });
+        spy.reset();
+      });
+
+      it('does not call componentDidMount when mounting', () => {
+        wrapper = shallow(<Foo />, { disableLifecycleMethods: true });
+        expect(spy.args).to.deep.equal([
+          ['componentWillMount'],
+          ['render'],
+        ]);
+      });
+
+      it('calls expected methods when receiving new props', () => {
+        wrapper.setProps({ foo: 'foo' });
+        expect(spy.args).to.deep.equal([
+          ['componentWillReceiveProps'],
+          ['shouldComponentUpdate'],
+          ['componentWillUpdate'],
+          ['render'],
+        ]);
+      });
+
+      it('calls expected methods for setState', () => {
+        wrapper.setState({ bar: 'bar' });
+        expect(spy.args).to.deep.equal([
+          ['shouldComponentUpdate'],
+          ['componentWillUpdate'],
+          ['render'],
+          ['componentDidUpdate'],
+        ]);
+      });
+
+      it('calls expected methods when unmounting', () => {
+        wrapper.unmount();
+        expect(spy.args).to.deep.equal([
+          ['componentWillUnmount'],
+        ]);
+      });
+    });
+  });
+
+  describe('lifecycleExperimental', () => {
+    describe('validation', () => {
+      it('throws for a non-boolean value', () => {
+        ['value', 42, null].forEach((value) => {
+          expect(() => shallow(<div />, {
+            lifecycleExperimental: value,
+          })).to.throw(/true or false/);
+        });
+      });
+
+      it('does not throw for a boolean value or when not provided', () => {
+        [true, false, undefined].forEach((value) => {
+          expect(() => shallow(<div />, {
+            lifecycleExperimental: value,
+          })).not.to.throw();
+        });
+      });
     });
 
     context('mounting phase', () => {
