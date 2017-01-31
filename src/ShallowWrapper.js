@@ -71,7 +71,7 @@ function validateOptions(options) {
   const { lifecycleExperimental, disableLifecycleMethods } = options;
   if (
     typeof lifecycleExperimental !== 'undefined' &&
-    lifecycleExperimental !== !!lifecycleExperimental
+    typeof lifecycleExperimental !== 'boolean'
   ) {
     throw new Error(
       'lifecycleExperimental must be either true or false if provided',
@@ -80,7 +80,7 @@ function validateOptions(options) {
 
   if (
     typeof disableLifecycleMethods !== 'undefined' &&
-    disableLifecycleMethods !== !!disableLifecycleMethods
+    typeof disableLifecycleMethods !== 'boolean'
   ) {
     throw new Error(
       'disableLifecycleMethods must be either true or false if provided',

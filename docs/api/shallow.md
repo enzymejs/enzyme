@@ -48,8 +48,8 @@ describe('<MyComponent />', () => {
 2. `options` (`Object` [optional]):
   - `options.context`: (`Object` [optional]): Context to be passed into the component
   - `options.disableLifecycleMethods`: (`Boolean` [optional]): If set to true, `componentDidMount`
-and `componentDidUpdate` are not called on the component. Allows `shallow` to be
-used when testing components that assume refs or DOM nodes are available during these methods
+is not called on the component, and `componentDidUpdate` is not called after
+[`setProps`](ShallowWrapper/setProps.md) and [`setContext`](ShallowWrapper/setContext.md).
 
 #### Returns
 

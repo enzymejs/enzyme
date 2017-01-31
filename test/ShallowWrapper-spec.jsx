@@ -2747,13 +2747,20 @@ describe('shallow', () => {
         }
       }
 
+      const options = {
+        disableLifecycleMethods: true,
+        context: {
+          foo: 'foo',
+        },
+      };
+
       beforeEach(() => {
-        wrapper = shallow(<Foo />, { disableLifecycleMethods: true });
+        wrapper = shallow(<Foo />, options);
         spy.reset();
       });
 
       it('does not call componentDidMount when mounting', () => {
-        wrapper = shallow(<Foo />, { disableLifecycleMethods: true });
+        wrapper = shallow(<Foo />, options);
         expect(spy.args).to.deep.equal([
           ['componentWillMount'],
           ['render'],
@@ -2764,6 +2771,15 @@ describe('shallow', () => {
         wrapper.setProps({ foo: 'foo' });
         expect(spy.args).to.deep.equal([
           ['componentWillReceiveProps'],
+          ['shouldComponentUpdate'],
+          ['componentWillUpdate'],
+          ['render'],
+        ]);
+      });
+
+      it('calls expected methods when receiving new context', () => {
+        wrapper.setContext({ foo: 'foo' });
+        expect(spy.args).to.deep.equal([
           ['shouldComponentUpdate'],
           ['componentWillUpdate'],
           ['render'],
