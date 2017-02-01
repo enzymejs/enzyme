@@ -5,7 +5,7 @@ import sinon from 'sinon';
 import { shallow, render, ShallowWrapper } from '../src/';
 import { describeIf, itIf, itWithData, generateEmptyRenderData } from './_helpers';
 import { ITERATOR_SYMBOL, withSetStateAllowed } from '../src/Utils';
-import { REACT013, REACT15 } from '../src/version';
+import { REACT013, REACT014, REACT15 } from '../src/version';
 
 describe('shallow', () => {
   describe('context', () => {
@@ -2777,13 +2777,27 @@ describe('shallow', () => {
         ]);
       });
 
-      it('calls expected methods when receiving new context', () => {
-        wrapper.setContext({ foo: 'foo' });
-        expect(spy.args).to.deep.equal([
-          ['shouldComponentUpdate'],
-          ['componentWillUpdate'],
-          ['render'],
-        ]);
+      describeIf(REACT013 || REACT15, 'setContext', () => {
+        it('calls expected methods when receiving new context', () => {
+          wrapper.setContext({ foo: 'foo' });
+          expect(spy.args).to.deep.equal([
+            ['componentWillReceiveProps'],
+            ['shouldComponentUpdate'],
+            ['componentWillUpdate'],
+            ['render'],
+          ]);
+        });
+      });
+
+      describeIf(REACT014, 'setContext', () => {
+        it('calls expected methods when receiving new context', () => {
+          wrapper.setContext({ foo: 'foo' });
+          expect(spy.args).to.deep.equal([
+            ['shouldComponentUpdate'],
+            ['componentWillUpdate'],
+            ['render'],
+          ]);
+        });
       });
 
       it('calls expected methods for setState', () => {
