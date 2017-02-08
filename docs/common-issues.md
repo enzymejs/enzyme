@@ -58,7 +58,7 @@ An example:
 If you are testing a library that creates a Modal, and it manually appends it to a different part of the DOM, React has lost
 track of this component, and therefore Enzyme has also lost track of it.
 
-Even moreso, if this library appends dom elements into react components, react still does not know about it. A library like d3 which
+Even more so, if this library appends dom elements into react components, react still does not know about it. A library like d3 which
 appends DOM elements would be an example here.
 
 ###### Solutions
