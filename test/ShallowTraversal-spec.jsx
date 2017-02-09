@@ -11,6 +11,7 @@ import {
   treeFilter,
   pathToNode,
   getTextFromNode,
+  buildPredicate,
 } from '../src/ShallowTraversal';
 import { describeIf } from './_helpers';
 import { REACT013 } from '../src/version';
@@ -260,6 +261,12 @@ describe('ShallowTraversal', () => {
   });
 
   describe('pathToNode', () => {
+    it('should return null if no queue length', () => {
+      const result = pathToNode({}, []);
+
+      expect(result).to.equal(null);
+    });
+
     it('should return trees from the root node', () => {
       const node = <label htmlFor="foo" />;
       const tree = (
@@ -299,6 +306,11 @@ describe('ShallowTraversal', () => {
   });
 
   describe('getTextFromNode', () => {
+    it('should return empty string for nodes which do not exist', () => {
+      const result = getTextFromNode(null);
+      expect(result).to.equal('');
+    });
+
     it('should return displayName for functions that provides one', () => {
       class Subject extends React.Component {
         render() {
@@ -344,6 +356,14 @@ describe('ShallowTraversal', () => {
         const result = getTextFromNode(node);
         expect(result).to.equal('<Subject />');
       });
+    });
+  });
+
+  describe('buildPredicate', () => {
+    it('should throw expected error', () => {
+      const intSelector = 10;
+      const func = buildPredicate.bind(this, intSelector);
+      expect(func).to.throw(TypeError, 'Enzyme::Selector expects a string, object, or Component Constructor');
     });
   });
 });
