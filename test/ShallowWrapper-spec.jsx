@@ -2862,8 +2862,11 @@ describe('shallow', () => {
         }
 
         const wrapper = shallow(<Foo foo="bar" />, { lifecycleExperimental: true });
+        expect(wrapper.instance().props.foo).to.equal('bar');
         wrapper.setProps({ foo: 'baz' });
+        expect(wrapper.instance().props.foo).to.equal('baz');
         wrapper.setProps({ foo: 'bax' });
+        expect(wrapper.instance().props.foo).to.equal('bax');
         expect(spy.args).to.deep.equal([
           ['render'],
           ['componentWillReceiveProps'],
@@ -3050,7 +3053,9 @@ describe('shallow', () => {
           }
         }
         const wrapper = shallow(<Foo />, { lifecycleExperimental: true });
+        expect(wrapper.instance().state.foo).to.equal('bar');
         wrapper.setState({ foo: 'baz' });
+        expect(wrapper.instance().state.foo).to.equal('baz');
         expect(spy.args).to.deep.equal([['render'], ['shouldComponentUpdate']]);
       });
 
@@ -3152,7 +3157,9 @@ describe('shallow', () => {
             lifecycleExperimental: true,
           },
         );
+        expect(wrapper.instance().context.foo).to.equal('bar');
         wrapper.setContext({ foo: 'baz' });
+        expect(wrapper.instance().context.foo).to.equal('baz');
         expect(spy.args).to.deep.equal([
           [
             'render',
