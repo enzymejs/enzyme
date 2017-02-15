@@ -230,6 +230,9 @@ class ShallowWrapper {
               instance.componentDidUpdate(prevProps, state, prevContext);
             }
             this.update();
+          // If it doesn't need to rerender, update only its props.
+          } else if (props) {
+            instance.props = props;
           }
           if (originalComponentWillReceiveProps) {
             instance.componentWillReceiveProps = originalComponentWillReceiveProps;
