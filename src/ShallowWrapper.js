@@ -472,7 +472,7 @@ class ShallowWrapper {
   }
 
   /**
-   * Returns true if the component rendered nothing, i.e., null or false.
+   * Returns `true` if the component rendered nothing, i.e., `null` or `false`.
    *
    * @returns {boolean}
    */

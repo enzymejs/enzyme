@@ -98,7 +98,7 @@ Returns whether or not the current node exists.
 *Deprecated*: Use [.exists()](ShallowWrapper/exists.md) instead.
 
 #### [`.isEmptyRender() => Boolean`](ShallowWrapper/isEmptyRender.md)
-Returns true if the component rendered nothing, i.e., null or false.
+Returns `true` if the component rendered nothing, i.e., `null` or `false`.
 
 #### [`.not(selector) => ShallowWrapper`](ShallowWrapper/not.md)
 Remove nodes in the current wrapper that match the provided selector. (inverse of `.filter()`)
