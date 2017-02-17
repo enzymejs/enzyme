@@ -17,6 +17,7 @@ Organizations
  - [crowdSPRING](https://crowdspring.com)
  - [nteract](https://nteract.io)
  - [Brave](https://brave.com)
+ - [Simple](https://github.com/simplefinance)
 
 Projects
 ----------
