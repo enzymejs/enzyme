@@ -71,27 +71,48 @@ export function nodeHasType(node, type) {
     functionName(node.type) === type : node.type.name === type) || node.type.displayName === type;
 }
 
-export function childrenEqual(a, b, lenComp) {
+function internalChildrenCompare(a, b, lenComp, isLoose) {
+  const nodeCompare = isLoose ? nodeMatches : nodeEqual;
+
   if (a === b) return true;
   if (!Array.isArray(a) && !Array.isArray(b)) {
-    return nodeEqual(a, b, lenComp);
+    return nodeCompare(a, b, lenComp);
   }
   if (!a && !b) return true;
   if (a.length !== b.length) return false;
   if (a.length === 0 && b.length === 0) return true;
   for (let i = 0; i < a.length; i += 1) {
-    if (!nodeEqual(a[i], b[i], lenComp)) return false;
+    if (!nodeCompare(a[i], b[i], lenComp)) return false;
   }
   return true;
 }
 
-export function nodeEqual(a, b, lenComp = is) {
+export function childrenMatch(a, b, lenComp) {
+  return internalChildrenCompare(a, b, lenComp, true);
+}
+
+export function childrenEqual(a, b, lenComp) {
+  return internalChildrenCompare(a, b, lenComp, false);
+}
+
+function removeNullaryReducer(acc, [key, value]) {
+  const addition = value == null ? {} : { [key]: value };
+  return assign({}, acc, addition);
+}
+
+function internalNodeCompare(a, b, lenComp, isLoose) {
   if (a === b) return true;
   if (!a || !b) return false;
   if (a.type !== b.type) return false;
-  const left = propsOfNode(a);
+
+  let left = propsOfNode(a);
+  let right = propsOfNode(b);
+  if (isLoose) {
+    left = entries(left).reduce(removeNullaryReducer, {});
+    right = entries(right).reduce(removeNullaryReducer, {});
+  }
+
   const leftKeys = Object.keys(left);
-  const right = propsOfNode(b);
   for (let i = 0; i < leftKeys.length; i += 1) {
     const prop = leftKeys[i];
     // we will check children later
@@ -110,11 +131,13 @@ export function nodeEqual(a, b, lenComp = is) {
 
   const leftHasChildren = 'children' in left;
   const rightHasChildren = 'children' in right;
+  const childCompare = isLoose ? childrenMatch : childrenEqual;
   if (leftHasChildren || rightHasChildren) {
-    if (!childrenEqual(
-        childrenToArray(left.children),
-        childrenToArray(right.children),
-        lenComp)) {
+    if (!childCompare(
+      childrenToArray(left.children),
+      childrenToArray(right.children),
+      lenComp,
+    )) {
       return false;
     }
   }
@@ -125,6 +148,14 @@ export function nodeEqual(a, b, lenComp = is) {
   }
 
   return false;
+}
+
+export function nodeMatches(a, b, lenComp = is) {
+  return internalNodeCompare(a, b, lenComp, true);
+}
+
+export function nodeEqual(a, b, lenComp = is) {
+  return internalNodeCompare(a, b, lenComp, false);
 }
 
 export function containsChildrenSubArray(match, node, subArray) {

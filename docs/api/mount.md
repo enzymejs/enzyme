@@ -89,8 +89,11 @@ Returns whether or not the current root node has the given class name or not.
 #### [`.is(selector) => Boolean`](ReactWrapper/is.md)
 Returns whether or not the current node matches a provided selector.
 
+#### [`.exists() => Boolean`](ReactWrapper/exists.md)
+Returns whether or not the current node exists.
+
 #### [`.isEmpty() => Boolean`](ReactWrapper/isEmpty.md)
-Returns whether or not the current node is empty.
+*Deprecated*: Use [.exists()](ReactWrapper/exists.md) instead.
 
 #### [`.not(selector) => ReactWrapper`](ReactWrapper/not.md)
 Remove nodes in the current wrapper that match the provided selector. (inverse of `.filter()`)
@@ -121,6 +124,12 @@ Returns a static HTML rendering of the current node.
 
 #### [`.get(index) => ReactElement`](ReactWrapper/get.md)
 Returns the node at the provided index of the current wrapper.
+
+#### [`.getNode() => ReactElement`](ReactWrapper/getNode.md)
+Returns the wrapper's underlying node.
+
+#### [`.getNodes() => Array<ReactElement>`](ReactWrapper/getNodes.md)
+Returns the wrapper's underlying nodes.
 
 #### [`.getDOMNode() => DOMComponent`](ReactWrapper/getDOMNode.md)
 Returns the outer most DOMComponent of the current wrapper.

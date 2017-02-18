@@ -9,6 +9,7 @@ import {
   coercePropValue,
   getNode,
   nodeEqual,
+  nodeMatches,
   isPseudoClassSelector,
   propFromEvent,
   SELECTOR,
@@ -21,7 +22,6 @@ import { REACT013 } from '../src/version';
 describe('Utils', () => {
 
   describeWithDOM('getNode', () => {
-
     it('should return a DOMNode when a DOMComponent is given', () => {
       const div = mount(<div />).getNode();
       expect(getNode(div)).to.be.instanceOf(window.HTMLElement);
@@ -45,27 +45,21 @@ describe('Utils', () => {
   });
 
   describe('nodeEqual', () => {
-
     it('should match empty elements of same tag', () => {
-
       expect(nodeEqual(
         <div />,
         <div />,
       )).to.equal(true);
-
     });
 
     it('should not match empty elements of different type', () => {
-
       expect(nodeEqual(
         <div />,
         <nav />,
       )).to.equal(false);
-
     });
 
     it('should match basic prop types', () => {
-
       expect(nodeEqual(
         <div className="foo" />,
         <div className="foo" />,
@@ -80,11 +74,9 @@ describe('Utils', () => {
         <div id="foo" className="baz" />,
         <div id="foo" className="bar" />,
       )).to.equal(false);
-
     });
 
     it('should check children as well', () => {
-
       expect(nodeEqual(
         <div>
           <div />
@@ -118,11 +110,9 @@ describe('Utils', () => {
           <div />
         </div>,
       )).to.equal(false);
-
     });
 
     it('should test deepEquality with object props', () => {
-
       expect(nodeEqual(
         <div foo={{ a: 1, b: 2 }} />,
         <div foo={{ a: 1, b: 2 }} />,
@@ -182,11 +172,9 @@ describe('Utils', () => {
           <div />,
         )).to.equal(true);
       });
-
     });
 
     describe('basic props and children mixed', () => {
-
       it('should match equal nodes', () => {
         expect(nodeEqual(
           <div className="foo">child</div>,
@@ -229,26 +217,247 @@ describe('Utils', () => {
           <div className="foo" />,
         )).to.equal(true);
       });
+    });
+  });
+
+  describe('nodeMatches', () => {
+    function nodesMatchTwoWays(aProps, bProps, LeftTag = 'div', RightTag = 'div', matches = true) {
+      expect(nodeMatches(
+        <LeftTag {...aProps} />,
+        <RightTag {...bProps} />,
+      )).to.equal(matches);
+
+      expect(nodeMatches(
+        <LeftTag {...bProps} />,
+        <RightTag {...aProps} />,
+      )).to.equal(matches);
+    }
+    function nodesDoNotMatchTwoWays(aProps, bProps, LeftTag = 'div', RightTag = 'div') {
+      return nodesMatchTwoWays(aProps, bProps, LeftTag, RightTag, false);
+    }
+
+    it('should match empty elements of same tag, not distinguishing null/undefined/absent', () => {
+      nodesMatchTwoWays({}, {});
+      nodesMatchTwoWays({}, { id: null });
+      nodesMatchTwoWays({}, { id: undefined });
+
+      nodesMatchTwoWays({ id: null }, {});
+      nodesMatchTwoWays({ id: null }, { id: null });
+      nodesMatchTwoWays({ id: null }, { id: undefined });
+
+      nodesMatchTwoWays({ id: undefined }, {});
+      nodesMatchTwoWays({ id: undefined }, { id: null });
+      nodesMatchTwoWays({ id: undefined }, { id: undefined });
+    });
+
+    it('should not match empty elements of different type, not distinguishing null/undefined/absent', () => {
+      nodesDoNotMatchTwoWays({}, {}, 'div', 'nav');
+      nodesDoNotMatchTwoWays({}, { id: null }, 'div', 'nav');
+      nodesDoNotMatchTwoWays({}, { id: undefined }, 'div', 'nav');
+
+      nodesDoNotMatchTwoWays({ id: null }, {}, 'div', 'nav');
+      nodesDoNotMatchTwoWays({ id: null }, { id: null }, 'div', 'nav');
+      nodesDoNotMatchTwoWays({ id: null }, { id: undefined }, 'div', 'nav');
+
+      nodesDoNotMatchTwoWays({ id: undefined }, {}, 'div', 'nav');
+      nodesDoNotMatchTwoWays({ id: undefined }, { id: null }, 'div', 'nav');
+      nodesDoNotMatchTwoWays({ id: undefined }, { id: undefined }, 'div', 'nav');
+    });
+
+    it('should match basic prop types', () => {
+      nodesMatchTwoWays({ className: 'foo' }, { className: 'foo' });
+      nodesMatchTwoWays({ id: 'foo', className: 'bar' }, { id: 'foo', className: 'bar' });
+      nodesDoNotMatchTwoWays({ id: 'foo', className: 'bar' }, { id: 'foo', className: 'baz' });
+    });
+
+    it('should check children as well, not distinguishing null/undefined/absent', () => {
+      expect(nodeMatches(
+        <div>
+          <div />
+        </div>,
+        <div />,
+      )).to.equal(false);
+
+      expect(nodeMatches(
+        <div><div /></div>,
+        <div><div /></div>,
+      )).to.equal(true);
+
+      expect(nodeMatches(
+        <div><div id={null} /></div>,
+        <div><div /></div>,
+      )).to.equal(true);
+      expect(nodeMatches(
+        <div><div /></div>,
+        <div><div id={null} /></div>,
+      )).to.equal(true);
+
+      expect(nodeMatches(
+        <div><div id={undefined} /></div>,
+        <div><div /></div>,
+      )).to.equal(true);
+      expect(nodeMatches(
+        <div><div /></div>,
+        <div><div id={undefined} /></div>,
+      )).to.equal(true);
+
+      expect(nodeMatches(
+        <div><div id={undefined} /></div>,
+        <div><div id={null} /></div>,
+      )).to.equal(true);
+      expect(nodeMatches(
+        <div><div id={null} /></div>,
+        <div><div id={undefined} /></div>,
+      )).to.equal(true);
+
+      expect(nodeMatches(
+        <div>
+          <div className="foo" />
+        </div>,
+        <div>
+          <div className="foo" />
+        </div>,
+      )).to.equal(true);
+
+      expect(nodeMatches(
+        <div>
+          <div className="foo" />
+        </div>,
+        <div>
+          <div />
+        </div>,
+      )).to.equal(false);
+    });
+
+    it('should test deepEquality with object props', () => {
+      expect(nodeMatches(
+        <div foo={{ a: 1, b: 2 }} />,
+        <div foo={{ a: 1, b: 2 }} />,
+      )).to.equal(true);
+
+      expect(nodeMatches(
+        <div foo={{ a: 2, b: 2 }} />,
+        <div foo={{ a: 1, b: 2 }} />,
+      )).to.equal(false);
 
     });
 
+    describe('children props', () => {
+      it('should match equal nodes', () => {
+        expect(nodeMatches(
+          <div>child</div>,
+          <div>child</div>,
+        )).to.equal(true);
+      });
+
+      it('should not match not equal nodes', () => {
+        expect(nodeMatches(
+          <div>child</div>,
+          <div />,
+        )).to.equal(false);
+
+        expect(nodeMatches(
+          <div />,
+          <div>child</div>,
+        )).to.equal(false);
+      });
+
+      it('should skip null children', () => {
+        expect(nodeMatches(
+          <div>{null}</div>,
+          <div />,
+        )).to.equal(true);
+      });
+
+      it('should skip undefined children', () => {
+        expect(nodeMatches(
+          <div>{undefined}</div>,
+          <div />,
+        )).to.equal(true);
+      });
+
+      it('should skip empty children', () => {
+        expect(nodeMatches(
+          <div>{[]}</div>,
+          <div />,
+        )).to.equal(true);
+      });
+
+      it('should skip array of null children', () => {
+        expect(nodeMatches(
+          <div>{[null, null, null]}</div>,
+          <div />,
+        )).to.equal(true);
+      });
+    });
+
+    describe('basic props and children mixed', () => {
+      it('should match equal nodes', () => {
+        expect(nodeMatches(
+          <div className="foo">child</div>,
+          <div className="foo">child</div>,
+        )).to.equal(true);
+      });
+
+      it('should not match when basic props are not equal', () => {
+        expect(nodeMatches(
+          <div className="foo">child</div>,
+          <div className="bar">child</div>,
+        )).to.equal(false);
+
+        expect(nodeMatches(
+          <div className="foo">child</div>,
+          <div className="bar">child</div>,
+        )).to.equal(false);
+      });
+
+      it('should not match when children are not equal', () => {
+        expect(nodeMatches(
+          <div className="foo">child</div>,
+          <div className="foo">other child</div>,
+        )).to.equal(false);
+
+        expect(nodeMatches(
+          <div className="foo">child</div>,
+          <div className="foo">other child</div>,
+        )).to.equal(false);
+      });
+
+      it('should match nodes when children are different but falsy', () => {
+        expect(nodeMatches(
+          <div className="foo">{null}</div>,
+          <div className="foo" />,
+        )).to.equal(true);
+
+        expect(nodeMatches(
+          <div children={null} className="foo" />, // eslint-disable-line react/no-children-prop
+          <div className="foo" />,
+        )).to.equal(true);
+
+        expect(nodeMatches(
+          <div foo="" />,
+          <div foo={0} />,
+        )).to.equal(false);
+
+        expect(nodeMatches(
+          <div>{''}</div>,
+          <div>{0}</div>,
+        )).to.equal(false);
+      });
+    });
   });
 
   describe('propFromEvent', () => {
-
     const fn = propFromEvent;
 
     it('should work', () => {
       expect(fn('click')).to.equal('onClick');
       expect(fn('mouseEnter')).to.equal('onMouseEnter');
     });
-
   });
 
 
   describe('isPseudoClassSelector', () => {
-
-
     describe('prohibited selectors', () => {
       function isNotPseudo(selector) {
         it(selector, () => {
@@ -284,11 +493,9 @@ describe('Utils', () => {
       isPseudo('div:checked');
       isPseudo('[data-foo=":hover"]:hover');
     });
-
   });
 
   describe('selectorType', () => {
-
     it('returns CLASS_TYPE for a prefixed .', () => {
       const type = selectorType('.foo');
 
@@ -309,7 +516,6 @@ describe('Utils', () => {
       isProp('[foo]');
       isProp('[foo="bar"]');
     });
-
   });
 
   describe('coercePropValue', () => {

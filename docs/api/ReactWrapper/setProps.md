@@ -12,7 +12,7 @@ NOTE: can only be called on a wrapper instance that is also the root instance.
 
 #### Arguments
 
-1. `props` (`Object`): An object containing new props to merge in with the current state
+1. `props` (`Object`): An object containing new props to merge in with the current props
 2. `callback` (`Function` [optional]): If provided, the callback function will be executed once setProps has completed
 
 

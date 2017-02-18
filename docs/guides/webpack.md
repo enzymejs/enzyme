@@ -20,7 +20,9 @@ react/lib/ReactContext
 react/lib/ExecutionEnvironment
 ```
 
-Here is an example piece of configuration code marking these as external:
+Depending on if you are using Webpack 1 or Webpack 2 you will need different configurations.
+
+### Webpack 1
 
 ```js
 /* webpack.config.js */
@@ -33,6 +35,18 @@ externals: {
 }
 // ...
 ```
+
+### Webpack 2
+
+```js
+externals: {
+  'cheerio': 'window',
+  'react/addons': 'react',
+  'react/lib/ExecutionEnvironment': 'react',
+  'react/lib/ReactContext': 'react',
+},
+```
+
 
 ## React 0.14 Compatibility
 

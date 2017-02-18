@@ -24,6 +24,7 @@ testing your React components, you can consider using:
 * [`chai-enzyme`](https://github.com/producthunt/chai-enzyme) with Mocha/Chai.
 * [`jasmine-enzyme`](https://github.com/blainekasten/enzyme-matchers/tree/master/packages/jasmine-enzyme) with Jasmine.
 * [`jest-enzyme`](https://github.com/blainekasten/enzyme-matchers/tree/master/packages/jest-enzyme) with Jest.
+* [`should-enzyme`](https://github.com/rkotze/should-enzyme) for should.js.
 
 
 [Using Enzyme with Mocha](/docs/guides/mocha.md)
@@ -121,7 +122,6 @@ import React from 'react';
 import sinon from 'sinon';
 import { mount } from 'enzyme';
 
-import MyComponent from './MyComponent';
 import Foo from './Foo';
 
 describe('<Foo />', () => {

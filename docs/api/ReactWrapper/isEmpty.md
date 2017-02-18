@@ -1,4 +1,5 @@
 # `.isEmpty() => Boolean`
+**Deprecated**: Use [.exists()](exists.md) instead.
 
 Returns whether or not the current node is empty.
 

@@ -1815,13 +1815,16 @@ describe('shallow', () => {
   });
 
   describe('.parents([selector])', () => {
-    it('should return an array of current nodes ancestors', () => {
+    it('should return an array of current node’s ancestors', () => {
       const wrapper = shallow(
         <div className="bax">
           <div className="foo">
             <div className="bar">
               <div className="baz" />
             </div>
+          </div>
+          <div className="qux">
+            <div className="qoo" />
           </div>
         </div>,
       );
@@ -1832,7 +1835,6 @@ describe('shallow', () => {
       expect(parents.at(0).hasClass('bar')).to.equal(true);
       expect(parents.at(1).hasClass('foo')).to.equal(true);
       expect(parents.at(2).hasClass('bax')).to.equal(true);
-
     });
 
     it('should work for non-leaf nodes as well', () => {
@@ -2502,12 +2504,47 @@ describe('shallow', () => {
   });
 
   describe('.isEmpty()', () => {
-    it('should return true iff wrapper is empty', () => {
+    let warningStub;
+    let fooNode;
+    let missingNode;
+
+    beforeEach(() => {
+      warningStub = sinon.stub(console, 'warn');
       const wrapper = shallow(
         <div className="foo" />,
       );
-      expect(wrapper.find('.bar').isEmpty()).to.equal(true);
-      expect(wrapper.find('.foo').isEmpty()).to.equal(false);
+      fooNode = wrapper.find('.foo');
+      missingNode = wrapper.find('.missing');
+    });
+    afterEach(() => {
+      warningStub.restore();
+    });
+
+    it('should display a deprecation warning', () => {
+      fooNode.isEmpty();
+      expect(warningStub.calledWith('Enzyme::Deprecated method isEmpty() called, use exists() instead.')).to.equal(true);
+    });
+
+    it('calls exists() instead', () => {
+      const existsSpy = sinon.spy();
+      fooNode.exists = existsSpy;
+      fooNode.isEmpty();
+      expect(existsSpy.called).to.equal(true);
+    });
+
+    it('should return true if wrapper is empty', () => {
+      expect(fooNode.isEmpty()).to.equal(false);
+      expect(missingNode.isEmpty()).to.equal(true);
+    });
+  });
+
+  describe('.exists()', () => {
+    it('should return true if node exists in wrapper', () => {
+      const wrapper = shallow(
+        <div className="foo" />,
+      );
+      expect(wrapper.find('.bar').exists()).to.equal(false);
+      expect(wrapper.find('.foo').exists()).to.equal(true);
     });
   });
 
@@ -2855,8 +2892,11 @@ describe('shallow', () => {
         }
 
         const wrapper = shallow(<Foo foo="bar" />, { lifecycleExperimental: true });
+        expect(wrapper.instance().props.foo).to.equal('bar');
         wrapper.setProps({ foo: 'baz' });
+        expect(wrapper.instance().props.foo).to.equal('baz');
         wrapper.setProps({ foo: 'bax' });
+        expect(wrapper.instance().props.foo).to.equal('bax');
         expect(spy.args).to.deep.equal([
           ['render'],
           ['componentWillReceiveProps'],
@@ -3043,7 +3083,9 @@ describe('shallow', () => {
           }
         }
         const wrapper = shallow(<Foo />, { lifecycleExperimental: true });
+        expect(wrapper.instance().state.foo).to.equal('bar');
         wrapper.setState({ foo: 'baz' });
+        expect(wrapper.instance().state.foo).to.equal('baz');
         expect(spy.args).to.deep.equal([['render'], ['shouldComponentUpdate']]);
       });
 
@@ -3145,7 +3187,9 @@ describe('shallow', () => {
             lifecycleExperimental: true,
           },
         );
+        expect(wrapper.instance().context.foo).to.equal('bar');
         wrapper.setContext({ foo: 'baz' });
+        expect(wrapper.instance().context.foo).to.equal('baz');
         expect(spy.args).to.deep.equal([
           [
             'render',
@@ -3503,6 +3547,7 @@ describe('shallow', () => {
       expect(spy1.callCount).to.equal(0);
       expect(spy2.callCount).to.equal(0);
     });
+
     it('should match on a single node that looks like a rendered one', () => {
       const spy1 = sinon.spy();
       const spy2 = sinon.spy();
@@ -3533,6 +3578,7 @@ describe('shallow', () => {
       expect(spy1.callCount).to.equal(0);
       expect(spy2.callCount).to.equal(0);
     });
+
     it('should not match on a single node that doesn\'t looks like a rendered one', () => {
       const spy1 = sinon.spy();
       const spy2 = sinon.spy();
@@ -3549,18 +3595,42 @@ describe('shallow', () => {
         <div onClick={spy2}>Au revoir le monde</div>,
       )).to.equal(false);
     });
+
+    it('should not differentiate between absence, null, or undefined', () => {
+      const wrapper = shallow((
+        <div>
+          <div className="a" id={null} />
+          <div className="b" id={undefined} />
+          <div className="c" />
+        </div>
+      ));
+
+      expect(wrapper.containsMatchingElement(<div />)).to.equal(true);
+
+      expect(wrapper.containsMatchingElement(<div className="a" />)).to.equal(true);
+      expect(wrapper.containsMatchingElement(<div className="a" id={null} />)).to.equal(true);
+      expect(wrapper.containsMatchingElement(<div className="a" id={undefined} />)).to.equal(true);
+
+      expect(wrapper.containsMatchingElement(<div className="b" />)).to.equal(true);
+      expect(wrapper.containsMatchingElement(<div className="b" id={null} />)).to.equal(true);
+      expect(wrapper.containsMatchingElement(<div className="b" id={undefined} />)).to.equal(true);
+
+      expect(wrapper.containsMatchingElement(<div className="c" />)).to.equal(true);
+      expect(wrapper.containsMatchingElement(<div className="c" id={null} />)).to.equal(true);
+      expect(wrapper.containsMatchingElement(<div className="c" id={undefined} />)).to.equal(true);
+    });
   });
 
   describe('.containsAllMatchingElements(nodes)', () => {
     it('should match on an array of nodes that all looks like one of rendered nodes', () => {
       const spy1 = sinon.spy();
       const spy2 = sinon.spy();
-      const wrapper = shallow(
+      const wrapper = shallow((
         <div>
           <div onClick={spy1} style={{ fontSize: 12, color: 'red' }}>Hello World</div>
           <div onClick={spy2} style={{ fontSize: 13, color: 'blue' }}>Goodbye World</div>
-        </div>,
-      );
+        </div>
+      ));
       expect(wrapper.containsAllMatchingElements([
         <div>Hello World</div>,
         <div>Goodbye World</div>,
@@ -3596,6 +3666,7 @@ describe('shallow', () => {
       expect(spy1.callCount).to.equal(0);
       expect(spy2.callCount).to.equal(0);
     });
+
     it('should not match on nodes that doesn\'t all looks like one of rendered nodes', () => {
       const spy1 = sinon.spy();
       const spy2 = sinon.spy();
@@ -3808,11 +3879,18 @@ describe('shallow', () => {
         return <RendersDOM />;
       }
     }
+    WrapsRendersDOM.contextTypes = { foo: React.PropTypes.string };
     class DoubleWrapsRendersDOM extends React.Component {
       render() {
         return <WrapsRendersDOM />;
       }
     }
+    class ContextWrapsRendersDOM extends React.Component {
+      render() {
+        return <WrapsRendersDOM />;
+      }
+    }
+    ContextWrapsRendersDOM.contextTypes = { foo: React.PropTypes.string };
 
     it('throws on a DOM node', () => {
       const wrapper = shallow(<RendersDOM />);
@@ -3848,6 +3926,17 @@ describe('shallow', () => {
 
       const underwater = wrapper.dive();
       expect(underwater.is(RendersDOM)).to.equal(true);
+    });
+
+    it('should merge and pass options through', () => {
+      const wrapper = shallow(<ContextWrapsRendersDOM />, { context: { foo: 'hello' } });
+      expect(wrapper.context()).to.deep.equal({ foo: 'hello' });
+
+      let underwater = wrapper.dive();
+      expect(underwater.context()).to.deep.equal({ foo: 'hello' });
+
+      underwater = wrapper.dive({ context: { foo: 'enzyme!' } });
+      expect(underwater.context()).to.deep.equal({ foo: 'enzyme!' });
     });
   });
 

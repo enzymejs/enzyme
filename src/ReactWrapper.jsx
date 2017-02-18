@@ -12,6 +12,7 @@ import {
   parentsOfInst,
   buildInstPredicate,
   instEqual,
+  instMatches,
   treeFilter,
   getNode,
   internalInstanceOrComponent,
@@ -29,7 +30,6 @@ import {
   typeOfNode,
   displayNameOfNode,
   ITERATOR_SYMBOL,
-  isFunctionalComponent,
 } from './Utils';
 import {
   debugInsts,
@@ -139,13 +139,7 @@ class ReactWrapper {
    * @returns {DOMComponent}
    */
   getDOMNode() {
-    return this.single('getDOMNode', (n) => {
-      if (isFunctionalComponent(n)) {
-        throw new TypeError('Method “getDOMNode” cannot be used on functional components.');
-      }
-
-      return findDOMNode(n);
-    });
+    return this.single('getDOMNode', findDOMNode);
   }
 
   /**
@@ -318,7 +312,7 @@ class ReactWrapper {
    * @returns {Boolean}
    */
   matchesElement(node) {
-    return this.single('matchesElement', () => instEqual(node, this.getNode(), (a, b) => a <= b));
+    return this.single('matchesElement', () => instMatches(node, this.getNode(), (a, b) => a <= b));
   }
 
   /**
@@ -357,7 +351,7 @@ class ReactWrapper {
    * @returns {Boolean}
    */
   containsMatchingElement(node) {
-    const predicate = other => instEqual(node, other, (a, b) => a <= b);
+    const predicate = other => instMatches(node, other, (a, b) => a <= b);
     return findWhereUnwrapped(this, predicate).length > 0;
   }
 
@@ -380,7 +374,7 @@ class ReactWrapper {
    * @returns {Boolean}
    */
   containsAllMatchingElements(nodes) {
-    const invertedEquals = (n1, n2) => instEqual(n2, n1, (a, b) => a <= b);
+    const invertedEquals = (n1, n2) => instMatches(n2, n1, (a, b) => a <= b);
     const predicate = other => containsChildrenSubArray(invertedEquals, other, nodes);
     return findWhereUnwrapped(this, predicate).length > 0;
   }
@@ -627,7 +621,7 @@ class ReactWrapper {
    */
   parents(selector) {
     const allParents = this.wrap(
-        this.single('parents', n => parentsOfInst(n, this.root.getNode())),
+      this.single('parents', n => parentsOfInst(n, this.root.getNode())),
     );
     return selector ? allParents.filter(selector) : allParents;
   }
@@ -885,12 +879,23 @@ class ReactWrapper {
   }
 
   /**
-   * Returns true if the current wrapper has no nodes. False otherwise.
+   * Delegates to exists()
    *
    * @returns {boolean}
    */
   isEmpty() {
-    return this.length === 0;
+    // eslint-disable-next-line no-console
+    console.warn('Enzyme::Deprecated method isEmpty() called, use exists() instead.');
+    return !this.exists();
+  }
+
+  /**
+   * Returns true if the current wrapper has nodes. False otherwise.
+   *
+   * @returns {boolean}
+   */
+  exists() {
+    return this.length > 0;
   }
 
   /**

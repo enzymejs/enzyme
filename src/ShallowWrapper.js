@@ -3,10 +3,12 @@ import flatten from 'lodash/flatten';
 import unique from 'lodash/uniq';
 import compact from 'lodash/compact';
 import cheerio from 'cheerio';
+import assign from 'object.assign';
 
 import ComplexSelector from './ComplexSelector';
 import {
   nodeEqual,
+  nodeMatches,
   containsChildrenSubArray,
   propFromEvent,
   withSetStateAllowed,
@@ -228,6 +230,9 @@ class ShallowWrapper {
               instance.componentDidUpdate(prevProps, state, prevContext);
             }
             this.update();
+          // If it doesn't need to rerender, update only its props.
+          } else if (props) {
+            instance.props = props;
           }
           if (originalComponentWillReceiveProps) {
             instance.componentWillReceiveProps = originalComponentWillReceiveProps;
@@ -354,7 +359,7 @@ class ShallowWrapper {
    * @returns {Boolean}
    */
   containsMatchingElement(node) {
-    const predicate = other => nodeEqual(node, other, (a, b) => a <= b);
+    const predicate = other => nodeMatches(node, other, (a, b) => a <= b);
     return findWhereUnwrapped(this, predicate).length > 0;
   }
 
@@ -378,7 +383,7 @@ class ShallowWrapper {
    * @returns {Boolean}
    */
   containsAllMatchingElements(nodes) {
-    const invertedEquals = (n1, n2) => nodeEqual(n2, n1, (a, b) => a <= b);
+    const invertedEquals = (n1, n2) => nodeMatches(n2, n1, (a, b) => a <= b);
     const predicate = other => containsChildrenSubArray(invertedEquals, other, nodes);
     return findWhereUnwrapped(this, predicate).length > 0;
   }
@@ -440,7 +445,7 @@ class ShallowWrapper {
    * @returns {Boolean}
    */
   matchesElement(node) {
-    return this.single('matchesElement', () => nodeEqual(node, this.getNode(), (a, b) => a <= b));
+    return this.single('matchesElement', () => nodeMatches(node, this.getNode(), (a, b) => a <= b));
   }
 
   /**
@@ -942,12 +947,23 @@ class ShallowWrapper {
   }
 
   /**
-   * Returns true if the current wrapper has no nodes. False otherwise.
+   * Delegates to exists()
    *
    * @returns {boolean}
    */
   isEmpty() {
-    return this.length === 0;
+    // eslint-disable-next-line no-console
+    console.warn('Enzyme::Deprecated method isEmpty() called, use exists() instead.');
+    return !this.exists();
+  }
+
+  /**
+   * Returns true if the current wrapper has nodes. False otherwise.
+   *
+   * @returns {boolean}
+   */
+  exists() {
+    return this.length > 0;
   }
 
   /**
@@ -1010,7 +1026,7 @@ class ShallowWrapper {
    * @param options object
    * @returns {ShallowWrapper}
    */
-  dive(options) {
+  dive(options = {}) {
     const name = 'dive';
     return this.single(name, (n) => {
       if (isDOMComponentElement(n)) {
@@ -1019,7 +1035,7 @@ class ShallowWrapper {
       if (!isCustomComponentElement(n)) {
         throw new TypeError(`ShallowWrapper::${name}() can only be called on components`);
       }
-      return new ShallowWrapper(n, null, options);
+      return new ShallowWrapper(n, null, assign({}, this.options, options));
     });
   }
 }

@@ -1910,6 +1910,12 @@ describeWithDOM('mount', () => {
       expect(children.at(1).hasClass('baz')).to.equal(true);
     });
 
+    it('should not attempt to get an instance for text nodes', () => {
+      const wrapper = mount(<div>B<span />C</div>);
+      const children = wrapper.children();
+      expect(children.length).to.equal(1);
+    });
+
     describeIf(!REACT013, 'stateless function components', () => {
       it('should handle mixed children with and without arrays', () => {
         const Foo = props => (
@@ -1950,13 +1956,16 @@ describeWithDOM('mount', () => {
   });
 
   describe('.parents([selector])', () => {
-    it('should return an array of current nodes ancestors', () => {
+    it('should return an array of current node’s ancestors', () => {
       const wrapper = mount(
         <div className="bax">
           <div className="foo">
             <div className="bar">
               <div className="baz" />
             </div>
+          </div>
+          <div className="qux">
+            <div className="qoo" />
           </div>
         </div>,
       );
@@ -2106,7 +2115,21 @@ describeWithDOM('mount', () => {
       });
     });
 
-    context('When using a Composite component', () => {
+    describeIf(!REACT013, 'with stateless components', () => {
+      it('should return whether or not node has a certain class', () => {
+        const Foo = () => <div className="foo bar baz some-long-string FoOo" />;
+        const wrapper = mount(<Foo />);
+
+        expect(wrapper.hasClass('foo')).to.equal(true);
+        expect(wrapper.hasClass('bar')).to.equal(true);
+        expect(wrapper.hasClass('baz')).to.equal(true);
+        expect(wrapper.hasClass('some-long-string')).to.equal(true);
+        expect(wrapper.hasClass('FoOo')).to.equal(true);
+        expect(wrapper.hasClass('doesnt-exist')).to.equal(false);
+      });
+    });
+
+    context('When using a Composite class component', () => {
       it('should return whether or not node has a certain class', () => {
         class Foo extends React.Component {
           render() {
@@ -2121,6 +2144,42 @@ describeWithDOM('mount', () => {
         expect(wrapper.hasClass('some-long-string')).to.equal(true);
         expect(wrapper.hasClass('FoOo')).to.equal(true);
         expect(wrapper.hasClass('doesnt-exist')).to.equal(false);
+      });
+    });
+
+    context('When using nested composite components', () => {
+      it('should return whether or not node has a certain class', () => {
+        class Foo extends React.Component {
+          render() {
+            return (<div className="foo bar baz some-long-string FoOo" />);
+          }
+        }
+        class Bar extends React.Component {
+          render() {
+            return <Foo />;
+          }
+        }
+        const wrapper = mount(<Bar />);
+
+        expect(wrapper.hasClass('foo')).to.equal(true);
+        expect(wrapper.hasClass('bar')).to.equal(true);
+        expect(wrapper.hasClass('baz')).to.equal(true);
+        expect(wrapper.hasClass('some-long-string')).to.equal(true);
+        expect(wrapper.hasClass('FoOo')).to.equal(true);
+        expect(wrapper.hasClass('doesnt-exist')).to.equal(false);
+      });
+    });
+
+    context('When using a Composite component that renders null', () => {
+      it('should return whether or not node has a certain class', () => {
+        class Foo extends React.Component {
+          render() {
+            return null;
+          }
+        }
+        const wrapper = mount(<Foo />);
+
+        expect(wrapper.hasClass('foo')).to.equal(false);
       });
     });
   });
@@ -2461,12 +2520,47 @@ describeWithDOM('mount', () => {
   });
 
   describe('.isEmpty()', () => {
-    it('should return true iff wrapper is empty', () => {
+    let warningStub;
+    let fooNode;
+    let missingNode;
+
+    beforeEach(() => {
+      warningStub = sinon.stub(console, 'warn');
       const wrapper = mount(
         <div className="foo" />,
       );
-      expect(wrapper.find('.bar').isEmpty()).to.equal(true);
-      expect(wrapper.find('.foo').isEmpty()).to.equal(false);
+      fooNode = wrapper.find('.foo');
+      missingNode = wrapper.find('.missing');
+    });
+    afterEach(() => {
+      warningStub.restore();
+    });
+
+    it('should display a deprecation warning', () => {
+      fooNode.isEmpty();
+      expect(warningStub.calledWith('Enzyme::Deprecated method isEmpty() called, use exists() instead.')).to.equal(true);
+    });
+
+    it('calls exists() instead', () => {
+      const existsSpy = sinon.spy();
+      fooNode.exists = existsSpy;
+      fooNode.isEmpty();
+      expect(existsSpy.called).to.equal(true);
+    });
+
+    it('should return true if wrapper is empty', () => {
+      expect(fooNode.isEmpty()).to.equal(false);
+      expect(missingNode.isEmpty()).to.equal(true);
+    });
+  });
+
+  describe('.exists()', () => {
+    it('should return true if node exists in wrapper', () => {
+      const wrapper = mount(
+        <div className="foo" />,
+      );
+      expect(wrapper.find('.bar').exists()).to.equal(false);
+      expect(wrapper.find('.foo').exists()).to.equal(true);
     });
   });
 
@@ -2946,6 +3040,7 @@ describeWithDOM('mount', () => {
       expect(spy1.callCount).to.equal(0);
       expect(spy2.callCount).to.equal(0);
     });
+
     it('should match on a single node that looks like a rendered one', () => {
       const spy1 = sinon.spy();
       const spy2 = sinon.spy();
@@ -2976,6 +3071,7 @@ describeWithDOM('mount', () => {
       expect(spy1.callCount).to.equal(0);
       expect(spy2.callCount).to.equal(0);
     });
+
     it('should not match on a single node that doesn\'t looks like a rendered one', () => {
       const spy1 = sinon.spy();
       const spy2 = sinon.spy();
@@ -2992,7 +3088,32 @@ describeWithDOM('mount', () => {
         <div onClick={spy2}>Au revoir le monde</div>,
       )).to.equal(false);
     });
+
+    it('should not differentiate between absence, null, or undefined', () => {
+      const wrapper = mount((
+        <div>
+          <div className="a" id={null} />
+          <div className="b" id={undefined} />
+          <div className="c" />
+        </div>
+      ));
+
+      expect(wrapper.containsMatchingElement(<div />)).to.equal(true);
+
+      expect(wrapper.containsMatchingElement(<div className="a" />)).to.equal(true);
+      expect(wrapper.containsMatchingElement(<div className="a" id={null} />)).to.equal(true);
+      expect(wrapper.containsMatchingElement(<div className="a" id={undefined} />)).to.equal(true);
+
+      expect(wrapper.containsMatchingElement(<div className="b" />)).to.equal(true);
+      expect(wrapper.containsMatchingElement(<div className="b" id={null} />)).to.equal(true);
+      expect(wrapper.containsMatchingElement(<div className="b" id={undefined} />)).to.equal(true);
+
+      expect(wrapper.containsMatchingElement(<div className="c" />)).to.equal(true);
+      expect(wrapper.containsMatchingElement(<div className="c" id={null} />)).to.equal(true);
+      expect(wrapper.containsMatchingElement(<div className="c" id={undefined} />)).to.equal(true);
+    });
   });
+
   describe('.containsAllMatchingElements(nodes)', () => {
     it('should match on an array of nodes that all looks like one of rendered nodes', () => {
       const spy1 = sinon.spy();
@@ -3212,7 +3333,7 @@ describeWithDOM('mount', () => {
         const ref = wrapper.ref('not-a-ref');
 
         expect(ref.length).to.equal(0);
-        expect(ref.isEmpty()).to.equal(true);
+        expect(ref.exists()).to.equal(false);
       });
     });
   });
@@ -3299,27 +3420,50 @@ describeWithDOM('mount', () => {
       }
     }
 
-    it('should return the outer most DOMComponent of the root wrapper', () => {
+    it('should return the outermost DOMComponent of the root wrapper', () => {
       const wrapper = mount(<Test />);
       expect(wrapper.getDOMNode()).to.have.property('className', 'outer');
     });
 
-    it('should return the outer most DOMComponent of the inner div wrapper', () => {
+    it('should return the outermost DOMComponent of the inner div wrapper', () => {
       const wrapper = mount(<Test />);
       expect(wrapper.find('.inner').getDOMNode()).to.have.property('className', 'inner');
     });
 
     it('should throw when wrapping multiple elements', () => {
       const wrapper = mount(<Test />).find('span');
-      expect(() => wrapper.getDOMNode()).to.throw(Error);
+      expect(() => wrapper.getDOMNode()).to.throw(
+        Error,
+        'Method “getDOMNode” is only meant to be run on a single node. 2 found instead.',
+      );
     });
 
     describeIf(!REACT013, 'stateless components', () => {
-      const SFC = () => (<div />);
+      const SFC = () => (
+        <div className="outer">
+          <div className="inner">
+            <span />
+            <span />
+          </div>
+        </div>
+      );
 
-      it('should throw when wrapping an SFC', () => {
+      it('should return the outermost DOMComponent of the root wrapper', () => {
         const wrapper = mount(<SFC />);
-        expect(() => wrapper.getDOMNode()).to.throw(TypeError, 'Method “getDOMNode” cannot be used on functional components.');
+        expect(wrapper.getDOMNode()).to.have.property('className', 'outer');
+      });
+
+      it('should return the outermost DOMComponent of the inner div wrapper', () => {
+        const wrapper = mount(<SFC />);
+        expect(wrapper.find('.inner').getDOMNode()).to.have.property('className', 'inner');
+      });
+
+      it('should throw when wrapping multiple elements', () => {
+        const wrapper = mount(<SFC />).find('span');
+        expect(() => wrapper.getDOMNode()).to.throw(
+          Error,
+          'Method “getDOMNode” is only meant to be run on a single node. 2 found instead.',
+        );
       });
     });
   });

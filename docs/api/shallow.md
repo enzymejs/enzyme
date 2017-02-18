@@ -91,8 +91,11 @@ Returns whether or not the current node has the given class name or not.
 #### [`.is(selector) => Boolean`](ShallowWrapper/is.md)
 Returns whether or not the current node matches a provided selector.
 
+#### [`.exists() => Boolean`](ShallowWrapper/exists.md)
+Returns whether or not the current node exists.
+
 #### [`.isEmpty() => Boolean`](ShallowWrapper/isEmpty.md)
-Returns whether or not the current node is empty.
+*Deprecated*: Use [.exists()](ShallowWrapper/exists.md) instead.
 
 #### [`.not(selector) => ShallowWrapper`](ShallowWrapper/not.md)
 Remove nodes in the current wrapper that match the provided selector. (inverse of `.filter()`)
@@ -129,6 +132,12 @@ Returns a static HTML rendering of the current node.
 
 #### [`.get(index) => ReactElement`](ShallowWrapper/get.md)
 Returns the node at the provided index of the current wrapper.
+
+#### [`.getNode() => ReactElement`](ShallowWrapper/getNode.md)
+Returns the wrapper's underlying node.
+
+#### [`.getNodes() => Array<ReactElement>`](ShallowWrapper/getNodes.md)
+Returns the wrapper's underlying nodes.
 
 #### [`.at(index) => ShallowWrapper`](ShallowWrapper/at.md)
 Returns a wrapper of the node at the provided index of the current wrapper.
