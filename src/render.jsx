@@ -1,3 +1,5 @@
+import React from 'react';
+import objectAssign from 'object.assign';
 import cheerio from 'cheerio';
 import { renderToStaticMarkup } from './react-compat';
 
@@ -11,9 +13,34 @@ import { renderToStaticMarkup } from './react-compat';
  * thus I'd like to keep this API in here even though it's not really "ours".
  *
  * @param node
+ * @param options
  * @returns {Cheerio}
  */
-export default function render(node) {
+
+function createContextWrapperForNode(node, context, childContextTypes) {
+  class ContextWrapper extends React.Component {
+    getChildContext() {
+      return context;
+    }
+    render() {
+      return node;
+    }
+  }
+  ContextWrapper.childContextTypes = childContextTypes;
+  return ContextWrapper;
+}
+
+export default function render(node, options = {}) {
+  if (options.context && (node.type.contextTypes || options.childContextTypes)) {
+    const childContextTypes = objectAssign(
+      {},
+      node.type.contextTypes || {},
+      options.childContextTypes,
+    );
+    const ContextWrapper = createContextWrapperForNode(node, options.context, childContextTypes);
+    const html = renderToStaticMarkup(<ContextWrapper />);
+    return cheerio.load(html).root();
+  }
   const html = renderToStaticMarkup(node);
   return cheerio.load(html).root();
 }
