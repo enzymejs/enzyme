@@ -11,6 +11,7 @@ import {
   treeFilter,
   pathToNode,
   getTextFromNode,
+  getNodeRefs,
 } from '../src/ShallowTraversal';
 import { describeIf } from './_helpers';
 import { REACT013 } from '../src/version';
@@ -344,6 +345,74 @@ describe('ShallowTraversal', () => {
         const result = getTextFromNode(node);
         expect(result).to.equal('<Subject />');
       });
+    });
+  });
+
+  describe('getOwnedReferencedNodes()', () => {
+    const aReactComponentRef = 'aReactComponentRef';
+    const aReactComponentChildRef = 'childrenRef';
+    const aDOMElementChildRef = 'childrenRef2';
+    const aFirstLevelRef = 'aFirstLevelRef';
+    const anUnexistingRef = 'aSillyRef';
+    const rootElementRef = 'rootElementRef';
+    const aRefOwnedByChild = 'aRefOwnedByChild';
+
+    const ComponentWithChildrenRefs = React.createClass({
+      render: () => <h1 ref={aReactComponentChildRef}>Allo</h1>,
+    });
+
+    const element = (
+      <div ref={rootElementRef}>
+        <ComponentWithChildrenRefs
+          ref={aReactComponentRef}
+          aProp="something"
+        >
+          <p ref={aRefOwnedByChild} />
+        </ComponentWithChildrenRefs>
+
+        <div ref={aFirstLevelRef}>
+          <p ref={aDOMElementChildRef} />
+        </div>
+      </div>
+    );
+
+    let stringNodes;
+
+    before(() => {
+      const refs = getNodeRefs(element);
+      stringNodes = refs.stringNodes;
+    });
+
+    const matchRefs = (nodes, ref) => nodes.filter(n => n.ref === ref);
+
+    const expectNodesToContain = (nodes, ref) => {
+      const matchingRefs = matchRefs(nodes, ref);
+      expect(matchingRefs).to.have.length.above(0);
+    };
+
+    const expectNodesToNotContain = (nodes, ref) => {
+      const matchingRefs = matchRefs(nodes, ref);
+      expect(matchingRefs).to.have.lengthOf(0);
+    };
+
+    it('contains the ref of the containing element', () => {
+      expectNodesToContain(stringNodes, rootElementRef);
+    });
+
+    it('contains a ref at first level', () => {
+      expectNodesToContain(stringNodes, aFirstLevelRef);
+    });
+
+    it('contains a ref nested under a dom element', () => {
+      expectNodesToContain(stringNodes, aDOMElementChildRef);
+    });
+
+    it('does not contain a unexisting ref', () => {
+      expectNodesToNotContain(stringNodes, anUnexistingRef);
+    });
+
+    it('does not contain a ref owned by a child React component', () => {
+      expectNodesToNotContain(stringNodes, aRefOwnedByChild);
     });
   });
 });

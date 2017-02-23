@@ -12,6 +12,9 @@ import {
   nodeHasType,
   nodeHasProperty,
 } from './Utils';
+import {
+  isDOMComponentElement,
+} from './react-compat';
 
 
 export function childrenOfNode(node) {
@@ -151,3 +154,51 @@ export function getTextFromNode(node) {
     .join('')
     .replace(/\s+/, ' ');
 }
+
+const getOwnedReferenceNodes = (node, isRootNode) => {
+  const referencedNodes = [];
+
+  if (!node) {
+    return referencedNodes;
+  }
+
+  if (node.ref) {
+    referencedNodes.push(node);
+  }
+
+  if (isDOMComponentElement(node) || isRootNode) {
+    const children = childrenOfNode(node);
+
+    children.forEach((c) => {
+      const recursiveNodes = getOwnedReferenceNodes(c);
+      referencedNodes.push(...recursiveNodes);
+    });
+  }
+
+  return referencedNodes;
+};
+
+export const getNodeRefs = (node) => {
+  const callbackNodes = [];
+  const stringNodes = [];
+
+  const referencedNodes = getOwnedReferenceNodes(node, true);
+
+  referencedNodes.forEach((n) => {
+    switch (typeof n.ref) {
+      case 'function':
+        callbackNodes.push(n);
+        break;
+      case 'string':
+        stringNodes.push(n);
+        break;
+      default:
+        throw new Error(`${n.ref} is an invalid ref. Valid refs are string or function type`);
+    }
+  });
+
+  return {
+    callbackNodes,
+    stringNodes,
+  };
+};

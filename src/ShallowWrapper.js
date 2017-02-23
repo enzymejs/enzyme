@@ -30,6 +30,7 @@ import {
   parentsOfNode,
   treeFilter,
   buildPredicate,
+  getNodeRefs,
 } from './ShallowTraversal';
 import {
   createShallowRenderer,
@@ -104,6 +105,62 @@ class ShallowWrapper {
     }
     this.options = options;
     this.complexSelector = new ComplexSelector(buildPredicate, findWhereUnwrapped, childrenOfNode);
+
+    if (isCustomComponentElement(this.unrendered)) {
+      this.attachRefListener();
+    }
+  }
+
+  attachRefListener() {
+    const instance = this.instance();
+    const oldComponentDidUpdate = instance.componentDidUpdate;
+
+    instance.componentDidUpdate = (...args) => {
+      this.clearRefs();
+      this.attachRefs(instance);
+      if (typeof oldComponentDidUpdate === 'function') {
+        oldComponentDidUpdate.call(instance, ...args);
+      }
+    };
+
+    this.attachRefs(instance);
+  }
+
+  clearRefs() {
+    const instance = this.instance();
+    instance.refs = [];
+  }
+
+  attachRefs(componentInstance) {
+    /* eslint-disable no-underscore-dangle */
+    const internalInstance = componentInstance._reactInternalInstance;
+    const renderedOutput = internalInstance._renderedComponent._renderedOutput;
+    /* eslint-enable no-underscore-dangle */
+
+    const { callbackNodes, stringNodes } = getNodeRefs(renderedOutput);
+
+    this.attachCallbackRefs(callbackNodes);
+    this.attachStringRefs(stringNodes);
+  }
+
+
+  attachCallbackRefs(nodes) {
+    nodes.map(n => n.ref.call(this, n));
+  }
+
+  attachStringRefs(nodes) {
+    const refs = nodes.reduce(
+      (refObject, n) => {
+        if (refObject[n.ref]) {
+          throw new Error('There is more than one component own by the tree root with the same ref string');
+        }
+
+        return assign({}, refObject, { [n.ref]: n });
+      },
+      {},
+    );
+
+    this.instance().refs = refs;
   }
 
   /**
