@@ -18,6 +18,7 @@ Organizations
  - [nteract](https://nteract.io)
  - [Brave](https://brave.com)
  - [Simple](https://github.com/simplefinance)
+ - [Grab](https://github.com/grab)
 
 Projects
 ----------
