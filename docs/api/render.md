@@ -19,7 +19,6 @@ constructors.
 import { render } from 'enzyme';
 
 describe('<Foo />', () => {
-
   it('renders three `.foo-bar`s', () => {
     const wrapper = render(<Foo />);
     expect(wrapper.find('.foo-bar')).to.have.length(3);
@@ -30,5 +29,19 @@ describe('<Foo />', () => {
     expect(wrapper.text()).to.contain("unique");
   });
 
+  it('can pass in context', () => {
+    const SimpleComponent = React.createClass({
+      contextTypes: {
+        name: React.PropTypes.string,
+      },
+      render() {
+        return <div>{this.context.name}</div>;
+      },
+    });
+
+    const context = { name: 'foo' };
+    const wrapper = render(<SimpleComponent />, { context });
+    expect(wrapper.text()).to.equal('foo');
+  });
 });
 ```
