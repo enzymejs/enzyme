@@ -19,6 +19,7 @@ Organizations
  - [Brave](https://brave.com)
  - [Simple](https://github.com/simplefinance)
  - [Grab](https://github.com/grab)
+ - [Megalytic](https://megalytic.com/)
 
 Projects
 ----------
