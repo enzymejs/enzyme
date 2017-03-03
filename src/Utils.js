@@ -134,8 +134,8 @@ function internalNodeCompare(a, b, lenComp, isLoose) {
   const childCompare = isLoose ? childrenMatch : childrenEqual;
   if (leftHasChildren || rightHasChildren) {
     if (!childCompare(
-      childrenToArray(left.children),
-      childrenToArray(right.children),
+      childrenToSimplifiedArray(left.children),
+      childrenToSimplifiedArray(right.children),
       lenComp,
     )) {
       return false;
@@ -166,6 +166,27 @@ export function containsChildrenSubArray(match, node, subArray) {
 
 function arraysEqual(match, left, right) {
   return left.length === right.length && left.every((el, i) => match(el, right[i]));
+}
+
+export function childrenToSimplifiedArray(nodeChildren) {
+  const childrenArray = childrenToArray(nodeChildren);
+  const simplifiedArray = [];
+
+  for (let i = 0; i < childrenArray.length; i += 1) {
+    const child = childrenArray[i];
+    const previousChild = simplifiedArray.pop();
+
+    if (previousChild === undefined) {
+      simplifiedArray.push(child);
+    } else if (isTextualNode(child) && isTextualNode(previousChild)) {
+      simplifiedArray.push(previousChild + child);
+    } else {
+      simplifiedArray.push(previousChild);
+      simplifiedArray.push(child);
+    }
+  }
+
+  return simplifiedArray;
 }
 
 function childrenOfNode(node) {
