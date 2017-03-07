@@ -40,13 +40,13 @@ import Foo from '../path/to/foo'
 
 test('shallow', t => {
   const wrapper = shallow(<Foo />)
-  t.is(wrapper.contains(<span>Foo</span>), true)
+  t.true(wrapper.contains(<span>Foo</span>))
 })
 
 test('mount', t => {
   const wrapper = mount(<Foo />)
   const fooInner = wrapper.find('.foo-inner')
-  t.is(fooInner.is('.foo-inner'), true)
+  t.true(fooInner.is('.foo-inner'))
 })
 ```
 
