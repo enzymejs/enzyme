@@ -76,6 +76,7 @@ Basic Usage
 
 ```javascript
 import React from 'react';
+import { expect } from 'chai';
 import { shallow } from 'enzyme';
 import sinon from 'sinon';
 
@@ -122,6 +123,7 @@ Read the full [API Documentation](/docs/api/shallow.md)
 ```javascript
 import React from 'react';
 import sinon from 'sinon';
+import { expect } from 'chai';
 import { mount } from 'enzyme';
 
 import Foo from './Foo';
@@ -159,6 +161,7 @@ Read the full [API Documentation](/docs/api/mount.md)
 
 ```javascript
 import React from 'react';
+import { expect } from 'chai';
 import { render } from 'enzyme';
 
 import Foo from './Foo';
