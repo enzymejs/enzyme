@@ -1,7 +1,7 @@
 # `.containsAnyMatchingElements(nodes) => Boolean`
 
 Returns whether or not one of the given react elements is matching on element in the shallow render tree.
-It will determine if an element in the wrapper __looks like__ one of the expected element by checking if all props of the expected element are present on the wrappers element and equals to each other.
+It will determine if an element in the wrapper __looks like__ one of the expected elements by checking if all props of the expected element are present on the wrappers element and equal to each other. Props present on the wrapper root node but not supplied in the expected element will be ignored.
 
 
 #### Arguments
