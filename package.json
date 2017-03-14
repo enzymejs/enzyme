@@ -60,6 +60,8 @@
     "object.assign": "^4.0.4",
     "object.entries": "^1.0.3",
     "object.values": "^1.0.3",
+    "react": "16.0.0-alpha.4",
+    "react-test-renderer": "16.0.0-alpha.3",
     "uuid": "^2.0.3"
   },
   "devDependencies": {
@@ -81,6 +83,7 @@
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-jsx-a11y": "^2.2.3",
     "eslint-plugin-react": "^6.7.1",
+    "flow": "^0.2.3",
     "gitbook-cli": "^1.0.1",
     "in-publish": "^2.0.0",
     "istanbul": "^1.0.0-alpha.2",
