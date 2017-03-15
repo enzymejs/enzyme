@@ -1,7 +1,7 @@
 # `.containsMatchingElement(node) => Boolean`
 
 Returns whether or not a given react element matches one element in the render tree.
-It will determine if an element in the wrapper matches the expected element by checking if all props of the expected element are present on the wrapper's element and equals to each other.
+It will determine if an element in the wrapper matches the expected element by checking if all props supplied in the expected element are present on the wrapper's element and equal to each other. Props present on the wrapper element but not supplied in the expected element will be ignored.
 
 
 #### Arguments
