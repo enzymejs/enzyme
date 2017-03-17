@@ -64,11 +64,47 @@ function filterWhereUnwrapped(wrapper, predicate) {
 }
 
 /**
+ * Ensure options passed to ShallowWrapper are valid. Throws otherwise.
+ * @param {Object} options
+ */
+function validateOptions(options) {
+  const { lifecycleExperimental, disableLifecycleMethods } = options;
+  if (
+    typeof lifecycleExperimental !== 'undefined' &&
+    typeof lifecycleExperimental !== 'boolean'
+  ) {
+    throw new Error(
+      'lifecycleExperimental must be either true or false if provided',
+    );
+  }
+
+  if (
+    typeof disableLifecycleMethods !== 'undefined' &&
+    typeof disableLifecycleMethods !== 'boolean'
+  ) {
+    throw new Error(
+      'disableLifecycleMethods must be either true or false if provided',
+    );
+  }
+
+  if (
+    lifecycleExperimental != null &&
+    disableLifecycleMethods != null &&
+    lifecycleExperimental === disableLifecycleMethods
+  ) {
+    throw new Error(
+      'lifecycleExperimental and disableLifecycleMethods cannot be set to the same value',
+    );
+  }
+}
+
+/**
  * @class ShallowWrapper
  */
 class ShallowWrapper {
 
   constructor(nodes, root, options = {}) {
+    validateOptions(options);
     if (!root) {
       this.root = this;
       this.unrendered = nodes;
