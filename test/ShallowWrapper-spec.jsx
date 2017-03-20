@@ -1022,7 +1022,9 @@ describe('shallow', () => {
             <a
               className={`clicks-${this.state.count}`}
               onClick={this.incrementCount}
-            >foo</a>
+            >
+              foo
+            </a>
           );
         }
       }
