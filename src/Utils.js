@@ -221,6 +221,9 @@ export function withSetStateAllowed(fn) {
   }
   fn();
   if (cleanup) {
+    // This works around a bug in node/jest in that developers aren't able to
+    // delete things from global when running in a node vm.
+    global.document = undefined;
     delete global.document;
   }
 }
