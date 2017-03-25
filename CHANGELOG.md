@@ -1,17 +1,32 @@
 # Change Log
 
+## 2.8.0
+
+### New Stuff
+
+- add disableLifecycleMethods for shallow ([#789](https://github.com/airbnb/enzyme/pull/789))
+- Match children before and after interpolation ([#512](https://github.com/airbnb/enzyme/pull/512))
+- Supporting passing context to static rendering ([#429](https://github.com/airbnb/enzyme/pull/429))
+
+
+### Fixes
+
+- Fix an issue w/ cleaning up global.document ([#855](https://github.com/airbnb/enzyme/pull/855))
+- Update props when shouldComponentUpdate returns `false` and `lifecycleExperimental` is on ([#807](https://github.com/airbnb/enzyme/pull/807))
+- Properly pass along options in `dive` ([#771](https://github.com/airbnb/enzyme/pull/771))
+
 ## 2.7.1 (January 22, 2017)
 
 ### Fixes
 
-- `mount`: Fix bug from ([#677](https://github.com/airbnb/enzyme/pull/677) ([#680](https://github.com/airbnb/enzyme/pull/680)
-- `mount`: ignore text nodes in childrenOfInst ([#604](https://github.com/airbnb/enzyme/pull/604)
+- `mount`: Fix bug from ([#677](https://github.com/airbnb/enzyme/pull/677) ([#680](https://github.com/airbnb/enzyme/pull/680))
+- `mount`: ignore text nodes in childrenOfInst ([#604](https://github.com/airbnb/enzyme/pull/604))
 
 ### Documentation
 
-- Update Docs for .getNode and .getNodes ([#743](https://github.com/airbnb/enzyme/pull/743)
+- Update Docs for .getNode and .getNodes ([#743](https://github.com/airbnb/enzyme/pull/743))
 - Add a link for `ShallowWrapper#dive()` ([#759](https://github.com/airbnb/enzyme/pull/759)
-- Fix alphabetical order of API lists ([#761](https://github.com/airbnb/enzyme/pull/761)
+- Fix alphabetical order of API lists ([#761](https://github.com/airbnb/enzyme/pull/761))
 
 ## 2.7.0 (December 21, 2016)
 
@@ -23,7 +38,7 @@
 
 ### Fixes
 
-- `mount`: extract MountedTraversal.hasClassName from MountedTraversal.instHasClassName, which allows ReactWrapper.hasClass to bypass the !isDOMComponent(inst) call ([#677](https://github.com/airbnb/enzyme/pull/677)
+- `mount`: extract MountedTraversal.hasClassName from MountedTraversal.instHasClassName, which allows ReactWrapper.hasClass to bypass the !isDOMComponent(inst) call ([#677](https://github.com/airbnb/enzyme/pull/677))
 - `withDom`: Display a useful error when `withDom` fails to find "jsdom" ([#686](https://github.com/airbnb/enzyme/pull/686))
 - `mount`: ensure that `react-text` comment nodes don’t break `.find` ([#691](https://github.com/airbnb/enzyme/pull/691))
 - `mount`: `.parents()` now filters out sibling path trees ([#713](https://github.com/airbnb/enzyme/pull/713))
@@ -146,7 +161,7 @@
 
 - fix handling of SFC components and `.instance()` ([#359](https://github.com/airbnb/enzyme/pull/359))
 
-- reduce false positives by using argument validation for `.contains` ([#259](https://github.com/airbnb/enzyme/pull/259)) 
+- reduce false positives by using argument validation for `.contains` ([#259](https://github.com/airbnb/enzyme/pull/259))
 
 - fix equality algorithm so that non-renderable nodes are equivalent ([#192](https://github.com/airbnb/enzyme/pull/192))
 
