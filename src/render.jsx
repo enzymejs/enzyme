@@ -1,6 +1,5 @@
 import React from 'react';
 import objectAssign from 'object.assign';
-import cheerio from 'cheerio';
 import { renderToStaticMarkup } from './react-compat';
 
 /**
@@ -31,16 +30,5 @@ function createContextWrapperForNode(node, context, childContextTypes) {
 }
 
 export default function render(node, options = {}) {
-  if (options.context && (node.type.contextTypes || options.childContextTypes)) {
-    const childContextTypes = objectAssign(
-      {},
-      node.type.contextTypes || {},
-      options.childContextTypes,
-    );
-    const ContextWrapper = createContextWrapperForNode(node, options.context, childContextTypes);
-    const html = renderToStaticMarkup(<ContextWrapper />);
-    return cheerio.load(html).root();
-  }
-  const html = renderToStaticMarkup(node);
-  return cheerio.load(html).root();
+  throw new Error('cannot render() - cheerio has been removed from source')
 }
