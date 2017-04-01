@@ -234,7 +234,7 @@ export function splitSelector(selector) {
     .filter(Boolean)
     .reduce((obj, match) => assign({}, obj, { [match]: uuid.v4() }), {});
 
-  return selector
+  const splits = selector
     // step 2: replace all quoted strings with the uuid, so we don't have to properly parse them
     .replace(/[^" ]+|("[^"]*")|.*/g, x => quotedSegments[x] || x)
     // step 3: split as best we can without a proper parser
@@ -247,6 +247,13 @@ export function splitSelector(selector) {
       });
       return restoredSegment;
     });
+
+  if (splits.length === 1 && splits[0] === selector) {
+    // splitSelector expects selector to be "splittable"
+    throw new TypeError('Enzyme::Selector received what appears to be a malformed string selector');
+  }
+
+  return splits;
 }
 
 
