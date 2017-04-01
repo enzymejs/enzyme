@@ -37,6 +37,10 @@ describe('ShallowTraversal', () => {
         fn('div[title="title"][data-value="foo"]'),
       ).to.eql(['div', '[title="title"]', '[data-value="foo"]']);
     });
+
+    it('throws for malformed selectors', () => {
+      expect(() => fn('div[data-name="xyz"')).to.throw(/Enzyme::Selector received what appears to be a malformed string selector/);
+    });
   });
 
   describe('hasClassName', () => {
