@@ -1036,6 +1036,43 @@ describe('shallow', () => {
       expect(wrapper.find('.clicks-1').length).to.equal(1);
     });
 
+    it('should simulate promise events', (done) => {
+      class Foo extends React.Component {
+        constructor(props) {
+          super(props);
+          this.state = { count: 0 };
+          this.incrementCount = this.incrementCount.bind(this);
+        }
+
+        incrementCount() {
+          return new Promise((resolve) => {
+            process.nextTick(() => {
+              this.setState({ count: this.state.count + 1 }, resolve);
+            });
+          });
+        }
+
+        render() {
+          return (
+            <a
+              className={`clicks-${this.state.count}`}
+              onClick={this.incrementCount}
+            >
+              foo
+            </a>
+          );
+        }
+      }
+
+      const wrapper = shallow(<Foo />);
+
+      expect(wrapper.find('.clicks-0').length).to.equal(1);
+      wrapper.simulate('click').then(() => {
+        expect(wrapper.find('.clicks-1').length).to.equal(1);
+        done();
+      });
+    });
+
 
     it('should pass in event data', () => {
       const spy = sinon.spy();
