@@ -46,6 +46,7 @@ describe('<MyComponent />', () => {
   - `options.disableLifecycleMethods`: (`Boolean` [optional]): If set to true, `componentDidMount`
 is not called on the component, and `componentDidUpdate` is not called after
 [`setProps`](ShallowWrapper/setProps.md) and [`setContext`](ShallowWrapper/setContext.md).
+  - `options.lifecycleExperimental`: (`Boolean` [optional]): If set to true, the entire lifecycle (`componentDidMount` and `componentDidUpdate`) of the React component is called
 
 #### Returns
 
