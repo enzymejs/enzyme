@@ -412,6 +412,7 @@ export function mapNativeEventNames(event) {
     ratechange: 'rateChange',
     timeupdate: 'timeUpdate',
     volumechange: 'volumeChange',
+    beforeinput: 'beforeInput',
   };
 
   if (!REACT013) {
