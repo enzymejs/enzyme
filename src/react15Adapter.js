@@ -1,4 +1,12 @@
 import React from 'react';
+import TestUtils from 'react-addons-test-utils';
+
+class Renderer {
+  render(element) {
+    this.rendered = TestUtils.renderIntoDocument(element);
+    console.log(rendered);
+  }
+}
 
 const adapter = {
   getTargetApiVersion() {
@@ -7,7 +15,7 @@ const adapter = {
 
   createRenderer(options) {
     this.options = options;
-    return {};
+    return new Renderer();
   },
 
   nodeToElement() {
