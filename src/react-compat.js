@@ -7,7 +7,7 @@
 */
 
 import objectAssign from 'object.assign';
-import { REACT013 } from './version';
+import { REACT013, REACT155 } from './version';
 
 let TestUtils;
 let createShallowRenderer;
@@ -18,6 +18,8 @@ let childrenToArray;
 let renderWithOptions;
 let unmountComponentAtNode;
 let batchedUpdates;
+let PropTypes;
+let createClass;
 
 const React = require('react');
 
@@ -95,8 +97,13 @@ if (REACT013) {
   // to list this as a dependency in package.json and have 0.13 work properly.
   // As a result, right now this is basically an implicit dependency.
   try {
-    // eslint-disable-next-line import/no-extraneous-dependencies
-    TestUtils = require('react-addons-test-utils');
+    if (REACT155) {
+      // eslint-disable-next-line import/no-extraneous-dependencies
+      TestUtils = require('react-dom/test-utils');
+    } else {
+      // eslint-disable-next-line import/no-extraneous-dependencies
+      TestUtils = require('react-addons-test-utils');
+    }
   } catch (e) {
     // eslint-disable-next-line no-console
     console.error(
@@ -150,6 +157,16 @@ if (REACT013) {
   };
 }
 
+if (REACT155) {
+  // eslint-disable-next-line import/no-extraneous-dependencies
+  PropTypes = require('prop-types');
+  // eslint-disable-next-line import/no-extraneous-dependencies
+  createClass = require('create-react-class');
+} else {
+  PropTypes = React.PropTypes;
+  createClass = React.createClass;
+}
+
 function isDOMComponentElement(inst) {
   return React.isValidElement(inst) && typeof inst.type === 'string';
 }
@@ -185,4 +202,6 @@ export {
   renderWithOptions,
   unmountComponentAtNode,
   batchedUpdates,
+  PropTypes,
+  createClass,
 };
