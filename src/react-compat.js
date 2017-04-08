@@ -20,6 +20,7 @@ let unmountComponentAtNode;
 let batchedUpdates;
 let PropTypes;
 let createClass;
+let shallowRendererFactory;
 
 const React = require('react');
 
@@ -114,6 +115,26 @@ if (REACT013) {
     throw e;
   }
 
+  // Shallow renderer is accessible via the react-test-renderer package for React 15.5+.
+  // This is a separate package though and may not be installed.
+  try {
+    if (REACT155) {
+      // eslint-disable-next-line import/no-extraneous-dependencies
+      shallowRendererFactory = require('react-test-renderer/shallow').createRenderer;
+    } else {
+      // eslint-disable-next-line import/no-extraneous-dependencies
+      shallowRendererFactory = TestUtils.createRenderer;
+    }
+  } catch (e) {
+    // eslint-disable-next-line no-console
+    console.error(
+      'react-test-renderer is an implicit dependency in order to support react@15.5+. ' +
+      'Please add the appropriate version to your devDependencies. ' +
+      'See https://github.com/airbnb/enzyme#installation',
+    );
+    throw e;
+  }
+
   // Shallow rendering changed from 0.13 => 0.14 in such a way that
   // 0.14 now does not allow shallow rendering of native DOM elements.
   // This is mainly because the result of such a call should not realistically
@@ -122,7 +143,7 @@ if (REACT013) {
   // is essentially a replacement for `TestUtils.createRenderer` that doesn't use
   // shallow rendering when it's just a DOM element.
   createShallowRenderer = function createRendererCompatible() {
-    const renderer = TestUtils.createRenderer();
+    const renderer = shallowRendererFactory();
     const originalRender = renderer.render;
     const originalRenderOutput = renderer.getRenderOutput;
     let isDOM = false;
