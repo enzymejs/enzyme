@@ -98,6 +98,17 @@ function validateOptions(options) {
   }
 }
 
+
+function performBatchedUpdates(wrapper, fn) {
+  const renderer = wrapper.root.renderer;
+  if (renderer.unstable_batchedUpdates) {
+    // React 15.5+ exposes batching on shallow renderer itself
+    return renderer.unstable_batchedUpdates(fn);
+  }
+  // React <15.5: Fallback to ReactDOM
+  return batchedUpdates(fn);
+}
+
 /**
  * @class ShallowWrapper
  */
@@ -110,7 +121,7 @@ class ShallowWrapper {
       this.unrendered = nodes;
       this.renderer = createShallowRenderer();
       withSetStateAllowed(() => {
-        this.batchedUpdates(() => {
+        performBatchedUpdates(this, () => {
           this.renderer.render(nodes, options.context);
           const instance = this.instance();
           if (
@@ -143,13 +154,7 @@ class ShallowWrapper {
   }
 
   batchedUpdates(fn) {
-    const renderer = this.root.renderer;
-    if (renderer.unstable_batchedUpdates) {
-      // React 15.5+ exposes batching on shallow renderer itself
-      return renderer.unstable_batchedUpdates(fn);
-    }
-    // React <15.5: Fallback to ReactDOM
-    return batchedUpdates(fn);
+
   }
 
   /**
@@ -233,7 +238,7 @@ class ShallowWrapper {
         const prevContext = instance.context;
         const nextProps = props || prevProps;
         const nextContext = context || prevContext;
-        this.batchedUpdates(() => {
+        performBatchedUpdates(this, () => {
           let shouldRender = true;
           // dirty hack:
           // make sure that componentWillReceiveProps is called before shouldComponentUpdate
@@ -621,7 +626,7 @@ class ShallowWrapper {
       withSetStateAllowed(() => {
         // TODO(lmr): create/use synthetic events
         // TODO(lmr): emulate React's event propagation
-        this.batchedUpdates(() => {
+        performBatchedUpdates(this, () => {
           handler(...args);
         });
         this.root.update();
