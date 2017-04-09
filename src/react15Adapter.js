@@ -1,10 +1,11 @@
 import React from 'react';
-import TestUtils from 'react-addons-test-utils';
+
+const TestUtils = require('react-addons-test-utils');
 
 class Renderer {
   render(element) {
     this.rendered = TestUtils.renderIntoDocument(element);
-    console.log(rendered);
+    return this.rendered;
   }
 }
 
