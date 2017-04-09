@@ -64,15 +64,14 @@ If you are using `React 0.14` or `React <15.5`, in addition to `enzyme`, you wil
 you also have the following npm modules installed if they were not already:
 
 ```bash
-npm i --save-dev react-addons-test-utils
-npm i --save-dev react-dom
+npm i --save-dev react-addons-test-utils react-dom
 ```
 
 If you are using `React >=15.5`, in addition to `enzyme`, you will have to ensure that you also have
 the following npm modules installed if they were not already:
 
 ```bash
-npm i --save-dev react-dom
+npm i --save-dev react-dom create-react-class
 ```
 
 

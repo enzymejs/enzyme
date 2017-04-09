@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { expect } from 'chai';
 import sinon from 'sinon';
 
+import { createClass } from '../src/react-compat';
 import { shallow, render, ShallowWrapper } from '../src/';
 import { describeIf, itIf, itWithData, generateEmptyRenderData } from './_helpers';
 import { ITERATOR_SYMBOL, withSetStateAllowed } from '../src/Utils';
@@ -11,7 +12,7 @@ import { REACT013, REACT014, REACT15 } from '../src/version';
 describe('shallow', () => {
   describe('context', () => {
     it('can pass in context', () => {
-      const SimpleComponent = React.createClass({
+      const SimpleComponent = createClass({
         contextTypes: {
           name: PropTypes.string,
         },
@@ -26,7 +27,7 @@ describe('shallow', () => {
     });
 
     it('should not throw if context is passed in but contextTypes is missing', () => {
-      const SimpleComponent = React.createClass({
+      const SimpleComponent = createClass({
         render() {
           return <div>{this.context.name}</div>;
         },
@@ -37,7 +38,7 @@ describe('shallow', () => {
     });
 
     it('is instrospectable through context API', () => {
-      const SimpleComponent = React.createClass({
+      const SimpleComponent = createClass({
         contextTypes: {
           name: PropTypes.string,
         },
@@ -952,7 +953,7 @@ describe('shallow', () => {
   });
 
   describe('.setContext(newContext)', () => {
-    const SimpleComponent = React.createClass({
+    const SimpleComponent = createClass({
       contextTypes: {
         name: PropTypes.string,
       },
@@ -1272,7 +1273,7 @@ describe('shallow', () => {
     const emptyRenderValues = generateEmptyRenderData();
 
     itWithData(emptyRenderValues, 'when a React class component returns: ', (data) => {
-      const Foo = React.createClass({
+      const Foo = createClass({
         render() {
           return data.value;
         },
@@ -3907,15 +3908,15 @@ describe('shallow', () => {
         });
       });
 
-      describe('React.createClass', () => {
+      describe('createClass', () => {
         it('should return the name of the node', () => {
-          const Foo = React.createClass({
+          const Foo = createClass({
             displayName: 'CustomWrapper',
             render() {
               return <div />;
             },
           });
-          const Wrapper = React.createClass({
+          const Wrapper = createClass({
             render() {
               return <Foo />;
             },
@@ -3953,14 +3954,14 @@ describe('shallow', () => {
         });
       });
 
-      describe('React.createClass', () => {
+      describe('createClass', () => {
         it('should return the name of the node', () => {
-          const Foo = React.createClass({
+          const Foo = createClass({
             render() {
               return <div />;
             },
           });
-          const Wrapper = React.createClass({
+          const Wrapper = createClass({
             render() {
               return <Foo />;
             },
