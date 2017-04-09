@@ -23,7 +23,7 @@
     "react:clean": "rimraf node_modules/react node_modules/react-dom node_modules/react-addons-test-utils",
     "react:13": "rimraf node_modules/.bin/npm && npm run react:clean && npm i react@0.13 && npm install",
     "react:14": "rimraf node_modules/.bin/npm && npm run react:clean && npm i react@0.14 react-dom@0.14 react-addons-test-utils@0.14 && npm install",
-    "react:15": "rimraf node_modules/.bin/npm && npm run react:clean && npm i react@15 react-dom@15 react-addons-test-utils@15 prop-types@15 create-react-class@15 react-test-renderer@15 && npm install",
+    "react:15": "rimraf node_modules/.bin/npm && npm run react:clean && npm i react@15 react-dom@15 react-addons-test-utils@15 create-react-class@15 react-test-renderer@15 && npm install",
     "docs:clean": "rimraf _book",
     "docs:prepare": "gitbook install",
     "docs:build": "npm run docs:prepare && gitbook build",
@@ -60,6 +60,7 @@
     "object.assign": "^4.0.4",
     "object.entries": "^1.0.3",
     "object.values": "^1.0.3",
+    "prop-types": "^15.5.4",
     "uuid": "^2.0.3"
   },
   "devDependencies": {

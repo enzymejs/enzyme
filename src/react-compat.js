@@ -18,7 +18,6 @@ let childrenToArray;
 let renderWithOptions;
 let unmountComponentAtNode;
 let batchedUpdates;
-let PropTypes;
 let createClass;
 let shallowRendererFactory;
 
@@ -180,11 +179,8 @@ if (REACT013) {
 
 if (REACT155) {
   // eslint-disable-next-line import/no-extraneous-dependencies
-  PropTypes = require('prop-types');
-  // eslint-disable-next-line import/no-extraneous-dependencies
   createClass = require('create-react-class');
 } else {
-  PropTypes = React.PropTypes;
   createClass = React.createClass;
 }
 
@@ -223,6 +219,5 @@ export {
   renderWithOptions,
   unmountComponentAtNode,
   batchedUpdates,
-  PropTypes,
   createClass,
 };

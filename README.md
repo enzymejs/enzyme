@@ -73,7 +73,6 @@ the following npm modules installed if they were not already:
 
 ```bash
 npm i --save-dev react-dom
-npm i --save-dev prop-types
 ```
 
 
