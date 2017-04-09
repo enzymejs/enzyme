@@ -93,12 +93,13 @@
     "karma-sourcemap-loader": "^0.3.7",
     "karma-webpack": "^1.8.0",
     "mocha": "^3.1.2",
+    "react": "^15.5.3",
+    "react-dom": "^15.5.3",
+    "react-test-renderer": "^15.5.3",
     "rimraf": "^2.5.4",
     "safe-publish-latest": "^1.1.1",
     "sinon": "^1.17.6",
     "webpack": "^1.13.3"
   },
-  "peerDependencies": {
-    "react": "0.13.x || 0.14.x || ^15.0.0-0 || 15.x"
-  }
+  "peerDependencies": {}
 }
