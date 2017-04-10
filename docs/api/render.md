@@ -30,14 +30,14 @@ describe('<Foo />', () => {
   });
 
   it('can pass in context', () => {
-    const SimpleComponent = React.createClass({
-      contextTypes: {
-        name: React.PropTypes.string,
-      },
+    class SimpleComponent extends React.Component {
       render() {
         return <div>{this.context.name}</div>;
-      },
-    });
+      }
+    }
+    SimpleComponent.contextTypes = {
+      name: React.PropTypes.string,
+    };
 
     const context = { name: 'foo' };
     const wrapper = render(<SimpleComponent />, { context });

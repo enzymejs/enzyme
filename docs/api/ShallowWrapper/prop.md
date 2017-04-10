@@ -19,13 +19,13 @@ of the root node of the component.
 
 
 ```jsx
-const MyComponent = React.createClass({
+class MyComponent extends React.Component {
   render() {
     return (
         <div className="foo bar" includedProp={this.props.includedProp}>Hello</div>
     )
   }
-})
+}
 const wrapper = shallow(<MyComponent includedProp="Success!" excludedProp="I'm not included" />);
 expect(wrapper.prop('includedProp')).to.equal("Success!");
 
