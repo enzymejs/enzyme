@@ -153,10 +153,6 @@ class ShallowWrapper {
     this.complexSelector = new ComplexSelector(buildPredicate, findWhereUnwrapped, childrenOfNode);
   }
 
-  batchedUpdates(fn) {
-
-  }
-
   /**
    * Returns the wrapped ReactElement.
    *
