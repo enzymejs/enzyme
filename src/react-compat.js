@@ -18,7 +18,6 @@ let childrenToArray;
 let renderWithOptions;
 let unmountComponentAtNode;
 let batchedUpdates;
-let createClass;
 let shallowRendererFactory;
 
 const React = require('react');
@@ -177,13 +176,6 @@ if (REACT013) {
   };
 }
 
-if (REACT155) {
-  // eslint-disable-next-line import/no-extraneous-dependencies
-  createClass = require('create-react-class');
-} else {
-  createClass = React.createClass;
-}
-
 function isDOMComponentElement(inst) {
   return React.isValidElement(inst) && typeof inst.type === 'string';
 }
@@ -219,5 +211,4 @@ export {
   renderWithOptions,
   unmountComponentAtNode,
   batchedUpdates,
-  createClass,
 };

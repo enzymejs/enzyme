@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { expect } from 'chai';
 import sinon from 'sinon';
 
-import { createClass } from '../src/react-compat';
+import { createClass } from './react-compat';
 import { shallow, render, ShallowWrapper } from '../src/';
 import { describeIf, itIf, itWithData, generateEmptyRenderData } from './_helpers';
 import { ITERATOR_SYMBOL, withSetStateAllowed } from '../src/Utils';

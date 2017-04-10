@@ -71,7 +71,7 @@ If you are using `React >=15.5`, in addition to `enzyme`, you will have to ensur
 the following npm modules installed if they were not already:
 
 ```bash
-npm i --save-dev react-dom create-react-class
+npm i --save-dev react-test-renderer react-dom
 ```
 
 

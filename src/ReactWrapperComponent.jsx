@@ -1,7 +1,5 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { PropTypes } from 'react';
 import objectAssign from 'object.assign';
-import { createClass } from './react-compat';
 
 /* eslint react/forbid-prop-types: 0 */
 
