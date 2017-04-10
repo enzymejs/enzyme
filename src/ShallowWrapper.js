@@ -606,18 +606,20 @@ class ShallowWrapper {
    * @returns {ShallowWrapper}
    */
   simulate(event, ...args) {
+    const promise = Promise.resolve();
     const handler = this.prop(propFromEvent(event));
     if (handler) {
       withSetStateAllowed(() => {
         // TODO(lmr): create/use synthetic events
         // TODO(lmr): emulate React's event propagation
         batchedUpdates(() => {
-          handler(...args);
+          const reply = handler(...args);
+          if (reply && reply.then) promise.then(() => reply);
         });
         this.root.update();
       });
     }
-    return this;
+    return promise;
   }
 
   /**
