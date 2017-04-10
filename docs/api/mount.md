@@ -63,7 +63,7 @@ describe('<Foo />', () => {
 Find every node in the render tree that matches the provided selector.
 
 #### [`.findWhere(predicate) => ReactWrapper`](ReactWrapper/findWhere.md)
-Find every node in the render tree that return true for the provided predicate function.
+Find every node in the render tree that returns true for the provided predicate function.
 
 #### [`.filter(selector) => ReactWrapper`](ReactWrapper/filter.md)
 Remove nodes in the current wrapper that do not match the provided selector.

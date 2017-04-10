@@ -1,6 +1,6 @@
 # `.findWhere(fn) => ReactWrapper`
 
-Finds every node in the render tree that return true for the provided predicate function.
+Finds every node in the render tree that returns true for the provided predicate function.
 
 
 #### Arguments
