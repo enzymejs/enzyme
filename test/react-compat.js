@@ -1,4 +1,4 @@
-import { REACT155 } from './version';
+import { REACT155 } from '../src/version';
 
 let createClass;
 
