@@ -21,16 +21,20 @@ render tree.
 
 
 ```jsx
-const MyComponent = React.createClass({
+class MyComponent extends React.Component {
+  constructor(props) {
+    super(props);
+    this.handleClick = this.handleClick.bind(this);
+  }
   handleClick() {
     ...
-  },
+  }
   render() {
     return (
       <div onClick={this.handleClick} className="foo bar">Hello</div>
     );
   }
-});
+}
 
 const wrapper = shallow(<MyComponent />);
 expect(wrapper.matchesElement(

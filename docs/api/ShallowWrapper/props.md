@@ -13,13 +13,13 @@ See [`.instance() => ReactComponent`](instance.md)
 
 
 ```jsx
-const MyComponent = React.createClass({
+class MyComponent extends React.Component {
   render() {
     return (
         <div className="foo bar" includedProp={this.props.includedProp}>Hello</div>
     )
   }
-})
+}
 const wrapper = shallow(<MyComponent includedProp="Success!" excludedProp="I'm not included" />);
 expect(wrapper.props().includedProp).to.equal("Success!");
 
