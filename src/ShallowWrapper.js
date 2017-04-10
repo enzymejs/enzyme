@@ -1,4 +1,5 @@
 import React from 'react';
+import objectAssign from 'object.assign';
 import flatten from 'lodash/flatten';
 import unique from 'lodash/uniq';
 import compact from 'lodash/compact';
@@ -36,6 +37,7 @@ import {
   renderToStaticMarkup,
   batchedUpdates,
   isDOMComponentElement,
+  SyntheticEvent,
 } from './react-compat';
 
 /**
@@ -598,26 +600,70 @@ class ShallowWrapper {
   }
 
   /**
-   * Used to simulate events. Pass an eventname and (optionally) event arguments. This method of
-   * testing events should be met with some skepticism.
+   * Used to invoke event handlers. Pass an eventname and (optionally) event
+   * arguments. This method of testing events should be met with some
+   * skepticism.
    *
    * @param {String} event
    * @param {Array} args
    * @returns {ShallowWrapper}
    */
-  simulate(event, ...args) {
-    const handler = this.prop(propFromEvent(event));
-    if (handler) {
-      withSetStateAllowed(() => {
-        // TODO(lmr): create/use synthetic events
-        // TODO(lmr): emulate React's event propagation
-        batchedUpdates(() => {
-          handler(...args);
+  invoke(event, ...args) {
+    return this.single('invoke', () => {
+      const handler = this.prop(propFromEvent(event));
+      if (handler) {
+        withSetStateAllowed(() => {
+          batchedUpdates(() => {
+            handler(...args);
+          });
+          this.root.update();
         });
+      }
+      return this;
+    });
+  }
+
+  /**
+   * Used to simulate events with propagation.
+   * Pass an eventname and an object with properties to assign to the event object.
+   * This method of testing events should be met with some skepticism.
+   *
+   * NOTE: can only be called on a wrapper of a single node.
+   *
+   * @param {String} event
+   * @param {Object} mock (optional)
+   * @returns {ShallowWrapper}
+   */
+  simulate(event, mock) {
+    return this.single('simulate', () => {
+      const bubbleProp = propFromEvent(event);
+      const captureProp = `${bubbleProp}Capture`;
+      const e = new SyntheticEvent(undefined, undefined, { type: event, target: {} });
+      objectAssign(e, mock);
+      withSetStateAllowed(() => {
+        const handlers = [
+          ...this.parents().map(n => n.prop(captureProp)).reverse(),
+          this.prop(captureProp),
+          this.prop(bubbleProp),
+          ...this.parents().map(n => n.prop(bubbleProp)),
+        ];
+
+        batchedUpdates(() => {
+          handlers.some((handler) => {
+            if (handler) {
+              handler(e);
+              if (e.isPropagationStopped()) {
+                return true;
+              }
+            }
+            return false;
+          });
+        });
+
         this.root.update();
       });
-    }
-    return this;
+      return this;
+    });
   }
 
   /**

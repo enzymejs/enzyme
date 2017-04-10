@@ -1,13 +1,14 @@
-# `.simulate(event[, ...args]) => Self`
+# `.simulate(event[, mock]) => Self`
 
-Simulate events
+Simulate events. The propagation behavior of browser events is simulated — however,
+this method does not emit an actual event. Event handlers are called with a SyntheticEvent object.
 
 
 #### Arguments
 
 1. `event` (`String`): The event name to be simulated
-2. `...args` (`Any` [optional]): A mock event object that will get passed through to the event
-handlers.
+2. `mock` (`Object` [optional]): A mock event object that will be merged with the event
+object passed to the handlers.
 
 
 
@@ -50,9 +51,10 @@ expect(wrapper.find('.clicks-1').length).to.equal(1);
 
 #### Common Gotchas
 
-- Currently, event simulation for the shallow renderer does not propagate as one would normally
-expect in a real environment. As a result, one must call `.simulate()` on the actual node that has
-the event handler set.
-- Even though the name would imply this simulates an actual event, `.simulate()` will in fact 
+- Even though the name would imply this simulates an actual event, `.simulate()` will in fact
 target the component's prop based on the event you give it. For example, `.simulate('click')` will
 actually get the `onClick` prop and call it.
+
+#### Related Methods
+
+- [`.invoke(event[, ...args]) => Self`](invoke.md)

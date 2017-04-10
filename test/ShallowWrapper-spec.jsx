@@ -1004,6 +1004,176 @@ describe('shallow', () => {
     });
   });
 
+  describe('.invoke(eventName, data)', () => {
+
+    it('should invoke event handlers without propagation', () => {
+
+      class Foo extends React.Component {
+        constructor(props) {
+          super(props);
+          this.state = { count: 0 };
+          this.incrementCount = this.incrementCount.bind(this);
+        }
+
+        incrementCount() {
+          this.setState({ count: this.state.count + 1 });
+        }
+
+        render() {
+          return (
+            <div onClick={this.incrementCount}>
+              <a
+                className={`clicks-${this.state.count}`}
+                onClick={this.incrementCount}
+              >foo</a>
+            </div>
+          );
+        }
+      }
+
+      const wrapper = shallow(<Foo />);
+
+      expect(wrapper.find('.clicks-0').length).to.equal(1);
+      wrapper.find('a').invoke('click');
+      expect(wrapper.find('.clicks-1').length).to.equal(1);
+
+    });
+
+
+    it('should pass in arguments', () => {
+      const spy = sinon.spy();
+      class Foo extends React.Component {
+        render() {
+          return (
+            <a onClick={spy}>foo</a>
+          );
+        }
+      }
+
+      const wrapper = shallow(<Foo />);
+      const a = {};
+      const b = {};
+
+      wrapper.invoke('click', a, b);
+      expect(spy.args[0][0]).to.equal(a);
+      expect(spy.args[0][1]).to.equal(b);
+    });
+
+    describeIf(!REACT013, 'stateless function components', () => {
+      it('should invoke event handlers', () => {
+        const spy = sinon.spy();
+        const Foo = props => (
+          <div onClick={props.onClick}>
+            <a onClick={props.onClick}>foo</a>
+          </div>
+        );
+
+        const wrapper = shallow(<Foo onClick={spy} />);
+
+        expect(spy.calledOnce).to.equal(false);
+        wrapper.find('a').invoke('click');
+        expect(spy.calledOnce).to.equal(true);
+      });
+
+
+      it('should pass in arguments', () => {
+        const spy = sinon.spy();
+        const Foo = () => (
+          <a onClick={spy}>foo</a>
+        );
+
+        const wrapper = shallow(<Foo />);
+        const a = {};
+        const b = {};
+
+        wrapper.invoke('click', a, b);
+        expect(spy.args[0][0]).to.equal(a);
+        expect(spy.args[0][1]).to.equal(b);
+      });
+    });
+
+    describe('Normalizing JS event names', () => {
+      it('should convert lowercase events to React camelcase', () => {
+        const spy = sinon.spy();
+        const clickSpy = sinon.spy();
+        class Foo extends React.Component {
+          render() {
+            return (
+              <a onClick={clickSpy} onDoubleClick={spy}>foo</a>
+            );
+          }
+        }
+
+        const wrapper = shallow(<Foo />);
+
+        wrapper.invoke('dblclick');
+        expect(spy.calledOnce).to.equal(true);
+
+        wrapper.invoke('click');
+        expect(clickSpy.calledOnce).to.equal(true);
+      });
+
+      describeIf(!REACT013, 'normalizing mouseenter', () => {
+        it('should convert lowercase events to React camelcase', () => {
+          const spy = sinon.spy();
+          class Foo extends React.Component {
+            render() {
+              return (
+                <a onMouseEnter={spy}>foo</a>
+              );
+            }
+          }
+
+          const wrapper = shallow(<Foo />);
+
+          wrapper.invoke('mouseenter');
+          expect(spy.calledOnce).to.equal(true);
+        });
+
+        it('should convert lowercase events to React camelcase in stateless components', () => {
+          const spy = sinon.spy();
+          const Foo = () => (
+            <a onMouseEnter={spy}>foo</a>
+          );
+
+          const wrapper = shallow(<Foo />);
+
+          wrapper.invoke('mouseenter');
+          expect(spy.calledOnce).to.equal(true);
+        });
+      });
+    });
+
+    it('should be batched updates', () => {
+      let renderCount = 0;
+      class Foo extends React.Component {
+        constructor(props) {
+          super(props);
+          this.state = {
+            count: 0,
+          };
+          this.onClick = this.onClick.bind(this);
+        }
+        onClick() {
+          this.setState({ count: this.state.count + 1 });
+          this.setState({ count: this.state.count + 1 });
+        }
+        render() {
+          renderCount += 1;
+          return (
+            <a onClick={this.onClick}>{this.state.count}</a>
+          );
+        }
+      }
+
+      const wrapper = shallow(<Foo />);
+      wrapper.invoke('click');
+      expect(wrapper.text()).to.equal('1');
+      expect(renderCount).to.equal(2);
+    });
+
+  });
+
   describe('.simulate(eventName, data)', () => {
     it('should simulate events', () => {
       class Foo extends React.Component {
@@ -1036,8 +1206,237 @@ describe('shallow', () => {
       expect(wrapper.find('.clicks-1').length).to.equal(1);
     });
 
+    it('should call handler with SyntheticEvent object', () => {
+      const spy = sinon.spy();
+      class Bar extends React.Component {
+        render() {
+          return <div onClick={spy}>bar</div>;
+        }
+      }
 
-    it('should pass in event data', () => {
+      const wrapper = shallow(<Bar />);
+
+      wrapper.simulate('click');
+
+      const event = spy.lastCall.args[0];
+      expect(event.stopPropagation).to.be.a('function');
+      expect(event.preventDefault).to.be.a('function');
+    });
+
+    it('should propagate events triggered on native elements', () => {
+      class Foo extends React.Component {
+        render() {
+          return (
+            <div
+              onClick={() => this.props.calls.push('div bubble')}
+              onClickCapture={() => this.props.calls.push('div capture')}
+            >
+              <span
+                onClick={() => this.props.calls.push('span bubble')}
+                onClickCapture={() => this.props.calls.push('span capture')}
+              >
+                <a
+                  onClick={() => this.props.calls.push('a bubble')}
+                  onClickCapture={() => this.props.calls.push('a capture')}
+                >
+                  foo
+                </a>
+              </span>
+            </div>
+          );
+        }
+      }
+
+      const actualCalls = [];
+      const wrapper = shallow(<Foo calls={actualCalls} />);
+
+      wrapper.find('a').simulate('click');
+      expect(actualCalls.length).to.equal(6);
+      expect(actualCalls).to.eql([
+        'div capture',
+        'span capture',
+        'a capture',
+        'a bubble',
+        'span bubble',
+        'div bubble',
+      ]);
+    });
+
+    it('should propagate events triggered on composite elements', () => {
+      class Bar extends React.Component {
+        render() {
+          return <div>bar</div>;
+        }
+      }
+
+      class Foo extends React.Component {
+        render() {
+          return (
+            <div
+              onClick={() => this.props.calls.push('div bubble')}
+              onClickCapture={() => this.props.calls.push('div capture')}
+            >
+              <span
+                onClick={() => this.props.calls.push('span bubble')}
+                onClickCapture={() => this.props.calls.push('span capture')}
+              >
+                <Bar
+                  onClick={() => this.props.calls.push('a bubble')}
+                  onClickCapture={() => this.props.calls.push('a capture')}
+                >
+                  foo
+                </Bar>
+              </span>
+            </div>
+          );
+        }
+      }
+
+      const actualCalls = [];
+      const wrapper = shallow(<Foo calls={actualCalls} />);
+
+      wrapper.find(Bar).simulate('click');
+      expect(actualCalls.length).to.equal(6);
+      expect(actualCalls).to.eql([
+        'div capture',
+        'span capture',
+        'a capture',
+        'a bubble',
+        'span bubble',
+        'div bubble',
+      ]);
+    });
+
+    it('should skip over parent nodes without handlers', () => {
+      class Foo extends React.Component {
+        render() {
+          return (
+            <div
+              onClick={() => this.props.calls.push('div bubble')}
+            >
+              <span
+                onClickCapture={() => this.props.calls.push('span capture')}
+              >
+                <a
+                  onClick={() => this.props.calls.push('a bubble')}
+                  onClickCapture={() => this.props.calls.push('a capture')}
+                >
+                  foo
+                </a>
+              </span>
+            </div>
+          );
+        }
+      }
+
+      const actualCalls = [];
+      const wrapper = shallow(<Foo calls={actualCalls} />);
+
+      wrapper.find('a').simulate('click');
+      expect(actualCalls.length).to.equal(4);
+      expect(actualCalls).to.eql([
+        'span capture',
+        'a capture',
+        'a bubble',
+        'div bubble',
+      ]);
+    });
+
+    it('should not call handlers for other events', () => {
+      class Foo extends React.Component {
+        render() {
+          return (
+            <div
+              onChange={() => this.props.calls.push('onChange')}
+              onClick={() => this.props.calls.push('div bubble')}
+              onClickCapture={() => this.props.calls.push('div capture')}
+            >
+              <span
+                onClick={() => this.props.calls.push('span bubble')}
+                onClickCapture={() => this.props.calls.push('span capture')}
+              >
+                <a
+                  onClick={() => this.props.calls.push('a bubble')}
+                  onClickCapture={() => this.props.calls.push('a capture')}
+                >
+                  foo
+                </a>
+              </span>
+            </div>
+          );
+        }
+      }
+
+      const actualCalls = [];
+      const wrapper = shallow(<Foo calls={actualCalls} />);
+
+      wrapper.find('a').simulate('click');
+      expect(actualCalls.length).to.equal(6);
+      expect(actualCalls).to.eql([
+        'div capture',
+        'span capture',
+        'a capture',
+        'a bubble',
+        'span bubble',
+        'div bubble',
+      ]);
+    });
+
+    it('should respect stopPropagation called in the bubbling phase', () => {
+      const innerOnClick = sinon.spy((e) => {
+        e.stopPropagation();
+      });
+      const outerOnClick = sinon.spy();
+      const outerOnClickCapture = sinon.spy();
+      class Foo extends React.Component {
+        render() {
+          return (
+            <div
+              onClickCapture={outerOnClickCapture}
+              onClick={outerOnClick}
+            >
+              <a onClick={innerOnClick}>foo</a>
+            </div>
+          );
+        }
+      }
+
+      const wrapper = shallow(<Foo />);
+
+      wrapper.find('a').simulate('click');
+      expect(outerOnClickCapture.calledOnce).to.equal(true);
+      expect(innerOnClick.calledOnce).to.equal(true);
+      expect(outerOnClick.calledOnce).to.equal(false);
+    });
+
+    it('should respect stopPropagation called in the capture phase', () => {
+      const innerOnClick = sinon.spy((e) => {
+        e.stopPropagation();
+      });
+      const outerOnClick = sinon.spy();
+      const outerOnClickCapture = sinon.spy();
+      class Foo extends React.Component {
+        render() {
+          return (
+            <div
+              onClickCapture={outerOnClickCapture}
+              onClick={outerOnClick}
+            >
+              <a onClickCapture={innerOnClick}>foo</a>
+            </div>
+          );
+        }
+      }
+
+      const wrapper = shallow(<Foo />);
+
+      wrapper.find('a').simulate('click');
+      expect(outerOnClickCapture.calledOnce).to.equal(true);
+      expect(innerOnClick.calledOnce).to.equal(true);
+      expect(outerOnClick.calledOnce).to.equal(false);
+    });
+
+    it('should assign mock data to SyntheticEvent', () => {
       const spy = sinon.spy();
       class Foo extends React.Component {
         render() {
@@ -1048,12 +1447,30 @@ describe('shallow', () => {
       }
 
       const wrapper = shallow(<Foo />);
-      const a = {};
-      const b = {};
+      const a = { abc: {} };
 
-      wrapper.simulate('click', a, b);
-      expect(spy.args[0][0]).to.equal(a);
-      expect(spy.args[0][1]).to.equal(b);
+      wrapper.simulate('click', a);
+      expect(spy.args[0][0].abc).to.equal(a.abc);
+    });
+
+    it('should throw if called on mulitple nodes', () => {
+      const spy = sinon.spy();
+      class Foo extends React.Component {
+        render() {
+          return (
+            <div>
+              <a onClick={spy}>foo</a>
+              <a onClick={spy}>bar</a>
+            </div>
+          );
+        }
+      }
+
+      const wrapper = shallow(<Foo />);
+
+      const anchors = wrapper.find('a');
+
+      expect(() => anchors.simulate('click')).to.throw();
     });
 
     describeIf(!REACT013, 'stateless function components', () => {
@@ -1077,12 +1494,197 @@ describe('shallow', () => {
         );
 
         const wrapper = shallow(<Foo />);
-        const a = {};
-        const b = {};
+        const a = { abc: {} };
 
-        wrapper.simulate('click', a, b);
-        expect(spy.args[0][0]).to.equal(a);
-        expect(spy.args[0][1]).to.equal(b);
+        wrapper.simulate('click', a);
+        expect(spy.args[0][0].abc).to.equal(a.abc);
+      });
+
+      it('should propagate events triggered on native elements', () => {
+        const Foo = ({ calls }) => (
+          <div
+            onClick={() => calls.push('div bubble')}
+            onClickCapture={() => calls.push('div capture')}
+          >
+            <span
+              onClick={() => calls.push('span bubble')}
+              onClickCapture={() => calls.push('span capture')}
+            >
+              <a
+                onClick={() => calls.push('a bubble')}
+                onClickCapture={() => calls.push('a capture')}
+              >
+                foo
+              </a>
+            </span>
+          </div>
+        );
+
+        const actualCalls = [];
+        const wrapper = shallow(<Foo calls={actualCalls} />);
+
+        wrapper.find('a').simulate('click');
+        expect(actualCalls.length).to.equal(6);
+        expect(actualCalls).to.eql([
+          'div capture',
+          'span capture',
+          'a capture',
+          'a bubble',
+          'span bubble',
+          'div bubble',
+        ]);
+      });
+
+      it('should propagate events triggered on composite elements', () => {
+        const Bar = () => (
+          <div>bar</div>
+        );
+
+        const Foo = ({ calls }) => (
+          <div
+            onClick={() => calls.push('div bubble')}
+            onClickCapture={() => calls.push('div capture')}
+          >
+            <span
+              onClick={() => calls.push('span bubble')}
+              onClickCapture={() => calls.push('span capture')}
+            >
+              <Bar
+                onClick={() => calls.push('a bubble')}
+                onClickCapture={() => calls.push('a capture')}
+              >
+                foo
+              </Bar>
+            </span>
+          </div>
+        );
+
+        const actualCalls = [];
+        const wrapper = shallow(<Foo calls={actualCalls} />);
+
+        wrapper.find(Bar).simulate('click');
+        expect(actualCalls.length).to.equal(6);
+        expect(actualCalls).to.eql([
+          'div capture',
+          'span capture',
+          'a capture',
+          'a bubble',
+          'span bubble',
+          'div bubble',
+        ]);
+      });
+
+      it('should skip over parent nodes without handlers', () => {
+        const Foo = ({ calls }) => (
+          <div
+            onClick={() => calls.push('div bubble')}
+          >
+            <span
+              onClickCapture={() => calls.push('span capture')}
+            >
+              <a
+                onClick={() => calls.push('a bubble')}
+                onClickCapture={() => calls.push('a capture')}
+              >
+                foo
+              </a>
+            </span>
+          </div>
+        );
+
+        const actualCalls = [];
+        const wrapper = shallow(<Foo calls={actualCalls} />);
+
+        wrapper.find('a').simulate('click');
+        expect(actualCalls.length).to.equal(4);
+        expect(actualCalls).to.eql([
+          'span capture',
+          'a capture',
+          'a bubble',
+          'div bubble',
+        ]);
+      });
+
+      it('should not call handlers for other events', () => {
+        const Foo = ({ calls }) => (
+          <div
+            onChange={() => calls.push('onChange')}
+            onClick={() => calls.push('div bubble')}
+            onClickCapture={() => calls.push('div capture')}
+          >
+            <span
+              onClick={() => calls.push('span bubble')}
+              onClickCapture={() => calls.push('span capture')}
+            >
+              <a
+                onClick={() => calls.push('a bubble')}
+                onClickCapture={() => calls.push('a capture')}
+              >
+                foo
+              </a>
+            </span>
+          </div>
+        );
+
+        const actualCalls = [];
+        const wrapper = shallow(<Foo calls={actualCalls} />);
+
+        wrapper.find('a').simulate('click');
+        expect(actualCalls.length).to.equal(6);
+        expect(actualCalls).to.eql([
+          'div capture',
+          'span capture',
+          'a capture',
+          'a bubble',
+          'span bubble',
+          'div bubble',
+        ]);
+      });
+
+      it('should respect stopPropagation called in the bubbling phase', () => {
+        const innerOnClick = sinon.spy((e) => {
+          e.stopPropagation();
+        });
+        const outerOnClick = sinon.spy();
+        const outerOnClickCapture = sinon.spy();
+        const Foo = () => (
+          <div
+            onClickCapture={outerOnClickCapture}
+            onClick={outerOnClick}
+          >
+            <a onClick={innerOnClick}>foo</a>
+          </div>
+        );
+
+        const wrapper = shallow(<Foo />);
+
+        wrapper.find('a').simulate('click');
+        expect(outerOnClickCapture.calledOnce).to.equal(true);
+        expect(innerOnClick.calledOnce).to.equal(true);
+        expect(outerOnClick.calledOnce).to.equal(false);
+      });
+
+      it('should respect stopPropagation called in the capture phase', () => {
+        const innerOnClick = sinon.spy((e) => {
+          e.stopPropagation();
+        });
+        const outerOnClick = sinon.spy();
+        const outerOnClickCapture = sinon.spy();
+        const Foo = () => (
+          <div
+            onClickCapture={outerOnClickCapture}
+            onClick={outerOnClick}
+          >
+            <a onClickCapture={innerOnClick}>foo</a>
+          </div>
+        );
+
+        const wrapper = shallow(<Foo />);
+
+        wrapper.find('a').simulate('click');
+        expect(outerOnClickCapture.calledOnce).to.equal(true);
+        expect(innerOnClick.calledOnce).to.equal(true);
+        expect(outerOnClick.calledOnce).to.equal(false);
       });
     });
 
@@ -1146,22 +1748,32 @@ describe('shallow', () => {
           this.state = {
             count: 0,
           };
-          this.onClick = this.onClick.bind(this);
         }
         onClick() {
+          this.setState({ count: this.state.count + 1 });
+          this.setState({ count: this.state.count + 1 });
+        }
+        outerOnClick() {
           this.setState({ count: this.state.count + 1 });
           this.setState({ count: this.state.count + 1 });
         }
         render() {
           renderCount += 1;
           return (
-            <a onClick={this.onClick}>{this.state.count}</a>
+            <div onClick={() => this.outerOnClick()}>
+              <a onClick={() => this.onClick()}>{this.state.count}</a>
+            </div>
           );
         }
       }
 
+      sinon.spy(Foo.prototype, 'outerOnClick');
+      sinon.spy(Foo.prototype, 'onClick');
+
       const wrapper = shallow(<Foo />);
-      wrapper.simulate('click');
+      wrapper.find('a').simulate('click');
+      expect(Foo.prototype.onClick.calledOnce).to.equal(true);
+      expect(Foo.prototype.outerOnClick.calledOnce).to.equal(true);
       expect(wrapper.text()).to.equal('1');
       expect(renderCount).to.equal(2);
     });
