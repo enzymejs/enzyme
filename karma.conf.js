@@ -4,6 +4,36 @@ require('babel-register');
 
 var IgnorePlugin = require('webpack').IgnorePlugin;
 var REACT013 = require('./src/version').REACT013;
+var REACT155 = require('./src/version').REACT155;
+
+function getPlugins() {
+  var plugins = [];
+
+  /*
+  this list of conditional IgnorePlugins mirrors the conditional
+  requires in src/react-compat.js and exists to avoid error
+  output from the webpack compilation
+  */
+
+  if (!REACT013) {
+    plugins.push(new IgnorePlugin(/react\/lib\/ExecutionEnvironment/));
+    plugins.push(new IgnorePlugin(/react\/lib\/ReactContext/));
+    plugins.push(new IgnorePlugin(/react\/addons/));
+  }
+  if (REACT013) {
+    plugins.push(new IgnorePlugin(/react-dom/));
+  }
+  if (REACT013 || REACT155) {
+    plugins.push(new IgnorePlugin(/react-addons-test-utils/));
+  }
+  if (!REACT155) {
+    plugins.push(new IgnorePlugin(/react-test-renderer/));
+    plugins.push(new IgnorePlugin(/react-dom\/test-utils/));
+    plugins.push(new IgnorePlugin(/create-react-class/));
+  }
+
+  return plugins
+}
 
 module.exports = function karma(config) {
   config.set({
@@ -29,11 +59,7 @@ module.exports = function karma(config) {
     reporters: ['dots'],
 
     files: [
-      'test/*.{jsx,js}',
-    ],
-
-    exclude: [
-      'test/_*.{jsx,js}',
+      'test/*-spec.{jsx,js}',
     ],
 
     browsers: [
@@ -71,18 +97,7 @@ module.exports = function karma(config) {
           },
         ],
       },
-      plugins: [
-        /*
-        this list of conditional IgnorePlugins mirrors the conditional
-        requires in src/react-compat.js and exists to avoid error
-        output from the webpack compilation
-        */
-        !REACT013 && new IgnorePlugin(/react\/lib\/ExecutionEnvironment/),
-        !REACT013 && new IgnorePlugin(/react\/lib\/ReactContext/),
-        !REACT013 && new IgnorePlugin(/react\/addons/),
-        REACT013 && new IgnorePlugin(/react-dom/),
-        REACT013 && new IgnorePlugin(/react-addons-test-utils/),
-      ].filter(function filterPlugins(plugin) { return plugin !== false; }),
+      plugins: getPlugins(),
     },
 
     webpackServer: {
