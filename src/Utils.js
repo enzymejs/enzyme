@@ -430,5 +430,5 @@ export function displayNameOfNode(node) {
 
   if (!type) return null;
 
-  return type.displayName || (typeof type === 'function' ? functionName(type) : type.name) || type;
+  return type.displayName || (typeof type === 'function' ? functionName(type) : type.name || type);
 }

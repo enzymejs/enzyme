@@ -598,6 +598,14 @@ describe('Utils', () => {
         expect(displayNameOfNode(<Foo />)).to.equal('Foo');
       });
 
+      it('should return the name even if it is falsy', () => {
+        const makeFoo = () => () => <div />;
+
+        const Foo = makeFoo();
+
+        expect(displayNameOfNode(<Foo />)).to.equal('');
+      });
+
       describeIf(!REACT013, 'stateless function components', () => {
         it('should return the name', () => {
           const Foo = () => <div />;
