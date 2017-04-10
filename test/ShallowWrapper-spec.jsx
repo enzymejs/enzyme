@@ -3953,24 +3953,6 @@ describe('shallow', () => {
           expect(wrapper.name()).to.equal('SFC');
         });
       });
-
-      describe('createClass', () => {
-        it('should return the name of the node', () => {
-          const Foo = createClass({
-            render() {
-              return <div />;
-            },
-          });
-          const Wrapper = createClass({
-            render() {
-              return <Foo />;
-            },
-          });
-
-          const wrapper = shallow(<Wrapper />);
-          expect(wrapper.name()).to.equal('Foo');
-        });
-      });
     });
 
     describe('DOM node', () => {

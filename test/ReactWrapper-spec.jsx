@@ -3304,19 +3304,6 @@ describeWithDOM('mount', () => {
           expect(wrapper.name()).to.equal('SFC');
         });
       });
-
-      describe('createClass', () => {
-        it('should return the name of the node', () => {
-          const Foo = createClass({
-            render() {
-              return <div />;
-            },
-          });
-
-          const wrapper = mount(<Foo />);
-          expect(wrapper.name()).to.equal('Foo');
-        });
-      });
     });
 
     describe('DOM node', () => {
