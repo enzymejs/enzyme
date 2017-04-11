@@ -104,12 +104,19 @@ if (REACT013) {
       TestUtils = require('react-addons-test-utils');
     }
   } catch (e) {
-    // eslint-disable-next-line no-console
-    console.error(
-      'react-addons-test-utils is an implicit dependency in order to support react@0.13-14. ' +
-      'Please add the appropriate version to your devDependencies. ' +
-      'See https://github.com/airbnb/enzyme#installation',
-    );
+    if (REACT155) {
+      console.error( // eslint-disable-line no-console
+        'react-dom@15.5+ is an implicit dependency when using react@15.5+ with enzyme. ' +
+        'Please add the appropriate version to your devDependencies. ' +
+        'See https://github.com/airbnb/enzyme#installation',
+      );
+    } else {
+      console.error( // eslint-disable-line no-console
+        'react-addons-test-utils is an implicit dependency in order to support react@0.13-14. ' +
+        'Please add the appropriate version to your devDependencies. ' +
+        'See https://github.com/airbnb/enzyme#installation',
+      );
+    }
     throw e;
   }
 
