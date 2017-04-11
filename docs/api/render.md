@@ -36,7 +36,7 @@ describe('<Foo />', () => {
       }
     }
     SimpleComponent.contextTypes = {
-      name: React.PropTypes.string,
+      name: PropTypes.string,
     };
 
     const context = { name: 'foo' };

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { expect } from 'chai';
 import { describeWithDOM, describeIf } from './_helpers';
 import { render } from '../src/';
@@ -9,7 +10,7 @@ describeWithDOM('render', () => {
     it('can pass in context', () => {
       const SimpleComponent = React.createClass({
         contextTypes: {
-          name: React.PropTypes.string,
+          name: PropTypes.string,
         },
         render() {
           return <div>{this.context.name}</div>;
@@ -23,7 +24,7 @@ describeWithDOM('render', () => {
     it('can pass context to the child of mounted component', () => {
       const SimpleComponent = React.createClass({
         contextTypes: {
-          name: React.PropTypes.string,
+          name: PropTypes.string,
         },
         render() {
           return <div>{this.context.name}</div>;
@@ -36,7 +37,7 @@ describeWithDOM('render', () => {
       });
 
       const childContextTypes = {
-        name: React.PropTypes.string.isRequired,
+        name: PropTypes.string.isRequired,
       };
       const context = { name: 'foo' };
       const wrapper = render(<ComplexComponent />, { context, childContextTypes });
