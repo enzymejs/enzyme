@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { expect } from 'chai';
 import sinon from 'sinon';
 
@@ -12,7 +13,7 @@ describe('shallow', () => {
     it('can pass in context', () => {
       const SimpleComponent = React.createClass({
         contextTypes: {
-          name: React.PropTypes.string,
+          name: PropTypes.string,
         },
         render() {
           return <div>{this.context.name}</div>;
@@ -38,7 +39,7 @@ describe('shallow', () => {
     it('is instrospectable through context API', () => {
       const SimpleComponent = React.createClass({
         contextTypes: {
-          name: React.PropTypes.string,
+          name: PropTypes.string,
         },
         render() {
           return <div>{this.context.name}</div>;
@@ -57,7 +58,7 @@ describe('shallow', () => {
         const SimpleComponent = (props, context) => (
           <div>{context.name}</div>
         );
-        SimpleComponent.contextTypes = { name: React.PropTypes.string };
+        SimpleComponent.contextTypes = { name: PropTypes.string };
 
         const context = { name: 'foo' };
         const wrapper = shallow(<SimpleComponent />, { context });
@@ -77,7 +78,7 @@ describe('shallow', () => {
         const SimpleComponent = (props, context) => (
           <div>{context.name}</div>
         );
-        SimpleComponent.contextTypes = { name: React.PropTypes.string };
+        SimpleComponent.contextTypes = { name: PropTypes.string };
 
         const wrapper = shallow(<SimpleComponent />, { context });
 
@@ -892,7 +893,7 @@ describe('shallow', () => {
         }
       }
 
-      Foo.contextTypes = { x: React.PropTypes.string };
+      Foo.contextTypes = { x: PropTypes.string };
 
       const context = { x: 'yolo' };
       const wrapper = shallow(<Foo x={5} />, { context });
@@ -938,7 +939,7 @@ describe('shallow', () => {
         const Foo = (props, context) => (
           <div>{context.x}</div>
         );
-        Foo.contextTypes = { x: React.PropTypes.string };
+        Foo.contextTypes = { x: PropTypes.string };
 
         const context = { x: 'yolo' };
         const wrapper = shallow(<Foo x={5} />, { context });
@@ -953,7 +954,7 @@ describe('shallow', () => {
   describe('.setContext(newContext)', () => {
     const SimpleComponent = React.createClass({
       contextTypes: {
-        name: React.PropTypes.string,
+        name: PropTypes.string,
       },
       render() {
         return <div>{this.context.name}</div>;
@@ -982,7 +983,7 @@ describe('shallow', () => {
       const SFC = (props, context) => (
         <div>{context.name}</div>
       );
-      SFC.contextTypes = { name: React.PropTypes.string };
+      SFC.contextTypes = { name: PropTypes.string };
 
       it('should set context for a component multiple times', () => {
         const context = { name: 'foo' };
@@ -2309,7 +2310,7 @@ describe('shallow', () => {
           }
         }
         Bar.contextTypes = {
-          name: React.PropTypes.string,
+          name: PropTypes.string,
         };
         class Foo extends React.Component {
           render() {
@@ -2355,7 +2356,7 @@ describe('shallow', () => {
           }
         }
         Bar.contextTypes = {
-          name: React.PropTypes.string,
+          name: PropTypes.string,
         };
         class Foo extends React.Component {
           render() {
@@ -2399,7 +2400,7 @@ describe('shallow', () => {
           const Bar = (props, context) => (
             <div>{context.name}</div>
           );
-          Bar.contextTypes = { name: React.PropTypes.string };
+          Bar.contextTypes = { name: PropTypes.string };
           const Foo = () => (
             <div>
               <Bar />
@@ -2430,7 +2431,7 @@ describe('shallow', () => {
           const Bar = (props, context) => (
             <div>{context.name}</div>
           );
-          Bar.contextTypes = { name: React.PropTypes.string };
+          Bar.contextTypes = { name: PropTypes.string };
           const Foo = () => (
             <div>
               <Bar />
@@ -2921,7 +2922,7 @@ describe('shallow', () => {
           }
         }
         Foo.contextTypes = {
-          foo: React.PropTypes.string,
+          foo: PropTypes.string,
         };
 
         const wrapper = shallow(
@@ -3145,7 +3146,7 @@ describe('shallow', () => {
           }
         }
         Foo.contextTypes = {
-          foo: React.PropTypes.string,
+          foo: PropTypes.string,
         };
 
         const wrapper = shallow(
@@ -3304,7 +3305,7 @@ describe('shallow', () => {
           }
         }
         Foo.contextTypes = {
-          foo: React.PropTypes.string,
+          foo: PropTypes.string,
         };
         const wrapper = shallow(
           <Foo foo="props" />,
@@ -3363,7 +3364,7 @@ describe('shallow', () => {
           }
         }
         Foo.contextTypes = {
-          foo: React.PropTypes.string,
+          foo: PropTypes.string,
         };
         const wrapper = shallow(
           <Foo />,
@@ -4005,7 +4006,7 @@ describe('shallow', () => {
         return <RendersDOM />;
       }
     }
-    WrapsRendersDOM.contextTypes = { foo: React.PropTypes.string };
+    WrapsRendersDOM.contextTypes = { foo: PropTypes.string };
     class DoubleWrapsRendersDOM extends React.Component {
       render() {
         return <WrapsRendersDOM />;
@@ -4016,7 +4017,7 @@ describe('shallow', () => {
         return <WrapsRendersDOM />;
       }
     }
-    ContextWrapsRendersDOM.contextTypes = { foo: React.PropTypes.string };
+    ContextWrapsRendersDOM.contextTypes = { foo: PropTypes.string };
 
     it('throws on a DOM node', () => {
       const wrapper = shallow(<RendersDOM />);

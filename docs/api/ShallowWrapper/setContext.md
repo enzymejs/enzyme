@@ -27,7 +27,7 @@ class SimpleComponent extends React.Component {
   }
 }
 SimpleComponent.contextTypes = {
-  name: React.PropTypes.string,
+  name: PropTypes.string,
 };
 ```
 ```jsx
