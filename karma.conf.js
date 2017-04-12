@@ -63,7 +63,7 @@ module.exports = function karma(config) {
     ],
 
     exclude: [
-      'test/_*.{jsx,js}',
+      'test/_helpers/index.jsx',
     ],
 
     browsers: [

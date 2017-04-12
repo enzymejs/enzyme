@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { expect } from 'chai';
 import sinon from 'sinon';
 import { batchedUpdates } from '../src/react-compat';
-import { createClass } from './react-compat';
+import { createClass } from './_helpers/react-compat';
 
 import {
   describeWithDOM,

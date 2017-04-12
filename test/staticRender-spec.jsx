@@ -4,7 +4,7 @@ import { expect } from 'chai';
 import { describeWithDOM, describeIf } from './_helpers';
 import { render } from '../src/';
 import { REACT013 } from '../src/version';
-import { createClass } from './react-compat';
+import { createClass } from './_helpers/react-compat';
 
 describeWithDOM('render', () => {
   describeIf(!REACT013, 'context', () => {

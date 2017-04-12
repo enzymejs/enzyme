@@ -4,7 +4,7 @@
   import/prefer-default-export: 0,
 */
 
-import { REACT155 } from '../src/version';
+import { REACT155 } from '../../src/version';
 
 let createClass;
 
