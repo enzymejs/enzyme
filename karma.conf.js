@@ -32,7 +32,7 @@ function getPlugins() {
     plugins.push(new IgnorePlugin(/create-react-class/));
   }
 
-  return plugins
+  return plugins;
 }
 
 module.exports = function karma(config) {
@@ -59,7 +59,11 @@ module.exports = function karma(config) {
     reporters: ['dots'],
 
     files: [
-      'test/*-spec.{jsx,js}',
+      'test/*.{jsx,js}',
+    ],
+
+    exclude: [
+      'test/_*.{jsx,js}',
     ],
 
     browsers: [
