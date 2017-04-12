@@ -7,7 +7,7 @@
 */
 
 import objectAssign from 'object.assign';
-import { REACT013 } from './version';
+import { REACT013, REACT155 } from './version';
 
 let TestUtils;
 let createShallowRenderer;
@@ -18,6 +18,7 @@ let childrenToArray;
 let renderWithOptions;
 let unmountComponentAtNode;
 let batchedUpdates;
+let shallowRendererFactory;
 
 const React = require('react');
 
@@ -95,12 +96,44 @@ if (REACT013) {
   // to list this as a dependency in package.json and have 0.13 work properly.
   // As a result, right now this is basically an implicit dependency.
   try {
-    // eslint-disable-next-line import/no-extraneous-dependencies
-    TestUtils = require('react-addons-test-utils');
+    if (REACT155) {
+      // eslint-disable-next-line import/no-extraneous-dependencies
+      TestUtils = require('react-dom/test-utils');
+    } else {
+      // eslint-disable-next-line import/no-extraneous-dependencies
+      TestUtils = require('react-addons-test-utils');
+    }
+  } catch (e) {
+    if (REACT155) {
+      console.error( // eslint-disable-line no-console
+        'react-dom@15.5+ is an implicit dependency when using react@15.5+ with enzyme. ' +
+        'Please add the appropriate version to your devDependencies. ' +
+        'See https://github.com/airbnb/enzyme#installation',
+      );
+    } else {
+      console.error( // eslint-disable-line no-console
+        'react-addons-test-utils is an implicit dependency in order to support react@0.13-14. ' +
+        'Please add the appropriate version to your devDependencies. ' +
+        'See https://github.com/airbnb/enzyme#installation',
+      );
+    }
+    throw e;
+  }
+
+  // Shallow renderer is accessible via the react-test-renderer package for React 15.5+.
+  // This is a separate package though and may not be installed.
+  try {
+    if (REACT155) {
+      // eslint-disable-next-line import/no-extraneous-dependencies
+      shallowRendererFactory = require('react-test-renderer/shallow').createRenderer;
+    } else {
+      // eslint-disable-next-line import/no-extraneous-dependencies
+      shallowRendererFactory = TestUtils.createRenderer;
+    }
   } catch (e) {
     // eslint-disable-next-line no-console
     console.error(
-      'react-addons-test-utils is an implicit dependency in order to support react@0.13-14. ' +
+      'react-test-renderer is an implicit dependency in order to support react@15.5+. ' +
       'Please add the appropriate version to your devDependencies. ' +
       'See https://github.com/airbnb/enzyme#installation',
     );
@@ -115,7 +148,7 @@ if (REACT013) {
   // is essentially a replacement for `TestUtils.createRenderer` that doesn't use
   // shallow rendering when it's just a DOM element.
   createShallowRenderer = function createRendererCompatible() {
-    const renderer = TestUtils.createRenderer();
+    const renderer = shallowRendererFactory();
     const originalRender = renderer.render;
     const originalRenderOutput = renderer.getRenderOutput;
     let isDOM = false;

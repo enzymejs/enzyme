@@ -36,6 +36,8 @@ matrix:
    - node_js: "6"
      env: KARMA=true REACT=0.14
    - node_js: "6"
+     env: KARMA=true REACT=15.4
+   - node_js: "6"
      env: KARMA=true REACT=15
   allow_failures:
     - node_js: "6"
@@ -43,4 +45,5 @@ matrix:
 env:
   - REACT=0.13
   - REACT=0.14
+  - REACT=15.4
   - REACT=15

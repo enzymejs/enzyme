@@ -1,9 +1,11 @@
 /* globals document */
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import { expect } from 'chai';
 import sinon from 'sinon';
 import { batchedUpdates } from '../src/react-compat';
+import { createClass } from './_helpers/react-compat';
 
 import {
   describeWithDOM,
@@ -23,9 +25,9 @@ import { REACT013, REACT014, REACT15 } from '../src/version';
 describeWithDOM('mount', () => {
   describe('context', () => {
     it('can pass in context', () => {
-      const SimpleComponent = React.createClass({
+      const SimpleComponent = createClass({
         contextTypes: {
-          name: React.PropTypes.string,
+          name: PropTypes.string,
         },
         render() {
           return <div>{this.context.name}</div>;
@@ -38,22 +40,22 @@ describeWithDOM('mount', () => {
     });
 
     it('can pass context to the child of mounted component', () => {
-      const SimpleComponent = React.createClass({
+      const SimpleComponent = createClass({
         contextTypes: {
-          name: React.PropTypes.string,
+          name: PropTypes.string,
         },
         render() {
           return <div>{this.context.name}</div>;
         },
       });
-      const ComplexComponent = React.createClass({
+      const ComplexComponent = createClass({
         render() {
           return <div><SimpleComponent /></div>;
         },
       });
 
       const childContextTypes = {
-        name: React.PropTypes.string.isRequired,
+        name: PropTypes.string.isRequired,
       };
       const context = { name: 'foo' };
       const wrapper = mount(<ComplexComponent />, { context, childContextTypes });
@@ -61,7 +63,7 @@ describeWithDOM('mount', () => {
     });
 
     it('should not throw if context is passed in but contextTypes is missing', () => {
-      const SimpleComponent = React.createClass({
+      const SimpleComponent = createClass({
         render() {
           return <div>{this.context.name}</div>;
         },
@@ -72,9 +74,9 @@ describeWithDOM('mount', () => {
     });
 
     it('is instrospectable through context API', () => {
-      const SimpleComponent = React.createClass({
+      const SimpleComponent = createClass({
         contextTypes: {
-          name: React.PropTypes.string,
+          name: PropTypes.string,
         },
         render() {
           return <div>{this.context.name}</div>;
@@ -93,7 +95,7 @@ describeWithDOM('mount', () => {
         const SimpleComponent = (props, context) => (
           <div>{context.name}</div>
         );
-        SimpleComponent.contextTypes = { name: React.PropTypes.string };
+        SimpleComponent.contextTypes = { name: PropTypes.string };
 
         const context = { name: 'foo' };
         const wrapper = mount(<SimpleComponent />, { context });
@@ -104,14 +106,14 @@ describeWithDOM('mount', () => {
         const SimpleComponent = (props, context) => (
           <div>{context.name}</div>
         );
-        SimpleComponent.contextTypes = { name: React.PropTypes.string };
+        SimpleComponent.contextTypes = { name: PropTypes.string };
 
         const ComplexComponent = () => (
           <div><SimpleComponent /></div>
         );
 
         const childContextTypes = {
-          name: React.PropTypes.string.isRequired,
+          name: PropTypes.string.isRequired,
         };
 
         const context = { name: 'foo' };
@@ -132,7 +134,7 @@ describeWithDOM('mount', () => {
         const SimpleComponent = (props, context) => (
           <div>{context.name}</div>
         );
-        SimpleComponent.contextTypes = { name: React.PropTypes.string };
+        SimpleComponent.contextTypes = { name: PropTypes.string };
 
         const context = { name: 'foo' };
         const wrapper = mount(<SimpleComponent />, { context });
@@ -150,7 +152,7 @@ describeWithDOM('mount', () => {
         );
 
         Foo.contextTypes = {
-          _: React.PropTypes.string,
+          _: PropTypes.string,
         };
 
         const wrapper = mount(<Foo foo="qux" />, {
@@ -1096,9 +1098,9 @@ describeWithDOM('mount', () => {
 
   describe('.setContext(newContext)', () => {
     it('should set context for a component multiple times', () => {
-      const SimpleComponent = React.createClass({
+      const SimpleComponent = createClass({
         contextTypes: {
-          name: React.PropTypes.string,
+          name: PropTypes.string,
         },
         render() {
           return <div>{this.context.name}</div>;
@@ -1115,9 +1117,9 @@ describeWithDOM('mount', () => {
     });
 
     it('should throw if it is called when shallow didn’t include context', () => {
-      const SimpleComponent = React.createClass({
+      const SimpleComponent = createClass({
         contextTypes: {
-          name: React.PropTypes.string,
+          name: PropTypes.string,
         },
         render() {
           return <div>{this.context.name}</div>;
@@ -1136,7 +1138,7 @@ describeWithDOM('mount', () => {
         const SimpleComponent = (props, context) => (
           <div>{context.name}</div>
         );
-        SimpleComponent.contextTypes = { name: React.PropTypes.string };
+        SimpleComponent.contextTypes = { name: PropTypes.string };
 
         const context = { name: 'foo' };
         const wrapper = mount(<SimpleComponent />, { context });
@@ -1151,7 +1153,7 @@ describeWithDOM('mount', () => {
         const SimpleComponent = (props, context) => (
           <div>{context.name}</div>
         );
-        SimpleComponent.contextTypes = { name: React.PropTypes.string };
+        SimpleComponent.contextTypes = { name: PropTypes.string };
 
         const wrapper = mount(<SimpleComponent />);
         expect(() => wrapper.setContext({ name: 'bar' })).to.throw(
@@ -1466,7 +1468,7 @@ describeWithDOM('mount', () => {
     const emptyRenderValues = generateEmptyRenderData();
 
     itWithData(emptyRenderValues, 'when a React class component returns: ', (data) => {
-      const Foo = React.createClass({
+      const Foo = createClass({
         render() {
           return data.value;
         },
@@ -3267,9 +3269,9 @@ describeWithDOM('mount', () => {
         });
       });
 
-      describe('React.createClass', () => {
+      describe('createClass', () => {
         it('should return the name of the node', () => {
-          const Foo = React.createClass({
+          const Foo = createClass({
             displayName: 'CustomWrapper',
             render() {
               return <div />;
@@ -3300,19 +3302,6 @@ describeWithDOM('mount', () => {
 
           const wrapper = mount(<SFC />);
           expect(wrapper.name()).to.equal('SFC');
-        });
-      });
-
-      describe('React.createClass', () => {
-        it('should return the name of the node', () => {
-          const Foo = React.createClass({
-            render() {
-              return <div />;
-            },
-          });
-
-          const wrapper = mount(<Foo />);
-          expect(wrapper.name()).to.equal('Foo');
         });
       });
     });
