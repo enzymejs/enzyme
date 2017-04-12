@@ -1,5 +1,13 @@
 # Change Log
 
+## 2.8.1
+
+### Fixes
+
+- support React@15.5 ([#876](https://github.com/airbnb/enzyme/pull/876))
+- no longer depend on `React.createClass` ([#877](https://github.com/airbnb/enzyme/pull/877))
+- Throw for malformed compound selectors ([#868](https://github.com/airbnb/enzyme/pull/868))
+
 ## 2.8.0
 
 ### New Stuff
