@@ -16,7 +16,9 @@ constructors.
 ### Example Usage
 
 ```jsx
+import React from 'react';
 import { render } from 'enzyme';
+import PropTypes from 'prop-types';
 
 describe('<Foo />', () => {
   it('renders three `.foo-bar`s', () => {
@@ -36,7 +38,7 @@ describe('<Foo />', () => {
       }
     }
     SimpleComponent.contextTypes = {
-      name: React.PropTypes.string,
+      name: PropTypes.string,
     };
 
     const context = { name: 'foo' };
