@@ -1,9 +1,11 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { IgnorePlugin } from 'webpack';
 
 import { REACT013, REACT155 } from './version';
 
+// eslint-disable-next-line import/prefer-default-export
 export function getPluginsForInstalledReact() {
-  var plugins = [];
+  const plugins = [];
 
   /*
   this list of conditional IgnorePlugins mirrors the conditional
