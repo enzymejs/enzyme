@@ -5,75 +5,42 @@ If you are using a test runner that runs code in a browser-based environment, yo
 
 Webpack uses static analysis to create a dependency graph at build-time of your source code to
 build a bundle. Enzyme has a handful of conditional `require()` calls in it in order to remain
-compatible with React 0.13 and React 0.14.
+compatible with React 0.13 and React 0.14 and React 15.
 
 Unfortunately, these conditional requires mean there is a bit of extra setup with bundlers like
 webpack.
 
-In your webpack configuration, you simply need to make sure that the following files are
-labeled as "external", which means they will be ignored:
+In your webpack configuration, you simply need to make sure that you include `IgnorePlugin`s for
+the conditional dependencies not needed for your version of `react`.
 
-```
-cheerio
-react/addons
-react/lib/ReactContext
-react/lib/ExecutionEnvironment
-```
+Enzyme exports a function returning the `IgnorePlugin`s needed for the version of `react` you have installed.
 
-Depending on if you are using Webpack 1 or Webpack 2 you will need different configurations.
+Depending on if you are using Webpack 1 or Webpack 2 you will need different additions to your configuration.
 
 ### Webpack 1
 
 ```js
 /* webpack.config.js */
-// ...
-externals: {
-  'cheerio': 'window',
-  'react/addons': true,
-  'react/lib/ExecutionEnvironment': true,
-  'react/lib/ReactContext': true
+{
+  plugins: require('enzyme/webpack').getPluginsForInstalledReact(),
+  loaders: {
+    {
+      test: /\.json$/,
+      loader: 'json-loader',
+    },
+  }
 }
-// ...
 ```
 
 ### Webpack 2
 
 ```js
-externals: {
-  'cheerio': 'window',
-  'react/addons': 'react',
-  'react/lib/ExecutionEnvironment': 'react',
-  'react/lib/ReactContext': 'react',
-},
-```
-
-
-## React 0.14 Compatibility
-
-If you are using React 0.14, the instructions above will be the same but with a different list of
-externals:
-
-```
-cheerio
-react-dom
-react-dom/server
-react-addons-test-utils
-```
-
-## React 15 Compatibility
-
-If you are using React 15, your config should include these externals:
-
-```js
 /* webpack.config.js */
-// ...
-externals: {
-  'react/addons': true,
-  'react/lib/ExecutionEnvironment': true,
-  'react/lib/ReactContext': true
+{
+  plugins: require('enzyme/webpack').getPluginsForInstalledReact(),
 }
-// ...
 ```
+
 
 ## Example Projects
 
