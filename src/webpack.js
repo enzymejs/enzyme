@@ -7,8 +7,7 @@ export function getPluginsForInstalledReact() {
 
   /*
   this list of conditional IgnorePlugins mirrors the conditional
-  requires in src/react-compat.js and exists to avoid error
-  output from the webpack compilation
+  requires in src/react-compat.js
   */
 
   if (!REACT013) {
