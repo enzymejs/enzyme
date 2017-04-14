@@ -102,7 +102,7 @@ function validateOptions(options) {
 
 function performBatchedUpdates(wrapper, fn) {
   const renderer = wrapper.root.renderer;
-  if (REACT155) {
+  if (REACT155 && renderer.unstable_batchedUpdates) {
     // React 15.5+ exposes batching on shallow renderer itself
     return renderer.unstable_batchedUpdates(fn);
   }

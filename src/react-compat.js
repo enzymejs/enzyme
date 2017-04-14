@@ -96,19 +96,30 @@ if (REACT013) {
   // to list this as a dependency in package.json and have 0.13 work properly.
   // As a result, right now this is basically an implicit dependency.
   try {
-    if (REACT155) {
+    try {
+      // This is for react v15.5 and up...
+
       // eslint-disable-next-line import/no-extraneous-dependencies
       TestUtils = require('react-dom/test-utils');
-    } else {
+      // eslint-disable-next-line import/no-extraneous-dependencies
+      shallowRendererFactory = require('react-test-renderer/shallow').createRenderer;
+    } catch (e) {
+      // This is for react < v15.5.  Note that users who have `react^15.4.x` in their package.json
+      // will arrive here, too.  They need to upgrade.  React will print a nice warning letting
+      // them know they need to upgrade, though, so we're good.  Also note we explicitly do not
+      // use TestUtils from react-dom/test-utils here, mainly so the user still gets a warning for
+      // requiring 'react-addons-test-utils', which lets them know there's action required.
+
       // eslint-disable-next-line import/no-extraneous-dependencies
       TestUtils = require('react-addons-test-utils');
+      shallowRendererFactory = TestUtils.createRenderer;
     }
   } catch (e) {
     if (REACT155) {
       console.error( // eslint-disable-line no-console
-        'react-dom@15.5+ is an implicit dependency when using react@15.5+ with enzyme. ' +
-        'Please add the appropriate version to your devDependencies. ' +
-        'See https://github.com/airbnb/enzyme#installation',
+        'react-dom@15.5+ and react-test-renderer are implicit dependencies when using' +
+        'react@15.5+ with enzyme. Please add the appropriate version to your' +
+        'devDependencies. See https://github.com/airbnb/enzyme#installation',
       );
     } else {
       console.error( // eslint-disable-line no-console
@@ -117,26 +128,6 @@ if (REACT013) {
         'See https://github.com/airbnb/enzyme#installation',
       );
     }
-    throw e;
-  }
-
-  // Shallow renderer is accessible via the react-test-renderer package for React 15.5+.
-  // This is a separate package though and may not be installed.
-  try {
-    if (REACT155) {
-      // eslint-disable-next-line import/no-extraneous-dependencies
-      shallowRendererFactory = require('react-test-renderer/shallow').createRenderer;
-    } else {
-      // eslint-disable-next-line import/no-extraneous-dependencies
-      shallowRendererFactory = TestUtils.createRenderer;
-    }
-  } catch (e) {
-    // eslint-disable-next-line no-console
-    console.error(
-      'react-test-renderer is an implicit dependency in order to support react@15.5+. ' +
-      'Please add the appropriate version to your devDependencies. ' +
-      'See https://github.com/airbnb/enzyme#installation',
-    );
     throw e;
   }
 
