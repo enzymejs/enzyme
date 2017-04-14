@@ -43,9 +43,9 @@ describe('debug', () => {
 
     it('should render props inline inline', () => {
       expect(debugNode(
-        <div id="foo" className="bar" />
+        <div id="foo" className="bar" />,
       )).to.equal(
-        '<div id="foo" className="bar" />'
+        '<div id="foo" className="bar" />',
       );
     });
 
@@ -53,11 +53,22 @@ describe('debug', () => {
       expect(debugNode(
         <div>
           <span />
-        </div>
+        </div>,
       )).to.equal(
         `<div>
   <span />
-</div>`
+</div>`,
+      );
+    });
+
+    it('should render mixed children', () => {
+      expect(debugNode(
+        <div>hello{'world'}</div>,
+      )).to.equal(
+        `<div>
+  hello
+  world
+</div>`,
       );
     });
 
@@ -65,21 +76,21 @@ describe('debug', () => {
       expect(debugNode(
         <div id="foo">
           <span id="bar" />
-        </div>
+        </div>,
       )).to.equal(
         `<div id="foo">
   <span id="bar" />
-</div>`
+</div>`,
       );
     });
 
     it('should render text on new line and indented', () => {
       expect(debugNode(
-        <span>some text</span>
+        <span>some text</span>,
       )).to.equal(
         `<span>
   some text
-</span>`
+</span>`,
       );
     });
 
@@ -92,11 +103,11 @@ describe('debug', () => {
       expect(debugNode(
         <div>
           <Foo />
-        </div>
+        </div>,
       )).to.equal(
 `<div>
   <Bar />
-</div>`
+</div>`,
       );
 
     });
@@ -109,11 +120,11 @@ describe('debug', () => {
       expect(debugNode(
         <div>
           <Foo />
-        </div>
+        </div>,
       )).to.equal(
 `<div>
   <Foo />
-</div>`
+</div>`,
       );
 
     });
@@ -125,11 +136,11 @@ describe('debug', () => {
       expect(debugNode(
         <div>
           <Foo />
-        </div>
+        </div>,
       )).to.equal(
 `<div>
   <Foo />
-</div>`
+</div>`,
       );
 
     });
@@ -139,7 +150,7 @@ describe('debug', () => {
         <div>
           <i>not in array</i>
           {['a', 'b', 'c']}
-        </div>
+        </div>,
       )).to.equal(
 `<div>
   <i>
@@ -148,7 +159,7 @@ describe('debug', () => {
   a
   b
   c
-</div>`
+</div>`,
       );
     });
 
@@ -158,23 +169,23 @@ describe('debug', () => {
           {-1}
           {0}
           {1}
-        </div>
+        </div>,
       )).to.equal(
 `<div>
   -1
   0
   1
-</div>`
+</div>`,
       );
     });
 
     it('renders html entities properly', () => {
       expect(debugNode(
-        <div>&gt;</div>
+        <div>&gt;</div>,
       )).to.equal(
 `<div>
   &gt;
-</div>`
+</div>`,
       );
     });
 
@@ -185,7 +196,7 @@ describe('debug', () => {
           {null}
           {undefined}
           {''}
-        </div>
+        </div>,
       )).to.equal('<div id="foo" />');
     });
 
@@ -208,6 +219,23 @@ describe('debug', () => {
     <span>
       Foo
     </span>
+  </div>
+</Foo>`);
+    });
+
+    it('renders basic debug of components with mixed children', () => {
+      class Foo extends React.Component {
+        render() {
+          return (
+            <div>hello{'world'}</div>
+          );
+        }
+      }
+      expect(mount(<Foo id="2" />).debug()).to.eql(
+`<Foo id="2">
+  <div>
+    hello
+    world
   </div>
 </Foo>`);
     });
@@ -389,7 +417,7 @@ describe('debug', () => {
       });
 
       it('renders passed children properly', () => {
-        const Foo = (props) => (
+        const Foo = props => (
           <div className="foo">
             <span>From Foo</span>
             {props.children}

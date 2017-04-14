@@ -8,7 +8,7 @@
   },
   "plugins": [
     "edit-link",
-    "prism",
+    "prism@2.0.0",
     "-highlight",
     "github",
     "-search",

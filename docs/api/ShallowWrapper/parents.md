@@ -2,7 +2,7 @@
 
 Returns a wrapper around all of the parents/ancestors of the wrapper. Does not include the node
 in the current wrapper. Optionally, a selector can be provided and it will filter the parents by
-this selector
+this selector.
 
 Note: can only be called on a wrapper of a single node.
 

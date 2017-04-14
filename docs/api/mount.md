@@ -1,7 +1,7 @@
 # Full Rendering API (`mount(...)`)
 
-Full DOM rendering is ideal for use cases where you have components that may interact with DOM apis,
-or may require the full lifecycle in order to fully test the component (ie, `componentDidMount`
+Full DOM rendering is ideal for use cases where you have components that may interact with DOM APIs,
+or may require the full lifecycle in order to fully test the component (i.e., `componentDidMount`
 etc.)
 
 Full DOM rendering requires that a full DOM API be available at the global scope. This means that
@@ -12,11 +12,13 @@ implemented completely in JS.
 
 ```jsx
 import { mount } from 'enzyme';
+import sinon from 'sinon';
+import Foo from './Foo';
 
 describe('<Foo />', () => {
 
   it('calls componentDidMount', () => {
-    spy(Foo.prototype, 'componentDidMount');
+    sinon.spy(Foo.prototype, 'componentDidMount');
     const wrapper = mount(<Foo />);
     expect(Foo.prototype.componentDidMount.calledOnce).to.equal(true);
   });
@@ -29,7 +31,7 @@ describe('<Foo />', () => {
   });
 
   it('simulates click events', () => {
-    const onButtonClick = spy();
+    const onButtonClick = sinon.spy();
     const wrapper = mount(
       <Foo onButtonClick={onButtonClick} />
     );
@@ -61,7 +63,7 @@ describe('<Foo />', () => {
 Find every node in the render tree that matches the provided selector.
 
 #### [`.findWhere(predicate) => ReactWrapper`](ReactWrapper/findWhere.md)
-Find every node in the render tree that return true for the provided predicate function.
+Find every node in the render tree that returns true for the provided predicate function.
 
 #### [`.filter(selector) => ReactWrapper`](ReactWrapper/filter.md)
 Remove nodes in the current wrapper that do not match the provided selector.
@@ -86,6 +88,12 @@ Returns whether or not the current root node has the given class name or not.
 
 #### [`.is(selector) => Boolean`](ReactWrapper/is.md)
 Returns whether or not the current node matches a provided selector.
+
+#### [`.exists() => Boolean`](ReactWrapper/exists.md)
+Returns whether or not the current node exists.
+
+#### [`.isEmpty() => Boolean`](ReactWrapper/isEmpty.md)
+*Deprecated*: Use [.exists()](ReactWrapper/exists.md) instead.
 
 #### [`.not(selector) => ReactWrapper`](ReactWrapper/not.md)
 Remove nodes in the current wrapper that match the provided selector. (inverse of `.filter()`)
@@ -116,6 +124,15 @@ Returns a static HTML rendering of the current node.
 
 #### [`.get(index) => ReactElement`](ReactWrapper/get.md)
 Returns the node at the provided index of the current wrapper.
+
+#### [`.getNode() => ReactElement`](ReactWrapper/getNode.md)
+Returns the wrapper's underlying node.
+
+#### [`.getNodes() => Array<ReactElement>`](ReactWrapper/getNodes.md)
+Returns the wrapper's underlying nodes.
+
+#### [`.getDOMNode() => DOMComponent`](ReactWrapper/getDOMNode.md)
+Returns the outer most DOMComponent of the current wrapper.
 
 #### [`.at(index) => ReactWrapper`](ReactWrapper/at.md)
 Returns a wrapper of the node at the provided index of the current wrapper.
@@ -183,25 +200,31 @@ Maps the current array of nodes to another array.
 #### [`.matchesElement(node) => Boolean`](ReactWrapper/matchesElement.md)
 Returns whether or not a given react element matches the current render tree.
 
-#### [`.reduce(fn[, initialValue]) => Any`](/docs/api/ReactWrapper/reduce.md)
+#### [`.reduce(fn[, initialValue]) => Any`](ReactWrapper/reduce.md)
 Reduces the current array of nodes to a value
 
-#### [`.reduceRight(fn[, initialValue]) => Any`](/docs/api/ReactWrapper/reduceRight.md)
+#### [`.reduceRight(fn[, initialValue]) => Any`](ReactWrapper/reduceRight.md)
 Reduces the current array of nodes to a value, from right to left.
 
-#### [`.some(selector) => Boolean`](/docs/api/ReactWrapper/some.md)
+#### [`.slice([begin[, end]]) => ReactWrapper`](ReactWrapper/slice.md)
+Returns a new wrapper with a subset of the nodes of the original wrapper, according to the rules of `Array#slice`.
+
+#### [`.tap(intercepter) => Self`](ReactWrapper/tap.md)
+Taps into the wrapper method chain. Helpful for debugging.
+
+#### [`.some(selector) => Boolean`](ReactWrapper/some.md)
 Returns whether or not any of the nodes in the wrapper match the provided selector.
 
-#### [`.someWhere(predicate) => Boolean`](/docs/api/ReactWrapper/someWHere.md)
+#### [`.someWhere(predicate) => Boolean`](ReactWrapper/someWhere.md)
 Returns whether or not any of the nodes in the wrapper pass the provided predicate function.
 
-#### [`.every(selector) => Boolean`](/docs/api/ReactWrapper/every.md)
+#### [`.every(selector) => Boolean`](ReactWrapper/every.md)
 Returns whether or not all of the nodes in the wrapper match the provided selector.
 
-#### [`.everyWhere(predicate) => Boolean`](/docs/api/ReactWrapper/everyWhere.md)
+#### [`.everyWhere(predicate) => Boolean`](ReactWrapper/everyWhere.md)
 Returns whether or not all of the nodes in the wrapper pass the provided predicate function.
 
-#### [`.ref(refName) => ReactWrapper`](/docs/api/ReactWrapper/ref.md)
+#### [`.ref(refName) => ReactWrapper`](ReactWrapper/ref.md)
 Returns a wrapper of the node that matches the provided reference name.
 
 #### [`.detach() => void`](ReactWrapper/detach.md)

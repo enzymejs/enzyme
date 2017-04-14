@@ -8,61 +8,42 @@ node_js:
 before_install:
   - 'if [ "${TRAVIS_NODE_VERSION}" != "0.9" ]; then case "$(npm --version)" in 1.*) npm install -g npm@1.4.28 ;; 2.*) npm install -g npm@2 ;; esac ; fi'
   - 'if [ "${TRAVIS_NODE_VERSION}" != "0.6" ] && [ "${TRAVIS_NODE_VERSION}" != "0.9" ]; then npm install -g npm; fi'
-before_script: "sh install-relevant-react.sh"
+before_script:
+  - "sh install-relevant-react.sh"
+  - if [ -n "${KARMA-}" ]; then export CHROME_BIN=chromium-browser; export DISPLAY=:99.0; sh -e /etc/init.d/xvfb start; fi
 script:
-  - 'if [ -z "$REACT" ] && [ "${TRAVIS_NODE_VERSION}" = "4" ]; then npm run test:env -- "${EXAMPLE}" ; elif [ -z "$REACT" ]; then echo "Test Skipped" ; elif [ "${TRAVIS_NODE_VERSION}" = "4" ]; then npm run lint && npm run travis ; elif [ "${TRAVIS_NODE_VERSION}" = "0.12" ]; then npm run travis ; else npm test ; fi'
+  - 'if [ -n "${EXAMPLE-}" ]; then npm run test:env -- "${EXAMPLE}" ; elif [ -n "${LINT-}" ]; then npm run lint; elif [ -n "${KARMA-}" ]; then npm run test:karma -- --single-run; elif [ -n "${REACT-}" ]; then npm run travis; else false ; fi'
 after_script:
   - 'if [ "${TRAVIS_NODE_VERSION}" = "4" ] || [ "${TRAVIS_NODE_VERSION}" = "0.12" ]; then cat ./coverage/lcov.info | ./node_modules/.bin/coveralls ; fi'
-env:
-  - REACT=0.13
-  - REACT=0.14
-  - REACT=15
-  - EXAMPLE=mocha
-  - EXAMPLE=karma
-  - EXAMPLE=react-native
-  - EXAMPLE=karma-webpack
-  - EXAMPLE=jest
 sudo: false
 matrix:
   fast_finish: true
-  exclude:
-  - node_js: "5"
-    env: EXAMPLE=mocha
-  - node_js: "5"
-    env: EXAMPLE=karma
-  - node_js: "5"
-    env: EXAMPLE=react-native
-  - node_js: "5"
-    env: EXAMPLE=karma-webpack
-  - node_js: "5"
-    env: EXAMPLE=jest
-  - node_js: "4"
-    env: EXAMPLE=mocha
-  - node_js: "4"
-    env: EXAMPLE=karma
-  - node_js: "4"
-    env: EXAMPLE=react-native
-  - node_js: "4"
-    env: EXAMPLE=karma-webpack
-  - node_js: "4"
-    env: EXAMPLE=jest
-  - node_js: "0.12"
-    env: EXAMPLE=mocha
-  - node_js: "0.12"
-    env: EXAMPLE=karma
-  - node_js: "0.12"
-    env: EXAMPLE=react-native
-  - node_js: "0.12"
-    env: EXAMPLE=karma-webpack
-  - node_js: "0.12"
-    env: EXAMPLE=jest
-  - node_js: "0.10"
-    env: EXAMPLE=mocha
-  - node_js: "0.10"
-    env: EXAMPLE=karma
-  - node_js: "0.10"
-    env: EXAMPLE=react-native
-  - node_js: "0.10"
-    env: EXAMPLE=karma-webpack
-  - node_js: "0.10"
-    env: EXAMPLE=jest
+  include:
+   - node_js: "6"
+     env: LINT=true
+   - node_js: "6"
+     env: EXAMPLE=mocha
+   - node_js: "6"
+     env: EXAMPLE=karma
+   - node_js: "6"
+     env: EXAMPLE=react-native
+   - node_js: "6"
+     env: EXAMPLE=karma-webpack
+   - node_js: "6"
+     env: EXAMPLE=jest
+   - node_js: "6"
+     env: KARMA=true REACT=0.13
+   - node_js: "6"
+     env: KARMA=true REACT=0.14
+   - node_js: "6"
+     env: KARMA=true REACT=15.4
+   - node_js: "6"
+     env: KARMA=true REACT=15
+  allow_failures:
+    - node_js: "6"
+      env: EXAMPLE=react-native
+env:
+  - REACT=0.13
+  - REACT=0.14
+  - REACT=15.4
+  - REACT=15

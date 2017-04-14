@@ -1,12 +1,154 @@
 # Change Log
 
+## 2.8.1
+
+### Fixes
+
+- support React@15.5 ([#876](https://github.com/airbnb/enzyme/pull/876))
+- no longer depend on `React.createClass` ([#877](https://github.com/airbnb/enzyme/pull/877))
+- Throw for malformed compound selectors ([#868](https://github.com/airbnb/enzyme/pull/868))
+
+## 2.8.0
+
+### New Stuff
+
+- add disableLifecycleMethods for shallow ([#789](https://github.com/airbnb/enzyme/pull/789))
+- Match children before and after interpolation ([#512](https://github.com/airbnb/enzyme/pull/512))
+- Supporting passing context to static rendering ([#429](https://github.com/airbnb/enzyme/pull/429))
+
+
+### Fixes
+
+- Fix an issue w/ cleaning up global.document ([#855](https://github.com/airbnb/enzyme/pull/855))
+- Update props when shouldComponentUpdate returns `false` and `lifecycleExperimental` is on ([#807](https://github.com/airbnb/enzyme/pull/807))
+- Properly pass along options in `dive` ([#771](https://github.com/airbnb/enzyme/pull/771))
+
+## 2.7.1 (January 22, 2017)
+
+### Fixes
+
+- `mount`: Fix bug from ([#677](https://github.com/airbnb/enzyme/pull/677) ([#680](https://github.com/airbnb/enzyme/pull/680))
+- `mount`: ignore text nodes in childrenOfInst ([#604](https://github.com/airbnb/enzyme/pull/604))
+
+### Documentation
+
+- Update Docs for .getNode and .getNodes ([#743](https://github.com/airbnb/enzyme/pull/743))
+- Add a link for `ShallowWrapper#dive()` ([#759](https://github.com/airbnb/enzyme/pull/759)
+- Fix alphabetical order of API lists ([#761](https://github.com/airbnb/enzyme/pull/761))
+
+## 2.7.0 (December 21, 2016)
+
+### New Stuff
+
+- `shallow`/`mount`: Add `.slice()` method ([#661](https://github.com/airbnb/enzyme/pull/661))
+- `mount`: implement ReactWrapper#getDOMNode ([#679](https://github.com/airbnb/enzyme/pull/679))
+- `shallow`/`mount`: Add `exists`; deprecate isEmpty() ([#722](https://github.com/airbnb/enzyme/pull/722))
+
+### Fixes
+
+- `mount`: extract MountedTraversal.hasClassName from MountedTraversal.instHasClassName, which allows ReactWrapper.hasClass to bypass the !isDOMComponent(inst) call ([#677](https://github.com/airbnb/enzyme/pull/677))
+- `withDom`: Display a useful error when `withDom` fails to find "jsdom" ([#686](https://github.com/airbnb/enzyme/pull/686))
+- `mount`: ensure that `react-text` comment nodes don’t break `.find` ([#691](https://github.com/airbnb/enzyme/pull/691))
+- `mount`: `.parents()` now filters out sibling path trees ([#713](https://github.com/airbnb/enzyme/pull/713))
+
+## 2.6.0 (November 9, 2016)
+
+### New Stuff
+
+- ensure ShallowWrapper render output can't get stale ([#490](https://github.com/airbnb/enzyme/pull/490))
+
+### Fixes
+
+- Use shim to detect constructor function name ([#659](https://github.com/airbnb/enzyme/pull/659))
+- `mount`/`shallow`: fix ID selectors ([#670](https://github.com/airbnb/enzyme/pull/670))
+
+
+## 2.5.2 (November 9, 2016)
+
+### Fixes
+
+- Use shim to detect constructor function name ([#659](https://github.com/airbnb/enzyme/pull/659))
+- `mount`/`shallow`: fix ID selectors ([#670](https://github.com/airbnb/enzyme/pull/670))
+
+
+## 2.5.1 (October 17, 2016)
+
+### Patches
+
+- continue to support one-argument `single` ([#632](https://github.com/airbnb/enzyme/pull/632))
+
+
+## 2.5.0 (October 17, 2016)
+
+### Minor Changes
+
+- pass callback on setState and setProps ([#617](https://github.com/airbnb/enzyme/pull/617))
+
+- Make ReactWrapper and ShallowWrapper iterable ([#594](https://github.com/airbnb/enzyme/pull/594))
+
+- add `.dive()` method to `shallow` ([#618](https://github.com/airbnb/enzyme/pull/618))
+
+
+### Patches
+
+- Warn if selector contains a pseudo-class ([#591](https://github.com/airbnb/enzyme/pull/591))
+
+- change isCompoundSelector to not match prop selector ([#595](https://github.com/airbnb/enzyme/pull/595))
+
+- fixed hasClassName in case className is not a string and has toString method ([#518](https://github.com/airbnb/enzyme/pull/518))
+
+- Throw if some() is called on a root wrapper ([#523](https://github.com/airbnb/enzyme/pull/523))
+
+- Fix valid + falsy propvalues ([#563](https://github.com/airbnb/enzyme/pull/563))
+
+
+## 2.4.2 (November 9, 2016)
+
+### Fixes
+
+- Use shim to detect constructor function name ([#659](https://github.com/airbnb/enzyme/pull/659))
+- `mount`/`shallow`: fix ID selectors ([#670](https://github.com/airbnb/enzyme/pull/670))
+
+
+## 2.4.1 (July 8, 2016)
+
+### Patches
+
+- Fix backwards incompatible `shouldComponentUpdate` call ([#491](https://github.com/airbnb/enzyme/pull/491))
+
+
+## 2.4.0 (July 7, 2016)
+
+### Minor Changes
+
+- Support all Component Lifecycle methods in ShallowRenderer (behind an experimental flag) ([#318](https://github.com/airbnb/enzyme/pull/318))
+
+- Add an `isEmptyRender()` method to both `ShallowWrapper` and `ReactWrapper` ([#339](https://github.com/airbnb/enzyme/pull/339))
+
+- Add support for batched updates with `ShallowRender.simulate` ([#342](https://github.com/airbnb/enzyme/pull/342))
+
+
+### Patches
+
+- Switch to using classList instead of className ([#448](https://github.com/airbnb/enzyme/pull/448))
+
+- fixes mount().debug() output with mixed children ([#476](https://github.com/airbnb/enzyme/pull/476))
+
+- Support additional characters in attribute selectors ([#412](https://github.com/airbnb/enzyme/pull/412))
+
+- fix id selector not working when combined with a tag selector ([#387](https://github.com/airbnb/enzyme/pull/387))
+
+- Support spaces in attribute selector values ([#427](https://github.com/airbnb/enzyme/pull/427))
+
+
+
 ## 2.3.0 (May 9, 2016)
 
 ### Minor Changes
 
 - add `.tap()` method to `ShallowWrapper` and `ReactWrapper` ([#299](https://github.com/airbnb/enzyme/pull/299))
 
-- add `.key()` method to `ShallowWrapper` and `ReactWrapper ([#327](https://github.com/airbnb/enzyme/pull/327))
+- add `.key()` method to `ShallowWrapper` and `ReactWrapper` ([#327](https://github.com/airbnb/enzyme/pull/327))
 
 - add support for descendent selectors, `>`, `~` and `+` ([#217](https://github.com/airbnb/enzyme/pull/217))
 
@@ -27,7 +169,7 @@
 
 - fix handling of SFC components and `.instance()` ([#359](https://github.com/airbnb/enzyme/pull/359))
 
-- reduce false positives by using argument validation for `.contains` ([#259](https://github.com/airbnb/enzyme/pull/259)) 
+- reduce false positives by using argument validation for `.contains` ([#259](https://github.com/airbnb/enzyme/pull/259))
 
 - fix equality algorithm so that non-renderable nodes are equivalent ([#192](https://github.com/airbnb/enzyme/pull/192))
 

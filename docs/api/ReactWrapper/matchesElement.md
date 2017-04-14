@@ -1,7 +1,7 @@
 # `.matchesElement(node) => Boolean`
 
 Returns whether or not a given react element matches the current render tree.
-It will determine if the the wrapper root node __looks like__ the expected element by checking if all props of the expected element are present on the wrapper root node and equals to each other.
+It will determine if the the wrapper root node __looks like__ the expected element by checking if all the props supplied in the expected element are present on the wrapper root node and equal to each other. Props present on the wrapper root node but not supplied in the expected element will be ignored.
 
 
 #### Arguments
@@ -21,16 +21,20 @@ render tree.
 
 
 ```jsx
-onst MyComponent = React.createClass({
+class MyComponent extends React.Component {
+  constructor(props) {
+    super(props);
+    this.handleClick = this.handleClick.bind(this);
+  }
   handleClick() {
     ...
-  },
+  }
   render() {
     return (
       <div onClick={this.handleClick} className="foo bar">Hello</div>
     );
   }
-});
+}
 
 const wrapper = mount(<MyComponent />);
 expect(wrapper.matchesElement(

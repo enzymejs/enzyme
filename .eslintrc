@@ -5,9 +5,28 @@
     "node": true,
     "mocha": true
   },
+  "ecmaFeatures": {
+    "jsx": true
+  },
   "rules": {
     "id-length": 0,
-    "new-cap": 0,
-    "no-console": 0
+    "new-cap": [2, { "capIsNewExceptions": ["AND"] }],
+    "react/jsx-pascal-case": [2, { "allowAllCaps": true }],
+    "no-underscore-dangle": [2, {
+      "allowAfterThis": true,
+      "allow": [
+        "_context",
+        "_currentElement",
+        "_instance",
+        "_reactInternalComponent",
+        "_reactInternalInstance",
+        "_renderedChildren",
+        "_renderedComponent",
+        "_renderedNodeType",
+        "_state",
+        "_store",
+        "_stringText",
+      ],
+    }],
   }
 }

@@ -46,7 +46,10 @@ describe('<MyComponent />', () => {
 
 1. `node` (`ReactElement`): The node to render
 2. `options` (`Object` [optional]):
-- `options.context`: (`Object` [optional]): Context to be passed into the component
+  - `options.context`: (`Object` [optional]): Context to be passed into the component
+  - `options.disableLifecycleMethods`: (`Boolean` [optional]): If set to true, `componentDidMount`
+is not called on the component, and `componentDidUpdate` is not called after
+[`setProps`](ShallowWrapper/setProps.md) and [`setContext`](ShallowWrapper/setContext.md).
 
 #### Returns
 
@@ -59,7 +62,7 @@ describe('<MyComponent />', () => {
 Find every node in the render tree that matches the provided selector.
 
 #### [`.findWhere(predicate) => ShallowWrapper`](ShallowWrapper/findWhere.md)
-Find every node in the render tree that return true for the provided predicate function.
+Find every node in the render tree that returns true for the provided predicate function.
 
 #### [`.filter(selector) => ShallowWrapper`](ShallowWrapper/filter.md)
 Remove nodes in the current wrapper that do not match the provided selector.
@@ -86,10 +89,16 @@ Returns whether or not the current render tree is equal to the given node, based
 Returns whether or not a given react element matches the shallow render tree.
 
 #### [`.hasClass(className) => Boolean`](ShallowWrapper/hasClass.md)
-Returns whether or not the current root node has the given class name or not.
+Returns whether or not the current node has the given class name or not.
 
 #### [`.is(selector) => Boolean`](ShallowWrapper/is.md)
 Returns whether or not the current node matches a provided selector.
+
+#### [`.exists() => Boolean`](ShallowWrapper/exists.md)
+Returns whether or not the current node exists.
+
+#### [`.isEmpty() => Boolean`](ShallowWrapper/isEmpty.md)
+*Deprecated*: Use [.exists()](ShallowWrapper/exists.md) instead.
 
 #### [`.not(selector) => ShallowWrapper`](ShallowWrapper/not.md)
 Remove nodes in the current wrapper that match the provided selector. (inverse of `.filter()`)
@@ -127,6 +136,12 @@ Returns a static HTML rendering of the current node.
 #### [`.get(index) => ReactElement`](ShallowWrapper/get.md)
 Returns the node at the provided index of the current wrapper.
 
+#### [`.getNode() => ReactElement`](ShallowWrapper/getNode.md)
+Returns the wrapper's underlying node.
+
+#### [`.getNodes() => Array<ReactElement>`](ShallowWrapper/getNodes.md)
+Returns the wrapper's underlying nodes.
+
 #### [`.at(index) => ShallowWrapper`](ShallowWrapper/at.md)
 Returns a wrapper of the node at the provided index of the current wrapper.
 
@@ -143,13 +158,13 @@ Returns the state of the root component.
 Returns the context of the root component.
 
 #### [`.props() => Object`](ShallowWrapper/props.md)
-Returns the props of the root component.
+Returns the props of the current node.
 
 #### [`.prop(key) => Any`](ShallowWrapper/prop.md)
-Returns the named prop of the root component.
+Returns the named prop of the current node.
 
 #### [`.key() => String`](ShallowWrapper/key.md)
-Returns the key of the root component.
+Returns the key of the current node.
 
 #### [`.simulate(event[, data]) => ShallowWrapper`](ShallowWrapper/simulate.md)
 Simulates an event on the current node.
@@ -184,20 +199,29 @@ Iterates through each node of the current wrapper and executes the provided func
 #### [`.map(fn) => Array`](ShallowWrapper/map.md)
 Maps the current array of nodes to another array.
 
-#### [`.reduce(fn[, initialValue]) => Any`](/docs/api/ShallowWrapper/reduce.md)
+#### [`.reduce(fn[, initialValue]) => Any`](ShallowWrapper/reduce.md)
 Reduces the current array of nodes to a value
 
-#### [`.reduceRight(fn[, initialValue]) => Any`](/docs/api/ShallowWrapper/reduceRight.md)
+#### [`.reduceRight(fn[, initialValue]) => Any`](ShallowWrapper/reduceRight.md)
 Reduces the current array of nodes to a value, from right to left.
 
-#### [`.some(selector) => Boolean`](/docs/api/ShallowWrapper/some.md)
+#### [`.slice([begin[, end]]) => ShallowWrapper`](ShallowWrapper/slice.md)
+Returns a new wrapper with a subset of the nodes of the original wrapper, according to the rules of `Array#slice`.
+
+#### [`.tap(intercepter) => Self`](ShallowWrapper/tap.md)
+Taps into the wrapper method chain. Helpful for debugging.
+
+#### [`.some(selector) => Boolean`](ShallowWrapper/some.md)
 Returns whether or not any of the nodes in the wrapper match the provided selector.
 
-#### [`.someWhere(predicate) => Boolean`](/docs/api/ShallowWrapper/someWhere.md)
+#### [`.someWhere(predicate) => Boolean`](ShallowWrapper/someWhere.md)
 Returns whether or not any of the nodes in the wrapper pass the provided predicate function.
 
-#### [`.every(selector) => Boolean`](/docs/api/ShallowWrapper/every.md)
+#### [`.every(selector) => Boolean`](ShallowWrapper/every.md)
 Returns whether or not all of the nodes in the wrapper match the provided selector.
 
-#### [`.everyWhere(predicate) => Boolean`](/docs/api/ShallowWrapper/everyWhere.md)
+#### [`.everyWhere(predicate) => Boolean`](ShallowWrapper/everyWhere.md)
 Returns whether or not all of the nodes in the wrapper pass the provided predicate function.
+
+#### [`.dive([options]) => ShallowWrapper`](ShallowWrapper/dive.md)
+Shallow render the one non-DOM child of the current wrapper, and return a wrapper around the result.

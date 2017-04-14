@@ -1,3 +1,9 @@
+import without from 'lodash/without';
+import escape from 'lodash/escape';
+import compact from 'lodash/compact';
+import objectValues from 'object.values';
+import functionName from 'function.prototype.name';
+
 import {
   childrenOfNode,
 } from './ShallowTraversal';
@@ -13,15 +19,11 @@ import {
   internalInstance,
   propsOfNode,
 } from './Utils';
-import without from 'lodash/without';
-import escape from 'lodash/escape';
-import compact from 'lodash/compact';
 import { REACT013 } from './version';
-import objectValues from 'object.values';
 
 export function typeName(node) {
   return typeof node.type === 'function'
-    ? (node.type.displayName || node.type.name || 'Component')
+    ? (node.type.displayName || functionName(node.type) || 'Component')
     : node.type;
 }
 
@@ -80,6 +82,10 @@ export function debugNodes(nodes) {
 export function debugInst(inst, indentLength = 2) {
   if (typeof inst === 'string' || typeof inst === 'number') return escape(inst);
   if (!inst) return '';
+
+  if (inst._stringText) {
+    return inst._stringText;
+  }
 
   if (!inst.getPublicInstance) {
     const internal = internalInstance(inst);

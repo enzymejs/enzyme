@@ -1,6 +1,6 @@
 # Using Enzyme with JSDOM
 
-JSDOM is a JavaScript based headless browser that can be used to create a realistic testing environment.
+[JSDOM](https://github.com/tmpvar/jsdom) is a JavaScript based headless browser that can be used to create a realistic testing environment.
 
 Since enzyme's [`mount`](../api/mount.md) API requires a DOM, JSDOM is required in order to use
 `mount` if you are not already in a browser environment (ie, a Node environment).
@@ -16,13 +16,10 @@ As a result, a standalone script like the one below is generally a good approach
 
 var jsdom = require('jsdom').jsdom;
 
-var exposedProperties = ['window', 'navigator', 'document'];
-
 global.document = jsdom('');
 global.window = document.defaultView;
 Object.keys(document.defaultView).forEach((property) => {
   if (typeof global[property] === 'undefined') {
-    exposedProperties.push(property);
     global[property] = document.defaultView[property];
   }
 });

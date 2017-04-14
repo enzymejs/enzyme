@@ -48,7 +48,7 @@ npm test
 ```
 
 ```bash
-# run tests on both React 0.14 and React 0.13
+# run tests on all supported versions of React
 npm run test:all
 ```
 

@@ -1,9 +1,10 @@
 import isEmpty from 'lodash/isEmpty';
+import values from 'object.values';
 import isSubset from 'is-subset';
 import {
   internalInstance,
-  coercePropValue,
   nodeEqual,
+  nodeMatches,
   propsOfNode,
   isFunctionalComponent,
   splitSelector,
@@ -12,6 +13,7 @@ import {
   AND,
   SELECTOR,
   nodeHasType,
+  nodeHasProperty,
 } from './Utils';
 import {
   isDOMComponent,
@@ -45,13 +47,31 @@ export function instEqual(a, b, lenComp) {
   return nodeEqual(getNode(a), getNode(b), lenComp);
 }
 
+export function instMatches(a, b, lenComp) {
+  return nodeMatches(getNode(a), getNode(b), lenComp);
+}
+
 export function instHasClassName(inst, className) {
+  const node = findDOMNode(inst);
+  if (node === null) { // inst renders null
+    return false;
+  }
+  if (node.classList) {
+    return node.classList.contains(className);
+  }
+  let classes = node.className || '';
+  if (typeof classes === 'object') {
+    classes = classes.baseVal;
+  }
+  classes = classes.replace(/\s/g, ' ');
+  return ` ${classes} `.indexOf(` ${className} `) > -1;
+}
+
+function hasClassName(inst, className) {
   if (!isDOMComponent(inst)) {
     return false;
   }
-  let classes = findDOMNode(inst).className || '';
-  classes = classes.replace(/\s/g, ' ');
-  return ` ${classes} `.indexOf(` ${className} `) > -1;
+  return instHasClassName(inst, className);
 }
 
 export function instHasId(inst, id) {
@@ -78,26 +98,10 @@ export function instHasType(inst, type) {
 
 export function instHasProperty(inst, propKey, stringifiedPropValue) {
   if (!isDOMComponent(inst)) return false;
+
   const node = getNode(inst);
-  const nodeProps = propsOfNode(node);
-  const descriptor = Object.getOwnPropertyDescriptor(nodeProps, propKey);
-  if (descriptor && descriptor.get) {
-    return false;
-  }
-  const nodePropValue = nodeProps[propKey];
 
-  const propValue = coercePropValue(propKey, stringifiedPropValue);
-
-  // intentionally not matching node props that are undefined
-  if (nodePropValue === undefined) {
-    return false;
-  }
-
-  if (propValue) {
-    return nodePropValue === propValue;
-  }
-
-  return nodeProps.hasOwnProperty(propKey);
+  return nodeHasProperty(node, propKey, stringifiedPropValue);
 }
 
 // called with private inst
@@ -120,23 +124,24 @@ export function childrenOfInstInternal(inst) {
   const publicInst = inst.getPublicInstance();
   const currentElement = inst._currentElement;
   if (isDOMComponent(publicInst)) {
-    const children = [];
     const renderedChildren = renderedChildrenOfInst(inst);
-    let key;
-    for (key in renderedChildren) {
-      if (!renderedChildren.hasOwnProperty(key)) {
-        continue;
+    return values(renderedChildren || {}).filter((node) => {
+      if (REACT013 && !node.getPublicInstance) {
+        return false;
       }
-      if (REACT013 && !renderedChildren[key].getPublicInstance) {
-        continue;
+      if (typeof node._stringText !== 'undefined') {
+        return false;
       }
-      if (!REACT013 && typeof renderedChildren[key]._currentElement.type === 'function') {
-        children.push(renderedChildren[key]._instance);
-        continue;
+      return true;
+    }).map((node) => {
+      if (!REACT013 && typeof node._currentElement.type === 'function') {
+        return node._instance;
       }
-      children.push(renderedChildren[key].getPublicInstance());
-    }
-    return children;
+      if (typeof node._stringText === 'string') {
+        return node;
+      }
+      return node.getPublicInstance();
+    });
   } else if (
     !REACT013 &&
     isElement(currentElement) &&
@@ -167,15 +172,77 @@ export function childrenOfInst(node) {
   return childrenOfInstInternal(internalInstanceOrComponent(node));
 }
 
+// This function should be called with an "internal instance". Nevertheless, if it is
+// called with a "public instance" instead, the function will call itself with the
+// internal instance and return the proper result.
+function findAllInRenderedTreeInternal(inst, test) {
+  if (!inst) {
+    return [];
+  }
+
+  if (!inst.getPublicInstance) {
+    const internal = internalInstance(inst);
+    return findAllInRenderedTreeInternal(internal, test);
+  }
+  const publicInst = inst.getPublicInstance() || inst._instance;
+  let ret = test(publicInst) ? [publicInst] : [];
+  const currentElement = inst._currentElement;
+  if (isDOMComponent(publicInst)) {
+    const renderedChildren = renderedChildrenOfInst(inst);
+    values(renderedChildren || {}).filter((node) => {
+      if (REACT013 && !node.getPublicInstance) {
+        return false;
+      }
+      return true;
+    }).forEach((node) => {
+      ret = ret.concat(findAllInRenderedTreeInternal(node, test));
+    });
+  } else if (
+    !REACT013 &&
+    isElement(currentElement) &&
+    typeof currentElement.type === 'function'
+  ) {
+    ret = ret.concat(
+      findAllInRenderedTreeInternal(
+        inst._renderedComponent,
+        test,
+      ),
+    );
+  } else if (
+    REACT013 &&
+    isCompositeComponent(publicInst)
+  ) {
+    ret = ret.concat(
+      findAllInRenderedTreeInternal(
+        inst._renderedComponent,
+        test,
+      ),
+    );
+  }
+  return ret;
+}
+
+// This function could be called with a number of different things technically, so we need to
+// pass the *right* thing to our internal helper.
+export function treeFilter(node, test) {
+  return findAllInRenderedTreeInternal(internalInstanceOrComponent(node), test);
+}
+
+function pathFilter(path, fn) {
+  return path.filter(tree => treeFilter(tree, fn).length !== 0);
+}
+
 export function pathToNode(node, root) {
   const queue = [root];
   const path = [];
+
+  const hasNode = testNode => node === testNode;
 
   while (queue.length) {
     const current = queue.pop();
     const children = childrenOfInst(current);
 
-    if (current === node) return path;
+    if (current === node) return pathFilter(path, hasNode);
 
     path.push(current);
 
@@ -183,7 +250,7 @@ export function pathToNode(node, root) {
       // leaf node. if it isn't the node we are looking for, we pop.
       path.pop();
     }
-    queue.push.apply(queue, children);
+    queue.push(...children);
   }
 
   return null;
@@ -212,11 +279,11 @@ export function buildInstPredicate(selector) {
 
       switch (selectorType(selector)) {
         case SELECTOR.CLASS_TYPE:
-          return inst => instHasClassName(inst, selector.substr(1));
+          return inst => hasClassName(inst, selector.slice(1));
         case SELECTOR.ID_TYPE:
-          return inst => instHasId(inst, selector.substr(1));
+          return inst => instHasId(inst, selector.slice(1));
         case SELECTOR.PROP_TYPE: {
-          const propKey = selector.split(/\[([a-zA-Z\-\:]*?)(=|\])/)[1];
+          const propKey = selector.split(/\[([a-zA-Z][a-zA-Z_\d\-:]*?)(=|])/)[1];
           const propValue = selector.split(/=(.*?)]/)[1];
 
           return node => instHasProperty(node, propKey, propValue);
@@ -231,70 +298,10 @@ export function buildInstPredicate(selector) {
         return node => instMatchesObjectProps(node, selector);
       }
       throw new TypeError(
-        'Enzyme::Selector does not support an array, null, or empty object as a selector'
+        'Enzyme::Selector does not support an array, null, or empty object as a selector',
       );
 
     default:
       throw new TypeError('Enzyme::Selector expects a string, object, or Component Constructor');
   }
-}
-
-// This function should be called with an "internal instance". Nevertheless, if it is
-// called with a "public instance" instead, the function will call itself with the
-// internal instance and return the proper result.
-function findAllInRenderedTreeInternal(inst, test) {
-  if (!inst) {
-    return [];
-  }
-
-  if (!inst.getPublicInstance) {
-    const internal = internalInstance(inst);
-    return findAllInRenderedTreeInternal(internal, test);
-  }
-  const publicInst = inst.getPublicInstance() || inst._instance;
-  let ret = test(publicInst) ? [publicInst] : [];
-  const currentElement = inst._currentElement;
-  if (isDOMComponent(publicInst)) {
-    const renderedChildren = renderedChildrenOfInst(inst);
-    let key;
-    for (key in renderedChildren) {
-      if (!renderedChildren.hasOwnProperty(key)) {
-        continue;
-      }
-      if (REACT013 && !renderedChildren[key].getPublicInstance) {
-        continue;
-      }
-      ret = ret.concat(
-        findAllInRenderedTreeInternal(renderedChildren[key], test)
-      );
-    }
-  } else if (
-    !REACT013 &&
-    isElement(currentElement) &&
-    typeof currentElement.type === 'function'
-  ) {
-    ret = ret.concat(
-      findAllInRenderedTreeInternal(
-        inst._renderedComponent,
-        test
-      )
-    );
-  } else if (
-    REACT013 &&
-    isCompositeComponent(publicInst)
-  ) {
-    ret = ret.concat(
-      findAllInRenderedTreeInternal(
-        inst._renderedComponent,
-        test
-      )
-    );
-  }
-  return ret;
-}
-
-// This function could be called with a number of different things technically, so we need to
-// pass the *right* thing to our internal helper.
-export function treeFilter(node, test) {
-  return findAllInRenderedTreeInternal(internalInstanceOrComponent(node), test);
 }

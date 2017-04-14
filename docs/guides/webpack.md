@@ -4,7 +4,7 @@ If you are using a test runner that runs code in a browser-based environment, yo
 [webpack]() in order to bundle your React code.
 
 Webpack uses static analysis to create a dependency graph at build-time of your source code to
-build a bundle. Enzyme has a hand full of conditional `require()` calls in it in order to remain
+build a bundle. Enzyme has a handful of conditional `require()` calls in it in order to remain
 compatible with React 0.13 and React 0.14.
 
 Unfortunately, these conditional requires mean there is a bit of extra setup with bundlers like
@@ -20,7 +20,9 @@ react/lib/ReactContext
 react/lib/ExecutionEnvironment
 ```
 
-Here is an example piece of configuration code marking these as external:
+Depending on if you are using Webpack 1 or Webpack 2 you will need different configurations.
+
+### Webpack 1
 
 ```js
 /* webpack.config.js */
@@ -34,6 +36,18 @@ externals: {
 // ...
 ```
 
+### Webpack 2
+
+```js
+externals: {
+  'cheerio': 'window',
+  'react/addons': 'react',
+  'react/lib/ExecutionEnvironment': 'react',
+  'react/lib/ReactContext': 'react',
+},
+```
+
+
 ## React 0.14 Compatibility
 
 If you are using React 0.14, the instructions above will be the same but with a different list of
@@ -46,7 +60,7 @@ react-dom/server
 react-addons-test-utils
 ```
 
-## React 15 Compatability
+## React 15 Compatibility
 
 If you are using React 15, your config should include these externals:
 

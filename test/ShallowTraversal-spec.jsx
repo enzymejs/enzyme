@@ -11,6 +11,7 @@ import {
   treeFilter,
   pathToNode,
   getTextFromNode,
+  buildPredicate,
 } from '../src/ShallowTraversal';
 import { describeIf } from './_helpers';
 import { REACT013 } from '../src/version';
@@ -33,8 +34,12 @@ describe('ShallowTraversal', () => {
     it('splits tag names and attributes', () => {
       expect(fn('input[type="text"]')).to.eql(['input', '[type="text"]']);
       expect(
-        fn('div[title="title"][data-value="foo"]')
+        fn('div[title="title"][data-value="foo"]'),
       ).to.eql(['div', '[title="title"]', '[data-value="foo"]']);
+    });
+
+    it('throws for malformed selectors', () => {
+      expect(() => fn('div[data-name="xyz"')).to.throw(/Enzyme::Selector received what appears to be a malformed string selector/);
     });
   });
 
@@ -59,6 +64,12 @@ describe('ShallowTraversal', () => {
       expect(hasClassName(node, 'foo-bar')).to.equal(true);
     });
 
+    it('should work if className has a function in toString property', () => {
+      function classes() {}
+      classes.toString = () => 'foo-bar';
+      const node = (<div className={classes} />);
+      expect(hasClassName(node, 'foo-bar')).to.equal(true);
+    });
   });
 
   describe('nodeHasProperty', () => {
@@ -104,6 +115,42 @@ describe('ShallowTraversal', () => {
       expect(nodeHasProperty(<div foo={2e8} />, 'foo', '2e8')).to.equal(true);
       expect(nodeHasProperty(<div foo={Infinity} />, 'foo', 'Infinity')).to.equal(true);
       expect(nodeHasProperty(<div foo={-Infinity} />, 'foo', '-Infinity')).to.equal(true);
+    });
+
+    it('should parse zeroes properly', () => {
+      expect(nodeHasProperty(<div foo={0} />, 'foo', '0')).to.equal(true);
+      expect(nodeHasProperty(<div foo={-0} />, 'foo', '-0')).to.equal(true);
+      expect(nodeHasProperty(<div foo={1} />, 'foo', '0')).to.equal(false);
+      expect(nodeHasProperty(<div foo={2} />, 'foo', '-0')).to.equal(false);
+    });
+
+    it('should work with empty strings', () => {
+      expect(nodeHasProperty(<div foo={''} />, 'foo', '')).to.equal(true);
+      expect(nodeHasProperty(<div foo={''} />, 'foo', '""')).to.equal(true);
+      expect(nodeHasProperty(<div foo={'bar'} />, 'foo', '')).to.equal(false);
+      expect(nodeHasProperty(<div foo={'bar'} />, 'foo', '""')).to.equal(false);
+    });
+
+    it('should work with NaN', () => {
+      expect(nodeHasProperty(<div foo={NaN} />, 'foo', 'NaN')).to.equal(true);
+      expect(nodeHasProperty(<div foo={0} />, 'foo', 'NaN')).to.equal(false);
+    });
+
+    it('should work with null', () => {
+      expect(nodeHasProperty(<div foo={null} />, 'foo', 'null')).to.equal(true);
+      expect(nodeHasProperty(<div foo={0} />, 'foo', 'null')).to.equal(false);
+    });
+
+    it('should work with false', () => {
+      expect(nodeHasProperty(<div foo={false} />, 'foo', 'false')).to.equal(true);
+      expect(nodeHasProperty(<div foo={0} />, 'foo', 'false')).to.equal(false);
+    });
+
+    it('should work with ±Infinity', () => {
+      expect(nodeHasProperty(<div foo={Infinity} />, 'foo', 'Infinity')).to.equal(true);
+      expect(nodeHasProperty(<div foo={0} />, 'foo', 'Infinity')).to.equal(false);
+      expect(nodeHasProperty(<div foo={-Infinity} />, 'foo', '-Infinity')).to.equal(true);
+      expect(nodeHasProperty(<div foo={0} />, 'foo', '-Infinity')).to.equal(false);
     });
 
     it('should throw when un unquoted string is passed in', () => {
@@ -164,7 +211,7 @@ describe('ShallowTraversal', () => {
       const spy = sinon.spy();
       const node = (
         <div>
-          <p>{""}</p>
+          <p>{''}</p>
         </div>
       );
       treeForEach(node, spy);
@@ -218,14 +265,20 @@ describe('ShallowTraversal', () => {
   });
 
   describe('pathToNode', () => {
+    it('should return null if no queue length', () => {
+      const result = pathToNode({}, []);
+
+      expect(result).to.equal(null);
+    });
+
     it('should return trees from the root node', () => {
-      const node = <label />;
+      const node = <label htmlFor="foo" />;
       const tree = (
         <div>
           <button />
           <nav>
             {node}
-            <input />
+            <input id="foo" />
           </nav>
         </div>
       );
@@ -237,13 +290,13 @@ describe('ShallowTraversal', () => {
     });
 
     it('should return trees from the root node except the sibling node', () => {
-      const node = <label />;
+      const node = <label htmlFor="foo" />;
       const tree = (
         <div>
           <button />
           <nav>
             {node}
-            <div><input /></div>
+            <div><input id="foo" /></div>
           </nav>
         </div>
       );
@@ -257,6 +310,11 @@ describe('ShallowTraversal', () => {
   });
 
   describe('getTextFromNode', () => {
+    it('should return empty string for nodes which do not exist', () => {
+      const result = getTextFromNode(null);
+      expect(result).to.equal('');
+    });
+
     it('should return displayName for functions that provides one', () => {
       class Subject extends React.Component {
         render() {
@@ -302,6 +360,14 @@ describe('ShallowTraversal', () => {
         const result = getTextFromNode(node);
         expect(result).to.equal('<Subject />');
       });
+    });
+  });
+
+  describe('buildPredicate', () => {
+    it('should throw expected error', () => {
+      const intSelector = 10;
+      const func = buildPredicate.bind(this, intSelector);
+      expect(func).to.throw(TypeError, 'Enzyme::Selector expects a string, object, or Component Constructor');
     });
   });
 });

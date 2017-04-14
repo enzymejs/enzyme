@@ -16,10 +16,11 @@ constructors.
 ### Example Usage
 
 ```jsx
+import React from 'react';
 import { render } from 'enzyme';
+import PropTypes from 'prop-types';
 
 describe('<Foo />', () => {
-
   it('renders three `.foo-bar`s', () => {
     const wrapper = render(<Foo />);
     expect(wrapper.find('.foo-bar')).to.have.length(3);
@@ -30,5 +31,19 @@ describe('<Foo />', () => {
     expect(wrapper.text()).to.contain("unique");
   });
 
+  it('can pass in context', () => {
+    class SimpleComponent extends React.Component {
+      render() {
+        return <div>{this.context.name}</div>;
+      }
+    }
+    SimpleComponent.contextTypes = {
+      name: PropTypes.string,
+    };
+
+    const context = { name: 'foo' };
+    const wrapper = render(<SimpleComponent />, { context });
+    expect(wrapper.text()).to.equal('foo');
+  });
 });
 ```

@@ -1,0 +1,4 @@
+--require withDom.js
+--compilers js:babel-core/register,jsx:babel-core/register
+--extensions js,jsx
+--reporter dot

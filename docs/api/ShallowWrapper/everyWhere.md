@@ -1,6 +1,6 @@
 # `.everyWhere(fn) => Boolean`
 
-Returns whether or not any of the nodes in the wrapper pass the provided predicate function.
+Returns whether or not all of the nodes in the wrapper pass the provided predicate function.
 
 
 #### Arguments

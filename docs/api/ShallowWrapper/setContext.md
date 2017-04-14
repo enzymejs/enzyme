@@ -21,14 +21,17 @@ NOTE: can only be called on a wrapper instance that is also the root instance.
 #### Example
 
 ```jsx
-const SimpleComponent = React.createClass({
-  contextTypes: {
-    name: React.PropTypes.string,
-  },
+import React from 'react';
+import PropTypes from 'prop-types';
+
+class SimpleComponent extends React.Component {
   render() {
     return <div>{this.context.name}</div>;
-  },
-});
+  }
+}
+SimpleComponent.contextTypes = {
+  name: PropTypes.string,
+};
 ```
 ```jsx
 const context = { name: 'foo' };

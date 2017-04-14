@@ -2,6 +2,10 @@
 import isEqual from 'lodash/isEqual';
 import React from 'react';
 import is from 'object-is';
+import uuid from 'uuid';
+import entries from 'object.entries';
+import assign from 'object.assign';
+import functionName from 'function.prototype.name';
 import {
   isDOMComponent,
   findDOMNode,
@@ -11,6 +15,8 @@ import {
   REACT013,
   REACT15,
 } from './version';
+
+export const ITERATOR_SYMBOL = typeof Symbol === 'function' && Symbol.iterator;
 
 function internalInstanceKey(node) {
   return Object.keys(Object(node)).filter(key => key.match(/^__reactInternalInstance\$/))[0];
@@ -22,7 +28,12 @@ export function internalInstance(inst) {
 }
 
 export function isFunctionalComponent(inst) {
-  return inst && inst.constructor && inst.constructor.name === 'StatelessComponent';
+  return !!inst && !!inst.constructor && typeof inst.constructor === 'function' &&
+    functionName(inst.constructor) === 'StatelessComponent';
+}
+
+export function isCustomComponentElement(inst) {
+  return !!inst && React.isValidElement(inst) && typeof inst.type === 'function';
 }
 
 export function propsOfNode(node) {
@@ -56,31 +67,53 @@ export function nodeHasType(node, type) {
   if (!type || !node) return false;
   if (!node.type) return false;
   if (typeof node.type === 'string') return node.type === type;
-  return node.type.name === type || node.type.displayName === type;
+  return (typeof node.type === 'function' ?
+    functionName(node.type) === type : node.type.name === type) || node.type.displayName === type;
 }
 
-export function childrenEqual(a, b, lenComp) {
+function internalChildrenCompare(a, b, lenComp, isLoose) {
+  const nodeCompare = isLoose ? nodeMatches : nodeEqual;
+
   if (a === b) return true;
   if (!Array.isArray(a) && !Array.isArray(b)) {
-    return nodeEqual(a, b, lenComp);
+    return nodeCompare(a, b, lenComp);
   }
   if (!a && !b) return true;
   if (a.length !== b.length) return false;
   if (a.length === 0 && b.length === 0) return true;
-  for (let i = 0; i < a.length; i++) {
-    if (!nodeEqual(a[i], b[i], lenComp)) return false;
+  for (let i = 0; i < a.length; i += 1) {
+    if (!nodeCompare(a[i], b[i], lenComp)) return false;
   }
   return true;
 }
 
-export function nodeEqual(a, b, lenComp = is) {
+export function childrenMatch(a, b, lenComp) {
+  return internalChildrenCompare(a, b, lenComp, true);
+}
+
+export function childrenEqual(a, b, lenComp) {
+  return internalChildrenCompare(a, b, lenComp, false);
+}
+
+function removeNullaryReducer(acc, [key, value]) {
+  const addition = value == null ? {} : { [key]: value };
+  return assign({}, acc, addition);
+}
+
+function internalNodeCompare(a, b, lenComp, isLoose) {
   if (a === b) return true;
   if (!a || !b) return false;
   if (a.type !== b.type) return false;
-  const left = propsOfNode(a);
+
+  let left = propsOfNode(a);
+  let right = propsOfNode(b);
+  if (isLoose) {
+    left = entries(left).reduce(removeNullaryReducer, {});
+    right = entries(right).reduce(removeNullaryReducer, {});
+  }
+
   const leftKeys = Object.keys(left);
-  const right = propsOfNode(b);
-  for (let i = 0; i < leftKeys.length; i++) {
+  for (let i = 0; i < leftKeys.length; i += 1) {
     const prop = leftKeys[i];
     // we will check children later
     if (prop === 'children') {
@@ -98,11 +131,13 @@ export function nodeEqual(a, b, lenComp = is) {
 
   const leftHasChildren = 'children' in left;
   const rightHasChildren = 'children' in right;
+  const childCompare = isLoose ? childrenMatch : childrenEqual;
   if (leftHasChildren || rightHasChildren) {
-    if (!childrenEqual(
-        childrenToArray(left.children),
-        childrenToArray(right.children),
-        lenComp)) {
+    if (!childCompare(
+      childrenToSimplifiedArray(left.children),
+      childrenToSimplifiedArray(right.children),
+      lenComp,
+    )) {
       return false;
     }
   }
@@ -115,6 +150,14 @@ export function nodeEqual(a, b, lenComp = is) {
   return false;
 }
 
+export function nodeMatches(a, b, lenComp = is) {
+  return internalNodeCompare(a, b, lenComp, true);
+}
+
+export function nodeEqual(a, b, lenComp = is) {
+  return internalNodeCompare(a, b, lenComp, false);
+}
+
 export function containsChildrenSubArray(match, node, subArray) {
   const children = childrenOfNode(node);
   const checker = (_, i) => arraysEqual(match, children.slice(i, i + subArray.length), subArray);
@@ -123,6 +166,27 @@ export function containsChildrenSubArray(match, node, subArray) {
 
 function arraysEqual(match, left, right) {
   return left.length === right.length && left.every((el, i) => match(el, right[i]));
+}
+
+export function childrenToSimplifiedArray(nodeChildren) {
+  const childrenArray = childrenToArray(nodeChildren);
+  const simplifiedArray = [];
+
+  for (let i = 0; i < childrenArray.length; i += 1) {
+    const child = childrenArray[i];
+    const previousChild = simplifiedArray.pop();
+
+    if (previousChild === undefined) {
+      simplifiedArray.push(child);
+    } else if (isTextualNode(child) && isTextualNode(previousChild)) {
+      simplifiedArray.push(previousChild + child);
+    } else {
+      simplifiedArray.push(previousChild);
+      simplifiedArray.push(child);
+    }
+  }
+
+  return simplifiedArray;
 }
 
 function childrenOfNode(node) {
@@ -143,7 +207,7 @@ export function isReactElementAlike(arg) {
 // 'mouseEnter' => 'onMouseEnter'
 export function propFromEvent(event) {
   const nativeEvent = mapNativeEventNames(event);
-  return `on${nativeEvent[0].toUpperCase()}${nativeEvent.substring(1)}`;
+  return `on${nativeEvent[0].toUpperCase()}${nativeEvent.slice(1)}`;
 }
 
 export function withSetStateAllowed(fn) {
@@ -157,28 +221,68 @@ export function withSetStateAllowed(fn) {
   }
   fn();
   if (cleanup) {
+    // This works around a bug in node/jest in that developers aren't able to
+    // delete things from global when running in a node vm.
+    global.document = undefined;
     delete global.document;
   }
 }
 
 export function splitSelector(selector) {
-  return selector.split(/(?=\.|\[.*\])|(?=#|\[#.*\])/);
+  // step 1: make a map of all quoted strings with a uuid
+  const quotedSegments = selector.split(/[^" ]+|("[^"]*")|.*/g)
+    .filter(Boolean)
+    .reduce((obj, match) => assign({}, obj, { [match]: uuid.v4() }), {});
+
+  const splits = selector
+    // step 2: replace all quoted strings with the uuid, so we don't have to properly parse them
+    .replace(/[^" ]+|("[^"]*")|.*/g, x => quotedSegments[x] || x)
+    // step 3: split as best we can without a proper parser
+    .split(/(?=\.|\[.*])|(?=#|\[#.*])/)
+    // step 4: restore the quoted strings by swapping back the uuid's for the original segments
+    .map((selectorSegment) => {
+      let restoredSegment = selectorSegment;
+      entries(quotedSegments).forEach(([k, v]) => {
+        restoredSegment = restoredSegment.replace(v, k);
+      });
+      return restoredSegment;
+    });
+
+  if (splits.length === 1 && splits[0] === selector) {
+    // splitSelector expects selector to be "splittable"
+    throw new TypeError('Enzyme::Selector received what appears to be a malformed string selector');
+  }
+
+  return splits;
 }
 
-export function isSimpleSelector(selector) {
-  // any of these characters pretty much guarantee it's a complex selector
-  return !/[~\s:>]/.test(selector);
+
+const containsQuotes = /'|"/;
+const containsColon = /:/;
+
+
+export function isPseudoClassSelector(selector) {
+  if (containsColon.test(selector)) {
+    if (!containsQuotes.test(selector)) {
+      return true;
+    }
+    const tokens = selector.split(containsQuotes);
+    return tokens.some((token, i) =>
+      containsColon.test(token) && i % 2 === 0,
+    );
+  }
+  return false;
 }
 
-export function selectorError(selector) {
+export function selectorError(selector, type = '') {
   return new TypeError(
-    `Enzyme received a complex CSS selector ('${selector}') that it does not currently support`
+    `Enzyme received a ${type} CSS selector ('${selector}') that it does not currently support`,
   );
 }
 
-export const isCompoundSelector = /([a-z]\.[a-z]|[a-z]\[.*\]|[a-z]#[a-z])/i;
+export const isCompoundSelector = /^[.#]?-?[_a-z]+[_a-z0-9-]*[.[#]/i;
 
-const isPropSelector = /^\[.*\]$/;
+const isPropSelector = /^\[.*]$/;
 
 export const SELECTOR = {
   CLASS_TYPE: 0,
@@ -187,6 +291,9 @@ export const SELECTOR = {
 };
 
 export function selectorType(selector) {
+  if (isPseudoClassSelector(selector)) {
+    throw selectorError(selector, 'pseudo-class');
+  }
   if (selector[0] === '.') {
     return SELECTOR.CLASS_TYPE;
   } else if (selector[0] === '#') {
@@ -198,13 +305,8 @@ export function selectorType(selector) {
 }
 
 export function AND(fns) {
-  return x => {
-    let i = fns.length;
-    while (i--) {
-      if (!fns[i](x)) return false;
-    }
-    return true;
-  };
+  const fnsReversed = fns.slice().reverse();
+  return x => fnsReversed.every(fn => fn(x));
 }
 
 export function coercePropValue(propName, propValue) {
@@ -213,10 +315,25 @@ export function coercePropValue(propName, propValue) {
     return propValue;
   }
 
+  // can be the empty string
+  if (propValue === '') {
+    return propValue;
+  }
+
+  if (propValue === 'NaN') {
+    return NaN;
+  }
+
+  if (propValue === 'null') {
+    return null;
+  }
+
   const trimmedValue = propValue.trim();
 
   // if propValue includes quotes, it should be
   // treated as a string
+  // eslint override pending https://github.com/eslint/eslint/issues/7472
+  // eslint-disable-next-line no-useless-escape
   if (/^(['"]).*\1$/.test(trimmedValue)) {
     return trimmedValue.slice(1, -1);
   }
@@ -224,7 +341,7 @@ export function coercePropValue(propName, propValue) {
   const numericPropValue = +trimmedValue;
 
   // if parseInt is not NaN, then we've wanted a number
-  if (!isNaN(numericPropValue)) {
+  if (!is(NaN, numericPropValue)) {
     return numericPropValue;
   }
 
@@ -235,8 +352,29 @@ export function coercePropValue(propName, propValue) {
   // user provided an unquoted string value
   throw new TypeError(
     `Enzyme::Unable to parse selector '[${propName}=${propValue}]'. ` +
-    `Perhaps you forgot to escape a string? Try '[${propName}="${trimmedValue}"]' instead.`
+    `Perhaps you forgot to escape a string? Try '[${propName}="${trimmedValue}"]' instead.`,
   );
+}
+
+export function nodeHasProperty(node, propKey, stringifiedPropValue) {
+  const nodeProps = propsOfNode(node);
+  const descriptor = Object.getOwnPropertyDescriptor(nodeProps, propKey);
+  if (descriptor && descriptor.get) {
+    return false;
+  }
+  const nodePropValue = nodeProps[propKey];
+
+  const propValue = coercePropValue(propKey, stringifiedPropValue);
+
+  if (nodePropValue === undefined) {
+    return false;
+  }
+
+  if (propValue !== undefined) {
+    return is(nodePropValue, propValue);
+  }
+
+  return Object.prototype.hasOwnProperty.call(nodeProps, propKey);
 }
 
 export function mapNativeEventNames(event) {
@@ -274,6 +412,7 @@ export function mapNativeEventNames(event) {
     ratechange: 'rateChange',
     timeupdate: 'timeUpdate',
     volumechange: 'volumeChange',
+    beforeinput: 'beforeInput',
   };
 
   if (!REACT013) {
@@ -291,5 +430,5 @@ export function displayNameOfNode(node) {
 
   if (!type) return null;
 
-  return type.displayName || type.name || type;
+  return type.displayName || (typeof type === 'function' ? functionName(type) : type.name || type);
 }

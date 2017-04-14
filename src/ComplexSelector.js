@@ -7,18 +7,15 @@ export default class ComplexSelector {
     this.childrenOfNode = childrenOfNode;
   }
 
-  getSelectors(selector) {
-    const cleaned = selector.replace(/\s{2,}/g, ' ');
-    const selectors = split(cleaned, ' ');
+  getSelectors(selector) { // eslint-disable-line class-methods-use-this
+    const selectors = split(selector, / (?=(?:(?:[^"]*"){2})*[^"]*$)/);
     return selectors.reduce((list, sel) => {
       if (sel === '+' || sel === '~') {
         const temp = list.pop();
-        list.push(sel, temp);
-        return list;
+        return list.concat(sel, temp);
       }
 
-      list.push(sel);
-      return list;
+      return list.concat(sel);
     }, []);
   }
 
@@ -36,7 +33,7 @@ export default class ComplexSelector {
 
       return (child) => {
         if (firstPredicate(child)) {
-          return (sibling) => secondPredicate(sibling);
+          return sibling => secondPredicate(sibling);
         }
 
         return false;
@@ -62,7 +59,7 @@ export default class ComplexSelector {
           predicate = buildSiblingPredicate(selectors[1], selectors[2]);
           selectSiblings = (children, pre, results, idx) =>
             children.slice(idx + 1).map(child =>
-              (pre(child) ? results.push(child) : null)
+              (pre(child) ? results.push(child) : null),
             );
 
           return recurseSelector(2, this.treeFindSiblings(selectSiblings), predicate);
@@ -86,16 +83,7 @@ export default class ComplexSelector {
   }
 
   treeFilterDirect() {
-    return (tree, fn) => {
-      const results = [];
-      this.childrenOfNode(tree).forEach(child => {
-        if (fn(child)) {
-          results.push(child);
-        }
-      });
-
-      return results;
-    };
+    return (tree, fn) => this.childrenOfNode(tree).filter(child => fn(child));
   }
 
   treeFindSiblings(selectSiblings) {
@@ -103,16 +91,15 @@ export default class ComplexSelector {
       const results = [];
       const list = [this.childrenOfNode(tree)];
 
-      const traverseChildren = (children) =>
-        children.forEach((child, i) => {
-          const secondPredicate = fn(child);
+      const traverseChildren = children => children.forEach((child, i) => {
+        const secondPredicate = fn(child);
 
-          list.push(this.childrenOfNode(child));
+        list.push(this.childrenOfNode(child));
 
-          if (secondPredicate) {
-            selectSiblings(children, secondPredicate, results, i);
-          }
-        });
+        if (secondPredicate) {
+          selectSiblings(children, secondPredicate, results, i);
+        }
+      });
 
       while (list.length) {
         traverseChildren(list.shift());

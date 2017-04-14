@@ -4,6 +4,9 @@ Enzyme
 [![Join the chat at https://gitter.im/airbnb/enzyme](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/airbnb/enzyme?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 [![npm Version](https://img.shields.io/npm/v/enzyme.svg)](https://www.npmjs.com/package/enzyme) [![License](https://img.shields.io/npm/l/enzyme.svg)](https://www.npmjs.com/package/enzyme) [![Build Status](https://travis-ci.org/airbnb/enzyme.svg)](https://travis-ci.org/airbnb/enzyme) [![Coverage Status](https://coveralls.io/repos/airbnb/enzyme/badge.svg?branch=master&service=github)](https://coveralls.io/github/airbnb/enzyme?branch=master)
+[![Discord Channel](https://img.shields.io/badge/discord-testing@reactiflux-738bd7.svg?style=flat-square)](https://discord.gg/0ZcbPKXt5bY8vNTA)
+
+
 
 Enzyme is a JavaScript Testing utility for React that makes it easier to assert, manipulate,
 and traverse your React Components' output.
@@ -16,11 +19,14 @@ compatible with all major test runners and assertion libraries out there. The do
 examples for enzyme use [mocha](https://mochajs.org/) and [chai](http://chaijs.com/), but you
 should be able to extrapolate to your framework of choice.
 
-If you are interested in using enzyme with custom Chai.js assertions and convenience functions for
-testing your React components, you can consider using [chai-enzyme](https://github.com/producthunt/chai-enzyme).
+If you are interested in using enzyme with custom assertions and convenience functions for
+testing your React components, you can consider using:
 
-If you are interested in using enzyme with custom Jasmine/Jest assertions and convenience functions for
-testing your React components, you can consider using [jasmine-enzyme](https://github.com/blainekasten/jasmine-enzyme).
+* [`chai-enzyme`](https://github.com/producthunt/chai-enzyme) with Mocha/Chai.
+* [`jasmine-enzyme`](https://github.com/blainekasten/enzyme-matchers/tree/master/packages/jasmine-enzyme) with Jasmine.
+* [`jest-enzyme`](https://github.com/blainekasten/enzyme-matchers/tree/master/packages/jest-enzyme) with Jest.
+* [`should-enzyme`](https://github.com/rkotze/should-enzyme) for should.js.
+* [`expect-enzyme`](https://github.com/PsychoLlama/expect-enzyme) for expect.
 
 
 [Using Enzyme with Mocha](/docs/guides/mocha.md)
@@ -28,6 +34,8 @@ testing your React components, you can consider using [jasmine-enzyme](https://g
 [Using Enzyme with Karma](/docs/guides/karma.md)
 
 [Using Enzyme with Browserify](/docs/guides/browserify.md)
+
+[Using Enzyme with SystemJS](/docs/guides/systemjs.md)
 
 [Using Enzyme with WebPack](/docs/guides/webpack.md)
 
@@ -38,6 +46,8 @@ testing your React components, you can consider using [jasmine-enzyme](https://g
 [Using Enzyme with Jest](/docs/guides/jest.md)
 
 [Using Enzyme with Lab](/docs/guides/lab.md)
+
+[Using Enzyme with Tape and AVA](/docs/guides/tape-ava.md)
 
 ### [Installation](/docs/installation/README.md)
 
@@ -50,12 +60,18 @@ npm i --save-dev enzyme
 Enzyme is currently compatible with `React 15.x`, `React 0.14.x` and `React 0.13.x`. In order to
 achieve this compatibility, some dependencies cannot be explicitly listed in our `package.json`.
 
-If you are using `React 0.14` or `React 15.x`, in addition to `enzyme`, you will have to ensure that
+If you are using `React 0.14` or `React <15.5`, in addition to `enzyme`, you will have to ensure that
 you also have the following npm modules installed if they were not already:
 
 ```bash
-npm i --save-dev react-addons-test-utils
-npm i --save-dev react-dom
+npm i --save-dev react-addons-test-utils react-dom
+```
+
+If you are using `React >=15.5`, in addition to `enzyme`, you will have to ensure that you also have
+the following npm modules installed if they were not already:
+
+```bash
+npm i --save-dev react-test-renderer react-dom
 ```
 
 
@@ -64,13 +80,16 @@ Basic Usage
 
 ## [Shallow Rendering](/docs/api/shallow.md)
 
-```jsx
+```javascript
 import React from 'react';
+import { expect } from 'chai';
 import { shallow } from 'enzyme';
 import sinon from 'sinon';
 
-describe('<MyComponent />', () => {
+import MyComponent from './MyComponent';
+import Foo from './Foo';
 
+describe('<MyComponent />', () => {
   it('renders three <Foo /> components', () => {
     const wrapper = shallow(<MyComponent />);
     expect(wrapper.find(Foo)).to.have.length(3);
@@ -96,9 +115,8 @@ describe('<MyComponent />', () => {
       <Foo onButtonClick={onButtonClick} />
     );
     wrapper.find('button').simulate('click');
-    expect(onButtonClick.calledOnce).to.equal(true);
+    expect(onButtonClick).to.have.property('callCount', 1);
   });
-
 });
 ```
 
@@ -108,18 +126,20 @@ Read the full [API Documentation](/docs/api/shallow.md)
 
 ## [Full DOM Rendering](/docs/api/mount.md)
 
-```jsx
+```javascript
 import React from 'react';
 import sinon from 'sinon';
+import { expect } from 'chai';
 import { mount } from 'enzyme';
 
-describe('<Foo />', () => {
+import Foo from './Foo';
 
+describe('<Foo />', () => {
   it('allows us to set props', () => {
     const wrapper = mount(<Foo bar="baz" />);
-    expect(wrapper.props().bar).to.equal("baz");
-    wrapper.setProps({ bar: "foo" });
-    expect(wrapper.props().bar).to.equal("foo");
+    expect(wrapper.props().bar).to.equal('baz');
+    wrapper.setProps({ bar: 'foo' });
+    expect(wrapper.props().bar).to.equal('foo');
   });
 
   it('simulates click events', () => {
@@ -128,16 +148,15 @@ describe('<Foo />', () => {
       <Foo onButtonClick={onButtonClick} />
     );
     wrapper.find('button').simulate('click');
-    expect(onButtonClick.calledOnce).to.equal(true);
+    expect(onButtonClick).to.have.property('callCount', 1);
   });
 
   it('calls componentDidMount', () => {
     sinon.spy(Foo.prototype, 'componentDidMount');
     const wrapper = mount(<Foo />);
-    expect(Foo.prototype.componentDidMount.calledOnce).to.be.true;
+    expect(Foo.prototype.componentDidMount).to.have.property('callCount', 1);
     Foo.prototype.componentDidMount.restore();
   });
-
 });
 ```
 
@@ -146,12 +165,14 @@ Read the full [API Documentation](/docs/api/mount.md)
 
 ## [Static Rendered Markup](/docs/api/render.md)
 
-```jsx
+```javascript
 import React from 'react';
+import { expect } from 'chai';
 import { render } from 'enzyme';
 
-describe('<Foo />', () => {
+import Foo from './Foo';
 
+describe('<Foo />', () => {
   it('renders three `.foo-bar`s', () => {
     const wrapper = render(<Foo />);
     expect(wrapper.find('.foo-bar').length).to.equal(3);
@@ -159,9 +180,8 @@ describe('<Foo />', () => {
 
   it('renders the title', () => {
     const wrapper = render(<Foo title="unique" />);
-    expect(wrapper.text()).to.contain("unique");
+    expect(wrapper.text()).to.contain('unique');
   });
-
 });
 ```
 

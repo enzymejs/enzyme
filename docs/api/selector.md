@@ -77,7 +77,7 @@ const myComponents = wrapper.find(MyComponent);
 ### 3. A React Component's displayName
 
 Enzyme allows you to find components based on a component's `displayName`. If a component exists
-in a render tree where it's `displayName` is set and has it's first character as a capital letter,
+in a render tree where its `displayName` is set and has its first character as a capital letter,
 a string can be used to find it:
 
 

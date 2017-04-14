@@ -1,6 +1,6 @@
 # `.html() => String`
 
-Returns a string of the rendered HTML markup of the current render tree.
+Returns a string of the rendered HTML markup of the current render tree. See also [.debug()](debug.md)
 
 Note: can only be called on a wrapper of a single node.
 

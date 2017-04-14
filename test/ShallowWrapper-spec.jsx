@@ -1,17 +1,20 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { expect } from 'chai';
-import { shallow, render, ShallowWrapper } from '../src/';
 import sinon from 'sinon';
-import { describeIf } from './_helpers';
-import { REACT013 } from '../src/version';
+
+import { createClass } from './_helpers/react-compat';
+import { shallow, render, ShallowWrapper } from '../src/';
+import { describeIf, itIf, itWithData, generateEmptyRenderData } from './_helpers';
+import { ITERATOR_SYMBOL, withSetStateAllowed } from '../src/Utils';
+import { REACT013, REACT014, REACT15 } from '../src/version';
 
 describe('shallow', () => {
-
   describe('context', () => {
     it('can pass in context', () => {
-      const SimpleComponent = React.createClass({
+      const SimpleComponent = createClass({
         contextTypes: {
-          name: React.PropTypes.string,
+          name: PropTypes.string,
         },
         render() {
           return <div>{this.context.name}</div>;
@@ -24,20 +27,20 @@ describe('shallow', () => {
     });
 
     it('should not throw if context is passed in but contextTypes is missing', () => {
-      const SimpleComponent = React.createClass({
+      const SimpleComponent = createClass({
         render() {
           return <div>{this.context.name}</div>;
         },
       });
 
       const context = { name: 'foo' };
-      expect(() => shallow(<SimpleComponent />, { context })).to.not.throw(Error);
+      expect(() => shallow(<SimpleComponent />, { context })).to.not.throw();
     });
 
     it('is instrospectable through context API', () => {
-      const SimpleComponent = React.createClass({
+      const SimpleComponent = createClass({
         contextTypes: {
-          name: React.PropTypes.string,
+          name: PropTypes.string,
         },
         render() {
           return <div>{this.context.name}</div>;
@@ -56,7 +59,7 @@ describe('shallow', () => {
         const SimpleComponent = (props, context) => (
           <div>{context.name}</div>
         );
-        SimpleComponent.contextTypes = { name: React.PropTypes.string };
+        SimpleComponent.contextTypes = { name: PropTypes.string };
 
         const context = { name: 'foo' };
         const wrapper = shallow(<SimpleComponent />, { context });
@@ -69,14 +72,14 @@ describe('shallow', () => {
         );
 
         const context = { name: 'foo' };
-        expect(() => shallow(<SimpleComponent />, { context })).not.to.throw(Error);
+        expect(() => shallow(<SimpleComponent />, { context })).not.to.throw();
       });
 
       it('is instrospectable through context API', () => {
         const SimpleComponent = (props, context) => (
           <div>{context.name}</div>
         );
-        SimpleComponent.contextTypes = { name: React.PropTypes.string };
+        SimpleComponent.contextTypes = { name: PropTypes.string };
 
         const wrapper = shallow(<SimpleComponent />, { context });
 
@@ -102,7 +105,6 @@ describe('shallow', () => {
   });
 
   describe('.instance()', () => {
-
     it('should return the component instance', () => {
       class Foo extends React.Component {
         render() { return <div />; }
@@ -121,13 +123,14 @@ describe('shallow', () => {
       const wrapper = shallow(<Foo />);
       const div = wrapper.find('div');
 
-      expect(() => div.instance()).to.throw();
+      expect(() => div.instance()).to.throw(
+        Error,
+        'ShallowWrapper::instance() can only be called on the root',
+      );
     });
-
   });
 
   describe('.contains(node)', () => {
-
     it('should allow matches on the root node', () => {
       const a = <div className="foo" />;
       const b = <div className="foo" />;
@@ -140,7 +143,7 @@ describe('shallow', () => {
       const wrapper = shallow(
         <div>
           <div className="foo" />
-        </div>
+        </div>,
       );
       const b = <div className="foo" />;
       expect(wrapper.contains(b)).to.equal(true);
@@ -153,7 +156,7 @@ describe('shallow', () => {
       const wrapper = shallow(
         <div>
           <Foo />
-        </div>
+        </div>,
       );
       const b = <Foo />;
       expect(wrapper.contains(b)).to.equal(true);
@@ -181,7 +184,7 @@ describe('shallow', () => {
             <div>{5}</div>
           </div>
           <div>foo</div>
-        </div>
+        </div>,
       );
 
       expect(wrapper.contains('foo')).to.equal(true);
@@ -197,7 +200,7 @@ describe('shallow', () => {
           <span>Hello</span>
           <div>Goodbye</div>
           <span>More</span>
-        </div>
+        </div>,
       );
       const fails = [
         <span>wrong</span>,
@@ -219,10 +222,16 @@ describe('shallow', () => {
     });
 
     it('should throw on invalid argument', () => {
-      const wrapper = shallow(<div></div>);
+      const wrapper = shallow(<div />);
 
-      expect(() => wrapper.contains({})).to.throw();
-      expect(() => wrapper.contains(() => ({}))).to.throw();
+      expect(() => wrapper.contains({})).to.throw(
+        Error,
+        'ShallowWrapper::contains() can only be called with ReactElement (or array of them), string or number as argument.', // eslint-disable-line max-len
+      );
+      expect(() => wrapper.contains(() => ({}))).to.throw(
+        Error,
+        'ShallowWrapper::contains() can only be called with ReactElement (or array of them), string or number as argument.', // eslint-disable-line max-len
+      );
     });
 
     describeIf(!REACT013, 'stateless function components', () => {
@@ -234,7 +243,7 @@ describe('shallow', () => {
         const wrapper = shallow(
           <div>
             <Foo />
-          </div>
+          </div>,
         );
         const b = <Foo />;
         expect(wrapper.contains(b)).to.equal(true);
@@ -243,7 +252,6 @@ describe('shallow', () => {
   });
 
   describe('.equals(node)', () => {
-
     it('should allow matches on the root node', () => {
       const a = <div className="foo" />;
       const b = <div className="foo" />;
@@ -256,7 +264,7 @@ describe('shallow', () => {
       const wrapper = shallow(
         <div>
           <div className="foo" />
-        </div>
+        </div>,
       );
       const b = <div className="foo" />;
       expect(wrapper.equals(b)).to.equal(false);
@@ -269,7 +277,7 @@ describe('shallow', () => {
       const wrapper = shallow(
         <div>
           <Foo />
-        </div>
+        </div>,
       );
       const b = <div><Foo /></div>;
       expect(wrapper.equals(b)).to.equal(true);
@@ -297,7 +305,7 @@ describe('shallow', () => {
         const wrapper = shallow(
           <div>
             <Foo />
-          </div>
+          </div>,
         );
         const b = <div><Foo /></div>;
         expect(wrapper.equals(b)).to.equal(true);
@@ -316,11 +324,9 @@ describe('shallow', () => {
         expect(shallow(<Foo />).equals(<Foo />)).to.equal(false);
       });
     });
-
   });
 
   describe('.find(selector)', () => {
-
     it('should be able to match the root DOM element', () => {
       const wrapper = shallow(<div id="ttt" className="ttt">hello</div>);
       expect(wrapper.find('#ttt')).to.have.length(1);
@@ -331,16 +337,60 @@ describe('shallow', () => {
       const wrapper = shallow(
         <div>
           <input className="foo" />
-        </div>
+        </div>,
       );
       expect(wrapper.find('.foo').type()).to.equal('input');
+    });
+
+    it('should find an element that has dot in attribute', () => {
+      const wrapper = shallow(
+        <div>
+          <div data-baz="foo.bar" />
+        </div>,
+      );
+
+      const elements = wrapper.find('[data-baz="foo.bar"]');
+      expect(elements.length).to.equal(1);
+    });
+
+    it('should find an element that with class and attribute', () => {
+      const wrapper = shallow(
+        <div>
+          <div data-baz="bar" className="classBar" />
+        </div>,
+      );
+
+      const elements = wrapper.find('.classBar[data-baz="bar"]');
+      expect(elements.length).to.equal(1);
+    });
+
+    it('should find an element that with multiple classes and one attribute', () => {
+      const wrapper = shallow(
+        <div>
+          <div data-baz="bar" className="classBar classFoo" />
+        </div>,
+      );
+
+      const elements = wrapper.find('.classBar.classFoo[data-baz="bar"]');
+      expect(elements.length).to.equal(1);
+    });
+
+    it('should find an element that with class and class with hyphen', () => {
+      const wrapper = shallow(
+        <div>
+          <div data-baz="bar" className="classBar class-Foo" />
+        </div>,
+      );
+
+      const elements = wrapper.find('.classBar.class-Foo');
+      expect(elements.length).to.equal(1);
     });
 
     it('should find an element based on a tag name and class name', () => {
       const wrapper = shallow(
         <div>
           <input className="foo" />
-        </div>
+        </div>,
       );
       expect(wrapper.find('input.foo').length).to.equal(1);
     });
@@ -349,7 +399,7 @@ describe('shallow', () => {
       const wrapper = shallow(
         <div>
           <input id="foo" />
-        </div>
+        </div>,
       );
       expect(wrapper.find('input#foo').length).to.equal(1);
     });
@@ -358,7 +408,7 @@ describe('shallow', () => {
       const wrapper = shallow(
         <div>
           <input id="foo" className="bar" />
-        </div>
+        </div>,
       );
       expect(wrapper.find('input#foo.bar').length).to.equal(1);
     });
@@ -368,9 +418,9 @@ describe('shallow', () => {
         <div>
           <input className="foo" />
           <button className="bar">Button</button>
-          <textarea className="magic"></textarea>
-          <select className="reality"></select>
-        </div>
+          <textarea className="magic" />
+          <select className="reality" />
+        </div>,
       );
       expect(wrapper.find('input').props().className).to.equal('foo');
       expect(wrapper.find('button').props().className).to.equal('bar');
@@ -385,7 +435,7 @@ describe('shallow', () => {
       const wrapper = shallow(
         <div>
           <Foo className="foo" />
-        </div>
+        </div>,
       );
       expect(wrapper.find(Foo).type()).to.equal(Foo);
     });
@@ -397,7 +447,7 @@ describe('shallow', () => {
       const wrapper = shallow(
         <div>
           <Foo className="foo" />
-        </div>
+        </div>,
       );
       expect(wrapper.find('Foo').type()).to.equal(Foo);
     });
@@ -407,7 +457,7 @@ describe('shallow', () => {
         <div>
           <input className="foo" />
           <button className="foo" />
-        </div>
+        </div>,
       );
       expect(wrapper.find('.foo').length).to.equal(2);
     });
@@ -418,7 +468,7 @@ describe('shallow', () => {
           <input className="foo" />
           <input />
           <button />
-        </div>
+        </div>,
       );
       expect(wrapper.find('input').length).to.equal(2);
       expect(wrapper.find('button').length).to.equal(1);
@@ -428,11 +478,30 @@ describe('shallow', () => {
       const wrapper = shallow(
         <div>
           <span title="foo" />
-        </div>
+        </div>,
       );
 
       expect(wrapper.find('[title="foo"]')).to.have.length(1);
       expect(wrapper.find('[title]')).to.have.length(1);
+    });
+
+    it('works with an adjacent sibling selector', () => {
+      const a = 'some';
+      const b = 'text';
+      const wrapper = shallow(
+        <div>
+          <div className="row">
+            {a}
+            {b}
+          </div>
+          <div className="row">
+            {a}
+            {b}
+          </div>
+        </div>,
+      );
+      expect(wrapper.find('.row')).to.have.lengthOf(2);
+      expect(wrapper.find('.row + .row')).to.have.lengthOf(1);
     });
 
     it('should error sensibly if prop selector without quotes', () => {
@@ -440,17 +509,20 @@ describe('shallow', () => {
         <div>
           <input type="text" />
           <input type="hidden" />
-        </div>
+        </div>,
       );
 
-      expect(() => wrapper.find('[type=text]')).to.throw();
+      expect(() => wrapper.find('[type=text]')).to.throw(
+        TypeError,
+        'Enzyme::Unable to parse selector \'[type=text]\'. Perhaps you forgot to escape a string? Try \'[type="text"]\' instead.', // eslint-disable-line max-len
+      );
     });
 
     it('should compound tag and prop selector', () => {
       const wrapper = shallow(
         <div>
           <span preserveAspectRatio="xMaxYMax" />
-        </div>
+        </div>,
       );
 
       expect(wrapper.find('span[preserveAspectRatio="xMaxYMax"]')).to.have.length(1);
@@ -461,7 +533,7 @@ describe('shallow', () => {
       const wrapper = shallow(
         <div>
           <span data-foo="bar" />
-        </div>
+        </div>,
       );
 
       expect(wrapper.find('[data-foo="bar"]')).to.have.length(1);
@@ -473,7 +545,7 @@ describe('shallow', () => {
       const wrapper = shallow(
         <div>
           <span htmlFor="foo" onChange={noop} preserveAspectRatio="xMaxYMax" />
-        </div>
+        </div>,
       );
 
       expect(wrapper.find('span[htmlFor="foo"][onChange]')).to.have.length(1);
@@ -486,7 +558,7 @@ describe('shallow', () => {
         <div>
           <span value={1} />
           <a value={false} />
-        </div>
+        </div>,
       );
 
       expect(wrapper.find('span[value=1]')).to.have.length(1);
@@ -497,11 +569,12 @@ describe('shallow', () => {
 
     it('should not find key or ref via property selector', () => {
       const arrayOfComponents = [<div key="1" />, <div key="2" />];
+
       const wrapper = shallow(
         <div>
           <div ref="foo" />
           {arrayOfComponents}
-        </div>
+        </div>,
       );
 
       expect(wrapper.find('div[ref="foo"]')).to.have.length(0);
@@ -516,7 +589,7 @@ describe('shallow', () => {
           <input className="foo" />
           <input />
           <button />
-        </div>
+        </div>,
       );
       expect(wrapper.find('input').length).to.equal(2);
       expect(wrapper.find('button').length).to.equal(1);
@@ -532,7 +605,7 @@ describe('shallow', () => {
           <div data-test="ref" prop={123} />
           <input data-test="ref" prop={false} />
           <a data-test="ref" prop />
-        </div>
+        </div>,
       );
       expect(wrapper.find({ a: 1 })).to.have.length(0);
       expect(wrapper.find({ 'data-test': 'ref' })).to.have.length(7);
@@ -552,7 +625,7 @@ describe('shallow', () => {
           <a more={[{ id: 1 }]} data-test="ref" />
           <div more={{ item: { id: 1 } }} data-test="ref" />
           <input style={{ height: 20 }} data-test="ref" />
-        </div>
+        </div>,
       );
       expect(wrapper.find({ 'data-test': 'ref' })).to.have.length(4);
       expect(wrapper.find({ more: { a: 1 } })).to.have.length(0);
@@ -560,7 +633,7 @@ describe('shallow', () => {
       expect(wrapper.find({ more: { item: { id: 1 } } })).to.have.length(1);
       expect(wrapper.find({ style: { height: 20 } })).to.have.length(1);
       expect(wrapper
-        .find({ more: [{ id: 1 }], 'data-test': 'ref', prop: true, onChange: testFunction })
+        .find({ more: [{ id: 1 }], 'data-test': 'ref', prop: true, onChange: testFunction }),
       ).to.have.length(1);
     });
 
@@ -568,11 +641,20 @@ describe('shallow', () => {
       const wrapper = shallow(
         <div>
           <input className="foo" type="text" />
-        </div>
+        </div>,
       );
-      expect(() => wrapper.find({})).to.throw(Error);
-      expect(() => wrapper.find([])).to.throw(Error);
-      expect(() => wrapper.find(null)).to.throw(Error);
+      expect(() => wrapper.find({})).to.throw(
+        TypeError,
+        'Enzyme::Selector does not support an array, null, or empty object as a selector',
+      );
+      expect(() => wrapper.find([])).to.throw(
+        TypeError,
+        'Enzyme::Selector does not support an array, null, or empty object as a selector',
+      );
+      expect(() => wrapper.find(null)).to.throw(
+        TypeError,
+        'Enzyme::Selector does not support an array, null, or empty object as a selector',
+      );
     });
 
     describeIf(!REACT013, 'stateless function components', () => {
@@ -583,7 +665,7 @@ describe('shallow', () => {
         const wrapper = shallow(
           <div>
             <Foo className="foo" />
-          </div>
+          </div>,
         );
         expect(wrapper.find(Foo).type()).to.equal(Foo);
       });
@@ -595,21 +677,44 @@ describe('shallow', () => {
         const wrapper = shallow(
           <div>
             <Foo className="foo" />
-          </div>
+          </div>,
         );
         expect(wrapper.find('Foo').type()).to.equal(Foo);
+      });
+    });
+
+    describe('works with attribute selectors containing #', () => {
+      let wrapper;
+      beforeEach(() => {
+        wrapper = shallow(
+          <div>
+            <a id="test" href="/page">Hello</a>
+            <a href="/page#anchor">World</a>
+          </div>,
+        );
+      });
+
+      it('works with an ID', () => {
+        expect(wrapper.find('a#test')).to.have.lengthOf(1);
+      });
+
+      it('works with a normal attribute', () => {
+        expect(wrapper.find('a[href="/page"]')).to.have.lengthOf(1);
+      });
+
+      it('works with an attribute with a #', () => {
+        expect(wrapper.find('a[href="/page#anchor"]')).to.have.lengthOf(1);
       });
     });
   });
 
   describe('.findWhere(predicate)', () => {
-
     it('should return all elements for a truthy test', () => {
       const wrapper = shallow(
         <div>
           <input className="foo" />
           <input />
-        </div>
+        </div>,
       );
       expect(wrapper.findWhere(() => true).length).to.equal(3);
     });
@@ -619,7 +724,7 @@ describe('shallow', () => {
         <div>
           <input className="foo" />
           <input />
-        </div>
+        </div>,
       );
       expect(wrapper.findWhere(() => false).length).to.equal(0);
     });
@@ -630,7 +735,7 @@ describe('shallow', () => {
           <div className="foo bar" />
           <div className="foo baz" />
           <div className="foo bux" />
-        </div>
+        </div>,
       );
 
       const stub = sinon.stub();
@@ -701,7 +806,7 @@ describe('shallow', () => {
           <div className="foo bar" />
           {null}
           {false}
-        </div>
+        </div>,
       );
       const stub = sinon.stub();
       stub.returns(true);
@@ -709,7 +814,6 @@ describe('shallow', () => {
       wrapper.findWhere(spy);
       expect(spy.callCount).to.equal(2);
     });
-
   });
 
   describe('.setProps(newProps)', () => {
@@ -759,7 +863,14 @@ describe('shallow', () => {
       class Foo extends React.Component {
         render() {
           return (
-            <div {...this.props} />
+            <Bar {...this.props} />
+          );
+        }
+      }
+      class Bar extends React.Component {
+        render() {
+          return (
+            <div />
           );
         }
       }
@@ -783,7 +894,7 @@ describe('shallow', () => {
         }
       }
 
-      Foo.contextTypes = { x: React.PropTypes.string };
+      Foo.contextTypes = { x: PropTypes.string };
 
       const context = { x: 'yolo' };
       const wrapper = shallow(<Foo x={5} />, { context });
@@ -795,7 +906,7 @@ describe('shallow', () => {
 
     describeIf(!REACT013, 'stateless function components', () => {
       it('should set props for a component multiple times', () => {
-        const Foo = (props) => (
+        const Foo = props => (
           <div className={props.id}>
             {props.id}
           </div>
@@ -808,8 +919,11 @@ describe('shallow', () => {
       });
 
       it('should merge newProps with oldProps', () => {
-        const Foo = (props) => (
-          <div {...props} />
+        const Foo = props => (
+          <Bar {...props} />
+        );
+        const Bar = () => (
+          <div />
         );
 
         const wrapper = shallow(<Foo a="a" b="b" />);
@@ -826,7 +940,7 @@ describe('shallow', () => {
         const Foo = (props, context) => (
           <div>{context.x}</div>
         );
-        Foo.contextTypes = { x: React.PropTypes.string };
+        Foo.contextTypes = { x: PropTypes.string };
 
         const context = { x: 'yolo' };
         const wrapper = shallow(<Foo x={5} />, { context });
@@ -839,9 +953,9 @@ describe('shallow', () => {
   });
 
   describe('.setContext(newContext)', () => {
-    const SimpleComponent = React.createClass({
+    const SimpleComponent = createClass({
       contextTypes: {
-        name: React.PropTypes.string,
+        name: PropTypes.string,
       },
       render() {
         return <div>{this.context.name}</div>;
@@ -858,16 +972,19 @@ describe('shallow', () => {
       expect(wrapper.text()).to.equal('baz');
     });
 
-    it('should throw if it is called when shallow didnt include context', () => {
+    it('should throw if it is called when shallow didn’t include context', () => {
       const wrapper = shallow(<SimpleComponent />);
-      expect(() => wrapper.setContext({ name: 'bar' })).to.throw(Error);
+      expect(() => wrapper.setContext({ name: 'bar' })).to.throw(
+        Error,
+        'ShallowWrapper::setContext() can only be called on a wrapper that was originally passed a context option', // eslint-disable-line max-len
+      );
     });
 
-    describeIf(!REACT013, 'stateless function components', () => {
+    describeIf(!REACT013, 'stateless functional components', () => {
       const SFC = (props, context) => (
         <div>{context.name}</div>
       );
-      SFC.contextTypes = { name: React.PropTypes.string };
+      SFC.contextTypes = { name: PropTypes.string };
 
       it('should set context for a component multiple times', () => {
         const context = { name: 'foo' };
@@ -879,17 +996,18 @@ describe('shallow', () => {
         expect(wrapper.text()).to.equal('baz');
       });
 
-      it('should throw if it is called when shallow didnt include context', () => {
+      it('should throw if it is called when shallow didn’t include context', () => {
         const wrapper = shallow(<SFC />);
-        expect(() => wrapper.setContext({ name: 'bar' })).to.throw(Error);
+        expect(() => wrapper.setContext({ name: 'bar' })).to.throw(
+          Error,
+          'ShallowWrapper::setContext() can only be called on a wrapper that was originally passed a context option', // eslint-disable-line max-len
+        );
       });
     });
   });
 
   describe('.simulate(eventName, data)', () => {
-
     it('should simulate events', () => {
-
       class Foo extends React.Component {
         constructor(props) {
           super(props);
@@ -906,7 +1024,9 @@ describe('shallow', () => {
             <a
               className={`clicks-${this.state.count}`}
               onClick={this.incrementCount}
-            >foo</a>
+            >
+              foo
+            </a>
           );
         }
       }
@@ -916,7 +1036,6 @@ describe('shallow', () => {
       expect(wrapper.find('.clicks-0').length).to.equal(1);
       wrapper.simulate('click');
       expect(wrapper.find('.clicks-1').length).to.equal(1);
-
     });
 
 
@@ -942,7 +1061,7 @@ describe('shallow', () => {
     describeIf(!REACT013, 'stateless function components', () => {
       it('should simulate events', () => {
         const spy = sinon.spy();
-        const Foo = (props) => (
+        const Foo = props => (
           <a onClick={props.onClick}>foo</a>
         );
 
@@ -952,7 +1071,6 @@ describe('shallow', () => {
         wrapper.find('a').simulate('click');
         expect(spy.calledOnce).to.equal(true);
       });
-
 
       it('should pass in event data', () => {
         const spy = sinon.spy();
@@ -1037,7 +1155,7 @@ describe('shallow', () => {
           this.setState({ count: this.state.count + 1 });
         }
         render() {
-          ++renderCount;
+          renderCount += 1;
           return (
             <a onClick={this.onClick}>{this.state.count}</a>
           );
@@ -1049,10 +1167,9 @@ describe('shallow', () => {
       expect(wrapper.text()).to.equal('1');
       expect(renderCount).to.equal(2);
     });
-
   });
 
-  describe('.setState(newState)', () => {
+  describe('.setState(newState[, callback])', () => {
     it('should set the state of the root node', () => {
       class Foo extends React.Component {
         constructor(props) {
@@ -1071,6 +1188,25 @@ describe('shallow', () => {
       expect(wrapper.find('.bar').length).to.equal(1);
     });
 
+    it('should call the callback when setState has completed', () => {
+      class Foo extends React.Component {
+        constructor(props) {
+          super(props);
+          this.state = { id: 'foo' };
+        }
+        render() {
+          return (
+            <div className={this.state.id} />
+          );
+        }
+      }
+      const wrapper = shallow(<Foo />);
+      expect(wrapper.state()).to.eql({ id: 'foo' });
+      wrapper.setState({ id: 'bar' }, () => {
+        expect(wrapper.state()).to.eql({ id: 'bar' });
+      });
+    });
+
     describeIf(!REACT013, 'stateless function components', () => {
       it('should throw when trying to access state', () => {
         const Foo = () => (
@@ -1079,7 +1215,10 @@ describe('shallow', () => {
 
         const wrapper = shallow(<Foo />);
 
-        expect(() => wrapper.state()).to.throw();
+        expect(() => wrapper.state()).to.throw(
+          Error,
+          'ShallowWrapper::state() can only be called on class components',
+        );
       });
 
       it('should throw when trying to set state', () => {
@@ -1089,7 +1228,10 @@ describe('shallow', () => {
 
         const wrapper = shallow(<Foo />);
 
-        expect(() => wrapper.setState({ a: 1 })).to.throw();
+        expect(() => wrapper.setState({ a: 1 })).to.throw(
+          Error,
+          'ShallowWrapper::setState() can only be called on class components',
+        );
       });
     });
   });
@@ -1127,6 +1269,45 @@ describe('shallow', () => {
     });
   });
 
+  describe('.isEmptyRender()', () => {
+    const emptyRenderValues = generateEmptyRenderData();
+
+    itWithData(emptyRenderValues, 'when a React class component returns: ', (data) => {
+      const Foo = createClass({
+        render() {
+          return data.value;
+        },
+      });
+      const wrapper = shallow(<Foo />);
+      expect(wrapper.isEmptyRender()).to.equal(data.expectResponse);
+    });
+
+    itWithData(emptyRenderValues, 'when an ES2015 class component returns: ', (data) => {
+      class Foo extends React.Component {
+        render() {
+          return data.value;
+        }
+      }
+      const wrapper = shallow(<Foo />);
+      expect(wrapper.isEmptyRender()).to.equal(data.expectResponse);
+    });
+
+    it('should not return true for HTML elements', () => {
+      const wrapper = shallow(<div className="bar baz" />);
+      expect(wrapper.isEmptyRender()).to.equal(false);
+    });
+
+    describeIf(REACT15, 'stateless function components', () => {
+      itWithData(emptyRenderValues, 'when a component returns: ', (data) => {
+        function Foo() {
+          return data.value;
+        }
+        const wrapper = shallow(<Foo />);
+        expect(wrapper.isEmptyRender()).to.equal(data.expectResponse);
+      });
+    });
+  });
+
   describe('.not(selector)', () => {
     it('filters to things not matching a selector', () => {
       const wrapper = shallow(
@@ -1136,7 +1317,7 @@ describe('shallow', () => {
           <div className="bar baz" />
           <div className="baz" />
           <div className="foo bar" />
-        </div>
+        </div>,
       );
 
       expect(wrapper.find('.foo').not('.bar').length).to.equal(1);
@@ -1157,7 +1338,7 @@ describe('shallow', () => {
           </div>
           <div className="baz" />
           <div className="foo bar" />
-        </div>
+        </div>,
       );
 
       expect(wrapper.find('.foo').filter('.bar').length).to.equal(3);
@@ -1173,7 +1354,7 @@ describe('shallow', () => {
             <div className="bar" />
           </div>
           <div className="foo bar" />
-        </div>
+        </div>,
       );
 
       expect(wrapper.find('.foo').filter('.bar').length).to.equal(1);
@@ -1187,7 +1368,7 @@ describe('shallow', () => {
           <div className="foo bar" />
           <div className="foo baz" />
           <div className="foo bux" />
-        </div>
+        </div>,
       );
 
       const stub = sinon.stub();
@@ -1206,7 +1387,7 @@ describe('shallow', () => {
           <div className="foo bar" />
           <div className="foo baz" />
           <div className="foo bux" />
-        </div>
+        </div>,
       );
 
       const stub = sinon.stub();
@@ -1224,7 +1405,6 @@ describe('shallow', () => {
   });
 
   describe('.text()', () => {
-
     const matchesRender = function matchesRender(node) {
       const actual = shallow(node).text();
       const expected = render(node).text();
@@ -1233,7 +1413,7 @@ describe('shallow', () => {
 
     it('should handle simple text nodes', () => {
       const wrapper = shallow(
-        <div>some text</div>
+        <div>some text</div>,
       );
       expect(wrapper.text()).to.equal('some text');
     });
@@ -1256,7 +1436,7 @@ describe('shallow', () => {
             <i key={2}>def</i>,
             <i key={3}>hij</i>,
           ]}
-        />
+        />,
       );
     });
 
@@ -1268,7 +1448,7 @@ describe('shallow', () => {
         <div>
           <Foo />
           <div>test</div>
-        </div>
+        </div>,
       );
       expect(wrapper.text()).to.equal('<Foo />test');
     });
@@ -1279,7 +1459,7 @@ describe('shallow', () => {
 
     describeIf(!REACT013, 'stateless function components', () => {
       it('should handle nodes with mapped children', () => {
-        const Foo = (props) => (
+        const Foo = props => (
           <div>
             {props.items.map(x => x)}
           </div>
@@ -1292,7 +1472,7 @@ describe('shallow', () => {
               <i key={2}>def</i>,
               <i key={3}>hij</i>,
             ]}
-          />
+          />,
         );
       });
 
@@ -1305,23 +1485,21 @@ describe('shallow', () => {
           <div>
             <Foo />
             <div>test</div>
-          </div>
+          </div>,
         );
         expect(wrapper.text()).to.equal('<Foo />test');
       });
     });
-
   });
 
   describe('.props()', () => {
-
     it('should return the props object', () => {
       const fn = () => ({});
       const wrapper = shallow(
         <div id="fooId" className="bax" onClick={fn} >
           <div className="baz" />
           <div className="foo" />
-        </div>
+        </div>,
       );
 
       expect(wrapper.props().className).to.equal('bax');
@@ -1336,11 +1514,99 @@ describe('shallow', () => {
         <div className="bax">
           <div className="baz" onClick={fn} />
           <div className="foo" id="fooId" />
-        </div>
+        </div>,
       );
 
       expect(wrapper.find('.baz').props().onClick).to.equal(fn);
       expect(wrapper.find('.foo').props().id).to.equal('fooId');
+    });
+
+    it('should return props of root rendered node', () => {
+      class Foo extends React.Component {
+        render() {
+          return (
+            <div className={this.props.bar} id={this.props.foo} />
+          );
+        }
+      }
+
+      const wrapper = shallow(<Foo foo="hi" bar="bye" />);
+
+      expect(wrapper.props()).to.eql({ className: 'bye', id: 'hi' });
+    });
+
+    describeIf(!REACT013, 'stateless function components', () => {
+      it('should return props of root rendered node', () => {
+        const Foo = ({ bar, foo }) => (
+          <div className={bar} id={foo} />
+        );
+
+        const wrapper = shallow(<Foo foo="hi" bar="bye" />);
+
+        expect(wrapper.props()).to.eql({ className: 'bye', id: 'hi' });
+      });
+    });
+  });
+
+  describe('.prop(name)', () => {
+    it('should return the props of key `name`', () => {
+      const fn = () => ({});
+      const wrapper = shallow(
+        <div id="fooId" className="bax" onClick={fn} >
+          <div className="baz" />
+          <div className="foo" />
+        </div>,
+      );
+
+      expect(wrapper.prop('className')).to.equal('bax');
+      expect(wrapper.prop('onClick')).to.equal(fn);
+      expect(wrapper.prop('id')).to.equal('fooId');
+
+    });
+
+    it('should be allowed to be used on an inner node', () => {
+      const fn = () => ({});
+      const wrapper = shallow(
+        <div className="bax">
+          <div className="baz" onClick={fn} />
+          <div className="foo" id="fooId" />
+        </div>,
+      );
+
+      expect(wrapper.find('.baz').prop('onClick')).to.equal(fn);
+      expect(wrapper.find('.foo').prop('id')).to.equal('fooId');
+    });
+
+    it('should return props of root rendered node', () => {
+      class Foo extends React.Component {
+        render() {
+          return (
+            <div className={this.props.bar} id={this.props.foo} />
+          );
+        }
+      }
+
+      const wrapper = shallow(<Foo foo="hi" bar="bye" />);
+
+      expect(wrapper.prop('className')).to.equal('bye');
+      expect(wrapper.prop('id')).to.equal('hi');
+      expect(wrapper.prop('foo')).to.equal(undefined);
+      expect(wrapper.prop('bar')).to.equal(undefined);
+    });
+
+    describeIf(!REACT013, 'stateless function components', () => {
+      it('should return props of root rendered node', () => {
+        const Foo = ({ bar, foo }) => (
+          <div className={bar} id={foo} />
+        );
+
+        const wrapper = shallow(<Foo foo="hi" bar="bye" />);
+
+        expect(wrapper.prop('className')).to.equal('bye');
+        expect(wrapper.prop('id')).to.equal('hi');
+        expect(wrapper.prop('foo')).to.equal(undefined);
+        expect(wrapper.prop('bar')).to.equal(undefined);
+      });
     });
   });
 
@@ -1408,7 +1674,7 @@ describe('shallow', () => {
             {[null, null]}
             <p>baz</p>
           </div>
-        </div>
+        </div>,
       );
       expect(wrapper.childAt(0).children().length).to.equal(1);
       expect(wrapper.childAt(1).children().length).to.equal(1);
@@ -1421,7 +1687,7 @@ describe('shallow', () => {
           <div className="foo" />
           <div className="bar" />
           <div className="baz" />
-        </div>
+        </div>,
       );
       expect(wrapper.children().length).to.equal(3);
       expect(wrapper.children().at(0).hasClass('foo')).to.equal(true);
@@ -1436,7 +1702,7 @@ describe('shallow', () => {
             <div className="bar" />
           </div>
           <div className="baz" />
-        </div>
+        </div>,
       );
       expect(wrapper.children().length).to.equal(2);
       expect(wrapper.children().at(0).hasClass('foo')).to.equal(true);
@@ -1448,7 +1714,7 @@ describe('shallow', () => {
         render() {
           return (
             <div>
-              <span className="foo"></span>
+              <span className="foo" />
               {this.props.items.map(x => x)}
             </div>
           );
@@ -1460,7 +1726,7 @@ describe('shallow', () => {
             <i key={1} className="bar">abc</i>,
             <i key={2} className="baz">def</i>,
           ]}
-        />
+        />,
       );
       expect(wrapper.children().length).to.equal(3);
       expect(wrapper.children().at(0).hasClass('foo')).to.equal(true);
@@ -1474,7 +1740,7 @@ describe('shallow', () => {
           <div className="foo" />
           <div className="bar bip" />
           <div className="baz bip" />
-        </div>
+        </div>,
       );
       const children = wrapper.children('.bip');
       expect(children.length).to.equal(2);
@@ -1484,9 +1750,9 @@ describe('shallow', () => {
 
     describeIf(!REACT013, 'stateless function components', () => {
       it('should handle mixed children with and without arrays', () => {
-        const Foo = (props) => (
+        const Foo = props => (
           <div>
-            <span className="foo"></span>
+            <span className="foo" />
             {props.items.map(x => x)}
           </div>
         );
@@ -1497,7 +1763,7 @@ describe('shallow', () => {
               <i key={1} className="bar">abc</i>,
               <i key={2} className="baz">def</i>,
             ]}
-          />
+          />,
         );
         expect(wrapper.children().length).to.equal(3);
         expect(wrapper.children().at(0).hasClass('foo')).to.equal(true);
@@ -1514,7 +1780,7 @@ describe('shallow', () => {
         <div>
           <div className="bar" />
           <div className="baz" />
-        </div>
+        </div>,
       );
 
       expect(wrapper.childAt(0).hasClass('bar')).to.equal(true);
@@ -1523,7 +1789,7 @@ describe('shallow', () => {
   });
 
   describe('.parents([selector])', () => {
-    it('should return an array of current nodes ancestors', () => {
+    it('should return an array of current node’s ancestors', () => {
       const wrapper = shallow(
         <div className="bax">
           <div className="foo">
@@ -1531,7 +1797,10 @@ describe('shallow', () => {
               <div className="baz" />
             </div>
           </div>
-        </div>
+          <div className="qux">
+            <div className="qoo" />
+          </div>
+        </div>,
       );
 
       const parents = wrapper.find('.baz').parents();
@@ -1540,7 +1809,6 @@ describe('shallow', () => {
       expect(parents.at(0).hasClass('bar')).to.equal(true);
       expect(parents.at(1).hasClass('foo')).to.equal(true);
       expect(parents.at(2).hasClass('bax')).to.equal(true);
-
     });
 
     it('should work for non-leaf nodes as well', () => {
@@ -1551,7 +1819,7 @@ describe('shallow', () => {
               <div className="baz" />
             </div>
           </div>
-        </div>
+        </div>,
       );
 
       const parents = wrapper.find('.bar').parents();
@@ -1569,7 +1837,7 @@ describe('shallow', () => {
               <div className="baz" />
             </div>
           </div>
-        </div>
+        </div>,
       );
 
       const parents = wrapper.find('.baz').parents('.foo');
@@ -1589,7 +1857,7 @@ describe('shallow', () => {
               <div className="baz" />
             </div>
           </div>
-        </div>
+        </div>,
       );
 
       expect(wrapper.find('.baz').parent().hasClass('bar')).to.equal(true);
@@ -1606,7 +1874,7 @@ describe('shallow', () => {
               </div>
             </div>
           </div>
-        </div>
+        </div>,
       );
 
       expect(wrapper.find('.baz').parent().hasClass('bar')).to.equal(true);
@@ -1624,7 +1892,7 @@ describe('shallow', () => {
           <div className="bax">
             <div className="baz" />
           </div>
-        </div>
+        </div>,
       );
 
       const parents = wrapper.find('.baz').parent();
@@ -1644,7 +1912,7 @@ describe('shallow', () => {
               <div className="bar" />
             </div>
           </div>
-        </div>
+        </div>,
       );
 
       const closestFoo = wrapper.find('.bar').closest('.foo');
@@ -1660,7 +1928,7 @@ describe('shallow', () => {
               <div className="baz" />
             </div>
           </div>
-        </div>
+        </div>,
       );
 
       expect(wrapper.find('.baz').parent().hasClass('bar')).to.equal(true);
@@ -1674,7 +1942,7 @@ describe('shallow', () => {
               <div className="bux baz" />
             </div>
           </div>
-        </div>
+        </div>,
       );
 
       expect(wrapper.find('.bux').closest('.baz').hasClass('bux')).to.equal(true);
@@ -1684,7 +1952,7 @@ describe('shallow', () => {
   describe('.hasClass(className)', () => {
     it('should return whether or not node has a certain class', () => {
       const wrapper = shallow(
-        <div className="foo bar baz some-long-string FoOo" />
+        <div className="foo bar baz some-long-string FoOo" />,
       );
 
       expect(wrapper.hasClass('foo')).to.equal(true);
@@ -1703,7 +1971,7 @@ describe('shallow', () => {
           <div className="foo bax" />
           <div className="foo bar" />
           <div className="foo baz" />
-        </div>
+        </div>,
       );
       const spy = sinon.spy();
 
@@ -1712,10 +1980,13 @@ describe('shallow', () => {
       expect(spy.callCount).to.equal(3);
       expect(spy.args[0][0]).to.be.instanceOf(ShallowWrapper);
       expect(spy.args[0][0].hasClass('bax')).to.equal(true);
+      expect(spy.args[0][1]).to.equal(0);
       expect(spy.args[1][0]).to.be.instanceOf(ShallowWrapper);
       expect(spy.args[1][0].hasClass('bar')).to.equal(true);
+      expect(spy.args[1][1]).to.equal(1);
       expect(spy.args[2][0]).to.be.instanceOf(ShallowWrapper);
       expect(spy.args[2][0].hasClass('baz')).to.equal(true);
+      expect(spy.args[2][1]).to.equal(2);
     });
   });
 
@@ -1726,7 +1997,7 @@ describe('shallow', () => {
           <div className="foo bax" />
           <div className="foo bar" />
           <div className="foo baz" />
-        </div>
+        </div>,
       );
       const spy = sinon.spy();
 
@@ -1735,10 +2006,13 @@ describe('shallow', () => {
       expect(spy.callCount).to.equal(3);
       expect(spy.args[0][0]).to.be.instanceOf(ShallowWrapper);
       expect(spy.args[0][0].hasClass('bax')).to.equal(true);
+      expect(spy.args[0][1]).to.equal(0);
       expect(spy.args[1][0]).to.be.instanceOf(ShallowWrapper);
       expect(spy.args[1][0].hasClass('bar')).to.equal(true);
+      expect(spy.args[1][1]).to.equal(1);
       expect(spy.args[2][0]).to.be.instanceOf(ShallowWrapper);
       expect(spy.args[2][0].hasClass('baz')).to.equal(true);
+      expect(spy.args[2][1]).to.equal(2);
     });
 
     it('should return an array with the mapped values', () => {
@@ -1747,7 +2021,7 @@ describe('shallow', () => {
           <div className="foo bax" />
           <div className="foo bar" />
           <div className="foo baz" />
-        </div>
+        </div>,
       );
       const result = wrapper.find('.foo').map(w => w.props().className);
 
@@ -1766,7 +2040,7 @@ describe('shallow', () => {
           <div className="foo bax" />
           <div className="foo bar" />
           <div className="foo baz" />
-        </div>
+        </div>,
       );
       const spy = sinon.spy(n => n + 1);
 
@@ -1787,14 +2061,14 @@ describe('shallow', () => {
           <div id="bax" className="foo qoo" />
           <div id="bar" className="foo boo" />
           <div id="baz" className="foo hoo" />
-        </div>
+        </div>,
       );
       const result = wrapper.find('.foo').reduce(
         (obj, n) => {
           obj[n.prop('id')] = n.prop('className');
           return obj;
         },
-        {}
+        {},
       );
 
       expect(result).to.eql({
@@ -1812,7 +2086,7 @@ describe('shallow', () => {
           <div className="foo bax" />
           <div className="foo bar" />
           <div className="foo baz" />
-        </div>
+        </div>,
       );
       const spy = sinon.spy(n => n + 1);
 
@@ -1833,14 +2107,14 @@ describe('shallow', () => {
           <div id="bax" className="foo qoo" />
           <div id="bar" className="foo boo" />
           <div id="baz" className="foo hoo" />
-        </div>
+        </div>,
       );
       const result = wrapper.find('.foo').reduceRight(
         (obj, n) => {
           obj[n.prop('id')] = n.prop('className');
           return obj;
         },
-        {}
+        {},
       );
 
       expect(result).to.eql({
@@ -1851,6 +2125,56 @@ describe('shallow', () => {
     });
   });
 
+  describe('.slice([begin[, end]])', () => {
+    it('should return an identical wrapper if no params are set', () => {
+      const wrapper = shallow(
+        <div>
+          <div className="foo bax" />
+          <div className="foo bar" />
+          <div className="foo baz" />
+        </div>,
+      );
+      expect(wrapper.find('.foo').slice()).to.have.length(3);
+      expect(wrapper.find('.foo').slice().at(0).hasClass('bax')).to.equal(true);
+      expect(wrapper.find('.foo').slice().at(1).hasClass('bar')).to.equal(true);
+      expect(wrapper.find('.foo').slice().at(2).hasClass('baz')).to.equal(true);
+    });
+    it('should return a new wrapper if begin is set', () => {
+      const wrapper = shallow(
+        <div>
+          <div className="foo bax" />
+          <div className="foo bar" />
+          <div className="foo baz" />
+        </div>,
+      );
+      expect(wrapper.find('.foo').slice(1)).to.have.length(2);
+      expect(wrapper.find('.foo').slice(1).at(0).hasClass('bar')).to.equal(true);
+      expect(wrapper.find('.foo').slice(1).at(1).hasClass('baz')).to.equal(true);
+    });
+    it('should return a new wrapper if begin and end are set', () => {
+      const wrapper = shallow(
+        <div>
+          <div className="foo bax" />
+          <div className="foo bar" />
+          <div className="foo baz" />
+        </div>,
+      );
+      expect(wrapper.find('.foo').slice(1, 2)).to.have.length(1);
+      expect(wrapper.find('.foo').slice(1, 2).at(0).hasClass('bar')).to.equal(true);
+    });
+    it('should return a new wrapper if begin and end are set (negative)', () => {
+      const wrapper = shallow(
+        <div>
+          <div className="foo bax" />
+          <div className="foo bar" />
+          <div className="foo baz" />
+        </div>,
+      );
+      expect(wrapper.find('.foo').slice(-2, -1)).to.have.length(1);
+      expect(wrapper.find('.foo').slice(-2, -1).at(0).hasClass('bar')).to.equal(true);
+    });
+  });
+
   describe('.some(selector)', () => {
     it('should return if a node matches a selector', () => {
       const wrapper = shallow(
@@ -1858,11 +2182,22 @@ describe('shallow', () => {
           <div className="foo qoo" />
           <div className="foo boo" />
           <div className="foo hoo" />
-        </div>
+        </div>,
       );
       expect(wrapper.find('.foo').some('.qoo')).to.equal(true);
       expect(wrapper.find('.foo').some('.foo')).to.equal(true);
       expect(wrapper.find('.foo').some('.bar')).to.equal(false);
+    });
+    it('should throw if called on root', () => {
+      const wrapper = shallow(
+        <div>
+          <div className="foo" />
+        </div>,
+      );
+      expect(() => wrapper.some('.foo')).to.throw(
+        Error,
+        'ShallowWrapper::some() can not be called on the root',
+      );
     });
   });
 
@@ -1873,7 +2208,7 @@ describe('shallow', () => {
           <div className="foo qoo" />
           <div className="foo boo" />
           <div className="foo hoo" />
-        </div>
+        </div>,
       );
       expect(wrapper.find('.foo').someWhere(n => n.hasClass('qoo'))).to.equal(true);
       expect(wrapper.find('.foo').someWhere(n => n.hasClass('foo'))).to.equal(true);
@@ -1888,7 +2223,7 @@ describe('shallow', () => {
           <div className="foo qoo" />
           <div className="foo boo" />
           <div className="foo hoo" />
-        </div>
+        </div>,
       );
       expect(wrapper.find('.foo').every('.foo')).to.equal(true);
       expect(wrapper.find('.foo').every('.qoo')).to.equal(false);
@@ -1903,7 +2238,7 @@ describe('shallow', () => {
           <div className="foo qoo" />
           <div className="foo boo" />
           <div className="foo hoo" />
-        </div>
+        </div>,
       );
       expect(wrapper.find('.foo').everyWhere(n => n.hasClass('foo'))).to.equal(true);
       expect(wrapper.find('.foo').everyWhere(n => n.hasClass('qoo'))).to.equal(false);
@@ -1927,10 +2262,10 @@ describe('shallow', () => {
             <div className="bax" />
             <div className="bax" />
           </div>
-        </div>
+        </div>,
       );
 
-      const nodes = wrapper.find('.foo').flatMap(w => w.children().nodes);
+      const nodes = wrapper.find('.foo').flatMap(w => w.children().getNodes());
 
       expect(nodes.length).to.equal(6);
       expect(nodes.at(0).hasClass('bar')).to.equal(true);
@@ -1976,7 +2311,7 @@ describe('shallow', () => {
           }
         }
         Bar.contextTypes = {
-          name: React.PropTypes.string,
+          name: PropTypes.string,
         };
         class Foo extends React.Component {
           render() {
@@ -2012,7 +2347,7 @@ describe('shallow', () => {
 
         const context = { name: 'foo' };
         const wrapper = shallow(<Foo />);
-        expect(() => wrapper.find(Bar).shallow({ context })).to.not.throw(Error);
+        expect(() => wrapper.find(Bar).shallow({ context })).to.not.throw();
       });
 
       it('is instrospectable through context API', () => {
@@ -2022,7 +2357,7 @@ describe('shallow', () => {
           }
         }
         Bar.contextTypes = {
-          name: React.PropTypes.string,
+          name: PropTypes.string,
         };
         class Foo extends React.Component {
           render() {
@@ -2066,7 +2401,7 @@ describe('shallow', () => {
           const Bar = (props, context) => (
             <div>{context.name}</div>
           );
-          Bar.contextTypes = { name: React.PropTypes.string };
+          Bar.contextTypes = { name: PropTypes.string };
           const Foo = () => (
             <div>
               <Bar />
@@ -2090,14 +2425,14 @@ describe('shallow', () => {
 
           const context = { name: 'foo' };
           const wrapper = shallow(<Foo />);
-          expect(() => wrapper.find(Bar).shallow({ context })).to.not.throw(Error);
+          expect(() => wrapper.find(Bar).shallow({ context })).to.not.throw();
         });
 
         it('is instrospectable through context API', () => {
           const Bar = (props, context) => (
             <div>{context.name}</div>
           );
-          Bar.contextTypes = { name: React.PropTypes.string };
+          Bar.contextTypes = { name: PropTypes.string };
           const Foo = () => (
             <div>
               <Bar />
@@ -2112,7 +2447,6 @@ describe('shallow', () => {
         });
       });
     });
-
   });
 
   describe('.first()', () => {
@@ -2123,7 +2457,7 @@ describe('shallow', () => {
           <div className="bar" />
           <div className="bar" />
           <div className="bar" />
-        </div>
+        </div>,
       );
       expect(wrapper.find('.bar').first().hasClass('baz')).to.equal(true);
     });
@@ -2137,19 +2471,54 @@ describe('shallow', () => {
           <div className="bar" />
           <div className="bar" />
           <div className="bar baz" />
-        </div>
+        </div>,
       );
       expect(wrapper.find('.bar').last().hasClass('baz')).to.equal(true);
     });
   });
 
   describe('.isEmpty()', () => {
-    it('should return true iff wrapper is empty', () => {
+    let warningStub;
+    let fooNode;
+    let missingNode;
+
+    beforeEach(() => {
+      warningStub = sinon.stub(console, 'warn');
       const wrapper = shallow(
-        <div className="foo" />
+        <div className="foo" />,
       );
-      expect(wrapper.find('.bar').isEmpty()).to.equal(true);
-      expect(wrapper.find('.foo').isEmpty()).to.equal(false);
+      fooNode = wrapper.find('.foo');
+      missingNode = wrapper.find('.missing');
+    });
+    afterEach(() => {
+      warningStub.restore();
+    });
+
+    it('should display a deprecation warning', () => {
+      fooNode.isEmpty();
+      expect(warningStub.calledWith('Enzyme::Deprecated method isEmpty() called, use exists() instead.')).to.equal(true);
+    });
+
+    it('calls exists() instead', () => {
+      const existsSpy = sinon.spy();
+      fooNode.exists = existsSpy;
+      fooNode.isEmpty();
+      expect(existsSpy.called).to.equal(true);
+    });
+
+    it('should return true if wrapper is empty', () => {
+      expect(fooNode.isEmpty()).to.equal(false);
+      expect(missingNode.isEmpty()).to.equal(true);
+    });
+  });
+
+  describe('.exists()', () => {
+    it('should return true if node exists in wrapper', () => {
+      const wrapper = shallow(
+        <div className="foo" />,
+      );
+      expect(wrapper.find('.bar').exists()).to.equal(false);
+      expect(wrapper.find('.foo').exists()).to.equal(true);
     });
   });
 
@@ -2161,7 +2530,7 @@ describe('shallow', () => {
           <div className="bar bax" />
           <div className="bar bux" />
           <div className="bar baz" />
-        </div>
+        </div>,
       );
       expect(wrapper.find('.bar').at(0).hasClass('foo')).to.equal(true);
       expect(wrapper.find('.bar').at(1).hasClass('bax')).to.equal(true);
@@ -2178,12 +2547,12 @@ describe('shallow', () => {
           <div className="bar bax" />
           <div className="bar bux" />
           <div className="bar baz" />
-        </div>
+        </div>,
       );
-      expect(wrapper.find('.bar').get(0)).to.equal(wrapper.find('.foo').node);
-      expect(wrapper.find('.bar').get(1)).to.equal(wrapper.find('.bax').node);
-      expect(wrapper.find('.bar').get(2)).to.equal(wrapper.find('.bux').node);
-      expect(wrapper.find('.bar').get(3)).to.equal(wrapper.find('.baz').node);
+      expect(wrapper.find('.bar').get(0)).to.equal(wrapper.find('.foo').getNode());
+      expect(wrapper.find('.bar').get(1)).to.equal(wrapper.find('.bax').getNode());
+      expect(wrapper.find('.bar').get(2)).to.equal(wrapper.find('.bux').getNode());
+      expect(wrapper.find('.bar').get(3)).to.equal(wrapper.find('.baz').getNode());
     });
   });
 
@@ -2198,10 +2567,10 @@ describe('shallow', () => {
       const wrapper = shallow(
         <div className="test">
           <span>Hello World!</span>
-        </div>
+        </div>,
       );
       expect(wrapper.html()).to.equal(
-        '<div class="test"><span>Hello World!</span></div>'
+        '<div class="test"><span>Hello World!</span></div>',
       );
     });
 
@@ -2222,10 +2591,10 @@ describe('shallow', () => {
       }
       const wrapper = shallow(<Bar />);
       expect(wrapper.html()).to.equal(
-        '<div class="in-bar"><div class="in-foo"></div></div>'
+        '<div class="in-bar"><div class="in-foo"></div></div>',
       );
       expect(wrapper.find(Foo).html()).to.equal(
-        '<div class="in-foo"></div>'
+        '<div class="in-foo"></div>',
       );
     });
 
@@ -2242,14 +2611,13 @@ describe('shallow', () => {
 
         const wrapper = shallow(<Bar />);
         expect(wrapper.html()).to.equal(
-          '<div class="in-bar"><div class="in-foo"></div></div>'
+          '<div class="in-bar"><div class="in-foo"></div></div>',
         );
         expect(wrapper.find(Foo).html()).to.equal(
-          '<div class="in-foo"></div>'
+          '<div class="in-foo"></div>',
         );
       });
     });
-
   });
 
   describe('.unmount()', () => {
@@ -2277,7 +2645,6 @@ describe('shallow', () => {
   });
 
   describe('.render()', () => {
-
     it('should return a cheerio wrapper around the current node', () => {
       class Foo extends React.Component {
         render() {
@@ -2318,7 +2685,835 @@ describe('shallow', () => {
         expect(renderedFoo.find('.in-bar')).to.have.length(0);
       });
     });
+  });
 
+  describe('disableLifecycleMethods', () => {
+    describe('validation', () => {
+      it('throws for a non-boolean value', () => {
+        ['value', 42, null].forEach((value) => {
+          expect(() => shallow(<div />, {
+            disableLifecycleMethods: value,
+          })).to.throw(/true or false/);
+        });
+      });
+
+      it('does not throw for a boolean value or undefined', () => {
+        [true, false, undefined].forEach((value) => {
+          expect(() => shallow(<div />, {
+            disableLifecycleMethods: value,
+          })).not.to.throw();
+        });
+      });
+
+      it('does not throw when no lifecycle flags are provided in options', () => {
+        expect(() => shallow(<div />, {})).not.to.throw();
+      });
+
+      it('throws when used with lifecycleExperimental in invalid combinations', () => {
+        [true, false].forEach((value) => {
+          expect(() => shallow(<div />, {
+            lifecycleExperimental: value,
+            disableLifecycleMethods: value,
+          })).to.throw(/same value/);
+        });
+      });
+    });
+
+    describe('when set to true', () => {
+      let wrapper;
+      const spy = sinon.spy();
+      class Foo extends React.Component {
+        componentWillMount() {
+          spy('componentWillMount');
+        }
+        componentDidMount() {
+          spy('componentDidMount');
+        }
+        componentWillReceiveProps() {
+          spy('componentWillReceiveProps');
+        }
+        shouldComponentUpdate() {
+          spy('shouldComponentUpdate');
+          return true;
+        }
+        componentWillUpdate() {
+          spy('componentWillUpdate');
+        }
+        componentDidUpdate() {
+          spy('componentDidUpdate');
+        }
+        componentWillUnmount() {
+          spy('componentWillUnmount');
+        }
+        render() {
+          spy('render');
+          return <div>foo</div>;
+        }
+      }
+
+      const options = {
+        disableLifecycleMethods: true,
+        context: {
+          foo: 'foo',
+        },
+      };
+
+      beforeEach(() => {
+        wrapper = shallow(<Foo />, options);
+        spy.reset();
+      });
+
+      it('does not call componentDidMount when mounting', () => {
+        wrapper = shallow(<Foo />, options);
+        expect(spy.args).to.deep.equal([
+          ['componentWillMount'],
+          ['render'],
+        ]);
+      });
+
+      it('calls expected methods when receiving new props', () => {
+        wrapper.setProps({ foo: 'foo' });
+        expect(spy.args).to.deep.equal([
+          ['componentWillReceiveProps'],
+          ['shouldComponentUpdate'],
+          ['componentWillUpdate'],
+          ['render'],
+        ]);
+      });
+
+      describeIf(REACT013 || REACT15, 'setContext', () => {
+        it('calls expected methods when receiving new context', () => {
+          wrapper.setContext({ foo: 'foo' });
+          expect(spy.args).to.deep.equal([
+            ['componentWillReceiveProps'],
+            ['shouldComponentUpdate'],
+            ['componentWillUpdate'],
+            ['render'],
+          ]);
+        });
+      });
+
+      describeIf(REACT014, 'setContext', () => {
+        it('calls expected methods when receiving new context', () => {
+          wrapper.setContext({ foo: 'foo' });
+          expect(spy.args).to.deep.equal([
+            ['shouldComponentUpdate'],
+            ['componentWillUpdate'],
+            ['render'],
+          ]);
+        });
+      });
+
+      it('calls expected methods for setState', () => {
+        wrapper.setState({ bar: 'bar' });
+        expect(spy.args).to.deep.equal([
+          ['shouldComponentUpdate'],
+          ['componentWillUpdate'],
+          ['render'],
+          ['componentDidUpdate'],
+        ]);
+      });
+
+      it('calls expected methods when unmounting', () => {
+        wrapper.unmount();
+        expect(spy.args).to.deep.equal([
+          ['componentWillUnmount'],
+        ]);
+      });
+    });
+  });
+
+  describe('lifecycleExperimental', () => {
+    describe('validation', () => {
+      it('throws for a non-boolean value', () => {
+        ['value', 42, null].forEach((value) => {
+          expect(() => shallow(<div />, {
+            lifecycleExperimental: value,
+          })).to.throw(/true or false/);
+        });
+      });
+
+      it('does not throw for a boolean value or when not provided', () => {
+        [true, false, undefined].forEach((value) => {
+          expect(() => shallow(<div />, {
+            lifecycleExperimental: value,
+          })).not.to.throw();
+        });
+      });
+    });
+
+    context('mounting phase', () => {
+      it('should call componentWillMount and componentDidMount', () => {
+        const spy = sinon.spy();
+        class Foo extends React.Component {
+          componentWillMount() {
+            spy('componentWillMount');
+          }
+          componentDidMount() {
+            spy('componentDidMount');
+          }
+          render() {
+            spy('render');
+            return <div>foo</div>;
+          }
+        }
+        shallow(<Foo />, { lifecycleExperimental: true });
+        expect(spy.args).to.deep.equal([
+          ['componentWillMount'],
+          ['render'],
+          ['componentDidMount'],
+        ]);
+      });
+
+      it('should be batching updates', () => {
+        const spy = sinon.spy();
+        class Foo extends React.Component {
+          constructor(props) {
+            super(props);
+            this.state = {
+              count: 0,
+            };
+          }
+          componentWillMount() {
+            this.setState({ count: this.state.count + 1 });
+            this.setState({ count: this.state.count + 1 });
+          }
+          componentDidMount() {
+            this.setState({ count: this.state.count + 1 });
+            this.setState({ count: this.state.count + 1 });
+          }
+          render() {
+            spy();
+            return <div>{this.state.count}</div>;
+          }
+        }
+        const result = shallow(<Foo />, { lifecycleExperimental: true });
+        expect(result.state('count')).to.equal(2);
+        expect(spy.callCount).to.equal(2);
+      });
+    });
+
+    context('updating props', () => {
+      it('should call shouldComponentUpdate, componentWillUpdate and componentDidUpdate', () => {
+        const spy = sinon.spy();
+
+        class Foo extends React.Component {
+          constructor(...args) {
+            super(...args);
+            this.state = {
+              foo: 'state',
+            };
+          }
+          componentWillReceiveProps(nextProps, nextContext) {
+            spy('componentWillReceiveProps', this.props, nextProps, nextContext);
+          }
+          shouldComponentUpdate(nextProps, nextState, nextContext) {
+            spy('shouldComponentUpdate', this.props, nextProps, this.state, nextState, nextContext);
+            return true;
+          }
+          componentWillUpdate(nextProps, nextState, nextContext) {
+            spy('componentWillUpdate', this.props, nextProps, this.state, nextState, nextContext);
+          }
+          componentDidUpdate(prevProps, prevState, prevContext) {
+            spy('componentDidUpdate', prevProps, this.props, prevState, this.state, prevContext);
+          }
+          render() {
+            spy('render');
+            return <div>foo</div>;
+          }
+        }
+        Foo.contextTypes = {
+          foo: PropTypes.string,
+        };
+
+        const wrapper = shallow(
+          <Foo foo="bar" />,
+          {
+            context: { foo: 'context' },
+            lifecycleExperimental: true,
+          },
+        );
+        wrapper.setProps({ foo: 'baz' });
+        wrapper.setProps({ foo: 'bax' });
+        expect(spy.args).to.deep.equal(
+          [
+            [
+              'render',
+            ],
+            [
+              'componentWillReceiveProps',
+              { foo: 'bar' }, { foo: 'baz' },
+              { foo: 'context' },
+            ],
+            [
+              'shouldComponentUpdate',
+              { foo: 'bar' }, { foo: 'baz' },
+              { foo: 'state' }, { foo: 'state' },
+              { foo: 'context' },
+            ],
+            [
+              'componentWillUpdate',
+              { foo: 'bar' }, { foo: 'baz' },
+              { foo: 'state' }, { foo: 'state' },
+              { foo: 'context' },
+            ],
+            [
+              'render',
+            ],
+            [
+              'componentDidUpdate',
+              { foo: 'bar' }, { foo: 'baz' },
+              { foo: 'state' }, { foo: 'state' },
+              { foo: 'context' },
+            ],
+            [
+              'componentWillReceiveProps',
+              { foo: 'baz' }, { foo: 'bax' },
+              { foo: 'context' },
+            ],
+            [
+              'shouldComponentUpdate',
+              { foo: 'baz' }, { foo: 'bax' },
+              { foo: 'state' }, { foo: 'state' },
+              { foo: 'context' },
+            ],
+            [
+              'componentWillUpdate',
+              { foo: 'baz' }, { foo: 'bax' },
+              { foo: 'state' }, { foo: 'state' },
+              { foo: 'context' },
+            ],
+            [
+              'render',
+            ],
+            [
+              'componentDidUpdate',
+              { foo: 'baz' }, { foo: 'bax' },
+              { foo: 'state' }, { foo: 'state' },
+              { foo: 'context' },
+            ],
+          ],
+        );
+      });
+
+      it('should cancel rendering when Component returns false in shouldComponentUpdate', () => {
+        const spy = sinon.spy();
+
+        class Foo extends React.Component {
+          componentWillReceiveProps() {
+            spy('componentWillReceiveProps');
+          }
+          shouldComponentUpdate() {
+            spy('shouldComponentUpdate');
+            return false;
+          }
+          componentWillUpdate() {
+            spy('componentWillUpdate');
+          }
+          componentDidUpdate() {
+            spy('componentDidUpdate');
+          }
+          render() {
+            spy('render');
+            return <div>foo</div>;
+          }
+        }
+
+        const wrapper = shallow(<Foo foo="bar" />, { lifecycleExperimental: true });
+        expect(wrapper.instance().props.foo).to.equal('bar');
+        wrapper.setProps({ foo: 'baz' });
+        expect(wrapper.instance().props.foo).to.equal('baz');
+        wrapper.setProps({ foo: 'bax' });
+        expect(wrapper.instance().props.foo).to.equal('bax');
+        expect(spy.args).to.deep.equal([
+          ['render'],
+          ['componentWillReceiveProps'],
+          ['shouldComponentUpdate'],
+          ['componentWillReceiveProps'],
+          ['shouldComponentUpdate'],
+        ]);
+      });
+
+      it('should not provoke another renders to call setState in componentWillReceiveProps', () => {
+        const spy = sinon.spy();
+        class Foo extends React.Component {
+          constructor(props) {
+            super(props);
+            this.state = {
+              count: 0,
+            };
+          }
+          componentWillReceiveProps() {
+            this.setState({ count: this.state.count + 1 });
+            this.setState({ count: this.state.count + 1 });
+          }
+          render() {
+            spy();
+            return <div>{this.props.foo}</div>;
+          }
+        }
+        const result = shallow(<Foo />, { lifecycleExperimental: true });
+        expect(spy).to.have.property('callCount', 1);
+        result.setProps({ name: 'bar' });
+        expect(spy).to.have.property('callCount', 2);
+        expect(result.state('count')).to.equal(1);
+      });
+
+      it('should provoke an another render to call setState twice in componentWillUpdate', () => {
+        const spy = sinon.spy();
+        class Foo extends React.Component {
+          constructor(props) {
+            super(props);
+            this.updated = false;
+            this.state = {
+              count: 0,
+            };
+          }
+          componentWillUpdate() {
+            if (!this.updated) {
+              this.updated = true;
+              this.setState({ count: this.state.count + 1 });
+              this.setState({ count: this.state.count + 1 });
+            }
+          }
+          render() {
+            spy();
+            return <div>{this.props.foo}</div>;
+          }
+        }
+        const result = shallow(<Foo />, { lifecycleExperimental: true });
+        expect(spy).to.have.property('callCount', 1);
+        result.setProps({ name: 'bar' });
+        expect(spy).to.have.property('callCount', 3);
+        expect(result.state('count')).to.equal(1);
+      });
+
+      it('should provoke an another render to call setState twice in componentDidUpdate', () => {
+        const spy = sinon.spy();
+        class Foo extends React.Component {
+          constructor(props) {
+            super(props);
+            this.updated = false;
+            this.state = {
+              count: 0,
+            };
+          }
+          componentDidUpdate() {
+            if (!this.updated) {
+              this.updated = true;
+              /* eslint-disable react/no-did-update-set-state */
+              this.setState({ count: this.state.count + 1 });
+              this.setState({ count: this.state.count + 1 });
+              /* eslint-enable react/no-did-update-set-state */
+            }
+          }
+          render() {
+            spy();
+            return <div>{this.props.foo}</div>;
+          }
+        }
+        const result = shallow(<Foo />, { lifecycleExperimental: true });
+        expect(spy).to.have.property('callCount', 1);
+        result.setProps({ name: 'bar' });
+        expect(spy).to.have.property('callCount', 3);
+        expect(result.state('count')).to.equal(1);
+      });
+    });
+
+    context('updating state', () => {
+      it('should call shouldComponentUpdate, componentWillUpdate and componentDidUpdate', () => {
+        const spy = sinon.spy();
+
+        class Foo extends React.Component {
+          constructor(...args) {
+            super(...args);
+            this.state = {
+              foo: 'bar',
+            };
+          }
+          shouldComponentUpdate(nextProps, nextState, nextContext) {
+            spy('shouldComponentUpdate', this.props, nextProps, this.state, nextState, nextContext);
+            return true;
+          }
+          componentWillUpdate(nextProps, nextState, nextContext) {
+            spy('componentWillUpdate', this.props, nextProps, this.state, nextState, nextContext);
+          }
+          componentDidUpdate(prevProps, prevState, prevContext) {
+            spy('componentDidUpdate', prevProps, this.props, prevState, this.state, prevContext);
+          }
+          render() {
+            spy('render');
+            return <div>foo</div>;
+          }
+        }
+        Foo.contextTypes = {
+          foo: PropTypes.string,
+        };
+
+        const wrapper = shallow(
+          <Foo foo="props" />,
+          {
+            context: { foo: 'context' },
+            lifecycleExperimental: true,
+          },
+        );
+        wrapper.setState({ foo: 'baz' });
+        expect(spy.args).to.deep.equal([
+          [
+            'render',
+          ],
+          [
+            'shouldComponentUpdate',
+            { foo: 'props' }, { foo: 'props' },
+            { foo: 'bar' }, { foo: 'baz' },
+            { foo: 'context' },
+          ],
+          [
+            'componentWillUpdate',
+            { foo: 'props' }, { foo: 'props' },
+            { foo: 'bar' }, { foo: 'baz' },
+            { foo: 'context' },
+          ],
+          [
+            'render',
+          ],
+          [
+            'componentDidUpdate',
+            { foo: 'props' }, { foo: 'props' },
+            { foo: 'bar' }, { foo: 'baz' },
+            { foo: 'context' },
+          ],
+        ]);
+      });
+
+      it('should cancel rendering when Component returns false in shouldComponentUpdate', () => {
+        const spy = sinon.spy();
+        class Foo extends React.Component {
+          constructor(props) {
+            super(props);
+            this.state = {
+              foo: 'bar',
+            };
+          }
+          shouldComponentUpdate() {
+            spy('shouldComponentUpdate');
+            return false;
+          }
+          componentWillUpdate() {
+            spy('componentWillUpdate');
+          }
+          componentDidUpdate() {
+            spy('componentDidUpdate');
+          }
+          render() {
+            spy('render');
+            return <div>foo</div>;
+          }
+        }
+        const wrapper = shallow(<Foo />, { lifecycleExperimental: true });
+        expect(wrapper.instance().state.foo).to.equal('bar');
+        wrapper.setState({ foo: 'baz' });
+        expect(wrapper.instance().state.foo).to.equal('baz');
+        expect(spy.args).to.deep.equal([['render'], ['shouldComponentUpdate']]);
+      });
+
+      it('should provoke an another render to call setState twice in componentWillUpdate', () => {
+        const spy = sinon.spy();
+        class Foo extends React.Component {
+          constructor(props) {
+            super(props);
+            this.updated = false;
+            this.state = {
+              name: 'foo',
+              count: 0,
+            };
+          }
+          componentWillUpdate() {
+            if (!this.updated) {
+              this.updated = true;
+              this.setState({ count: this.state.count + 1 });
+              this.setState({ count: this.state.count + 1 });
+            }
+          }
+          render() {
+            spy();
+            return <div>{this.state.name}</div>;
+          }
+        }
+        const result = shallow(<Foo />, { lifecycleExperimental: true });
+        expect(spy).to.have.property('callCount', 1);
+        result.setState({ name: 'bar' });
+        expect(spy).to.have.property('callCount', 3);
+        expect(result.state('count')).to.equal(1);
+      });
+
+      it('should provoke an another render to call setState twice in componentDidUpdate', () => {
+        const spy = sinon.spy();
+        class Foo extends React.Component {
+          constructor(props) {
+            super(props);
+            this.updated = false;
+            this.state = {
+              name: 'foo',
+              count: 0,
+            };
+          }
+          componentDidUpdate() {
+            if (!this.updated) {
+              this.updated = true;
+              /* eslint-disable react/no-did-update-set-state */
+              this.setState({ count: this.state.count + 1 });
+              this.setState({ count: this.state.count + 1 });
+              /* eslint-enable react/no-did-update-set-state */
+            }
+          }
+          render() {
+            spy();
+            return <div>{this.state.name}</div>;
+          }
+        }
+        const result = shallow(<Foo />, { lifecycleExperimental: true });
+        expect(spy).to.have.property('callCount', 1);
+        result.setState({ name: 'bar' });
+        expect(spy).to.have.property('callCount', 3);
+        expect(result.state('count')).to.equal(1);
+      });
+    });
+
+    context('updating context', () => {
+      it('should call shouldComponentUpdate, componentWillUpdate and componentDidUpdate', () => {
+        const spy = sinon.spy();
+        class Foo extends React.Component {
+          constructor(...args) {
+            super(...args);
+            this.state = {
+              foo: 'state',
+            };
+          }
+          shouldComponentUpdate(nextProps, nextState, nextContext) {
+            spy('shouldComponentUpdate', this.props, nextProps, this.state, nextState, nextContext);
+            return true;
+          }
+          componentWillUpdate(nextProps, nextState, nextContext) {
+            spy('componentWillUpdate', this.props, nextProps, this.state, nextState, nextContext);
+          }
+          componentDidUpdate(prevProps, prevState, prevContext) {
+            spy('componentDidUpdate', prevProps, this.props, prevState, this.state, prevContext);
+          }
+          render() {
+            spy('render');
+            return <div>foo</div>;
+          }
+        }
+        Foo.contextTypes = {
+          foo: PropTypes.string,
+        };
+        const wrapper = shallow(
+          <Foo foo="props" />,
+          {
+            context: { foo: 'bar' },
+            lifecycleExperimental: true,
+          },
+        );
+        expect(wrapper.instance().context.foo).to.equal('bar');
+        wrapper.setContext({ foo: 'baz' });
+        expect(wrapper.instance().context.foo).to.equal('baz');
+        expect(spy.args).to.deep.equal([
+          [
+            'render',
+          ],
+          [
+            'shouldComponentUpdate',
+            { foo: 'props' }, { foo: 'props' },
+            { foo: 'state' }, { foo: 'state' },
+            { foo: 'baz' },
+          ],
+          [
+            'componentWillUpdate',
+            { foo: 'props' }, { foo: 'props' },
+            { foo: 'state' }, { foo: 'state' },
+            { foo: 'baz' },
+          ],
+          [
+            'render',
+          ],
+          [
+            'componentDidUpdate',
+            { foo: 'props' }, { foo: 'props' },
+            { foo: 'state' }, { foo: 'state' },
+            { foo: 'bar' },
+          ],
+        ]);
+      });
+
+      it('should cancel rendering when Component returns false in shouldComponentUpdate', () => {
+        const spy = sinon.spy();
+        class Foo extends React.Component {
+          shouldComponentUpdate() {
+            spy('shouldComponentUpdate');
+            return false;
+          }
+          componentWillUpdate() {
+            spy('componentWillUpdate');
+          }
+          componentDidUpdate() {
+            spy('componentDidUpdate');
+          }
+          render() {
+            spy('render');
+            return <div>foo</div>;
+          }
+        }
+        Foo.contextTypes = {
+          foo: PropTypes.string,
+        };
+        const wrapper = shallow(
+          <Foo />,
+          {
+            context: { foo: 'bar' },
+            lifecycleExperimental: true,
+          },
+        );
+        wrapper.setContext({ foo: 'baz' });
+        expect(spy.args).to.deep.equal([['render'], ['shouldComponentUpdate']]);
+      });
+
+      it('should provoke an another render to call setState twice in componentWillUpdate', () => {
+        const spy = sinon.spy();
+        class Foo extends React.Component {
+          constructor(props) {
+            super(props);
+            this.updated = false;
+            this.state = {
+              count: 0,
+            };
+          }
+          componentWillUpdate() {
+            if (!this.updated) {
+              this.updated = true;
+              this.setState({ count: this.state.count + 1 });
+              this.setState({ count: this.state.count + 1 });
+            }
+          }
+          render() {
+            spy();
+            return <div>{this.state.name}</div>;
+          }
+        }
+        const result = shallow(
+          <Foo />,
+          {
+            context: { foo: 'bar' },
+            lifecycleExperimental: true,
+          },
+        );
+        expect(spy).to.have.property('callCount', 1);
+        result.setContext({ foo: 'baz' });
+        expect(spy).to.have.property('callCount', 3);
+        expect(result.state('count')).to.equal(1);
+      });
+
+      it('should provoke an another render to call setState twice in componentDidUpdate', () => {
+        const spy = sinon.spy();
+        class Foo extends React.Component {
+          constructor(props) {
+            super(props);
+            this.updated = false;
+            this.state = {
+              count: 0,
+            };
+          }
+          componentDidUpdate() {
+            if (!this.updated) {
+              this.updated = true;
+              /* eslint-disable react/no-did-update-set-state */
+              this.setState({ count: this.state.count + 1 });
+              this.setState({ count: this.state.count + 1 });
+              /* eslint-enable react/no-did-update-set-state */
+            }
+          }
+          render() {
+            spy();
+            return <div>{this.state.name}</div>;
+          }
+        }
+        const result = shallow(
+          <Foo />,
+          {
+            context: { foo: 'bar' },
+            lifecycleExperimental: true,
+          },
+        );
+        expect(spy).to.have.property('callCount', 1);
+        result.setContext({ foo: 'baz' });
+        expect(spy).to.have.property('callCount', 3);
+        expect(result.state('count')).to.equal(1);
+      });
+    });
+
+    context('unmounting phase', () => {
+      it('should call componentWillUnmount', () => {
+        const spy = sinon.spy();
+        class Foo extends React.Component {
+          componentWillUnmount() {
+            spy();
+          }
+          render() {
+            return <div>foo</div>;
+          }
+        }
+        const wrapper = shallow(<Foo />, { lifecycleExperimental: true });
+        wrapper.unmount();
+        expect(spy).to.have.property('callCount', 1);
+      });
+    });
+
+    it('should not call when lifecycleExperimental flag is false', () => {
+      const spy = sinon.spy();
+      class Foo extends React.Component {
+        componentDidMount() {
+          spy();
+        }
+        render() {
+          return <div>foo</div>;
+        }
+      }
+      shallow(<Foo />, { lifecycleExperimental: false });
+      expect(spy).to.have.property('callCount', 0);
+    });
+
+    it('should call shouldComponentUpdate when lifecycleExperimental flag is false', () => {
+      const spy = sinon.spy();
+      class Foo extends React.Component {
+        constructor(props) {
+          super(props);
+          this.state = {
+            foo: 'bar',
+          };
+        }
+        shouldComponentUpdate() {
+          spy();
+          return false;
+        }
+        render() {
+          return <div>foo</div>;
+        }
+      }
+      const wrapper = shallow(
+        <Foo foo="foo" />,
+        {
+          context: { foo: 'foo' },
+          lifecycleExperimental: false,
+        },
+      );
+      expect(spy).to.have.property('callCount', 0);
+      wrapper.setProps({ foo: 'bar' });
+      expect(spy).to.have.property('callCount', 1);
+      wrapper.setState({ foo: 'bar' });
+      expect(spy).to.have.property('callCount', 2);
+      wrapper.setContext({ foo: 'bar' });
+      expect(spy).to.have.property('callCount', 3);
+    });
   });
 
   it('works with class components that return null', () => {
@@ -2336,6 +3531,18 @@ describe('shallow', () => {
     expect(rendered.html()).to.equal(null);
   });
 
+  itIf(REACT15, 'works with SFCs that return null', () => {
+    const Foo = () => null;
+
+    const wrapper = shallow(<Foo />);
+    expect(wrapper).to.have.length(1);
+    expect(wrapper.html()).to.equal(null);
+    expect(wrapper.type()).to.equal(null);
+    const rendered = wrapper.render();
+    expect(rendered.length).to.equal(0);
+    expect(rendered.html()).to.equal(null);
+  });
+
   describe('.tap()', () => {
     it('should call the passed function with current ShallowWrapper and returns itself', () => {
       const spy = sinon.spy();
@@ -2344,7 +3551,7 @@ describe('shallow', () => {
           <li>xxx</li>
           <li>yyy</li>
           <li>zzz</li>
-        </ul>
+        </ul>,
       ).find('li');
       const result = wrapper.tap(spy);
       expect(spy.calledWith(wrapper)).to.equal(true);
@@ -2357,7 +3564,7 @@ describe('shallow', () => {
       const wrapper = shallow(
         <ul>
           {['foo', 'bar'].map(s => <li key={s}>{s}</li>)}
-        </ul>
+        </ul>,
       ).find('li');
       expect(wrapper.at(0).key()).to.equal('foo');
       expect(wrapper.at(1).key()).to.equal('bar');
@@ -2370,23 +3577,23 @@ describe('shallow', () => {
       const wrapper = shallow(
         <div>
           <div onClick={spy} style={{ fontSize: 12, color: 'red' }}>Hello World</div>
-        </div>
+        </div>,
       ).first();
       expect(wrapper.matchesElement(<div><div>Hello World</div></div>)).to.equal(true);
       expect(wrapper.matchesElement(
         <div>
           <div onClick={spy} style={{ fontSize: 12, color: 'red' }}>Hello World</div>
-        </div>
+        </div>,
       )).to.equal(true);
       expect(wrapper.matchesElement(
         <div>
           <div onClick={spy}>Hello World</div>
-        </div>
+        </div>,
       )).to.equal(true);
       expect(wrapper.matchesElement(
         <div>
           <div style={{ fontSize: 12, color: 'red' }}>Hello World</div>
-        </div>
+        </div>,
       )).to.equal(true);
       expect(spy.callCount).to.equal(0);
     });
@@ -2396,23 +3603,23 @@ describe('shallow', () => {
       const wrapper = shallow(
         <div>
           <div onClick={spy} style={{ fontSize: 12, color: 'red' }}>Hello World</div>
-        </div>
+        </div>,
       ).first();
       expect(wrapper.matchesElement(<div><div>Bonjour le monde</div></div>)).to.equal(false);
       expect(wrapper.matchesElement(
         <div>
           <div onClick={spy} style={{ fontSize: 12, color: 'blue' }}>Hello World</div>
-        </div>
+        </div>,
       )).to.equal(false);
       expect(wrapper.matchesElement(
         <div>
           <div onClick={spy2}>Hello World</div>
-        </div>
+        </div>,
       )).to.equal(false);
       expect(wrapper.matchesElement(
         <div>
           <div style={{ fontSize: 13, color: 'red' }}>Hello World</div>
-        </div>
+        </div>,
       )).to.equal(false);
       expect(spy.callCount).to.equal(0);
       expect(spy2.callCount).to.equal(0);
@@ -2427,47 +3634,48 @@ describe('shallow', () => {
         <div>
           <div onClick={spy1} style={{ fontSize: 12, color: 'red' }}>Hello World</div>
           <div onClick={spy2} style={{ fontSize: 13, color: 'blue' }}>Goodbye World</div>
-        </div>
+        </div>,
       );
       expect(wrapper.containsMatchingElement(
         <div>
           <div>Hello World</div>
           <div>Goodbye World</div>
-        </div>
+        </div>,
       )).to.equal(true);
       expect(wrapper.containsMatchingElement(
         <div>
           <div onClick={spy1} style={{ fontSize: 12, color: 'red' }}>Hello World</div>
           <div onClick={spy2} style={{ fontSize: 13, color: 'blue' }}>Goodbye World</div>
-        </div>
+        </div>,
       )).to.equal(true);
       expect(wrapper.containsMatchingElement(
         <div>
           <div onClick={spy1}>Hello World</div>
           <div style={{ fontSize: 13, color: 'blue' }}>Goodbye World</div>
-        </div>
+        </div>,
       )).to.equal(true);
       expect(wrapper.containsMatchingElement(
         <div>
           <div style={{ fontSize: 12, color: 'red' }}>Hello World</div>
           <div onClick={spy2}>Goodbye World</div>
-        </div>
+        </div>,
       )).to.equal(true);
       expect(wrapper.containsMatchingElement(
         <div>
           <div>Hello World</div>
           <div onClick={spy2} style={{ fontSize: 13, color: 'blue' }}>Goodbye World</div>
-        </div>
+        </div>,
       )).to.equal(true);
       expect(wrapper.containsMatchingElement(
         <div>
           <div>Hello World</div>
           <div style={{ fontSize: 13, color: 'blue' }}>Goodbye World</div>
-        </div>
+        </div>,
       )).to.equal(true);
       expect(spy1.callCount).to.equal(0);
       expect(spy2.callCount).to.equal(0);
     });
+
     it('should match on a single node that looks like a rendered one', () => {
       const spy1 = sinon.spy();
       const spy2 = sinon.spy();
@@ -2475,29 +3683,30 @@ describe('shallow', () => {
         <div>
           <div onClick={spy1} style={{ fontSize: 12, color: 'red' }}>Hello World</div>
           <div onClick={spy2} style={{ fontSize: 13, color: 'blue' }}>Goodbye World</div>
-        </div>
+        </div>,
       );
       expect(wrapper.containsMatchingElement(
-        <div>Hello World</div>
+        <div>Hello World</div>,
       )).to.equal(true);
       expect(wrapper.containsMatchingElement(
-        <div>Goodbye World</div>
+        <div>Goodbye World</div>,
       )).to.equal(true);
       expect(wrapper.containsMatchingElement(
-        <div onClick={spy1} style={{ fontSize: 12, color: 'red' }}>Hello World</div>
+        <div onClick={spy1} style={{ fontSize: 12, color: 'red' }}>Hello World</div>,
       )).to.equal(true);
       expect(wrapper.containsMatchingElement(
-        <div style={{ fontSize: 12, color: 'red' }}>Hello World</div>
+        <div style={{ fontSize: 12, color: 'red' }}>Hello World</div>,
       )).to.equal(true);
       expect(wrapper.containsMatchingElement(
-        <div onClick={spy2} style={{ fontSize: 13, color: 'blue' }}>Goodbye World</div>
+        <div onClick={spy2} style={{ fontSize: 13, color: 'blue' }}>Goodbye World</div>,
       )).to.equal(true);
       expect(wrapper.containsMatchingElement(
-        <div onClick={spy2}>Goodbye World</div>
+        <div onClick={spy2}>Goodbye World</div>,
       )).to.equal(true);
       expect(spy1.callCount).to.equal(0);
       expect(spy2.callCount).to.equal(0);
     });
+
     it('should not match on a single node that doesn\'t looks like a rendered one', () => {
       const spy1 = sinon.spy();
       const spy2 = sinon.spy();
@@ -2505,26 +3714,51 @@ describe('shallow', () => {
         <div>
           <div onClick={spy1} style={{ fontSize: 12, color: 'red' }}>Hello World</div>
           <div onClick={spy2} style={{ fontSize: 13, color: 'blue' }}>Goodbye World</div>
-        </div>
+        </div>,
       );
       expect(wrapper.containsMatchingElement(
-        <div>Bonjour le monde</div>
+        <div>Bonjour le monde</div>,
       )).to.equal(false);
       expect(wrapper.containsMatchingElement(
-        <div onClick={spy2}>Au revoir le monde</div>
+        <div onClick={spy2}>Au revoir le monde</div>,
       )).to.equal(false);
     });
+
+    it('should not differentiate between absence, null, or undefined', () => {
+      const wrapper = shallow((
+        <div>
+          <div className="a" id={null} />
+          <div className="b" id={undefined} />
+          <div className="c" />
+        </div>
+      ));
+
+      expect(wrapper.containsMatchingElement(<div />)).to.equal(true);
+
+      expect(wrapper.containsMatchingElement(<div className="a" />)).to.equal(true);
+      expect(wrapper.containsMatchingElement(<div className="a" id={null} />)).to.equal(true);
+      expect(wrapper.containsMatchingElement(<div className="a" id={undefined} />)).to.equal(true);
+
+      expect(wrapper.containsMatchingElement(<div className="b" />)).to.equal(true);
+      expect(wrapper.containsMatchingElement(<div className="b" id={null} />)).to.equal(true);
+      expect(wrapper.containsMatchingElement(<div className="b" id={undefined} />)).to.equal(true);
+
+      expect(wrapper.containsMatchingElement(<div className="c" />)).to.equal(true);
+      expect(wrapper.containsMatchingElement(<div className="c" id={null} />)).to.equal(true);
+      expect(wrapper.containsMatchingElement(<div className="c" id={undefined} />)).to.equal(true);
+    });
   });
+
   describe('.containsAllMatchingElements(nodes)', () => {
     it('should match on an array of nodes that all looks like one of rendered nodes', () => {
       const spy1 = sinon.spy();
       const spy2 = sinon.spy();
-      const wrapper = shallow(
+      const wrapper = shallow((
         <div>
           <div onClick={spy1} style={{ fontSize: 12, color: 'red' }}>Hello World</div>
           <div onClick={spy2} style={{ fontSize: 13, color: 'blue' }}>Goodbye World</div>
         </div>
-      );
+      ));
       expect(wrapper.containsAllMatchingElements([
         <div>Hello World</div>,
         <div>Goodbye World</div>,
@@ -2560,6 +3794,7 @@ describe('shallow', () => {
       expect(spy1.callCount).to.equal(0);
       expect(spy2.callCount).to.equal(0);
     });
+
     it('should not match on nodes that doesn\'t all looks like one of rendered nodes', () => {
       const spy1 = sinon.spy();
       const spy2 = sinon.spy();
@@ -2567,7 +3802,7 @@ describe('shallow', () => {
         <div>
           <div onClick={spy1} style={{ fontSize: 12, color: 'red' }}>Hello World</div>
           <div onClick={spy2} style={{ fontSize: 13, color: 'blue' }}>Goodbye World</div>
-        </div>
+        </div>,
       );
       expect(wrapper.containsAllMatchingElements([
         <div onClick={spy1} style={{ fontSize: 12, color: 'red' }}>Hello World</div>,
@@ -2587,7 +3822,7 @@ describe('shallow', () => {
         <div>
           <div onClick={spy1} style={{ fontSize: 12, color: 'red' }}>Hello World</div>
           <div onClick={spy2} style={{ fontSize: 13, color: 'blue' }}>Goodbye World</div>
-        </div>
+        </div>,
       );
       expect(wrapper.containsAnyMatchingElements([
         <div>Bonjour le monde</div>,
@@ -2631,7 +3866,7 @@ describe('shallow', () => {
         <div>
           <div onClick={spy1} style={{ fontSize: 12, color: 'red' }}>Hello World</div>
           <div onClick={spy2} style={{ fontSize: 13, color: 'blue' }}>Goodbye World</div>
-        </div>
+        </div>,
       );
       expect(wrapper.containsAnyMatchingElements([
         <div onClick={spy1} style={{ fontSize: 12, color: 'red' }}>Bonjour le monde</div>,
@@ -2641,6 +3876,7 @@ describe('shallow', () => {
       expect(spy2.callCount).to.equal(0);
     });
   });
+
   describe('.name()', () => {
     describe('node with displayName', () => {
       it('should return the displayName of the node', () => {
@@ -2672,15 +3908,15 @@ describe('shallow', () => {
         });
       });
 
-      describe('React.createClass', () => {
+      describe('createClass', () => {
         it('should return the name of the node', () => {
-          const Foo = React.createClass({
+          const Foo = createClass({
             displayName: 'CustomWrapper',
             render() {
               return <div />;
             },
           });
-          const Wrapper = React.createClass({
+          const Wrapper = createClass({
             render() {
               return <Foo />;
             },
@@ -2717,24 +3953,6 @@ describe('shallow', () => {
           expect(wrapper.name()).to.equal('SFC');
         });
       });
-
-      describe('React.createClass', () => {
-        it('should return the name of the node', () => {
-          const Foo = React.createClass({
-            render() {
-              return <div />;
-            },
-          });
-          const Wrapper = React.createClass({
-            render() {
-              return <Foo />;
-            },
-          });
-
-          const wrapper = shallow(<Wrapper />);
-          expect(wrapper.name()).to.equal('Foo');
-        });
-      });
     });
 
     describe('DOM node', () => {
@@ -2745,4 +3963,243 @@ describe('shallow', () => {
     });
   });
 
+  describe('.dive()', () => {
+    class RendersDOM extends React.Component {
+      render() {
+        return <div><i /></div>;
+      }
+    }
+    class RendersNull extends React.Component {
+      render() {
+        return null;
+      }
+    }
+    class RendersMultiple extends React.Component {
+      render() {
+        return (
+          <div>
+            <RendersNull />
+            <RendersDOM />
+          </div>
+        );
+      }
+    }
+    class WrapsRendersDOM extends React.Component {
+      render() {
+        return <RendersDOM />;
+      }
+    }
+    WrapsRendersDOM.contextTypes = { foo: PropTypes.string };
+    class DoubleWrapsRendersDOM extends React.Component {
+      render() {
+        return <WrapsRendersDOM />;
+      }
+    }
+    class ContextWrapsRendersDOM extends React.Component {
+      render() {
+        return <WrapsRendersDOM />;
+      }
+    }
+    ContextWrapsRendersDOM.contextTypes = { foo: PropTypes.string };
+
+    it('throws on a DOM node', () => {
+      const wrapper = shallow(<RendersDOM />);
+      expect(wrapper.is('div')).to.equal(true);
+
+      expect(() => { wrapper.dive(); }).to.throw(
+        TypeError,
+        'ShallowWrapper::dive() can not be called on DOM components',
+      );
+    });
+
+    it('throws on a non-component', () => {
+      const wrapper = shallow(<RendersNull />);
+      expect(wrapper.type()).to.equal(null);
+
+      expect(() => { wrapper.dive(); }).to.throw(
+        TypeError,
+        'ShallowWrapper::dive() can only be called on components',
+      );
+    });
+
+    it('throws on multiple children found', () => {
+      const wrapper = shallow(<RendersMultiple />).find('div').children();
+      expect(() => { wrapper.dive(); }).to.throw(
+        Error,
+        'Method “dive” is only meant to be run on a single node. 2 found instead.',
+      );
+    });
+
+    it('dives + shallow-renders when there is one component child', () => {
+      const wrapper = shallow(<DoubleWrapsRendersDOM />);
+      expect(wrapper.is(WrapsRendersDOM)).to.equal(true);
+
+      const underwater = wrapper.dive();
+      expect(underwater.is(RendersDOM)).to.equal(true);
+    });
+
+    it('should merge and pass options through', () => {
+      const wrapper = shallow(<ContextWrapsRendersDOM />, { context: { foo: 'hello' } });
+      expect(wrapper.context()).to.deep.equal({ foo: 'hello' });
+
+      let underwater = wrapper.dive();
+      expect(underwater.context()).to.deep.equal({ foo: 'hello' });
+
+      underwater = wrapper.dive({ context: { foo: 'enzyme!' } });
+      expect(underwater.context()).to.deep.equal({ foo: 'enzyme!' });
+    });
+  });
+
+  describeIf(ITERATOR_SYMBOL, '@@iterator', () => {
+    it('should be iterable', () => {
+      class Foo extends React.Component {
+        render() {
+          return (
+            <div>
+              <a href="#1">Hello</a>
+              <a href="#2">Hello</a>
+              <a href="#3">Hello</a>
+              <a href="#4">Hello</a>
+            </div>
+          );
+        }
+      }
+      const wrapper = shallow(<Foo />);
+      const [a, b, c, d] = wrapper.find('a');
+      const a1 = wrapper.find('a').get(0);
+      const b1 = wrapper.find('a').get(1);
+      const c1 = wrapper.find('a').get(2);
+      const d1 = wrapper.find('a').get(3);
+      expect(a1).to.equal(a);
+      expect(b1).to.equal(b);
+      expect(c1).to.equal(c);
+      expect(d1).to.equal(d);
+    });
+  });
+
+  describe('.getNode()', () => {
+    const element = (
+      <div>
+        <span />
+        <span />
+      </div>
+    );
+
+    class Test extends React.Component {
+      render() {
+        return element;
+      }
+    }
+
+    it('should return the wrapped element', () => {
+      const wrapper = shallow(<Test />);
+      expect(wrapper.getNode()).to.equal(element);
+    });
+
+    it('should throw when wrapping multiple elements', () => {
+      const wrapper = shallow(<Test />).find('span');
+      expect(() => wrapper.getNode()).to.throw(Error);
+    });
+  });
+
+  describe('.getNodes()', () => {
+    it('should return the wrapped elements', () => {
+      const one = <span />;
+      const two = <span />;
+
+      class Test extends React.Component {
+        render() {
+          return (
+            <div>
+              { one }
+              { two }
+            </div>
+          );
+        }
+      }
+
+      const wrapper = shallow(<Test />);
+      expect(wrapper.find('span').getNodes()).to.deep.equal([one, two]);
+    });
+  });
+
+  describe('out-of-band state updates', () => {
+    class Child extends React.Component {
+      render() {
+        return <span />;
+      }
+    }
+
+    class Test extends React.Component {
+      componentWillMount() {
+        this.state = {};
+      }
+
+      safeSetState(newState) {
+        withSetStateAllowed(() => {
+          this.setState(newState);
+        });
+      }
+
+      asyncSetState() {
+        setImmediate(() => {
+          this.safeSetState({ showSpan: true });
+        });
+      }
+
+      callbackSetState() {
+        this.safeSetState({ showSpan: true });
+      }
+
+      render() {
+        return (
+          <div>
+            {this.state && this.state.showSpan && <span className="show-me" />}
+            <button className="async-btn" onClick={() => this.asyncSetState()} />
+            <Child callback={() => this.callbackSetState()} />
+          </div>
+        );
+      }
+    }
+
+    it('should have updated output after an asynchronous setState', (done) => {
+      const wrapper = shallow(<Test />);
+      wrapper.find('.async-btn').simulate('click');
+      setImmediate(() => {
+        expect(wrapper.find('.show-me').length).to.equal(1);
+        done();
+      });
+    });
+
+    it('should have updated output after child prop callback invokes setState', () => {
+      const wrapper = shallow(<Test />);
+      wrapper.find(Child).props().callback();
+      expect(wrapper.find('.show-me').length).to.equal(1);
+    });
+  });
+
+  describe('#single()', () => {
+    it('throws if run on multiple nodes', () => {
+      const wrapper = shallow(<div><i /><i /></div>).children();
+      expect(wrapper).to.have.lengthOf(2);
+      expect(() => wrapper.single('name!')).to.throw(
+        Error,
+        'Method “name!” is only meant to be run on a single node. 2 found instead.',
+      );
+    });
+
+    it('works with a name', () => {
+      const wrapper = shallow(<div />);
+      wrapper.single('foo', (node) => {
+        expect(node).to.equal(wrapper.get(0));
+      });
+    });
+
+    it('works without a name', () => {
+      const wrapper = shallow(<div />);
+      wrapper.single((node) => {
+        expect(node).to.equal(wrapper.get(0));
+      });
+    });
+  });
 });

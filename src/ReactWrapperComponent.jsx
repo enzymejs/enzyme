@@ -1,5 +1,8 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import objectAssign from 'object.assign';
+
+/* eslint react/forbid-prop-types: 0 */
 
 /**
  * This is a utility component to wrap around the nodes we are
@@ -10,37 +13,19 @@ import objectAssign from 'object.assign';
  * pass new props in.
  */
 export default function createWrapperComponent(node, options = {}) {
-  const spec = {
-
-    propTypes: {
-      Component: PropTypes.oneOfType([PropTypes.func, PropTypes.string]).isRequired,
-      props: PropTypes.object.isRequired,
-      context: PropTypes.object,
-    },
-
-    getDefaultProps() {
-      return {
-        context: null,
-      };
-    },
-
-    getInitialState() {
-      return {
+  class WrapperComponent extends React.Component {
+    constructor(...args) {
+      super(...args);
+      this.state = {
         mount: true,
         props: this.props.props,
         context: this.props.context,
       };
-    },
-
-    setChildProps(newProps) {
+    }
+    setChildProps(newProps, callback = undefined) {
       const props = objectAssign({}, this.state.props, newProps);
-      this.setState({ props });
-    },
-
-    setChildContext(context) {
-      return new Promise(resolve => this.setState({ context }, resolve));
-    },
-
+      this.setState({ props }, callback);
+    }
     getInstance() {
       const component = this._reactInternalInstance._renderedComponent;
       const inst = component.getPublicInstance();
@@ -48,8 +33,7 @@ export default function createWrapperComponent(node, options = {}) {
         return component._instance;
       }
       return inst;
-    },
-
+    }
     getWrappedComponent() {
       const component = this._reactInternalInstance._renderedComponent;
       const inst = component.getPublicInstance();
@@ -57,8 +41,10 @@ export default function createWrapperComponent(node, options = {}) {
         return component._instance;
       }
       return inst;
-    },
-
+    }
+    setChildContext(context) {
+      return new Promise(resolve => this.setState({ context }, resolve));
+    }
     render() {
       const { Component } = this.props;
       const { mount, props } = this.state;
@@ -66,7 +52,15 @@ export default function createWrapperComponent(node, options = {}) {
       return (
         <Component {...props} />
       );
-    },
+    }
+  }
+  WrapperComponent.propTypes = {
+    Component: PropTypes.oneOfType([PropTypes.func, PropTypes.string]).isRequired,
+    props: PropTypes.object.isRequired,
+    context: PropTypes.object,
+  };
+  WrapperComponent.defaultProps = {
+    context: null,
   };
 
   if (options.context && (node.type.contextTypes || options.childContextTypes)) {
@@ -79,13 +73,10 @@ export default function createWrapperComponent(node, options = {}) {
     if (options.childContextTypes) {
       objectAssign(childContextTypes, options.childContextTypes);
     }
-    objectAssign(spec, {
-      childContextTypes,
-      getChildContext() {
-        return this.state.context;
-      },
-    });
+    WrapperComponent.prototype.getChildContext = function getChildContext() {
+      return this.state.context;
+    };
+    WrapperComponent.childContextTypes = childContextTypes;
   }
-
-  return React.createClass(spec);
+  return WrapperComponent;
 }
