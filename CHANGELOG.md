@@ -1,5 +1,15 @@
 # Change Log
 
+## 2.8.2
+
+### Fixes
+
+ - Loosen react-compat implicit dependency logic for React 15.4 ([#896](https://github.com/airbnb/enzyme/pull/896))
+
+### Documentation
+
+ - [Docs] Update docs to use `prop-types` ([#894](https://github.com/airbnb/enzyme/pull/894), [#890](https://github.com/airbnb/enzyme/issue/890))
+
 ## 2.8.1
 
 ### Fixes
