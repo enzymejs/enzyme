@@ -1038,7 +1038,6 @@ describe('shallow', () => {
       expect(wrapper.find('.clicks-1').length).to.equal(1);
     });
 
-
     it('should pass in event data', () => {
       const spy = sinon.spy();
       class Foo extends React.Component {
@@ -1056,6 +1055,34 @@ describe('shallow', () => {
       wrapper.simulate('click', a, b);
       expect(spy.args[0][0]).to.equal(a);
       expect(spy.args[0][1]).to.equal(b);
+    });
+
+    it('rejects a descriptive error for invalid events', () => {
+      const wrapper = shallow(<div>foo</div>);
+
+      return wrapper.simulate('invalidEvent').catch((error) => {
+        expect(error).to.deep.equal(
+          new TypeError("ShallowWrapper::simulate() event 'invalidEvent' does not exist"),
+        );
+      });
+    });
+
+    it('resolves a promise that can be chained', () => {
+      const spy = sinon.stub().returns(123);
+      class Foo extends React.Component {
+        render() {
+          return (
+            <a onClick={spy}>foo</a>
+          );
+        }
+      }
+
+      const wrapper = shallow(<Foo />);
+
+      return wrapper.simulate('click').then((value) => {
+        expect(spy.called).to.equal(true);
+        expect(value).to.equal(123);
+      });
     });
 
     describeIf(!REACT013, 'stateless function components', () => {

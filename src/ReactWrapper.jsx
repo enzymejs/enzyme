@@ -523,19 +523,21 @@ class ReactWrapper {
    *
    * @param {String} event
    * @param {Object} mock (optional)
-   * @returns {ReactWrapper}
+   * @returns {Promise}
    */
   simulate(event, mock = {}) {
-    this.single('simulate', (n) => {
-      const mappedEvent = mapNativeEventNames(event);
-      const eventFn = Simulate[mappedEvent];
-      if (!eventFn) {
-        throw new TypeError(`ReactWrapper::simulate() event '${event}' does not exist`);
-      }
+    return new Promise((resolve, reject) => {
+      this.single('simulate', (n) => {
+        const mappedEvent = mapNativeEventNames(event);
+        const eventFn = Simulate[mappedEvent];
 
-      eventFn(findDOMNode(n), mock);
+        if (eventFn) {
+          resolve(eventFn(findDOMNode(n), mock));
+        } else {
+          reject(new TypeError(`ReactWrapper::simulate() event '${event}' does not exist`));
+        }
+      });
     });
-    return this;
   }
 
   /**

@@ -1,4 +1,4 @@
-# `.simulate(event[, mock]) => Self`
+# `.simulate(event[, mock]) => Promise`
 
 Simulate events
 
@@ -12,7 +12,7 @@ Simulate events
 
 #### Returns
 
-`ReactWrapper`: Returns itself.
+`Promise`: Resolves the value of the event handler, or rejects if a handler could not be found.
 
 
 

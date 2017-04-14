@@ -615,21 +615,25 @@ class ShallowWrapper {
    *
    * @param {String} event
    * @param {Array} args
-   * @returns {ShallowWrapper}
+   * @returns {Promise}
    */
   simulate(event, ...args) {
-    const handler = this.prop(propFromEvent(event));
-    if (handler) {
-      withSetStateAllowed(() => {
-        // TODO(lmr): create/use synthetic events
-        // TODO(lmr): emulate React's event propagation
-        performBatchedUpdates(this, () => {
-          handler(...args);
+    return new Promise((resolve, reject) => {
+      const handler = this.prop(propFromEvent(event));
+
+      if (handler) {
+        withSetStateAllowed(() => {
+          // TODO(lmr): create/use synthetic events
+          // TODO(lmr): emulate React's event propagation
+          performBatchedUpdates(this, () => {
+            resolve(handler(...args));
+          });
+          this.root.update();
         });
-        this.root.update();
-      });
-    }
-    return this;
+      } else {
+        reject(new TypeError(`ShallowWrapper::simulate() event '${event}' does not exist`));
+      }
+    });
   }
 
   /**

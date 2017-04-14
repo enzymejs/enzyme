@@ -1273,10 +1273,33 @@ describeWithDOM('mount', () => {
       expect(spy.args[0][0].someSpecialData).to.equal('foo');
     });
 
-    it('should throw a descriptive error for invalid events', () => {
+    it('rejects a descriptive error for invalid events', () => {
       const wrapper = mount(<div>foo</div>);
-      expect(wrapper.simulate.bind(wrapper, 'invalidEvent'))
-        .to.throw(TypeError, "ReactWrapper::simulate() event 'invalidEvent' does not exist");
+
+      return wrapper.simulate('invalidEvent').catch((error) => {
+        expect(error).to.deep.equal(
+          new TypeError("ReactWrapper::simulate() event 'invalidEvent' does not exist"),
+        );
+      });
+    });
+
+    it('resolves a promise that can be chained', () => {
+      const spy = sinon.stub().returns(123);
+      class Foo extends React.Component {
+        render() {
+          return (
+            <a onClick={spy}>foo</a>
+          );
+        }
+      }
+
+      const wrapper = mount(<Foo />);
+
+      return wrapper.simulate('click').then(() => {
+        // React TestUtils.Simulate does not return a value,
+        // so we can't check for it in `then`.
+        expect(spy.called).to.equal(true);
+      });
     });
 
     describe('Normalizing JS event names', () => {
