@@ -118,7 +118,7 @@ if (REACT013) {
     if (REACT155) {
       console.error( // eslint-disable-line no-console
         'react-dom@15.5+ and react-test-renderer are implicit dependencies when using' +
-        'react@15.5+ with enzyme. Please add the appropriate version to your' +
+        'react@15.5+ with enzyme. Please add the appropriate version to your ' +
         'devDependencies. See https://github.com/airbnb/enzyme#installation',
       );
     } else {
