@@ -71,6 +71,7 @@
     * [type()](/docs/api/ShallowWrapper/type.md)
     * [unmount()](/docs/api/ShallowWrapper/unmount.md)
     * [update()](/docs/api/ShallowWrapper/update.md)
+    * [wrap()](/docs/api/ShallowWrapper/wrap.md)
   * [Full DOM Rendering](/docs/api/mount.md)
     * [at(index)](/docs/api/ReactWrapper/at.md)
     * [contains(nodeOrNodes)](/docs/api/ReactWrapper/contains.md)
