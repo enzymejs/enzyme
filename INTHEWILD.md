@@ -20,6 +20,7 @@ Organizations
  - [Simple](https://github.com/simplefinance)
  - [Grab](https://github.com/grab)
  - [Megalytic](https://megalytic.com/)
+ - [Chroma](http://hichroma.com/)
 
 Projects
 ----------
