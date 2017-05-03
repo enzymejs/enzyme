@@ -751,7 +751,7 @@ class ShallowWrapper {
    *
    * NOTE: can only be called on wrapper of a single node.
    *
-   * @param options object
+   * @param {Object} options
    * @returns {ShallowWrapper}
    */
   shallow(options) {
@@ -1049,10 +1049,12 @@ class ShallowWrapper {
   /**
    * Returns an HTML-like string of the shallow render for debugging purposes.
    *
+   * @param {Object} options - (Optional) Property bag of additional options.
+   * options.ignoreProps - if true, props are omitted from the string.
    * @returns {String}
    */
-  debug() {
-    return debugNodes(this.getNodes());
+  debug(options = {}) {
+    return debugNodes(this.getNodes(), options);
   }
 
   /**
@@ -1070,7 +1072,7 @@ class ShallowWrapper {
    * Primarily useful for HOCs (higher-order components), this method may only be
    * run on a single, non-DOM node, and will return the node, shallow-rendered.
    *
-   * @param options object
+   * @param {Object} options
    * @returns {ShallowWrapper}
    */
   dive(options = {}) {
