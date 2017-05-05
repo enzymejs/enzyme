@@ -76,13 +76,11 @@ if (REACT013) {
     // eslint-disable-next-line import/no-extraneous-dependencies
     ReactDOM = require('react-dom');
   } catch (e) {
-    // eslint-disable-next-line no-console
-    console.error(
+    throw new Error(
       'react-dom is an implicit dependency in order to support react@0.13-14. ' +
       'Please add the appropriate version to your devDependencies. ' +
       'See https://github.com/airbnb/enzyme#installation',
     );
-    throw e;
   }
 
   // eslint-disable-next-line import/no-extraneous-dependencies
@@ -116,19 +114,18 @@ if (REACT013) {
     }
   } catch (e) {
     if (REACT155) {
-      console.error( // eslint-disable-line no-console
+      throw new Error(
         'react-dom@15.5+ and react-test-renderer are implicit dependencies when using ' +
         'react@15.5+ with enzyme. Please add the appropriate version to your ' +
         'devDependencies. See https://github.com/airbnb/enzyme#installation',
       );
     } else {
-      console.error( // eslint-disable-line no-console
+      throw new Error(
         'react-addons-test-utils is an implicit dependency in order to support react@0.13-14. ' +
         'Please add the appropriate version to your devDependencies. ' +
         'See https://github.com/airbnb/enzyme#installation',
       );
     }
-    throw e;
   }
 
   // Shallow rendering changed from 0.13 => 0.14 in such a way that
