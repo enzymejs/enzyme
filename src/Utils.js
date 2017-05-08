@@ -379,6 +379,7 @@ export function nodeHasProperty(node, propKey, stringifiedPropValue) {
 
 export function mapNativeEventNames(event) {
   const nativeToReactEventMap = {
+    blur: 'blur',
     compositionend: 'compositionEnd',
     compositionstart: 'compositionStart',
     compositionupdate: 'compositionUpdate',
