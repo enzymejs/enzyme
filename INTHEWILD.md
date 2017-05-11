@@ -22,6 +22,7 @@ Organizations
  - [Megalytic](https://megalytic.com/)
  - [Chroma](http://hichroma.com/)
  - [Mavens](https://github.com/mavens)
+ - [Cucumber](https://cucumber.io)
 
 Projects
 ----------
