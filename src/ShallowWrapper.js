@@ -2,7 +2,6 @@ import React from 'react';
 import flatten from 'lodash/flatten';
 import unique from 'lodash/uniq';
 import compact from 'lodash/compact';
-import cheerio from 'cheerio';
 import assign from 'object.assign';
 
 import ComplexSelector from './ComplexSelector';
@@ -596,7 +595,7 @@ class ShallowWrapper {
    * @returns {CheerioWrapper}
    */
   render() {
-    return this.type() === null ? cheerio() : cheerio.load(this.html()).root();
+    throw new Error('Cheerio has been removed, can no longer call render()')
   }
 
   /**

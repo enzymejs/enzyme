@@ -23,52 +23,9 @@ let shallowRendererFactory;
 const React = require('react');
 
 if (REACT013) {
-  renderToStaticMarkup = React.renderToStaticMarkup;
-  /* eslint-disable react/no-deprecated */
-  findDOMNode = React.findDOMNode;
-  unmountComponentAtNode = React.unmountComponentAtNode;
-  /* eslint-enable react/no-deprecated */
-  TestUtils = require('react/addons').addons.TestUtils;
-  batchedUpdates = require('react/addons').addons.batchedUpdates;
-  const ReactContext = require('react/lib/ReactContext');
-
-  // Shallow rendering in 0.13 did not properly support context. This function provides a shim
-  // around `TestUtils.createRenderer` that instead returns a ShallowRenderer that actually
-  // works with context. See https://github.com/facebook/react/issues/3721 for more details.
-  createShallowRenderer = function createRendererCompatible() {
-    const renderer = TestUtils.createRenderer();
-    renderer.render = (originalRender => function contextCompatibleRender(node, context = {}) {
-      ReactContext.current = context;
-      originalRender.call(this, React.createElement(node.type, node.props), context);
-      ReactContext.current = {};
-      return renderer.getRenderOutput();
-    })(renderer.render);
-    return renderer;
-  };
-  renderIntoDocument = TestUtils.renderIntoDocument;
-  // this fixes some issues in React 0.13 with setState and jsdom...
-  // see issue: https://github.com/airbnb/enzyme/issues/27
-  require('react/lib/ExecutionEnvironment').canUseDOM = true;
-
-  // in 0.13, a Children.toArray function was not exported. Make our own instead.
-  childrenToArray = (children) => {
-    const results = [];
-    if (children !== undefined && children !== null && children !== false) {
-      React.Children.forEach(children, (el) => {
-        if (el !== undefined && el !== null && el !== false) {
-          results.push(el);
-        }
-      });
-    }
-    return results;
-  };
-
-  renderWithOptions = (node, options) => {
-    if (options.attachTo) {
-      return React.render(node, options.attachTo);
-    }
-    return TestUtils.renderIntoDocument(node);
-  };
+    // requiring react/lib/ExecutionEnvironment' not working w/ figbuild
+    // so removing from static analysis
+  return
 } else {
   let ReactDOM;
 
