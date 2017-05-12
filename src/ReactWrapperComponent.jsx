@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import objectAssign from 'object.assign';
 
 /* eslint react/forbid-prop-types: 0 */
 
@@ -23,7 +22,7 @@ export default function createWrapperComponent(node, options = {}) {
       };
     }
     setChildProps(newProps, callback = undefined) {
-      const props = objectAssign({}, this.state.props, newProps);
+      const props = { ...this.state.props, ...newProps };
       this.setState({ props }, callback);
     }
     getInstance() {
@@ -71,7 +70,7 @@ export default function createWrapperComponent(node, options = {}) {
     // In that case, we define both a `getChildContext()` function and a `childContextTypes` prop.
     const childContextTypes = node.type.contextTypes || {};
     if (options.childContextTypes) {
-      objectAssign(childContextTypes, options.childContextTypes);
+      Object.assign(childContextTypes, options.childContextTypes);
     }
     WrapperComponent.prototype.getChildContext = function getChildContext() {
       return this.state.context;

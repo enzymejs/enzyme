@@ -6,7 +6,6 @@
   react/no-render-return-value: 0,
 */
 
-import objectAssign from 'object.assign';
 import { REACT013, REACT155 } from './version';
 
 let TestUtils;
@@ -141,7 +140,7 @@ if (REACT013) {
     const originalRenderOutput = renderer.getRenderOutput;
     let isDOM = false;
     let cachedNode;
-    return objectAssign(renderer, {
+    return Object.assign(renderer, {
       render(node, context) {
         /* eslint consistent-return: 0 */
         if (typeof node.type === 'string') {

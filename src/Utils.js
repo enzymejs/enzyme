@@ -4,7 +4,6 @@ import React from 'react';
 import is from 'object-is';
 import uuid from 'uuid';
 import entries from 'object.entries';
-import assign from 'object.assign';
 import functionName from 'function.prototype.name';
 import {
   isDOMComponent,
@@ -97,7 +96,7 @@ export function childrenEqual(a, b, lenComp) {
 
 function removeNullaryReducer(acc, [key, value]) {
   const addition = value == null ? {} : { [key]: value };
-  return assign({}, acc, addition);
+  return { ...acc, ...addition };
 }
 
 function internalNodeCompare(a, b, lenComp, isLoose) {
@@ -232,7 +231,7 @@ export function splitSelector(selector) {
   // step 1: make a map of all quoted strings with a uuid
   const quotedSegments = selector.split(/[^" ]+|("[^"]*")|.*/g)
     .filter(Boolean)
-    .reduce((obj, match) => assign({}, obj, { [match]: uuid.v4() }), {});
+    .reduce((obj, match) => ({ ...obj, [match]: uuid.v4() }), {});
 
   const splits = selector
     // step 2: replace all quoted strings with the uuid, so we don't have to properly parse them
