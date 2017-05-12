@@ -18,7 +18,7 @@ git clone https://github.com/airbnb/enzyme.git
 cd enzyme
 
 # install dependencies (use react:13 if you want to use React 0.13)
-npm install && npm run react:14
+npm install -g yarn && yarn && npm run react:14
 ```
 
 
@@ -95,4 +95,3 @@ with them.
 tests in all versions automatically when you push the PR, but if you'd like to check locally, you
 can do so (see above).
 1. Please rebase and resolve all conflicts before submitting.
-
