@@ -7,7 +7,7 @@ node_js:
   - "0.10"
 before_install:
   - 'if [ "${TRAVIS_NODE_VERSION}" != "0.9" ]; then case "$(npm --version)" in 1.*) npm install -g npm@1.4.28 ;; 2.*) npm install -g npm@2 ;; esac ; fi'
-  - 'if [ "${TRAVIS_NODE_VERSION}" != "0.6" ] && [ "${TRAVIS_NODE_VERSION}" != "0.9" ]; then npm install -g npm; fi'
+  - 'if [ "${TRAVIS_NODE_VERSION}" = "0.12" ] || [ "${TRAVIS_NODE_VERSION}" = "0.10" ]; then npm install -g npm@4.5 ; elif [ "${TRAVIS_NODE_VERSION}" != "0.6" ] && [ "${TRAVIS_NODE_VERSION}" != "0.9" ]; then npm install -g npm; fi'
 before_script:
   - "sh install-relevant-react.sh"
   - if [ -n "${KARMA-}" ]; then export CHROME_BIN=chromium-browser; export DISPLAY=:99.0; sh -e /etc/init.d/xvfb start; fi
