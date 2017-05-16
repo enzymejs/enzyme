@@ -1106,6 +1106,32 @@ class ShallowWrapper {
     return this.type() === null ? cheerio() : cheerio.load('')(this.html());
   }
 
+  /*
+   * Used to simulate events. Pass an eventname and (optionally) event arguments.
+   * Will invoke an event handler prop of the same name and return its value.
+   *
+   * @param {String} event
+   * @param {Array} args
+   * @returns {Any}
+   */
+  invoke(event, ...args) {
+    return this.single('invoke', () => {
+      const handler = this.prop(propFromEvent(event));
+      let response = null;
+
+       if (handler) {
+        withSetStateAllowed(() => {
+          performBatchedUpdates(this, () => {
+            response = handler(...args);
+          });
+          this.root.update();
+        });
+      }
+
+       return response;
+    });
+  }
+
   /**
    * Used to simulate events. Pass an eventname and (optionally) event arguments. This method of
    * testing events should be met with some skepticism.

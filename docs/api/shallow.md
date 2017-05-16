@@ -180,6 +180,9 @@ Returns the key of the current node.
 #### [`.simulate(event[, data]) => ShallowWrapper`](ShallowWrapper/simulate.md)
 Simulates an event on the current node.
 
+#### [`.invoke(event[, ...args]) => Any`](ShallowWrapper/invoke.md)
+Invokes an event handler on the current node and returns the handlers value.
+
 #### [`.setState(nextState) => ShallowWrapper`](ShallowWrapper/setState.md)
 Manually sets state of the root component.
 

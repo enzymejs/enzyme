@@ -48,6 +48,7 @@
     * [hasClass(className)](/docs/api/ShallowWrapper/hasClass.md)
     * [hostNodes()](/docs/api/ShallowWrapper/hostNodes.md)
     * [html()](/docs/api/ShallowWrapper/html.md)
+    * [invoke(event[, ...args])](/docs/api/ShallowWrapper/invoke.md)
     * [instance()](/docs/api/ShallowWrapper/instance.md)
     * [is(selector)](/docs/api/ShallowWrapper/is.md)
     * [isEmpty()](/docs/api/ShallowWrapper/isEmpty.md)
