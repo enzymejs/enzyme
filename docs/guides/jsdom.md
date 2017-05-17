@@ -17,7 +17,7 @@ As a result, a standalone script like the one below is generally a good approach
 var jsdom = require('jsdom').jsdom;
 
 global.document = jsdom('');
-global.window = document.defaultView;
+global.window = global;
 Object.keys(document.defaultView).forEach((property) => {
   if (typeof global[property] === 'undefined') {
     global[property] = document.defaultView[property];
