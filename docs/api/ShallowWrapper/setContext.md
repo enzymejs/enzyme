@@ -35,7 +35,7 @@ SimpleComponent.contextTypes = {
 ```
 ```jsx
 const context = { name: 'foo' };
-const wrapper = shallow(<SimpleComponent />, { context });
+const wrapper = shallow(<SimpleComponent />, { context: context });
 expect(wrapper.text()).to.equal('foo');
 wrapper.setContext({ name: 'bar' });
 expect(wrapper.text()).to.equal('bar');
