@@ -57,26 +57,30 @@ function propsString(node) {
   return keys.map(key => `${key}=${propString(props[key])}`).join(' ');
 }
 
+function indentChildren(childrenStrs, indentLength) {
+  return childrenStrs.length
+    ? `\n${childrenStrs.map(x => indent(indentLength, x)).join('\n')}\n`
+    : '';
+}
+
 export function debugNode(node, indentLength = 2) {
   if (typeof node === 'string' || typeof node === 'number') return escape(node);
   if (!node) return '';
 
-  const children = compact(childrenOfNode(node).map(n => debugNode(n, indentLength)));
+  const childrenStrs = compact(childrenOfNode(node).map(n => debugNode(n, indentLength)));
   const type = typeName(node);
   const props = propsString(node);
   const beforeProps = props ? ' ' : '';
-  const nodeClose = children.length ? `</${type}>` : '/>';
-  const afterProps = children.length
+  const nodeClose = childrenStrs.length ? `</${type}>` : '/>';
+  const afterProps = childrenStrs.length
     ? '>'
     : ' ';
-  const childrenIndented = children.length
-    ? `\n${children.map(x => indent(indentLength, x)).join('\n')}\n`
-    : '';
+  const childrenIndented = indentChildren(childrenStrs, indentLength);
   return `<${type}${beforeProps}${props}${afterProps}${childrenIndented}${nodeClose}`;
 }
 
 export function debugNodes(nodes) {
-  return nodes.map(debugNode).join('\n\n\n');
+  return nodes.map(node => debugNode(node)).join('\n\n\n');
 }
 
 export function debugInst(inst, indentLength = 2) {
@@ -128,12 +132,10 @@ export function debugInst(inst, indentLength = 2) {
   const afterProps = childrenStrs.length
     ? '>'
     : ' ';
-  const childrenIndented = childrenStrs.length
-    ? `\n${childrenStrs.map(x => indent(indentLength + 2, x)).join('\n')}\n`
-    : '';
+  const childrenIndented = indentChildren(childrenStrs, indentLength);
   return `<${type}${beforeProps}${props}${afterProps}${childrenIndented}${nodeClose}`;
 }
 
 export function debugInsts(insts) {
-  return insts.map(debugInst).join('\n\n\n');
+  return insts.map(inst => debugInst(inst)).join('\n\n\n');
 }
