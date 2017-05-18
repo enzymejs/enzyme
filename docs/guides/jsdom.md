@@ -11,22 +11,52 @@ gets run *before* React's code is run.
 
 As a result, a standalone script like the one below is generally a good approach:
 
+`jsdom v10~`:
+
 ```js
 /* setup.js */
 
-var jsdom = require('jsdom').jsdom;
+const { JSDOM } = require('jsdom');
+const jsdom = new JSDOM('<!doctype html><html><body></body></html>');
+const { window } = jsdom;
 
-global.document = jsdom('');
-global.window = document.defaultView;
-Object.keys(document.defaultView).forEach((property) => {
-  if (typeof global[property] === 'undefined') {
-    global[property] = document.defaultView[property];
-  }
-});
+function copyProps(src, target) {
+  const props = Object.getOwnPropertyNames(src)
+    .filter(prop => typeof target[prop] === 'undefined')
+    .map(prop => Object.getOwnPropertyDescriptor(src, prop));
+  Object.defineProperties(target, props);
+}
 
+global.window = window;
+global.document = window.document;
 global.navigator = {
   userAgent: 'node.js'
 };
+copyProps(window, global);
+```
+
+Here is the sample of [jsdom old API](https://github.com/tmpvar/jsdom/blob/master/lib/old-api.md) as well.
+
+`jsdom ~<v10`:
+
+```js
+/* setup.js */
+
+const jsdom = require('jsdom').jsdom;
+
+global.document = jsdom('');
+global.window = document.defaultView;
+global.navigator = {
+  userAgent: 'node.js'
+};
+
+function copyProps(src, target) {
+  const props = Object.getOwnPropertyNames(src)
+    .filter(prop => typeof target[prop] === 'undefined')
+    .map(prop => Object.getOwnPropertyDescriptor(src, prop));
+  Object.defineProperties(target, props);
+}
+copyProps(document.defaultView, global);
 ```
 
 
