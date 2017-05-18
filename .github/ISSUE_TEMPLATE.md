@@ -1,6 +1,8 @@
 Thanks for reporting an issue to us! We're glad you are using and invested in Enzyme.
 Before submitting, please read over our commonly reported issues to prevent duplicates!
 
+For any bug reports, please create a reproducible issue on Repl: https://repl.it/languages/enzyme
+
 ### All common issues
 
 * [common issues](../blob/master/docs/common-issues.md)
