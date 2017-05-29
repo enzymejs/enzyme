@@ -1,3 +1,5 @@
+require('raf/polyfill');
+
 if (!global.document) {
   try {
     const jsdom = require('jsdom').jsdom; // could throw

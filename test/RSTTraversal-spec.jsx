@@ -4,6 +4,7 @@ import { expect } from 'chai';
 import {
   splitSelector,
 } from '../src/Utils';
+import elementToTree from '../src/adapters/elementToTree';
 import {
   hasClassName,
   nodeHasProperty,
@@ -12,12 +13,13 @@ import {
   pathToNode,
   getTextFromNode,
   buildPredicate,
-} from '../src/ShallowTraversal';
+} from '../src/RSTTraversal';
 import { describeIf } from './_helpers';
 import { REACT013 } from '../src/version';
 
-describe('ShallowTraversal', () => {
+const $ = elementToTree;
 
+describe('RSTTraversal', () => {
   describe('splitSelector', () => {
     const fn = splitSelector;
     it('splits multiple class names', () => {
@@ -46,13 +48,13 @@ describe('ShallowTraversal', () => {
   describe('hasClassName', () => {
 
     it('should work for standalone classNames', () => {
-      const node = (<div className="foo" />);
+      const node = $(<div className="foo" />);
       expect(hasClassName(node, 'foo')).to.equal(true);
       expect(hasClassName(node, 'bar')).to.equal(false);
     });
 
     it('should work for multiple classNames', () => {
-      const node = (<div className="foo bar baz" />);
+      const node = $(<div className="foo bar baz" />);
       expect(hasClassName(node, 'foo')).to.equal(true);
       expect(hasClassName(node, 'bar')).to.equal(true);
       expect(hasClassName(node, 'baz')).to.equal(true);
@@ -60,14 +62,14 @@ describe('ShallowTraversal', () => {
     });
 
     it('should also allow hyphens', () => {
-      const node = (<div className="foo-bar" />);
+      const node = $(<div className="foo-bar" />);
       expect(hasClassName(node, 'foo-bar')).to.equal(true);
     });
 
     it('should work if className has a function in toString property', () => {
       function classes() {}
       classes.toString = () => 'foo-bar';
-      const node = (<div className={classes} />);
+      const node = $(<div className={classes} />);
       expect(hasClassName(node, 'foo-bar')).to.equal(true);
     });
   });
@@ -76,32 +78,32 @@ describe('ShallowTraversal', () => {
 
     it('should find properties', () => {
       function noop() {}
-      const node = (<div onChange={noop} title="foo" />);
+      const node = $(<div onChange={noop} title="foo" />);
 
       expect(nodeHasProperty(node, 'onChange')).to.equal(true);
       expect(nodeHasProperty(node, 'title', '"foo"')).to.equal(true);
     });
 
     it('should not match on html attributes', () => {
-      const node = (<div htmlFor="foo" />);
+      const node = $(<div htmlFor="foo" />);
 
       expect(nodeHasProperty(node, 'for', '"foo"')).to.equal(false);
     });
 
     it('should not find undefined properties', () => {
-      const node = (<div title={undefined} />);
+      const node = $(<div title={undefined} />);
 
       expect(nodeHasProperty(node, 'title')).to.equal(false);
     });
 
     it('should parse false as a literal', () => {
-      const node = (<div foo={false} />);
+      const node = $(<div foo={false} />);
 
       expect(nodeHasProperty(node, 'foo', 'false')).to.equal(true);
     });
 
     it('should parse false as a literal', () => {
-      const node = (<div foo />);
+      const node = $(<div foo />);
 
       expect(nodeHasProperty(node, 'foo', 'true')).to.equal(true);
     });
@@ -154,7 +156,7 @@ describe('ShallowTraversal', () => {
     });
 
     it('should throw when un unquoted string is passed in', () => {
-      const node = (<div title="foo" />);
+      const node = $(<div title="foo" />);
 
       expect(() => nodeHasProperty(node, 'title', 'foo')).to.throw();
     });
@@ -165,17 +167,17 @@ describe('ShallowTraversal', () => {
 
     it('should be called once for a leaf node', () => {
       const spy = sinon.spy();
-      const node = (<div />);
+      const node = $(<div />);
       treeForEach(node, spy);
       expect(spy.calledOnce).to.equal(true);
     });
 
     it('should handle a single child', () => {
       const spy = sinon.spy();
-      const node = (
+      const node = $(
         <div>
           <div />
-        </div>
+        </div>,
       );
       treeForEach(node, spy);
       expect(spy.callCount).to.equal(2);
@@ -183,11 +185,11 @@ describe('ShallowTraversal', () => {
 
     it('should handle several children', () => {
       const spy = sinon.spy();
-      const node = (
+      const node = $(
         <div>
           <div />
           <div />
-        </div>
+        </div>,
       );
       treeForEach(node, spy);
       expect(spy.callCount).to.equal(3);
@@ -195,13 +197,13 @@ describe('ShallowTraversal', () => {
 
     it('should handle multiple hierarchies', () => {
       const spy = sinon.spy();
-      const node = (
+      const node = $(
         <div>
           <div>
             <div />
             <div />
           </div>
-        </div>
+        </div>,
       );
       treeForEach(node, spy);
       expect(spy.callCount).to.equal(4);
@@ -209,10 +211,10 @@ describe('ShallowTraversal', () => {
 
     it('should not get trapped from empty strings', () => {
       const spy = sinon.spy();
-      const node = (
+      const node = $(
         <div>
           <p>{''}</p>
-        </div>
+        </div>,
       );
       treeForEach(node, spy);
       expect(spy.callCount).to.equal(3);
@@ -220,13 +222,13 @@ describe('ShallowTraversal', () => {
 
     it('should pass in the node', () => {
       const spy = sinon.spy();
-      const node = (
+      const node = $(
         <div>
           <button />
           <nav>
             <input />
           </nav>
-        </div>
+        </div>,
       );
       treeForEach(node, spy);
       expect(spy.callCount).to.equal(4);
@@ -239,14 +241,14 @@ describe('ShallowTraversal', () => {
   });
 
   describe('treeFilter', () => {
-    const tree = (
+    const tree = $(
       <div>
         <button />
         <button />
         <nav>
           <input />
         </nav>
-      </div>
+      </div>,
     );
 
     it('should return an empty array for falsy test', () => {
@@ -273,17 +275,18 @@ describe('ShallowTraversal', () => {
 
     it('should return trees from the root node', () => {
       const node = <label htmlFor="foo" />;
-      const tree = (
+      const tree = $(
         <div>
           <button />
           <nav>
             {node}
             <input id="foo" />
           </nav>
-        </div>
+        </div>,
       );
 
-      const result = pathToNode(node, tree);
+      const nodeInTree = tree.rendered[1].rendered[0];
+      const result = pathToNode(nodeInTree, tree);
       expect(result.length).to.equal(2);
       expect(result[0].type).to.equal('div');
       expect(result[1].type).to.equal('nav');
@@ -291,17 +294,18 @@ describe('ShallowTraversal', () => {
 
     it('should return trees from the root node except the sibling node', () => {
       const node = <label htmlFor="foo" />;
-      const tree = (
+      const tree = $(
         <div>
           <button />
           <nav>
             {node}
             <div><input id="foo" /></div>
           </nav>
-        </div>
+        </div>,
       );
 
-      const result = pathToNode(node, tree);
+      const nodeInTree = tree.rendered[1].rendered[0];
+      const result = pathToNode(nodeInTree, tree);
       expect(result.length).to.equal(2);
       expect(result[0].type).to.equal('div');
       expect(result[1].type).to.equal('nav');
@@ -324,7 +328,7 @@ describe('ShallowTraversal', () => {
         }
       }
       Subject.displayName = 'CustomSubject';
-      const node = <Subject />;
+      const node = $(<Subject />);
       const result = getTextFromNode(node);
       expect(result).to.equal('<CustomSubject />');
     });
@@ -337,7 +341,7 @@ describe('ShallowTraversal', () => {
           );
         }
       }
-      const node = <Subject />;
+      const node = $(<Subject />);
       const result = getTextFromNode(node);
       expect(result).to.equal('<Subject />');
     });
@@ -348,7 +352,7 @@ describe('ShallowTraversal', () => {
         const Subject = () => <div />;
         Subject.displayName = 'CustomSubject';
 
-        const node = <Subject />;
+        const node = $(<Subject />);
         const result = getTextFromNode(node);
         expect(result).to.equal('<CustomSubject />');
       });
@@ -356,7 +360,7 @@ describe('ShallowTraversal', () => {
       it('should return function name if displayName is not provided', () => {
         const Subject = () => <div />;
 
-        const node = <Subject />;
+        const node = $(<Subject />);
         const result = getTextFromNode(node);
         expect(result).to.equal('<Subject />');
       });

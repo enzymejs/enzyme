@@ -9,9 +9,7 @@ import {
   nodeEqual,
   nodeMatches,
   containsChildrenSubArray,
-  propFromEvent,
   withSetStateAllowed,
-  propsOfNode,
   typeOfNode,
   isReactElementAlike,
   displayNameOfNode,
@@ -23,20 +21,15 @@ import {
   debugNodes,
 } from './Debug';
 import {
+  propsOfNode,
   getTextFromNode,
   hasClassName,
   childrenOfNode,
   parentsOfNode,
   treeFilter,
   buildPredicate,
-} from './ShallowTraversal';
-import {
-  createShallowRenderer,
-  renderToStaticMarkup,
-  batchedUpdates,
-  isDOMComponentElement,
-} from './react-compat';
-import { REACT155 } from './version';
+} from './RSTTraversal';
+import configuration from './configuration';
 
 /**
  * Finds all nodes in the current wrapper nodes' render trees that match the provided predicate
@@ -98,15 +91,20 @@ function validateOptions(options) {
   }
 }
 
-
-function performBatchedUpdates(wrapper, fn) {
-  const renderer = wrapper.root.renderer;
-  if (REACT155 && renderer.unstable_batchedUpdates) {
-    // React 15.5+ exposes batching on shallow renderer itself
-    return renderer.unstable_batchedUpdates(fn);
+function getRootNode(node) {
+  if (node.nodeType === 'host') {
+    return node;
   }
-  // React <15.5: Fallback to ReactDOM
-  return batchedUpdates(fn);
+  return node.rendered;
+}
+
+function getAdapter(options) {
+  if (options.adapter) {
+    return options.adapter;
+  }
+  const adapter = configuration.get().adapter;
+  // TODO(lmr): warn about no adapter being configured
+  return adapter;
 }
 
 /**
@@ -118,27 +116,25 @@ class ShallowWrapper {
     if (!root) {
       this.root = this;
       this.unrendered = nodes;
-      this.renderer = createShallowRenderer();
-      withSetStateAllowed(() => {
-        performBatchedUpdates(this, () => {
-          this.renderer.render(nodes, options.context);
-          const instance = this.instance();
-          if (
-            options.lifecycleExperimental &&
-            instance &&
-            typeof instance.componentDidMount === 'function'
-          ) {
-            instance.componentDidMount();
-          }
+      this.renderer = getAdapter(options).createRenderer({ mode: 'shallow', ...options });
+      this.renderer.render(nodes, options.context);
+      const instance = this.renderer.getNode().instance;
+      if (
+        options.lifecycleExperimental &&
+        instance &&
+        typeof instance.componentDidMount === 'function'
+      ) {
+        this.renderer.batchedUpdates(() => {
+          instance.componentDidMount();
         });
-      });
-      this.node = this.renderer.getRenderOutput();
+      }
+      this.node = getRootNode(this.renderer.getNode());
       this.nodes = [this.node];
       this.length = 1;
     } else {
       this.root = root;
       this.unrendered = null;
-      this.renderer = null;
+      this.renderer = root.renderer;
       if (!Array.isArray(nodes)) {
         this.node = nodes;
         this.nodes = [nodes];
@@ -148,7 +144,7 @@ class ShallowWrapper {
       }
       this.length = this.nodes.length;
     }
-    this.options = options;
+    this.options = root ? root.options : options;
     this.complexSelector = new ComplexSelector(buildPredicate, findWhereUnwrapped, childrenOfNode);
   }
 
@@ -163,7 +159,7 @@ class ShallowWrapper {
         'ShallowWrapper::getNode() can only be called when wrapping one node',
       );
     }
-    return this.root === this ? this.renderer.getRenderOutput() : this.node;
+    return this.node;
   }
 
   /**
@@ -172,7 +168,20 @@ class ShallowWrapper {
    * @return {Array<ReactElement>}
    */
   getNodes() {
-    return this.root === this ? [this.renderer.getRenderOutput()] : this.nodes;
+    return this.nodes;
+  }
+
+  getElement() {
+    if (this.length !== 1) {
+      throw new Error(
+        'ShallowWrapper::getElement() can only be called when wrapping one node',
+      );
+    }
+    return getAdapter(this.options).nodeToElement(this.node);
+  }
+
+  getElements() {
+    return this.nodes.map(getAdapter(this.options).nodeToElement);
   }
 
   /**
@@ -192,7 +201,7 @@ class ShallowWrapper {
     if (this.root !== this) {
       throw new Error('ShallowWrapper::instance() can only be called on the root');
     }
-    return this.renderer._instance ? this.renderer._instance._instance : null;
+    return this.renderer.getNode().instance;
   }
 
   /**
@@ -208,7 +217,7 @@ class ShallowWrapper {
       throw new Error('ShallowWrapper::update() can only be called on the root');
     }
     this.single('update', () => {
-      this.node = this.renderer.getRenderOutput();
+      this.node = getRootNode(this.renderer.getNode());
       this.nodes = [this.node];
     });
     return this;
@@ -227,13 +236,19 @@ class ShallowWrapper {
   rerender(props, context) {
     this.single('rerender', () => {
       withSetStateAllowed(() => {
-        const instance = this.instance();
+        // NOTE(lmr): In react 16, instances will be null for SFCs, but
+        // rerendering with props/context is still a valid thing to do. In
+        // this case, state will be undefined, but props/context will exist.
+        const instance = this.instance() || {};
         const state = instance.state;
-        const prevProps = instance.props;
-        const prevContext = instance.context;
+        const prevProps = instance.props || this.unrendered.props;
+        const prevContext = instance.context || this.options.context;
         const nextProps = props || prevProps;
         const nextContext = context || prevContext;
-        performBatchedUpdates(this, () => {
+        if (context) {
+          this.options = { ...this.options, context: nextContext };
+        }
+        this.renderer.batchedUpdates(() => {
           let shouldRender = true;
           // dirty hack:
           // make sure that componentWillReceiveProps is called before shouldComponentUpdate
@@ -326,7 +341,7 @@ class ShallowWrapper {
     if (this.root !== this) {
       throw new Error('ShallowWrapper::setState() can only be called on the root');
     }
-    if (isFunctionalComponent(this.instance())) {
+    if (this.instance() === null || isFunctionalComponent(this.instance())) {
       throw new Error('ShallowWrapper::setState() can only be called on class components');
     }
     this.single('setState', () => {
@@ -379,10 +394,13 @@ class ShallowWrapper {
         'string or number as argument.',
       );
     }
-
     const predicate = Array.isArray(nodeOrNodes)
-      ? other => containsChildrenSubArray(nodeEqual, other, nodeOrNodes)
-      : other => nodeEqual(nodeOrNodes, other);
+      ? other => containsChildrenSubArray(
+        nodeEqual,
+        other,
+        nodeOrNodes.map(getAdapter(this.options).elementToNode),
+      )
+      : other => nodeEqual(getAdapter(this.options).elementToNode(nodeOrNodes), other);
 
     return findWhereUnwrapped(this, predicate).length > 0;
   }
@@ -585,7 +603,12 @@ class ShallowWrapper {
    * @returns {String}
    */
   html() {
-    return this.single('html', n => (this.type() === null ? null : renderToStaticMarkup(n)));
+    return this.single('html', (n) => {
+      if (this.type() === null) return null;
+      const adapter = getAdapter(this.options);
+      const renderer = adapter.createRenderer({ ...this.options, mode: 'string' });
+      return renderer.render(adapter.nodeToElement(n));
+    });
   }
 
   /**
@@ -618,18 +641,10 @@ class ShallowWrapper {
    * @returns {ShallowWrapper}
    */
   simulate(event, ...args) {
-    const handler = this.prop(propFromEvent(event));
-    if (handler) {
-      withSetStateAllowed(() => {
-        // TODO(lmr): create/use synthetic events
-        // TODO(lmr): emulate React's event propagation
-        performBatchedUpdates(this, () => {
-          handler(...args);
-        });
-        this.root.update();
-      });
-    }
-    return this;
+    return this.single('simulate', (n) => {
+      this.renderer.simulateEvent(n, event, ...args);
+      this.root.update();
+    });
   }
 
   /**
@@ -656,7 +671,7 @@ class ShallowWrapper {
     if (this.root !== this) {
       throw new Error('ShallowWrapper::state() can only be called on the root');
     }
-    if (isFunctionalComponent(this.instance())) {
+    if (this.instance() === null || isFunctionalComponent(this.instance())) {
       throw new Error('ShallowWrapper::state() can only be called on class components');
     }
     const _state = this.single('state', () => this.instance().state);
@@ -683,6 +698,11 @@ class ShallowWrapper {
       throw new Error(
         'ShallowWrapper::context() can only be called on a wrapper that was originally passed ' +
         'a context option',
+      );
+    }
+    if (this.instance() === null) {
+      throw new Error(
+        'ShallowWrapper::context() can only be called on class components as of React 16',
       );
     }
     const _context = this.single('context', () => this.instance().context);
@@ -724,7 +744,7 @@ class ShallowWrapper {
    */
   parents(selector) {
     const allParents = this.wrap(
-      this.single('parents', n => parentsOfNode(n, this.root.getNode())),
+      this.single('parents', n => parentsOfNode(n, this.root.node)),
     );
     return selector ? allParents.filter(selector) : allParents;
   }
@@ -756,7 +776,9 @@ class ShallowWrapper {
    * @returns {ShallowWrapper}
    */
   shallow(options) {
-    return this.single('shallow', n => this.wrap(n, null, options));
+    return this.single('shallow', n => this.wrap(
+      getAdapter(this.options).nodeToElement(n), null, options),
+    );
   }
 
   /**
@@ -1079,13 +1101,14 @@ class ShallowWrapper {
   dive(options = {}) {
     const name = 'dive';
     return this.single(name, (n) => {
-      if (isDOMComponentElement(n)) {
+      if (n && n.nodeType === 'host') {
         throw new TypeError(`ShallowWrapper::${name}() can not be called on DOM components`);
       }
-      if (!isCustomComponentElement(n)) {
+      const el = getAdapter(this.options).nodeToElement(n);
+      if (!isCustomComponentElement(el)) {
         throw new TypeError(`ShallowWrapper::${name}() can only be called on components`);
       }
-      return this.wrap(n, null, { ...this.options, ...options });
+      return this.wrap(el, null, { ...this.options, ...options });
     });
   }
 }

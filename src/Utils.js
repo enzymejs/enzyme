@@ -5,26 +5,8 @@ import is from 'object-is';
 import uuidv4 from 'uuid/v4';
 import entries from 'object.entries';
 import functionName from 'function.prototype.name';
-import {
-  isDOMComponent,
-  findDOMNode,
-  childrenToArray,
-} from './react-compat';
-import {
-  REACT013,
-  REACT15,
-} from './version';
 
 export const ITERATOR_SYMBOL = typeof Symbol === 'function' && Symbol.iterator;
-
-function internalInstanceKey(node) {
-  return Object.keys(Object(node)).filter(key => key.match(/^__reactInternalInstance\$/))[0];
-}
-
-export function internalInstance(inst) {
-  return inst._reactInternalInstance ||
-    inst[internalInstanceKey(inst)];
-}
 
 export function isFunctionalComponent(inst) {
   return !!inst && !!inst.constructor && typeof inst.constructor === 'function' &&
@@ -35,31 +17,12 @@ export function isCustomComponentElement(inst) {
   return !!inst && React.isValidElement(inst) && typeof inst.type === 'function';
 }
 
-export function propsOfNode(node) {
-  if (REACT013 && node && node._store) {
-    return (node._store.props) || {};
-  }
-  if (node && node._reactInternalComponent && node._reactInternalComponent._currentElement) {
-    return (node._reactInternalComponent._currentElement.props) || {};
-  }
-  if (node && node._currentElement) {
-    return (node._currentElement.props) || {};
-  }
-  if (REACT15 && node) {
-    if (internalInstance(node) && internalInstance(node)._currentElement) {
-      return (internalInstance(node)._currentElement.props) || {};
-    }
-  }
-
+function propsOfNode(node) {
   return (node && node.props) || {};
 }
 
 export function typeOfNode(node) {
   return node ? node.type : null;
-}
-
-export function getNode(node) {
-  return isDOMComponent(node) ? findDOMNode(node) : node;
 }
 
 export function nodeHasType(node, type) {
@@ -86,11 +49,11 @@ function internalChildrenCompare(a, b, lenComp, isLoose) {
   return true;
 }
 
-export function childrenMatch(a, b, lenComp) {
+function childrenMatch(a, b, lenComp) {
   return internalChildrenCompare(a, b, lenComp, true);
 }
 
-export function childrenEqual(a, b, lenComp) {
+function childrenEqual(a, b, lenComp) {
   return internalChildrenCompare(a, b, lenComp, false);
 }
 
@@ -167,6 +130,17 @@ function arraysEqual(match, left, right) {
   return left.length === right.length && left.every((el, i) => match(el, right[i]));
 }
 
+function childrenToArray(children) {
+  // NOTE(lmr): we currently use this instead of Children.toArray(...) because
+  // toArray(...) didn't exist in React 0.13
+  const result = [];
+  React.Children.forEach(children, (el) => {
+    if (el === null || el === false || el === undefined) return;
+    result.push(el);
+  });
+  return result;
+}
+
 export function childrenToSimplifiedArray(nodeChildren) {
   const childrenArray = childrenToArray(nodeChildren);
   const simplifiedArray = [];
@@ -202,13 +176,7 @@ export function isReactElementAlike(arg) {
   return React.isValidElement(arg) || isTextualNode(arg) || Array.isArray(arg);
 }
 
-// 'click' => 'onClick'
-// 'mouseEnter' => 'onMouseEnter'
-export function propFromEvent(event) {
-  const nativeEvent = mapNativeEventNames(event);
-  return `on${nativeEvent[0].toUpperCase()}${nativeEvent.slice(1)}`;
-}
-
+// TODO(lmr): can we get rid of this outside of the adapter?
 export function withSetStateAllowed(fn) {
   // NOTE(lmr):
   // this is currently here to circumvent a React bug where `setState()` is
@@ -273,7 +241,7 @@ export function isPseudoClassSelector(selector) {
   return false;
 }
 
-export function selectorError(selector, type = '') {
+function selectorError(selector, type = '') {
   return new TypeError(
     `Enzyme received a ${type} CSS selector ('${selector}') that it does not currently support`,
   );
@@ -374,54 +342,6 @@ export function nodeHasProperty(node, propKey, stringifiedPropValue) {
   }
 
   return Object.prototype.hasOwnProperty.call(nodeProps, propKey);
-}
-
-export function mapNativeEventNames(event) {
-  const nativeToReactEventMap = {
-    compositionend: 'compositionEnd',
-    compositionstart: 'compositionStart',
-    compositionupdate: 'compositionUpdate',
-    keydown: 'keyDown',
-    keyup: 'keyUp',
-    keypress: 'keyPress',
-    contextmenu: 'contextMenu',
-    dblclick: 'doubleClick',
-    doubleclick: 'doubleClick', // kept for legacy. TODO: remove with next major.
-    dragend: 'dragEnd',
-    dragenter: 'dragEnter',
-    dragexist: 'dragExit',
-    dragleave: 'dragLeave',
-    dragover: 'dragOver',
-    dragstart: 'dragStart',
-    mousedown: 'mouseDown',
-    mousemove: 'mouseMove',
-    mouseout: 'mouseOut',
-    mouseover: 'mouseOver',
-    mouseup: 'mouseUp',
-    touchcancel: 'touchCancel',
-    touchend: 'touchEnd',
-    touchmove: 'touchMove',
-    touchstart: 'touchStart',
-    canplay: 'canPlay',
-    canplaythrough: 'canPlayThrough',
-    durationchange: 'durationChange',
-    loadeddata: 'loadedData',
-    loadedmetadata: 'loadedMetadata',
-    loadstart: 'loadStart',
-    ratechange: 'rateChange',
-    timeupdate: 'timeUpdate',
-    volumechange: 'volumeChange',
-    beforeinput: 'beforeInput',
-  };
-
-  if (!REACT013) {
-    // these could not be simulated in React 0.13:
-    // https://github.com/facebook/react/issues/1297
-    nativeToReactEventMap.mouseenter = 'mouseEnter';
-    nativeToReactEventMap.mouseleave = 'mouseLeave';
-  }
-
-  return nativeToReactEventMap[event] || event;
 }
 
 export function displayNameOfNode(node) {

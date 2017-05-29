@@ -53,3 +53,4 @@ env:
   - REACT=0.14
   - REACT=15.4
   - REACT=15
+  - REACT=16

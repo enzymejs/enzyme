@@ -3,48 +3,24 @@
 import React from 'react';
 import { expect } from 'chai';
 
-import { describeWithDOM, describeIf } from './_helpers';
-import { mount } from '../src';
+import { describeIf } from './_helpers';
 import {
   coercePropValue,
   childrenToSimplifiedArray,
-  getNode,
   nodeEqual,
   nodeMatches,
   isPseudoClassSelector,
-  propFromEvent,
   SELECTOR,
   selectorType,
-  mapNativeEventNames,
   displayNameOfNode,
 } from '../src/Utils';
+import {
+  mapNativeEventNames,
+  propFromEvent,
+} from '../src/adapters/Utils';
 import { REACT013 } from '../src/version';
 
 describe('Utils', () => {
-
-  describeWithDOM('getNode', () => {
-    it('should return a DOMNode when a DOMComponent is given', () => {
-      const div = mount(<div />).getNode();
-      expect(getNode(div)).to.be.instanceOf(window.HTMLElement);
-    });
-
-    it('should return the component when a component is given', () => {
-      class Foo extends React.Component {
-        render() { return <div />; }
-      }
-      const foo = mount(<Foo />).getNode();
-      expect(getNode(foo)).to.equal(foo);
-    });
-
-    describeIf(!REACT013, 'stateless function components', () => {
-      it('should return the component when a component is given', () => {
-        const Foo = () => <div />;
-        const foo = mount(<Foo />).getNode();
-        expect(getNode(foo)).to.equal(foo);
-      });
-    });
-  });
-
   describe('nodeEqual', () => {
     it('should match empty elements of same tag', () => {
       expect(nodeEqual(

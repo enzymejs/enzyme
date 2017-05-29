@@ -4,11 +4,11 @@
   import/prefer-default-export: 0,
 */
 
-import { REACT155 } from '../../src/version';
+import { REACT155, REACT16 } from '../../src/version';
 
 let createClass;
 
-if (REACT155) {
+if (REACT155 || REACT16) {
   // eslint-disable-next-line import/no-extraneous-dependencies
   createClass = require('create-react-class');
 } else {

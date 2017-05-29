@@ -1,0 +1,215 @@
+import React from 'react';
+import ReactAddons from 'react/addons';
+import ReactContext from 'react/lib/ReactContext';
+import PropTypes from 'prop-types';
+import values from 'object.values';
+import EnzymeAdapter from './EnzymeAdapter';
+import elementToTree from './elementToTree';
+import {
+  mapNativeEventNames,
+  propFromEvent,
+  withSetStateAllowed,
+} from './Utils';
+
+// this fixes some issues in React 0.13 with setState and jsdom...
+// see issue: https://github.com/airbnb/enzyme/issues/27
+// eslint-disable-next-line import/no-unresolved
+require('react/lib/ExecutionEnvironment').canUseDOM = true;
+
+const { TestUtils, batchedUpdates } = ReactAddons.addons;
+
+const getEmptyElementType = (() => {
+  let EmptyElementType = null;
+  class Foo extends React.Component {
+    render() {
+      return null;
+    }
+  }
+
+  return () => {
+    if (EmptyElementType === null) {
+      const instance = TestUtils.renderIntoDocument(React.createElement(Foo));
+      EmptyElementType = instance._reactInternalInstance._renderedComponent._currentElement.type;
+    }
+    return EmptyElementType;
+  };
+})();
+
+const createShallowRenderer = function createRendererCompatible() {
+  const renderer = TestUtils.createRenderer();
+  renderer.render = (originalRender => function contextCompatibleRender(node, context = {}) {
+    ReactContext.current = context;
+    originalRender.call(this, React.createElement(node.type, node.props), context);
+    ReactContext.current = {};
+    return renderer.getRenderOutput();
+  })(renderer.render);
+  return renderer;
+};
+
+
+function instanceToTree(inst) {
+  if (typeof inst !== 'object') {
+    return inst;
+  }
+  const el = inst._currentElement;
+  if (!el) {
+    return null;
+  }
+  if (typeof el !== 'object') {
+    return el;
+  }
+  if (el.type === getEmptyElementType()) {
+    return null;
+  }
+  if (typeof el.type === 'string') {
+    const innerInst = inst._renderedComponent;
+    const children = innerInst._renderedChildren || { '.0': el._store.props.children };
+    return {
+      nodeType: 'host',
+      type: el.type,
+      props: el._store.props,
+      instance: inst._instance.getDOMNode(),
+      rendered: values(children).map(instanceToTree),
+    };
+  }
+  if (inst._renderedComponent) {
+    return {
+      nodeType: 'class',
+      type: el.type,
+      props: el._store.props,
+      instance: inst._instance || inst._hostNode || null,
+      rendered: instanceToTree(inst._renderedComponent),
+    };
+  }
+  throw new Error('Enzyme Internal Error: unknown instance encountered');
+}
+
+class SimpleWrapper extends React.Component {
+  render() {
+    return this.props.node || null;
+  }
+}
+
+SimpleWrapper.propTypes = { node: PropTypes.node.isRequired };
+
+class ReactThirteenAdapter extends EnzymeAdapter {
+  createMountRenderer(options) {
+    const domNode = options.attachTo || global.document.createElement('div');
+    let instance = null;
+    return {
+      render(el/* , context */) {
+        const wrappedEl = React.createElement(SimpleWrapper, {
+          node: el,
+        });
+        instance = React.render(wrappedEl, domNode);
+      },
+      unmount() {
+        React.unmountComponentAtNode(domNode);
+      },
+      getNode() {
+        return instanceToTree(instance._reactInternalInstance._renderedComponent);
+      },
+      simulateEvent(node, event, mock) {
+        const mappedEvent = mapNativeEventNames(event);
+        const eventFn = TestUtils.Simulate[mappedEvent];
+        if (!eventFn) {
+          throw new TypeError(`ReactWrapper::simulate() event '${event}' does not exist`);
+        }
+        // eslint-disable-next-line react/no-find-dom-node
+        eventFn(React.findDOMNode(node.instance), mock);
+      },
+      batchedUpdates(fn) {
+        return batchedUpdates(fn);
+      },
+    };
+  }
+
+  createShallowRenderer(/* options */) {
+    const renderer = createShallowRenderer();
+    let isDOM = false;
+    let cachedNode = null;
+    return {
+      render(el, context) {
+        cachedNode = el;
+        /* eslint consistent-return: 0 */
+        if (typeof el.type === 'string') {
+          isDOM = true;
+        } else {
+          isDOM = false;
+          return renderer.render(el, context); // TODO: context
+        }
+      },
+      unmount() {
+        renderer.unmount();
+      },
+      getNode() {
+        if (isDOM) {
+          return elementToTree(cachedNode);
+        }
+        const output = renderer.getRenderOutput();
+        return {
+          nodeType: 'class',
+          type: cachedNode.type,
+          props: cachedNode.props,
+          instance: renderer._instance._instance,
+          rendered: elementToTree(output),
+        };
+      },
+      simulateEvent(node, event, ...args) {
+        const handler = node.props[propFromEvent(event)];
+        if (handler) {
+          withSetStateAllowed(() => {
+            // TODO(lmr): create/use synthetic events
+            // TODO(lmr): emulate React's event propagation
+            batchedUpdates(() => {
+              handler(...args);
+            });
+          });
+        }
+      },
+      batchedUpdates(fn) {
+        return withSetStateAllowed(() => batchedUpdates(fn));
+      },
+    };
+  }
+
+  createStringRenderer(/* options */) {
+    return {
+      render(el /* , context */) {
+        return React.renderToStaticMarkup(el);
+      },
+    };
+  }
+
+  // Provided a bag of options, return an `EnzymeRenderer`. Some options can be implementation
+  // specific, like `attach` etc. for React, but not part of this interface explicitly.
+  // eslint-disable-next-line class-methods-use-this, no-unused-vars
+  createRenderer(options) {
+    switch (options.mode) {
+      case 'mount': return this.createMountRenderer(options);
+      case 'shallow': return this.createShallowRenderer(options);
+      case 'string': return this.createStringRenderer(options);
+      default:
+        throw new Error('Unrecognized mode');
+    }
+  }
+
+  // converts an RSTNode to the corresponding JSX Pragma Element. This will be needed
+  // in order to implement the `Wrapper.mount()` and `Wrapper.shallow()` methods, but should
+  // be pretty straightforward for people to implement.
+  // eslint-disable-next-line class-methods-use-this, no-unused-vars
+  nodeToElement(node) {
+    if (!node || typeof node !== 'object') return null;
+    return React.createElement(node.type, node.props);
+  }
+
+  elementToNode(element) {
+    return elementToTree(element);
+  }
+
+  nodeToHostNode(node) {
+    return React.findDOMNode(node.instance);
+  }
+}
+
+module.exports = ReactThirteenAdapter;

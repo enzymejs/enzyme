@@ -1,6 +1,16 @@
 import React from 'react';
 import cheerio from 'cheerio';
-import { renderToStaticMarkup } from './react-compat';
+
+import configuration from './configuration';
+
+function getAdapter(options) {
+  if (options.adapter) {
+    return options.adapter;
+  }
+  const adapter = configuration.get().adapter;
+  // TODO(lmr): warn about no adapter being configured
+  return adapter;
+}
 
 /**
  * Renders a react component into static HTML and provides a cheerio wrapper around it. This is
@@ -30,15 +40,17 @@ function createContextWrapperForNode(node, context, childContextTypes) {
 }
 
 export default function render(node, options = {}) {
+  const adapter = getAdapter(options);
+  const renderer = adapter.createRenderer({ mode: 'string', ...options });
   if (options.context && (node.type.contextTypes || options.childContextTypes)) {
     const childContextTypes = {
       ...(node.type.contextTypes || {}),
       ...options.childContextTypes,
     };
     const ContextWrapper = createContextWrapperForNode(node, options.context, childContextTypes);
-    const html = renderToStaticMarkup(<ContextWrapper />);
+    const html = renderer.render(<ContextWrapper />);
     return cheerio.load(html).root();
   }
-  const html = renderToStaticMarkup(node);
+  const html = renderer.render(node);
   return cheerio.load(html).root();
 }
