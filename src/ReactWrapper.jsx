@@ -924,11 +924,11 @@ class ReactWrapper {
    * @param {ReactWrapper|ReactElement|Array<ReactElement>} node
    * @returns {ReactWrapper}
    */
-  wrap(node) {
+  wrap(node, root = this.root, ...args) {
     if (node instanceof ReactWrapper) {
       return node;
     }
-    return new ReactWrapper(node, this.root);
+    return new ReactWrapper(node, root, ...args);
   }
 
   /**

@@ -755,7 +755,7 @@ class ShallowWrapper {
    * @returns {ShallowWrapper}
    */
   shallow(options) {
-    return this.single('shallow', n => new ShallowWrapper(n, null, options));
+    return this.single('shallow', n => this.wrap(n, null, options));
   }
 
   /**
@@ -1039,11 +1039,11 @@ class ShallowWrapper {
    * @param node
    * @returns {ShallowWrapper}
    */
-  wrap(node) {
+  wrap(node, root = this.root, ...args) {
     if (node instanceof ShallowWrapper) {
       return node;
     }
-    return new ShallowWrapper(node, this.root);
+    return new ShallowWrapper(node, root, ...args);
   }
 
   /**
@@ -1082,7 +1082,7 @@ class ShallowWrapper {
       if (!isCustomComponentElement(n)) {
         throw new TypeError(`ShallowWrapper::${name}() can only be called on components`);
       }
-      return new ShallowWrapper(n, null, { ...this.options, ...options });
+      return this.wrap(n, null, { ...this.options, ...options });
     });
   }
 }
