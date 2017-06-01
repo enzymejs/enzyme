@@ -42,6 +42,10 @@ matrix:
   allow_failures:
     - node_js: "6"
       env: EXAMPLE=react-native
+    - node_js: "6"
+      env: EXAMPLE=mocha
+    - node_js: "6"
+      env: EXAMPLE=karma
 env:
   - REACT=0.13
   - REACT=0.14
