@@ -249,7 +249,7 @@ describe('ShallowTraversal', () => {
       </div>
     );
 
-    it('should return an empty array for falsey test', () => {
+    it('should return an empty array for falsy test', () => {
       expect(treeFilter(tree, () => false).length).to.equal(0);
     });
 

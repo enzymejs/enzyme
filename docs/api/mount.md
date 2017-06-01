@@ -95,6 +95,9 @@ Returns whether or not the current node exists.
 #### [`.isEmpty() => Boolean`](ReactWrapper/isEmpty.md)
 *Deprecated*: Use [.exists()](ReactWrapper/exists.md) instead.
 
+#### [`.isEmptyRender() => Boolean`](ReactWrapper/isEmptyRender.md)
+Returns whether or not the current component returns a falsy value.
+
 #### [`.not(selector) => ReactWrapper`](ReactWrapper/not.md)
 Remove nodes in the current wrapper that match the provided selector. (inverse of `.filter()`)
 
