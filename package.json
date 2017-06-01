@@ -60,9 +60,9 @@
     "lodash": "^4.17.4",
     "object-is": "^1.0.1",
     "object.assign": "^4.0.4",
-    "object.entries": "^1.0.3",
-    "object.values": "^1.0.3",
-    "prop-types": "^15.5.4",
+    "object.entries": "^1.0.4",
+    "object.values": "^1.0.4",
+    "prop-types": "^15.5.10",
     "uuid": "^2.0.3"
   },
   "devDependencies": {
