@@ -1,6 +1,6 @@
 # `.isEmptyRender() => Boolean`
 
-Returns whether or not the current component returns a falsy value: `false`, `null`, `undefined`.
+Returns whether or not the current component returns one of the allowed falsy values: `false` or `null`.
 
 #### Returns
 
