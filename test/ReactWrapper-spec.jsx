@@ -208,6 +208,17 @@ describeWithDOM('mount', () => {
     });
   });
 
+  describe('.instance()', () => {
+    it('should return instance after unmount', () => {
+      const wrapper = mount(<div />);
+      const instance = wrapper.instance();
+
+      wrapper.unmount();
+
+      expect(wrapper.instance()).to.equal(instance);
+    });
+  });
+
   describe('.contains(node)', () => {
     it('should allow matches on the root node', () => {
       const a = <div className="foo" />;

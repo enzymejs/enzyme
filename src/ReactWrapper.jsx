@@ -208,7 +208,10 @@ class ReactWrapper {
       throw new Error('ReactWrapper::unmount() can only be called on the root');
     }
     this.single('unmount', () => {
-      this.component.setState({ mount: false });
+      this.component.setState({
+        mount: false,
+        lastRender: this.component._reactInternalInstance._renderedComponent.getPublicInstance(),
+      });
     });
     return this;
   }
