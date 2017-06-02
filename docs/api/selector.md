@@ -14,6 +14,34 @@ follows:
 - id syntax (`#foo`, `#foo-bar`, etc.)
 - prop syntax (`[htmlFor="foo"]`, `[bar]`, `[baz=1]`, etc.);
 
+**Note -- shallow rendering**
+Components rendered with `shallow(<MyComponent/>)` do not render
+render the HTML of child components.
+
+``` js
+const Child = React.createClass({
+  render() {
+    return <span className="child">foo</span>;
+  }
+});
+
+const MyComponent = React.createClass({
+  render() {
+    return <div>
+        <Child />
+        <span className="hello">hello world</span>
+      </div>;
+  }
+});
+
+const wrapper = shallow(<MyComponent/>);
+
+wrapper.find('.hello').length // 1
+wrapper.find('.child').length // 0
+```
+
+If you want the HTML of child components, use `mount`.
+
 **Note -- Prop selector**
 Strings, numeric literals and boolean property values are supported for prop syntax
 in combination of the expected string syntax. For example, the following
