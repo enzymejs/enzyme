@@ -185,7 +185,7 @@ describe('<Foo />', () => {
 });
 ```
 
-Read the full [API Documentation](/docs/api/render.md)
+Read the full [API Documentation](/docs/api/README.md)
 
 
 ### Future
