@@ -17,7 +17,6 @@ export default function createWrapperComponent(node, options = {}) {
       super(...args);
       this.state = {
         mount: true,
-        lastRender: null,
         props: this.props.props,
         context: this.props.context,
       };
@@ -28,7 +27,6 @@ export default function createWrapperComponent(node, options = {}) {
     }
     getInstance() {
       const component = this._reactInternalInstance._renderedComponent;
-
       const inst = component.getPublicInstance();
       if (inst === null) {
         return component._instance;

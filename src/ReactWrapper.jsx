@@ -208,14 +208,14 @@ class ReactWrapper {
    * @returns {ReactWrapper}
    */
   unmount() {
-    const { component } = this;
-    const inst = component._reactInternalInstance._renderedComponent.getPublicInstance();
-    if (this.root !== this) {
+    const { component, root } = this;
+    const inst = this.instance();
+    if (root !== this) {
       throw new Error('ReactWrapper::unmount() can only be called on the root');
     }
     this.single('unmount', () => {
       instanceMap.set(component, inst);
-      this.component.setState({ mount: false });
+      component.setState({ mount: false });
     });
     return this;
   }
