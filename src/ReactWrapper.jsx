@@ -177,9 +177,8 @@ class ReactWrapper {
     if (this.root !== this) {
       throw new Error('ReactWrapper::instance() can only be called on the root');
     }
-    if (!this.component.state.mount) return instanceMap.get(this.component);
 
-    return this.component.getInstance();
+    return this.component.getInstance() || instanceMap.get(this.component);
   }
 
   /**
