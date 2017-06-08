@@ -2,6 +2,7 @@
   "name": "enzyme",
   "version": "2.8.2",
   "description": "JavaScript Testing utilities for React",
+  "homepage": "http://airbnb.io/enzyme/",
   "main": "build",
   "scripts": {
     "prepublish": "not-in-publish || (npm run clean && npm run build && safe-publish-latest)",
