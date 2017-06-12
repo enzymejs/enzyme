@@ -934,10 +934,12 @@ class ReactWrapper {
   /**
    * Returns an HTML-like string of the shallow render for debugging purposes.
    *
+   * @param {Object} options - (Optional) Property bag of additional options.
+   * options.ignoreProps - if true, props are omitted from the string.
    * @returns {String}
    */
-  debug() {
-    return debugInsts(this.getNodes());
+  debug(options = {}) {
+    return debugInsts(this.getNodes(), options);
   }
 
   /**

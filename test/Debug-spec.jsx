@@ -571,4 +571,98 @@ describe('debug', () => {
 </span>`);
     });
   });
+
+  describe('debug shallow wrapper', () => {
+    it('options.ignoreProps causes props to be omitted', () => {
+      class Foo extends React.Component {
+        render() {
+          return (
+            <div className="foo">
+              {this.props.fooVal}
+            </div>
+          );
+        }
+      }
+
+      class Bar extends React.Component {
+        render() {
+          return (
+            <div className="class1">
+              <Foo fooVal="baz" />
+              <span className="class2">span text</span>
+            </div>
+          );
+        }
+      }
+
+      expect(shallow(<Bar />).debug({ ignoreProps: false })).to.eql(
+`<div className="class1">
+  <Foo fooVal="baz" />
+  <span className="class2">
+    span text
+  </span>
+</div>`);
+
+      expect(shallow(<Bar />).debug({ ignoreProps: true })).to.eql(
+`<div>
+  <Foo />
+  <span>
+    span text
+  </span>
+</div>`);
+    });
+  });
+
+  describeWithDOM('debug React wrapper', () => {
+    it('options.ignoreProps causes props to be omitted', () => {
+      class Foo extends React.Component {
+        render() {
+          return (
+            <div className="foo">
+              {this.props.fooVal}
+            </div>
+          );
+        }
+      }
+
+      class Bar extends React.Component {
+        render() {
+          return (
+            <div className="class1">
+              <Foo fooVal="baz" />
+              <span className="class2">span text</span>
+            </div>
+          );
+        }
+      }
+
+      expect(mount(<Bar />).debug({ ignoreProps: false })).to.eql(
+`<Bar>
+  <div className="class1">
+    <Foo fooVal="baz">
+      <div className="foo">
+        baz
+      </div>
+    </Foo>
+    <span className="class2">
+      span text
+    </span>
+  </div>
+</Bar>`);
+
+      expect(mount(<Bar />).debug({ ignoreProps: true })).to.eql(
+`<Bar>
+  <div>
+    <Foo>
+      <div>
+        baz
+      </div>
+    </Foo>
+    <span>
+      span text
+    </span>
+  </div>
+</Bar>`);
+    });
+  });
 });

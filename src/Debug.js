@@ -63,27 +63,28 @@ function indentChildren(childrenStrs, indentLength) {
     : '';
 }
 
-export function debugNode(node, indentLength = 2) {
+export function debugNode(node, indentLength = 2, options = {}) {
   if (typeof node === 'string' || typeof node === 'number') return escape(node);
   if (!node) return '';
 
-  const childrenStrs = compact(childrenOfNode(node).map(n => debugNode(n, indentLength)));
+  const childrenStrs = compact(childrenOfNode(node).map(n => debugNode(n, indentLength, options)));
   const type = typeName(node);
-  const props = propsString(node);
+
+  const props = options.ignoreProps ? '' : propsString(node);
   const beforeProps = props ? ' ' : '';
-  const nodeClose = childrenStrs.length ? `</${type}>` : '/>';
   const afterProps = childrenStrs.length
     ? '>'
     : ' ';
   const childrenIndented = indentChildren(childrenStrs, indentLength);
+  const nodeClose = childrenStrs.length ? `</${type}>` : '/>';
   return `<${type}${beforeProps}${props}${afterProps}${childrenIndented}${nodeClose}`;
 }
 
-export function debugNodes(nodes) {
-  return nodes.map(node => debugNode(node)).join('\n\n\n');
+export function debugNodes(nodes, options = {}) {
+  return nodes.map(node => debugNode(node, undefined, options)).join('\n\n\n');
 }
 
-export function debugInst(inst, indentLength = 2) {
+export function debugInst(inst, indentLength = 2, options = {}) {
   if (typeof inst === 'string' || typeof inst === 'number') return escape(inst);
   if (!inst) return '';
 
@@ -93,7 +94,7 @@ export function debugInst(inst, indentLength = 2) {
 
   if (!inst.getPublicInstance) {
     const internal = internalInstance(inst);
-    return debugInst(internal, indentLength);
+    return debugInst(internal, indentLength, options);
   }
   const publicInst = inst.getPublicInstance();
 
@@ -103,7 +104,7 @@ export function debugInst(inst, indentLength = 2) {
   // do stuff with publicInst
   const currentElement = inst._currentElement;
   const type = typeName(currentElement);
-  const props = propsString(currentElement);
+  const props = options.ignoreProps ? '' : propsString(currentElement);
   const children = [];
   if (isDOMComponent(publicInst)) {
     const renderedChildren = renderedChildrenOfInst(inst);
@@ -125,7 +126,7 @@ export function debugInst(inst, indentLength = 2) {
     children.push(inst._renderedComponent);
   }
 
-  const childrenStrs = compact(children.map(n => debugInst(n, indentLength)));
+  const childrenStrs = compact(children.map(n => debugInst(n, indentLength, options)));
 
   const beforeProps = props ? ' ' : '';
   const nodeClose = childrenStrs.length ? `</${type}>` : '/>';
@@ -136,6 +137,6 @@ export function debugInst(inst, indentLength = 2) {
   return `<${type}${beforeProps}${props}${afterProps}${childrenIndented}${nodeClose}`;
 }
 
-export function debugInsts(insts) {
-  return insts.map(inst => debugInst(inst)).join('\n\n\n');
+export function debugInsts(insts, options = {}) {
+  return insts.map(inst => debugInst(inst, undefined, options)).join('\n\n\n');
 }
