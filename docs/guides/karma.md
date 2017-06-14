@@ -14,8 +14,8 @@ See the [webpack guide](webpack.md).
 ```js
 /* karma.conf.js */
 
-webpack: { //kind of a copy of your webpack config
-  devtool: 'inline-source-map', //just do inline source maps instead of the default
+webpack: { // kind of a copy of your webpack config
+  devtool: 'inline-source-map', // just do inline source maps instead of the default
   module: {
     loaders: [
       {
@@ -25,15 +25,14 @@ webpack: { //kind of a copy of your webpack config
         query: {
           presets: ['airbnb']
         }
+      },
+      {
+        test: /\.json$/,
+        loader: 'json-loader',
       }
     ]
   },
-  externals: {
-    'cheerio': 'window',
-    'react/addons': true,
-    'react/lib/ExecutionEnvironment': true,
-    'react/lib/ReactContext': true
-  }
+  plugins: require('enzyme/webpack').getPluginsForInstalledReact(),
 },
 ```
 
