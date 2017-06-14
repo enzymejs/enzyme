@@ -10,8 +10,7 @@ compatible with React 0.13 and React 0.14.
 Unfortunately, these conditional requires mean there is a bit of extra setup with bundlers like
 webpack.
 
-In your webpack configuration, you simply need to make sure that the following files are
-labeled as "external", which means they will be ignored:
+In your webpack configuration, you simply need to make sure that the following files will be ignored:
 
 ```
 cheerio
@@ -20,31 +19,17 @@ react/lib/ReactContext
 react/lib/ExecutionEnvironment
 ```
 
-Depending on if you are using Webpack 1 or Webpack 2 you will need different configurations.
-
-### Webpack 1
+You will need the following configuration:
 
 ```js
 /* webpack.config.js */
 // ...
-externals: {
-  'cheerio': 'window',
-  'react/addons': true,
-  'react/lib/ExecutionEnvironment': true,
-  'react/lib/ReactContext': true
-}
+plugins: [
+  new webpack.IgnorePlugin(/react\/addons/),
+  new webpack.IgnorePlugin(/react\/lib\/ExecutionEnvironment/),
+  new webpack.IgnorePlugin(/react\/lib\/ReactContext/)
+]
 // ...
-```
-
-### Webpack 2
-
-```js
-externals: {
-  'cheerio': 'window',
-  'react/addons': 'react',
-  'react/lib/ExecutionEnvironment': 'react',
-  'react/lib/ReactContext': 'react',
-},
 ```
 
 
@@ -53,11 +38,15 @@ externals: {
 If you are using React 0.14, the instructions above will be the same but with a different list of
 externals:
 
-```
-cheerio
-react-dom
-react-dom/server
-react-addons-test-utils
+```js
+/* webpack.config.js */
+// ...
+plugins: [
+  new webpack.IgnorePlugin(/cheerio/),
+  new webpack.IgnorePlugin(/react-dom/),
+  new webpack.IgnorePlugin(/react-dom\/server/)
+  new webpack.IgnorePlugin(/react-addons-test-utils/)
+]
 ```
 
 ## React 15 Compatibility
@@ -67,11 +56,11 @@ If you are using React 15, your config should include these externals:
 ```js
 /* webpack.config.js */
 // ...
-externals: {
-  'react/addons': true,
-  'react/lib/ExecutionEnvironment': true,
-  'react/lib/ReactContext': true
-}
+plugins: [
+  new webpack.IgnorePlugin(/react\/addons/),
+  new webpack.IgnorePlugin(/react\/lib\/ExecutionEnvironment/),
+  new webpack.IgnorePlugin(/react\/lib\/ReactContext/)
+]
 // ...
 ```
 
