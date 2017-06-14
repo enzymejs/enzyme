@@ -12,7 +12,7 @@ npm i --save-dev enzyme
 ```jsx
 import test from 'tape'
 import React from 'react'
-import { shallow, mount } from 'enzyme';
+import { shallow, mount } from 'enzyme'
 
 import Foo from '../path/to/foo'
 
@@ -34,7 +34,7 @@ test('mount', t => {
 ```jsx
 import test from 'ava'
 import React from 'react'
-import { shallow, mount } from 'enzyme';
+import { shallow, mount } from 'enzyme'
 
 import Foo from '../path/to/foo'
 
