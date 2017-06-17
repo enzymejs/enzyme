@@ -28,14 +28,13 @@ describe('<Foo />', () => {
 
   it('rendered the title', () => {
     const wrapper = render(<Foo title="unique" />);
-    expect(wrapper.text()).to.contain("unique");
+    expect(wrapper.text()).to.contain('unique');
   });
 
   it('can pass in context', () => {
-    class SimpleComponent extends React.Component {
-      render() {
-        return <div>{this.context.name}</div>;
-      }
+    function SimpleComponent(props, context) {
+      const { name } = context;
+      return <div>{name}</div>;
     }
     SimpleComponent.contextTypes = {
       name: PropTypes.string,

@@ -7,7 +7,6 @@ that your tests aren't indirectly asserting on behavior of child components.
 import { shallow } from 'enzyme';
 
 describe('<MyComponent />', () => {
-
   it('should render three <Foo /> components', () => {
     const wrapper = shallow(<MyComponent />);
     expect(wrapper.find(Foo)).to.have.length(3);
@@ -19,23 +18,20 @@ describe('<MyComponent />', () => {
   });
 
   it('should render children when passed in', () => {
-    const wrapper = shallow(
+    const wrapper = shallow((
       <MyComponent>
         <div className="unique" />
       </MyComponent>
-    );
+    ));
     expect(wrapper.contains(<div className="unique" />)).to.equal(true);
   });
 
   it('simulates click events', () => {
     const onButtonClick = sinon.spy();
-    const wrapper = shallow(
-      <Foo onButtonClick={onButtonClick} />
-    );
+    const wrapper = shallow(<Foo onButtonClick={onButtonClick} />);
     wrapper.find('button').simulate('click');
     expect(onButtonClick.calledOnce).to.equal(true);
   });
-
 });
 
 ```

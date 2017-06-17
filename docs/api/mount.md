@@ -5,7 +5,7 @@ or may require the full lifecycle in order to fully test the component (i.e., `c
 etc.)
 
 Full DOM rendering requires that a full DOM API be available at the global scope. This means that
-it must be run in an environment that at least "looks like" a browser environment. If you do not
+it must be run in an environment that at least “looks like” a browser environment. If you do not
 want to run your tests inside of a browser, the recommended approach to using `mount` is to depend
 on a library called [jsdom](https://github.com/tmpvar/jsdom) which is essentially a headless browser
 implemented completely in JS.
@@ -16,7 +16,6 @@ import sinon from 'sinon';
 import Foo from './Foo';
 
 describe('<Foo />', () => {
-
   it('calls componentDidMount', () => {
     sinon.spy(Foo.prototype, 'componentDidMount');
     const wrapper = mount(<Foo />);
@@ -25,20 +24,19 @@ describe('<Foo />', () => {
 
   it('allows us to set props', () => {
     const wrapper = mount(<Foo bar="baz" />);
-    expect(wrapper.props().bar).to.equal("baz");
-    wrapper.setProps({ bar: "foo" });
-    expect(wrapper.props().bar).to.equal("foo");
+    expect(wrapper.props().bar).to.equal('baz');
+    wrapper.setProps({ bar: 'foo' });
+    expect(wrapper.props().bar).to.equal('foo');
   });
 
   it('simulates click events', () => {
     const onButtonClick = sinon.spy();
-    const wrapper = mount(
+    const wrapper = mount((
       <Foo onButtonClick={onButtonClick} />
-    );
+    ));
     wrapper.find('button').simulate('click');
     expect(onButtonClick.calledOnce).to.equal(true);
   });
-
 });
 ```
 
