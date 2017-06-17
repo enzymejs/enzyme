@@ -22,28 +22,18 @@ the one passed in.
 
 
 ```jsx
-const wrapper = shallow(
+const wrapper = shallow((
   <div>
     <div data-foo="foo" data-bar="bar">Hello</div>
   </div>
-);
+));
 
-expect(wrapper.containsMatchingElement(
-  <div data-foo="foo" data-bar="bar">Hello</div>
-)).to.equal(true);
-expect(wrapper.containsMatchingElement(
-  <div data-foo="foo">Hello</div>
-)).to.equal(true);
+expect(wrapper.containsMatchingElement(<div data-foo="foo" data-bar="bar">Hello</div>)).to.equal(true);
+expect(wrapper.containsMatchingElement(<div data-foo="foo">Hello</div>)).to.equal(true);
 
-expect(wrapper.containsMatchingElement(
-  <div data-foo="foo" data-bar="bar" data-baz="baz">Hello</div>
-)).to.equal(false);
-expect(wrapper.containsMatchingElement(
-  <div data-foo="foo" data-bar="Hello">Hello</div>
-)).to.equal(false);
-expect(wrapper.containsMatchingElement(
-  <div data-foo="foo" data-bar="bar" />
-)).to.equal(false);
+expect(wrapper.containsMatchingElement(<div data-foo="foo" data-bar="bar" data-baz="baz">Hello</div>)).to.equal(false);
+expect(wrapper.containsMatchingElement(<div data-foo="foo" data-bar="Hello">Hello</div>)).to.equal(false);
+expect(wrapper.containsMatchingElement(<div data-foo="foo" data-bar="bar" />)).to.equal(false);
 ```
 
 #### Common Gotchas

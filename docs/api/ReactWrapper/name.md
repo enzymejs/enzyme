@@ -18,7 +18,7 @@ Note: can only be called on a wrapper of a single node.
 #### Examples
 
 ```jsx
-const wrapper = mount(<div/>);
+const wrapper = mount(<div />);
 expect(wrapper.name()).to.equal('div');
 ```
 

@@ -32,7 +32,7 @@ class Foo extends React.Component {
         <div className={`clicks-${count}`}>
           {count} clicks
         </div>
-        <a onClick={() => this.setState({ count: count + 1 })}>
+        <a href="url" onClick={() => { this.setState({ count: count + 1 }); }}>
           Increment
         </a>
       </div>
@@ -53,6 +53,6 @@ expect(wrapper.find('.clicks-1').length).to.equal(1);
 - Currently, event simulation for the shallow renderer does not propagate as one would normally
 expect in a real environment. As a result, one must call `.simulate()` on the actual node that has
 the event handler set.
-- Even though the name would imply this simulates an actual event, `.simulate()` will in fact 
+- Even though the name would imply this simulates an actual event, `.simulate()` will in fact
 target the component's prop based on the event you give it. For example, `.simulate('click')` will
 actually get the `onClick` prop and call it.

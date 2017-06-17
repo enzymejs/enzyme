@@ -6,20 +6,22 @@
 # Example Test: Enzyme + Lab + Code
 
 ```jsx
-const Code = require('code');
-const Lab = require('lab');
-const lab = exports.lab = Lab.script();
 import { shallow, mount, render } from 'enzyme';
 import React from 'react';
 
+const Code = require('code');
+const Lab = require('lab');
+
+const lab = Lab.script();
+exports.lab = lab;
+
 lab.suite('A suite', () => {
-  lab.test("calls componentDidMount", (done) => {
+  lab.test('calls componentDidMount', (done) => {
     const wrapper = mount(<Foo />);
     Code.expect(Foo.prototype.componentDidMount.calledOnce).to.equal(true);
     done();
   });
 });
-
 ```
 
 

@@ -22,11 +22,11 @@ the ones passed in.
 
 
 ```jsx
-const wrapper = mount(
+const wrapper = mount((
   <div>
     <div data-foo="foo" data-bar="bar">Hello</div>
   </div>
-);
+));
 
 expect(wrapper.contains(<div data-foo="foo" data-bar="bar">Hello</div>)).to.equal(true);
 
@@ -37,13 +37,13 @@ expect(wrapper.contains(<div data-foo="foo" data-bar="bar" />)).to.equal(false);
 ```
 
 ```jsx
-const wrapper = mount(
+const wrapper = mount((
   <div>
     <span>Hello</span>
     <div>Goodbye</div>
     <span>Again</span>
   </div>
-);
+));
 
 expect(wrapper.contains([
   <span>Hello</span>,

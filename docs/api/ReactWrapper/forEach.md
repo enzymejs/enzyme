@@ -21,15 +21,15 @@ instance.
 #### Example
 
 ```jsx
-const wrapper = mount(
+const wrapper = mount((
   <div>
     <div className="foo bax" />
     <div className="foo bar" />
     <div className="foo baz" />
   </div>
-);
+));
 
-wrapper.find('.foo').forEach(function (node) {
+wrapper.find('.foo').forEach((node) => {
   expect(node.hasClass('foo')).to.equal(true);
 });
 ```

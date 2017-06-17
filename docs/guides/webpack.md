@@ -26,25 +26,32 @@ Depending on if you are using Webpack 1 or Webpack 2 you will need different con
 
 ```js
 /* webpack.config.js */
-// ...
-externals: {
-  'cheerio': 'window',
-  'react/addons': true,
-  'react/lib/ExecutionEnvironment': true,
-  'react/lib/ReactContext': true
-}
-// ...
+module.exports = {
+  // ...
+  externals: {
+    cheerio: 'window',
+    'react/addons': true,
+    'react/lib/ExecutionEnvironment': true,
+    'react/lib/ReactContext': true,
+  },
+  // ...
+};
 ```
 
 ### Webpack 2
 
 ```js
-externals: {
-  'cheerio': 'window',
-  'react/addons': 'react',
-  'react/lib/ExecutionEnvironment': 'react',
-  'react/lib/ReactContext': 'react',
-},
+/* webpack.config.js */
+module.exports = {
+  // ...
+  externals: {
+    cheerio: 'window',
+    'react/addons': 'react',
+    'react/lib/ExecutionEnvironment': 'react',
+    'react/lib/ReactContext': 'react',
+  },
+  // ...
+};
 ```
 
 
@@ -66,13 +73,15 @@ If you are using React 15, your config should include these externals:
 
 ```js
 /* webpack.config.js */
-// ...
-externals: {
-  'react/addons': true,
-  'react/lib/ExecutionEnvironment': true,
-  'react/lib/ReactContext': true
-}
-// ...
+module.exports = {
+  // ...
+  externals: {
+    'react/addons': true,
+    'react/lib/ExecutionEnvironment': true,
+    'react/lib/ReactContext': true,
+  },
+  // ...
+};
 ```
 
 ## Example Projects

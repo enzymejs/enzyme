@@ -27,22 +27,18 @@ class MyComponent extends React.Component {
     this.handleClick = this.handleClick.bind(this);
   }
   handleClick() {
-    ...
+    // ...
   }
   render() {
     return (
-      <div onClick={this.handleClick} className="foo bar">Hello</div>
+      <button type="button" onClick={this.handleClick} className="foo bar">Hello</button>
     );
   }
 }
 
 const wrapper = shallow(<MyComponent />);
-expect(wrapper.matchesElement(
-  <div>Hello</div>
-)).to.equal(true);
-expect(wrapper.matchesElement(
-  <div className="foo bar">Hello</div>
-)).to.equal(true);
+expect(wrapper.matchesElement(<div>Hello</div>)).to.equal(true);
+expect(wrapper.matchesElement(<div className="foo bar">Hello</div>)).to.equal(true);
 ```
 
 

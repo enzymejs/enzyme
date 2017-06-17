@@ -22,13 +22,13 @@ like one of the array passed in.
 
 
 ```jsx
-const wrapper = shallow(
+const wrapper = shallow((
   <div>
     <span className="foo">Hello</span>
     <div style={{ fontSize: 13 }}>Goodbye</div>
     <span>Again</span>
   </div>
-);
+));
 
 expect(wrapper.containsAnyMatchingElements([
   <span>Bonjour</span>,

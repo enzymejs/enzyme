@@ -24,11 +24,14 @@ And then you're ready to go!  In your test files you can simply `require` or `im
 ES6:
 ```js
 import { shallow, mount, render } from 'enzyme';
+
 const wrapper = shallow(<Foo />);
 ```
 
 ES5:
+<!-- eslint no-var: 0 -->
 ```js
 var enzyme = require('enzyme');
+
 var wrapper = enzyme.shallow(<Foo />);
 ```

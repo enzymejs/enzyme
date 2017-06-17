@@ -18,13 +18,13 @@ Returns whether or not any of the nodes in the wrapper match the provided select
 #### Examples
 
 ```jsx
-const wrapper = shallow(
+const wrapper = shallow((
   <div>
     <div className="foo qoo" />
     <div className="foo boo" />
     <div className="foo hoo" />
   </div>
-);
+));
 expect(wrapper.find('.foo').some('.qoo')).to.equal(true);
 expect(wrapper.find('.foo').some('.foo')).to.equal(true);
 expect(wrapper.find('.foo').some('.bar')).to.equal(false);

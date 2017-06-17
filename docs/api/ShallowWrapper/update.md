@@ -21,13 +21,14 @@ class ImpureRender extends React.Component {
     this.count = 0;
   }
   render() {
-    return <div>{this.count++}</div>
+    this.count += 1;
+    return <div>{this.count}</div>;
   }
 }
 ```
 ```jsx
 const wrapper = shallow(<ImpureRender />);
-expect(wrapper.text()).to.equal("0");
+expect(wrapper.text()).to.equal('0');
 wrapper.update();
-expect(wrapper.text()).to.equal("1");
+expect(wrapper.text()).to.equal('1');
 ```

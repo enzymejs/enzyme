@@ -19,15 +19,14 @@ This is helpful when debugging nodes in method chains.
 
 
 ```jsx
-const result = mount(
+const result = mount((
   <ul>
     <li>xxx</li>
     <li>yyy</li>
     <li>zzz</li>
   </ul>
-)
+))
 .find('li')
 .tap(n => console.log(n.debug()))
-.map(n => n.text())
-;
+.map(n => n.text());
 ```

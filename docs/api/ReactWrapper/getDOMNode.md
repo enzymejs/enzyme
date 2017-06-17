@@ -17,5 +17,5 @@ Notes:
 
 ```jsx
 const wrapper = mount(<MyComponent />);
-expect(wrapper.getDOMNode()).to.have.property("className");
+expect(wrapper.getDOMNode()).to.have.property('className');
 ```

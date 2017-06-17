@@ -26,16 +26,14 @@ first invocation of the reducing function.
 #### Example
 
 ```jsx
-class Foo extends React.Component {
-  render() {
-    return (
-      <div>
-        <Bar amount={2} />
-        <Bar amount={4} />
-        <Bar amount={8} />
-      </div>
-    );
-  }
+function Foo() {
+  return (
+    <div>
+      <Bar amount={2} />
+      <Bar amount={4} />
+      <Bar amount={8} />
+    </div>
+  );
 }
 ```
 

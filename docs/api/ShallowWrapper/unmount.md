@@ -12,6 +12,8 @@ an unmount/mount lifecycle.
 #### Example
 
 ```jsx
+import PropTypes from 'prop-types';
+
 const spy = sinon.spy();
 
 class Foo extends React.Component {
@@ -19,14 +21,19 @@ class Foo extends React.Component {
     super(props);
     this.componentWillUnmount = spy;
   }
+
   render() {
+    const { id } = this.props;
     return (
-      <div className={this.props.id}>
-        {this.props.id}
+      <div className={id}>
+        {id}
       </div>
     );
   }
 }
+Foo.propTypes = {
+  id: PropTypes.string.isRequired,
+};
 const wrapper = shallow(<Foo id="foo" />);
 expect(spy.calledOnce).to.equal(false);
 wrapper.unmount();

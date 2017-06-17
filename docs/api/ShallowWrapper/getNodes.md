@@ -17,15 +17,13 @@ If the current wrapper is wrapping the root component, returns the root componen
 const one = <span />;
 const two = <span />;
 
-class Test extends React.Component {
-	render() {
-		return (
-			<div>
-				{ one }
-				{ two }
-			</div>
-		);
-	}
+function Test() {
+  return (
+    <div>
+      {one}
+      {two}
+    </div>
+  );
 }
 
 const wrapper = shallow(<Test />);

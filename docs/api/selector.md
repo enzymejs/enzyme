@@ -20,15 +20,15 @@ in combination of the expected string syntax. For example, the following
 is supported:
 
 ```js
-const wrapper = mount(
+const wrapper = mount((
   <div>
     <span foo={3} bar={false} title="baz" />
   </div>
-)
+));
 
-wrapper.find('[foo=3]')
-wrapper.find('[bar=false]')
-wrapper.find('[title="baz"]')
+wrapper.find('[foo=3]');
+wrapper.find('[bar=false]');
+wrapper.find('[title="baz"]');
 ```
 
 Further, enzyme supports combining any of those supported syntaxes together to uniquely identify a
@@ -64,8 +64,8 @@ Enzyme allows you to find components based on their constructor. You can pass in
 the component's constructor:
 
 ```jsx
-class MyComponent extends React.Component {
-  render() { ... }
+function MyComponent() {
+  return <div />;
 }
 
 // find instances of MyComponent
@@ -82,13 +82,13 @@ a string can be used to find it:
 
 
 ```jsx
-class MyComponent extends React.Component {
-  render() { ... }
+function MyComponent() {
+  return <div />;
 }
-MyComponent.displayName = 'MyComponent';
+MyComponent.displayName = 'MyComponent!';
 
 // find instances of MyComponent
-const myComponents = wrapper.find('MyComponent');
+const myComponents = wrapper.find('MyComponent!');
 ```
 
 NOTE: This will *only* work if the selector (and thus the component's `displayName`) is a string
@@ -103,13 +103,13 @@ Enzyme allows you to find components and nodes based on a subset of their proper
 
 
 ```jsx
-const wrapper = mount(
+const wrapper = mount((
   <div>
     <span foo={3} bar={false} title="baz" />
   </div>
-)
+));
 
-wrapper.find({ foo: 3 })
-wrapper.find({ bar: false })
-wrapper.find({ title: 'baz'})
+wrapper.find({ foo: 3 });
+wrapper.find({ bar: false });
+wrapper.find({ title: 'baz' });
 ```

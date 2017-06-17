@@ -19,26 +19,26 @@ Returns a new wrapper with a subset of the nodes of the original wrapper, accord
 #### Examples
 
 ```jsx
-const wrapper = mount(
-<div>
-  <div className="foo bax" />
-  <div className="foo bar" />
-  <div className="foo baz" />
-</div>
-);
+const wrapper = mount((
+  <div>
+    <div className="foo bax" />
+    <div className="foo bar" />
+    <div className="foo baz" />
+  </div>
+));
 expect(wrapper.find('.foo').slice(1)).to.have.length(2);
 expect(wrapper.find('.foo').slice(1).at(0).hasClass('bar')).to.equal(true);
 expect(wrapper.find('.foo').slice(1).at(1).hasClass('baz')).to.equal(true);
 ```
 
 ```jsx
-const wrapper = mount(
-<div>
-  <div className="foo bax" />
-  <div className="foo bar" />
-  <div className="foo baz" />
-</div>
-);
+const wrapper = mount((
+  <div>
+    <div className="foo bax" />
+    <div className="foo bar" />
+    <div className="foo baz" />
+  </div>
+));
 expect(wrapper.find('.foo').slice(1, 2)).to.have.length(1);
 expect(wrapper.find('.foo').slice(1, 2).at(0).hasClass('bar')).to.equal(true);
 ```

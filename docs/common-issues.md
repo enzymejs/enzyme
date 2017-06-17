@@ -22,7 +22,7 @@ Please see the guide for [webpack](/docs/guides/webpack) to ensure your configur
 - [Related Github issue](https://github.com/airbnb/enzyme/issues/684)
 - [Related code](https://github.com/airbnb/enzyme/blob/3aeb02461eabf2fd402613991915d8d6f4b88536/src/react-compat.js#L97-L105)
 
-###### Reason 
+###### Reason
 
 In order to properly support multiple versions of React, we have conditional requirements that npm does not support with tools like
 `peerDependencies`. Instead we manually require and throw errors if the dependency is not met.
@@ -42,10 +42,10 @@ Install a matching version of React for `react-test-utils`. Example package.json
 
 ### Query Selector fails
 
-###### Reason 
+###### Reason
 
 This could be due to a regression, or the feature is not yet implemented. If you are wanting to use a
-certain query syntax, make sure it is implemented first before raising an issue. Here is the list of 
+certain query syntax, make sure it is implemented first before raising an issue. Here is the list of
 selectors we currently support: https://github.com/airbnb/enzyme/blob/master/docs/api/selector.md
 
 ### Testing third party libraries
@@ -75,7 +75,7 @@ import ThirdPartyPortalLibrary from 'someplace';
 
 class Comp extends React.Component {
   render() {
-    return <ThirdPartyPortalLibrary ref={node => this.portal = node}>
+    return <ThirdPartyPortalLibrary ref={(node) => { this.portal = node; }} />;
   }
 }
 
@@ -83,7 +83,3 @@ const wrapper = mount(<Comp />);
 const portal = wrapper.instance().portal;
 // assert on `portal`
 ```
-
-
-
-

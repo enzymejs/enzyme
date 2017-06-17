@@ -30,8 +30,9 @@ class Foo extends React.Component {
     this.state = { name: 'foo' };
   }
   render() {
+    const { name } = this.state;
     return (
-      <div className={this.state.name}/>
+      <div className={name} />
     );
   }
 }
