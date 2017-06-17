@@ -18,13 +18,13 @@ Returns whether or not all of the nodes in the wrapper match the provided select
 #### Examples
 
 ```jsx
-const wrapper = mount(
+const wrapper = mount((
   <div>
     <div className="foo qoo" />
     <div className="foo boo" />
     <div className="foo hoo" />
   </div>
-);
+));
 expect(wrapper.find('.foo').every('.foo')).to.equal(true);
 expect(wrapper.find('.foo').every('.qoo')).to.equal(false);
 expect(wrapper.find('.foo').every('.bar')).to.equal(false);

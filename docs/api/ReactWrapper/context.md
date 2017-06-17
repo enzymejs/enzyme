@@ -17,7 +17,7 @@ root component instance.
 ```jsx
 const wrapper = mount(
   <MyComponent />,
-  { context: { foo: 10 } }
+  { context: { foo: 10 } },
 );
 
 expect(wrapper.context().foo).to.equal(10);

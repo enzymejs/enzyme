@@ -12,15 +12,13 @@ Returns the wrapper's underlying nodes.
 #### Examples
 
 ```jsx
-class Test extends React.Component {
-  render() {
-    return (
-      <div>
-        <span />
-        <span />
-      </div>
-    );
-  }
+function Test() {
+  return (
+    <div>
+      <span />
+      <span />
+    </div>
+  );
 }
 
 const wrapper = mount(<Test />);

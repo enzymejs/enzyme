@@ -18,6 +18,7 @@ NOTE: can only be called on a wrapper instance that is also the root instance.
 
 #### Examples
 
+<!-- eslint react/no-string-refs: 1 -->
 ```jsx
 class Foo extends React.Component {
   render() {

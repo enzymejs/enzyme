@@ -14,25 +14,21 @@ console when tests are not passing when you expect them to.
 
 Say we have the following components:
 ```jsx
-class Foo extends React.Component {
-  render() {
-    return (
-      <div className="foo">
-        <span>Foo</span>
-      </div>
-    );
-  }
+function Foo() {
+  return (
+    <div className="foo">
+      <span>Foo</span>
+    </div>
+  );
 }
 
-class Bar extends React.Component {
-  render() {
-    return (
-      <div className="bar">
-        <span>Non-Foo</span>
-        <Foo baz="bax" />
-      </div>
-    );
-  }
+function Bar() {
+  return (
+    <div className="bar">
+      <span>Non-Foo</span>
+      <Foo baz="bax" />
+    </div>
+  );
 }
 ```
 
@@ -42,6 +38,7 @@ console.log(mount(<Bar id="2" />).debug());
 ```
 
 Would output the following to the console:
+<!-- eslint-disable -->
 ```jsx
 <Bar id="2">
   <div className="bar">
@@ -65,6 +62,7 @@ Likewise, running:
 console.log(mount(<Bar id="2" />).find(Foo).debug());
 ```
 Would output the following to the console:
+<!-- eslint-disable -->
 ```jsx
 <Foo baz="bax">
   <div className="foo">

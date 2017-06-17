@@ -24,10 +24,8 @@ NOTE: can only be called on a wrapper instance that is also the root instance.
 import React from 'react';
 import PropTypes from 'prop-types';
 
-class SimpleComponent extends React.Component {
-  render() {
-    return <div>{this.context.name}</div>;
-  }
+function SimpleComponent(props, context) {
+  return <div>{name}</div>;
 }
 SimpleComponent.contextTypes = {
   name: PropTypes.string,

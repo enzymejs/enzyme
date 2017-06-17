@@ -25,13 +25,16 @@ NOTE: can only be called on a wrapper instance that is also the root instance.
 #### Example
 
 ```jsx
-class Foo extends React.Component {
-  render() {
-    return (
-      <div className={this.props.name}/>
-    );
-  }
+import PropTypes from 'prop-types';
+
+function Foo({ name }) {
+  return (
+    <div className={this.props.name} />
+  );
 }
+Foo.propTypes = {
+  name: PropTypes.string.isRequired,
+};
 ```
 ```jsx
 const wrapper = mount(<Foo name="foo" />);

@@ -14,5 +14,5 @@ Reduce the set of matched nodes to the first in the set.
 
 ```jsx
 const wrapper = mount(<MyComponent />);
-expect(wrapper.find(Foo).first().props().foo).to.equal("bar");
+expect(wrapper.find(Foo).first().props().foo).to.equal('bar');
 ```

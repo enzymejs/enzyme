@@ -31,7 +31,7 @@ class Foo extends React.Component {
         <div className={`clicks-${count}`}>
           {count} clicks
         </div>
-        <a onClick={() => this.setState({ count: count + 1 })}>
+        <a href="url" onClick={() => { this.setState({ count: count + 1 }); }}>
           Increment
         </a>
       </div>
