@@ -98,10 +98,9 @@ may want to try using a browser-based test runner such as [Karma](../guides/karm
 Some times you may need to switch between different versions of node, you can use a CLI tool called
 `nvm` to quickly switch between node versions.
 
-To install NVM:
+To install `nvm`, use the curl script from http://nvm.sh, and then:
 
 ```bash
-brew install nvm
 nvm install 4
 ```
 
