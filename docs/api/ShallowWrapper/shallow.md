@@ -21,26 +21,22 @@ NOTE: can only be called on wrapper of a single node.
 #### Examples
 
 ```jsx
-class Bar extends React.Component {
-  render() {
-    return (
-      <div>
-        <div className="in-bar" />
-      </div>
-    );
-  }
+function Bar() {
+  return (
+    <div>
+      <div className="in-bar" />
+    </div>
+  );
 }
 ```
 
 ```jsx
-class Foo extends React.Component {
-  render() {
-    return (
-      <div>
-        <Bar />
-      </div>
-    );
-  }
+function Foo() {
+  return (
+    <div>
+      <Bar />
+    </div>
+  );
 }
 ```
 

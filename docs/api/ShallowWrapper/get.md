@@ -19,7 +19,7 @@ Returns the node at a given index of the current wrapper.
 
 ```jsx
 const wrapper = shallow(<MyComponent />);
-expect(wrapper.find(Foo).get(0).props.foo).to.equal("bar");
+expect(wrapper.find(Foo).get(0).props.foo).to.equal('bar');
 ```
 
 

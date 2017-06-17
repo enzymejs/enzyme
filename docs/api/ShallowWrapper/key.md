@@ -8,11 +8,11 @@ NOTE: can only be called on a wrapper of a single node.
 
 
 ```jsx
-const wrapper = shallow(
+const wrapper = shallow((
   <ul>
     {['foo', 'bar'].map(s => <li key={s}>{s}</li>)}
   </ul>
-).find('li');
+)).find('li');
 expect(wrapper.at(0).key()).to.equal('foo');
 expect(wrapper.at(1).key()).to.equal('bar');
 ```

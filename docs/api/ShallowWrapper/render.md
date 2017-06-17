@@ -14,22 +14,18 @@ Note: can only be called on a wrapper of a single node.
 #### Examples
 
 ```jsx
-class Foo extends React.Component {
-  render() {
-    return (<div className="in-foo" />);
-  }
+function Foo() {
+  return (<div className="in-foo" />);
 }
 ```
 
 ```jsx
-class Bar extends React.Component {
-  render() {
-    return (
-      <div className="in-bar">
-        <Foo />
-      </div>
-    );
-  }
+function Bar() {
+  return (
+    <div className="in-bar">
+      <Foo />
+    </div>
+  );
 }
 ```
 

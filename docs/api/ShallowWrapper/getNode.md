@@ -15,16 +15,14 @@ If the current wrapper is wrapping the root component, returns the root componen
 
 ```jsx
 const element = (
-	<div>
-		<span />
-		<span />
-	</div>
+  <div>
+    <span />
+    <span />
+  </div>
 );
 
-class MyComponent extends React.Component {
-	render() {
-		return element;
-	}
+function MyComponent() {
+  return element;
 }
 
 const wrapper = shallow(<MyComponent />);

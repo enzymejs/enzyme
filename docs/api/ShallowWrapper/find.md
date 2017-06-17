@@ -47,7 +47,7 @@ expect(wrapper.find('Foo')).to.have.length(1);
 Object Property Selector:
 ```jsx
 const wrapper = shallow(<MyComponent />);
-expect(wrapper.find({prop: 'value'})).to.have.length(1);
+expect(wrapper.find({ prop: 'value' })).to.have.length(1);
 ```
 
 

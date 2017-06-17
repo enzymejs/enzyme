@@ -19,7 +19,7 @@ Returns a wrapper around the node at a given index of the current wrapper.
 
 ```jsx
 const wrapper = shallow(<MyComponent />);
-expect(wrapper.find(Foo).at(0).props().foo).to.equal("bar");
+expect(wrapper.find(Foo).at(0).props().foo).to.equal('bar');
 ```
 
 

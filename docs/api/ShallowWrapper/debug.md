@@ -12,18 +12,21 @@ console when tests are not passing when you expect them to.
 
 #### Examples
 ```jsx
-class Book extends React.Component {
-  render() {
-    const { title, cover } = this.props;
-    return (
-      <div>
-        <h1 className="title">{title}</h1>
-        {cover && <BookCover cover={cover} />}
-      </div>
-    );
-  }
+function Book({ title, cover }) {
+  return (
+    <div>
+      <h1 className="title">{title}</h1>
+      {cover && <BookCover cover={cover} />}
+    </div>
+  );
 }
-
+Book.propTypes = {
+  title: PropTypes.string.isRequired,
+  cover: PropTypes.string,
+};
+Book.defaultProps = {
+  cover: null,
+};
 ```
 ```jsx
 const wrapper = shallow(<Book title="Huckleberry Finn" />);
@@ -37,16 +40,16 @@ Outputs to console:
 ```
 
 ```jsx
-const wrapper = shallow(
+const wrapper = shallow((
   <Book
     title="Huckleberry Finn"
     cover={{
       url: 'http://some.url/to/img.png',
       width: 40,
-      height: 80
+      height: 80,
     }}
   />
-);
+));
 console.log(wrapper.debug());
 ```
 Outputs to console:
