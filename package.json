@@ -10,6 +10,7 @@
     "postversion": "git push && git push --tags && npm run clean && npm run docs:publish",
     "version": "npm run build",
     "clean": "rimraf build",
+    "prelint": "npm run docs:lint",
     "lint": "eslint --ext js,jsx src test",
     "check": "npm run lint && npm run test:all",
     "build": "babel src --out-dir build",
