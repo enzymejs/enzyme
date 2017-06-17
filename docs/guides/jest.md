@@ -23,14 +23,15 @@ You do **not** need to include Jest's own renderer, unless you want to use it _o
 
 If you are using Jest 0.9 – 14.0 with Enzyme and using Jest's automocking feature, you will need to mark react and enzyme to be unmocked in your `package.json`:
 
-```js
-/* package.json */
-
-"jest": {
-  "unmockedModulePathPatterns": [
-    "node_modules/react/",
-    "node_modules/enzyme/"
-  ]
+`package.json`:
+```json
+{
+  "jest": {
+    "unmockedModulePathPatterns": [
+      "node_modules/react/",
+      "node_modules/enzyme/"
+    ]
+  }
 }
 ```
 

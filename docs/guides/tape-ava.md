@@ -10,44 +10,44 @@ npm i --save-dev enzyme
 ## Tape
 
 ```jsx
-import test from 'tape'
-import React from 'react'
-import { shallow, mount } from 'enzyme'
+import test from 'tape';
+import React from 'react';
+import { shallow, mount } from 'enzyme';
 
-import Foo from '../path/to/foo'
+import Foo from '../path/to/foo';
 
-test('shallow', t => {
-  const wrapper = shallow(<Foo />)
-  t.equal(wrapper.contains(<span>Foo</span>), true)
-})
+test('shallow', (t) => {
+  const wrapper = shallow(<Foo />);
+  t.equal(wrapper.contains(<span>Foo</span>), true);
+});
 
-test('mount', t => {
-  const wrapper = mount(<Foo />)
-  const fooInner = wrapper.find('.foo-inner')
-  t.equal(fooInner.is('.foo-inner'), true)
-})
+test('mount', (t) => {
+  const wrapper = mount(<Foo />);
+  const fooInner = wrapper.find('.foo-inner');
+  t.equal(fooInner.is('.foo-inner'), true);
+});
 ```
 
 ## AVA
 
 
 ```jsx
-import test from 'ava'
-import React from 'react'
-import { shallow, mount } from 'enzyme'
+import test from 'ava';
+import React from 'react';
+import { shallow, mount } from 'enzyme';
 
-import Foo from '../path/to/foo'
+import Foo from '../path/to/foo';
 
-test('shallow', t => {
-  const wrapper = shallow(<Foo />)
-  t.is(wrapper.contains(<span>Foo</span>), true)
-})
+test('shallow', (t) => {
+  const wrapper = shallow(<Foo />);
+  t.is(wrapper.contains(<span>Foo</span>), true);
+});
 
-test('mount', t => {
-  const wrapper = mount(<Foo />)
-  const fooInner = wrapper.find('.foo-inner')
-  t.is(fooInner.is('.foo-inner'), true)
-})
+test('mount', (t) => {
+  const wrapper = mount(<Foo />);
+  const fooInner = wrapper.find('.foo-inner');
+  t.is(fooInner.is('.foo-inner'), true);
+});
 ```
 
 ## Example Projects

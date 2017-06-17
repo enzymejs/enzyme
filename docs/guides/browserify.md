@@ -22,9 +22,9 @@ react/lib/ExecutionEnvironment
 Here is an example piece of configuration code marking these as external:
 
 ```js
-var browserify = require('browserify');
+const browserify = require('browserify');
 
-var b = browserify();
+const b = browserify();
 
 // make sure to mark these as external!
 b.external('react/addons');

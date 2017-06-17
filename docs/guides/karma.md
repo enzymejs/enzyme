@@ -13,28 +13,31 @@ See the [webpack guide](webpack.md).
 
 ```js
 /* karma.conf.js */
-
-webpack: { //kind of a copy of your webpack config
-  devtool: 'inline-source-map', //just do inline source maps instead of the default
-  module: {
-    loaders: [
-      {
-        test: /\.js$/,
-        exclude: /\/node_modules\//,
-        loader: 'babel',
-        query: {
-          presets: ['airbnb']
-        }
-      }
-    ]
-  },
-  externals: {
-    'cheerio': 'window',
-    'react/addons': true,
-    'react/lib/ExecutionEnvironment': true,
-    'react/lib/ReactContext': true
-  }
-},
+module.exports = function karmaConfig(config) {
+  config.set({
+    // ...
+    webpack: { // kind of a copy of your webpack config
+      devtool: 'inline-source-map', // just do inline source maps instead of the default
+      module: {
+        loaders: [{
+          test: /\.js$/,
+          exclude: /\/node_modules\//,
+          loader: 'babel',
+          query: {
+            presets: ['airbnb'],
+          },
+        }],
+      },
+      externals: {
+        cheerio: 'window',
+        'react/addons': true,
+        'react/lib/ExecutionEnvironment': true,
+        'react/lib/ReactContext': true,
+      },
+    },
+    // ...
+  });
+};
 ```
 
 ## Enzyme + Karma + Browserify
@@ -43,19 +46,25 @@ See the [browserify guide](browserify.md).
 
 ```js
 /* karma.conf.js */
-browserify: {
-  debug: true,
-  transform: [
-    ['babelify', { presets: ['airbnb'] }]
-  ],
-  configure: function(bundle) {
-    bundle.on('prebundle', function() {
-      bundle.external('react/addons');
-      bundle.external('react/lib/ReactContext');
-      bundle.external('react/lib/ExecutionEnvironment');
-    });
-  }
-},
+module.exports = function karmaConfig(config) {
+  config.set({
+    // ...
+    browserify: {
+      debug: true,
+      transform: [
+        ['babelify', { presets: ['airbnb'] }],
+      ],
+      configure(bundle) {
+        bundle.on('prebundle', () => {
+          bundle.external('react/addons');
+          bundle.external('react/lib/ReactContext');
+          bundle.external('react/lib/ExecutionEnvironment');
+        });
+      },
+    },
+    // ...
+  });
+};
 ```
 
 

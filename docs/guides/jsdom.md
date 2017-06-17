@@ -17,6 +17,7 @@ As a result, a standalone script like the one below is generally a good approach
 /* setup.js */
 
 const { JSDOM } = require('jsdom');
+
 const jsdom = new JSDOM('<!doctype html><html><body></body></html>');
 const { window } = jsdom;
 
@@ -30,7 +31,7 @@ function copyProps(src, target) {
 global.window = window;
 global.document = window.document;
 global.navigator = {
-  userAgent: 'node.js'
+  userAgent: 'node.js',
 };
 copyProps(window, global);
 ```
@@ -47,7 +48,7 @@ const jsdom = require('jsdom').jsdom;
 global.document = jsdom('');
 global.window = document.defaultView;
 global.navigator = {
-  userAgent: 'node.js'
+  userAgent: 'node.js',
 };
 
 function copyProps(src, target) {
