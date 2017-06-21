@@ -2,7 +2,7 @@
 import isEqual from 'lodash/isEqual';
 import React from 'react';
 import is from 'object-is';
-import uuid from 'uuid';
+import uuidv4 from 'uuid/v4';
 import entries from 'object.entries';
 import functionName from 'function.prototype.name';
 import {
@@ -231,7 +231,7 @@ export function splitSelector(selector) {
   // step 1: make a map of all quoted strings with a uuid
   const quotedSegments = selector.split(/[^" ]+|("[^"]*")|.*/g)
     .filter(Boolean)
-    .reduce((obj, match) => ({ ...obj, [match]: uuid.v4() }), {});
+    .reduce((obj, match) => ({ ...obj, [match]: uuidv4() }), {});
 
   const splits = selector
     // step 2: replace all quoted strings with the uuid, so we don't have to properly parse them
