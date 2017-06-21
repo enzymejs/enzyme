@@ -1273,6 +1273,23 @@ describeWithDOM('mount', () => {
       expect(spy.args[0][0].someSpecialData).to.equal('foo');
     });
 
+    it('should let us override the event object', () => {
+      const spy = sinon.spy();
+      class Foo extends React.Component {
+        render() {
+          return (
+            <input type="text" onChange={spy} value="foo" />
+          );
+        }
+      }
+
+      const wrapper = mount(<Foo />);
+
+      wrapper.simulate('change', { target: { value: 'bar' } });
+      expect(spy.calledOnce).to.equal(true);
+      expect(spy.args[0][0].target.value).to.equal('bar');
+    });
+
     it('should throw a descriptive error for invalid events', () => {
       const wrapper = mount(<div>foo</div>);
       expect(wrapper.simulate.bind(wrapper, 'invalidEvent'))
