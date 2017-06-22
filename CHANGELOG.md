@@ -1,5 +1,30 @@
 # Change Log
 
+## 2.9.0
+
+### New Stuff
+
+ - `mount`/`shallow`: `debug`: add `ignoreProps` option ([#960](https://github.com/airbnb/enzyme/pull/960))
+
+### Fixes
+
+ - `shallow`: debug: fix indentation ([#926](https://github.com/airbnb/enzyme/pull/926))
+ - react-compat: Make sure dependency error reporting always work ([#929](https://github.com/airbnb/enzyme/pull/929))
+ - react-compat: correct error message ([#904](https://github.com/airbnb/enzyme/pull/904))
+
+### Documentation
+
+ - lint our markdown ([#988](https://github.com/airbnb/enzyme/pull/988))
+ - correct `nvm` install instructions (never install it with homebrew) ([#988](https://github.com/airbnb/enzyme/pull/988))
+ - fix typos ([#979](https://github.com/airbnb/enzyme/pull/979)), ([#983](https://github.com/airbnb/enzyme/pull/983))
+ - Added missing isEmptyRender() docs
+ - update jsdom guides for v10 and later ([#921](https://github.com/airbnb/enzyme/pull/921))
+
+### Refactors
+
+ - `shallow`/`mount`: Make all references to the wrapper `class` call into `this.wrap`
+ - update `uuid` from v2 to v3 ([#998](https://github.com/airbnb/enzyme/pull/998))
+
 ## 2.8.2
 
 ### Fixes
@@ -8,7 +33,7 @@
 
 ### Documentation
 
- - [Docs] Update docs to use `prop-types` ([#894](https://github.com/airbnb/enzyme/pull/894), [#890](https://github.com/airbnb/enzyme/issue/890))
+ - Update docs to use `prop-types` ([#894](https://github.com/airbnb/enzyme/pull/894), [#890](https://github.com/airbnb/enzyme/issue/890))
 
 ## 2.8.1
 
