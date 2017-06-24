@@ -1,5 +1,11 @@
 # Change Log
 
+## 2.9.1
+
+### Fixes
+
+ - [Deps] Require uuid at least 3.0.1 ([#1001](https://github.com/airbnb/enzyme/pull/1001))
+
 ## 2.9.0
 
 ### New Stuff
