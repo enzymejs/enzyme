@@ -86,10 +86,10 @@
     "enzyme-example-react-native": "^0.1.0",
     "eslint": "^3.19.0",
     "eslint-config-airbnb": "^15.0.1",
-    "eslint-plugin-import": "^2.3.0",
+    "eslint-plugin-import": "^2.6.0",
     "eslint-plugin-jsx-a11y": "^5.0.3",
     "eslint-plugin-markdown": "^1.0.0-beta.6",
-    "eslint-plugin-react": "^7.0.1",
+    "eslint-plugin-react": "^7.1.0",
     "gitbook-cli": "^1.0.1",
     "in-publish": "^2.0.0",
     "istanbul": "^1.0.0-alpha.2",
@@ -105,7 +105,8 @@
     "rimraf": "^2.6.1",
     "safe-publish-latest": "^1.1.1",
     "sinon": "^2.3.5",
-    "webpack": "^1.13.3"
+    "webpack": "^1.13.3",
+    "react": "0.13.x || 0.14.x || ^15.0.0-0 || 15.x"
   },
   "peerDependencies": {
     "react": "0.13.x || 0.14.x || ^15.0.0-0 || 15.x"
