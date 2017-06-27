@@ -5,7 +5,8 @@
   "homepage": "http://airbnb.io/enzyme/",
   "main": "build",
   "scripts": {
-    "prepublish": "not-in-publish || (npm run clean && npm run build && safe-publish-latest)",
+    "prepare": "not-in-publish || (npm run clean && npm run build && safe-publish-latest)",
+    "prepublish": "npm run prepare",
     "preversion": "npm run clean && npm run check",
     "postversion": "git push && git push --tags && npm run clean && npm run docs:publish",
     "version": "npm run build",
