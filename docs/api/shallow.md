@@ -43,7 +43,7 @@ describe('<MyComponent />', () => {
 1. `node` (`ReactElement`): The node to render
 2. `options` (`Object` [optional]):
   - `options.context`: (`Object` [optional]): Context to be passed into the component
-  - `options.disableLifecycleMethods`: (`Boolean` [optional]): If set to true, `componentWillMount`
+  - `options.disableLifecycleMethods`: (`Boolean` [optional]): If set to true, `componentDidMount`
 is not called on the component, and `componentDidUpdate` is not called after
 [`setProps`](ShallowWrapper/setProps.md) and [`setContext`](ShallowWrapper/setContext.md).
 
