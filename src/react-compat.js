@@ -181,7 +181,6 @@ const {
   isDOMComponent,
   isCompositeComponent,
   isCompositeComponentWithType,
-  isCompositeComponentElement,
   Simulate,
   findAllInRenderedTree,
 } = TestUtils;
@@ -197,7 +196,6 @@ export {
   isDOMComponentElement,
   isCompositeComponent,
   isCompositeComponentWithType,
-  isCompositeComponentElement,
   Simulate,
   findDOMNode,
   findAllInRenderedTree,
