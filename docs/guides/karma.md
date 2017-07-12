@@ -60,6 +60,8 @@ module.exports = function karmaConfig(config) {
           bundle.external('react/addons');
           bundle.external('react/lib/ReactContext');
           bundle.external('react/lib/ExecutionEnvironment');
+          bundle.external('react-dom/test-utils');
+          bundle.external('react-test-renderer/shallow');
         });
       },
     },
