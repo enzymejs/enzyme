@@ -33,6 +33,7 @@ module.exports = {
     'react/addons': true,
     'react/lib/ExecutionEnvironment': true,
     'react/lib/ReactContext': true,
+    'react-addons-test-utils': 'react-dom',
   },
   // ...
 };
@@ -49,6 +50,7 @@ module.exports = {
     'react/addons': 'react',
     'react/lib/ExecutionEnvironment': 'react',
     'react/lib/ReactContext': 'react',
+    'react-addons-test-utils': 'react-dom',
   },
   // ...
 };
@@ -79,6 +81,7 @@ module.exports = {
     'react/addons': true,
     'react/lib/ExecutionEnvironment': true,
     'react/lib/ReactContext': true,
+    'react-addons-test-utils': 'react-dom',
   },
   // ...
 };
