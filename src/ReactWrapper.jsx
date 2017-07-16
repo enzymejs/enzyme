@@ -412,9 +412,7 @@ class ReactWrapper {
       throw new TypeError('nodes should be an Array');
     }
 
-    const invertedEquals = (n1, n2) => nodeMatches(n2, n1, (a, b) => a <= b);
-    const predicate = other => containsChildrenSubArray(invertedEquals, other, nodes);
-    return findWhereUnwrapped(this, predicate).length > 0;
+    return nodes.every(node => this.containsMatchingElement(node));
   }
 
   /**

@@ -8,7 +8,7 @@ import { is } from '../../src/version';
 
 let createClass;
 
-if (is('>=15.5')) {
+if (is('>=15.5 || ^16.0.0-alpha')) {
   // eslint-disable-next-line import/no-extraneous-dependencies
   createClass = require('create-react-class');
 } else {
