@@ -16,6 +16,7 @@ import {
   isFunctionalComponent,
   isCustomComponentElement,
   ITERATOR_SYMBOL,
+  getAdapter,
 } from './Utils';
 import {
   debugNodes,
@@ -29,7 +30,6 @@ import {
   treeFilter,
   buildPredicate,
 } from './RSTTraversal';
-import configuration from './configuration';
 
 /**
  * Finds all nodes in the current wrapper nodes' render trees that match the provided predicate
@@ -96,15 +96,6 @@ function getRootNode(node) {
     return node;
   }
   return node.rendered;
-}
-
-function getAdapter(options) {
-  if (options.adapter) {
-    return options.adapter;
-  }
-  const adapter = configuration.get().adapter;
-  // TODO(lmr): warn about no adapter being configured
-  return adapter;
 }
 
 /**

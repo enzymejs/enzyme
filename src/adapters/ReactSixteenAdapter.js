@@ -11,6 +11,7 @@ import elementToTree from './elementToTree';
 import {
   mapNativeEventNames,
   propFromEvent,
+  assertDomAvailable,
 } from './Utils';
 
 const HostRoot = 3;
@@ -142,6 +143,7 @@ SimpleWrapper.propTypes = { node: PropTypes.node.isRequired };
 
 class ReactSixteenAdapter extends EnzymeAdapter {
   createMountRenderer(options) {
+    assertDomAvailable('mount');
     const domNode = options.attachTo || global.document.createElement('div');
     let instance = null;
     return {

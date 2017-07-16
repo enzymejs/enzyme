@@ -10,6 +10,7 @@ import {
   mapNativeEventNames,
   propFromEvent,
   withSetStateAllowed,
+  assertDomAvailable,
 } from './Utils';
 
 function typeToNodeType(type) {
@@ -68,6 +69,7 @@ SimpleWrapper.propTypes = { node: PropTypes.node.isRequired };
 
 class ReactFifteenAdapter extends EnzymeAdapter {
   createMountRenderer(options) {
+    assertDomAvailable('mount');
     const domNode = options.attachTo || global.document.createElement('div');
     let instance = null;
     return {

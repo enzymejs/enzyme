@@ -73,3 +73,11 @@ export function withSetStateAllowed(fn) {
   }
   return result;
 }
+
+export function assertDomAvailable(feature) {
+  if (!global || !global.document || !global.document.createElement) {
+    throw new Error(
+      `Enzyme's ${feature} expects a DOM environment to be loaded, but found none`,
+    );
+  }
+}

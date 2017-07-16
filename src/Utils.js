@@ -5,9 +5,31 @@ import is from 'object-is';
 import uuidv4 from 'uuid/v4';
 import entries from 'object.entries';
 import functionName from 'function.prototype.name';
+import configuration from './configuration';
 
 export const ITERATOR_SYMBOL = typeof Symbol === 'function' && Symbol.iterator;
 
+export function getAdapter(options = {}) {
+  if (options.adapter) {
+    return options.adapter;
+  }
+  const adapter = configuration.get().adapter;
+  if (!adapter) {
+    throw new Error(`
+      Enzyme expects an adapter to be configured, but found none. To configure an adapter,
+      you should call \`Enzyme.configure({ adapter: new Adapter() })\` before using any of
+      Enzyme's top level APIs, where \`Adapter\` is the adapter corresponding to the library
+      currently being tested. For example:
+
+      import Adapter from 'enzyme-adapter-react-15';
+
+      To find out more about this, see http://airbnb.io/enzyme/docs/installation/index.html
+    `);
+  }
+  return adapter;
+}
+
+// TODO(lmr): we shouldn't need this
 export function isFunctionalComponent(inst) {
   return !!inst && !!inst.constructor && typeof inst.constructor === 'function' &&
     functionName(inst.constructor) === 'StatelessComponent';

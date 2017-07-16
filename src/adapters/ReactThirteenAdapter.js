@@ -9,6 +9,7 @@ import {
   mapNativeEventNames,
   propFromEvent,
   withSetStateAllowed,
+  assertDomAvailable,
 } from './Utils';
 
 // this fixes some issues in React 0.13 with setState and jsdom...
@@ -94,6 +95,7 @@ SimpleWrapper.propTypes = { node: PropTypes.node.isRequired };
 
 class ReactThirteenAdapter extends EnzymeAdapter {
   createMountRenderer(options) {
+    assertDomAvailable('mount');
     const domNode = options.attachTo || global.document.createElement('div');
     let instance = null;
     return {

@@ -13,6 +13,7 @@ import {
   ITERATOR_SYMBOL,
   nodeEqual,
   nodeMatches,
+  getAdapter,
 } from './Utils';
 import {
   debugNodes,
@@ -25,7 +26,6 @@ import {
   treeFilter,
   buildPredicate,
 } from './RSTTraversal';
-import configuration from './configuration';
 
 const noop = () => {};
 
@@ -60,15 +60,6 @@ function getFromRenderer(renderer) {
     component: root.instance,
     node: root.rendered,
   };
-}
-
-function getAdapter(options) {
-  if (options.adapter) {
-    return options.adapter;
-  }
-  const adapter = configuration.get().adapter;
-  // TODO(lmr): warn about no adapter being configured
-  return adapter;
 }
 
 /**
