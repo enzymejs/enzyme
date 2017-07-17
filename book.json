@@ -1,10 +1,11 @@
 {
-  "gitbook": "2.4.3",
+  "gitbook": "3.x",
   "title": "Enzyme",
   "description": "React Testing",
+  "root": "docs/",
   "structure": {
-    "summary": "docs/README.md",
-    "glossary": "docs/GLOSSARY.md"
+    "summary": "README.md",
+    "glossary": "GLOSSARY.md"
   },
   "plugins": [
     "edit-link",
