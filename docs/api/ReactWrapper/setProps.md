@@ -46,6 +46,8 @@ expect(wrapper.find('.bar')).to.have.length(1);
 ```
 
 ```jsx
+import sinon from 'sinon';
+
 const spy = sinon.spy(MyComponent.prototype, 'componentWillReceiveProps');
 
 const wrapper = mount(<MyComponent foo="bar" />);

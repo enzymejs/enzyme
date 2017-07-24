@@ -13,6 +13,7 @@ an unmount/mount lifecycle.
 
 ```jsx
 import PropTypes from 'prop-types';
+import sinon from 'sinon';
 
 const willMount = sinon.spy();
 const didMount = sinon.spy();
