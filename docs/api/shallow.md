@@ -5,6 +5,7 @@ that your tests aren't indirectly asserting on behavior of child components.
 
 ```jsx
 import { shallow } from 'enzyme';
+import sinon from 'sinon';
 
 describe('<MyComponent />', () => {
   it('should render three <Foo /> components', () => {
