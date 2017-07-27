@@ -23,6 +23,7 @@ Organizations
  - [Chroma](http://hichroma.com/)
  - [Mavens](https://github.com/mavens)
  - [Cucumber](https://cucumber.io)
+ - [Genoa Telepsychiatry](https://genoatelepsychiatry.com)
 
 Projects
 ----------
