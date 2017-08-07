@@ -87,6 +87,38 @@ module.exports = {
 };
 ```
 
+## React 15.5 Compatibility
+
+As of React 15.5, `react/addons` is gone and `react-addons-test-utils` is deprecated. You should install the `react-test-renderer` dependency and use that instead:
+
+#### Webpack 1
+```js
+/* webpack.config.js */
+module.exports = {
+  // ...
+  externals: {
+    'react/lib/ExecutionEnvironment': true,
+    'react/lib/ReactContext': true,
+    'react-test-renderer': true,
+  },
+  // ...
+};
+```
+
+#### Webpack 2+
+```js
+/* webpack.config.js */
+module.exports = {
+  // ...
+  externals: {
+    'react/lib/ExecutionEnvironment': 'react',
+    'react/lib/ReactContext': 'react',
+    'react-test-renderer': 'react-test-renderer',
+  },
+  // ...
+};
+```
+
 ## Example Projects
 
 - [enzyme-example-karma-webpack](https://github.com/lelandrichardson/enzyme-example-karma-webpack)
