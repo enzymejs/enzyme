@@ -1,11 +1,9 @@
 require('raf/polyfill');
 
 if (!global.document) {
-  try {
-    const jsdom = require('jsdom').jsdom; // could throw
-
-    global.document = jsdom('');
-    global.window = document.defaultView;
+  function initGlobal(document, window) {
+    global.document = document;
+    global.window = window;
     Object.keys(document.defaultView).forEach((property) => {
       if (typeof global[property] === 'undefined') {
         global[property] = document.defaultView[property];
@@ -15,6 +13,28 @@ if (!global.document) {
     global.navigator = {
       userAgent: 'node.js',
     };
+  }
+
+  function createV9jsdom(jsdom) {
+    const document = jsdom('');
+    initGlobal(document, document.defaultView);
+  }
+
+  function createV10jsdom(JSDOM) {
+    const { window: { document } } = new JSDOM('');
+    initGlobal(document, window);
+  }
+
+  try {
+    const jsdomPackage = require('jsdom');
+    const jsdom = jsdomPackage.jsdom;
+    const JSDOM = jsdomPackage.JSDOM;
+
+    if(jsdom && typeof jsdom === 'function'){
+      createV9jsdom(jsdom);
+    } else if (JSDOM && typeof JSDOM === 'function') {
+      createV10jsdom(JSDOM);
+    }
   } catch (e) {
     // jsdom is not supported...
     if (e.message === "Cannot find module 'jsdom'") {
