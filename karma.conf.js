@@ -31,10 +31,10 @@ function getPlugins() {
     plugins = plugins.filter(not(adapter13));
   } else if (is('0.14.x')) {
     plugins = plugins.filter(not(adapter14));
-  } else if (is('^15.0.0-0 && < 15.5.0')) {
-    plugins = plugins.filter(not(adapter154));
   } else if (is('^15.5.0')) {
     plugins = plugins.filter(not(adapter15));
+  } else if (is('^15.0.0-0')) {
+    plugins = plugins.filter(not(adapter154));
   } else if (is('^16.0.0-0')) {
     plugins = plugins.filter(not(adapter16));
   }

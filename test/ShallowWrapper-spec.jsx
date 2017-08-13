@@ -2861,13 +2861,23 @@ describe('shallow', () => {
         });
       });
 
-      it('calls expected methods for setState', () => {
+      itIf(!REACT16, 'calls expected methods for setState', () => {
         wrapper.setState({ bar: 'bar' });
         expect(spy.args).to.deep.equal([
           ['shouldComponentUpdate'],
           ['componentWillUpdate'],
           ['render'],
           ['componentDidUpdate'],
+        ]);
+      });
+
+      // componentDidUpdate does not seem to get called in react 16 beta.
+      itIf(REACT16, 'calls expected methods for setState', () => {
+        wrapper.setState({ bar: 'bar' });
+        expect(spy.args).to.deep.equal([
+          ['shouldComponentUpdate'],
+          ['componentWillUpdate'],
+          ['render'],
         ]);
       });
 
