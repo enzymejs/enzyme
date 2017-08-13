@@ -20,6 +20,6 @@ if [ "$REACT" = "15" ]; then
     npm run react:15
 fi
 
-if [ "$REACT" = "15" ]; then
+if [ "$REACT" = "16" ]; then
     npm run react:16
 fi
