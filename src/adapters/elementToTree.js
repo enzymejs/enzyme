@@ -4,7 +4,7 @@ function nodeTypeFromType(type) {
   if (typeof type === 'string') {
     return 'host';
   }
-  if (type && type.prototype && typeof type.prototype.render === 'function') {
+  if (type && type.prototype && type.prototype.isReactComponent) {
     return 'class';
   }
   return 'function';
