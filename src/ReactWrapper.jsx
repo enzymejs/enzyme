@@ -558,7 +558,7 @@ class ReactWrapper {
   simulate(event, mock = {}) {
     this.single('simulate', (n) => {
       this.renderer.simulateEvent(n, event, mock);
-      this.update();
+      this.root.update();
     });
     return this;
   }
@@ -689,7 +689,7 @@ class ReactWrapper {
    * @returns {String}
    */
   key() {
-    return this.single('key', n => n.key); // TODO(lmr): RSTNode might need to understand key?
+    return this.single('key', n => n.key);
   }
 
   /**

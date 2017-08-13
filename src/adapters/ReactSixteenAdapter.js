@@ -2,7 +2,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import ReactDOMServer from 'react-dom/server';
-// import TestRenderer from 'react-test-renderer';
 import ShallowRenderer from 'react-test-renderer/shallow';
 import TestUtils from 'react-dom/test-utils';
 import PropTypes from 'prop-types';
@@ -12,6 +11,7 @@ import {
   mapNativeEventNames,
   propFromEvent,
   assertDomAvailable,
+  withSetStateAllowed,
 } from './Utils';
 
 const HostRoot = 3;
@@ -66,6 +66,8 @@ function toTree(vnode) {
         nodeType: 'class',
         type: node.type,
         props: { ...node.memoizedProps },
+        key: node.key,
+        ref: node.ref,
         instance: node.stateNode,
         rendered: childrenToTree(node.child),
       };
@@ -76,6 +78,8 @@ function toTree(vnode) {
         nodeType: 'function',
         type: node.type,
         props: { ...node.memoizedProps },
+        key: node.key,
+        ref: node.ref,
         instance: null,
         rendered: childrenToTree(node.child),
       };
@@ -88,6 +92,8 @@ function toTree(vnode) {
         nodeType: 'host',
         type: node.type,
         props: { ...node.memoizedProps },
+        key: node.key,
+        ref: node.ref,
         instance: node.stateNode,
         rendered: renderedNodes,
       };
@@ -187,7 +193,7 @@ class ReactSixteenAdapter extends EnzymeAdapter {
           isDOM = true;
         } else {
           isDOM = false;
-          return renderer.render(el, context);
+          return withSetStateAllowed(() => renderer.render(el, context));
         }
       },
       unmount() {
@@ -202,6 +208,8 @@ class ReactSixteenAdapter extends EnzymeAdapter {
           nodeType: 'class',
           type: cachedNode.type,
           props: cachedNode.props,
+          key: cachedNode.key,
+          ref: cachedNode.ref,
           instance: renderer._instance,
           rendered: elementToTree(output),
         };
@@ -238,11 +246,11 @@ class ReactSixteenAdapter extends EnzymeAdapter {
   // eslint-disable-next-line class-methods-use-this, no-unused-vars
   createRenderer(options) {
     switch (options.mode) {
-      case 'mount': return this.createMountRenderer(options);
-      case 'shallow': return this.createShallowRenderer(options);
-      case 'string': return this.createStringRenderer(options);
+      case EnzymeAdapter.MODES.MOUNT: return this.createMountRenderer(options);
+      case EnzymeAdapter.MODES.SHALLOW: return this.createShallowRenderer(options);
+      case EnzymeAdapter.MODES.STRING: return this.createStringRenderer(options);
       default:
-        throw new Error('Unrecognized mode');
+        throw new Error(`Enzyme Internal Error: Unrecognized mode: ${options.mode}`);
     }
   }
 

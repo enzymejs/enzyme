@@ -69,6 +69,8 @@ function instanceToTree(inst) {
       nodeType: 'host',
       type: el.type,
       props: el._store.props,
+      key: el.key,
+      ref: el.ref,
       instance: inst._instance.getDOMNode(),
       rendered: values(children).map(instanceToTree),
     };
@@ -78,6 +80,8 @@ function instanceToTree(inst) {
       nodeType: 'class',
       type: el.type,
       props: el._store.props,
+      key: el.key,
+      ref: el.ref,
       instance: inst._instance || inst._hostNode || null,
       rendered: instanceToTree(inst._renderedComponent),
     };
@@ -138,7 +142,8 @@ class ReactThirteenAdapter extends EnzymeAdapter {
           isDOM = true;
         } else {
           isDOM = false;
-          return renderer.render(el, context); // TODO: context
+          // return withSetStateAllowed(() => renderer.render(el, context));
+          return renderer.render(el, context);
         }
       },
       unmount() {
@@ -153,6 +158,8 @@ class ReactThirteenAdapter extends EnzymeAdapter {
           nodeType: 'class',
           type: cachedNode.type,
           props: cachedNode.props,
+          key: cachedNode.key,
+          ref: cachedNode.ref,
           instance: renderer._instance._instance,
           rendered: elementToTree(output),
         };
@@ -188,11 +195,11 @@ class ReactThirteenAdapter extends EnzymeAdapter {
   // eslint-disable-next-line class-methods-use-this, no-unused-vars
   createRenderer(options) {
     switch (options.mode) {
-      case 'mount': return this.createMountRenderer(options);
-      case 'shallow': return this.createShallowRenderer(options);
-      case 'string': return this.createStringRenderer(options);
+      case EnzymeAdapter.MODES.MOUNT: return this.createMountRenderer(options);
+      case EnzymeAdapter.MODES.SHALLOW: return this.createShallowRenderer(options);
+      case EnzymeAdapter.MODES.STRING: return this.createStringRenderer(options);
       default:
-        throw new Error('Unrecognized mode');
+        throw new Error(`Enzyme Internal Error: Unrecognized mode: ${options.mode}`);
     }
   }
 

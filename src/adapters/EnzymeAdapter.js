@@ -21,4 +21,10 @@ class EnzymeAdapter {
   }
 }
 
+EnzymeAdapter.MODES = {
+  STRING: 'string',
+  MOUNT: 'mount',
+  SHALLOW: 'shallow',
+};
+
 module.exports = EnzymeAdapter;

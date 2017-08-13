@@ -15,7 +15,8 @@ import {
 
 function compositeTypeToNodeType(type) {
   switch (type) {
-    case 0: return 'class';
+    case 0:
+    case 1: return 'class';
     case 2: return 'function';
     default:
       throw new Error(`Enzyme Internal Error: unknown composite type ${type}`);
@@ -23,7 +24,7 @@ function compositeTypeToNodeType(type) {
 }
 
 function instanceToTree(inst) {
-  if (typeof inst !== 'object') {
+  if (!inst || typeof inst !== 'object') {
     return inst;
   }
   const el = inst._currentElement;
@@ -35,6 +36,8 @@ function instanceToTree(inst) {
       nodeType: inst._hostNode ? 'host' : compositeTypeToNodeType(inst._compositeType),
       type: el.type,
       props: el.props,
+      key: el.key,
+      ref: el.ref,
       instance: inst._instance || inst._hostNode || null,
       rendered: values(inst._renderedChildren).map(instanceToTree),
     };
@@ -48,6 +51,8 @@ function instanceToTree(inst) {
       nodeType: 'host',
       type: el.type,
       props: el.props,
+      key: el.key,
+      ref: el.ref,
       instance: inst._instance || inst._hostNode || null,
       rendered: values(children).map(instanceToTree),
     };
@@ -57,6 +62,8 @@ function instanceToTree(inst) {
       nodeType: compositeTypeToNodeType(inst._compositeType),
       type: el.type,
       props: el.props,
+      key: el.key,
+      ref: el.ref,
       instance: inst._instance || inst._hostNode || null,
       rendered: instanceToTree(inst._renderedComponent),
     };
@@ -117,7 +124,7 @@ class ReactFifteenFourAdapter extends EnzymeAdapter {
           isDOM = true;
         } else {
           isDOM = false;
-          return renderer.render(el, context); // TODO: context
+          return withSetStateAllowed(() => renderer.render(el, context));
         }
       },
       unmount() {
@@ -132,6 +139,8 @@ class ReactFifteenFourAdapter extends EnzymeAdapter {
           nodeType: 'class',
           type: cachedNode.type,
           props: cachedNode.props,
+          key: cachedNode.key,
+          ref: cachedNode.ref,
           instance: renderer._instance._instance,
           rendered: elementToTree(output),
         };
@@ -167,11 +176,11 @@ class ReactFifteenFourAdapter extends EnzymeAdapter {
   // eslint-disable-next-line class-methods-use-this, no-unused-vars
   createRenderer(options) {
     switch (options.mode) {
-      case 'mount': return this.createMountRenderer(options);
-      case 'shallow': return this.createShallowRenderer(options);
-      case 'string': return this.createStringRenderer(options);
+      case EnzymeAdapter.MODES.MOUNT: return this.createMountRenderer(options);
+      case EnzymeAdapter.MODES.SHALLOW: return this.createShallowRenderer(options);
+      case EnzymeAdapter.MODES.STRING: return this.createStringRenderer(options);
       default:
-        throw new Error('Unrecognized mode');
+        throw new Error(`Enzyme Internal Error: Unrecognized mode: ${options.mode}`);
     }
   }
 

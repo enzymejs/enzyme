@@ -2995,7 +2995,7 @@ describe('shallow', () => {
             [
               'componentWillReceiveProps',
               { foo: 'bar' }, { foo: 'baz' },
-              { foo: 'context' },
+              { foo: 'context' }, // this will be fixed
             ],
             [
               'shouldComponentUpdate',
@@ -3016,7 +3016,7 @@ describe('shallow', () => {
               'componentDidUpdate',
               { foo: 'bar' }, { foo: 'baz' },
               { foo: 'state' }, { foo: 'state' },
-              { foo: 'context' },
+              { foo: 'context' }, // this will be gone in 16
             ],
             [
               'componentWillReceiveProps',
@@ -3613,8 +3613,7 @@ describe('shallow', () => {
     });
   });
 
-  // TODO(lmr): keys aren't included in RST Nodes. We should think about this.
-  describe.skip('.key()', () => {
+  describe('.key()', () => {
     it('should return the key of the node', () => {
       const wrapper = shallow(
         <ul>

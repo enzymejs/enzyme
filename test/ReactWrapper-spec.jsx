@@ -2902,8 +2902,7 @@ describeWithDOM('mount', () => {
     expect(rendered.html()).to.equal(null);
   });
 
-  // TODO(lmr): keys aren't included in RST Nodes. We should think about this.
-  describe.skip('.key()', () => {
+  describe('.key()', () => {
     it('should return the key of the node', () => {
       const wrapper = mount(
         <ul>

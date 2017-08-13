@@ -6,7 +6,7 @@ import shallow from './shallow';
 import render from './render';
 import { merge as configure } from './configuration';
 
-export {
+module.exports = {
   render,
   shallow,
   mount,

@@ -1,16 +1,6 @@
 import React from 'react';
 import cheerio from 'cheerio';
-
-import configuration from './configuration';
-
-function getAdapter(options) {
-  if (options.adapter) {
-    return options.adapter;
-  }
-  const adapter = configuration.get().adapter;
-  // TODO(lmr): warn about no adapter being configured
-  return adapter;
-}
+import { getAdapter } from './Utils';
 
 /**
  * Renders a react component into static HTML and provides a cheerio wrapper around it. This is
