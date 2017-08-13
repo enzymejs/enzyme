@@ -1,3 +1,4 @@
+import '../setupAdapters';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { expect } from 'chai';
@@ -99,10 +100,12 @@ describe('shallow', () => {
 
         const wrapper = shallow(<SimpleComponent />, { context });
 
-        expect(() => wrapper.context()).to.throw(Error,
+        expect(() => wrapper.context()).to.throw(
+          Error,
           'ShallowWrapper::context() can only be called on class components as of React 16',
         );
-        expect(() => wrapper.context('name')).to.throw(Error,
+        expect(() => wrapper.context('name')).to.throw(
+          Error,
           'ShallowWrapper::context() can only be called on class components as of React 16',
         );
       });
@@ -2479,10 +2482,12 @@ describe('shallow', () => {
           const context = { name: 'foo' };
           const wrapper = shallow(<Foo />).find(Bar).shallow({ context });
 
-          expect(() => wrapper.context()).to.throw(Error,
+          expect(() => wrapper.context()).to.throw(
+            Error,
             'ShallowWrapper::context() can only be called on class components as of React 16',
           );
-          expect(() => wrapper.context('name')).to.throw(Error,
+          expect(() => wrapper.context('name')).to.throw(
+            Error,
             'ShallowWrapper::context() can only be called on class components as of React 16',
           );
         });

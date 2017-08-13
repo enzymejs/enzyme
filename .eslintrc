@@ -10,6 +10,7 @@
     "new-cap": [2, { "capIsNewExceptions": ["AND"] }],
     "react/jsx-pascal-case": [2, { "allowAllCaps": true }],
     "react/no-find-dom-node": 1,
+    "import/first": 0,
     "no-underscore-dangle": [2, {
       "allowAfterThis": true,
       "allow": [

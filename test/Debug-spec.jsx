@@ -1,3 +1,4 @@
+import '../setupAdapters';
 import { expect } from 'chai';
 import React from 'react';
 import {

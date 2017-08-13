@@ -7,13 +7,13 @@ The initially returned wrapper used to be around the element passed
 into the `mount` API, and for `shallow` it was around the root node of the rendered output of the element passed in. After the upgrade, the
 two APIs are now symmetrical, starting off
 
-```js
+```
 const x = 'x';
 const Foo = props => <div inner={props.outer} />
 const wrapper = mount(<Foo outer={x} />);
 ```
 
-```js
+```
 expect(wrapper.props()).to.deep.equal({ outer: x });
 ```
 

@@ -46,7 +46,7 @@ than what is currently satisfied by the output of something like `react-test-ren
 only outputting the "host" nodes (ie, HTML elements). We need a tree format that allows for expressing a full
 react component tree, including composite components.
 
-```js
+```
 // Strings and Numbers are rendered as literals.
 type LiteralValue = string | number
 
@@ -56,9 +56,9 @@ type Node = LiteralValue | RSTNode
 // if node.type
 type RenderedNode = RSTNode | [Node]
 
-type SourceLocation = {| 
+type SourceLocation = {|
   fileName: string
-  lineNumber: number 
+  lineNumber: number
 |}
 
 type NodeType = 'class' | 'function' | 'host';
@@ -80,12 +80,12 @@ type RSTNode = {|
   // The backing instance to the node. Can be null in the case of "host" nodes and SFCs.
   // Enzyme will expect instances to have the _public interface_ of a React Component, as would
   // be expected in the corresponding React release returned by `getTargetVersion` of the
-  // renderer. Alternative React libraries can choose to provide an object here that implements 
-  // the same interface, and Enzyme functionality that uses this will continue to work (An example 
+  // renderer. Alternative React libraries can choose to provide an object here that implements
+  // the same interface, and Enzyme functionality that uses this will continue to work (An example
   // of this would be the `setState()` prototype method).
   instance: ComponentInstance?;
 
-  // For a given node, this corresponds roughly to the result of the `render` function with the 
+  // For a given node, this corresponds roughly to the result of the `render` function with the
   // provided props, but transformed into an RST. For "host" nodes, this will always be `null` or
   // an Array. For "composite" nodes, this will always be `null` or an `RSTNode`.
   rendered: RenderedNode?;
@@ -100,15 +100,15 @@ type RSTNode = {|
 
 **Definitions:**
 
-An `Element` is considered to be whatever data structure is returned by the JSX pragma being used. In the 
+An `Element` is considered to be whatever data structure is returned by the JSX pragma being used. In the
 react case, this would be the data structure returned from `React.createElement`
 
 
-```js
+```
 type RendererOptions = {
   // An optional predicate function that takes in an `Element` and returns
   // whether or not the underlying Renderer should treat it as a "Host" node
-  // or not. This function should only be called with elements that are 
+  // or not. This function should only be called with elements that are
   // not required to be considered "host" nodes (ie, with a string `type`),
   // so the default implementation of `isHost` is just a function that returns
   // false.
@@ -137,7 +137,7 @@ type EnzymeAdapter = {
 type EnzymeRenderer = {
   // both initial render and updates for the renderer.
   render(Element): void;
-  
+
   // retrieve a frozen-in-time copy of the RST.
   getNode(): RSTNode?;
 }
@@ -149,7 +149,7 @@ type EnzymeRenderer = {
 At the top level, Enzyme would expose a `configure` method, which would allow for an `adapter`
 option to be specified and globally configure Enzyme's adapter preference:
 
-```js
+```
 import Enzyme from 'enzyme';
 import ThirdPartyEnzymeAdapter from 'third-party-enzyme-adapter';
 
@@ -160,7 +160,7 @@ Enzyme.configure({ adapter: ThirdPartyEnzymeAdapter });
 Additionally, each wrapper Enzyme exposes will allow for an overriding `adapter` option that will use a
 given adapter for just that wrapper:
 
-```jsx
+```
 import { shallow } from 'enzyme';
 import ThirdPartyEnzymeAdapter from 'third-party-enzyme-adapter';
 
@@ -170,7 +170,7 @@ shallow(<Foo />, { adapter: ThirdPartyEnzymeAdapter });
 Enzyme will build adapters for all major versions of React since React 0.13, though will deprecate
 adapters as usage of a particular major version fades.
 
-```js
+```
 import React13Adapter from 'enzyme-adapter-react-13';
 import React14Adapter from 'enzyme-adapter-react-14';
 import React15Adapter from 'enzyme-adapter-react-15';
@@ -179,6 +179,6 @@ import React15Adapter from 'enzyme-adapter-react-15';
 
 ### Validation
 
-Enzyme will provide an `validate(node): Error?` method that will traverse down a provided `RSTNode` and 
-return an `Error` if any deviations from the spec are encountered, and `null` otherwise. This will 
+Enzyme will provide an `validate(node): Error?` method that will traverse down a provided `RSTNode` and
+return an `Error` if any deviations from the spec are encountered, and `null` otherwise. This will
 provide a way for implementors of the adapters to determine whether or not they are in compliance or not.

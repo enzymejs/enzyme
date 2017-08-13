@@ -1,35 +1,42 @@
-/* eslint-disable no-var,prefer-arrow-callback,vars-on-top */
+/* eslint-disable no-var,prefer-arrow-callback,vars-on-top, import/no-extraneous-dependencies */
 
 require('babel-register');
 
 var IgnorePlugin = require('webpack').IgnorePlugin;
-var REACT013 = require('./src/version').REACT013;
-var REACT155 = require('./src/version').REACT155;
+var is = require('./src/version').is;
 
 function getPlugins() {
-  var plugins = [];
+  const adapter13 = new IgnorePlugin(/adapters\/ReactThirteenAdapter/);
+  const adapter14 = new IgnorePlugin(/adapters\/ReactFourteenAdapter/);
+  const adapter154 = new IgnorePlugin(/adapters\/ReactFifteenFourAdapter/);
+  const adapter15 = new IgnorePlugin(/adapters\/ReactFifteenFiveAdapter/);
+  const adapter16 = new IgnorePlugin(/adapters\/ReactSixteenAdapter/);
 
-  /*
-  this list of conditional IgnorePlugins mirrors the conditional
-  requires in src/react-compat.js and exists to avoid error
-  output from the webpack compilation
-  */
+  var plugins = [
+    adapter13,
+    adapter14,
+    adapter154,
+    adapter15,
+    adapter16,
+  ];
 
-  if (!REACT013) {
-    plugins.push(new IgnorePlugin(/react\/lib\/ExecutionEnvironment/));
-    plugins.push(new IgnorePlugin(/react\/lib\/ReactContext/));
-    plugins.push(new IgnorePlugin(/react\/addons/));
+  function not(x) {
+    return function notPredicate(y) {
+      return y !== x;
+    };
   }
-  if (REACT013) {
-    plugins.push(new IgnorePlugin(/react-dom/));
-  }
-  if (REACT013 || REACT155) {
-    plugins.push(new IgnorePlugin(/react-addons-test-utils/));
-  }
-  if (!REACT155) {
-    plugins.push(new IgnorePlugin(/react-test-renderer/));
-    plugins.push(new IgnorePlugin(/react-dom\/test-utils/));
-    plugins.push(new IgnorePlugin(/create-react-class/));
+
+  // we want to ignore all of the adapters *except* the one we are currently using
+  if (is('0.13.x')) {
+    plugins = plugins.filter(not(adapter13));
+  } else if (is('0.14.x')) {
+    plugins = plugins.filter(not(adapter14));
+  } else if (is('^15.0.0-0 && < 15.5.0')) {
+    plugins = plugins.filter(not(adapter154));
+  } else if (is('^15.5.0')) {
+    plugins = plugins.filter(not(adapter15));
+  } else if (is('^16.0.0-0')) {
+    plugins = plugins.filter(not(adapter16));
   }
 
   return plugins;

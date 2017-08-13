@@ -21,6 +21,7 @@ const { TestUtils, batchedUpdates } = ReactAddons.addons;
 
 const getEmptyElementType = (() => {
   let EmptyElementType = null;
+  // eslint-disable-next-line react/prefer-stateless-function
   class Foo extends React.Component {
     render() {
       return null;

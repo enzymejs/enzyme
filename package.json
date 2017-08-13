@@ -23,12 +23,12 @@
     "test:env": "sh ./example-test.sh",
     "test:all": "npm run react:13 && npm run test:only && npm run react:14 && npm run test:only && npm run react:15.4 && npm run test:only && npm run react:15 && npm run test:only && npm run react:16 && npm run test:only",
     "clean-local-npm": "rimraf node_modules/.bin/npm node_modules/.bin/npm.cmd",
-    "react:clean": "npm run clean-local-npm && rimraf node_modules/react node_modules/react-dom node_modules/react-addons-test-utils node_modules/react-test-renderer && npm prune",
+    "react:clean": "npm run clean-local-npm && rimraf node_modules/react node_modules/react-dom node_modules/react-addons-test-utils node_modules/react-test-renderer node_modules/create-react-class && npm prune",
     "react:13": "npm run react:clean && npm install && npm i --no-save react@0.13",
     "react:14": "npm run react:clean && npm install && npm i --no-save react@0.14 react-dom@0.14 react-addons-test-utils@0.14",
     "react:15.4": "npm run react:clean && npm install && npm i --no-save react@15.4 react-dom@15.4 react-addons-test-utils@15.4",
     "react:15": "npm run react:clean && npm install && npm i --no-save react@15 react-dom@15 create-react-class@15 react-test-renderer@^15.5.4",
-    "react:16": "npm run react:clean && npm install && npm i --no-save react@16.0.0-alpha.13 react-dom@16.0.0-alpha.13 create-react-class@15.6.0 react-test-renderer@16.0.0-alpha.13",
+    "react:16": "npm run react:clean && npm install && npm i --no-save react@16.0.0-0 react-dom@16.0.0-0 create-react-class@15.6.0 react-test-renderer@16.0.0-0",
     "docs:clean": "rimraf _book",
     "docs:lint": "eslint --ext md --config .eslintrc-markdown .",
     "docs:prepare": "gitbook install",
@@ -111,6 +111,6 @@
     "webpack": "^1.13.3"
   },
   "peerDependencies": {
-    "react": "0.13.x || 0.14.x || ^15.0.0-0 || 15.x || 16.x || ^16.0.0-alpha"
+    "react": "0.13.x || 0.14.x || ^15.0.0-0 || ^16.0.0-0"
   }
 }
