@@ -510,8 +510,8 @@ describe('debug', () => {
         }
       }
 
-      expect(debugNodes(shallow(<Foo />).getNodes())).to.eql(
-        `<div className="foo">
+      expect(debugNodes(shallow(<Foo />).getNodesInternal())).to.eql(
+`<div className="foo">
   <span>
     inside Foo
   </span>
@@ -566,8 +566,8 @@ describe('debug', () => {
         }
       }
 
-      expect(debugNodes(shallow(<Foo />).children().getNodes())).to.eql(
-        `<span>
+      expect(debugNodes(shallow(<Foo />).children().getNodesInternal())).to.eql(
+`<span>
   span1 text
 </span>
 

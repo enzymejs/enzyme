@@ -41,7 +41,7 @@ import {
  * @returns {ShallowWrapper}
  */
 function findWhereUnwrapped(wrapper, predicate, filter = treeFilter) {
-  return wrapper.flatMap(n => filter(n.getNode(), predicate));
+  return wrapper.flatMap(n => filter(n.getNodeInternal(), predicate));
 }
 
 /**
@@ -53,7 +53,7 @@ function findWhereUnwrapped(wrapper, predicate, filter = treeFilter) {
  * @returns {ShallowWrapper}
  */
 function filterWhereUnwrapped(wrapper, predicate) {
-  return wrapper.wrap(compact(wrapper.getNodes().filter(predicate)));
+  return wrapper.wrap(compact(wrapper.getNodesInternal().filter(predicate)));
 }
 
 /**
@@ -139,6 +139,15 @@ class ShallowWrapper {
     this.complexSelector = new ComplexSelector(buildPredicate, findWhereUnwrapped, childrenOfNode);
   }
 
+  getNodeInternal() {
+    if (this.length !== 1) {
+      throw new Error(
+        'ShallowWrapper::getNode() can only be called when wrapping one node',
+      );
+    }
+    return this.node;
+  }
+
   /**
    * Returns the wrapped ReactElement.
    *
@@ -150,7 +159,11 @@ class ShallowWrapper {
         'ShallowWrapper::getNode() can only be called when wrapping one node',
       );
     }
-    return this.node;
+    return getAdapter(this.options).nodeToElement(this.node);
+  }
+
+  getNodesInternal() {
+    return this.nodes;
   }
 
   /**
@@ -159,19 +172,6 @@ class ShallowWrapper {
    * @return {Array<ReactElement>}
    */
   getNodes() {
-    return this.nodes;
-  }
-
-  getElement() {
-    if (this.length !== 1) {
-      throw new Error(
-        'ShallowWrapper::getElement() can only be called when wrapping one node',
-      );
-    }
-    return getAdapter(this.options).nodeToElement(this.node);
-  }
-
-  getElements() {
     return this.nodes.map(getAdapter(this.options).nodeToElement);
   }
 
@@ -481,7 +481,7 @@ class ShallowWrapper {
    * @returns {Boolean}
    */
   equals(node) {
-    return this.single('equals', () => nodeEqual(this.getNode(), node));
+    return this.single('equals', () => nodeEqual(this.getNodeInternal(), node));
   }
 
   /**
@@ -502,7 +502,7 @@ class ShallowWrapper {
    * @returns {Boolean}
    */
   matchesElement(node) {
-    return this.single('matchesElement', () => nodeMatches(node, this.getNode(), (a, b) => a <= b));
+    return this.single('matchesElement', () => nodeMatches(node, this.getNodeInternal(), (a, b) => a <= b));
   }
 
   /**
@@ -711,7 +711,7 @@ class ShallowWrapper {
    * @returns {ShallowWrapper}
    */
   children(selector) {
-    const allChildren = this.flatMap(n => childrenOfNode(n.getNode()));
+    const allChildren = this.flatMap(n => childrenOfNode(n.getNodeInternal()));
     return selector ? allChildren.filter(selector) : allChildren;
   }
 
@@ -840,7 +840,7 @@ class ShallowWrapper {
    * @returns {ShallowWrapper}
    */
   forEach(fn) {
-    this.getNodes().forEach((n, i) => fn.call(this, this.wrap(n), i));
+    this.getNodesInternal().forEach((n, i) => fn.call(this, this.wrap(n), i));
     return this;
   }
 
@@ -852,7 +852,7 @@ class ShallowWrapper {
    * @returns {Array}
    */
   map(fn) {
-    return this.getNodes().map((n, i) => fn.call(this, this.wrap(n), i));
+    return this.getNodesInternal().map((n, i) => fn.call(this, this.wrap(n), i));
   }
 
   /**
@@ -864,7 +864,7 @@ class ShallowWrapper {
    * @returns {*}
    */
   reduce(fn, initialValue) {
-    return this.getNodes().reduce(
+    return this.getNodesInternal().reduce(
       (accum, n, i) => fn.call(this, accum, this.wrap(n), i),
       initialValue,
     );
@@ -879,7 +879,7 @@ class ShallowWrapper {
    * @returns {*}
    */
   reduceRight(fn, initialValue) {
-    return this.getNodes().reduceRight(
+    return this.getNodesInternal().reduceRight(
       (accum, n, i) => fn.call(this, accum, this.wrap(n), i),
       initialValue,
     );
@@ -894,7 +894,7 @@ class ShallowWrapper {
    * @returns {ShallowWrapper}
    */
   slice(begin, end) {
-    return this.wrap(this.getNodes().slice(begin, end));
+    return this.wrap(this.getNodesInternal().slice(begin, end));
   }
 
   /**
@@ -908,7 +908,7 @@ class ShallowWrapper {
       throw new Error('ShallowWrapper::some() can not be called on the root');
     }
     const predicate = buildPredicate(selector);
-    return this.getNodes().some(predicate);
+    return this.getNodesInternal().some(predicate);
   }
 
   /**
@@ -918,7 +918,7 @@ class ShallowWrapper {
    * @returns {Boolean}
    */
   someWhere(predicate) {
-    return this.getNodes().some((n, i) => predicate.call(this, this.wrap(n), i));
+    return this.getNodesInternal().some((n, i) => predicate.call(this, this.wrap(n), i));
   }
 
   /**
@@ -929,7 +929,7 @@ class ShallowWrapper {
    */
   every(selector) {
     const predicate = buildPredicate(selector);
-    return this.getNodes().every(predicate);
+    return this.getNodesInternal().every(predicate);
   }
 
   /**
@@ -939,7 +939,7 @@ class ShallowWrapper {
    * @returns {Boolean}
    */
   everyWhere(predicate) {
-    return this.getNodes().every((n, i) => predicate.call(this, this.wrap(n), i));
+    return this.getNodesInternal().every((n, i) => predicate.call(this, this.wrap(n), i));
   }
 
   /**
@@ -951,7 +951,7 @@ class ShallowWrapper {
    * @returns {ShallowWrapper}
    */
   flatMap(fn) {
-    const nodes = this.getNodes().map((n, i) => fn.call(this, this.wrap(n), i));
+    const nodes = this.getNodesInternal().map((n, i) => fn.call(this, this.wrap(n), i));
     const flattened = flatten(nodes, true);
     const uniques = unique(flattened);
     const compacted = compact(uniques);
@@ -977,7 +977,7 @@ class ShallowWrapper {
    * @returns {ReactElement}
    */
   get(index) {
-    return this.getNodes()[index];
+    return getAdapter(this.options).nodeToElement(this.getNodesInternal()[index]);
   }
 
   /**
@@ -987,7 +987,7 @@ class ShallowWrapper {
    * @returns {ShallowWrapper}
    */
   at(index) {
-    return this.wrap(this.getNodes()[index]);
+    return this.wrap(this.getNodesInternal()[index]);
   }
 
   /**
@@ -1044,7 +1044,7 @@ class ShallowWrapper {
         `Method “${fnName}” is only meant to be run on a single node. ${this.length} found instead.`,
       );
     }
-    return callback.call(this, this.getNode());
+    return callback.call(this, this.getNodeInternal());
   }
 
   /**
@@ -1069,7 +1069,7 @@ class ShallowWrapper {
    * @returns {String}
    */
   debug(options = {}) {
-    return debugNodes(this.getNodes(), options);
+    return debugNodes(this.getNodesInternal(), options);
   }
 
   /**
@@ -1109,7 +1109,20 @@ if (ITERATOR_SYMBOL) {
   Object.defineProperty(ShallowWrapper.prototype, ITERATOR_SYMBOL, {
     configurable: true,
     value: function iterator() {
-      return this.nodes[ITERATOR_SYMBOL]();
+      const iter = this.nodes[ITERATOR_SYMBOL]();
+      const adapter = getAdapter(this.options);
+      return {
+        next: () => {
+          const next = iter.next();
+          if (next.done) {
+            return { done: true };
+          }
+          return {
+            done: false,
+            value: adapter.nodeToElement(next.value),
+          };
+        },
+      };
     },
   });
 }

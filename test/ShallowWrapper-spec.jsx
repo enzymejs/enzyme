@@ -2595,10 +2595,10 @@ describe('shallow', () => {
           <div className="bar baz" />
         </div>,
       );
-      expect(wrapper.find('.bar').get(0)).to.equal(wrapper.find('.foo').getNode());
-      expect(wrapper.find('.bar').get(1)).to.equal(wrapper.find('.bax').getNode());
-      expect(wrapper.find('.bar').get(2)).to.equal(wrapper.find('.bux').getNode());
-      expect(wrapper.find('.bar').get(3)).to.equal(wrapper.find('.baz').getNode());
+      expect(wrapper.find('.bar').get(0)).to.deep.equal(wrapper.find('.foo').getNode());
+      expect(wrapper.find('.bar').get(1)).to.deep.equal(wrapper.find('.bax').getNode());
+      expect(wrapper.find('.bar').get(2)).to.deep.equal(wrapper.find('.bux').getNode());
+      expect(wrapper.find('.bar').get(3)).to.deep.equal(wrapper.find('.baz').getNode());
     });
   });
 
@@ -4171,36 +4171,10 @@ describe('shallow', () => {
       const b1 = wrapper.find('a').get(1);
       const c1 = wrapper.find('a').get(2);
       const d1 = wrapper.find('a').get(3);
-      expect(a1).to.equal(a);
-      expect(b1).to.equal(b);
-      expect(c1).to.equal(c);
-      expect(d1).to.equal(d);
-    });
-  });
-
-  // TODO(lmr): this is a breaking change (naming)
-  describe('.getElement()', () => {
-    const element = (
-      <div>
-        <span />
-        <span />
-      </div>
-    );
-
-    class Test extends React.Component {
-      render() {
-        return element;
-      }
-    }
-
-    it('should return the wrapped element', () => {
-      const wrapper = shallow(<Test />);
-      expect(wrapper.getElement()).to.eql(element);
-    });
-
-    it('should throw when wrapping multiple elements', () => {
-      const wrapper = shallow(<Test />).find('span');
-      expect(() => wrapper.getElement()).to.throw(Error);
+      expect(a1).to.deep.equal(a);
+      expect(b1).to.deep.equal(b);
+      expect(c1).to.deep.equal(c);
+      expect(d1).to.deep.equal(d);
     });
   });
 
@@ -4221,7 +4195,7 @@ describe('shallow', () => {
       }
 
       const wrapper = shallow(<Test />);
-      expect(wrapper.find('span').getElements()).to.deep.equal([one, two]);
+      expect(wrapper.find('span').getNodes()).to.deep.equal([one, two]);
     });
   });
 
@@ -4295,14 +4269,14 @@ describe('shallow', () => {
     it('works with a name', () => {
       const wrapper = shallow(<div />);
       wrapper.single('foo', (node) => {
-        expect(node).to.equal(wrapper.get(0));
+        expect(node).to.equal(wrapper.node);
       });
     });
 
     it('works without a name', () => {
       const wrapper = shallow(<div />);
       wrapper.single((node) => {
-        expect(node).to.equal(wrapper.get(0));
+        expect(node).to.equal(wrapper.node);
       });
     });
   });
