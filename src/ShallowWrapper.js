@@ -693,7 +693,8 @@ class ShallowWrapper {
     }
     if (this.instance() === null) {
       throw new Error(
-        'ShallowWrapper::context() can only be called on class components as of React 16',
+        'ShallowWrapper::context() can only be called on wrapped nodes that have a non-null ' +
+        'instance',
       );
     }
     const _context = this.single('context', () => this.instance().context);
@@ -1093,7 +1094,7 @@ class ShallowWrapper {
     const name = 'dive';
     return this.single(name, (n) => {
       if (n && n.nodeType === 'host') {
-        throw new TypeError(`ShallowWrapper::${name}() can not be called on DOM components`);
+        throw new TypeError(`ShallowWrapper::${name}() can not be called on Host Components`);
       }
       const el = getAdapter(this.options).nodeToElement(n);
       if (!isCustomComponentElement(el)) {

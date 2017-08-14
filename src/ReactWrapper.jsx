@@ -271,6 +271,9 @@ class ReactWrapper {
     if (this.root !== this) {
       throw new Error('ReactWrapper::setProps() can only be called on the root');
     }
+    if (typeof callback !== 'function') {
+      throw new Error('ReactWrapper::setProps() expects a function as its second argument');
+    }
     this.component.setChildProps(props, () => {
       this.update();
       callback();

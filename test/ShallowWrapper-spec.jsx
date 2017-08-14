@@ -4109,7 +4109,7 @@ describe('shallow', () => {
 
       expect(() => { wrapper.dive(); }).to.throw(
         TypeError,
-        'ShallowWrapper::dive() can not be called on DOM components',
+        'ShallowWrapper::dive() can not be called on Host Components',
       );
     });
 

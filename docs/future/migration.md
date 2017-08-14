@@ -51,13 +51,13 @@ The list of adapter npm packages for React semver ranges are as follows:
 - `enzyme-adapter-react-13` for `^0.13.x`
 
 
-## Element referencial identity is no longer preserved
+## Element referential identity is no longer preserved
 
 Enzyme's new architecture means that the react "render tree" is transformed into an intermediate
 representation that is common across all react versions so that Enzyme can properly traverse it
 independent of React's internal representations.  A side effect of this is that Enzyme no longer
 has access to the actual object references that were returned from `render` in your React
-components.  This normally isn't much of a problem, but can manifest as a test failure in some
+components. This normally isn't much of a problem, but can manifest as a test failure in some
 cases.
 
 For example, consider the following example:
@@ -96,8 +96,248 @@ actually expect and want.
 
 ## `get(n)` versus `getElement(n)` versus `getNode()`
 
+NOTE: might be able to get rid of this
 
-## Updates are sometimes required
+get(n) v2: returns the react element that the wrapper wraps at index n
+get(n) v3: returns the RST node that the wrapper wraps at index n
+
+getNode() v2: returns the react element that the wrapper wraps (must be single)
+getNode() v3: returns the RST node that the wrapper wraps (must be single)
+
+getElement(n) v3: effectively what `get(n)` was in v2
+
+
+
+## `children()` now has slightly different meaning
+
+TODO: talk about this
+
+## For `mount`, updates are sometimes required when they weren't before
+
+React applications are dynamic. When testing your react components, you often want to test them
+before *and after* certain state changes take place. When using `mount`, any react component
+instance in the entire render tree could register code to initiate a state change at any time.
+
+For instance, consider the following contrived example:
+
+```js
+import React from 'react';
+
+class CurrentTime extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      now: Date.now(),
+    };
+  }
+  componentDidMount() {
+    this.tick();
+  }
+  componentWillUnmount() {
+    clearTimeout(this.timer);
+  }
+  tick() {
+    this.setState({ now: Date.now() });
+    this.timer = setTimeout(tick, 0);
+  }
+  render() {
+    return <span>{this.state.now}</span>
+  }
+}
+```
+
+In this code, there is a timer that continuously changes the rendered output of this component. This
+might be a reasonable thing to do in your application. The thing is, Enzyme has no way of knowing
+that these changes are taking place, and no way to automatically update the render tree. In Enzyme
+v2, Enzyme operated *directly* on the in-memory representation of the render tree that React itself
+had. This means that even though Enzyme couldn't know when the render tree was updated, updates
+would be reflected anyway, since React *does* know.
+
+Enzyme v3 architecturally created a layer where React would create an intermediate representation
+of the render tree at an instance in time and pass that to Enzyme to traverse and inspect. This has
+many advantages, but one of the side effects is that now the intermediate representation does not
+receive automatic updates.
+
+Enzyme does attempt to automatically "update" the root wrapper in most common scenarios, but these
+are only the state changes that it knows about. For all other state changes, you may need to call
+`wrapper.update()` yourself.
+
+The most common manifestation of this problem can be shown with the following example:
+
+```js
+class Counter extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { count: 0 };
+    this.increment = this.increment.bind(this);
+    this.decrement = this.decrement.bind(this);
+  }
+  increment() {
+    this.setState({ count: this.state.count + 1 });
+  }
+  decrement() {
+    this.setState({ count: this.state.count - 1 });
+  }
+  render() {
+    return (
+      <div>
+        <div className="count">Count: {this.state.count}</div>
+        <button className="inc" onClick={this.increment}>Increment</button>
+        <button className="dec" onClick={this.decrement}>Decrement</button>
+      </div>
+    );
+  }
+}
+```
+
+This is a basic "counter" component in React. Here our resulting markup is a function of
+`this.state.count`, which can get updated by the `increment` and `decrement` functions. Let's take a
+look at what some Enzyme tests with this component might look like, and when we do or don't have to
+call `update()`.
+
+```js
+const wrapper = shallow(<Counter />);
+wrapper.find('.count').text(); // => "Count: 0"
+```
+
+As we can see, we can easily assert on the text and the count of this component. But we haven't
+caused any state changes yet. Let's see what it looks like when we simulate a `click` event on
+the increment and decrement buttons:
+
+```js
+const wrapper = shallow(<Counter />);
+wrapper.find('.count').text(); // => "Count: 0"
+wrapper.find('.inc').simulate('click');
+wrapper.find('.count').text(); // => "Count: 1"
+wrapper.find('.inc').simulate('click');
+wrapper.find('.count').text(); // => "Count: 2"
+wrapper.find('.dec').simulate('click');
+wrapper.find('.count').text(); // => "Count: 1"
+```
+
+In this case Enzyme will automatically check for updates after an event simulation takes place, as
+it knows that this is a very common place for state changes to occur. In this case there is no
+difference between v2 and v3.
+
+Let's consider a different way this test could have been written.
+
+```js
+const wrapper = shallow(<Counter />);
+wrapper.find('.count').text(); // => "Count: 0"
+wrapper.instance().increment();
+wrapper.find('.count').text(); // => "Count: 0" (would have been "Count: 1" in v2)
+wrapper.instance().increment();
+wrapper.find('.count').text(); // => "Count: 0" (would have been "Count: 2" in v2)
+wrapper.instance().decrement();
+wrapper.find('.count').text(); // => "Count: 0" (would have been "Count: 1" in v2)
+```
+
+The problem here is that once we grab the instance using `wrapper.instance()`, Enzyme has no way of
+knowing if you are going to execute something that will cause a state transition, and thus does not
+know when to ask for an updated render tree from React.  As a result, `.text()` never changes value.
+
+The fix here is to use Enzyme's `wrapper.update()` method after a state change has occurred:
+
+```js
+const wrapper = shallow(<Counter />);
+wrapper.find('.count').text(); // => "Count: 0"
+wrapper.instance().increment();
+wrapper.update();
+wrapper.find('.count').text(); // => "Count: 1"
+wrapper.instance().increment();
+wrapper.update();
+wrapper.find('.count').text(); // => "Count: 2"
+wrapper.instance().decrement();
+wrapper.update();
+wrapper.find('.count').text(); // => "Count: 1"
+```
+
+In practice we have found that this isn't actually needed that often, and when it is it is not
+difficult to add. This breaking change was worth the architectural benefits of the new adapter
+system in v3.
+
+
+## `ref(refName)` now returns the actual ref instead of a wrapper
+
+In Enzyme v2, the wrapper returned from `mount(...)` had a prototype method on it `ref(refName)`
+that returned a wrapper around the actual element of that ref. This has now been changed to
+return the actual ref, which I believe is more intuitive.
+
+Consider the following simple react component:
+
+```js
+class Box extends React.Component {
+  render() {
+    return <div ref="abc" className="box">Hello</div>;
+  }
+}
+```
+
+In this case we can call `.ref('abc')` on a wrapper of `Box`. In this case it will return a wrapper
+around the rendered div. To demonstrate, we can see that both `wrapper` and the result of `ref(...)`
+share the same constructor:
+
+```js
+const wrapper = mount(<Box />);
+// this is what would happen with Enzyme v2
+expect(wrapper.ref('abc')).toBeInstanceOf(wrapper.constructor);
+```
+
+In v3, the contract is slightly changed. The ref is exactly what React would assign as the ref. In
+this case, it would be an DOM Element:
+
+```js
+const wrapper = mount(<Box />);
+// this is what would happen with Enzyme v2
+expect(wrapper.ref('abc')).toBeInstanceOf(Element);
+```
+
+Similarly, if you have a ref on a composite component, the `ref(...)` method will return an instance
+of that element:
+
+```js
+class Bar extends React.Component {
+  render() {
+    return <Box ref="abc" />;
+  }
+}
+```
+
+```js
+const wrapper = mount(<Bar />);
+expect(wrapper.ref('abc')).toBeInstanceOf(Box);
+```
+
+
+In our experience, this is most often what people would actually want and expect out of the `.ref(...)`
+method.
+
+
+
+# New Features in Enzyme v3
+
+
+## `instance()` can be called at any level of the tree
+
+TODO: talk about this
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # Migration Guide (for React 0.13 - React 15.x)
 
@@ -118,11 +358,6 @@ const wrapper = mount(<Foo outer={x} />);
 expect(wrapper.props()).to.deep.equal({ outer: x });
 ```
 
-## Refs
-
-Refs no longer return a "wrapper". They return what the ref would actually be.
-
-
 ## for shallow, getNode() was renamed to getElement()
 
 ## for mount, getNode() should not be used. instance() does what it used to.
@@ -132,59 +367,3 @@ Refs no longer return a "wrapper". They return what the ref would actually be.
 ## what getNode() returns
 
 we need to keep in mind that `getElement()` will no longer be referentially equal to what it was before.
-
-## Updates are required
-
-```js
-wrapper.find('.async-btn').simulate('click');
-setImmediate(() => {
-  // this didn't used to be needed
-  wrapper.update(); // TODO(lmr): this is a breaking change...
-  expect(wrapper.find('.show-me').length).to.equal(1);
-  done();
-});
-```
-
-
-
-
-## Enzyme.use
-
-
-
-
-# Migration Guide (for React 16)
-
-## Stateless Functional Components
-
-SFCs actually go down a different code path in react 16, which means that they
-dont have "instances" associated with them, which means there are a couple of things
-that we used to be able to do with enzyme + SFCs that will just no longer work.
-
-We could fix a lot of this if there was a reliable way to get from an SFC "fiber" to
-the corresponding DOM element that it renders.
-
-## Strings vs. Numbers
-
-React 16 converts numbers to strings very early on. we can't change this. this will change
-some behavior in enzyme but we are considering this the "correct" behavior.
-
-
-
-
-
-
-
-
-
-
-
-# Left to do:
-
-- move adapters into standalone packages
-- x create Enzyme.use API
-- x create api to inject adapter per use
-- x make sure all react dependence is moved into adapters
-- x make tests run for all adapters
-- export tests for 3rd party adapters to run
-- check the targetApiVersion returned by the adapter and use the semver library
