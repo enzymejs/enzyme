@@ -59,7 +59,7 @@
   "license": "MIT",
   "dependencies": {
     "cheerio": "^0.22.0",
-    "function.prototype.name": "^1.0.0",
+    "function.prototype.name": "^1.0.3",
     "is-subset": "^0.1.1",
     "lodash": "^4.17.4",
     "object-is": "^1.0.1",
@@ -68,8 +68,8 @@
     "object.values": "^1.0.4",
     "prop-types": "^15.5.10",
     "raf": "^3.3.2",
-    "semver": "^5.3.0",
-    "uuid": "^3.0.1"
+    "semver": "^5.4.1",
+    "uuid": "^3.1.0"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
