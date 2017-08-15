@@ -1,4 +1,4 @@
-import './setupAdapters';
+import './_helpers/setupAdapters';
 import React from 'react';
 import sinon from 'sinon';
 import { expect } from 'chai';
@@ -16,7 +16,7 @@ import {
   buildPredicate,
 } from '../src/RSTTraversal';
 import { describeIf } from './_helpers';
-import { REACT013 } from './version';
+import { REACT013 } from './_helpers/version';
 
 const $ = elementToTree;
 

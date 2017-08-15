@@ -5,21 +5,21 @@
  * version of React is loaded, and configures enzyme to use the right
  * corresponding adapter.
  */
-const Version = require('./version');
-const Enzyme = require('../src');
+const Version = require('.//version');
+const Enzyme = require('../../src');
 
 let Adapter = null;
 
 if (Version.REACT013) {
-  Adapter = require('../src/adapters/ReactThirteenAdapter');
+  Adapter = require('../../src/adapters/ReactThirteenAdapter');
 } else if (Version.REACT014) {
-  Adapter = require('../src/adapters/ReactFourteenAdapter');
+  Adapter = require('../../src/adapters/ReactFourteenAdapter');
 } else if (Version.REACT155) {
-  Adapter = require('../src/adapters/ReactFifteenAdapter');
+  Adapter = require('../../src/adapters/ReactFifteenAdapter');
 } else if (Version.REACT15) {
-  Adapter = require('../src/adapters/ReactFifteenFourAdapter');
+  Adapter = require('../../src/adapters/ReactFifteenFourAdapter');
 } else if (Version.REACT16) {
-  Adapter = require('../src/adapters/ReactSixteenAdapter');
+  Adapter = require('../../src/adapters/ReactSixteenAdapter');
 }
 
 Enzyme.configure({ adapter: new Adapter() });

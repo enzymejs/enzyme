@@ -4,7 +4,7 @@
   import/prefer-default-export: 0,
 */
 
-import { is } from '../version';
+import { is } from './version';
 
 let createClass;
 

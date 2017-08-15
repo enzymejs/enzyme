@@ -1,4 +1,4 @@
-import './setupAdapters';
+import './_helpers/setupAdapters';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { expect } from 'chai';
@@ -8,7 +8,7 @@ import { createClass } from './_helpers/react-compat';
 import { shallow, render, ShallowWrapper } from '../src/';
 import { describeIf, itIf, itWithData, generateEmptyRenderData } from './_helpers';
 import { ITERATOR_SYMBOL, withSetStateAllowed } from '../src/Utils';
-import { REACT013, REACT014, REACT16, is } from './version';
+import { REACT013, REACT014, REACT16, is } from './_helpers/version';
 
 // The shallow renderer in react 16 does not yet support batched updates. When it does,
 // we should be able to go un-skip all of the tests that are skipped with this flag.

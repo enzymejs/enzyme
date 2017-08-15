@@ -1,5 +1,5 @@
 /* globals document */
-import './setupAdapters';
+import './_helpers/setupAdapters';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { expect } from 'chai';
@@ -19,7 +19,7 @@ import {
   ReactWrapper,
 } from '../src';
 import { ITERATOR_SYMBOL } from '../src/Utils';
-import { REACT013, REACT014, REACT16, is } from './version';
+import { REACT013, REACT014, REACT16, is } from './_helpers/version';
 
 describeWithDOM('mount', () => {
   describe('top level wrapper', () => {
