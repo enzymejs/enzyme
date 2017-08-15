@@ -144,13 +144,18 @@ function arraysEqual(match, left, right) {
 }
 
 function childrenToArray(children) {
-  // NOTE(lmr): we currently use this instead of Children.toArray(...) because
-  // toArray(...) didn't exist in React 0.13
   const result = [];
-  React.Children.forEach(children, (el) => {
+
+  const push = (el) => {
     if (el === null || el === false || el === undefined) return;
     result.push(el);
-  });
+  };
+
+  if (Array.isArray(children)) {
+    children.forEach(push);
+  } else {
+    push(children);
+  }
   return result;
 }
 
