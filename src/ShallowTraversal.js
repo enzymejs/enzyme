@@ -110,8 +110,12 @@ export function buildPredicate(selector) {
           return node => nodeHasId(node, selector.slice(1));
 
         case SELECTOR.PROP_TYPE: {
-          const propKey = selector.split(/\[([a-zA-Z-]*?)(=|])/)[1];
-          const propValue = selector.split(/=(.*?)]/)[1];
+          const selectorSplit = selector.split(/\[([a-z]+[a-z-0-9-]*?)(=|])/i);
+          if (selectorSplit.length === 1) {
+            throw new TypeError(`Enzyme::Invalid attribute selector ('${selector}')`);
+          }
+          const [, propKey] = selectorSplit;
+          const [, propValue] = selector.split(/=(.*?)]/);
 
           return node => nodeHasProperty(node, propKey, propValue);
         }
