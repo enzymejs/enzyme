@@ -34,3 +34,5 @@ _book
 
 # Only apps should have lockfiles
 package-lock.json
+
+packages/*/build/
