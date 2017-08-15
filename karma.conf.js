@@ -3,7 +3,7 @@
 require('babel-register');
 
 var IgnorePlugin = require('webpack').IgnorePlugin;
-var is = require('./src/version').is;
+var is = require('./test/version').is;
 
 function getPlugins() {
   const adapter13 = new IgnorePlugin(/adapters\/ReactThirteenAdapter/);

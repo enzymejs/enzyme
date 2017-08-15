@@ -1,8 +1,8 @@
-import '../setupAdapters';
+import './setupAdapters';
 import React from 'react';
 import { expect } from 'chai';
 
-import { REACT013, REACT16 } from '../src/version';
+import { REACT013, REACT16 } from './version';
 import configuration from '../src/configuration';
 import { itIf, describeWithDOM } from './_helpers';
 

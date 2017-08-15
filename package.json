@@ -108,7 +108,8 @@
     "rimraf": "^2.6.1",
     "safe-publish-latest": "^1.1.1",
     "sinon": "^2.4.1",
-    "webpack": "^1.13.3"
+    "webpack": "^1.13.3",
+    "react": "0.13.x || 0.14.x || ^15.0.0-0 || ^16.0.0-0"
   },
   "peerDependencies": {
     "react": "0.13.x || 0.14.x || ^15.0.0-0 || ^16.0.0-0"

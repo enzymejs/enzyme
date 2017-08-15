@@ -94,23 +94,29 @@ two elements being found.
 Although this is a breaking change, I believe the new behavior is closer to what people would
 actually expect and want.
 
-## `get(n)` versus `getElement(n)` versus `getNode()`
-
-NOTE: might be able to get rid of this
-
-get(n) v2: returns the react element that the wrapper wraps at index n
-get(n) v3: returns the RST node that the wrapper wraps at index n
-
-getNode() v2: returns the react element that the wrapper wraps (must be single)
-getNode() v3: returns the RST node that the wrapper wraps (must be single)
-
-getElement(n) v3: effectively what `get(n)` was in v2
-
-
-
 ## `children()` now has slightly different meaning
 
-TODO: talk about this
+Enzyme has a `.children()` method which is intended to return the rendered children of a wrapper.
+
+When using `mount(...)`, it can sometimes be unclear exactly what this would mean. Consider for
+example the following react components:
+
+```js
+class Box extends React.Component {
+  render() {
+    return <div className="box">{this.props.children}</div>;
+  }
+}
+class Foo extends React.Component {
+  render() {
+    return (
+      <Box bam>
+        <div className="div" />
+      </Box>
+    );
+  }
+}
+```
 
 ## For `mount`, updates are sometimes required when they weren't before
 
@@ -358,12 +364,4 @@ const wrapper = mount(<Foo outer={x} />);
 expect(wrapper.props()).to.deep.equal({ outer: x });
 ```
 
-## for shallow, getNode() was renamed to getElement()
-
 ## for mount, getNode() should not be used. instance() does what it used to.
-
-## for mount, getElement() will return the root JSX element
-
-## what getNode() returns
-
-we need to keep in mind that `getElement()` will no longer be referentially equal to what it was before.

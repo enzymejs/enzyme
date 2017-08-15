@@ -116,10 +116,6 @@ class ReactWrapper {
     );
   }
 
-  rendered() {
-    return this.single('rendered', n => this.wrap(n.rendered));
-  }
-
   /**
    * Returns the wrapped component.
    *

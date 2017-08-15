@@ -5,8 +5,8 @@ import PropTypes from 'prop-types';
 import values from 'object.values';
 import EnzymeAdapter from './EnzymeAdapter';
 import elementToTree from './elementToTree';
+import mapNativeEventNames from './ReactThirteenMapNativeEventNames'
 import {
-  mapNativeEventNames,
   propFromEvent,
   withSetStateAllowed,
   assertDomAvailable,

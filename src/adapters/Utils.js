@@ -1,5 +1,3 @@
-import { REACT013 } from '../version';
-
 export function mapNativeEventNames(event) {
   const nativeToReactEventMap = {
     compositionend: 'compositionEnd',
@@ -36,14 +34,9 @@ export function mapNativeEventNames(event) {
     timeupdate: 'timeUpdate',
     volumechange: 'volumeChange',
     beforeinput: 'beforeInput',
+    mouseenter: 'mouseEnter',
+    mouseleave: 'mouseLeave',
   };
-
-  if (!REACT013) {
-    // these could not be simulated in React 0.13:
-    // https://github.com/facebook/react/issues/1297
-    nativeToReactEventMap.mouseenter = 'mouseEnter';
-    nativeToReactEventMap.mouseleave = 'mouseLeave';
-  }
 
   return nativeToReactEventMap[event] || event;
 }

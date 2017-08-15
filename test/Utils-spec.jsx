@@ -1,4 +1,4 @@
-import '../setupAdapters';
+import './setupAdapters';
 import React from 'react';
 import { expect } from 'chai';
 
@@ -17,7 +17,7 @@ import {
   mapNativeEventNames,
   propFromEvent,
 } from '../src/adapters/Utils';
-import { REACT013 } from '../src/version';
+import { REACT013 } from './version';
 
 describe('Utils', () => {
   describe('nodeEqual', () => {

@@ -1,5 +1,5 @@
 /* globals document */
-import '../setupAdapters';
+import './setupAdapters';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { expect } from 'chai';
@@ -1916,10 +1916,10 @@ describeWithDOM('mount', () => {
           ]}
         />,
       );
-      expect(wrapper.rendered().children().length).to.equal(3);
-      expect(wrapper.rendered().children().at(0).hasClass('foo')).to.equal(true);
-      expect(wrapper.rendered().children().at(1).hasClass('bar')).to.equal(true);
-      expect(wrapper.rendered().children().at(2).hasClass('baz')).to.equal(true);
+      expect(wrapper.children().children().length).to.equal(3);
+      expect(wrapper.children().children().at(0).hasClass('foo')).to.equal(true);
+      expect(wrapper.children().children().at(1).hasClass('bar')).to.equal(true);
+      expect(wrapper.children().children().at(2).hasClass('baz')).to.equal(true);
     });
 
     it('should optionally allow a selector to filter by', () => {
@@ -1959,10 +1959,10 @@ describeWithDOM('mount', () => {
             ]}
           />,
         );
-        expect(wrapper.rendered().children().length).to.equal(3);
-        expect(wrapper.rendered().children().at(0).hasClass('foo')).to.equal(true);
-        expect(wrapper.rendered().children().at(1).hasClass('bar')).to.equal(true);
-        expect(wrapper.rendered().children().at(2).hasClass('baz')).to.equal(true);
+        expect(wrapper.children().children().length).to.equal(3);
+        expect(wrapper.children().children().at(0).hasClass('foo')).to.equal(true);
+        expect(wrapper.children().children().at(1).hasClass('bar')).to.equal(true);
+        expect(wrapper.children().children().at(2).hasClass('baz')).to.equal(true);
       });
     });
   });
@@ -2153,12 +2153,12 @@ describeWithDOM('mount', () => {
         expect(wrapper.hasClass('FoOo')).to.equal(false);
         expect(wrapper.hasClass('doesnt-exist')).to.equal(false);
 
-        expect(wrapper.rendered().hasClass('foo')).to.equal(true);
-        expect(wrapper.rendered().hasClass('bar')).to.equal(true);
-        expect(wrapper.rendered().hasClass('baz')).to.equal(true);
-        expect(wrapper.rendered().hasClass('some-long-string')).to.equal(true);
-        expect(wrapper.rendered().hasClass('FoOo')).to.equal(true);
-        expect(wrapper.rendered().hasClass('doesnt-exist')).to.equal(false);
+        expect(wrapper.children().hasClass('foo')).to.equal(true);
+        expect(wrapper.children().hasClass('bar')).to.equal(true);
+        expect(wrapper.children().hasClass('baz')).to.equal(true);
+        expect(wrapper.children().hasClass('some-long-string')).to.equal(true);
+        expect(wrapper.children().hasClass('FoOo')).to.equal(true);
+        expect(wrapper.children().hasClass('doesnt-exist')).to.equal(false);
       });
     });
 
@@ -2178,12 +2178,12 @@ describeWithDOM('mount', () => {
         expect(wrapper.hasClass('FoOo')).to.equal(false);
         expect(wrapper.hasClass('doesnt-exist')).to.equal(false);
 
-        expect(wrapper.rendered().hasClass('foo')).to.equal(true);
-        expect(wrapper.rendered().hasClass('bar')).to.equal(true);
-        expect(wrapper.rendered().hasClass('baz')).to.equal(true);
-        expect(wrapper.rendered().hasClass('some-long-string')).to.equal(true);
-        expect(wrapper.rendered().hasClass('FoOo')).to.equal(true);
-        expect(wrapper.rendered().hasClass('doesnt-exist')).to.equal(false);
+        expect(wrapper.children().hasClass('foo')).to.equal(true);
+        expect(wrapper.children().hasClass('bar')).to.equal(true);
+        expect(wrapper.children().hasClass('baz')).to.equal(true);
+        expect(wrapper.children().hasClass('some-long-string')).to.equal(true);
+        expect(wrapper.children().hasClass('FoOo')).to.equal(true);
+        expect(wrapper.children().hasClass('doesnt-exist')).to.equal(false);
       });
     });
 
@@ -2209,13 +2209,13 @@ describeWithDOM('mount', () => {
         expect(wrapper.hasClass('doesnt-exist')).to.equal(false);
 
         // NOTE(lmr): the fact that this no longer works is a semantically
-        // meaningfull deviation in behavior
-        expect(wrapper.rendered().hasClass('foo')).to.equal(false);
-        expect(wrapper.rendered().hasClass('bar')).to.equal(false);
-        expect(wrapper.rendered().hasClass('baz')).to.equal(false);
-        expect(wrapper.rendered().hasClass('some-long-string')).to.equal(false);
-        expect(wrapper.rendered().hasClass('FoOo')).to.equal(false);
-        expect(wrapper.rendered().hasClass('doesnt-exist')).to.equal(false);
+        // meaningfull deviation in behavior. But this will be remedied with the ".root()" change
+        expect(wrapper.children().hasClass('foo')).to.equal(false);
+        expect(wrapper.children().hasClass('bar')).to.equal(false);
+        expect(wrapper.children().hasClass('baz')).to.equal(false);
+        expect(wrapper.children().hasClass('some-long-string')).to.equal(false);
+        expect(wrapper.children().hasClass('FoOo')).to.equal(false);
+        expect(wrapper.children().hasClass('doesnt-exist')).to.equal(false);
       });
     });
 

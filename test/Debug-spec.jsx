@@ -1,4 +1,4 @@
-import '../setupAdapters';
+import './setupAdapters';
 import { expect } from 'chai';
 import React from 'react';
 import {
@@ -13,7 +13,7 @@ import {
   describeIf,
   itIf,
 } from './_helpers';
-import { REACT013 } from '../src/version';
+import { REACT013 } from './version';
 import configuration from '../src/configuration';
 
 const { adapter } = configuration.get();
