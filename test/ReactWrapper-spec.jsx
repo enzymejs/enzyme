@@ -999,7 +999,7 @@ describeWithDOM('mount', () => {
       expect(wrapper.props().d).to.equal('e');
     });
 
-    it('should throw if an exception occurs during render', () => {
+    itIf(!REACT16, 'should throw if an exception occurs during render', () => {
       class Trainwreck extends React.Component {
         render() {
           const { user } = this.props;
@@ -1090,7 +1090,7 @@ describeWithDOM('mount', () => {
         expect(wrapper.props().d).to.equal('e');
       });
 
-      it('should throw if an exception occurs during render', () => {
+      itIf(!REACT16, 'should throw if an exception occurs during render', () => {
         const Trainwreck = ({ user }) => (
           <div>
             {user.name.givenName}
