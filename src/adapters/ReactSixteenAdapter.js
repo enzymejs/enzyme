@@ -65,7 +65,7 @@ function toTree(vnode) {
       return {
         nodeType: 'class',
         type: node.type,
-        props: { ...node.memoizedProps },
+        props: { ...vnode.memoizedProps },
         key: node.key,
         ref: node.ref,
         instance: node.stateNode,
@@ -77,7 +77,7 @@ function toTree(vnode) {
       return {
         nodeType: 'function',
         type: node.type,
-        props: { ...node.memoizedProps },
+        props: { ...vnode.memoizedProps },
         key: node.key,
         ref: node.ref,
         instance: null,

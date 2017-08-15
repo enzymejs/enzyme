@@ -133,11 +133,11 @@ describe('shallow', () => {
 
         expect(() => wrapper.context()).to.throw(
           Error,
-          'ShallowWrapper::context() can only be called on class components as of React 16',
+          'ShallowWrapper::context() can only be called on wrapped nodes that have a non-null instance',
         );
         expect(() => wrapper.context('name')).to.throw(
           Error,
-          'ShallowWrapper::context() can only be called on class components as of React 16',
+          'ShallowWrapper::context() can only be called on wrapped nodes that have a non-null instance',
         );
       });
     });
@@ -2515,11 +2515,11 @@ describe('shallow', () => {
 
           expect(() => wrapper.context()).to.throw(
             Error,
-            'ShallowWrapper::context() can only be called on class components as of React 16',
+            'ShallowWrapper::context() can only be called on wrapped nodes that have a non-null instance',
           );
           expect(() => wrapper.context('name')).to.throw(
             Error,
-            'ShallowWrapper::context() can only be called on class components as of React 16',
+            'ShallowWrapper::context() can only be called on wrapped nodes that have a non-null instance',
           );
         });
       });
@@ -4273,7 +4273,7 @@ describe('shallow', () => {
       const wrapper = shallow(<Test />);
       wrapper.find('.async-btn').simulate('click');
       setImmediate(() => {
-        wrapper.update(); // TODO(lmr): this is a breaking change...
+        wrapper.update();
         expect(wrapper.find('.show-me').length).to.equal(1);
         done();
       });
@@ -4282,7 +4282,7 @@ describe('shallow', () => {
     it('should have updated output after child prop callback invokes setState', () => {
       const wrapper = shallow(<Test />);
       wrapper.find(Child).props().callback();
-      wrapper.update(); // TODO(lmr): this is a breaking change...
+      wrapper.update();
       expect(wrapper.find('.show-me').length).to.equal(1);
     });
   });

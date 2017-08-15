@@ -934,9 +934,7 @@ describeWithDOM('mount', () => {
 
   });
 
-  // TODO(lmr): for some reason these tests are causing mocha to freeze. need to look
-  // into this before merging
-  describeIf(!REACT16, '.setProps(newProps[, callback])', () => {
+  describe('.setProps(newProps[, callback])', () => {
     it('should set props for a component multiple times', () => {
       class Foo extends React.Component {
         render() {
@@ -1039,7 +1037,7 @@ describeWithDOM('mount', () => {
       expect(setInvalidProps).to.throw(TypeError, similarException.message);
     });
 
-    it('should call the callback when setProps has completed', () => {
+    itIf(!REACT16, 'should call the callback when setProps has completed', () => {
       class Foo extends React.Component {
         render() {
           return (
@@ -1815,7 +1813,6 @@ describeWithDOM('mount', () => {
     });
 
     describeIf(!REACT013, 'stateless function components', () => {
-      // TODO(lmr): this is broken now
       it('should return props of root rendered node', () => {
         const Foo = ({ bar, foo }) => (
           <div className={bar} id={foo} />

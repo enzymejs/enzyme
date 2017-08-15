@@ -127,9 +127,6 @@ class ReactWrapper {
         'ReactWrapper::getNode() can only be called when wrapping one node',
       );
     }
-    // TODO(lmr): the public API for this was to return an instance, but we use it internally like
-    // a "return a node", so it's unclear what we should be doing here. Publicly, we should be using
-    // instance() instead.
     return this.nodes[0];
   }
 
@@ -237,7 +234,6 @@ class ReactWrapper {
    */
   update() {
     if (this.root !== this) {
-      // TODO(lmr): this requirement may not be necessary for the ReactWrapper
       throw new Error('ReactWrapper::update() can only be called on the root');
     }
     this.single('update', () => {
