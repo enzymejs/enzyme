@@ -5,13 +5,11 @@
     "node": true,
     "mocha": true
   },
-  "ecmaFeatures": {
-    "jsx": true
-  },
   "rules": {
     "id-length": 0,
     "new-cap": [2, { "capIsNewExceptions": ["AND"] }],
     "react/jsx-pascal-case": [2, { "allowAllCaps": true }],
+    "react/no-find-dom-node": 1,
     "no-underscore-dangle": [2, {
       "allowAfterThis": true,
       "allow": [

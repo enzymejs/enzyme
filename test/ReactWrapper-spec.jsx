@@ -799,7 +799,7 @@ describeWithDOM('mount', () => {
       const content = 'blah';
       const wrapper = mount(<Foo data={content} />);
       expect(wrapper.debug()).to.equal(
-`<Foo data="${content}">
+        `<Foo data="${content}">
   <div data-foo="${content}">
     Test Component
   </div>
@@ -876,7 +876,7 @@ describeWithDOM('mount', () => {
         const content = 'blah';
         const wrapper = mount(<SFC data={content} />);
         expect(wrapper.debug()).to.equal(
-`<SFC data="${content}">
+          `<SFC data="${content}">
   <div data-foo="${content}">
     Test SFC
   </div>

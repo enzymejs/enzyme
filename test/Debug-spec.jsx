@@ -15,7 +15,6 @@ import {
 import { REACT013 } from '../src/version';
 
 describe('debug', () => {
-
   describe('spaces(n)', () => {
     it('should return n spaces', () => {
       expect(spaces(4)).to.equal('    ');
@@ -37,7 +36,6 @@ describe('debug', () => {
   });
 
   describe('debugNode(node)', () => {
-
     it('should render a node with no props or children as single single xml tag', () => {
       expect(debugNode(<div />)).to.equal('<div />');
     });
@@ -106,7 +104,7 @@ describe('debug', () => {
           <Foo />
         </div>,
       )).to.equal(
-`<div>
+        `<div>
   <Bar />
 </div>`,
       );
@@ -123,7 +121,7 @@ describe('debug', () => {
           <Foo />
         </div>,
       )).to.equal(
-`<div>
+        `<div>
   <Foo />
 </div>`,
       );
@@ -139,7 +137,7 @@ describe('debug', () => {
           <Foo />
         </div>,
       )).to.equal(
-`<div>
+        `<div>
   <Foo />
 </div>`,
       );
@@ -153,7 +151,7 @@ describe('debug', () => {
           {['a', 'b', 'c']}
         </div>,
       )).to.equal(
-`<div>
+        `<div>
   <i>
     not in array
   </i>
@@ -172,7 +170,7 @@ describe('debug', () => {
           {1}
         </div>,
       )).to.equal(
-`<div>
+        `<div>
   -1
   0
   1
@@ -184,7 +182,7 @@ describe('debug', () => {
       expect(debugNode(
         <div>&gt;</div>,
       )).to.equal(
-`<div>
+        `<div>
   &gt;
 </div>`,
       );
@@ -215,13 +213,14 @@ describe('debug', () => {
         }
       }
       expect(mount(<Foo id="2" />).debug()).to.eql(
-`<Foo id="2">
+        `<Foo id="2">
   <div className="foo">
     <span>
       Foo
     </span>
   </div>
-</Foo>`);
+</Foo>`,
+      );
     });
 
     it('renders basic debug of components with mixed children', () => {
@@ -233,12 +232,13 @@ describe('debug', () => {
         }
       }
       expect(mount(<Foo id="2" />).debug()).to.eql(
-`<Foo id="2">
+        `<Foo id="2">
   <div>
     hello
     world
   </div>
-</Foo>`);
+</Foo>`,
+      );
     });
 
     it('renders debug of compositional components', () => {
@@ -332,7 +332,7 @@ describe('debug', () => {
       }
 
       expect(mount(<Bar id="2" />).debug()).to.eql(
-`<Bar id="2">
+        `<Bar id="2">
   <div className="bar">
     <Foo baz="bax">
       <div className="foo">
@@ -345,8 +345,8 @@ describe('debug', () => {
       </div>
     </Foo>
   </div>
-</Bar>`);
-
+</Bar>`,
+      );
     });
 
     describeIf(!REACT013, 'stateless function components', () => {
@@ -357,13 +357,14 @@ describe('debug', () => {
           </div>
         );
         expect(mount(<Foo id="2" />).debug()).to.eql(
-`<Foo id="2">
+          `<Foo id="2">
   <div className="foo">
     <span>
       Foo
     </span>
   </div>
-</Foo>`);
+</Foo>`,
+        );
       });
 
       it('renders debug of compositional components', () => {
@@ -379,7 +380,7 @@ describe('debug', () => {
           </div>
         );
         expect(mount(<Bar id="2" />).debug()).to.eql(
-        `<Bar id="2">
+          `<Bar id="2">
   <div className="bar">
     <span>
       Non-Foo
@@ -392,7 +393,8 @@ describe('debug', () => {
       </div>
     </Foo>
   </div>
-</Bar>`);
+</Bar>`,
+        );
       });
 
       it('renders a subtree of a mounted tree', () => {
@@ -408,13 +410,14 @@ describe('debug', () => {
           </div>
         );
         expect(mount(<Bar id="2" />).find(Foo).debug()).to.eql(
-        `<Foo baz="bax">
+          `<Foo baz="bax">
   <div className="foo">
     <span>
       Foo
     </span>
   </div>
-</Foo>`);
+</Foo>`,
+        );
       });
 
       it('renders passed children properly', () => {
@@ -434,7 +437,7 @@ describe('debug', () => {
         );
 
         expect(mount(<Bar id="2" />).debug()).to.eql(
-`<Bar id="2">
+          `<Bar id="2">
   <div className="bar">
     <Foo baz="bax">
       <div className="foo">
@@ -447,11 +450,10 @@ describe('debug', () => {
       </div>
     </Foo>
   </div>
-</Bar>`);
+</Bar>`,
+        );
       });
-
     });
-
   });
 
   describe('shallow', () => {
@@ -479,13 +481,14 @@ describe('debug', () => {
       }
 
       expect(shallow(<Bar id="2" />).debug()).to.eql(
-`<div className="bar">
+        `<div className="bar">
   <Foo baz="bax">
     <span>
       From Bar
     </span>
   </Foo>
-</div>`);
+</div>`,
+      );
     });
   });
 
@@ -502,11 +505,12 @@ describe('debug', () => {
       }
 
       expect(debugNodes(shallow(<Foo />).getNodes())).to.eql(
-`<div className="foo">
+        `<div className="foo">
   <span>
     inside Foo
   </span>
-</div>`);
+</div>`,
+      );
     });
 
     it('can render multiple nodes', () => {
@@ -533,13 +537,14 @@ describe('debug', () => {
       }
 
       expect(debugNodes(shallow(<Bar />).children().getNodes())).to.eql(
-`<Foo />
+        `<Foo />
 
 
 <Foo />
 
 
-<Foo />`);
+<Foo />`,
+      );
     });
 
     it('can render multiple nodes with indent', () => {
@@ -556,7 +561,7 @@ describe('debug', () => {
       }
 
       expect(debugNodes(shallow(<Foo />).children().getNodes())).to.eql(
-`<span>
+        `<span>
   span1 text
 </span>
 
@@ -568,7 +573,8 @@ describe('debug', () => {
 
 <span>
   span3 text
-</span>`);
+</span>`,
+      );
     });
   });
 
@@ -596,20 +602,22 @@ describe('debug', () => {
       }
 
       expect(shallow(<Bar />).debug({ ignoreProps: false })).to.eql(
-`<div className="class1">
+        `<div className="class1">
   <Foo fooVal="baz" />
   <span className="class2">
     span text
   </span>
-</div>`);
+</div>`,
+      );
 
       expect(shallow(<Bar />).debug({ ignoreProps: true })).to.eql(
-`<div>
+        `<div>
   <Foo />
   <span>
     span text
   </span>
-</div>`);
+</div>`,
+      );
     });
   });
 
@@ -637,7 +645,7 @@ describe('debug', () => {
       }
 
       expect(mount(<Bar />).debug({ ignoreProps: false })).to.eql(
-`<Bar>
+        `<Bar>
   <div className="class1">
     <Foo fooVal="baz">
       <div className="foo">
@@ -648,10 +656,11 @@ describe('debug', () => {
       span text
     </span>
   </div>
-</Bar>`);
+</Bar>`,
+      );
 
       expect(mount(<Bar />).debug({ ignoreProps: true })).to.eql(
-`<Bar>
+        `<Bar>
   <div>
     <Foo>
       <div>
@@ -662,7 +671,8 @@ describe('debug', () => {
       span text
     </span>
   </div>
-</Bar>`);
+</Bar>`,
+      );
     });
   });
 });

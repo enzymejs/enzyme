@@ -108,5 +108,4 @@ export default class ComplexSelector {
       return results;
     };
   }
-
 }

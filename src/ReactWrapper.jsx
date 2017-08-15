@@ -65,7 +65,6 @@ function filterWhereUnwrapped(wrapper, predicate) {
  * @class ReactWrapper
  */
 class ReactWrapper {
-
   constructor(nodes, root, options = {}) {
     if (!global.window && !global.document) {
       throw new Error(
@@ -76,12 +75,15 @@ class ReactWrapper {
     if (!root) {
       const ReactWrapperComponent = createWrapperComponent(nodes, options);
       this.component = renderWithOptions(
-        <ReactWrapperComponent
-          Component={nodes.type}
-          props={nodes.props}
-          context={options.context}
-        />,
-      options);
+        (
+          <ReactWrapperComponent
+            Component={nodes.type}
+            props={nodes.props}
+            context={options.context}
+          />
+        ),
+        options,
+      );
       this.root = this;
       this.node = this.component.getWrappedComponent();
       this.nodes = [this.node];

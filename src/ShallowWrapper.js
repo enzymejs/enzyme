@@ -113,7 +113,6 @@ function performBatchedUpdates(wrapper, fn) {
  * @class ShallowWrapper
  */
 class ShallowWrapper {
-
   constructor(nodes, root, options = {}) {
     validateOptions(options);
     if (!root) {
@@ -725,7 +724,7 @@ class ShallowWrapper {
    */
   parents(selector) {
     const allParents = this.wrap(
-        this.single('parents', n => parentsOfNode(n, this.root.getNode())),
+      this.single('parents', n => parentsOfNode(n, this.root.getNode())),
     );
     return selector ? allParents.filter(selector) : allParents;
   }
