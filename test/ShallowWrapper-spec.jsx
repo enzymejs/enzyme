@@ -1,4 +1,4 @@
-import '../setupAdapters';
+import './setupAdapters';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { expect } from 'chai';
@@ -8,13 +8,44 @@ import { createClass } from './_helpers/react-compat';
 import { shallow, render, ShallowWrapper } from '../src/';
 import { describeIf, itIf, itWithData, generateEmptyRenderData } from './_helpers';
 import { ITERATOR_SYMBOL, withSetStateAllowed } from '../src/Utils';
-import { REACT013, REACT014, REACT16, is } from '../src/version';
+import { REACT013, REACT014, REACT16, is } from './version';
 
 // The shallow renderer in react 16 does not yet support batched updates. When it does,
 // we should be able to go un-skip all of the tests that are skipped with this flag.
 const BATCHING = !REACT16;
 
 describe('shallow', () => {
+  describe('top level wrapper', () => {
+    it('does what i expect', () => {
+      class Box extends React.Component {
+        render() {
+          return <div className="box">{this.props.children}</div>;
+        }
+      }
+      class Foo extends React.Component {
+        render() {
+          return (
+            <Box bam>
+              <div className="div" />
+            </Box>
+          );
+        }
+      }
+
+      const wrapper = shallow(<Foo bar />);
+
+      expect(wrapper.type()).to.equal(Box);
+      expect(wrapper.props().bam).to.equal(true);
+      expect(wrapper.instance()).to.be.instanceOf(Foo);
+      expect(wrapper.children().at(0).type()).to.equal('div');
+      expect(wrapper.find(Box).children().props().className).to.equal('div');
+      expect(wrapper.find(Box).children().at(0).props().className).to.equal('div');
+      expect(wrapper.find(Box).children().props().className).to.equal('div');
+      expect(wrapper.children().type()).to.equal('div');
+      expect(wrapper.children().props().bam).to.equal(undefined);
+    });
+  });
+
   describe('context', () => {
     it('can pass in context', () => {
       const SimpleComponent = createClass({

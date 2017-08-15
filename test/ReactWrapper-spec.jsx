@@ -19,10 +19,10 @@ import {
   ReactWrapper,
 } from '../src';
 import { ITERATOR_SYMBOL } from '../src/Utils';
-import { REACT013, REACT014, REACT16, is } from '../src/version';
+import { REACT013, REACT014, REACT16, is } from './version';
 
 describeWithDOM('mount', () => {
-  describe('playground', () => {
+  describe('top level wrapper', () => {
     it('does what i expect', () => {
       class Box extends React.Component {
         render() {
@@ -38,16 +38,23 @@ describeWithDOM('mount', () => {
           );
         }
       }
+
       const wrapper = mount(<Foo bar />);
+
       expect(wrapper.type()).to.equal(Foo);
       expect(wrapper.props()).to.deep.equal({ bar: true });
-      expect(wrapper.children().at(0).type()).to.equal(Box);
       expect(wrapper.instance()).to.be.instanceOf(Foo);
-      expect(wrapper.rendered().type()).to.equal(Box);
-      expect(wrapper.rendered().instance()).to.be.instanceOf(Box);
-      expect(wrapper.rendered().props().bam).to.equal(true);
+      expect(wrapper.children().at(0).type()).to.equal(Box);
+      expect(wrapper.find(Box).children().props().className).to.equal('box');
+      expect(wrapper.find(Box).instance()).to.be.instanceOf(Box);
+      expect(wrapper.find(Box).children().at(0).props().className).to.equal('box');
+      expect(wrapper.find(Box).children().props().className).to.equal('box');
+      expect(wrapper.children().type()).to.equal(Box);
+      expect(wrapper.children().instance()).to.be.instanceOf(Box);
+      expect(wrapper.children().props().bam).to.equal(true);
     });
   });
+
   describe('context', () => {
     it('can pass in context', () => {
       const SimpleComponent = createClass({
