@@ -53,7 +53,7 @@ matrix:
     - node_js: "6"
       env: EXAMPLE=karma-webpack
     - node_js: "6"
-      env: EXAMPLE=jest
+      env: KARMA=true REACT=16
 env:
   - REACT=0.13
   - REACT=0.14
