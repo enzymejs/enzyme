@@ -217,13 +217,13 @@ class ReactSixteenAdapter extends EnzymeAdapter {
       simulateEvent(node, event, ...args) {
         const handler = node.props[propFromEvent(event)];
         if (handler) {
-          // withSetStateAllowed(() => {
+          withSetStateAllowed(() => {
             // TODO(lmr): create/use synthetic events
             // TODO(lmr): emulate React's event propagation
             // ReactDOM.unstable_batchedUpdates(() => {
-          handler(...args);
+            handler(...args);
             // });
-          // });
+          });
         }
       },
       batchedUpdates(fn) {
