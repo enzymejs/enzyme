@@ -26,8 +26,8 @@ export function isFunctionalComponent(inst) {
     functionName(inst.constructor) === 'StatelessComponent';
 }
 
-export function isCustomComponentElement(inst) {
-  return !!inst && React.isValidElement(inst) && typeof inst.type === 'function';
+export function isCustomComponentElement(inst, adapter) {
+  return !!inst && adapter.isValidElement(inst) && typeof inst.type === 'function';
 }
 
 function propsOfNode(node) {
@@ -190,8 +190,8 @@ function isTextualNode(node) {
   return typeof node === 'string' || typeof node === 'number';
 }
 
-export function isReactElementAlike(arg) {
-  return React.isValidElement(arg) || isTextualNode(arg) || Array.isArray(arg);
+export function isReactElementAlike(arg, adapter) {
+  return adapter.isValidElement(arg) || isTextualNode(arg) || Array.isArray(arg);
 }
 
 // TODO(lmr): can we get rid of this outside of the adapter?

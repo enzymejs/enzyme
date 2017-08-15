@@ -2535,7 +2535,7 @@ describeWithDOM('mount', () => {
         </div>,
       );
 
-      const nodes = wrapper.find('.foo').flatMap(w => w.children().getNodes());
+      const nodes = wrapper.find('.foo').flatMap(w => w.children().getNodesInternal());
 
       expect(nodes.length).to.equal(6);
       expect(nodes.at(0).hasClass('bar')).to.equal(true);
@@ -2647,10 +2647,10 @@ describeWithDOM('mount', () => {
           <div className="bar baz" />
         </div>,
       );
-      expect(wrapper.find('.bar').get(0)).to.equal(wrapper.find('.foo').getNode());
-      expect(wrapper.find('.bar').get(1)).to.equal(wrapper.find('.bax').getNode());
-      expect(wrapper.find('.bar').get(2)).to.equal(wrapper.find('.bux').getNode());
-      expect(wrapper.find('.bar').get(3)).to.equal(wrapper.find('.baz').getNode());
+      expect(wrapper.find('.bar').get(0)).to.deep.equal(wrapper.find('.foo').getElement());
+      expect(wrapper.find('.bar').get(1)).to.deep.equal(wrapper.find('.bax').getElement());
+      expect(wrapper.find('.bar').get(2)).to.deep.equal(wrapper.find('.bux').getElement());
+      expect(wrapper.find('.bar').get(3)).to.deep.equal(wrapper.find('.baz').getElement());
     });
   });
 
@@ -3440,10 +3440,10 @@ describeWithDOM('mount', () => {
       const b1 = wrapper.find('a').get(1);
       const c1 = wrapper.find('a').get(2);
       const d1 = wrapper.find('a').get(3);
-      expect(a1).to.equal(a);
-      expect(b1).to.equal(b);
-      expect(c1).to.equal(c);
-      expect(d1).to.equal(d);
+      expect(a1).to.deep.equal(a);
+      expect(b1).to.deep.equal(b);
+      expect(c1).to.deep.equal(c);
+      expect(d1).to.deep.equal(d);
     });
   });
 
@@ -3470,7 +3470,7 @@ describeWithDOM('mount', () => {
     });
   });
 
-  describe('.getNodes()', () => {
+  describe('.getElements()', () => {
     it('should return the wrapped elements', () => {
       class Test extends React.Component {
         render() {
@@ -3484,7 +3484,7 @@ describeWithDOM('mount', () => {
       }
 
       const wrapper = mount(<Test />);
-      expect(wrapper.find('span').getNodes()).to.have.lengthOf(2);
+      expect(wrapper.find('span').getElements()).to.have.lengthOf(2);
     });
   });
 
@@ -3563,14 +3563,14 @@ describeWithDOM('mount', () => {
     it('works with a name', () => {
       const wrapper = mount(<div />);
       wrapper.single('foo', (node) => {
-        expect(node).to.equal(wrapper.get(0));
+        expect(node).to.equal(wrapper.getNodeInternal());
       });
     });
 
     it('works without a name', () => {
       const wrapper = mount(<div />);
       wrapper.single((node) => {
-        expect(node).to.equal(wrapper.get(0));
+        expect(node).to.equal(wrapper.getNodeInternal());
       });
     });
   });

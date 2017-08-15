@@ -542,8 +542,8 @@ describe('debug', () => {
         }
       }
 
-      expect(debugNodes(shallow(<Bar />).children().getNodes())).to.eql(
-        `<Foo />
+      expect(debugNodes(shallow(<Bar />).children().getElements())).to.eql(
+`<Foo />
 
 
 <Foo />

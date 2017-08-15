@@ -200,6 +200,14 @@ class ReactFifteenFourAdapter extends EnzymeAdapter {
   nodeToHostNode(node) {
     return ReactDOM.findDOMNode(node.instance);
   }
+
+  isValidElement(element) {
+    return React.isValidElement(element);
+  }
+
+  createElement(...args) {
+    return React.createElement(...args);
+  }
 }
 
 module.exports = ReactFifteenFourAdapter;

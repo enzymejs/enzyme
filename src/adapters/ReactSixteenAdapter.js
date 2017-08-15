@@ -270,6 +270,14 @@ class ReactSixteenAdapter extends EnzymeAdapter {
   nodeToHostNode(node) {
     return nodeToHostNode(node);
   }
+
+  isValidElement(element) {
+    return React.isValidElement(element);
+  }
+
+  createElement(...args) {
+    return React.createElement(...args);
+  }
 }
 
 module.exports = ReactSixteenAdapter;

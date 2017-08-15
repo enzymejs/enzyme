@@ -153,17 +153,13 @@ class ShallowWrapper {
    *
    * @return {ReactElement}
    */
-  getNode() {
+  getElement() {
     if (this.length !== 1) {
       throw new Error(
-        'ShallowWrapper::getNode() can only be called when wrapping one node',
+        'ShallowWrapper::getElement() can only be called when wrapping one node',
       );
     }
     return getAdapter(this.options).nodeToElement(this.node);
-  }
-
-  getNodesInternal() {
-    return this.nodes;
   }
 
   /**
@@ -171,8 +167,26 @@ class ShallowWrapper {
    *
    * @return {Array<ReactElement>}
    */
-  getNodes() {
+  getElements() {
     return this.nodes.map(getAdapter(this.options).nodeToElement);
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  getNode() {
+    throw new Error(
+      'ShallowWrapper::getNode() is no longer supported. Use ShallowWrapper::getElement() instead',
+    );
+  }
+
+  getNodesInternal() {
+    return this.nodes;
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  getNodes() {
+    throw new Error(
+      'ShallowWrapper::getNodes() is no longer supported. Use ShallowWrapper::getElements() instead',
+    );
   }
 
   /**
@@ -379,7 +393,8 @@ class ShallowWrapper {
    * @returns {Boolean}
    */
   contains(nodeOrNodes) {
-    if (!isReactElementAlike(nodeOrNodes)) {
+    const adapter = getAdapter(this.options);
+    if (!isReactElementAlike(nodeOrNodes, adapter)) {
       throw new Error(
         'ShallowWrapper::contains() can only be called with ReactElement (or array of them), ' +
         'string or number as argument.',
@@ -389,9 +404,9 @@ class ShallowWrapper {
       ? other => containsChildrenSubArray(
         nodeEqual,
         other,
-        nodeOrNodes.map(getAdapter(this.options).elementToNode),
+        nodeOrNodes.map(adapter.elementToNode),
       )
-      : other => nodeEqual(getAdapter(this.options).elementToNode(nodeOrNodes), other);
+      : other => nodeEqual(adapter.elementToNode(nodeOrNodes), other);
 
     return findWhereUnwrapped(this, predicate).length > 0;
   }
@@ -1091,13 +1106,14 @@ class ShallowWrapper {
    * @returns {ShallowWrapper}
    */
   dive(options = {}) {
+    const adapter = getAdapter(this.options);
     const name = 'dive';
     return this.single(name, (n) => {
       if (n && n.nodeType === 'host') {
         throw new TypeError(`ShallowWrapper::${name}() can not be called on Host Components`);
       }
       const el = getAdapter(this.options).nodeToElement(n);
-      if (!isCustomComponentElement(el)) {
+      if (!isCustomComponentElement(el, adapter)) {
         throw new TypeError(`ShallowWrapper::${name}() can only be called on components`);
       }
       return this.wrap(el, null, { ...this.options, ...options });
@@ -1112,7 +1128,7 @@ if (ITERATOR_SYMBOL) {
       const iter = this.nodes[ITERATOR_SYMBOL]();
       const adapter = getAdapter(this.options);
       return {
-        next: () => {
+        next() {
           const next = iter.next();
           if (next.done) {
             return { done: true };

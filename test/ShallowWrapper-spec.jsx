@@ -2318,7 +2318,7 @@ describe('shallow', () => {
         </div>,
       );
 
-      const nodes = wrapper.find('.foo').flatMap(w => w.children().getNodes());
+      const nodes = wrapper.find('.foo').flatMap(w => w.children().getElements());
 
       expect(nodes.length).to.equal(6);
       expect(nodes.at(0).hasClass('bar')).to.equal(true);
@@ -2626,10 +2626,10 @@ describe('shallow', () => {
           <div className="bar baz" />
         </div>,
       );
-      expect(wrapper.find('.bar').get(0)).to.deep.equal(wrapper.find('.foo').getNode());
-      expect(wrapper.find('.bar').get(1)).to.deep.equal(wrapper.find('.bax').getNode());
-      expect(wrapper.find('.bar').get(2)).to.deep.equal(wrapper.find('.bux').getNode());
-      expect(wrapper.find('.bar').get(3)).to.deep.equal(wrapper.find('.baz').getNode());
+      expect(wrapper.find('.bar').get(0)).to.deep.equal(wrapper.find('.foo').getElement());
+      expect(wrapper.find('.bar').get(1)).to.deep.equal(wrapper.find('.bax').getElement());
+      expect(wrapper.find('.bar').get(2)).to.deep.equal(wrapper.find('.bux').getElement());
+      expect(wrapper.find('.bar').get(3)).to.deep.equal(wrapper.find('.baz').getElement());
     });
   });
 
@@ -4226,7 +4226,7 @@ describe('shallow', () => {
       }
 
       const wrapper = shallow(<Test />);
-      expect(wrapper.find('span').getNodes()).to.deep.equal([one, two]);
+      expect(wrapper.find('span').getElements()).to.deep.equal([one, two]);
     });
   });
 
