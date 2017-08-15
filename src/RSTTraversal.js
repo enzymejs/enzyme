@@ -1,9 +1,8 @@
-import React from 'react';
 import isEmpty from 'lodash/isEmpty';
+import flatten from 'lodash/flatten';
 import isSubset from 'is-subset';
 import functionName from 'function.prototype.name';
 import {
-  propsOfNode,
   splitSelector,
   isCompoundSelector,
   selectorType,
@@ -13,17 +12,13 @@ import {
   nodeHasProperty,
 } from './Utils';
 
+export function propsOfNode(node) {
+  return (node && node.props) || {};
+}
 
 export function childrenOfNode(node) {
   if (!node) return [];
-  const maybeArray = propsOfNode(node).children;
-  const result = [];
-  React.Children.forEach(maybeArray, (child) => {
-    if (child !== null && child !== false && typeof child !== 'undefined') {
-      result.push(child);
-    }
-  });
-  return result;
+  return Array.isArray(node.rendered) ? flatten(node.rendered, true) : [node.rendered];
 }
 
 export function hasClassName(node, className) {
@@ -110,7 +105,7 @@ export function buildPredicate(selector) {
           return node => nodeHasId(node, selector.slice(1));
 
         case SELECTOR.PROP_TYPE: {
-          const propKey = selector.split(/\[([a-zA-Z-]*?)(=|])/)[1];
+          const propKey = selector.split(/\[([a-zA-Z][a-zA-Z_\d\-:]*?)(=|])/)[1];
           const propValue = selector.split(/=(.*?)]/)[1];
 
           return node => nodeHasProperty(node, propKey, propValue);

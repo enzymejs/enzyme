@@ -21,13 +21,14 @@
     "test:watch": "mocha --recursive --watch test",
     "test:karma": "karma start",
     "test:env": "sh ./example-test.sh",
-    "test:all": "npm run react:13 && npm run test:only && npm run react:14 && npm run test:only && npm run react:15.4 && npm run test:only && npm run react:15 && npm run test:only",
+    "test:all": "npm run react:13 && npm run test:only && npm run react:14 && npm run test:only && npm run react:15.4 && npm run test:only && npm run react:15 && npm run test:only && npm run react:16 && npm run test:only",
     "clean-local-npm": "rimraf node_modules/.bin/npm node_modules/.bin/npm.cmd",
-    "react:clean": "npm run clean-local-npm && rimraf node_modules/react node_modules/react-dom node_modules/react-addons-test-utils node_modules/react-test-renderer && npm prune",
+    "react:clean": "npm run clean-local-npm && rimraf node_modules/react node_modules/react-dom node_modules/react-addons-test-utils node_modules/react-test-renderer node_modules/create-react-class && npm prune",
     "react:13": "npm run react:clean && npm install && npm i --no-save react@0.13",
     "react:14": "npm run react:clean && npm install && npm i --no-save react@0.14 react-dom@0.14 react-addons-test-utils@0.14",
     "react:15.4": "npm run react:clean && npm install && npm i --no-save react@15.4 react-dom@15.4 react-addons-test-utils@15.4",
     "react:15": "npm run react:clean && npm install && npm i --no-save react@15 react-dom@15 create-react-class@15 react-test-renderer@^15.5.4",
+    "react:16": "npm run react:clean && npm install && npm i --no-save react@^16.0.0-0 react-dom@^16.0.0-0 create-react-class@^15.6.0 react-test-renderer@^16.0.0-0",
     "docs:clean": "rimraf _book",
     "docs:lint": "eslint --ext md --config .eslintrc-markdown .",
     "docs:prepare": "gitbook install",
@@ -66,6 +67,8 @@
     "object.entries": "^1.0.4",
     "object.values": "^1.0.4",
     "prop-types": "^15.5.10",
+    "raf": "^3.3.2",
+    "semver": "^5.3.0",
     "uuid": "^3.0.1"
   },
   "devDependencies": {
@@ -102,13 +105,13 @@
     "karma-sourcemap-loader": "^0.3.7",
     "karma-webpack": "^1.8.1",
     "mocha": "^3.5.0",
-    "react": "0.13.x || 0.14.x || ^15.0.0-0 || 15.x",
     "rimraf": "^2.6.1",
     "safe-publish-latest": "^1.1.1",
     "sinon": "^2.4.1",
-    "webpack": "^1.13.3"
+    "webpack": "^1.13.3",
+    "react": "0.13.x || 0.14.x || ^15.0.0-0 || ^16.0.0-0"
   },
   "peerDependencies": {
-    "react": "0.13.x || 0.14.x || ^15.0.0-0 || 15.x"
+    "react": "0.13.x || 0.14.x || ^15.0.0-0 || ^16.0.0-0"
   }
 }

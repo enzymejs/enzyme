@@ -1,9 +1,10 @@
+import './_helpers/setupAdapters';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { expect } from 'chai';
 import { describeWithDOM, describeIf } from './_helpers';
 import { render } from '../src/';
-import { REACT013 } from '../src/version';
+import { REACT013 } from './_helpers/version';
 import { createClass } from './_helpers/react-compat';
 
 describeWithDOM('render', () => {

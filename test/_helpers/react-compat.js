@@ -4,11 +4,11 @@
   import/prefer-default-export: 0,
 */
 
-import { REACT155 } from '../../src/version';
+import { is } from './version';
 
 let createClass;
 
-if (REACT155) {
+if (is('>=15.5 || ^16.0.0-alpha')) {
   // eslint-disable-next-line import/no-extraneous-dependencies
   createClass = require('create-react-class');
 } else {

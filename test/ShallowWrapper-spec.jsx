@@ -1,3 +1,4 @@
+import './_helpers/setupAdapters';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { expect } from 'chai';
@@ -7,9 +8,44 @@ import { createClass } from './_helpers/react-compat';
 import { shallow, render, ShallowWrapper } from '../src/';
 import { describeIf, itIf, itWithData, generateEmptyRenderData } from './_helpers';
 import { ITERATOR_SYMBOL, withSetStateAllowed } from '../src/Utils';
-import { REACT013, REACT014, REACT15 } from '../src/version';
+import { REACT013, REACT014, REACT16, is } from './_helpers/version';
+
+// The shallow renderer in react 16 does not yet support batched updates. When it does,
+// we should be able to go un-skip all of the tests that are skipped with this flag.
+const BATCHING = !REACT16;
 
 describe('shallow', () => {
+  describe('top level wrapper', () => {
+    it('does what i expect', () => {
+      class Box extends React.Component {
+        render() {
+          return <div className="box">{this.props.children}</div>;
+        }
+      }
+      class Foo extends React.Component {
+        render() {
+          return (
+            <Box bam>
+              <div className="div" />
+            </Box>
+          );
+        }
+      }
+
+      const wrapper = shallow(<Foo bar />);
+
+      expect(wrapper.type()).to.equal(Box);
+      expect(wrapper.props().bam).to.equal(true);
+      expect(wrapper.instance()).to.be.instanceOf(Foo);
+      expect(wrapper.children().at(0).type()).to.equal('div');
+      expect(wrapper.find(Box).children().props().className).to.equal('div');
+      expect(wrapper.find(Box).children().at(0).props().className).to.equal('div');
+      expect(wrapper.find(Box).children().props().className).to.equal('div');
+      expect(wrapper.children().type()).to.equal('div');
+      expect(wrapper.children().props().bam).to.equal(undefined);
+    });
+  });
+
   describe('context', () => {
     it('can pass in context', () => {
       const SimpleComponent = createClass({
@@ -37,7 +73,7 @@ describe('shallow', () => {
       expect(() => shallow(<SimpleComponent />, { context })).to.not.throw();
     });
 
-    it('is instrospectable through context API', () => {
+    it('is introspectable through context API', () => {
       const SimpleComponent = createClass({
         contextTypes: {
           name: PropTypes.string,
@@ -75,7 +111,7 @@ describe('shallow', () => {
         expect(() => shallow(<SimpleComponent />, { context })).not.to.throw();
       });
 
-      it('is instrospectable through context API', () => {
+      itIf(!REACT16, 'is introspectable through context API', () => {
         const SimpleComponent = (props, context) => (
           <div>{context.name}</div>
         );
@@ -85,6 +121,24 @@ describe('shallow', () => {
 
         expect(wrapper.context().name).to.equal(context.name);
         expect(wrapper.context('name')).to.equal(context.name);
+      });
+
+      itIf(REACT16, 'is not introspectable through context API', () => {
+        const SimpleComponent = (props, context) => (
+          <div>{context.name}</div>
+        );
+        SimpleComponent.contextTypes = { name: PropTypes.string };
+
+        const wrapper = shallow(<SimpleComponent />, { context });
+
+        expect(() => wrapper.context()).to.throw(
+          Error,
+          'ShallowWrapper::context() can only be called on wrapped nodes that have a non-null instance',
+        );
+        expect(() => wrapper.context('name')).to.throw(
+          Error,
+          'ShallowWrapper::context() can only be called on wrapped nodes that have a non-null instance',
+        );
       });
     });
   });
@@ -1140,7 +1194,7 @@ describe('shallow', () => {
       });
     });
 
-    it('should be batched updates', () => {
+    itIf(BATCHING, 'should be batched updates', () => {
       let renderCount = 0;
       class Foo extends React.Component {
         constructor(props) {
@@ -1297,7 +1351,7 @@ describe('shallow', () => {
       expect(wrapper.isEmptyRender()).to.equal(false);
     });
 
-    describeIf(REACT15, 'stateless function components', () => {
+    describeIf(is('>=15 || ^16.0.0-alpha'), 'stateless function components', () => {
       itWithData(emptyRenderValues, 'when a component returns: ', (data) => {
         function Foo() {
           return data.value;
@@ -1859,7 +1913,6 @@ describe('shallow', () => {
           </div>
         </div>,
       );
-
       expect(wrapper.find('.baz').parent().hasClass('bar')).to.equal(true);
     });
 
@@ -2265,7 +2318,7 @@ describe('shallow', () => {
         </div>,
       );
 
-      const nodes = wrapper.find('.foo').flatMap(w => w.children().getNodes());
+      const nodes = wrapper.find('.foo').flatMap(w => w.children().getElements());
 
       expect(nodes.length).to.equal(6);
       expect(nodes.at(0).hasClass('bar')).to.equal(true);
@@ -2350,7 +2403,7 @@ describe('shallow', () => {
         expect(() => wrapper.find(Bar).shallow({ context })).to.not.throw();
       });
 
-      it('is instrospectable through context API', () => {
+      it('is introspectable through context API', () => {
         class Bar extends React.Component {
           render() {
             return <div>{this.context.name}</div>;
@@ -2428,7 +2481,7 @@ describe('shallow', () => {
           expect(() => wrapper.find(Bar).shallow({ context })).to.not.throw();
         });
 
-        it('is instrospectable through context API', () => {
+        itIf(!REACT16, 'is introspectable through context API', () => {
           const Bar = (props, context) => (
             <div>{context.name}</div>
           );
@@ -2444,6 +2497,30 @@ describe('shallow', () => {
 
           expect(wrapper.context().name).to.equal(context.name);
           expect(wrapper.context('name')).to.equal(context.name);
+        });
+
+        itIf(REACT16, 'will throw when trying to inspect context', () => {
+          const Bar = (props, context) => (
+            <div>{context.name}</div>
+          );
+          Bar.contextTypes = { name: PropTypes.string };
+          const Foo = () => (
+            <div>
+              <Bar />
+            </div>
+          );
+
+          const context = { name: 'foo' };
+          const wrapper = shallow(<Foo />).find(Bar).shallow({ context });
+
+          expect(() => wrapper.context()).to.throw(
+            Error,
+            'ShallowWrapper::context() can only be called on wrapped nodes that have a non-null instance',
+          );
+          expect(() => wrapper.context('name')).to.throw(
+            Error,
+            'ShallowWrapper::context() can only be called on wrapped nodes that have a non-null instance',
+          );
         });
       });
     });
@@ -2549,10 +2626,10 @@ describe('shallow', () => {
           <div className="bar baz" />
         </div>,
       );
-      expect(wrapper.find('.bar').get(0)).to.equal(wrapper.find('.foo').getNode());
-      expect(wrapper.find('.bar').get(1)).to.equal(wrapper.find('.bax').getNode());
-      expect(wrapper.find('.bar').get(2)).to.equal(wrapper.find('.bux').getNode());
-      expect(wrapper.find('.bar').get(3)).to.equal(wrapper.find('.baz').getNode());
+      expect(wrapper.find('.bar').get(0)).to.deep.equal(wrapper.find('.foo').getElement());
+      expect(wrapper.find('.bar').get(1)).to.deep.equal(wrapper.find('.bax').getElement());
+      expect(wrapper.find('.bar').get(2)).to.deep.equal(wrapper.find('.bux').getElement());
+      expect(wrapper.find('.bar').get(3)).to.deep.equal(wrapper.find('.baz').getElement());
     });
   });
 
@@ -2781,11 +2858,22 @@ describe('shallow', () => {
         ]);
       });
 
-      describeIf(REACT013 || REACT15, 'setContext', () => {
+      describeIf(!REACT014 && !REACT16, 'setContext', () => {
         it('calls expected methods when receiving new context', () => {
           wrapper.setContext({ foo: 'foo' });
           expect(spy.args).to.deep.equal([
             ['componentWillReceiveProps'],
+            ['shouldComponentUpdate'],
+            ['componentWillUpdate'],
+            ['render'],
+          ]);
+        });
+      });
+
+      describeIf(REACT16, 'setContext', () => {
+        it('calls expected methods when receiving new context', () => {
+          wrapper.setContext({ foo: 'foo' });
+          expect(spy.args).to.deep.equal([
             ['shouldComponentUpdate'],
             ['componentWillUpdate'],
             ['render'],
@@ -2804,13 +2892,23 @@ describe('shallow', () => {
         });
       });
 
-      it('calls expected methods for setState', () => {
+      itIf(!REACT16, 'calls expected methods for setState', () => {
         wrapper.setState({ bar: 'bar' });
         expect(spy.args).to.deep.equal([
           ['shouldComponentUpdate'],
           ['componentWillUpdate'],
           ['render'],
           ['componentDidUpdate'],
+        ]);
+      });
+
+      // componentDidUpdate does not seem to get called in react 16 beta.
+      itIf(REACT16, 'calls expected methods for setState', () => {
+        wrapper.setState({ bar: 'bar' });
+        expect(spy.args).to.deep.equal([
+          ['shouldComponentUpdate'],
+          ['componentWillUpdate'],
+          ['render'],
         ]);
       });
 
@@ -2865,7 +2963,7 @@ describe('shallow', () => {
         ]);
       });
 
-      it('should be batching updates', () => {
+      itIf(BATCHING, 'should be batching updates', () => {
         const spy = sinon.spy();
         class Foo extends React.Component {
           constructor(props) {
@@ -2943,7 +3041,7 @@ describe('shallow', () => {
             [
               'componentWillReceiveProps',
               { foo: 'bar' }, { foo: 'baz' },
-              { foo: 'context' },
+              { foo: 'context' }, // this will be fixed
             ],
             [
               'shouldComponentUpdate',
@@ -2964,7 +3062,7 @@ describe('shallow', () => {
               'componentDidUpdate',
               { foo: 'bar' }, { foo: 'baz' },
               { foo: 'state' }, { foo: 'state' },
-              { foo: 'context' },
+              { foo: 'context' }, // this will be gone in 16
             ],
             [
               'componentWillReceiveProps',
@@ -3034,7 +3132,7 @@ describe('shallow', () => {
         ]);
       });
 
-      it('should not provoke another renders to call setState in componentWillReceiveProps', () => {
+      itIf(BATCHING, 'should not provoke another renders to call setState in componentWillReceiveProps', () => {
         const spy = sinon.spy();
         class Foo extends React.Component {
           constructor(props) {
@@ -3059,7 +3157,7 @@ describe('shallow', () => {
         expect(result.state('count')).to.equal(1);
       });
 
-      it('should provoke an another render to call setState twice in componentWillUpdate', () => {
+      itIf(BATCHING, 'should provoke an another render to call setState twice in componentWillUpdate', () => {
         const spy = sinon.spy();
         class Foo extends React.Component {
           constructor(props) {
@@ -3088,7 +3186,7 @@ describe('shallow', () => {
         expect(result.state('count')).to.equal(1);
       });
 
-      it('should provoke an another render to call setState twice in componentDidUpdate', () => {
+      itIf(BATCHING, 'should provoke an another render to call setState twice in componentDidUpdate', () => {
         const spy = sinon.spy();
         class Foo extends React.Component {
           constructor(props) {
@@ -3121,7 +3219,9 @@ describe('shallow', () => {
     });
 
     context('updating state', () => {
-      it('should call shouldComponentUpdate, componentWillUpdate and componentDidUpdate', () => {
+      // NOTE: There is a bug in react 16 shallow renderer where prevContext is not passed
+      // into componentDidUpdate. Skip this test for react 16 only. add back in if it gets fixed.
+      itIf(!REACT16, 'should call shouldComponentUpdate, componentWillUpdate and componentDidUpdate', () => {
         const spy = sinon.spy();
 
         class Foo extends React.Component {
@@ -3217,7 +3317,7 @@ describe('shallow', () => {
         expect(spy.args).to.deep.equal([['render'], ['shouldComponentUpdate']]);
       });
 
-      it('should provoke an another render to call setState twice in componentWillUpdate', () => {
+      itIf(BATCHING, 'should provoke an another render to call setState twice in componentWillUpdate', () => {
         const spy = sinon.spy();
         class Foo extends React.Component {
           constructor(props) {
@@ -3247,7 +3347,7 @@ describe('shallow', () => {
         expect(result.state('count')).to.equal(1);
       });
 
-      it('should provoke an another render to call setState twice in componentDidUpdate', () => {
+      itIf(BATCHING, 'should provoke an another render to call setState twice in componentDidUpdate', () => {
         const spy = sinon.spy();
         class Foo extends React.Component {
           constructor(props) {
@@ -3378,7 +3478,7 @@ describe('shallow', () => {
         expect(spy.args).to.deep.equal([['render'], ['shouldComponentUpdate']]);
       });
 
-      it('should provoke an another render to call setState twice in componentWillUpdate', () => {
+      itIf(BATCHING, 'should provoke an another render to call setState twice in componentWillUpdate', () => {
         const spy = sinon.spy();
         class Foo extends React.Component {
           constructor(props) {
@@ -3413,7 +3513,7 @@ describe('shallow', () => {
         expect(result.state('count')).to.equal(1);
       });
 
-      it('should provoke an another render to call setState twice in componentDidUpdate', () => {
+      itIf(BATCHING, 'should provoke an another render to call setState twice in componentDidUpdate', () => {
         const spy = sinon.spy();
         class Foo extends React.Component {
           constructor(props) {
@@ -3531,7 +3631,7 @@ describe('shallow', () => {
     expect(rendered.html()).to.equal(null);
   });
 
-  itIf(REACT15, 'works with SFCs that return null', () => {
+  itIf(is('>=15 || ^16.0.0-alpha'), 'works with SFCs that return null', () => {
     const Foo = () => null;
 
     const wrapper = shallow(<Foo />);
@@ -4040,7 +4140,7 @@ describe('shallow', () => {
 
       expect(() => { wrapper.dive(); }).to.throw(
         TypeError,
-        'ShallowWrapper::dive() can not be called on DOM components',
+        'ShallowWrapper::dive() can not be called on Host Components',
       );
     });
 
@@ -4102,35 +4202,10 @@ describe('shallow', () => {
       const b1 = wrapper.find('a').get(1);
       const c1 = wrapper.find('a').get(2);
       const d1 = wrapper.find('a').get(3);
-      expect(a1).to.equal(a);
-      expect(b1).to.equal(b);
-      expect(c1).to.equal(c);
-      expect(d1).to.equal(d);
-    });
-  });
-
-  describe('.getNode()', () => {
-    const element = (
-      <div>
-        <span />
-        <span />
-      </div>
-    );
-
-    class Test extends React.Component {
-      render() {
-        return element;
-      }
-    }
-
-    it('should return the wrapped element', () => {
-      const wrapper = shallow(<Test />);
-      expect(wrapper.getNode()).to.equal(element);
-    });
-
-    it('should throw when wrapping multiple elements', () => {
-      const wrapper = shallow(<Test />).find('span');
-      expect(() => wrapper.getNode()).to.throw(Error);
+      expect(a1).to.deep.equal(a);
+      expect(b1).to.deep.equal(b);
+      expect(c1).to.deep.equal(c);
+      expect(d1).to.deep.equal(d);
     });
   });
 
@@ -4151,7 +4226,7 @@ describe('shallow', () => {
       }
 
       const wrapper = shallow(<Test />);
-      expect(wrapper.find('span').getNodes()).to.deep.equal([one, two]);
+      expect(wrapper.find('span').getElements()).to.deep.equal([one, two]);
     });
   });
 
@@ -4198,6 +4273,7 @@ describe('shallow', () => {
       const wrapper = shallow(<Test />);
       wrapper.find('.async-btn').simulate('click');
       setImmediate(() => {
+        wrapper.update();
         expect(wrapper.find('.show-me').length).to.equal(1);
         done();
       });
@@ -4206,6 +4282,7 @@ describe('shallow', () => {
     it('should have updated output after child prop callback invokes setState', () => {
       const wrapper = shallow(<Test />);
       wrapper.find(Child).props().callback();
+      wrapper.update();
       expect(wrapper.find('.show-me').length).to.equal(1);
     });
   });
@@ -4223,14 +4300,14 @@ describe('shallow', () => {
     it('works with a name', () => {
       const wrapper = shallow(<div />);
       wrapper.single('foo', (node) => {
-        expect(node).to.equal(wrapper.get(0));
+        expect(node).to.equal(wrapper.node);
       });
     });
 
     it('works without a name', () => {
       const wrapper = shallow(<div />);
       wrapper.single((node) => {
-        expect(node).to.equal(wrapper.get(0));
+        expect(node).to.equal(wrapper.node);
       });
     });
   });
