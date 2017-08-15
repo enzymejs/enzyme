@@ -62,6 +62,7 @@ cases.
 
 For example, consider the following example:
 
+<!-- eslint react/prop-types: 0 -->
 ```js
 import React from 'react';
 import Icon from './path/to/Icon';
@@ -71,7 +72,7 @@ const ICONS = {
   failure: <Icon name="exclamation-mark" />,
 };
 
-const StatusLabel = ({ id, label }) => <div>{ICONS[id]}{label}{ICONS[id]}</div>
+const StatusLabel = ({ id, label }) => <div>{ICONS[id]}{label}{ICONS[id]}</div>;
 ```
 
 ```js
@@ -101,6 +102,7 @@ Enzyme has a `.children()` method which is intended to return the rendered child
 When using `mount(...)`, it can sometimes be unclear exactly what this would mean. Consider for
 example the following react components:
 
+<!-- eslint react/prop-types: 0, react/prefer-stateless-function: 0 -->
 ```js
 class Box extends React.Component {
   render() {
@@ -147,7 +149,7 @@ class CurrentTime extends React.Component {
     this.timer = setTimeout(tick, 0);
   }
   render() {
-    return <span>{this.state.now}</span>
+    return <span>{this.state.now}</span>;
   }
 }
 ```
@@ -271,6 +273,7 @@ return the actual ref, which I believe is more intuitive.
 
 Consider the following simple react component:
 
+<!-- eslint react/no-string-refs: 0 -->
 ```js
 class Box extends React.Component {
   render() {
@@ -301,6 +304,7 @@ expect(wrapper.ref('abc')).toBeInstanceOf(Element);
 Similarly, if you have a ref on a composite component, the `ref(...)` method will return an instance
 of that element:
 
+<!-- eslint react/no-string-refs: 0 -->
 ```js
 class Bar extends React.Component {
   render() {
@@ -354,9 +358,10 @@ The initially returned wrapper used to be around the element passed
 into the `mount` API, and for `shallow` it was around the root node of the rendered output of the element passed in. After the upgrade, the
 two APIs are now symmetrical, starting off
 
+<!-- eslint react/prop-types: 0 -->
 ```js
 const x = 'x';
-const Foo = props => <div inner={props.outer} />
+const Foo = props => <div inner={props.outer} />;
 const wrapper = mount(<Foo outer={x} />);
 ```
 

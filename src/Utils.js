@@ -1,6 +1,5 @@
 /* eslint no-use-before-define:0 */
 import isEqual from 'lodash/isEqual';
-import React from 'react';
 import is from 'object-is';
 import uuidv4 from 'uuid/v4';
 import entries from 'object.entries';
