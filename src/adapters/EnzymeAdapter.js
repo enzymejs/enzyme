@@ -19,6 +19,16 @@ class EnzymeAdapter {
   nodeToElement(node) {
     throw unimplementedError('nodeToElement', 'EnzymeAdapter');
   }
+
+  // eslint-disable-next-line class-methods-use-this, no-unused-vars
+  isValidElement(element) {
+    throw unimplementedError('isValidElement', 'EnzymeAdapter');
+  }
+
+  // eslint-disable-next-line class-methods-use-this, no-unused-vars
+  createElement(type, props, ...children) {
+    throw unimplementedError('createElement', 'EnzymeAdapter');
+  }
 }
 
 EnzymeAdapter.MODES = {
