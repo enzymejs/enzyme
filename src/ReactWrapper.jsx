@@ -61,6 +61,8 @@ function filterWhereUnwrapped(wrapper, predicate) {
   return wrapper.wrap(compact(wrapper.getNodes().filter(predicate)));
 }
 
+const instanceMap = new WeakMap();
+
 /**
  * @class ReactWrapper
  */
@@ -177,7 +179,8 @@ class ReactWrapper {
     if (this.root !== this) {
       throw new Error('ReactWrapper::instance() can only be called on the root');
     }
-    return this.component.getInstance();
+
+    return this.component.getInstance() || instanceMap.get(this.component);
   }
 
   /**
@@ -206,11 +209,14 @@ class ReactWrapper {
    * @returns {ReactWrapper}
    */
   unmount() {
-    if (this.root !== this) {
+    const { component, root } = this;
+    const inst = this.instance();
+    if (root !== this) {
       throw new Error('ReactWrapper::unmount() can only be called on the root');
     }
     this.single('unmount', () => {
-      this.component.setState({ mount: false });
+      instanceMap.set(component, inst);
+      component.setState({ mount: false });
     });
     return this;
   }
