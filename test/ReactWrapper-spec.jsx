@@ -999,6 +999,52 @@ describeWithDOM('mount', () => {
       expect(wrapper.props().d).to.equal('e');
     });
 
+    describe('pure components with children', () => {
+      let PureComponent;
+      beforeEach(() => {
+        class Foo extends React.Component { // pure component was introduced only in react 15
+          shouldComponentUpdate(nextProps) {
+            return this.props.children !== nextProps.children;
+          }
+          render() {
+            this.renderedCount = (this.renderedCount || 0) + 1;
+            return (
+              <div>{this.props.children}</div>
+            );
+          }
+        }
+        PureComponent = Foo;
+      });
+
+      it('should not render for nothing when children are null', () => {
+        const wrapper = mount(<PureComponent />);
+        expect(wrapper.instance().renderedCount).to.equal(1);
+        wrapper.setProps({});
+        expect(wrapper.instance().renderedCount).to.equal(1);
+      });
+
+      it('should not render for nothing when children are string', () => {
+        const wrapper = mount(<PureComponent>String children</PureComponent>);
+        expect(wrapper.instance().renderedCount).to.equal(1);
+        wrapper.setProps({});
+        expect(wrapper.instance().renderedCount).to.equal(1);
+      });
+
+      it('should render for nothing because react sends a new children object', () => {
+        const wrapper = mount(<PureComponent><div>Object children</div></PureComponent>);
+        expect(wrapper.instance().renderedCount).to.equal(1);
+        wrapper.setProps({});
+        expect(wrapper.instance().renderedCount).to.equal(2);
+      });
+
+      it('should render for nothing because react sends a new children array', () => {
+        const wrapper = mount(<PureComponent><div>Child 1</div><div>Child 2</div></PureComponent>);
+        expect(wrapper.instance().renderedCount).to.equal(1);
+        wrapper.setProps({});
+        expect(wrapper.instance().renderedCount).to.equal(2);
+      });
+    });
+
     itIf(!REACT16, 'should throw if an exception occurs during render', () => {
       class Trainwreck extends React.Component {
         render() {
