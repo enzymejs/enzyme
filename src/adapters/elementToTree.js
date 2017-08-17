@@ -1,6 +1,6 @@
 import flatten from 'lodash/flatten';
 
-function nodeTypeFromType(type) {
+export function nodeTypeFromType(type) {
   if (typeof type === 'string') {
     return 'host';
   }
