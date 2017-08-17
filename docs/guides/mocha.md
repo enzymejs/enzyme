@@ -11,6 +11,10 @@ npm i --save-dev enzyme
 import React from 'react';
 import { expect } from 'chai';
 import { mount, shallow } from 'enzyme';
+import sinon from 'sinon';
+import Foo from './src/Foo';
+
+sinon.spy(Foo.prototype, 'componentDidMount');
 
 describe('<Foo />', () => {
   it('calls componentDidMount', () => {
