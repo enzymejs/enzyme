@@ -13,7 +13,6 @@ import {
   typeOfNode,
   isReactElementAlike,
   displayNameOfNode,
-  isFunctionalComponent,
   isCustomComponentElement,
   ITERATOR_SYMBOL,
   getAdapter,
@@ -346,7 +345,7 @@ class ShallowWrapper {
     if (this.root !== this) {
       throw new Error('ShallowWrapper::setState() can only be called on the root');
     }
-    if (this.instance() === null || isFunctionalComponent(this.instance())) {
+    if (this.instance() === null || this.renderer.getNode().nodeType === 'function') {
       throw new Error('ShallowWrapper::setState() can only be called on class components');
     }
     this.single('setState', () => {
@@ -677,7 +676,7 @@ class ShallowWrapper {
     if (this.root !== this) {
       throw new Error('ShallowWrapper::state() can only be called on the root');
     }
-    if (this.instance() === null || isFunctionalComponent(this.instance())) {
+    if (this.instance() === null || this.renderer.getNode().nodeType === 'function') {
       throw new Error('ShallowWrapper::state() can only be called on class components');
     }
     const _state = this.single('state', () => this.instance().state);

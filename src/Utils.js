@@ -19,12 +19,6 @@ export function getAdapter(options = {}) {
   return adapter;
 }
 
-// TODO(lmr): we shouldn't need this
-export function isFunctionalComponent(inst) {
-  return !!inst && !!inst.constructor && typeof inst.constructor === 'function' &&
-    functionName(inst.constructor) === 'StatelessComponent';
-}
-
 export function isCustomComponentElement(inst, adapter) {
   return !!inst && adapter.isValidElement(inst) && typeof inst.type === 'function';
 }
