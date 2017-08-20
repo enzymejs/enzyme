@@ -6,7 +6,7 @@ import ShallowRenderer from 'react-test-renderer/shallow';
 import TestUtils from 'react-dom/test-utils';
 import PropTypes from 'prop-types';
 import EnzymeAdapter from './EnzymeAdapter';
-import elementToTree from './elementToTree';
+import elementToTree, { nodeTypeFromType } from './elementToTree';
 import {
   mapNativeEventNames,
   propFromEvent,
@@ -205,7 +205,7 @@ class ReactSixteenAdapter extends EnzymeAdapter {
         }
         const output = renderer.getRenderOutput();
         return {
-          nodeType: 'class',
+          nodeType: nodeTypeFromType(cachedNode.type),
           type: cachedNode.type,
           props: cachedNode.props,
           key: cachedNode.key,

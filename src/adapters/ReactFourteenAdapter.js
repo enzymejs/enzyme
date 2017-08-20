@@ -128,7 +128,7 @@ class ReactFifteenAdapter extends EnzymeAdapter {
         }
         const output = renderer.getRenderOutput();
         return {
-          nodeType: 'class',
+          nodeType: typeToNodeType(cachedNode.type),
           type: cachedNode.type,
           props: cachedNode.props,
           key: cachedNode.key,
