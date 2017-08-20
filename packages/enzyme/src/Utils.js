@@ -362,3 +362,15 @@ export function displayNameOfNode(node) {
 
   return type.displayName || (typeof type === 'function' ? functionName(type) : type.name || type);
 }
+
+export function sym(s) {
+  return typeof Symbol === 'function' ? Symbol.for(`enzyme.${s}`) : s;
+}
+
+export function privateSet(obj, prop, value) {
+  Object.defineProperty(obj, prop, {
+    value,
+    enumerable: false,
+    writable: true,
+  });
+}

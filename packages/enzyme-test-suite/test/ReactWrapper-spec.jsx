@@ -18,7 +18,7 @@ import {
   render,
   ReactWrapper,
 } from 'enzyme';
-import { ITERATOR_SYMBOL } from 'enzyme/build/Utils';
+import { ITERATOR_SYMBOL, sym } from 'enzyme/build/Utils';
 import { REACT013, REACT014, REACT16, is } from './_helpers/version';
 
 describeWithDOM('mount', () => {
@@ -1037,6 +1037,7 @@ describeWithDOM('mount', () => {
       expect(setInvalidProps).to.throw(TypeError, similarException.message);
     });
 
+
     itIf(!REACT16, 'should call the callback when setProps has completed', () => {
       class Foo extends React.Component {
         render() {
@@ -1050,7 +1051,7 @@ describeWithDOM('mount', () => {
       const wrapper = mount(<Foo id="foo" />);
       expect(wrapper.find('.foo').length).to.equal(1);
 
-      wrapper.renderer.batchedUpdates(() => {
+      wrapper[sym('__renderer__')].batchedUpdates(() => {
         wrapper.setProps({ id: 'bar', foo: 'bla' }, () => {
           expect(wrapper.find('.bar').length).to.equal(1);
         });

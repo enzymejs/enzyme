@@ -7,7 +7,7 @@ import sinon from 'sinon';
 import { createClass } from './_helpers/react-compat';
 import { shallow, render, ShallowWrapper } from 'enzyme';
 import { describeIf, itIf, itWithData, generateEmptyRenderData } from './_helpers';
-import { ITERATOR_SYMBOL, withSetStateAllowed } from 'enzyme/build/Utils';
+import { ITERATOR_SYMBOL, withSetStateAllowed, sym } from 'enzyme/build/Utils';
 import { REACT013, REACT014, REACT16, is } from './_helpers/version';
 
 // The shallow renderer in react 16 does not yet support batched updates. When it does,
@@ -4300,14 +4300,14 @@ describe('shallow', () => {
     it('works with a name', () => {
       const wrapper = shallow(<div />);
       wrapper.single('foo', (node) => {
-        expect(node).to.equal(wrapper.node);
+        expect(node).to.equal(wrapper[sym('__node__')]);
       });
     });
 
     it('works without a name', () => {
       const wrapper = shallow(<div />);
       wrapper.single((node) => {
-        expect(node).to.equal(wrapper.node);
+        expect(node).to.equal(wrapper[sym('__node__')]);
       });
     });
   });
