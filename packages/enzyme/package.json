@@ -38,12 +38,8 @@
     "object-is": "^1.0.1",
     "object.assign": "^4.0.4",
     "object.entries": "^1.0.4",
-    "prop-types": "^15.5.10",
     "raf": "^3.3.2",
     "uuid": "^3.1.0"
-  },
-  "peerDependencies": {
-    "react": "0.13.x || 0.14.x || ^15.0.0-0 || ^16.0.0-0"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",

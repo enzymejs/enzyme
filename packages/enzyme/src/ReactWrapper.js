@@ -1,11 +1,9 @@
-import React from 'react';
 import cheerio from 'cheerio';
 import flatten from 'lodash/flatten';
 import unique from 'lodash/uniq';
 import compact from 'lodash/compact';
 
 import ComplexSelector from './ComplexSelector';
-import createWrapperComponent from './ReactWrapperComponent';
 import {
   containsChildrenSubArray,
   typeOfNode,
@@ -16,6 +14,7 @@ import {
   getAdapter,
   sym,
   privateSet,
+  cloneElement,
 } from './Utils';
 import {
   debugNodes,
@@ -33,8 +32,8 @@ const noop = () => {};
 
 const NODE = sym('__node__');
 const NODES = sym('__nodes__');
-const COMPONENT = sym('__component__');
 const RENDERER = sym('__renderer__');
+const UNRENDERED = sym('__unrendered__');
 const ROOT = sym('__root__');
 const OPTIONS = sym('__options__');
 const COMPLEX_SELECTOR = sym('__complexSelector__');
@@ -64,14 +63,6 @@ function filterWhereUnwrapped(wrapper, predicate) {
   return wrapper.wrap(compact(wrapper.getNodesInternal().filter(predicate)));
 }
 
-function getFromRenderer(renderer) {
-  const root = renderer.getNode();
-  return {
-    component: root.instance,
-    node: root.rendered,
-  };
-}
-
 /**
  * @class ReactWrapper
  */
@@ -84,26 +75,17 @@ class ReactWrapper {
     }
 
     if (!root) {
+      privateSet(this, UNRENDERED, nodes);
       const renderer = getAdapter(options).createRenderer({ mode: 'mount', ...options });
       privateSet(this, RENDERER, renderer);
-      const ReactWrapperComponent = createWrapperComponent(nodes, options);
-      renderer.render(
-        <ReactWrapperComponent
-          Component={nodes.type}
-          props={nodes.props}
-          context={options.context}
-        />,
-      );
+      renderer.render(nodes, options.context);
       privateSet(this, ROOT, this);
-      const {
-        component,
-        node,
-      } = getFromRenderer(this[RENDERER]);
-      privateSet(this, COMPONENT, component);
+      const node = this[RENDERER].getNode();
       privateSet(this, NODE, node);
       privateSet(this, NODES, [node]);
       this.length = 1;
     } else {
+      privateSet(this, UNRENDERED, null);
       privateSet(this, RENDERER, root[RENDERER]);
       privateSet(this, ROOT, root);
       if (!nodes) {
@@ -117,7 +99,6 @@ class ReactWrapper {
         privateSet(this, NODES, nodes);
       }
       this.length = this[NODES].length;
-      privateSet(this, COMPONENT, null);
     }
     privateSet(this, OPTIONS, root ? root[OPTIONS] : options);
     privateSet(this, COMPLEX_SELECTOR, new ComplexSelector(
@@ -248,11 +229,7 @@ class ReactWrapper {
       throw new Error('ReactWrapper::update() can only be called on the root');
     }
     this.single('update', () => {
-      const {
-        component,
-        node,
-      } = getFromRenderer(this[RENDERER]);
-      this[COMPONENT] = component;
+      const node = this[RENDERER].getNode();
       this[NODE] = node;
       this[NODES] = [node];
     });
@@ -270,7 +247,7 @@ class ReactWrapper {
       throw new Error('ReactWrapper::unmount() can only be called on the root');
     }
     this.single('unmount', () => {
-      this[COMPONENT].setState({ mount: false });
+      this[RENDERER].unmount();
       this.update();
     });
     return this;
@@ -287,8 +264,7 @@ class ReactWrapper {
       throw new Error('ReactWrapper::mount() can only be called on the root');
     }
     this.single('mount', () => {
-      this[COMPONENT].setState({ mount: true });
-      this.update();
+      this[RENDERER].render(this[UNRENDERED], this[OPTIONS].context, () => this.update());
     });
     return this;
   }
@@ -314,7 +290,9 @@ class ReactWrapper {
     if (typeof callback !== 'function') {
       throw new TypeError('ReactWrapper::setProps() expects a function as its second argument');
     }
-    this[COMPONENT].setChildProps(props, () => {
+    const adapter = getAdapter(this[OPTIONS]);
+    this[UNRENDERED] = cloneElement(adapter, this[UNRENDERED], props);
+    this[RENDERER].render(this[UNRENDERED], null, () => {
       this.update();
       callback();
     });
@@ -367,8 +345,7 @@ class ReactWrapper {
         'a context option',
       );
     }
-    this[COMPONENT].setChildContext(context);
-    this.update();
+    this[RENDERER].render(this[UNRENDERED], context, () => this.update());
     return this;
   }
 

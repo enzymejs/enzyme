@@ -374,3 +374,10 @@ export function privateSet(obj, prop, value) {
     writable: true,
   });
 }
+
+export function cloneElement(adapter, el, props) {
+  return adapter.createElement(
+    el.type,
+    { ...el.props, ...props },
+  );
+}

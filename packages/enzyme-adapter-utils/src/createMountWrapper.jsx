@@ -11,7 +11,7 @@ import PropTypes from 'prop-types';
  * the DOM node it rendered to, so we can't really "re-render" to
  * pass new props in.
  */
-export default function createWrapperComponent(node, options = {}) {
+export default function createMountWrapper(node, options = {}) {
   class WrapperComponent extends React.Component {
     constructor(...args) {
       super(...args);
@@ -21,9 +21,10 @@ export default function createWrapperComponent(node, options = {}) {
         context: this.props.context,
       };
     }
-    setChildProps(newProps, callback = undefined) {
+    setChildProps(newProps, newContext, callback = undefined) {
       const props = { ...this.state.props, ...newProps };
-      this.setState({ props }, callback);
+      const context = { ...this.state.context, ...newContext };
+      this.setState({ props, context }, callback);
     }
     getInstance() {
       const component = this._reactInternalInstance._renderedComponent;
