@@ -14,6 +14,8 @@ import {
   nodeEqual,
   nodeMatches,
   getAdapter,
+  shouldCloneChildren,
+  cloneChildren,
 } from './Utils';
 import {
   debugNodes,
@@ -302,6 +304,12 @@ class ReactWrapper {
     }
     if (typeof callback !== 'function') {
       throw new TypeError('ReactWrapper::setProps() expects a function as its second argument');
+    }
+    const instance = this.getNodeInternal();
+    const adapter = getAdapter(this.options);
+    if (shouldCloneChildren(instance, props, adapter)) {
+      props = props || {}; // eslint-disable-line no-param-reassign
+      props.children = cloneChildren(instance); // eslint-disable-line no-param-reassign
     }
     this.component.setChildProps(props, () => {
       this.update();

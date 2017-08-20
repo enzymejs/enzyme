@@ -1,4 +1,5 @@
 /* eslint no-use-before-define:0 */
+import React from 'react';
 import isEqual from 'lodash/isEqual';
 import is from 'object-is';
 import uuidv4 from 'uuid/v4';
@@ -179,12 +180,20 @@ function childrenOfNode(node) {
   return childrenToArray(children);
 }
 
+function propsHaveChildren(props) {
+  return !!(props || {}).children;
+}
+
 function isTextualNode(node) {
   return typeof node === 'string' || typeof node === 'number';
 }
 
 export function isReactElementAlike(arg, adapter) {
   return adapter.isValidElement(arg) || isTextualNode(arg) || Array.isArray(arg);
+}
+
+function isReactObjectAlike(arg, adapter) {
+  return adapter.isValidElement(arg) || Array.isArray(arg);
 }
 
 // TODO(lmr): can we get rid of this outside of the adapter?
@@ -361,4 +370,13 @@ export function displayNameOfNode(node) {
   if (!type) return null;
 
   return type.displayName || (typeof type === 'function' ? functionName(type) : type.name || type);
+}
+
+export function shouldCloneChildren(node, newProps, adapter) {
+  // if our new props don't have children and we have an array we should clone the children
+  return !propsHaveChildren(newProps) && isReactObjectAlike(propsOfNode(node).children, adapter);
+}
+
+export function cloneChildren(node) {
+  return React.Children.map(node.props.children, (child => React.cloneElement(child)));
 }
