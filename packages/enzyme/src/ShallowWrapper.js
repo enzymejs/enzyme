@@ -16,6 +16,8 @@ import {
   isCustomComponentElement,
   ITERATOR_SYMBOL,
   getAdapter,
+  sym,
+  privateSet,
 } from './Utils';
 import {
   debugNodes,
@@ -30,6 +32,13 @@ import {
   buildPredicate,
 } from './RSTTraversal';
 
+const NODE = sym('__node__');
+const NODES = sym('__nodes__');
+const RENDERER = sym('__renderer__');
+const UNRENDERED = sym('__unrendered__');
+const ROOT = sym('__root__');
+const OPTIONS = sym('__options__');
+const COMPLEX_SELECTOR = sym('__complexSelector__');
 /**
  * Finds all nodes in the current wrapper nodes' render trees that match the provided predicate
  * function.
@@ -104,38 +113,43 @@ class ShallowWrapper {
   constructor(nodes, root, options = {}) {
     validateOptions(options);
     if (!root) {
-      this.root = this;
-      this.unrendered = nodes;
-      this.renderer = getAdapter(options).createRenderer({ mode: 'shallow', ...options });
-      this.renderer.render(nodes, options.context);
-      const instance = this.renderer.getNode().instance;
+      privateSet(this, ROOT, this);
+      privateSet(this, UNRENDERED, nodes);
+      const renderer = getAdapter(options).createRenderer({ mode: 'shallow', ...options });
+      privateSet(this, RENDERER, renderer);
+      this[RENDERER].render(nodes, options.context);
+      const instance = this[RENDERER].getNode().instance;
       if (
         options.lifecycleExperimental &&
         instance &&
         typeof instance.componentDidMount === 'function'
       ) {
-        this.renderer.batchedUpdates(() => {
+        this[RENDERER].batchedUpdates(() => {
           instance.componentDidMount();
         });
       }
-      this.node = getRootNode(this.renderer.getNode());
-      this.nodes = [this.node];
+      privateSet(this, NODE, getRootNode(this[RENDERER].getNode()));
+      privateSet(this, NODES, [this[NODE]]);
       this.length = 1;
     } else {
-      this.root = root;
-      this.unrendered = null;
-      this.renderer = root.renderer;
+      privateSet(this, ROOT, root);
+      privateSet(this, UNRENDERED, null);
+      privateSet(this, RENDERER, root[RENDERER]);
       if (!Array.isArray(nodes)) {
-        this.node = nodes;
-        this.nodes = [nodes];
+        privateSet(this, NODE, nodes);
+        privateSet(this, NODES, [nodes]);
       } else {
-        this.node = nodes[0];
-        this.nodes = nodes;
+        privateSet(this, NODE, nodes[0]);
+        privateSet(this, NODES, nodes);
       }
-      this.length = this.nodes.length;
+      this.length = this[NODES].length;
     }
-    this.options = root ? root.options : options;
-    this.complexSelector = new ComplexSelector(buildPredicate, findWhereUnwrapped, childrenOfNode);
+    privateSet(this, OPTIONS, root ? root[OPTIONS] : options);
+    privateSet(this, COMPLEX_SELECTOR, new ComplexSelector(
+      buildPredicate,
+      findWhereUnwrapped,
+      childrenOfNode,
+    ));
   }
 
   getNodeInternal() {
@@ -144,7 +158,7 @@ class ShallowWrapper {
         'ShallowWrapper::getNode() can only be called when wrapping one node',
       );
     }
-    return this.node;
+    return this[NODE];
   }
 
   /**
@@ -158,7 +172,7 @@ class ShallowWrapper {
         'ShallowWrapper::getElement() can only be called when wrapping one node',
       );
     }
-    return getAdapter(this.options).nodeToElement(this.node);
+    return getAdapter(this[OPTIONS]).nodeToElement(this[NODE]);
   }
 
   /**
@@ -167,7 +181,7 @@ class ShallowWrapper {
    * @return {Array<ReactElement>}
    */
   getElements() {
-    return this.nodes.map(getAdapter(this.options).nodeToElement);
+    return this[NODES].map(getAdapter(this[OPTIONS]).nodeToElement);
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -178,7 +192,7 @@ class ShallowWrapper {
   }
 
   getNodesInternal() {
-    return this.nodes;
+    return this[NODES];
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -202,10 +216,10 @@ class ShallowWrapper {
    * @returns {ReactComponent}
    */
   instance() {
-    if (this.root !== this) {
+    if (this[ROOT] !== this) {
       throw new Error('ShallowWrapper::instance() can only be called on the root');
     }
-    return this.renderer.getNode().instance;
+    return this[RENDERER].getNode().instance;
   }
 
   /**
@@ -217,12 +231,12 @@ class ShallowWrapper {
    * @returns {ShallowWrapper}
    */
   update() {
-    if (this.root !== this) {
+    if (this[ROOT] !== this) {
       throw new Error('ShallowWrapper::update() can only be called on the root');
     }
     this.single('update', () => {
-      this.node = getRootNode(this.renderer.getNode());
-      this.nodes = [this.node];
+      this[NODE] = getRootNode(this[RENDERER].getNode());
+      this[NODES] = [this[NODE]];
     });
     return this;
   }
@@ -245,20 +259,20 @@ class ShallowWrapper {
         // this case, state will be undefined, but props/context will exist.
         const instance = this.instance() || {};
         const state = instance.state;
-        const prevProps = instance.props || this.unrendered.props;
-        const prevContext = instance.context || this.options.context;
+        const prevProps = instance.props || this[UNRENDERED].props;
+        const prevContext = instance.context || this[OPTIONS].context;
         const nextProps = props || prevProps;
         const nextContext = context || prevContext;
         if (context) {
-          this.options = { ...this.options, context: nextContext };
+          this[OPTIONS] = { ...this[OPTIONS], context: nextContext };
         }
-        this.renderer.batchedUpdates(() => {
+        this[RENDERER].batchedUpdates(() => {
           let shouldRender = true;
           // dirty hack:
           // make sure that componentWillReceiveProps is called before shouldComponentUpdate
           let originalComponentWillReceiveProps;
           if (
-            this.options.lifecycleExperimental &&
+            this[OPTIONS].lifecycleExperimental &&
             instance &&
             typeof instance.componentWillReceiveProps === 'function'
           ) {
@@ -269,7 +283,7 @@ class ShallowWrapper {
           // dirty hack: avoid calling shouldComponentUpdate twice
           let originalShouldComponentUpdate;
           if (
-            this.options.lifecycleExperimental &&
+            this[OPTIONS].lifecycleExperimental &&
             instance &&
             typeof instance.shouldComponentUpdate === 'function'
           ) {
@@ -277,18 +291,18 @@ class ShallowWrapper {
             originalShouldComponentUpdate = instance.shouldComponentUpdate;
           }
           if (shouldRender) {
-            if (props) this.unrendered = React.cloneElement(this.unrendered, props);
+            if (props) this[UNRENDERED] = React.cloneElement(this[UNRENDERED], props);
             if (originalShouldComponentUpdate) {
               instance.shouldComponentUpdate = () => true;
             }
 
-            this.renderer.render(this.unrendered, nextContext);
+            this[RENDERER].render(this[UNRENDERED], nextContext);
 
             if (originalShouldComponentUpdate) {
               instance.shouldComponentUpdate = originalShouldComponentUpdate;
             }
             if (
-              this.options.lifecycleExperimental &&
+              this[OPTIONS].lifecycleExperimental &&
               instance &&
               typeof instance.componentDidUpdate === 'function'
             ) {
@@ -322,7 +336,7 @@ class ShallowWrapper {
    * @returns {ShallowWrapper}
    */
   setProps(props) {
-    if (this.root !== this) {
+    if (this[ROOT] !== this) {
       throw new Error('ShallowWrapper::setProps() can only be called on the root');
     }
     return this.rerender(props);
@@ -342,10 +356,10 @@ class ShallowWrapper {
    * @returns {ShallowWrapper}
    */
   setState(state, callback = undefined) {
-    if (this.root !== this) {
+    if (this[ROOT] !== this) {
       throw new Error('ShallowWrapper::setState() can only be called on the root');
     }
-    if (this.instance() === null || this.renderer.getNode().nodeType === 'function') {
+    if (this.instance() === null || this[RENDERER].getNode().nodeType === 'function') {
       throw new Error('ShallowWrapper::setState() can only be called on class components');
     }
     this.single('setState', () => {
@@ -367,10 +381,10 @@ class ShallowWrapper {
    * @returns {ShallowWrapper}
    */
   setContext(context) {
-    if (this.root !== this) {
+    if (this[ROOT] !== this) {
       throw new Error('ShallowWrapper::setContext() can only be called on the root');
     }
-    if (!this.options.context) {
+    if (!this[OPTIONS].context) {
       throw new Error(
         'ShallowWrapper::setContext() can only be called on a wrapper that was originally passed ' +
         'a context option',
@@ -392,7 +406,7 @@ class ShallowWrapper {
    * @returns {Boolean}
    */
   contains(nodeOrNodes) {
-    const adapter = getAdapter(this.options);
+    const adapter = getAdapter(this[OPTIONS]);
     if (!isReactElementAlike(nodeOrNodes, adapter)) {
       throw new Error(
         'ShallowWrapper::contains() can only be called with ReactElement (or array of them), ' +
@@ -526,7 +540,7 @@ class ShallowWrapper {
    * @returns {ShallowWrapper}
    */
   find(selector) {
-    return this.complexSelector.find(selector, this);
+    return this[COMPLEX_SELECTOR].find(selector, this);
   }
 
   /**
@@ -610,8 +624,8 @@ class ShallowWrapper {
   html() {
     return this.single('html', (n) => {
       if (this.type() === null) return null;
-      const adapter = getAdapter(this.options);
-      const renderer = adapter.createRenderer({ ...this.options, mode: 'string' });
+      const adapter = getAdapter(this[OPTIONS]);
+      const renderer = adapter.createRenderer({ ...this[OPTIONS], mode: 'string' });
       return renderer.render(adapter.nodeToElement(n));
     });
   }
@@ -633,7 +647,7 @@ class ShallowWrapper {
    * @returns {ShallowWrapper}
    */
   unmount() {
-    this.renderer.unmount();
+    this[RENDERER].unmount();
     return this;
   }
 
@@ -647,8 +661,8 @@ class ShallowWrapper {
    */
   simulate(event, ...args) {
     return this.single('simulate', (n) => {
-      this.renderer.simulateEvent(n, event, ...args);
-      this.root.update();
+      this[RENDERER].simulateEvent(n, event, ...args);
+      this[ROOT].update();
     });
   }
 
@@ -673,10 +687,10 @@ class ShallowWrapper {
    * @returns {*}
    */
   state(name) {
-    if (this.root !== this) {
+    if (this[ROOT] !== this) {
       throw new Error('ShallowWrapper::state() can only be called on the root');
     }
-    if (this.instance() === null || this.renderer.getNode().nodeType === 'function') {
+    if (this.instance() === null || this[RENDERER].getNode().nodeType === 'function') {
       throw new Error('ShallowWrapper::state() can only be called on class components');
     }
     const _state = this.single('state', () => this.instance().state);
@@ -696,10 +710,10 @@ class ShallowWrapper {
    * @returns {*}
    */
   context(name) {
-    if (this.root !== this) {
+    if (this[ROOT] !== this) {
       throw new Error('ShallowWrapper::context() can only be called on the root');
     }
-    if (!this.options.context) {
+    if (!this[OPTIONS].context) {
       throw new Error(
         'ShallowWrapper::context() can only be called on a wrapper that was originally passed ' +
         'a context option',
@@ -750,7 +764,7 @@ class ShallowWrapper {
    */
   parents(selector) {
     const allParents = this.wrap(
-      this.single('parents', n => parentsOfNode(n, this.root.node)),
+      this.single('parents', n => parentsOfNode(n, this[ROOT][NODE])),
     );
     return selector ? allParents.filter(selector) : allParents;
   }
@@ -783,7 +797,7 @@ class ShallowWrapper {
    */
   shallow(options) {
     return this.single('shallow', n => this.wrap(
-      getAdapter(this.options).nodeToElement(n), null, options),
+      getAdapter(this[OPTIONS]).nodeToElement(n), null, options),
     );
   }
 
@@ -918,7 +932,7 @@ class ShallowWrapper {
    * @returns {Boolean}
    */
   some(selector) {
-    if (this.root === this) {
+    if (this[ROOT] === this) {
       throw new Error('ShallowWrapper::some() can not be called on the root');
     }
     const predicate = buildPredicate(selector);
@@ -991,7 +1005,7 @@ class ShallowWrapper {
    * @returns {ReactElement}
    */
   get(index) {
-    return getAdapter(this.options).nodeToElement(this.getNodesInternal()[index]);
+    return getAdapter(this[OPTIONS]).nodeToElement(this.getNodesInternal()[index]);
   }
 
   /**
@@ -1068,7 +1082,7 @@ class ShallowWrapper {
    * @param node
    * @returns {ShallowWrapper}
    */
-  wrap(node, root = this.root, ...args) {
+  wrap(node, root = this[ROOT], ...args) {
     if (node instanceof ShallowWrapper) {
       return node;
     }
@@ -1105,17 +1119,17 @@ class ShallowWrapper {
    * @returns {ShallowWrapper}
    */
   dive(options = {}) {
-    const adapter = getAdapter(this.options);
+    const adapter = getAdapter(this[OPTIONS]);
     const name = 'dive';
     return this.single(name, (n) => {
       if (n && n.nodeType === 'host') {
         throw new TypeError(`ShallowWrapper::${name}() can not be called on Host Components`);
       }
-      const el = getAdapter(this.options).nodeToElement(n);
+      const el = getAdapter(this[OPTIONS]).nodeToElement(n);
       if (!isCustomComponentElement(el, adapter)) {
         throw new TypeError(`ShallowWrapper::${name}() can only be called on components`);
       }
-      return this.wrap(el, null, { ...this.options, ...options });
+      return this.wrap(el, null, { ...this[OPTIONS], ...options });
     });
   }
 }
@@ -1124,8 +1138,8 @@ if (ITERATOR_SYMBOL) {
   Object.defineProperty(ShallowWrapper.prototype, ITERATOR_SYMBOL, {
     configurable: true,
     value: function iterator() {
-      const iter = this.nodes[ITERATOR_SYMBOL]();
-      const adapter = getAdapter(this.options);
+      const iter = this[NODES][ITERATOR_SYMBOL]();
+      const adapter = getAdapter(this[OPTIONS]);
       return {
         next() {
           const next = iter.next();
@@ -1141,5 +1155,26 @@ if (ITERATOR_SYMBOL) {
     },
   });
 }
+
+function privateWarning(prop, extraMessage) {
+  Object.defineProperty(ShallowWrapper.prototype, prop, {
+    get() {
+      throw new Error(`
+        Attempted to access ShallowWrapper::${prop}, which was previously a private property on
+        Enzyme ShallowWrapper instances, but is no longer and should not be relied upon.
+        ${extraMessage}
+      `);
+    },
+    enumerable: false,
+    configurable: false,
+  });
+}
+
+privateWarning('node', 'Consider using the getElement() method instead.');
+privateWarning('nodes', 'Consider using the getElements() method instead.');
+privateWarning('renderer', '');
+privateWarning('root', '');
+privateWarning('options', '');
+privateWarning('complexSelector', '');
 
 export default ShallowWrapper;
