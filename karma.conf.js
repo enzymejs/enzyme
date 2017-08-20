@@ -3,14 +3,14 @@
 require('babel-register');
 
 var IgnorePlugin = require('webpack').IgnorePlugin;
-var is = require('./test/_helpers/version').is;
+var is = require('./packages/enzyme-test-suite/test/_helpers/version').is;
 
 function getPlugins() {
-  const adapter13 = new IgnorePlugin(/adapters\/ReactThirteenAdapter/);
-  const adapter14 = new IgnorePlugin(/adapters\/ReactFourteenAdapter/);
-  const adapter154 = new IgnorePlugin(/adapters\/ReactFifteenFourAdapter/);
-  const adapter15 = new IgnorePlugin(/adapters\/ReactFifteenFiveAdapter/);
-  const adapter16 = new IgnorePlugin(/adapters\/ReactSixteenAdapter/);
+  const adapter13 = new IgnorePlugin(/enzyme-adapter-react-13$/);
+  const adapter14 = new IgnorePlugin(/enzyme-adapter-react-14$/);
+  const adapter154 = new IgnorePlugin(/enzyme-adapter-react-15\.4$/);
+  const adapter15 = new IgnorePlugin(/enzyme-adapter-react-15$/);
+  const adapter16 = new IgnorePlugin(/enzyme-adapter-react-16$/);
 
   var plugins = [
     adapter13,
@@ -66,11 +66,11 @@ module.exports = function karma(config) {
     reporters: ['dots'],
 
     files: [
-      'test/*.{jsx,js}',
+      'packages/enzyme-test-suite/test/*.{jsx,js}',
     ],
 
     exclude: [
-      'test/_helpers/index.jsx',
+      'packages/enzyme-test-suite/test/_helpers/index.jsx',
     ],
 
     browsers: [
@@ -79,7 +79,7 @@ module.exports = function karma(config) {
     ],
 
     preprocessors: {
-      'test/*.{jsx,js}': ['webpack', 'sourcemap'],
+      'packages/enzyme-test-suite/test/*.{jsx,js}': ['webpack', 'sourcemap'],
     },
 
     webpack: {
