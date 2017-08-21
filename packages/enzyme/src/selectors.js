@@ -135,7 +135,7 @@ export function buildPredicate(selector) {
     case 'string': {
       const tokens = safelyGenerateTokens(selector);
       if (isComplexSelector(tokens)) {
-        // @TODO throw a helpful error.
+        throw new TypeError('This method does not support complex CSS selectors');
       }
       // Simple selectors only have a single selector token
       return buildPredicateFromToken(tokens[0]);

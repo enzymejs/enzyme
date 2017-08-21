@@ -21,7 +21,7 @@ const tests = [
   },
 ];
 
-describe('ComplexSelector', () => {
+describe('selectors', () => {
   tests.forEach(({ describeMethod, name, renderMethod }) => {
     describeMethod(name, () => {
       it('simple descendent', () => {
@@ -171,6 +171,15 @@ describe('ComplexSelector', () => {
         const siblings = wrapper.find('span ~ span');
         expect(spans.length - 2).to.equal(siblings.length);
         siblings.map(sibling => expect(sibling.text()).to.not.equal('Top'));
+      });
+
+      it('throws for complex selectors in simple selector methods', () => {
+        const wrapper = renderMethod(<div className="foo" />);
+        ['is', 'filter', 'not', 'every'].forEach((method) => {
+          expect(() => wrapper[method]('.foo + div')).to.throw(
+            `This method does not support complex CSS selectors`
+          );
+        });
       });
 
       it('.foo + div > span', () => {
