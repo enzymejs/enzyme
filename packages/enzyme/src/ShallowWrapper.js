@@ -3,7 +3,6 @@ import unique from 'lodash/uniq';
 import compact from 'lodash/compact';
 import cheerio from 'cheerio';
 
-import ComplexSelector from './ComplexSelector';
 import {
   nodeEqual,
   nodeMatches,
@@ -29,8 +28,8 @@ import {
   childrenOfNode,
   parentsOfNode,
   treeFilter,
-  buildPredicate,
 } from './RSTTraversal';
+import { buildPredicate, reduceTreeBySelector } from './selectors';
 
 const NODE = sym('__node__');
 const NODES = sym('__nodes__');
@@ -145,11 +144,6 @@ class ShallowWrapper {
       this.length = this[NODES].length;
     }
     privateSet(this, OPTIONS, root ? root[OPTIONS] : options);
-    privateSet(this, COMPLEX_SELECTOR, new ComplexSelector(
-      buildPredicate,
-      findWhereUnwrapped,
-      childrenOfNode,
-    ));
   }
 
   getNodeInternal() {
@@ -541,7 +535,7 @@ class ShallowWrapper {
    * @returns {ShallowWrapper}
    */
   find(selector) {
-    return this[COMPLEX_SELECTOR].find(selector, this);
+    return reduceTreeBySelector(selector, this);
   }
 
   /**

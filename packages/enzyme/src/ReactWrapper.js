@@ -3,7 +3,7 @@ import flatten from 'lodash/flatten';
 import unique from 'lodash/uniq';
 import compact from 'lodash/compact';
 
-import ComplexSelector from './ComplexSelector';
+import createWrapperComponent from './ReactWrapperComponent';
 import {
   containsChildrenSubArray,
   typeOfNode,
@@ -25,8 +25,9 @@ import {
   childrenOfNode,
   parentsOfNode,
   treeFilter,
-  buildPredicate,
 } from './RSTTraversal';
+
+import { buildPredicate, reduceTreeBySelector } from './selectors';
 
 const noop = () => {};
 
@@ -101,11 +102,6 @@ class ReactWrapper {
       this.length = this[NODES].length;
     }
     privateSet(this, OPTIONS, root ? root[OPTIONS] : options);
-    privateSet(this, COMPLEX_SELECTOR, new ComplexSelector(
-      buildPredicate,
-      findWhereUnwrapped,
-      childrenOfNode,
-    ));
   }
 
   /**
@@ -464,7 +460,7 @@ class ReactWrapper {
    * @returns {ReactWrapper}
    */
   find(selector) {
-    return this[COMPLEX_SELECTOR].find(selector, this);
+    return reduceTreeBySelector(selector, this);
   }
 
   /**
