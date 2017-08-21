@@ -2,9 +2,6 @@ import './_helpers/setupAdapters';
 import React from 'react';
 import sinon from 'sinon';
 import { expect } from 'chai';
-import {
-  splitSelector,
-} from 'enzyme/build/Utils';
 import { elementToTree } from 'enzyme-adapter-utils';
 import {
   hasClassName,
@@ -13,7 +10,6 @@ import {
   treeFilter,
   pathToNode,
   getTextFromNode,
-  buildPredicate,
 } from 'enzyme/build/RSTTraversal';
 import { describeIf } from './_helpers';
 import { REACT013 } from './_helpers/version';
@@ -21,31 +17,6 @@ import { REACT013 } from './_helpers/version';
 const $ = elementToTree;
 
 describe('RSTTraversal', () => {
-  describe('splitSelector', () => {
-    const fn = splitSelector;
-    it('splits multiple class names', () => {
-      expect(fn('.foo.bar')).to.eql(['.foo', '.bar']);
-      expect(fn('.foo.bar.baz')).to.eql(['.foo', '.bar', '.baz']);
-    });
-
-    it('splits tag names and class names', () => {
-      expect(fn('input.bar')).to.eql(['input', '.bar']);
-      expect(fn('div.bar.baz')).to.eql(['div', '.bar', '.baz']);
-      expect(fn('Foo.bar')).to.eql(['Foo', '.bar']);
-    });
-
-    it('splits tag names and attributes', () => {
-      expect(fn('input[type="text"]')).to.eql(['input', '[type="text"]']);
-      expect(
-        fn('div[title="title"][data-value="foo"]'),
-      ).to.eql(['div', '[title="title"]', '[data-value="foo"]']);
-    });
-
-    it('throws for malformed selectors', () => {
-      expect(() => fn('div[data-name="xyz"')).to.throw(/Enzyme::Selector received what appears to be a malformed string selector/);
-    });
-  });
-
   describe('hasClassName', () => {
 
     it('should work for standalone classNames', () => {
@@ -356,14 +327,6 @@ describe('RSTTraversal', () => {
         const result = getTextFromNode(node);
         expect(result).to.equal('<Subject />');
       });
-    });
-  });
-
-  describe('buildPredicate', () => {
-    it('should throw expected error', () => {
-      const intSelector = 10;
-      const func = buildPredicate.bind(this, intSelector);
-      expect(func).to.throw(TypeError, 'Enzyme::Selector expects a string, object, or Component Constructor');
     });
   });
 });
