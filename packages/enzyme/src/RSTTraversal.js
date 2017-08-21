@@ -44,6 +44,31 @@ export function treeFilter(tree, fn) {
   return results;
 }
 
+/**
+ * To support sibling selectors we need to be able to find
+ * the siblings of a node. The easiest way to do that is find
+ * the parent of the node and access its children.
+ * 
+ * This would be unneeded if the RST spec included sibling pointers
+ * such as node.nextSibling and node.prevSibling
+ * @param {*} root 
+ * @param {*} targetNode 
+ */
+export function findParentNode(root, targetNode) {
+  const results = treeFilter(
+    root,
+    (node) => {
+      if (!node.rendered) {
+        return false;
+      }
+      return Array.isArray(node.rendered)
+        ? node.rendered.indexOf(targetNode) !== -1
+        : node.rendered === targetNode;
+    },
+  );
+  return results[0] || null;
+}
+
 function pathFilter(path, fn) {
   return path.filter(tree => treeFilter(tree, fn).length !== 0);
 }
