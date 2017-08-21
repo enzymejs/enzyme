@@ -4,7 +4,6 @@ import ReactDOM from 'react-dom';
 import ReactDOMServer from 'react-dom/server';
 // eslint-disable-next-line import/no-unresolved, import/extensions
 import TestUtils from 'react-dom/test-utils';
-import PropTypes from 'prop-types';
 import values from 'object.values';
 import { EnzymeAdapter } from 'enzyme';
 import {
@@ -13,6 +12,8 @@ import {
   propFromEvent,
   withSetStateAllowed,
   assertDomAvailable,
+  createRenderWrapper,
+  createMountWrapper,
 } from 'enzyme-adapter-utils';
 
 function compositeTypeToNodeType(type) {
@@ -73,31 +74,34 @@ function instanceToTree(inst) {
   throw new Error('Enzyme Internal Error: unknown instance encountered');
 }
 
-class SimpleWrapper extends React.Component {
-  render() {
-    return this.props.node || null;
-  }
-}
-
-SimpleWrapper.propTypes = { node: PropTypes.node.isRequired };
-
 class ReactFifteenAdapter extends EnzymeAdapter {
   createMountRenderer(options) {
     assertDomAvailable('mount');
     const domNode = options.attachTo || global.document.createElement('div');
     let instance = null;
     return {
-      render(el/* , context */) {
-        const wrappedEl = React.createElement(SimpleWrapper, {
-          node: el,
-        });
-        instance = ReactDOM.render(wrappedEl, domNode);
+      render(el, context, callback) {
+        if (instance === null) {
+          const ReactWrapperComponent = createMountWrapper(el, options);
+          const wrappedEl = React.createElement(ReactWrapperComponent, {
+            Component: el.type,
+            props: el.props,
+            context,
+          });
+          instance = ReactDOM.render(wrappedEl, domNode);
+          if (typeof callback === 'function') {
+            callback();
+          }
+        } else {
+          instance.setChildProps(el.props, context, callback);
+        }
       },
       unmount() {
         ReactDOM.unmountComponentAtNode(domNode);
+        instance = null;
       },
       getNode() {
-        return instanceToTree(instance._reactInternalInstance._renderedComponent);
+        return instance ? instanceToTree(instance._reactInternalInstance).rendered : null;
       },
       simulateEvent(node, event, mock) {
         const mappedEvent = mapNativeEventNames(event);
@@ -165,9 +169,17 @@ class ReactFifteenAdapter extends EnzymeAdapter {
     };
   }
 
-  createStringRenderer(/* options */) {
+  createStringRenderer(options) {
     return {
-      render(el /* , context */) {
+      render(el, context) {
+        if (options.context && (el.type.contextTypes || options.childContextTypes)) {
+          const childContextTypes = {
+            ...(el.type.contextTypes || {}),
+            ...options.childContextTypes,
+          };
+          const ContextWrapper = createRenderWrapper(el, context, childContextTypes);
+          return ReactDOMServer.renderToStaticMarkup(React.createElement(ContextWrapper));
+        }
         return ReactDOMServer.renderToStaticMarkup(el);
       },
     };

@@ -56,13 +56,12 @@ const additionalDirsToRemove = [
   'node_modules/.bin/npm.cmd',
 ];
 
-const rmrfArgs = []
+const rmrfs = []
   .concat(packagesToRemove)
-  .concat(additionalDirsToRemove)
-  .join(' ');
+  .concat(additionalDirsToRemove);
 
 Promise.resolve()
-  .then(() => primraf(rmrfArgs))
+  .then(() => Promise.all(rmrfs.map(s => primraf(s))))
   .then(() => run('npm i'))
   .then(() => Promise.all([
     getJSON(adapterPackageJsonPath),

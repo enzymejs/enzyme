@@ -1,4 +1,8 @@
 import flatten from 'lodash/flatten';
+import createMountWrapper from './createMountWrapper';
+import createRenderWrapper from './createRenderWrapper';
+
+export { createMountWrapper, createRenderWrapper };
 
 export function mapNativeEventNames(event) {
   const nativeToReactEventMap = {

@@ -1,4 +1,3 @@
-import React from 'react';
 import cheerio from 'cheerio';
 import { getAdapter } from './Utils';
 
@@ -16,31 +15,9 @@ import { getAdapter } from './Utils';
  * @returns {Cheerio}
  */
 
-function createContextWrapperForNode(node, context, childContextTypes) {
-  class ContextWrapper extends React.Component {
-    getChildContext() {
-      return context;
-    }
-    render() {
-      return node;
-    }
-  }
-  ContextWrapper.childContextTypes = childContextTypes;
-  return ContextWrapper;
-}
-
 export default function render(node, options = {}) {
   const adapter = getAdapter(options);
   const renderer = adapter.createRenderer({ mode: 'string', ...options });
-  if (options.context && (node.type.contextTypes || options.childContextTypes)) {
-    const childContextTypes = {
-      ...(node.type.contextTypes || {}),
-      ...options.childContextTypes,
-    };
-    const ContextWrapper = createContextWrapperForNode(node, options.context, childContextTypes);
-    const html = renderer.render(<ContextWrapper />);
-    return cheerio.load(html).root();
-  }
-  const html = renderer.render(node);
+  const html = renderer.render(node, options.context);
   return cheerio.load(html).root();
 }

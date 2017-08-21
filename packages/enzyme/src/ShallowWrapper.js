@@ -1,4 +1,3 @@
-import React from 'react';
 import flatten from 'lodash/flatten';
 import unique from 'lodash/uniq';
 import compact from 'lodash/compact';
@@ -18,6 +17,7 @@ import {
   getAdapter,
   sym,
   privateSet,
+  cloneElement,
 } from './Utils';
 import {
   debugNodes,
@@ -252,6 +252,7 @@ class ShallowWrapper {
    * @returns {ShallowWrapper}
    */
   rerender(props, context) {
+    const adapter = getAdapter(this[OPTIONS]);
     this.single('rerender', () => {
       withSetStateAllowed(() => {
         // NOTE(lmr): In react 16, instances will be null for SFCs, but
@@ -291,7 +292,7 @@ class ShallowWrapper {
             originalShouldComponentUpdate = instance.shouldComponentUpdate;
           }
           if (shouldRender) {
-            if (props) this[UNRENDERED] = React.cloneElement(this[UNRENDERED], props);
+            if (props) this[UNRENDERED] = cloneElement(adapter, this[UNRENDERED], props);
             if (originalShouldComponentUpdate) {
               instance.shouldComponentUpdate = () => true;
             }
