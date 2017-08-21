@@ -308,14 +308,6 @@ export function coercePropValue(propName, propValue) {
 
   const trimmedValue = propValue.trim();
 
-  // if propValue includes quotes, it should be
-  // treated as a string
-  // eslint override pending https://github.com/eslint/eslint/issues/7472
-  // eslint-disable-next-line no-useless-escape
-  if (/^(['"]).*\1$/.test(trimmedValue)) {
-    return trimmedValue.slice(1, -1);
-  }
-
   const numericPropValue = +trimmedValue;
 
   // if parseInt is not NaN, then we've wanted a number
@@ -327,11 +319,7 @@ export function coercePropValue(propName, propValue) {
   if (trimmedValue === 'true') return true;
   if (trimmedValue === 'false') return false;
 
-  // user provided an unquoted string value
-  throw new TypeError(
-    `Enzyme::Unable to parse selector '[${propName}=${propValue}]'. ` +
-    `Perhaps you forgot to escape a string? Try '[${propName}="${trimmedValue}"]' instead.`,
-  );
+  return trimmedValue;
 }
 
 export function nodeHasProperty(node, propKey, stringifiedPropValue) {
