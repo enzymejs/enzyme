@@ -489,24 +489,6 @@ describeWithDOM('mount', () => {
       expect(wrapper.find('[type=text]')).to.have.lengthOf(2);
     });
 
-    // React 15.2 warns when setting a non valid prop to an DOM element
-    describeIf(REACT013 || REACT014, 'unauthorized dom props', () => {
-      it('should not find components with invalid attributes', () => {
-        // Invalid attributes aren't valid JSX, so manual instantiation is necessary
-        const wrapper = mount(
-          React.createElement('div', null, React.createElement('span', {
-            '123-foo': 'bar',
-            '-foo': 'bar',
-            '+foo': 'bar',
-          })),
-        );
-
-        expect(wrapper.find('[-foo]')).to.have.length(0, '-foo');
-        expect(wrapper.find('[+foo]')).to.have.length(0, '+foo');
-        expect(wrapper.find('[123-foo]')).to.have.length(0, '123-foo');
-      });
-    });
-
     it('should support data prop selectors', () => {
       const wrapper = mount(
         <div>
