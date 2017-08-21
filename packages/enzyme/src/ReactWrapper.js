@@ -3,7 +3,6 @@ import flatten from 'lodash/flatten';
 import unique from 'lodash/uniq';
 import compact from 'lodash/compact';
 
-import createWrapperComponent from './ReactWrapperComponent';
 import {
   containsChildrenSubArray,
   typeOfNode,
@@ -37,7 +36,6 @@ const RENDERER = sym('__renderer__');
 const UNRENDERED = sym('__unrendered__');
 const ROOT = sym('__root__');
 const OPTIONS = sym('__options__');
-const COMPLEX_SELECTOR = sym('__complexSelector__');
 
 /**
  * Finds all nodes in the current wrapper nodes' render trees that match the provided predicate

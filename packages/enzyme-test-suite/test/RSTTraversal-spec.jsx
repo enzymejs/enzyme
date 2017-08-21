@@ -82,13 +82,13 @@ describe('RSTTraversal', () => {
       const node = $(<div onChange={noop} title="foo" />);
 
       expect(nodeHasProperty(node, 'onChange')).to.equal(true);
-      expect(nodeHasProperty(node, 'title', '"foo"')).to.equal(true);
+      expect(nodeHasProperty(node, 'title', 'foo')).to.equal(true);
     });
 
     it('should not match on html attributes', () => {
       const node = $(<div htmlFor="foo" />);
 
-      expect(nodeHasProperty(node, 'for', '"foo"')).to.equal(false);
+      expect(nodeHasProperty(node, 'for', 'foo')).to.equal(false);
     });
 
     it('should not find undefined properties', () => {
@@ -112,8 +112,8 @@ describe('RSTTraversal', () => {
     it('should parse numbers as numeric literals', () => {
       expect(nodeHasProperty(<div foo={2.3} />, 'foo', '2.3')).to.equal(true);
       expect(nodeHasProperty(<div foo={2} />, 'foo', '2')).to.equal(true);
-      expect(() => nodeHasProperty(<div foo={2} />, 'foo', '2abc')).to.throw();
-      expect(() => nodeHasProperty(<div foo={2} />, 'foo', 'abc2')).to.throw();
+      expect(nodeHasProperty(<div foo={2} />, 'foo', '2abc')).to.equal(false);
+      expect(nodeHasProperty(<div foo={2} />, 'foo', 'abc2')).to.equal(false);
       expect(nodeHasProperty(<div foo={-2} />, 'foo', '-2')).to.equal(true);
       expect(nodeHasProperty(<div foo={2e8} />, 'foo', '2e8')).to.equal(true);
       expect(nodeHasProperty(<div foo={Infinity} />, 'foo', 'Infinity')).to.equal(true);
@@ -129,9 +129,7 @@ describe('RSTTraversal', () => {
 
     it('should work with empty strings', () => {
       expect(nodeHasProperty(<div foo={''} />, 'foo', '')).to.equal(true);
-      expect(nodeHasProperty(<div foo={''} />, 'foo', '""')).to.equal(true);
       expect(nodeHasProperty(<div foo={'bar'} />, 'foo', '')).to.equal(false);
-      expect(nodeHasProperty(<div foo={'bar'} />, 'foo', '""')).to.equal(false);
     });
 
     it('should work with NaN', () => {
@@ -155,13 +153,6 @@ describe('RSTTraversal', () => {
       expect(nodeHasProperty(<div foo={-Infinity} />, 'foo', '-Infinity')).to.equal(true);
       expect(nodeHasProperty(<div foo={0} />, 'foo', '-Infinity')).to.equal(false);
     });
-
-    it('should throw when un unquoted string is passed in', () => {
-      const node = $(<div title="foo" />);
-
-      expect(() => nodeHasProperty(node, 'title', 'foo')).to.throw();
-    });
-
   });
 
   describe('treeForEach', () => {

@@ -37,7 +37,6 @@ function safelyGeneratorTokens(selector) {
   try {
     return parser.parse(selector);
   } catch (err) {
-    console.log(err);
     throw new Error(`Failed to parse selector: ${selector}`);
   }
 }

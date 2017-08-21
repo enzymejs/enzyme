@@ -388,6 +388,7 @@ describeWithDOM('mount', () => {
       const wrapper = mount(
         <div>
           <input className="foo" />
+          <div className="foo" />
         </div>,
       );
       expect(wrapper.find('input.foo').length).to.equal(1);
@@ -439,6 +440,7 @@ describeWithDOM('mount', () => {
       const wrapper = mount(
         <div>
           <span htmlFor="foo" />
+          <div htmlFor="foo" />
         </div>,
       );
 
@@ -474,6 +476,17 @@ describeWithDOM('mount', () => {
       );
       expect(wrapper.find('.row')).to.have.lengthOf(2);
       expect(wrapper.find('.row + .row')).to.have.lengthOf(1);
+    });
+
+    it('should treat unquoted attribute values as strings', () => {
+      const wrapper = mount(
+        <div>
+          <input type="text" />
+          <input type="hidden" />
+          <input type="text" />
+        </div>
+      );
+      expect(wrapper.find('[type=text]')).to.have.lengthOf(2);
     });
 
     // React 15.2 warns when setting a non valid prop to an DOM element
