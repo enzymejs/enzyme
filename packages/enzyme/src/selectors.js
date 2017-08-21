@@ -30,6 +30,15 @@ const ATTRIBUTE_VALUE = 'attributeValueSelector';
 // const PSEUDO_CLASS = 'pseudoClassSelector';
 // const PSEUDO_ELEMENT = 'pseudoElementSelector';
 
+/**
+ * Calls reduce on a array of nodes with the passed 
+ * function, returning only unique results.
+ * @param {Function} fn 
+ * @param {Array<Node>} nodes 
+ */
+function uniqueReduce(fn, nodes) {
+  return unique(nodes.reduce(fn, []));
+}
 
 /**
  * Takes a CSS selector and returns a set of tokens parsed
@@ -146,6 +155,84 @@ export function buildPredicate(selector) {
 }
 
 /**
+ * Matches only nodes which are adjacent siblings (direct next sibling)
+ * against a predicate, returning those that match.
+ * @param {Array<Node>} nodes 
+ * @param {Function} predicate 
+ * @param {Node} root
+ */
+function matchAdjacentSiblings(nodes, predicate, root) {
+  return nodes.reduce((matches, node) => {
+    const parent = findParentNode(root, node);
+    // If there's no parent, there's no siblings
+    if (!parent) {
+      return matches;
+    }
+    const nodeIndex = parent.rendered.indexOf(node);
+    const adjacentSibling = parent.rendered[nodeIndex + 1];
+    // No sibling
+    if (!adjacentSibling) {
+      return matches;
+    }
+    if (predicate(adjacentSibling)) {
+      matches.push(adjacentSibling);
+    }
+    return matches;
+  }, []);
+}
+
+/**
+ * Matches only nodes which are general siblings (any sibling *after*)
+ * against a predicate, returning those that match.
+ * @param {Array<Node>} nodes 
+ * @param {Function} predicate 
+ * @param {Node} root
+ */
+function matchGeneralSibling(nodes, predicate, root) {
+  return uniqueReduce((matches, node) => {
+    const parent = findParentNode(root, node);
+    const nodeIndex = parent.rendered.indexOf(node);
+    parent.rendered.forEach((sibling, i) => {
+      if (i > nodeIndex && predicate(sibling)) {
+        matches.push(sibling);
+      }
+    });
+    return matches;
+  }, nodes);
+}
+
+/**
+ * Matches only nodes which are direct children (not grandchildren, etc.)
+ * against a predicate, returning those that match.
+ * @param {Array<Node>} nodes 
+ * @param {Function} predicate 
+ */
+function matchDirectChild(nodes, predicate) {
+  return uniqueReduce((matches, node) => {
+    const children = childrenOfNode(node);
+    children.forEach((child) => {
+      if (predicate(child)) {
+        matches.push(child);
+      }
+    });
+    return matches;
+  }, nodes);
+}
+
+/**
+ * Matches all descendant nodes against a predicate,
+ * returning those that match.
+ * @param {Array<Node>} nodes 
+ * @param {Function} predicate 
+ */
+function matchDescendant(nodes, predicate) {
+  return uniqueReduce(
+    (matches, node) => matches.concat(treeFilter(node, predicate)),
+    nodes,
+  );
+}
+
+/**
  * Takes an RST and reduces it to a set of nodes matching
  * the selector. The selector can be a simple selector, which
  * is handled by `buildPredicate`, or a complex CSS selector which
@@ -197,62 +284,20 @@ export function reduceTreeBySelector(selector, wrapper) {
           // since a combinator is meant to refine a previous selector.
           switch (type) {
             // The + combinator
-            case ADJACENT_SIBLING: {
-              results = results.reduce((matches, node) => {
-                const parent = findParentNode(root, node);
-                // If there's no parent, there's no siblings
-                if (!parent) {
-                  return matches;
-                }
-                const nodeIndex = parent.rendered.indexOf(node);
-                const adjacentSibling = parent.rendered[nodeIndex + 1];
-                // No sibling
-                if (!adjacentSibling) {
-                  return matches;
-                }
-                if (predicate(adjacentSibling)) {
-                  matches.push(adjacentSibling);
-                }
-                return matches;
-              }, []);
+            case ADJACENT_SIBLING:
+              results = matchAdjacentSiblings(results, predicate, root);
               break;
-            }
             // The ~ combinator
-            case GENERAL_SIBLING: {
-              const matched = results.reduce((matches, node) => {
-                const parent = findParentNode(root, node);
-                const nodeIndex = parent.rendered.indexOf(node);
-                parent.rendered.forEach((sibling, i) => {
-                  if (i > nodeIndex && predicate(sibling)) {
-                    matches.push(sibling);
-                  }
-                });
-                return matches;
-              }, []);
-              results = unique(matched);
+            case GENERAL_SIBLING:
+              results = matchGeneralSibling(results, predicate, root);
               break;
-            }
             // The > combinator
-            case CHILD: {
-              const matched = results.reduce((matches, node) => {
-                const children = childrenOfNode(node);
-                children.forEach((child) => {
-                  if (predicate(child)) {
-                    matches.push(child);
-                  }
-                });
-                return matches;
-              }, []);
-              results = unique(matched);
+            case CHILD:
+              results = matchDirectChild(results, predicate);
               break;
-            }
             // The ' ' (whitespace) combinator
             case DESCENDANT: {
-              const matched = results.reduce(
-                (matches, node) => matches.concat(treeFilter(node, predicate)),
-                [],
-              );
-              results = unique(matched);
+              results = matchDescendant(results, predicate);
               break;
             }
             default:
