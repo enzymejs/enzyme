@@ -55,7 +55,7 @@ function nodeMatchesToken(node, token) {
     return false;
   }
   switch (token.type) {
-     /**
+    /**
      * Match against the className prop
      * @example '.active' matches <div className='active' />
      */
@@ -79,7 +79,7 @@ function nodeMatchesToken(node, token) {
      * @example '[disabled]' matches <a disabled />
      */
     case ATTRIBUTE_PRESENCE:
-    return nodeHasProperty(node, token.name);
+      return nodeHasProperty(node, token.name);
     /**
      * Matches if an attribute is present with the
      * provided value

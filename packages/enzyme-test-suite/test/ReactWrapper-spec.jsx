@@ -484,7 +484,7 @@ describeWithDOM('mount', () => {
           <input type="text" />
           <input type="hidden" />
           <input type="text" />
-        </div>
+        </div>,
       );
       expect(wrapper.find('[type=text]')).to.have.lengthOf(2);
     });
