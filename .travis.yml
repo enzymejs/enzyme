@@ -9,7 +9,7 @@ before_script:
   - 'rm ./node_modules/.bin/npm 2>/dev/null || :'
   - "./node_modules/.bin/lerna bootstrap"
   - "./node_modules/.bin/lerna run build"
-  - "sh install-relevant-react.sh"
+  - "sh install-relevant-deps.sh"
   - if [ -n "${KARMA-}" ]; then export CHROME_BIN=chromium-browser; export DISPLAY=:99.0; sh -e /etc/init.d/xvfb start; fi
 script:
   - 'if [ -n "${LINT-}" ]; then npm run lint; elif [ -n "${KARMA-}" ]; then npm run test:karma -- --single-run; elif [ -n "${REACT-}" ]; then npm run travis; else false ; fi'
@@ -31,6 +31,27 @@ matrix:
      env: KARMA=true REACT=15
    - node_js: "6"
      env: KARMA=true REACT=16
+  exclude:
+   - node_js: "4"
+     env: JSDOM=10 REACT=0.13
+   - node_js: "4"
+     env: JSDOM=10 REACT=0.14
+   - node_js: "4"
+     env: JSDOM=10 REACT=15.4
+   - node_js: "4"
+     env: JSDOM=10 REACT=15
+   - node_js: "4"
+     env: JSDOM=10 REACT=16
+   - node_js: "4"
+     env: JSDOM=11 REACT=0.13
+   - node_js: "4"
+     env: JSDOM=11 REACT=0.14
+   - node_js: "4"
+     env: JSDOM=11 REACT=15.4
+   - node_js: "4"
+     env: JSDOM=11 REACT=15
+   - node_js: "4"
+     env: JSDOM=11 REACT=16
   allow_failures:
     - node_js: "6"
       env: KARMA=true REACT=16
@@ -40,3 +61,8 @@ env:
   - REACT=15.4
   - REACT=15
   - REACT=16
+  - JSDOM=7
+  - JSDOM=8
+  - JSDOM=9
+  - JSDOM=10
+  - JSDOM=11
