@@ -107,7 +107,7 @@ const installers = {
   },
 
   jsdom(version) {
-    return Promise.reject(new Error('Not implemented yet.'));
+    return run(`npm i --no-save jsdom@${version}.x.x`)
   }
 };
 
