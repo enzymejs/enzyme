@@ -262,7 +262,7 @@ class ShallowWrapper {
         const state = instance.state;
         const prevProps = instance.props || this[UNRENDERED].props;
         const prevContext = instance.context || this[OPTIONS].context;
-        const nextProps = props || prevProps;
+        const nextProps = { ...prevProps, ...props };
         const nextContext = context || prevContext;
         if (context) {
           this[OPTIONS] = { ...this[OPTIONS], context: nextContext };

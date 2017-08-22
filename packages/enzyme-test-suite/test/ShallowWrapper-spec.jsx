@@ -958,6 +958,50 @@ describe('shallow', () => {
       expect(wrapper.first('div').text()).to.equal('yolo');
     });
 
+    it('should call componentWillReceiveProps, shouldComponentUpdate and componentWillUpdate with merged newProps', () => {
+      const spy = sinon.spy();
+
+      class Foo extends React.Component {
+        componentWillReceiveProps(nextProps) {
+          spy('componentWillReceiveProps', this.props, nextProps);
+        }
+        shouldComponentUpdate(nextProps) {
+          spy('shouldComponentUpdate', this.props, nextProps);
+          return true;
+        }
+        componentWillUpdate(nextProps) {
+          spy('componentWillUpdate', this.props, nextProps);
+        }
+        render() {
+          return (
+            <div />
+          );
+        }
+      }
+
+      const wrapper = shallow(<Foo a="a" b="b" />);
+
+      wrapper.setProps({ b: 'c', d: 'e' });
+
+      expect(spy.args).to.deep.equal([
+        [
+          'componentWillReceiveProps',
+          { a: 'a', b: 'b' },
+          { a: 'a', b: 'c', d: 'e' },
+        ],
+        [
+          'shouldComponentUpdate',
+          { a: 'a', b: 'b' },
+          { a: 'a', b: 'c', d: 'e' },
+        ],
+        [
+          'componentWillUpdate',
+          { a: 'a', b: 'b' },
+          { a: 'a', b: 'c', d: 'e' },
+        ],
+      ]);
+    });
+
     describeIf(!REACT013, 'stateless function components', () => {
       it('should set props for a component multiple times', () => {
         const Foo = props => (
@@ -3092,6 +3136,58 @@ describe('shallow', () => {
             ],
           ],
         );
+      });
+
+      it('should componentWillReceiveProps, shouldComponentUpdate, componentWillUpdate and componentDidUpdate with merged props', () => {
+        const spy = sinon.spy();
+
+        class Foo extends React.Component {
+          componentWillReceiveProps(nextProps) {
+            spy('componentWillReceiveProps', this.props, nextProps);
+          }
+          shouldComponentUpdate(nextProps) {
+            spy('shouldComponentUpdate', this.props, nextProps);
+            return true;
+          }
+          componentWillUpdate(nextProps) {
+            spy('componentWillUpdate', this.props, nextProps);
+          }
+          componentDidUpdate(prevProps) {
+            spy('componentDidUpdate', prevProps, this.props);
+          }
+          render() {
+            return (
+              <div />
+            );
+          }
+        }
+
+        const wrapper = shallow(<Foo a="a" b="b" />, { lifecycleExperimental: true });
+
+        wrapper.setProps({ b: 'c', d: 'e' });
+
+        expect(spy.args).to.deep.equal([
+          [
+            'componentWillReceiveProps',
+            { a: 'a', b: 'b' },
+            { a: 'a', b: 'c', d: 'e' },
+          ],
+          [
+            'shouldComponentUpdate',
+            { a: 'a', b: 'b' },
+            { a: 'a', b: 'c', d: 'e' },
+          ],
+          [
+            'componentWillUpdate',
+            { a: 'a', b: 'b' },
+            { a: 'a', b: 'c', d: 'e' },
+          ],
+          [
+            'componentDidUpdate',
+            { a: 'a', b: 'b' },
+            { a: 'a', b: 'c', d: 'e' },
+          ],
+        ]);
       });
 
       it('should cancel rendering when Component returns false in shouldComponentUpdate', () => {
