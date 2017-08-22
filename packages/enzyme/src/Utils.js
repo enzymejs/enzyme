@@ -210,50 +210,13 @@ export function AND(fns) {
   return x => fnsReversed.every(fn => fn(x));
 }
 
-export function coercePropValue(propName, propValue) {
-  // can be undefined
-  if (propValue === undefined) {
-    return propValue;
-  }
-
-  // can be the empty string
-  if (propValue === '') {
-    return propValue;
-  }
-
-  if (propValue === 'NaN') {
-    return NaN;
-  }
-
-  if (propValue === 'null') {
-    return null;
-  }
-
-  const trimmedValue = propValue.trim();
-
-  const numericPropValue = +trimmedValue;
-
-  // if parseInt is not NaN, then we've wanted a number
-  if (!is(NaN, numericPropValue)) {
-    return numericPropValue;
-  }
-
-  // coerce to boolean
-  if (trimmedValue === 'true') return true;
-  if (trimmedValue === 'false') return false;
-
-  return trimmedValue;
-}
-
-export function nodeHasProperty(node, propKey, stringifiedPropValue) {
+export function nodeHasProperty(node, propKey, propValue) {
   const nodeProps = propsOfNode(node);
   const descriptor = Object.getOwnPropertyDescriptor(nodeProps, propKey);
   if (descriptor && descriptor.get) {
     return false;
   }
   const nodePropValue = nodeProps[propKey];
-
-  const propValue = coercePropValue(propKey, stringifiedPropValue);
 
   if (nodePropValue === undefined) {
     return false;

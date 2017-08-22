@@ -4,7 +4,6 @@ import { expect } from 'chai';
 
 import { describeIf } from './_helpers';
 import {
-  coercePropValue,
   childrenToSimplifiedArray,
   nodeEqual,
   nodeMatches,
@@ -433,23 +432,6 @@ describe('Utils', () => {
     it('should work', () => {
       expect(fn('click')).to.equal('onClick');
       expect(fn('mouseEnter')).to.equal('onMouseEnter');
-    });
-  });
-
-  describe('coercePropValue', () => {
-    const key = 'foo';
-    it('returns undefined if passed undefined', () => {
-      expect(coercePropValue(key, undefined)).to.equal(undefined);
-    });
-
-    it('returns number if passed a stringified number', () => {
-      expect(coercePropValue(key, '1')).to.be.equal(1);
-      expect(coercePropValue(key, '0')).to.be.equal(0);
-    });
-
-    it('returns a boolean if passed a stringified bool', () => {
-      expect(coercePropValue(key, 'true')).to.equal(true);
-      expect(coercePropValue(key, 'false')).to.equal(false);
     });
   });
 

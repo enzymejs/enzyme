@@ -478,7 +478,7 @@ describeWithDOM('mount', () => {
       expect(wrapper.find('.row + .row')).to.have.lengthOf(1);
     });
 
-    it('should treat unquoted attribute values as strings', () => {
+    it('should throw for non-numeric attribute values without quotes', () => {
       const wrapper = mount(
         <div>
           <input type="text" />
@@ -486,7 +486,9 @@ describeWithDOM('mount', () => {
           <input type="text" />
         </div>,
       );
-      expect(wrapper.find('[type=text]')).to.have.lengthOf(2);
+      expect(() => wrapper.find('[type=text]')).to.throw();
+      expect(() => wrapper.find('[type=hidden]')).to.throw();
+      expect(() => wrapper.find('[type="text"]')).to.not.throw();
     });
 
     it('should support data prop selectors', () => {
@@ -539,6 +541,10 @@ describeWithDOM('mount', () => {
         <div>
           <span value={1} />
           <a value={false} />
+          <a value="false" />
+          <span value="true" />
+          <a value="1" />
+          <a value="2" />
         </div>,
       );
 

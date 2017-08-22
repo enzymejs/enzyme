@@ -1,4 +1,4 @@
-import { createParser } from 'scalpel';
+import { createParser } from 'rst-selector-parser';
 import isEmpty from 'lodash/isEmpty';
 import unique from 'lodash/uniq';
 import {

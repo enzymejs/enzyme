@@ -561,7 +561,7 @@ describe('shallow', () => {
       expect(wrapper.find('.row + .row')).to.have.lengthOf(1);
     });
 
-    it('should treat unquoted attribute values as strings', () => {
+    it('should throw for non-numeric attribute values without quotes', () => {
       const wrapper = shallow(
         <div>
           <input type="text" />
@@ -569,7 +569,9 @@ describe('shallow', () => {
           <input type="text" />
         </div>,
       );
-      expect(wrapper.find('[type=text]')).to.have.lengthOf(2);
+      expect(() => wrapper.find('[type=text]')).to.throw();
+      expect(() => wrapper.find('[type=hidden]')).to.throw();
+      expect(() => wrapper.find('[type="text"]')).to.not.throw();
     });
 
     it('should compound tag and prop selector', () => {
