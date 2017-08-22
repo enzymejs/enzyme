@@ -17,13 +17,28 @@ const writeJSON = (fpath, json, pretty = false) => writeFile(
     ? JSON.stringify(json, null, 2)
     : JSON.stringify(json)
 );
-const primraf = path => promisify(cb => rimraf(path, cb));
-const run = cmd => promisify(cb => child_process.exec(cmd, cb));
+const primraf = path => promisify(cb => {
+  console.log('rimraf %s', path);
+  rimraf(path, cb)
+});
+const run = cmd => promisify(cb => {
+  console.log('%s', cmd);
+  child_process.exec(cmd, cb)
+});
 
-// This script is executed with a single argument, indicating the version of
-// react and adapters etc. that we want to set ourselves up for testing.
-// should be "14" for "enzyme-adapter-react-14", "15.4" for "enzyme-adapter-react-15.4", etc.
-const version = process.argv[2];
+const root = process.cwd();
+const testPackageJsonPath = path.join(root, 'packages', 'enzyme-test-suite', 'package.json');
+
+// This script is designed to install react, jsdom (or both). The CLI arguments will
+// always be in the form "(react|jsdom):version" (e.g. "react:15", "jsdom:8", etc.). For:
+// - react: installs react and adapters etc. that we want to set ourselves up for testing.
+//          Should be "14" for "enzyme-adapter-react-14", "15.4" for "enzyme-adapter-react-15.4", etc.
+// - jsdom: installs the correct version of jsdom, nothing else.
+const packages = process.argv.slice(2).reduce((acc, arg) => {
+  const [name, version] = arg.split(':');
+  acc[name] = version;
+  return acc;
+}, {});
 
 // This script will do the following:
 //
@@ -33,63 +48,70 @@ const version = process.argv[2];
 // 4. add the adapter to the dev-deps for enzyme-test-suite package
 // 5. call lerna bootstrap to link all the packages
 // 6. install all of the package's peer deps at the top level
+const installers = {
+  react(version) {
+    var adapterName = 'enzyme-adapter-react-' + version;
+    var adapterPackageJsonPath = path.join(root, 'packages', adapterName, 'package.json');
+    if (!fs.statSync(adapterPackageJsonPath)) {
+      throw new Error('Adapter not found: "' + adapterName + '"');
+    }
 
-var root = process.cwd();
-var adapterName = 'enzyme-adapter-react-' + version;
-var adapterPackageJsonPath = path.join(root, 'packages', adapterName, 'package.json');
-var testPackageJsonPath = path.join(root, 'packages', 'enzyme-test-suite', 'package.json');
+    const packagesToRemove = [
+      'react',
+      'react-dom',
+      'react-addons-test-utils',
+      'react-test-renderer',
+      'create-react-class',
+    ].map(s => `./node_modules/${s}`);
 
-if (!fs.statSync(adapterPackageJsonPath)) {
-  throw new Error('Adapter not found: "' + adapterName + '"');
-}
+    const additionalDirsToRemove = [
+      'node_modules/.bin/npm',
+      'node_modules/.bin/npm.cmd',
+    ];
 
-const packagesToRemove = [
-  'react',
-  'react-dom',
-  'react-addons-test-utils',
-  'react-test-renderer',
-  'create-react-class',
-].map(s => `./node_modules/${s}`);
+    const rmrfs = []
+      .concat(packagesToRemove)
+      .concat(additionalDirsToRemove);
 
-const additionalDirsToRemove = [
-  'node_modules/.bin/npm',
-  'node_modules/.bin/npm.cmd',
-];
+    return Promise.all(rmrfs.map(s => primraf(s)))
+      .then(() => run('npm i'))
+      .then(() => Promise.all([
+        getJSON(adapterPackageJsonPath),
+        getJSON(testPackageJsonPath),
+      ]))
+      .then(([adapterJson, testJson]) => {
+        const peerDeps = adapterJson.peerDependencies;
+        const installs = Object.keys(peerDeps)
+          .filter(key => !key.startsWith('enzyme'))
+          .map(key => `${key}@'${peerDeps[key]}'`)
+          .join(' ');
 
-const rmrfs = []
-  .concat(packagesToRemove)
-  .concat(additionalDirsToRemove);
+        testJson.dependencies[adapterName] = adapterJson.version;
 
-Promise.resolve()
-  .then(() => Promise.all(rmrfs.map(s => primraf(s))))
-  .then(() => run('npm i'))
-  .then(() => Promise.all([
-    getJSON(adapterPackageJsonPath),
-    getJSON(testPackageJsonPath),
-  ]))
-  .then(([adapterJson, testJson]) => {
-    const peerDeps = adapterJson.peerDependencies;
-    const installs = Object.keys(peerDeps)
-      .filter(key => !key.startsWith('enzyme'))
-      .map(key => `${key}@'${peerDeps[key]}'`)
-      .join(' ');
+        return Promise.all([
+          // npm install the peer deps at the root
+          run(`npm i --no-save ${installs}`),
 
-    testJson.dependencies[adapterName] = adapterJson.version;
+          // add the adapter to the dependencies of the test suite
+          writeJSON(testPackageJsonPath, testJson, true),
+        ]);
+      })
+      .then(() => run('lerna bootstrap'))
+      .then(() => getJSON(testPackageJsonPath))
+      .then(testJson => {
+        // now that we've lerna bootstrapped, we can remove the adapter from the
+        // package.json so there is no diff
+        delete testJson.dependencies[adapterName];
+        return writeJSON(testPackageJsonPath, testJson, true);
+      });
+  },
 
-    return Promise.all([
-      // npm install the peer deps at the root
-      run(`npm i --no-save ${installs}`),
+  jsdom(version) {
+    return Promise.reject(new Error('Not implemented yet.'));
+  }
+};
 
-      // add the adapter to the dependencies of the test suite
-      writeJSON(testPackageJsonPath, testJson, true),
-    ]);
-  })
-  .then(() => run('lerna bootstrap'))
-  .then(() => getJSON(testPackageJsonPath))
-  .then(testJson => {
-    // now that we've lerna bootstrapped, we can remove the adapter from the
-    // package.json so there is no diff
-    delete testJson.dependencies[adapterName];
-    return writeJSON(testPackageJsonPath, testJson, true);
-  })
-  .catch(err => console.error(err));
+Promise.all(Object.keys(packages).map(name => {
+  const version = packages[name];
+  return installers[name](version);
+}));
