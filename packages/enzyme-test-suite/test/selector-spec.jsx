@@ -211,6 +211,102 @@ describe('selectors', () => {
 
         expect(wrapper.find('.foo + div > span').length).to.equal(1);
       });
+
+      it('.foo + .foo + .foo', () => {
+        const wrapper = renderMethod(
+          <div>
+            <div className="foo">foo1</div>
+            <div className="foo">foo2</div>
+            <div className="foo">foo3</div>
+          </div>,
+        );
+        expect(wrapper.find('.foo + .foo').length).to.equal(2);
+        expect(wrapper.find('.foo + .foo').at(0).text()).to.equal('foo2');
+        expect(wrapper.find('.foo + .foo').at(1).text()).to.equal('foo3');
+        expect(wrapper.find('.foo + .foo + .foo').length).to.equal(1);
+      });
+
+      it('attribute names with numbers', () => {
+        const wrapper = renderMethod(
+          <div>
+            <div data-foo-1={1} />
+            <div data-foo-1={1} />
+            <div data-foo-2={2} />
+            <div data-foo-2="2" />
+          </div>,
+        );
+        expect(wrapper.find('[data-foo-1=1]').length).to.equal(2);
+        expect(wrapper.find('[data-foo-1="1"]').length).to.equal(0);
+        expect(wrapper.find('[data-foo-2=2]').length).to.equal(1);
+        expect(wrapper.find('[data-foo-2="2"]').length).to.equal(1);
+      });
+
+      it('hyphens', () => {
+        const wrapper = renderMethod(
+          <div>
+            <div className="-foo" />
+            <div className="foo- -bar-" type="foo" />
+            <div id="bar" className="-foo" />
+            <span className="-foo" />
+          </div>,
+        );
+        expect(wrapper.find('.-foo').length).to.equal(3);
+        expect(wrapper.find('.foo-').length).to.equal(1);
+        expect(wrapper.find('[type="foo"].foo-').length).to.equal(1);
+        expect(wrapper.find('.foo-.-bar-').length).to.equal(1);
+        expect(wrapper.find('div.foo-').length).to.equal(1);
+        expect(wrapper.find('div.-foo').length).to.equal(2);
+        expect(wrapper.find('#bar.-foo').length).to.equal(1);
+      });
+
+      it('hyphens', () => {
+        const wrapper = renderMethod(
+          <div>
+            <div className="-foo" />
+            <div className="foo- -bar-" type="foo" />
+            <div id="bar" className="-foo" />
+            <span className="-foo" />
+          </div>,
+        );
+        expect(wrapper.find('.-foo').length).to.equal(3);
+        expect(wrapper.find('.foo-').length).to.equal(1);
+        expect(wrapper.find('[type="foo"].foo-').length).to.equal(1);
+        expect(wrapper.find('.foo-.-bar-').length).to.equal(1);
+        expect(wrapper.find('div.foo-').length).to.equal(1);
+        expect(wrapper.find('div.-foo').length).to.equal(2);
+        expect(wrapper.find('#bar.-foo').length).to.equal(1);
+      });
+
+      it('spaces in attribute values', () => {
+        const wrapper = renderMethod(
+          <div>
+            <div type="foo bar" />
+            <div type="foo.bar" />
+            <div type="foobar" />
+          </div>,
+        );
+        expect(wrapper.find('[type="foo bar"]').length).to.equal(1);
+      });
+
+      it('dots in attribute values', () => {
+        const wrapper = renderMethod(
+          <div>
+            <div type="foo.bar" />
+            <div type="foo bar" />
+            <div type="foobar" />
+          </div>,
+        );
+        expect(wrapper.find('[type="foo.bar"]').length).to.equal(1);
+      });
+
+      it('brackets in attribute values', () => {
+        const wrapper = renderMethod(
+          <div>
+            <div type="foo[1]" />
+          </div>,
+        );
+        expect(wrapper.find('[type="foo[1]"]').length).to.equal(1);
+      });
     });
   });
 });
