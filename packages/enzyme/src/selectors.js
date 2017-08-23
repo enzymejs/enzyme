@@ -27,8 +27,8 @@ const ID_SELECTOR = 'idSelector';
 const ATTRIBUTE_PRESENCE = 'attributePresenceSelector';
 const ATTRIBUTE_VALUE = 'attributeValueSelector';
 // @TODO we dont support these, throw if they are used
-// const PSEUDO_CLASS = 'pseudoClassSelector';
-// const PSEUDO_ELEMENT = 'pseudoElementSelector';
+const PSEUDO_CLASS = 'pseudoClassSelector';
+const PSEUDO_ELEMENT = 'pseudoElementSelector';
 
 /**
  * Calls reduce on a array of nodes with the passed 
@@ -96,6 +96,9 @@ function nodeMatchesToken(node, token) {
      */
     case ATTRIBUTE_VALUE:
       return nodeHasProperty(node, token.name, token.value);
+    case PSEUDO_ELEMENT:
+    case PSEUDO_CLASS:
+      throw new Error('Enzyme::Selector does not support psuedo-element or psuedo-class selectors.');
     default:
       throw new Error(`Unknown token type: ${token.type}`);
   }
