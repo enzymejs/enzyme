@@ -307,6 +307,17 @@ describe('selectors', () => {
         );
         expect(wrapper.find('[type="foo[1]"]').length).to.equal(1);
       });
+
+      it('URLs in attribute values', () => {
+        const wrapper = renderMethod(
+          <div>
+            <a href="https://www.foo.com" />
+            <a href="foo.com" />
+          </div>,
+        );
+        expect(wrapper.find('a[href="https://www.foo.com"]').length).to.equal(1);
+        expect(wrapper.find('a[href="foo.com"]').length).to.equal(1);
+      });
     });
   });
 });
