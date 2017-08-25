@@ -1,0 +1,13 @@
+{
+  "rules": {
+    "react/no-find-dom-node": 0,
+    "react/no-multi-comp": 0,
+    "no-underscore-dangle": 0,
+    "class-methods-use-this": 0
+  },
+  "settings": {
+    "react": {
+      "version": "15.5.0"
+    }
+  }
+}

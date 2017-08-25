@@ -7,6 +7,11 @@ There are several things we'd like to address with Enzyme that often get asked. 
 of projects that we plan on addressing in the near future:
 
 
+### Enzyme Adapter & Compatibility
+
+[See the full proposal](future/compatibility.md)
+
+
 #### Improved CSS Selector Support
 
 Currently, "hierarchical" CSS selectors are not supported in Enzyme. That means that the only CSS

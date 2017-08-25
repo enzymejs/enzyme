@@ -1,0 +1,41 @@
+{
+  "name": "enzyme-test-suite",
+  "private": true,
+  "version": "2.9.1",
+  "description": "JavaScript Testing utilities for React",
+  "homepage": "http://airbnb.io/enzyme/",
+  "scripts": {
+    "lint": "eslint --ext js,jsx src test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/airbnb/enzyme.git"
+  },
+  "keywords": [
+    "javascript",
+    "shallow rendering",
+    "shallowRender",
+    "test",
+    "reactjs",
+    "react",
+    "flux",
+    "testing",
+    "test utils",
+    "assertion helpers",
+    "tdd",
+    "mocha"
+  ],
+  "author": "Leland Richardson <leland.richardson@airbnb.com>",
+  "license": "MIT",
+  "dependencies": {
+    "semver": "^5.4.1",
+    "chai": "^4.1.1",
+    "sinon": "^2.4.1",
+    "prop-types": "^15.5.10",
+    "enzyme": "2.9.1",
+    "enzyme-adapter-utils": "2.9.1"
+  },
+  "peerDependencies": {
+    "react": "^15.5.0"
+  }
+}
