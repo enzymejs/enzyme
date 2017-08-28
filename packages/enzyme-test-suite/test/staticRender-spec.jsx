@@ -21,16 +21,12 @@ describeWithDOM('render', () => {
 
       const context = { name: 'foo' };
       const wrapper = render(<SimpleComponent />, { context });
+      expect(wrapper).to.have.lengthOf(1);
 
-      const rootEls = wrapper.children();
-      expect(rootEls).to.have.lengthOf(1);
-
-      expect(rootEls.is('div')).to.equal(true);
-      expect(rootEls.text()).to.equal('foo');
+      expect(wrapper.is('div')).to.equal(true);
       expect(wrapper.text()).to.equal('foo');
 
       expect(String(wrapper)).to.equal('<div>foo</div>');
-      expect(String(rootEls)).to.equal('<div>foo</div>');
     });
 
     it('can pass context to the child of mounted component', () => {
@@ -53,20 +49,17 @@ describeWithDOM('render', () => {
       };
       const context = { name: 'foo' };
       const wrapper = render(<ComplexComponent />, { context, childContextTypes });
+      expect(wrapper).to.have.length(1);
 
-      const rootEls = wrapper.children();
-      expect(rootEls).to.have.length(1);
+      expect(wrapper.is('div')).to.equal(true);
 
-      expect(rootEls.is('div')).to.equal(true);
-
-      const children = rootEls.children();
+      const children = wrapper.children();
       expect(children).to.have.length(1);
       expect(children.is('span')).to.equal(true);
 
       expect(children.first().text()).to.equal('foo');
 
       expect(String(wrapper)).to.equal('<div><span>foo</span></div>');
-      expect(String(rootEls)).to.equal('<div><span>foo</span></div>');
       expect(String(children)).to.equal('<span>foo</span>');
     });
 

@@ -639,7 +639,7 @@ class ShallowWrapper {
    * @returns {CheerioWrapper}
    */
   render() {
-    return this.type() === null ? cheerio() : cheerio.load(this.html()).root();
+    return this.type() === null ? cheerio() : cheerio.load('')(this.html());
   }
 
   /**

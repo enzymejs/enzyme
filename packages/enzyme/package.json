@@ -31,7 +31,7 @@
   "author": "Leland Richardson <leland.richardson@airbnb.com>",
   "license": "MIT",
   "dependencies": {
-    "cheerio": "^0.22.0",
+    "cheerio": "^1.0.0-rc.2",
     "function.prototype.name": "^1.0.3",
     "is-subset": "^0.1.1",
     "lodash": "^4.17.4",

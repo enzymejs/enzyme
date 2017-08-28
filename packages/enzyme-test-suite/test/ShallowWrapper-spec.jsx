@@ -2817,7 +2817,7 @@ describe('shallow', () => {
   });
 
   describe('.render()', () => {
-    it('should return a cheerio wrapper around the current node', () => {
+    it('returns a cheerio wrapper around the current node', () => {
       class Foo extends React.Component {
         render() {
           return (<div className="in-foo" />);
@@ -2832,15 +2832,21 @@ describe('shallow', () => {
           );
         }
       }
+
       const wrapper = shallow(<Bar />);
-      expect(wrapper.render().find('.in-bar')).to.have.length(1);
+
+      const rendered = wrapper.render();
+      expect(rendered.is('.in-bar')).to.equal(true);
+      expect(rendered).to.have.lengthOf(1);
+
       const renderedFoo = wrapper.find(Foo).render();
-      expect(renderedFoo.find('.in-foo')).to.have.length(1);
+      expect(renderedFoo.is('.in-foo')).to.equal(true);
+      expect(renderedFoo.is('.in-bar')).to.equal(false);
       expect(renderedFoo.find('.in-bar')).to.have.length(0);
     });
 
-    describeIf(!REACT013, 'stateless function components', () => {
-      it('should return a cheerio wrapper around the current node', () => {
+    describeIf(!REACT013, 'stateless functional components', () => {
+      it('returns a cheerio wrapper around the current node', () => {
         const Foo = () => (
           <div className="in-foo" />
         );
@@ -2851,9 +2857,11 @@ describe('shallow', () => {
         );
 
         const wrapper = shallow(<Bar />);
-        expect(wrapper.render().find('.in-bar')).to.have.length(1);
+        expect(wrapper.render().is('.in-bar')).to.equal(true);
+
         const renderedFoo = wrapper.find(Foo).render();
-        expect(renderedFoo.find('.in-foo')).to.have.length(1);
+        expect(renderedFoo.is('.in-foo')).to.equal(true);
+        expect(renderedFoo.is('.in-bar')).to.equal(false);
         expect(renderedFoo.find('.in-bar')).to.have.length(0);
       });
     });

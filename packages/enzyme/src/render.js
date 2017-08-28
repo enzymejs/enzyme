@@ -19,5 +19,5 @@ export default function render(node, options = {}) {
   const adapter = getAdapter(options);
   const renderer = adapter.createRenderer({ mode: 'string', ...options });
   const html = renderer.render(node, options.context);
-  return cheerio.load(html).root();
+  return cheerio.load('')(html);
 }
