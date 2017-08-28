@@ -5,7 +5,9 @@
   "description": "JavaScript Testing utilities for React",
   "homepage": "http://airbnb.io/enzyme/",
   "scripts": {
-    "prepublish": "not-in-publish || (npm run clean && npm run build && safe-publish-latest)",
+    "clean-local-npm": "rimraf node_modules/.bin/npm node_modules/.bin/npm.cmd",
+    "postinstall": "[ -n \"${TRAVIS-}\" ] || (npm run clean-local-npm && npm link npm && lerna bootstrap)",
+    "prepublish": "not-in-publish || (npm run build && safe-publish-latest)",
     "preversion": "npm run clean && npm run check",
     "postversion": "git push && git push --tags && npm run clean && npm run docs:publish",
     "version": "lerna run build",
@@ -13,14 +15,17 @@
     "lint": "lerna run lint",
     "postlint": "npm run docs:lint",
     "check": "lerna run lint && npm run test:all",
+    "prebuild": "npm run clean",
     "build": "lerna run build",
-    "build:watch": "lerna run build",
+    "build:watch": "lerna run watch",
     "pretest": "lerna run lint",
-    "test": "npm run clean && npm run build && npm run test:only",
+    "test": "npm run test:only",
+    "pretest:only": "npm run build",
     "test:only": "mocha --recursive packages/enzyme-test-suite/test",
     "test:single": "mocha --watch",
     "test:watch": "mocha --recursive --watch packages/enzyme-test-suite/test",
-    "test:karma": "npm run build && karma start",
+    "pretest:karma": "npm run build",
+    "test:karma": "karma start",
     "test:env": "sh ./example-test.sh",
     "test:all": "npm run react:13 && npm run test:only && npm run react:14 && npm run test:only && npm run react:15.4 && npm run test:only && npm run react:15 && npm run test:only && npm run react:16 && npm run test:only",
     "react:13": "npm run env -- 13",
@@ -35,7 +40,8 @@
     "docs:build": "npm run docs:prepare && gitbook build",
     "docs:watch": "npm run docs:prepare && gitbook serve",
     "docs:publish": "npm run docs:clean && npm run docs:build && cd _book && git init && git commit --allow-empty -m 'update book' && git fetch git@github.com:airbnb/enzyme.git gh-pages && git checkout -b gh-pages && git add . && git commit -am 'update book' && git push git@github.com:airbnb/enzyme.git gh-pages --force",
-    "travis": "npm run build && babel-node \"$(which istanbul)\" cover --report html _mocha -- packages/enzyme-test-suite/test --recursive"
+    "pretravis": "npm run build",
+    "travis": "babel-node \"$(which istanbul)\" cover --report html _mocha -- packages/enzyme-test-suite/test --recursive"
   },
   "repository": {
     "type": "git",
@@ -92,5 +98,6 @@
     "safe-publish-latest": "^1.1.1",
     "sinon": "^2.4.1",
     "webpack": "^1.13.3"
-  }
+  },
+  "dependencies": {}
 }
