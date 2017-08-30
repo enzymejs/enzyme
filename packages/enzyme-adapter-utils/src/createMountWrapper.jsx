@@ -69,10 +69,11 @@ export default function createMountWrapper(node, options = {}) {
     // OR the merged context types for all children (the node component or deeper children) are
     // specified in options parameter under childContextTypes.
     // In that case, we define both a `getChildContext()` function and a `childContextTypes` prop.
-    const childContextTypes = node.type.contextTypes || {};
-    if (options.childContextTypes) {
-      Object.assign(childContextTypes, options.childContextTypes);
-    }
+    const childContextTypes = {
+      ...node.type.contextTypes,
+      ...options.childContextTypes,
+    };
+
     WrapperComponent.prototype.getChildContext = function getChildContext() {
       return this.state.context;
     };
