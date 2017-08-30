@@ -94,6 +94,46 @@ describeWithDOM('mount', () => {
       expect(wrapper.find(SimpleComponent)).to.have.length(1);
     });
 
+    describe('does not attempt to mutate Component.childContextTypes', () => {
+      const SimpleComponent = createClass({
+        displayName: 'Simple',
+        render() {
+          return <div />;
+        },
+      });
+
+      class ClassComponent extends React.Component {
+        render() {
+          return (
+            <div>
+              {this.context.a}
+              <SimpleComponent />
+            </div>
+          );
+        }
+      }
+      ClassComponent.contextTypes = Object.freeze({ a: PropTypes.string });
+
+      const CreateClassComponent = createClass({
+        contextTypes: ClassComponent.contextTypes,
+        render: ClassComponent.prototype.render,
+      });
+
+      it('works without options', () => {
+        expect(() => mount(<ClassComponent />)).not.to.throw();
+        expect(() => mount(<CreateClassComponent />)).not.to.throw();
+      });
+
+      it('works with a childContextTypes option', () => {
+        const options = {
+          childContextTypes: { b: PropTypes.string },
+          context: { a: 'hello', b: 'world' },
+        };
+        expect(() => mount(<ClassComponent />, options)).not.to.throw();
+        expect(() => mount(<CreateClassComponent />, options)).not.to.throw();
+      });
+    });
+
     it('should not throw if context is passed in but contextTypes is missing', () => {
       const SimpleComponent = createClass({
         render() {
@@ -102,7 +142,7 @@ describeWithDOM('mount', () => {
       });
 
       const context = { name: 'foo' };
-      expect(() => mount(<SimpleComponent />, { context })).to.not.throw();
+      expect(() => mount(<SimpleComponent />, { context })).not.to.throw();
     });
 
     it('is introspectable through context API', () => {
