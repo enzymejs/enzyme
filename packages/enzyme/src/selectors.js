@@ -133,28 +133,29 @@ function isComplexSelector(tokens) {
  * @param {Function|Object|String} selector 
  */
 export function buildPredicate(selector) {
-  switch (typeof selector) {
-    case 'function':
-      // constructor
-      return node => node && node.type === selector;
-    case 'object':
-      if (!Array.isArray(selector) && selector !== null && !isEmpty(selector)) {
-        return node => nodeMatchesObjectProps(node, selector);
-      }
-      throw new TypeError(
-        'Enzyme::Selector does not support an array, null, or empty object as a selector',
-      );
-    case 'string': {
-      const tokens = safelyGenerateTokens(selector);
-      if (isComplexSelector(tokens)) {
-        throw new TypeError('This method does not support complex CSS selectors');
-      }
-      // Simple selectors only have a single selector token
-      return buildPredicateFromToken(tokens[0]);
-    }
-    default:
-      throw new TypeError('Enzyme::Selector expects a string, object, or Component Constructor');
+  // If the selector is a function, check if the node's constructor matches
+  if (typeof selector === 'function') {
+    return node => node && node.type === selector;
   }
+  // If the selector is an non-empty object, treat the keys/values as props
+  if (typeof selector === 'object') {
+    if (!Array.isArray(selector) && selector !== null && !isEmpty(selector)) {
+      return node => nodeMatchesObjectProps(node, selector);
+    }
+    throw new TypeError(
+      'Enzyme::Selector does not support an array, null, or empty object as a selector',
+    );
+  }
+  // If the selector is a string, parse it as a simple CSS selector
+  if (typeof selector === 'string') {
+    const tokens = safelyGenerateTokens(selector);
+    if (isComplexSelector(tokens)) {
+      throw new TypeError('This method does not support complex CSS selectors');
+    }
+    // Simple selectors only have a single selector token
+    return buildPredicateFromToken(tokens[0]);
+  }
+  throw new TypeError('Enzyme::Selector expects a string, object, or Component Constructor');
 }
 
 /**
@@ -246,73 +247,69 @@ function matchDescendant(nodes, predicate) {
 export function reduceTreeBySelector(selector, wrapper) {
   const root = wrapper.getNodeInternal();
   let results = [];
-  switch (typeof selector) {
-    case 'function':
-    case 'object':
-      results = treeFilter(root, buildPredicate(selector));
-      break;
-    case 'string': {
-      const tokens = safelyGenerateTokens(selector);
-      let index = 0;
-      let token = null;
-      while (index < tokens.length) {
-        token = tokens[index];
-        /**
-         * There are two types of tokens in a CSS selector:
-         * 
-         * 1. Selector tokens. These target nodes directly, like
-         *    type or attribute selectors. These are easy to apply
-         *    because we can travserse the tree and return only
-         *    the nodes that match the predicate.
-         * 
-         * 2. Combinator tokens. These tokens chain together
-         *    selector nodes. For example > for children, or +
-         *    for adjecent siblings. These are harder to match
-         *    as we have to track where in the tree we are
-         *    to determine if a selector node applies or not.
-         */
-        if (token.type === SELECTOR) {
-          const predicate = buildPredicateFromToken(token);
-          results = results.concat(treeFilter(root, predicate));
-        } else {
-          // We can assume there always all previously matched tokens since selectors
-          // cannot start with combinators.
-          const type = token.type;
-          // We assume the next token is a selector, so move the index
-          // forward and build the predicate.
-          index += 1;
-          token = tokens[index];
-          const predicate = buildPredicateFromToken(token);
-          // We match against only the nodes which have already been matched,
-          // since a combinator is meant to refine a previous selector.
-          switch (type) {
-            // The + combinator
-            case ADJACENT_SIBLING:
-              results = matchAdjacentSiblings(results, predicate, root);
-              break;
-            // The ~ combinator
-            case GENERAL_SIBLING:
-              results = matchGeneralSibling(results, predicate, root);
-              break;
-            // The > combinator
-            case CHILD:
-              results = matchDirectChild(results, predicate);
-              break;
-            // The ' ' (whitespace) combinator
-            case DESCENDANT: {
-              results = matchDescendant(results, predicate);
-              break;
-            }
-            default:
-              throw new Error(`Unkown combinator selector: ${type}`);
-          }
-        }
+
+  if (typeof selector === 'function' || typeof selector === 'object') {
+    results = treeFilter(root, buildPredicate(selector));
+  } else if (typeof selector === 'string') {
+    const tokens = safelyGenerateTokens(selector);
+    let index = 0;
+    let token = null;
+    while (index < tokens.length) {
+      token = tokens[index];
+      /**
+       * There are two types of tokens in a CSS selector:
+       * 
+       * 1. Selector tokens. These target nodes directly, like
+       *    type or attribute selectors. These are easy to apply
+       *    because we can travserse the tree and return only
+       *    the nodes that match the predicate.
+       * 
+       * 2. Combinator tokens. These tokens chain together
+       *    selector nodes. For example > for children, or +
+       *    for adjecent siblings. These are harder to match
+       *    as we have to track where in the tree we are
+       *    to determine if a selector node applies or not.
+       */
+      if (token.type === SELECTOR) {
+        const predicate = buildPredicateFromToken(token);
+        results = results.concat(treeFilter(root, predicate));
+      } else {
+        // We can assume there always all previously matched tokens since selectors
+        // cannot start with combinators.
+        const type = token.type;
+        // We assume the next token is a selector, so move the index
+        // forward and build the predicate.
         index += 1;
+        token = tokens[index];
+        const predicate = buildPredicateFromToken(token);
+        // We match against only the nodes which have already been matched,
+        // since a combinator is meant to refine a previous selector.
+        switch (type) {
+          // The + combinator
+          case ADJACENT_SIBLING:
+            results = matchAdjacentSiblings(results, predicate, root);
+            break;
+          // The ~ combinator
+          case GENERAL_SIBLING:
+            results = matchGeneralSibling(results, predicate, root);
+            break;
+          // The > combinator
+          case CHILD:
+            results = matchDirectChild(results, predicate);
+            break;
+          // The ' ' (whitespace) combinator
+          case DESCENDANT: {
+            results = matchDescendant(results, predicate);
+            break;
+          }
+          default:
+            throw new Error(`Unkown combinator selector: ${type}`);
+        }
       }
-      break;
+      index += 1;
     }
-    default:
-      throw new TypeError('Enzyme::Selector expects a string, object, or Component Constructor');
+  } else {
+    throw new TypeError('Enzyme::Selector expects a string, object, or Component Constructor');
   }
   return wrapper.wrap(results);
 }
