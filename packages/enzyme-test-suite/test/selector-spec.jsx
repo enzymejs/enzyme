@@ -177,7 +177,7 @@ describe('selectors', () => {
         const wrapper = renderMethod(<div className="foo" />);
         ['is', 'filter', 'not', 'every'].forEach((method) => {
           expect(() => wrapper[method]('.foo + div')).to.throw(
-            Error,
+            TypeError,
             'This method does not support complex CSS selectors',
           );
         });
