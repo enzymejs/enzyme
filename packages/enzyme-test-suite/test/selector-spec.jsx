@@ -36,8 +36,8 @@ describe('selectors', () => {
           </div>,
         );
 
-        expect(wrapper.find('span').length).to.equal(2);
-        expect(wrapper.find('.top-div span').length).to.equal(1);
+        expect(wrapper.find('span')).to.have.lengthOf(2);
+        expect(wrapper.find('.top-div span')).to.have.lengthOf(1);
       });
 
       it('nested descendent', () => {
@@ -55,8 +55,8 @@ describe('selectors', () => {
           </div>,
         );
 
-        expect(wrapper.find('h1').length).to.equal(3);
-        expect(wrapper.find('.my-div h1').length).to.equal(2);
+        expect(wrapper.find('h1')).to.have.lengthOf(3);
+        expect(wrapper.find('.my-div h1')).to.have.lengthOf(2);
       });
 
       it('deep descendent', () => {
@@ -75,8 +75,8 @@ describe('selectors', () => {
           </div>,
         );
 
-        expect(wrapper.find('h1').length).to.equal(2);
-        expect(wrapper.find('div .inner span .way-inner h1').length).to.equal(1);
+        expect(wrapper.find('h1')).to.have.lengthOf(2);
+        expect(wrapper.find('div .inner span .way-inner h1')).to.have.lengthOf(1);
       });
 
       it('direct descendent', () => {
@@ -92,9 +92,9 @@ describe('selectors', () => {
           </div>,
         );
 
-        expect(wrapper.find('.to-find').length).to.equal(3);
+        expect(wrapper.find('.to-find')).to.have.lengthOf(3);
         const descendent = wrapper.find('.container > .to-find');
-        expect(descendent.length).to.equal(1);
+        expect(descendent).to.have.lengthOf(1);
         expect(descendent.text()).to.equal('Direct');
       });
 
@@ -107,9 +107,9 @@ describe('selectors', () => {
           </div>,
         );
 
-        expect(wrapper.find('.sibling').length).to.equal(2);
+        expect(wrapper.find('.sibling')).to.have.lengthOf(2);
         const toFind = wrapper.find('.to-find + .sibling');
-        expect(toFind.length).to.equal(1);
+        expect(toFind).to.have.lengthOf(1);
         expect(toFind.text()).to.equal('Adjacent');
       });
 
@@ -129,9 +129,9 @@ describe('selectors', () => {
           </div>,
         );
 
-        expect(wrapper.find('.to-find').length).to.equal(3);
+        expect(wrapper.find('.to-find')).to.have.lengthOf(3);
         const toFind = wrapper.find('.to-find + .sibling');
-        expect(toFind.length).to.equal(2);
+        expect(toFind).to.have.lengthOf(2);
         toFind.map(found => expect(found.text()).to.equal('Adjacent'));
       });
 
@@ -148,7 +148,7 @@ describe('selectors', () => {
           </div>,
         );
 
-        expect(wrapper.find('.to-find ~ span').length).to.equal(3);
+        expect(wrapper.find('.to-find ~ span')).to.have.lengthOf(3);
       });
 
       it('nested general siblings', () => {
@@ -177,6 +177,7 @@ describe('selectors', () => {
         const wrapper = renderMethod(<div className="foo" />);
         ['is', 'filter', 'not', 'every'].forEach((method) => {
           expect(() => wrapper[method]('.foo + div')).to.throw(
+            Error,
             'This method does not support complex CSS selectors',
           );
         });
@@ -209,7 +210,7 @@ describe('selectors', () => {
           </div>,
         );
 
-        expect(wrapper.find('.foo + div > span').length).to.equal(1);
+        expect(wrapper.find('.foo + div > span')).to.have.lengthOf(1);
       });
 
       it('.foo + .foo + .foo', () => {
@@ -220,10 +221,10 @@ describe('selectors', () => {
             <div className="foo">foo3</div>
           </div>,
         );
-        expect(wrapper.find('.foo + .foo').length).to.equal(2);
+        expect(wrapper.find('.foo + .foo')).to.have.lengthOf(2);
         expect(wrapper.find('.foo + .foo').at(0).text()).to.equal('foo2');
         expect(wrapper.find('.foo + .foo').at(1).text()).to.equal('foo3');
-        expect(wrapper.find('.foo + .foo + .foo').length).to.equal(1);
+        expect(wrapper.find('.foo + .foo + .foo')).to.have.lengthOf(1);
       });
 
       it('attribute names with numbers', () => {
@@ -235,10 +236,10 @@ describe('selectors', () => {
             <div data-foo-2="2" />
           </div>,
         );
-        expect(wrapper.find('[data-foo-1=1]').length).to.equal(2);
-        expect(wrapper.find('[data-foo-1="1"]').length).to.equal(0);
-        expect(wrapper.find('[data-foo-2=2]').length).to.equal(1);
-        expect(wrapper.find('[data-foo-2="2"]').length).to.equal(1);
+        expect(wrapper.find('[data-foo-1=1]')).to.have.lengthOf(2);
+        expect(wrapper.find('[data-foo-1="1"]')).to.have.lengthOf(0);
+        expect(wrapper.find('[data-foo-2=2]')).to.have.lengthOf(1);
+        expect(wrapper.find('[data-foo-2="2"]')).to.have.lengthOf(1);
       });
 
       it('hyphens', () => {
@@ -250,13 +251,13 @@ describe('selectors', () => {
             <span className="-foo" />
           </div>,
         );
-        expect(wrapper.find('.-foo').length).to.equal(3);
-        expect(wrapper.find('.foo-').length).to.equal(1);
-        expect(wrapper.find('[type="foo"].foo-').length).to.equal(1);
-        expect(wrapper.find('.foo-.-bar-').length).to.equal(1);
-        expect(wrapper.find('div.foo-').length).to.equal(1);
-        expect(wrapper.find('div.-foo').length).to.equal(2);
-        expect(wrapper.find('#bar.-foo').length).to.equal(1);
+        expect(wrapper.find('.-foo')).to.have.lengthOf(3);
+        expect(wrapper.find('.foo-')).to.have.lengthOf(1);
+        expect(wrapper.find('[type="foo"].foo-')).to.have.lengthOf(1);
+        expect(wrapper.find('.foo-.-bar-')).to.have.lengthOf(1);
+        expect(wrapper.find('div.foo-')).to.have.lengthOf(1);
+        expect(wrapper.find('div.-foo')).to.have.lengthOf(2);
+        expect(wrapper.find('#bar.-foo')).to.have.lengthOf(1);
       });
 
       it('hyphens', () => {
@@ -268,13 +269,13 @@ describe('selectors', () => {
             <span className="-foo" />
           </div>,
         );
-        expect(wrapper.find('.-foo').length).to.equal(3);
-        expect(wrapper.find('.foo-').length).to.equal(1);
-        expect(wrapper.find('[type="foo"].foo-').length).to.equal(1);
-        expect(wrapper.find('.foo-.-bar-').length).to.equal(1);
-        expect(wrapper.find('div.foo-').length).to.equal(1);
-        expect(wrapper.find('div.-foo').length).to.equal(2);
-        expect(wrapper.find('#bar.-foo').length).to.equal(1);
+        expect(wrapper.find('.-foo')).to.have.lengthOf(3);
+        expect(wrapper.find('.foo-')).to.have.lengthOf(1);
+        expect(wrapper.find('[type="foo"].foo-')).to.have.lengthOf(1);
+        expect(wrapper.find('.foo-.-bar-')).to.have.lengthOf(1);
+        expect(wrapper.find('div.foo-')).to.have.lengthOf(1);
+        expect(wrapper.find('div.-foo')).to.have.lengthOf(2);
+        expect(wrapper.find('#bar.-foo')).to.have.lengthOf(1);
       });
 
       it('spaces in attribute values', () => {
@@ -285,7 +286,7 @@ describe('selectors', () => {
             <div type="foobar" />
           </div>,
         );
-        expect(wrapper.find('[type="foo bar"]').length).to.equal(1);
+        expect(wrapper.find('[type="foo bar"]')).to.have.lengthOf(1);
       });
 
       it('dots in attribute values', () => {
@@ -296,7 +297,7 @@ describe('selectors', () => {
             <div type="foobar" />
           </div>,
         );
-        expect(wrapper.find('[type="foo.bar"]').length).to.equal(1);
+        expect(wrapper.find('[type="foo.bar"]')).to.have.lengthOf(1);
       });
 
       it('brackets in attribute values', () => {
@@ -305,7 +306,7 @@ describe('selectors', () => {
             <div type="foo[1]" />
           </div>,
         );
-        expect(wrapper.find('[type="foo[1]"]').length).to.equal(1);
+        expect(wrapper.find('[type="foo[1]"]')).to.have.lengthOf(1);
       });
 
       it('URLs in attribute values', () => {
@@ -315,8 +316,8 @@ describe('selectors', () => {
             <a href="foo.com" />
           </div>,
         );
-        expect(wrapper.find('a[href="https://www.foo.com"]').length).to.equal(1);
-        expect(wrapper.find('a[href="foo.com"]').length).to.equal(1);
+        expect(wrapper.find('a[href="https://www.foo.com"]')).to.have.lengthOf(1);
+        expect(wrapper.find('a[href="foo.com"]')).to.have.lengthOf(1);
       });
     });
   });

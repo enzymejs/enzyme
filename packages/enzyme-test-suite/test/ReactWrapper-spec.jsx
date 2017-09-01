@@ -486,9 +486,18 @@ describeWithDOM('mount', () => {
           <input type="text" />
         </div>,
       );
-      expect(() => wrapper.find('[type=text]')).to.throw();
-      expect(() => wrapper.find('[type=hidden]')).to.throw();
-      expect(() => wrapper.find('[type="text"]')).to.not.throw();
+      expect(() => wrapper.find('[type=text]')).to.throw(
+        Error,
+        'Failed to parse selector: [type=text]',
+      );
+      expect(() => wrapper.find('[type=hidden]')).to.throw(
+        Error,
+        'Failed to parse selector: [type=hidden]',
+      );
+      expect(() => wrapper.find('[type="text"]')).to.not.throw(
+        Error,
+        'Failed to parse selector: [type="text"]',
+      );
     });
 
     it('should support data prop selectors', () => {

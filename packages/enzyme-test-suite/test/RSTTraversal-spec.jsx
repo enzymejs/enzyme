@@ -68,10 +68,13 @@ describe('RSTTraversal', () => {
       expect(nodeHasProperty(node, 'title')).to.equal(false);
     });
 
-    it('should parse false', () => {
-      const node = $(<div foo={false} />);
-
-      expect(nodeHasProperty(node, 'foo', false)).to.equal(true);
+    it('should parse booleans', () => {
+      expect(nodeHasProperty(<div foo />, 'foo', true)).to.equal(true);
+      expect(nodeHasProperty(<div foo />, 'foo', false)).to.equal(false);
+      expect(nodeHasProperty(<div foo />, 'foo', 'true')).to.equal(false);
+      expect(nodeHasProperty(<div foo={false} />, 'foo', false)).to.equal(true);
+      expect(nodeHasProperty(<div foo={false} />, 'foo', true)).to.equal(false);
+      expect(nodeHasProperty(<div foo={false} />, 'foo', 'false')).to.equal(false);
     });
 
     it('should parse numeric literals', () => {
@@ -89,11 +92,14 @@ describe('RSTTraversal', () => {
       expect(nodeHasProperty(<div foo={0} />, 'foo', 0)).to.equal(true);
       expect(nodeHasProperty(<div foo={0} />, 'foo', +0)).to.equal(true);
       expect(nodeHasProperty(<div foo={-0} />, 'foo', -0)).to.equal(true);
+      expect(nodeHasProperty(<div foo={-0} />, 'foo', 0)).to.equal(false);
+      expect(nodeHasProperty(<div foo={0} />, 'foo', -0)).to.equal(false);
       expect(nodeHasProperty(<div foo={1} />, 'foo', 0)).to.equal(false);
       expect(nodeHasProperty(<div foo={2} />, 'foo', -0)).to.equal(false);
     });
 
     it('should work with empty strings', () => {
+      expect(nodeHasProperty(<div foo="" />, 'foo', '')).to.equal(true);
       expect(nodeHasProperty(<div foo={''} />, 'foo', '')).to.equal(true);
       expect(nodeHasProperty(<div foo={'bar'} />, 'foo', '')).to.equal(false);
     });
@@ -116,9 +122,13 @@ describe('RSTTraversal', () => {
     it('should work with ±Infinity', () => {
       expect(nodeHasProperty(<div foo={Infinity} />, 'foo', Infinity)).to.equal(true);
       expect(nodeHasProperty(<div foo={Infinity} />, 'foo', +Infinity)).to.equal(true);
+      expect(nodeHasProperty(<div foo={Infinity} />, 'foo', -Infinity)).to.equal(false);
+      expect(nodeHasProperty(<div foo={Infinity} />, 'foo', 'Infinity')).to.equal(false);
       expect(nodeHasProperty(<div foo={0} />, 'foo', Infinity)).to.equal(false);
       expect(nodeHasProperty(<div foo={-Infinity} />, 'foo', -Infinity)).to.equal(true);
       expect(nodeHasProperty(<div foo={-Infinity} />, 'foo', Infinity)).to.equal(false);
+      expect(nodeHasProperty(<div foo={-Infinity} />, 'foo', Infinity)).to.equal(false);
+      expect(nodeHasProperty(<div foo={-Infinity} />, 'foo', '-Infinity')).to.equal(false);
       expect(nodeHasProperty(<div foo={0} />, 'foo', -Infinity)).to.equal(false);
     });
   });
