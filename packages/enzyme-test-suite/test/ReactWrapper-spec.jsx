@@ -440,12 +440,12 @@ describeWithDOM('mount', () => {
       const wrapper = mount(
         <div>
           <span htmlFor="foo" />
-          <div htmlFor="foo" />
+          <div htmlFor="bar" />
         </div>,
       );
 
       expect(wrapper.find('[htmlFor="foo"]')).to.have.length(1);
-      expect(wrapper.find('[htmlFor]')).to.have.length(1);
+      expect(wrapper.find('[htmlFor]')).to.have.length(2);
     });
 
     it('should compound tag and prop selector', () => {
