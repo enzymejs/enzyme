@@ -12,8 +12,7 @@ following arguments:
   - `node` (`ReactWrapper`): A wrapper around the current node being processed
   - `index` (`Number`): The index of the current node being processed
 
-2. `initialValue` (`T` [optional]): If provided, this will be passed in as the first argument to the
-first invocation of the reducing function.
+2. `initialValue` (`T` [optional]): If provided, this will be passed in as the first argument to the first invocation of the reducing function. If omitted, the first `node` will be provided and the iteration will begin on the second node in the collection.
 
 
 

@@ -892,11 +892,19 @@ class ShallowWrapper {
    * @param {*} initialValue - the initial value
    * @returns {*}
    */
-  reduce(fn, initialValue) {
-    return this.getNodesInternal().reduce(
-      (accum, n, i) => fn.call(this, accum, this.wrap(n), i),
-      initialValue,
-    );
+  reduce(fn, initialValue = undefined) {
+    if (arguments.length > 1) {
+      return this.getNodesInternal().reduce(
+        (accum, n, i) => fn.call(this, accum, this.wrap(n), i),
+        initialValue,
+      );
+    }
+    return this.getNodesInternal().reduce((accum, n, i) => fn.call(
+      this,
+      i === 1 ? this.wrap(accum) : accum,
+      this.wrap(n),
+      i,
+    ));
   }
 
   /**
@@ -907,11 +915,19 @@ class ShallowWrapper {
    * @param {*} initialValue - the initial value
    * @returns {*}
    */
-  reduceRight(fn, initialValue) {
-    return this.getNodesInternal().reduceRight(
-      (accum, n, i) => fn.call(this, accum, this.wrap(n), i),
-      initialValue,
-    );
+  reduceRight(fn, initialValue = undefined) {
+    if (arguments.length > 1) {
+      return this.getNodesInternal().reduceRight(
+        (accum, n, i) => fn.call(this, accum, this.wrap(n), i),
+        initialValue,
+      );
+    }
+    return this.getNodesInternal().reduceRight((accum, n, i) => fn.call(
+      this,
+      i === 1 ? this.wrap(accum) : accum,
+      this.wrap(n),
+      i,
+    ));
   }
 
   /**

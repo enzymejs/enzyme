@@ -14,6 +14,9 @@ import { REACT013, REACT014, REACT16, is } from './_helpers/version';
 // we should be able to go un-skip all of the tests that are skipped with this flag.
 const BATCHING = !REACT16;
 
+const getElementPropSelector = prop => x => x.props[prop];
+const getWrapperPropSelector = prop => x => x.prop(prop);
+
 describe('shallow', () => {
   describe('top level wrapper', () => {
     it('does what i expect', () => {
@@ -2131,6 +2134,10 @@ describe('shallow', () => {
   });
 
   describe('.reduce(fn[, initialValue])', () => {
+    it('has the right length', () => {
+      expect(ShallowWrapper.prototype.reduce).to.have.lengthOf(1);
+    });
+
     it('should call a function with a wrapper for each node in the wrapper', () => {
       const wrapper = shallow(
         <div>
@@ -2174,9 +2181,33 @@ describe('shallow', () => {
         baz: 'foo hoo',
       });
     });
+
+    it('allows the initialValue to be omitted', () => {
+      const one = (<div id="bax" className="foo qoo" />);
+      const two = (<div id="bar" className="foo boo" />);
+      const three = (<div id="baz" className="foo hoo" />);
+      const wrapper = shallow(
+        <div>
+          {one}
+          {two}
+          {three}
+        </div>,
+      );
+      const counter = (<noscript id="counter" />);
+      const result = wrapper
+        .find('.foo')
+        .reduce((acc, n) => [].concat(acc, n, new ShallowWrapper(counter)))
+        .map(getWrapperPropSelector('id'));
+
+      expect(result).to.eql([one, two, counter, three, counter].map(getElementPropSelector('id')));
+    });
   });
 
   describe('.reduceRight(fn[, initialValue])', () => {
+    it('has the right length', () => {
+      expect(ShallowWrapper.prototype.reduceRight).to.have.lengthOf(1);
+    });
+
     it('should call a function with a wrapper for each node in the wrapper in reverse', () => {
       const wrapper = shallow(
         <div>
@@ -2219,6 +2250,26 @@ describe('shallow', () => {
         bar: 'foo boo',
         baz: 'foo hoo',
       });
+    });
+
+    it('allows the initialValue to be omitted', () => {
+      const one = (<div id="bax" className="foo qoo" />);
+      const two = (<div id="bar" className="foo boo" />);
+      const three = (<div id="baz" className="foo hoo" />);
+      const wrapper = shallow(
+        <div>
+          {one}
+          {two}
+          {three}
+        </div>,
+      );
+      const counter = (<noscript id="counter" />);
+      const result = wrapper
+        .find('.foo')
+        .reduceRight((acc, n) => [].concat(acc, n, new ShallowWrapper(counter)))
+        .map(getWrapperPropSelector('id'));
+
+      expect(result).to.eql([three, two, counter, one, counter].map(getElementPropSelector('id')));
     });
   });
 
