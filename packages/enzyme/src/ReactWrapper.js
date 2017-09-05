@@ -564,7 +564,7 @@ class ReactWrapper {
    */
   render() {
     const html = this.html();
-    return html === null ? cheerio() : cheerio.load(html).root();
+    return html === null ? cheerio() : cheerio.load('')(html);
   }
 
   /**
