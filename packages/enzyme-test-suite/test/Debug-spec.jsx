@@ -218,7 +218,7 @@ describe('debug', () => {
           );
         }
       }
-      expect(mount(<Foo id="2" />).debug()).to.eql(
+      expect(mount(<Foo id="2" />).root().debug()).to.eql(
         `<Foo id="2">
   <div className="foo">
     <span>
@@ -237,7 +237,7 @@ describe('debug', () => {
           );
         }
       }
-      expect(mount(<Foo id="2" />).debug()).to.eql(
+      expect(mount(<Foo id="2" />).root().debug()).to.eql(
         `<Foo id="2">
   <div>
     hello
@@ -267,7 +267,7 @@ describe('debug', () => {
           );
         }
       }
-      expect(mount(<Bar id="2" />).debug()).to.eql(
+      expect(mount(<Bar id="2" />).root().debug()).to.eql(
         `<Bar id="2">
   <div className="bar">
     <span>
@@ -337,7 +337,7 @@ describe('debug', () => {
         }
       }
 
-      expect(mount(<Bar id="2" />).debug()).to.eql(
+      expect(mount(<Bar id="2" />).root().debug()).to.eql(
         `<Bar id="2">
   <div className="bar">
     <Foo baz="bax">
@@ -362,7 +362,7 @@ describe('debug', () => {
             <span>Foo</span>
           </div>
         );
-        expect(mount(<Foo id="2" />).debug()).to.eql(
+        expect(mount(<Foo id="2" />).root().debug()).to.eql(
           `<Foo id="2">
   <div className="foo">
     <span>
@@ -385,7 +385,7 @@ describe('debug', () => {
             <Foo baz="bax" />
           </div>
         );
-        expect(mount(<Bar id="2" />).debug()).to.eql(
+        expect(mount(<Bar id="2" />).root().debug()).to.eql(
           `<Bar id="2">
   <div className="bar">
     <span>
@@ -415,7 +415,7 @@ describe('debug', () => {
             <Foo baz="bax" />
           </div>
         );
-        expect(mount(<Bar id="2" />).find(Foo).debug()).to.eql(
+        expect(mount(<Bar id="2" />).root().find(Foo).debug()).to.eql(
           `<Foo baz="bax">
   <div className="foo">
     <span>
@@ -442,7 +442,7 @@ describe('debug', () => {
           </div>
         );
 
-        expect(mount(<Bar id="2" />).debug()).to.eql(
+        expect(mount(<Bar id="2" />).root().debug()).to.eql(
           `<Bar id="2">
   <div className="bar">
     <Foo baz="bax">
@@ -650,7 +650,7 @@ describe('debug', () => {
         }
       }
 
-      expect(mount(<Bar />).debug({ ignoreProps: false })).to.eql(
+      expect(mount(<Bar />).root().debug({ ignoreProps: false })).to.eql(
         `<Bar>
   <div className="class1">
     <Foo fooVal="baz">
@@ -665,7 +665,7 @@ describe('debug', () => {
 </Bar>`,
       );
 
-      expect(mount(<Bar />).debug({ ignoreProps: true })).to.eql(
+      expect(mount(<Bar />).root().debug({ ignoreProps: true })).to.eql(
         `<Bar>
   <div>
     <Foo>
