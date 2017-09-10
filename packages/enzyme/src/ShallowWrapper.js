@@ -37,6 +37,7 @@ const NODES = sym('__nodes__');
 const RENDERER = sym('__renderer__');
 const UNRENDERED = sym('__unrendered__');
 const ROOT = sym('__root__');
+const PRIMARY = sym('__primary__');
 const OPTIONS = sym('__options__');
 const COMPLEX_SELECTOR = sym('__complexSelector__');
 /**
@@ -110,10 +111,21 @@ function getRootNode(node) {
  * @class ShallowWrapper
  */
 class ShallowWrapper {
-  constructor(nodes, root, options = {}) {
+  constructor(nodes, root, options = {}, rootFlag = false) {
     validateOptions(options);
-    if (!root) {
+    if (rootFlag) {
       privateSet(this, ROOT, this);
+      privateSet(this, UNRENDERED, root[UNRENDERED]);
+      privateSet(this, RENDERER, root[RENDERER]);
+      const node = this[RENDERER].getNode();
+      privateSet(this, NODE, node);
+      privateSet(this, NODES, [node]);
+      privateSet(root, NODE, getRootNode(node));
+      privateSet(root, NODES, [root[NODE]]);
+      privateSet(this, OPTIONS, root[OPTIONS]);
+      privateSet(this, PRIMARY, root);
+      this.length = 1;
+    } else if (!root) {
       privateSet(this, UNRENDERED, nodes);
       const renderer = getAdapter(options).createRenderer({ mode: 'shallow', ...options });
       privateSet(this, RENDERER, renderer);
@@ -130,6 +142,8 @@ class ShallowWrapper {
       }
       privateSet(this, NODE, getRootNode(this[RENDERER].getNode()));
       privateSet(this, NODES, [this[NODE]]);
+      privateSet(this, OPTIONS, options);
+      privateSet(this, ROOT, new ShallowWrapper(null, this, options, true));
       this.length = 1;
     } else {
       privateSet(this, ROOT, root);
@@ -142,14 +156,19 @@ class ShallowWrapper {
         privateSet(this, NODE, nodes[0]);
         privateSet(this, NODES, nodes);
       }
+      privateSet(this, OPTIONS, root[OPTIONS]);
       this.length = this[NODES].length;
     }
-    privateSet(this, OPTIONS, root ? root[OPTIONS] : options);
+
     privateSet(this, COMPLEX_SELECTOR, new ComplexSelector(
       buildPredicate,
       findWhereUnwrapped,
       childrenOfNode,
     ));
+  }
+
+  root() {
+    return this[ROOT];
   }
 
   getNodeInternal() {
@@ -231,12 +250,15 @@ class ShallowWrapper {
    * @returns {ShallowWrapper}
    */
   update() {
-    if (this[ROOT] !== this) {
+    if (this[ROOT] !== this && this[PRIMARY] !== this) {
       throw new Error('ShallowWrapper::update() can only be called on the root');
     }
     this.single('update', () => {
-      this[NODE] = getRootNode(this[RENDERER].getNode());
+      const node = this[RENDERER].getNode();
+      this[NODE] = node;
       this[NODES] = [this[NODE]];
+      this[PRIMARY][NODE] = getRootNode(node);
+      this[PRIMARY][NODES] = [this[PRIMARY][NODE]];
     });
     return this;
   }
@@ -1190,7 +1212,7 @@ function privateWarning(prop, extraMessage) {
 privateWarning('node', 'Consider using the getElement() method instead.');
 privateWarning('nodes', 'Consider using the getElements() method instead.');
 privateWarning('renderer', '');
-privateWarning('root', '');
+// privateWarning('root', '');
 privateWarning('options', '');
 privateWarning('complexSelector', '');
 

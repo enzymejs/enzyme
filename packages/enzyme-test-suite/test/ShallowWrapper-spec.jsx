@@ -39,7 +39,7 @@ describe('shallow', () => {
 
       expect(wrapper.type()).to.equal(Box);
       expect(wrapper.props().bam).to.equal(true);
-      expect(wrapper.instance()).to.be.instanceOf(Foo);
+      expect(wrapper.root().instance()).to.be.instanceOf(Foo);
       expect(wrapper.children().at(0).type()).to.equal('div');
       expect(wrapper.find(Box).children().props().className).to.equal('div');
       expect(wrapper.find(Box).children().at(0).props().className).to.equal('div');
@@ -89,8 +89,8 @@ describe('shallow', () => {
       const context = { name: 'foo' };
       const wrapper = shallow(<SimpleComponent />, { context });
 
-      expect(wrapper.context().name).to.equal(context.name);
-      expect(wrapper.context('name')).to.equal(context.name);
+      expect(wrapper.root().context().name).to.equal(context.name);
+      expect(wrapper.root().context('name')).to.equal(context.name);
     });
 
     describeIf(!REACT013, 'stateless function components', () => {
@@ -122,8 +122,8 @@ describe('shallow', () => {
 
         const wrapper = shallow(<SimpleComponent />, { context });
 
-        expect(wrapper.context().name).to.equal(context.name);
-        expect(wrapper.context('name')).to.equal(context.name);
+        expect(wrapper.root().context().name).to.equal(context.name);
+        expect(wrapper.root().context('name')).to.equal(context.name);
       });
 
       itIf(REACT16, 'is not introspectable through context API', () => {
@@ -134,11 +134,11 @@ describe('shallow', () => {
 
         const wrapper = shallow(<SimpleComponent />, { context });
 
-        expect(() => wrapper.context()).to.throw(
+        expect(() => wrapper.root().context()).to.throw(
           Error,
           'ShallowWrapper::context() can only be called on wrapped nodes that have a non-null instance',
         );
-        expect(() => wrapper.context('name')).to.throw(
+        expect(() => wrapper.root().context('name')).to.throw(
           Error,
           'ShallowWrapper::context() can only be called on wrapped nodes that have a non-null instance',
         );
@@ -168,8 +168,8 @@ describe('shallow', () => {
       }
 
       const wrapper = shallow(<Foo />);
-      expect(wrapper.instance()).to.be.instanceof(Foo);
-      expect(wrapper.instance().render).to.equal(Foo.prototype.render);
+      expect(wrapper.root().instance()).to.be.instanceof(Foo);
+      expect(wrapper.root().instance().render).to.equal(Foo.prototype.render);
     });
 
     it('should throw if called on something other than the root node', () => {
@@ -887,7 +887,7 @@ describe('shallow', () => {
       }
       const wrapper = shallow(<Foo id="foo" />);
       expect(wrapper.find('.foo').length).to.equal(1);
-      wrapper.setProps({ id: 'bar', foo: 'bla' });
+      wrapper.root().setProps({ id: 'bar', foo: 'bla' });
       expect(wrapper.find('.bar').length).to.equal(1);
     });
 
@@ -911,7 +911,7 @@ describe('shallow', () => {
       const nextProps = { id: 'bar', foo: 'bla' };
       const wrapper = shallow(<Foo id="foo" />);
       expect(spy.calledOnce).to.equal(false);
-      wrapper.setProps(nextProps);
+      wrapper.root().setProps(nextProps);
       expect(spy.calledOnce).to.equal(true);
       expect(spy.calledWith(nextProps)).to.equal(true);
     });
@@ -936,7 +936,7 @@ describe('shallow', () => {
       expect(wrapper.props().a).to.equal('a');
       expect(wrapper.props().b).to.equal('b');
 
-      wrapper.setProps({ b: 'c', d: 'e' });
+      wrapper.root().setProps({ b: 'c', d: 'e' });
       expect(wrapper.props().a).to.equal('a');
       expect(wrapper.props().b).to.equal('c');
       expect(wrapper.props().d).to.equal('e');
@@ -957,7 +957,7 @@ describe('shallow', () => {
       const wrapper = shallow(<Foo x={5} />, { context });
       expect(wrapper.first('div').text()).to.equal('yolo');
 
-      wrapper.setProps({ x: 5 }); // Just force a re-render
+      wrapper.root().setProps({ x: 5 }); // Just force a re-render
       expect(wrapper.first('div').text()).to.equal('yolo');
     });
 
@@ -984,7 +984,7 @@ describe('shallow', () => {
 
       const wrapper = shallow(<Foo a="a" b="b" />);
 
-      wrapper.setProps({ b: 'c', d: 'e' });
+      wrapper.root().setProps({ b: 'c', d: 'e' });
 
       expect(spy.args).to.deep.equal([
         [
@@ -1015,7 +1015,7 @@ describe('shallow', () => {
 
         const wrapper = shallow(<Foo id="foo" />);
         expect(wrapper.find('.foo').length).to.equal(1);
-        wrapper.setProps({ id: 'bar', foo: 'bla' });
+        wrapper.root().setProps({ id: 'bar', foo: 'bla' });
         expect(wrapper.find('.bar').length).to.equal(1);
       });
 
@@ -1031,7 +1031,7 @@ describe('shallow', () => {
         expect(wrapper.props().a).to.equal('a');
         expect(wrapper.props().b).to.equal('b');
 
-        wrapper.setProps({ b: 'c', d: 'e' });
+        wrapper.root().setProps({ b: 'c', d: 'e' });
         expect(wrapper.props().a).to.equal('a');
         expect(wrapper.props().b).to.equal('c');
         expect(wrapper.props().d).to.equal('e');
@@ -1047,7 +1047,7 @@ describe('shallow', () => {
         const wrapper = shallow(<Foo x={5} />, { context });
         expect(wrapper.first('div').text()).to.equal('yolo');
 
-        wrapper.setProps({ x: 5 }); // Just force a re-render
+        wrapper.root().setProps({ x: 5 }); // Just force a re-render
         expect(wrapper.first('div').text()).to.equal('yolo');
       });
     });
@@ -1067,15 +1067,15 @@ describe('shallow', () => {
       const context = { name: 'foo' };
       const wrapper = shallow(<SimpleComponent />, { context });
       expect(wrapper.text()).to.equal('foo');
-      wrapper.setContext({ name: 'bar' });
+      wrapper.root().setContext({ name: 'bar' });
       expect(wrapper.text()).to.equal('bar');
-      wrapper.setContext({ name: 'baz' });
+      wrapper.root().setContext({ name: 'baz' });
       expect(wrapper.text()).to.equal('baz');
     });
 
     it('should throw if it is called when shallow didn’t include context', () => {
       const wrapper = shallow(<SimpleComponent />);
-      expect(() => wrapper.setContext({ name: 'bar' })).to.throw(
+      expect(() => wrapper.root().setContext({ name: 'bar' })).to.throw(
         Error,
         'ShallowWrapper::setContext() can only be called on a wrapper that was originally passed a context option', // eslint-disable-line max-len
       );
@@ -1091,15 +1091,15 @@ describe('shallow', () => {
         const context = { name: 'foo' };
         const wrapper = shallow(<SFC />, { context });
         expect(wrapper.text()).to.equal('foo');
-        wrapper.setContext({ name: 'bar' });
+        wrapper.root().setContext({ name: 'bar' });
         expect(wrapper.text()).to.equal('bar');
-        wrapper.setContext({ name: 'baz' });
+        wrapper.root().setContext({ name: 'baz' });
         expect(wrapper.text()).to.equal('baz');
       });
 
       it('should throw if it is called when shallow didn’t include context', () => {
         const wrapper = shallow(<SFC />);
-        expect(() => wrapper.setContext({ name: 'bar' })).to.throw(
+        expect(() => wrapper.root().setContext({ name: 'bar' })).to.throw(
           Error,
           'ShallowWrapper::setContext() can only be called on a wrapper that was originally passed a context option', // eslint-disable-line max-len
         );
@@ -1285,7 +1285,7 @@ describe('shallow', () => {
       }
       const wrapper = shallow(<Foo />);
       expect(wrapper.find('.foo').length).to.equal(1);
-      wrapper.setState({ id: 'bar' });
+      wrapper.root().setState({ id: 'bar' });
       expect(wrapper.find('.bar').length).to.equal(1);
     });
 
@@ -1302,9 +1302,9 @@ describe('shallow', () => {
         }
       }
       const wrapper = shallow(<Foo />);
-      expect(wrapper.state()).to.eql({ id: 'foo' });
-      wrapper.setState({ id: 'bar' }, () => {
-        expect(wrapper.state()).to.eql({ id: 'bar' });
+      expect(wrapper.root().state()).to.eql({ id: 'foo' });
+      wrapper.root().setState({ id: 'bar' }, () => {
+        expect(wrapper.root().state()).to.eql({ id: 'bar' });
       });
     });
 
@@ -1316,7 +1316,7 @@ describe('shallow', () => {
 
         const wrapper = shallow(<Foo />);
 
-        expect(() => wrapper.state()).to.throw(
+        expect(() => wrapper.root().state()).to.throw(
           Error,
           'ShallowWrapper::state() can only be called on class components',
         );
@@ -1329,7 +1329,7 @@ describe('shallow', () => {
 
         const wrapper = shallow(<Foo />);
 
-        expect(() => wrapper.setState({ a: 1 })).to.throw(
+        expect(() => wrapper.root().setState({ a: 1 })).to.throw(
           Error,
           'ShallowWrapper::setState() can only be called on class components',
         );
@@ -1722,7 +1722,7 @@ describe('shallow', () => {
         render() { return <div />; }
       }
       const wrapper = shallow(<Foo />);
-      expect(wrapper.state()).to.eql({ foo: 'foo' });
+      expect(wrapper.root().state()).to.eql({ foo: 'foo' });
     });
 
     it('should return the current state after state transitions', () => {
@@ -1734,8 +1734,8 @@ describe('shallow', () => {
         render() { return <div />; }
       }
       const wrapper = shallow(<Foo />);
-      wrapper.setState({ foo: 'bar' });
-      expect(wrapper.state()).to.eql({ foo: 'bar' });
+      wrapper.root().setState({ foo: 'bar' });
+      expect(wrapper.root().state()).to.eql({ foo: 'bar' });
     });
 
     it('should allow a state property name be passed in as an argument', () => {
@@ -1747,7 +1747,7 @@ describe('shallow', () => {
         render() { return <div />; }
       }
       const wrapper = shallow(<Foo />);
-      expect(wrapper.state('foo')).to.equal('foo');
+      expect(wrapper.root().state('foo')).to.equal('foo');
     });
   });
 
@@ -2342,7 +2342,7 @@ describe('shallow', () => {
           <div className="foo" />
         </div>,
       );
-      expect(() => wrapper.some('.foo')).to.throw(
+      expect(() => wrapper.root().some('.foo')).to.throw(
         Error,
         'ShallowWrapper::some() can not be called on the root',
       );
@@ -2520,8 +2520,8 @@ describe('shallow', () => {
         const context = { name: 'foo' };
         const wrapper = shallow(<Foo />).find(Bar).shallow({ context });
 
-        expect(wrapper.context().name).to.equal(context.name);
-        expect(wrapper.context('name')).to.equal(context.name);
+        expect(wrapper.root().context().name).to.equal(context.name);
+        expect(wrapper.root().context('name')).to.equal(context.name);
       });
     });
 
@@ -2590,8 +2590,8 @@ describe('shallow', () => {
           const context = { name: 'foo' };
           const wrapper = shallow(<Foo />).find(Bar).shallow({ context });
 
-          expect(wrapper.context().name).to.equal(context.name);
-          expect(wrapper.context('name')).to.equal(context.name);
+          expect(wrapper.root().context().name).to.equal(context.name);
+          expect(wrapper.root().context('name')).to.equal(context.name);
         });
 
         itIf(REACT16, 'will throw when trying to inspect context', () => {
@@ -2608,11 +2608,11 @@ describe('shallow', () => {
           const context = { name: 'foo' };
           const wrapper = shallow(<Foo />).find(Bar).shallow({ context });
 
-          expect(() => wrapper.context()).to.throw(
+          expect(() => wrapper.root().context()).to.throw(
             Error,
             'ShallowWrapper::context() can only be called on wrapped nodes that have a non-null instance',
           );
-          expect(() => wrapper.context('name')).to.throw(
+          expect(() => wrapper.root().context('name')).to.throw(
             Error,
             'ShallowWrapper::context() can only be called on wrapped nodes that have a non-null instance',
           );
@@ -2952,7 +2952,7 @@ describe('shallow', () => {
       });
 
       it('calls expected methods when receiving new props', () => {
-        wrapper.setProps({ foo: 'foo' });
+        wrapper.root().setProps({ foo: 'foo' });
         expect(spy.args).to.deep.equal([
           ['componentWillReceiveProps'],
           ['shouldComponentUpdate'],
@@ -2963,7 +2963,7 @@ describe('shallow', () => {
 
       describeIf(!REACT014 && !REACT16, 'setContext', () => {
         it('calls expected methods when receiving new context', () => {
-          wrapper.setContext({ foo: 'foo' });
+          wrapper.root().setContext({ foo: 'foo' });
           expect(spy.args).to.deep.equal([
             ['componentWillReceiveProps'],
             ['shouldComponentUpdate'],
@@ -2975,7 +2975,7 @@ describe('shallow', () => {
 
       describeIf(REACT16, 'setContext', () => {
         it('calls expected methods when receiving new context', () => {
-          wrapper.setContext({ foo: 'foo' });
+          wrapper.root().setContext({ foo: 'foo' });
           expect(spy.args).to.deep.equal([
             ['shouldComponentUpdate'],
             ['componentWillUpdate'],
@@ -2986,7 +2986,7 @@ describe('shallow', () => {
 
       describeIf(REACT014, 'setContext', () => {
         it('calls expected methods when receiving new context', () => {
-          wrapper.setContext({ foo: 'foo' });
+          wrapper.root().setContext({ foo: 'foo' });
           expect(spy.args).to.deep.equal([
             ['shouldComponentUpdate'],
             ['componentWillUpdate'],
@@ -2996,7 +2996,7 @@ describe('shallow', () => {
       });
 
       itIf(!REACT16, 'calls expected methods for setState', () => {
-        wrapper.setState({ bar: 'bar' });
+        wrapper.root().setState({ bar: 'bar' });
         expect(spy.args).to.deep.equal([
           ['shouldComponentUpdate'],
           ['componentWillUpdate'],
@@ -3007,7 +3007,7 @@ describe('shallow', () => {
 
       // componentDidUpdate does not seem to get called in react 16 beta.
       itIf(REACT16, 'calls expected methods for setState', () => {
-        wrapper.setState({ bar: 'bar' });
+        wrapper.root().setState({ bar: 'bar' });
         expect(spy.args).to.deep.equal([
           ['shouldComponentUpdate'],
           ['componentWillUpdate'],
@@ -3134,8 +3134,8 @@ describe('shallow', () => {
             lifecycleExperimental: true,
           },
         );
-        wrapper.setProps({ foo: 'baz' });
-        wrapper.setProps({ foo: 'bax' });
+        wrapper.root().setProps({ foo: 'baz' });
+        wrapper.root().setProps({ foo: 'bax' });
         expect(spy.args).to.deep.equal(
           [
             [
@@ -3223,7 +3223,7 @@ describe('shallow', () => {
 
         const wrapper = shallow(<Foo a="a" b="b" />, { lifecycleExperimental: true });
 
-        wrapper.setProps({ b: 'c', d: 'e' });
+        wrapper.root().setProps({ b: 'c', d: 'e' });
 
         expect(spy.args).to.deep.equal([
           [
@@ -3273,11 +3273,11 @@ describe('shallow', () => {
         }
 
         const wrapper = shallow(<Foo foo="bar" />, { lifecycleExperimental: true });
-        expect(wrapper.instance().props.foo).to.equal('bar');
-        wrapper.setProps({ foo: 'baz' });
-        expect(wrapper.instance().props.foo).to.equal('baz');
-        wrapper.setProps({ foo: 'bax' });
-        expect(wrapper.instance().props.foo).to.equal('bax');
+        expect(wrapper.root().instance().props.foo).to.equal('bar');
+        wrapper.root().setProps({ foo: 'baz' });
+        expect(wrapper.root().instance().props.foo).to.equal('baz');
+        wrapper.root().setProps({ foo: 'bax' });
+        expect(wrapper.root().instance().props.foo).to.equal('bax');
         expect(spy.args).to.deep.equal([
           ['render'],
           ['componentWillReceiveProps'],
@@ -3412,7 +3412,7 @@ describe('shallow', () => {
             lifecycleExperimental: true,
           },
         );
-        wrapper.setState({ foo: 'baz' });
+        wrapper.root().setState({ foo: 'baz' });
         expect(spy.args).to.deep.equal([
           [
             'render',
@@ -3466,9 +3466,9 @@ describe('shallow', () => {
           }
         }
         const wrapper = shallow(<Foo />, { lifecycleExperimental: true });
-        expect(wrapper.instance().state.foo).to.equal('bar');
-        wrapper.setState({ foo: 'baz' });
-        expect(wrapper.instance().state.foo).to.equal('baz');
+        expect(wrapper.root().instance().state.foo).to.equal('bar');
+        wrapper.root().setState({ foo: 'baz' });
+        expect(wrapper.root().instance().state.foo).to.equal('baz');
         expect(spy.args).to.deep.equal([['render'], ['shouldComponentUpdate']]);
       });
 
@@ -3570,9 +3570,9 @@ describe('shallow', () => {
             lifecycleExperimental: true,
           },
         );
-        expect(wrapper.instance().context.foo).to.equal('bar');
-        wrapper.setContext({ foo: 'baz' });
-        expect(wrapper.instance().context.foo).to.equal('baz');
+        expect(wrapper.root().instance().context.foo).to.equal('bar');
+        wrapper.root().setContext({ foo: 'baz' });
+        expect(wrapper.root().instance().context.foo).to.equal('baz');
         expect(spy.args).to.deep.equal([
           [
             'render',
@@ -3629,7 +3629,7 @@ describe('shallow', () => {
             lifecycleExperimental: true,
           },
         );
-        wrapper.setContext({ foo: 'baz' });
+        wrapper.root().setContext({ foo: 'baz' });
         expect(spy.args).to.deep.equal([['render'], ['shouldComponentUpdate']]);
       });
 
@@ -3663,7 +3663,7 @@ describe('shallow', () => {
           },
         );
         expect(spy).to.have.property('callCount', 1);
-        result.setContext({ foo: 'baz' });
+        result.root().setContext({ foo: 'baz' });
         expect(spy).to.have.property('callCount', 3);
         expect(result.state('count')).to.equal(1);
       });
@@ -3700,7 +3700,7 @@ describe('shallow', () => {
           },
         );
         expect(spy).to.have.property('callCount', 1);
-        result.setContext({ foo: 'baz' });
+        result.root().setContext({ foo: 'baz' });
         expect(spy).to.have.property('callCount', 3);
         expect(result.state('count')).to.equal(1);
       });
@@ -3762,11 +3762,11 @@ describe('shallow', () => {
         },
       );
       expect(spy).to.have.property('callCount', 0);
-      wrapper.setProps({ foo: 'bar' });
+      wrapper.root().setProps({ foo: 'bar' });
       expect(spy).to.have.property('callCount', 1);
-      wrapper.setState({ foo: 'bar' });
+      wrapper.root().setState({ foo: 'bar' });
       expect(spy).to.have.property('callCount', 2);
-      wrapper.setContext({ foo: 'bar' });
+      wrapper.root().setContext({ foo: 'bar' });
       expect(spy).to.have.property('callCount', 3);
     });
   });
@@ -4327,13 +4327,13 @@ describe('shallow', () => {
 
     it('should merge and pass options through', () => {
       const wrapper = shallow(<ContextWrapsRendersDOM />, { context: { foo: 'hello' } });
-      expect(wrapper.context()).to.deep.equal({ foo: 'hello' });
+      expect(wrapper.root().context()).to.deep.equal({ foo: 'hello' });
 
       let underwater = wrapper.dive();
-      expect(underwater.context()).to.deep.equal({ foo: 'hello' });
+      expect(underwater.root().context()).to.deep.equal({ foo: 'hello' });
 
       underwater = wrapper.dive({ context: { foo: 'enzyme!' } });
-      expect(underwater.context()).to.deep.equal({ foo: 'enzyme!' });
+      expect(underwater.root().context()).to.deep.equal({ foo: 'enzyme!' });
     });
   });
 
@@ -4428,7 +4428,7 @@ describe('shallow', () => {
       const wrapper = shallow(<Test />);
       wrapper.find('.async-btn').simulate('click');
       setImmediate(() => {
-        wrapper.update();
+        wrapper.root().update();
         expect(wrapper.find('.show-me').length).to.equal(1);
         done();
       });
@@ -4437,7 +4437,7 @@ describe('shallow', () => {
     it('should have updated output after child prop callback invokes setState', () => {
       const wrapper = shallow(<Test />);
       wrapper.find(Child).props().callback();
-      wrapper.update();
+      wrapper.root().update();
       expect(wrapper.find('.show-me').length).to.equal(1);
     });
   });
