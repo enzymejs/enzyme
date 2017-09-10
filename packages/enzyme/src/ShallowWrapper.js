@@ -140,8 +140,6 @@ class ShallowWrapper {
           instance.componentDidMount();
         });
       }
-      // privateSet(this, NODE, getRootNode(this[RENDERER].getNode()));
-      // privateSet(this, NODES, [this[NODE]]);
       privateSet(this, OPTIONS, options);
       privateSet(this, ROOT, new ShallowWrapper(null, this, options, true));
       this.length = 1;
@@ -1212,7 +1210,6 @@ function privateWarning(prop, extraMessage) {
 privateWarning('node', 'Consider using the getElement() method instead.');
 privateWarning('nodes', 'Consider using the getElements() method instead.');
 privateWarning('renderer', '');
-// privateWarning('root', '');
 privateWarning('options', '');
 privateWarning('complexSelector', '');
 

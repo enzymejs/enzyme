@@ -99,10 +99,6 @@ class ReactWrapper {
       const renderer = getAdapter(options).createRenderer({ mode: 'mount', ...options });
       privateSet(this, RENDERER, renderer);
       renderer.render(nodes, options.context);
-      // privateSet(this, ROOT, this);
-      // const node = this[RENDERER].getNode();
-      // privateSet(this, NODE, node);
-      // privateSet(this, NODES, [node]);
       privateSet(this, OPTIONS, options);
       privateSet(this, ROOT, new ReactWrapper(null, this, options, true));
       this.length = 1;
@@ -1109,7 +1105,6 @@ function privateWarning(prop, extraMessage) {
 privateWarning('node', 'Consider using the getElement() method instead.');
 privateWarning('nodes', 'Consider using the getElements() method instead.');
 privateWarning('renderer', '');
-// privateWarning('root', '');
 privateWarning('options', '');
 privateWarning('complexSelector', '');
 
