@@ -35,6 +35,7 @@ const NODES = sym('__nodes__');
 const RENDERER = sym('__renderer__');
 const UNRENDERED = sym('__unrendered__');
 const ROOT = sym('__root__');
+const PRIMARY = sym('__primary__');
 const OPTIONS = sym('__options__');
 const COMPLEX_SELECTOR = sym('__complexSelector__');
 
@@ -63,26 +64,47 @@ function filterWhereUnwrapped(wrapper, predicate) {
   return wrapper.wrap(compact(wrapper.getNodesInternal().filter(predicate)));
 }
 
+function getRootNode(node) {
+  if (node === null || node.nodeType === 'host') {
+    return node;
+  }
+  return node.rendered;
+}
+
 /**
  * @class ReactWrapper
  */
 class ReactWrapper {
-  constructor(nodes, root, options = {}) {
+  constructor(nodes, root, options = {}, rootFlag = false) {
     if (!global.window && !global.document) {
       throw new Error(
         'It looks like you called `mount()` without a global document being loaded.',
       );
     }
 
-    if (!root) {
+    if (rootFlag) {
+      privateSet(this, ROOT, this);
+      privateSet(this, UNRENDERED, root[UNRENDERED]);
+      privateSet(this, RENDERER, root[RENDERER]);
+      const node = this[RENDERER].getNode();
+      privateSet(this, NODE, node);
+      privateSet(this, NODES, [node]);
+      privateSet(root, NODE, getRootNode(node));
+      privateSet(root, NODES, [root[NODE]]);
+      privateSet(this, OPTIONS, root[OPTIONS]);
+      privateSet(this, PRIMARY, root);
+      this.length = 1;
+    } else if (!root) {
       privateSet(this, UNRENDERED, nodes);
       const renderer = getAdapter(options).createRenderer({ mode: 'mount', ...options });
       privateSet(this, RENDERER, renderer);
       renderer.render(nodes, options.context);
-      privateSet(this, ROOT, this);
-      const node = this[RENDERER].getNode();
-      privateSet(this, NODE, node);
-      privateSet(this, NODES, [node]);
+      // privateSet(this, ROOT, this);
+      // const node = this[RENDERER].getNode();
+      // privateSet(this, NODE, node);
+      // privateSet(this, NODES, [node]);
+      privateSet(this, OPTIONS, options);
+      privateSet(this, ROOT, new ReactWrapper(null, this, options, true));
       this.length = 1;
     } else {
       privateSet(this, UNRENDERED, null);
@@ -98,9 +120,9 @@ class ReactWrapper {
         privateSet(this, NODE, nodes[0]);
         privateSet(this, NODES, nodes);
       }
+      privateSet(this, OPTIONS, root[OPTIONS]);
       this.length = this[NODES].length;
     }
-    privateSet(this, OPTIONS, root ? root[OPTIONS] : options);
     privateSet(this, COMPLEX_SELECTOR, new ComplexSelector(
       buildPredicate,
       findWhereUnwrapped,
@@ -196,6 +218,10 @@ class ReactWrapper {
     return this.instance().refs[refname];
   }
 
+  root() {
+    return this[ROOT];
+  }
+
   /**
    * Gets the instance of the component being rendered as the root node passed into `mount()`.
    *
@@ -232,6 +258,8 @@ class ReactWrapper {
       const node = this[RENDERER].getNode();
       this[NODE] = node;
       this[NODES] = [node];
+      this[PRIMARY][NODE] = getRootNode(node);
+      this[PRIMARY][NODES] = [this[PRIMARY][NODE]];
     });
     return this;
   }
@@ -243,7 +271,7 @@ class ReactWrapper {
    * @returns {ReactWrapper}
    */
   unmount() {
-    if (this[ROOT] !== this) {
+    if (this[ROOT] !== this && this[PRIMARY] !== this) {
       throw new Error('ReactWrapper::unmount() can only be called on the root');
     }
     this.single('unmount', () => {
@@ -486,7 +514,7 @@ class ReactWrapper {
    * @returns {boolean}
    */
   isEmptyRender() {
-    return this.single('isEmptyRender', n => n.rendered === null);
+    return this.single('isEmptyRender', n => n === null || n.rendered === null);
   }
 
   /**
@@ -1081,7 +1109,7 @@ function privateWarning(prop, extraMessage) {
 privateWarning('node', 'Consider using the getElement() method instead.');
 privateWarning('nodes', 'Consider using the getElements() method instead.');
 privateWarning('renderer', '');
-privateWarning('root', '');
+// privateWarning('root', '');
 privateWarning('options', '');
 privateWarning('complexSelector', '');
 

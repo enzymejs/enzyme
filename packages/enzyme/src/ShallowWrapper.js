@@ -140,8 +140,8 @@ class ShallowWrapper {
           instance.componentDidMount();
         });
       }
-      privateSet(this, NODE, getRootNode(this[RENDERER].getNode()));
-      privateSet(this, NODES, [this[NODE]]);
+      // privateSet(this, NODE, getRootNode(this[RENDERER].getNode()));
+      // privateSet(this, NODES, [this[NODE]]);
       privateSet(this, OPTIONS, options);
       privateSet(this, ROOT, new ShallowWrapper(null, this, options, true));
       this.length = 1;
