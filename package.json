@@ -17,7 +17,7 @@
     "check": "lerna run lint && npm run test:all",
     "prebuild": "npm run clean",
     "build": "lerna run build",
-    "build:watch": "lerna run watch",
+    "build:watch": "lerna run --parallel watch",
     "pretest": "lerna run lint",
     "test": "npm run test:only",
     "pretest:only": "npm run build",
