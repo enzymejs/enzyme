@@ -113,6 +113,18 @@ describe('selectors', () => {
         expect(toFind.text()).to.equal('Adjacent');
       });
 
+      it('simple adjacent with arrays', () => {
+        const wrapper = renderMethod(
+          <div>
+            <div className="to-find" />
+            {[<div key="0" className="sibling">Adjacent</div>]}
+          </div>,
+        );
+        const toFind = wrapper.find('.to-find + .sibling');
+        expect(toFind).to.have.lengthOf(1);
+        expect(toFind.text()).to.equal('Adjacent');
+      });
+
       it('nested adjacent', () => {
         const wrapper = renderMethod(
           <div>
