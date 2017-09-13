@@ -124,11 +124,15 @@ describe('RSTTraversal', () => {
       expect(nodeHasProperty(<div foo={Infinity} />, 'foo', +Infinity)).to.equal(true);
       expect(nodeHasProperty(<div foo={Infinity} />, 'foo', -Infinity)).to.equal(false);
       expect(nodeHasProperty(<div foo={Infinity} />, 'foo', 'Infinity')).to.equal(false);
+      expect(nodeHasProperty(<div foo={Infinity} />, 'foo', NaN)).to.equal(false);
       expect(nodeHasProperty(<div foo={0} />, 'foo', Infinity)).to.equal(false);
       expect(nodeHasProperty(<div foo={-Infinity} />, 'foo', -Infinity)).to.equal(true);
       expect(nodeHasProperty(<div foo={-Infinity} />, 'foo', Infinity)).to.equal(false);
       expect(nodeHasProperty(<div foo={-Infinity} />, 'foo', Infinity)).to.equal(false);
       expect(nodeHasProperty(<div foo={-Infinity} />, 'foo', '-Infinity')).to.equal(false);
+      expect(nodeHasProperty(<div foo={-Infinity} />, 'foo', NaN)).to.equal(false);
+      expect(nodeHasProperty(<div foo={NaN} />, 'foo', Infinity)).to.equal(false);
+      expect(nodeHasProperty(<div foo={NaN} />, 'foo', -Infinity)).to.equal(false);
       expect(nodeHasProperty(<div foo={0} />, 'foo', -Infinity)).to.equal(false);
     });
   });
