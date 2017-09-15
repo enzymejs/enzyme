@@ -99,11 +99,15 @@ function validateOptions(options) {
   }
 }
 
-function getRootNode(node) {
-  if (node.nodeType === 'host') {
-    return node;
+function getRenderedNode(wrapper) {
+  const node = wrapper[NODE];
+  if (wrapper[ROOT] === wrapper) {
+    if (node.nodeType === 'host') {
+      return node;
+    }
+    return node.rendered;
   }
-  return node.rendered;
+  return node;
 }
 
 /**
@@ -118,7 +122,8 @@ class ShallowWrapper {
       const renderer = getAdapter(options).createRenderer({ mode: 'shallow', ...options });
       privateSet(this, RENDERER, renderer);
       this[RENDERER].render(nodes, options.context);
-      const instance = this[RENDERER].getNode().instance;
+      const node = this[RENDERER].getNode();
+      const instance = node.instance;
       if (
         options.lifecycleExperimental &&
         instance &&
@@ -128,7 +133,7 @@ class ShallowWrapper {
           instance.componentDidMount();
         });
       }
-      privateSet(this, NODE, getRootNode(this[RENDERER].getNode()));
+      privateSet(this, NODE, node);
       privateSet(this, NODES, [this[NODE]]);
       this.length = 1;
     } else {
@@ -219,7 +224,7 @@ class ShallowWrapper {
     if (this[ROOT] !== this) {
       throw new Error('ShallowWrapper::instance() can only be called on the root');
     }
-    return this[RENDERER].getNode().instance;
+    return this[NODE].instance;
   }
 
   /**
@@ -235,7 +240,7 @@ class ShallowWrapper {
       throw new Error('ShallowWrapper::update() can only be called on the root');
     }
     this.single('update', () => {
-      this[NODE] = getRootNode(this[RENDERER].getNode());
+      this[NODE] = this[RENDERER].getNode();
       this[NODES] = [this[NODE]];
     });
     return this;
@@ -360,7 +365,7 @@ class ShallowWrapper {
     if (this[ROOT] !== this) {
       throw new Error('ShallowWrapper::setState() can only be called on the root');
     }
-    if (this.instance() === null || this[RENDERER].getNode().nodeType === 'function') {
+    if (this.instance() === null || this[NODE].nodeType === 'function') {
       throw new Error('ShallowWrapper::setState() can only be called on class components');
     }
     this.single('setState', () => {
@@ -510,7 +515,7 @@ class ShallowWrapper {
    * @returns {Boolean}
    */
   equals(node) {
-    return this.single('equals', () => nodeEqual(this.getNodeInternal(), node));
+    return this.single('equals', () => nodeEqual(getRenderedNode(this), node));
   }
 
   /**
@@ -563,7 +568,8 @@ class ShallowWrapper {
    * @returns {boolean}
    */
   isEmptyRender() {
-    return this.type() === null;
+    const rendered = getRenderedNode(this);
+    return rendered === null || rendered === false;
   }
 
   /**
@@ -612,7 +618,9 @@ class ShallowWrapper {
    * @returns {String}
    */
   text() {
-    return this.single('text', getTextFromNode);
+    return this.single('text', () => {
+      return getTextFromNode(getRenderedNode(this));
+    });
   }
 
   /**
@@ -624,10 +632,10 @@ class ShallowWrapper {
    */
   html() {
     return this.single('html', (n) => {
-      if (this.type() === null) return null;
+      if (this.isEmptyRender()) return null;
       const adapter = getAdapter(this[OPTIONS]);
       const renderer = adapter.createRenderer({ ...this[OPTIONS], mode: 'string' });
-      return renderer.render(adapter.nodeToElement(n));
+      return renderer.render(adapter.nodeToElement(getRenderedNode(this)));
     });
   }
 
@@ -661,8 +669,8 @@ class ShallowWrapper {
    * @returns {ShallowWrapper}
    */
   simulate(event, ...args) {
-    return this.single('simulate', (n) => {
-      this[RENDERER].simulateEvent(n, event, ...args);
+    return this.single('simulate', () => {
+      this[RENDERER].simulateEvent(getRenderedNode(this), event, ...args);
       this[ROOT].update();
     });
   }
@@ -691,7 +699,7 @@ class ShallowWrapper {
     if (this[ROOT] !== this) {
       throw new Error('ShallowWrapper::state() can only be called on the root');
     }
-    if (this.instance() === null || this[RENDERER].getNode().nodeType === 'function') {
+    if (this.instance() === null || this[NODE].nodeType === 'function') {
       throw new Error('ShallowWrapper::state() can only be called on class components');
     }
     const _state = this.single('state', () => this.instance().state);
@@ -740,6 +748,11 @@ class ShallowWrapper {
    * @returns {ShallowWrapper}
    */
   children(selector) {
+    const allChildren = this.flatMap(n => childrenOfNode(n.getNodeInternal()));
+    return selector ? allChildren.filter(selector) : allChildren;
+  }
+
+  rendered(selector) {
     const allChildren = this.flatMap(n => childrenOfNode(n.getNodeInternal()));
     return selector ? allChildren.filter(selector) : allChildren;
   }
@@ -1138,7 +1151,11 @@ class ShallowWrapper {
   dive(options = {}) {
     const adapter = getAdapter(this[OPTIONS]);
     const name = 'dive';
-    return this.single(name, (n) => {
+    return this.single(name, () => {
+      const n = getRenderedNode(this);
+      // if (Array.isArray(n)) {
+      //   throw new TypeError('todo: use single error message');
+      // }
       if (n && n.nodeType === 'host') {
         throw new TypeError(`ShallowWrapper::${name}() can not be called on Host Components`);
       }
