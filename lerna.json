@@ -3,5 +3,6 @@
   "packages": [
     "packages/*"
   ],
-  "version": "2.9.1"
+  "version": "independent",
+  "independent": true
 }
