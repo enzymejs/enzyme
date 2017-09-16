@@ -1,3 +1,4 @@
+import './_helpers/setup';
 import React from 'react';
 import sinon from 'sinon';
 import { expect } from 'chai';

@@ -1,0 +1,2 @@
+import './setupShims';
+import './setupAdapters';
