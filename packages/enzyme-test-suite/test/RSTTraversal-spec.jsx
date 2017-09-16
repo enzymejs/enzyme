@@ -2,9 +2,6 @@ import './_helpers/setupAdapters';
 import React from 'react';
 import sinon from 'sinon';
 import { expect } from 'chai';
-import {
-  splitSelector,
-} from 'enzyme/build/Utils';
 import { elementToTree } from 'enzyme-adapter-utils';
 import {
   hasClassName,
@@ -13,7 +10,6 @@ import {
   treeFilter,
   pathToNode,
   getTextFromNode,
-  buildPredicate,
 } from 'enzyme/build/RSTTraversal';
 import { describeIf } from './_helpers';
 import { REACT013 } from './_helpers/version';
@@ -21,31 +17,6 @@ import { REACT013 } from './_helpers/version';
 const $ = elementToTree;
 
 describe('RSTTraversal', () => {
-  describe('splitSelector', () => {
-    const fn = splitSelector;
-    it('splits multiple class names', () => {
-      expect(fn('.foo.bar')).to.eql(['.foo', '.bar']);
-      expect(fn('.foo.bar.baz')).to.eql(['.foo', '.bar', '.baz']);
-    });
-
-    it('splits tag names and class names', () => {
-      expect(fn('input.bar')).to.eql(['input', '.bar']);
-      expect(fn('div.bar.baz')).to.eql(['div', '.bar', '.baz']);
-      expect(fn('Foo.bar')).to.eql(['Foo', '.bar']);
-    });
-
-    it('splits tag names and attributes', () => {
-      expect(fn('input[type="text"]')).to.eql(['input', '[type="text"]']);
-      expect(
-        fn('div[title="title"][data-value="foo"]'),
-      ).to.eql(['div', '[title="title"]', '[data-value="foo"]']);
-    });
-
-    it('throws for malformed selectors', () => {
-      expect(() => fn('div[data-name="xyz"')).to.throw(/Enzyme::Selector received what appears to be a malformed string selector/);
-    });
-  });
-
   describe('hasClassName', () => {
 
     it('should work for standalone classNames', () => {
@@ -82,13 +53,13 @@ describe('RSTTraversal', () => {
       const node = $(<div onChange={noop} title="foo" />);
 
       expect(nodeHasProperty(node, 'onChange')).to.equal(true);
-      expect(nodeHasProperty(node, 'title', '"foo"')).to.equal(true);
+      expect(nodeHasProperty(node, 'title', 'foo')).to.equal(true);
     });
 
     it('should not match on html attributes', () => {
       const node = $(<div htmlFor="foo" />);
 
-      expect(nodeHasProperty(node, 'for', '"foo"')).to.equal(false);
+      expect(nodeHasProperty(node, 'for', 'foo')).to.equal(false);
     });
 
     it('should not find undefined properties', () => {
@@ -97,71 +68,73 @@ describe('RSTTraversal', () => {
       expect(nodeHasProperty(node, 'title')).to.equal(false);
     });
 
-    it('should parse false as a literal', () => {
-      const node = $(<div foo={false} />);
-
-      expect(nodeHasProperty(node, 'foo', 'false')).to.equal(true);
+    it('should parse booleans', () => {
+      expect(nodeHasProperty(<div foo />, 'foo', true)).to.equal(true);
+      expect(nodeHasProperty(<div foo />, 'foo', false)).to.equal(false);
+      expect(nodeHasProperty(<div foo />, 'foo', 'true')).to.equal(false);
+      expect(nodeHasProperty(<div foo={false} />, 'foo', false)).to.equal(true);
+      expect(nodeHasProperty(<div foo={false} />, 'foo', true)).to.equal(false);
+      expect(nodeHasProperty(<div foo={false} />, 'foo', 'false')).to.equal(false);
     });
 
-    it('should parse false as a literal', () => {
-      const node = $(<div foo />);
-
-      expect(nodeHasProperty(node, 'foo', 'true')).to.equal(true);
-    });
-
-    it('should parse numbers as numeric literals', () => {
-      expect(nodeHasProperty(<div foo={2.3} />, 'foo', '2.3')).to.equal(true);
-      expect(nodeHasProperty(<div foo={2} />, 'foo', '2')).to.equal(true);
-      expect(() => nodeHasProperty(<div foo={2} />, 'foo', '2abc')).to.throw();
-      expect(() => nodeHasProperty(<div foo={2} />, 'foo', 'abc2')).to.throw();
-      expect(nodeHasProperty(<div foo={-2} />, 'foo', '-2')).to.equal(true);
-      expect(nodeHasProperty(<div foo={2e8} />, 'foo', '2e8')).to.equal(true);
-      expect(nodeHasProperty(<div foo={Infinity} />, 'foo', 'Infinity')).to.equal(true);
-      expect(nodeHasProperty(<div foo={-Infinity} />, 'foo', '-Infinity')).to.equal(true);
+    it('should parse numeric literals', () => {
+      expect(nodeHasProperty(<div foo={2.3} />, 'foo', 2.3)).to.equal(true);
+      expect(nodeHasProperty(<div foo={2} />, 'foo', 2)).to.equal(true);
+      expect(nodeHasProperty(<div foo={2} />, 'foo', '2abc')).to.equal(false);
+      expect(nodeHasProperty(<div foo={2} />, 'foo', 'abc2')).to.equal(false);
+      expect(nodeHasProperty(<div foo={-2} />, 'foo', -2)).to.equal(true);
+      expect(nodeHasProperty(<div foo={2e8} />, 'foo', 2e8)).to.equal(true);
+      expect(nodeHasProperty(<div foo={Infinity} />, 'foo', Infinity)).to.equal(true);
+      expect(nodeHasProperty(<div foo={-Infinity} />, 'foo', -Infinity)).to.equal(true);
     });
 
     it('should parse zeroes properly', () => {
-      expect(nodeHasProperty(<div foo={0} />, 'foo', '0')).to.equal(true);
-      expect(nodeHasProperty(<div foo={-0} />, 'foo', '-0')).to.equal(true);
-      expect(nodeHasProperty(<div foo={1} />, 'foo', '0')).to.equal(false);
-      expect(nodeHasProperty(<div foo={2} />, 'foo', '-0')).to.equal(false);
+      expect(nodeHasProperty(<div foo={0} />, 'foo', 0)).to.equal(true);
+      expect(nodeHasProperty(<div foo={0} />, 'foo', +0)).to.equal(true);
+      expect(nodeHasProperty(<div foo={-0} />, 'foo', -0)).to.equal(true);
+      expect(nodeHasProperty(<div foo={-0} />, 'foo', 0)).to.equal(false);
+      expect(nodeHasProperty(<div foo={0} />, 'foo', -0)).to.equal(false);
+      expect(nodeHasProperty(<div foo={1} />, 'foo', 0)).to.equal(false);
+      expect(nodeHasProperty(<div foo={2} />, 'foo', -0)).to.equal(false);
     });
 
     it('should work with empty strings', () => {
+      expect(nodeHasProperty(<div foo="" />, 'foo', '')).to.equal(true);
       expect(nodeHasProperty(<div foo={''} />, 'foo', '')).to.equal(true);
-      expect(nodeHasProperty(<div foo={''} />, 'foo', '""')).to.equal(true);
       expect(nodeHasProperty(<div foo={'bar'} />, 'foo', '')).to.equal(false);
-      expect(nodeHasProperty(<div foo={'bar'} />, 'foo', '""')).to.equal(false);
     });
 
     it('should work with NaN', () => {
-      expect(nodeHasProperty(<div foo={NaN} />, 'foo', 'NaN')).to.equal(true);
-      expect(nodeHasProperty(<div foo={0} />, 'foo', 'NaN')).to.equal(false);
+      expect(nodeHasProperty(<div foo={NaN} />, 'foo', NaN)).to.equal(true);
+      expect(nodeHasProperty(<div foo={0} />, 'foo', NaN)).to.equal(false);
     });
 
     it('should work with null', () => {
-      expect(nodeHasProperty(<div foo={null} />, 'foo', 'null')).to.equal(true);
-      expect(nodeHasProperty(<div foo={0} />, 'foo', 'null')).to.equal(false);
+      expect(nodeHasProperty(<div foo={null} />, 'foo', null)).to.equal(true);
+      expect(nodeHasProperty(<div foo={0} />, 'foo', null)).to.equal(false);
     });
 
     it('should work with false', () => {
-      expect(nodeHasProperty(<div foo={false} />, 'foo', 'false')).to.equal(true);
-      expect(nodeHasProperty(<div foo={0} />, 'foo', 'false')).to.equal(false);
+      expect(nodeHasProperty(<div foo={false} />, 'foo', false)).to.equal(true);
+      expect(nodeHasProperty(<div foo={0} />, 'foo', false)).to.equal(false);
     });
 
     it('should work with ±Infinity', () => {
-      expect(nodeHasProperty(<div foo={Infinity} />, 'foo', 'Infinity')).to.equal(true);
-      expect(nodeHasProperty(<div foo={0} />, 'foo', 'Infinity')).to.equal(false);
-      expect(nodeHasProperty(<div foo={-Infinity} />, 'foo', '-Infinity')).to.equal(true);
-      expect(nodeHasProperty(<div foo={0} />, 'foo', '-Infinity')).to.equal(false);
+      expect(nodeHasProperty(<div foo={Infinity} />, 'foo', Infinity)).to.equal(true);
+      expect(nodeHasProperty(<div foo={Infinity} />, 'foo', +Infinity)).to.equal(true);
+      expect(nodeHasProperty(<div foo={Infinity} />, 'foo', -Infinity)).to.equal(false);
+      expect(nodeHasProperty(<div foo={Infinity} />, 'foo', 'Infinity')).to.equal(false);
+      expect(nodeHasProperty(<div foo={Infinity} />, 'foo', NaN)).to.equal(false);
+      expect(nodeHasProperty(<div foo={0} />, 'foo', Infinity)).to.equal(false);
+      expect(nodeHasProperty(<div foo={-Infinity} />, 'foo', -Infinity)).to.equal(true);
+      expect(nodeHasProperty(<div foo={-Infinity} />, 'foo', Infinity)).to.equal(false);
+      expect(nodeHasProperty(<div foo={-Infinity} />, 'foo', Infinity)).to.equal(false);
+      expect(nodeHasProperty(<div foo={-Infinity} />, 'foo', '-Infinity')).to.equal(false);
+      expect(nodeHasProperty(<div foo={-Infinity} />, 'foo', NaN)).to.equal(false);
+      expect(nodeHasProperty(<div foo={NaN} />, 'foo', Infinity)).to.equal(false);
+      expect(nodeHasProperty(<div foo={NaN} />, 'foo', -Infinity)).to.equal(false);
+      expect(nodeHasProperty(<div foo={0} />, 'foo', -Infinity)).to.equal(false);
     });
-
-    it('should throw when un unquoted string is passed in', () => {
-      const node = $(<div title="foo" />);
-
-      expect(() => nodeHasProperty(node, 'title', 'foo')).to.throw();
-    });
-
   });
 
   describe('treeForEach', () => {
@@ -365,14 +338,6 @@ describe('RSTTraversal', () => {
         const result = getTextFromNode(node);
         expect(result).to.equal('<Subject />');
       });
-    });
-  });
-
-  describe('buildPredicate', () => {
-    it('should throw expected error', () => {
-      const intSelector = 10;
-      const func = buildPredicate.bind(this, intSelector);
-      expect(func).to.throw(TypeError, 'Enzyme::Selector expects a string, object, or Component Constructor');
     });
   });
 });

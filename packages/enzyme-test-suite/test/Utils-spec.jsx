@@ -4,13 +4,9 @@ import { expect } from 'chai';
 
 import { describeIf } from './_helpers';
 import {
-  coercePropValue,
   childrenToSimplifiedArray,
   nodeEqual,
   nodeMatches,
-  isPseudoClassSelector,
-  SELECTOR,
-  selectorType,
   displayNameOfNode,
 } from 'enzyme/build/Utils';
 import {
@@ -436,85 +432,6 @@ describe('Utils', () => {
     it('should work', () => {
       expect(fn('click')).to.equal('onClick');
       expect(fn('mouseEnter')).to.equal('onMouseEnter');
-    });
-  });
-
-
-  describe('isPseudoClassSelector', () => {
-    describe('prohibited selectors', () => {
-      function isNotPseudo(selector) {
-        it(selector, () => {
-          expect(isPseudoClassSelector(selector)).to.equal(false);
-        });
-      }
-      isNotPseudo('.foo');
-      isNotPseudo('div');
-      isNotPseudo('.foo .bar');
-      isNotPseudo('[hover]');
-      isNotPseudo('[checked=""]');
-      isNotPseudo('[checked=":checked"]');
-      isNotPseudo('[checked=\':checked\']');
-      isNotPseudo('.foo>.bar');
-      isNotPseudo('.foo > .bar');
-      isNotPseudo('.foo~.bar');
-      isNotPseudo('#foo');
-    });
-
-    describe('allowed selectors', () => {
-      function isPseudo(selector) {
-        it(selector, () => {
-          expect(isPseudoClassSelector(selector)).to.equal(true);
-        });
-      }
-      isPseudo(':checked');
-      isPseudo(':focus');
-      isPseudo(':hover');
-      isPseudo(':disabled');
-      isPseudo(':any');
-      isPseudo(':last-child');
-      isPseudo(':nth-child(1)');
-      isPseudo('div:checked');
-      isPseudo('[data-foo=":hover"]:hover');
-    });
-  });
-
-  describe('selectorType', () => {
-    it('returns CLASS_TYPE for a prefixed .', () => {
-      const type = selectorType('.foo');
-
-      expect(type).to.be.equal(SELECTOR.CLASS_TYPE);
-    });
-
-    it('returns ID_TYPE for a prefixed #', () => {
-      const type = selectorType('#foo');
-
-      expect(type).to.be.equal(SELECTOR.ID_TYPE);
-    });
-
-    it('returns PROP_TYPE for []', () => {
-      function isProp(selector) {
-        expect(selectorType(selector)).to.be.equal(SELECTOR.PROP_TYPE);
-      }
-
-      isProp('[foo]');
-      isProp('[foo="bar"]');
-    });
-  });
-
-  describe('coercePropValue', () => {
-    const key = 'foo';
-    it('returns undefined if passed undefined', () => {
-      expect(coercePropValue(key, undefined)).to.equal(undefined);
-    });
-
-    it('returns number if passed a stringified number', () => {
-      expect(coercePropValue(key, '1')).to.be.equal(1);
-      expect(coercePropValue(key, '0')).to.be.equal(0);
-    });
-
-    it('returns a boolean if passed a stringified bool', () => {
-      expect(coercePropValue(key, 'true')).to.equal(true);
-      expect(coercePropValue(key, 'false')).to.equal(false);
     });
   });
 

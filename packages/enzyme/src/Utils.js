@@ -1,7 +1,6 @@
 /* eslint no-use-before-define:0 */
 import isEqual from 'lodash/isEqual';
 import is from 'object-is';
-import uuidv4 from 'uuid/v4';
 import entries from 'object.entries';
 import functionName from 'function.prototype.name';
 import configuration from './configuration';
@@ -206,143 +205,18 @@ export function withSetStateAllowed(fn) {
   }
 }
 
-export function splitSelector(selector) {
-  // step 1: make a map of all quoted strings with a uuid
-  const quotedSegments = selector.split(/[^" ]+|("[^"]*")|.*/g)
-    .filter(Boolean)
-    .reduce((obj, match) => ({ ...obj, [match]: uuidv4() }), {});
-
-  const splits = selector
-    // step 2: replace all quoted strings with the uuid, so we don't have to properly parse them
-    .replace(/[^" ]+|("[^"]*")|.*/g, x => quotedSegments[x] || x)
-    // step 3: split as best we can without a proper parser
-    .split(/(?=\.|\[.*])|(?=#|\[#.*])/)
-    // step 4: restore the quoted strings by swapping back the uuid's for the original segments
-    .map((selectorSegment) => {
-      let restoredSegment = selectorSegment;
-      entries(quotedSegments).forEach(([k, v]) => {
-        restoredSegment = restoredSegment.replace(v, k);
-      });
-      return restoredSegment;
-    });
-
-  if (splits.length === 1 && splits[0] === selector) {
-    // splitSelector expects selector to be "splittable"
-    throw new TypeError('Enzyme::Selector received what appears to be a malformed string selector');
-  }
-
-  return splits;
-}
-
-
-const containsQuotes = /'|"/;
-const containsColon = /:/;
-
-
-export function isPseudoClassSelector(selector) {
-  if (containsColon.test(selector)) {
-    if (!containsQuotes.test(selector)) {
-      return true;
-    }
-    const tokens = selector.split(containsQuotes);
-    return tokens.some((token, i) =>
-      containsColon.test(token) && i % 2 === 0,
-    );
-  }
-  return false;
-}
-
-function selectorError(selector, type = '') {
-  return new TypeError(
-    `Enzyme received a ${type} CSS selector ('${selector}') that it does not currently support`,
-  );
-}
-
-export const isCompoundSelector = /^[.#]?-?[_a-z]+[_a-z0-9-]*[.[#]/i;
-
-const isPropSelector = /^\[.*]$/;
-
-export const SELECTOR = {
-  CLASS_TYPE: 0,
-  ID_TYPE: 1,
-  PROP_TYPE: 2,
-};
-
-export function selectorType(selector) {
-  if (isPseudoClassSelector(selector)) {
-    throw selectorError(selector, 'pseudo-class');
-  }
-  if (selector[0] === '.') {
-    return SELECTOR.CLASS_TYPE;
-  } else if (selector[0] === '#') {
-    return SELECTOR.ID_TYPE;
-  } else if (isPropSelector.test(selector)) {
-    return SELECTOR.PROP_TYPE;
-  }
-  return undefined;
-}
-
 export function AND(fns) {
   const fnsReversed = fns.slice().reverse();
   return x => fnsReversed.every(fn => fn(x));
 }
 
-export function coercePropValue(propName, propValue) {
-  // can be undefined
-  if (propValue === undefined) {
-    return propValue;
-  }
-
-  // can be the empty string
-  if (propValue === '') {
-    return propValue;
-  }
-
-  if (propValue === 'NaN') {
-    return NaN;
-  }
-
-  if (propValue === 'null') {
-    return null;
-  }
-
-  const trimmedValue = propValue.trim();
-
-  // if propValue includes quotes, it should be
-  // treated as a string
-  // eslint override pending https://github.com/eslint/eslint/issues/7472
-  // eslint-disable-next-line no-useless-escape
-  if (/^(['"]).*\1$/.test(trimmedValue)) {
-    return trimmedValue.slice(1, -1);
-  }
-
-  const numericPropValue = +trimmedValue;
-
-  // if parseInt is not NaN, then we've wanted a number
-  if (!is(NaN, numericPropValue)) {
-    return numericPropValue;
-  }
-
-  // coerce to boolean
-  if (trimmedValue === 'true') return true;
-  if (trimmedValue === 'false') return false;
-
-  // user provided an unquoted string value
-  throw new TypeError(
-    `Enzyme::Unable to parse selector '[${propName}=${propValue}]'. ` +
-    `Perhaps you forgot to escape a string? Try '[${propName}="${trimmedValue}"]' instead.`,
-  );
-}
-
-export function nodeHasProperty(node, propKey, stringifiedPropValue) {
+export function nodeHasProperty(node, propKey, propValue) {
   const nodeProps = propsOfNode(node);
   const descriptor = Object.getOwnPropertyDescriptor(nodeProps, propKey);
   if (descriptor && descriptor.get) {
     return false;
   }
   const nodePropValue = nodeProps[propKey];
-
-  const propValue = coercePropValue(propKey, stringifiedPropValue);
 
   if (nodePropValue === undefined) {
     return false;

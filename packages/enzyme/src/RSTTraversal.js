@@ -1,16 +1,7 @@
-import isEmpty from 'lodash/isEmpty';
 import flatten from 'lodash/flatten';
 import isSubset from 'is-subset';
 import functionName from 'function.prototype.name';
-import {
-  splitSelector,
-  isCompoundSelector,
-  selectorType,
-  AND,
-  SELECTOR,
-  nodeHasType,
-  nodeHasProperty,
-} from './Utils';
+import { nodeHasProperty } from './Utils';
 
 export function propsOfNode(node) {
   return (node && node.props) || {};
@@ -42,6 +33,31 @@ export function treeFilter(tree, fn) {
     }
   });
   return results;
+}
+
+/**
+ * To support sibling selectors we need to be able to find
+ * the siblings of a node. The easiest way to do that is find
+ * the parent of the node and access its children.
+ * 
+ * This would be unneeded if the RST spec included sibling pointers
+ * such as node.nextSibling and node.prevSibling
+ * @param {*} root 
+ * @param {*} targetNode 
+ */
+export function findParentNode(root, targetNode) {
+  const results = treeFilter(
+    root,
+    (node) => {
+      if (!node.rendered) {
+        return false;
+      }
+      return Array.isArray(node.rendered)
+        ? node.rendered.indexOf(targetNode) !== -1
+        : node.rendered === targetNode;
+    },
+  );
+  return results[0] || null;
 }
 
 function pathFilter(path, fn) {
@@ -85,49 +101,6 @@ export { nodeHasProperty };
 export function nodeMatchesObjectProps(node, props) {
   return isSubset(propsOfNode(node), props);
 }
-
-export function buildPredicate(selector) {
-  switch (typeof selector) {
-    case 'function':
-      // selector is a component constructor
-      return node => node && node.type === selector;
-
-    case 'string':
-      if (isCompoundSelector.test(selector)) {
-        return AND(splitSelector(selector).map(buildPredicate));
-      }
-
-      switch (selectorType(selector)) {
-        case SELECTOR.CLASS_TYPE:
-          return node => hasClassName(node, selector.slice(1));
-
-        case SELECTOR.ID_TYPE:
-          return node => nodeHasId(node, selector.slice(1));
-
-        case SELECTOR.PROP_TYPE: {
-          const propKey = selector.split(/\[([a-zA-Z][a-zA-Z_\d\-:]*?)(=|])/)[1];
-          const propValue = selector.split(/=(.*?)]/)[1];
-
-          return node => nodeHasProperty(node, propKey, propValue);
-        }
-        default:
-          // selector is a string. match to DOM tag or constructor displayName
-          return node => nodeHasType(node, selector);
-      }
-
-    case 'object':
-      if (!Array.isArray(selector) && selector !== null && !isEmpty(selector)) {
-        return node => nodeMatchesObjectProps(node, selector);
-      }
-      throw new TypeError(
-        'Enzyme::Selector does not support an array, null, or empty object as a selector',
-      );
-
-    default:
-      throw new TypeError('Enzyme::Selector expects a string, object, or Component Constructor');
-  }
-}
-
 
 export function getTextFromNode(node) {
   if (node === null || node === undefined) {

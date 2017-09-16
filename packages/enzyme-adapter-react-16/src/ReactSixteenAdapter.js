@@ -171,7 +171,7 @@ class ReactSixteenAdapter extends EnzymeAdapter {
         instance = null;
       },
       getNode() {
-        return instance ? toTree(instance._reactInternalInstance).rendered : null;
+        return instance ? toTree(instance._reactInternalFiber).rendered : null;
       },
       simulateEvent(node, event, mock) {
         const mappedEvent = mapNativeEventNames(event);

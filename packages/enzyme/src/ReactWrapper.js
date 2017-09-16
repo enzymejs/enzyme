@@ -3,7 +3,6 @@ import flatten from 'lodash/flatten';
 import unique from 'lodash/uniq';
 import compact from 'lodash/compact';
 
-import ComplexSelector from './ComplexSelector';
 import {
   containsChildrenSubArray,
   typeOfNode,
@@ -25,8 +24,9 @@ import {
   childrenOfNode,
   parentsOfNode,
   treeFilter,
-  buildPredicate,
 } from './RSTTraversal';
+
+import { buildPredicate, reduceTreeBySelector } from './selectors';
 
 const noop = () => {};
 
@@ -36,7 +36,6 @@ const RENDERER = sym('__renderer__');
 const UNRENDERED = sym('__unrendered__');
 const ROOT = sym('__root__');
 const OPTIONS = sym('__options__');
-const COMPLEX_SELECTOR = sym('__complexSelector__');
 
 /**
  * Finds all nodes in the current wrapper nodes' render trees that match the provided predicate
@@ -101,11 +100,6 @@ class ReactWrapper {
       this.length = this[NODES].length;
     }
     privateSet(this, OPTIONS, root ? root[OPTIONS] : options);
-    privateSet(this, COMPLEX_SELECTOR, new ComplexSelector(
-      buildPredicate,
-      findWhereUnwrapped,
-      childrenOfNode,
-    ));
   }
 
   /**
@@ -464,7 +458,7 @@ class ReactWrapper {
    * @returns {ReactWrapper}
    */
   find(selector) {
-    return this[COMPLEX_SELECTOR].find(selector, this);
+    return reduceTreeBySelector(selector, this);
   }
 
   /**

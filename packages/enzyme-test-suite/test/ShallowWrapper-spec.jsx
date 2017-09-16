@@ -561,17 +561,25 @@ describe('shallow', () => {
       expect(wrapper.find('.row + .row')).to.have.lengthOf(1);
     });
 
-    it('should error sensibly if prop selector without quotes', () => {
+    it('should throw for non-numeric attribute values without quotes', () => {
       const wrapper = shallow(
         <div>
           <input type="text" />
           <input type="hidden" />
+          <input type="text" />
         </div>,
       );
-
       expect(() => wrapper.find('[type=text]')).to.throw(
-        TypeError,
-        'Enzyme::Unable to parse selector \'[type=text]\'. Perhaps you forgot to escape a string? Try \'[type="text"]\' instead.', // eslint-disable-line max-len
+        Error,
+        'Failed to parse selector: [type=text]',
+      );
+      expect(() => wrapper.find('[type=hidden]')).to.throw(
+        Error,
+        'Failed to parse selector: [type=hidden]',
+      );
+      expect(() => wrapper.find('[type="text"]')).to.not.throw(
+        Error,
+        'Failed to parse selector: [type="text"]',
       );
     });
 

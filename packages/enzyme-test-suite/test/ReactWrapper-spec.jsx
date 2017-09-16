@@ -388,6 +388,7 @@ describeWithDOM('mount', () => {
       const wrapper = mount(
         <div>
           <input className="foo" />
+          <div className="foo" />
         </div>,
       );
       expect(wrapper.find('input.foo').length).to.equal(1);
@@ -439,11 +440,12 @@ describeWithDOM('mount', () => {
       const wrapper = mount(
         <div>
           <span htmlFor="foo" />
+          <div htmlFor="bar" />
         </div>,
       );
 
       expect(wrapper.find('[htmlFor="foo"]')).to.have.length(1);
-      expect(wrapper.find('[htmlFor]')).to.have.length(1);
+      expect(wrapper.find('[htmlFor]')).to.have.length(2);
     });
 
     it('should compound tag and prop selector', () => {
@@ -476,22 +478,26 @@ describeWithDOM('mount', () => {
       expect(wrapper.find('.row + .row')).to.have.lengthOf(1);
     });
 
-    // React 15.2 warns when setting a non valid prop to an DOM element
-    describeIf(REACT013 || REACT014, 'unauthorized dom props', () => {
-      it('should not find components with invalid attributes', () => {
-        // Invalid attributes aren't valid JSX, so manual instantiation is necessary
-        const wrapper = mount(
-          React.createElement('div', null, React.createElement('span', {
-            '123-foo': 'bar',
-            '-foo': 'bar',
-            '+foo': 'bar',
-          })),
-        );
-
-        expect(wrapper.find('[-foo]')).to.have.length(0, '-foo');
-        expect(wrapper.find('[+foo]')).to.have.length(0, '+foo');
-        expect(wrapper.find('[123-foo]')).to.have.length(0, '123-foo');
-      });
+    it('should throw for non-numeric attribute values without quotes', () => {
+      const wrapper = mount(
+        <div>
+          <input type="text" />
+          <input type="hidden" />
+          <input type="text" />
+        </div>,
+      );
+      expect(() => wrapper.find('[type=text]')).to.throw(
+        Error,
+        'Failed to parse selector: [type=text]',
+      );
+      expect(() => wrapper.find('[type=hidden]')).to.throw(
+        Error,
+        'Failed to parse selector: [type=hidden]',
+      );
+      expect(() => wrapper.find('[type="text"]')).to.not.throw(
+        Error,
+        'Failed to parse selector: [type="text"]',
+      );
     });
 
     it('should support data prop selectors', () => {
@@ -544,6 +550,10 @@ describeWithDOM('mount', () => {
         <div>
           <span value={1} />
           <a value={false} />
+          <a value="false" />
+          <span value="true" />
+          <a value="1" />
+          <a value="2" />
         </div>,
       );
 
