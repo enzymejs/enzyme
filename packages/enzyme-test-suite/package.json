@@ -1,7 +1,7 @@
 {
   "name": "enzyme-test-suite",
   "private": true,
-  "version": "1.0.0-beta.2",
+  "version": "1.0.0-beta.3",
   "description": "JavaScript Testing utilities for React",
   "homepage": "http://airbnb.io/enzyme/",
   "scripts": {
@@ -29,8 +29,8 @@
   "license": "MIT",
   "dependencies": {
     "chai": "^4.1.1",
-    "enzyme": "^3.0.0-beta.2",
-    "enzyme-adapter-utils": "^1.0.0-beta.2",
+    "enzyme": "^3.0.0-beta.3",
+    "enzyme-adapter-utils": "^1.0.0-beta.3",
     "prop-types": "^15.5.10",
     "semver": "^5.4.1",
     "sinon": "^2.4.1"
