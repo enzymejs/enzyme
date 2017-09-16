@@ -40,7 +40,8 @@
   "peerDependencies": {
     "enzyme": "^3.0.0-beta.2",
     "react": "^15.5.0",
-    "react-dom": "^15.5.0"
+    "react-dom": "^15.5.0",
+    "react-test-renderer": "^15.5.0"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
