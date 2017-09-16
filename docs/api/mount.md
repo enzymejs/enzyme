@@ -10,6 +10,8 @@ want to run your tests inside of a browser, the recommended approach to using `m
 on a library called [jsdom](https://github.com/tmpvar/jsdom) which is essentially a headless browser
 implemented completely in JS.
 
+**Note**: unlike shallow or static rendering, full rendering actually mounts the component in the DOM, which means that tests can affect each other if they are all using the same DOM. Keep that in mind while writing your tests and, if necessary, use [`.unmount()`](ReactWrapper/unmount.md) or something similar as cleanup.
+
 ```jsx
 import { mount } from 'enzyme';
 import sinon from 'sinon';
