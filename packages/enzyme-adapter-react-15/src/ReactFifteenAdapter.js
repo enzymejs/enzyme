@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom';
 import ReactDOMServer from 'react-dom/server';
 // eslint-disable-next-line import/no-unresolved, import/extensions
 import TestUtils from 'react-dom/test-utils';
+import ShallowRenderer from 'react-test-renderer/shallow';
 import values from 'object.values';
 import { EnzymeAdapter } from 'enzyme';
 import {
@@ -119,7 +120,7 @@ class ReactFifteenAdapter extends EnzymeAdapter {
   }
 
   createShallowRenderer(/* options */) {
-    const renderer = TestUtils.createRenderer();
+    const renderer = new ShallowRenderer();
     let isDOM = false;
     let cachedNode = null;
     return {
