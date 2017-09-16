@@ -24,9 +24,3 @@ describe('<Foo />', () => {
 });
 
 ```
-
-
-## Example Projects
-
-- [enzyme-example-mocha](https://github.com/lelandrichardson/enzyme-example-mocha)
-- [enzyme-example-react-native](https://github.com/lelandrichardson/enzyme-example-react-native)

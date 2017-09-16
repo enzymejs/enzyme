@@ -38,8 +38,3 @@ mocha --require react-native-mock/mock --recursive path/to/test/dir
 // This will mutate `react-native`'s require cache with `react-native-mock`'s.
 require('react-native-mock/mock'); // <-- side-effects!!!
 ```
-
-
-## Example Projects
-
-- [enzyme-example-react-native](https://github.com/lelandrichardson/enzyme-example-react-native)

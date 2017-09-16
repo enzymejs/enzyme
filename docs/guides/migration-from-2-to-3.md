@@ -1,7 +1,7 @@
 # Migration Guide for Enzyme v2.x to v3.x
 
 The change from Enzyme v2.x to v3.x is a more significant change than in previous major releases,
-due to the fact that the internal implementation has been almost completely rewritten.
+due to the fact that the internal implementation of Enzyme has been almost completely rewritten.
 
 The goal of this rewrite was to address a lot of the major issues that have plagued Enzyme since
 its initial release. It was also to simultaneously remove a lot of the dependence that Enzyme has
@@ -10,16 +10,17 @@ with "React-like" libraries such as Preact and Inferno.
 
 We have done our best to make Enzyme v3 as API compatible with v2.x as possible, however there are
 a hand full of breaking changes that we decided we needed to make, intentionally, in order to
-support this new architecture.
+support this new architecture and also improve the usability of the library long-term.
 
 Airbnb has one of the largest Enzyme test suites, coming in at around 30,000 enzyme unit tests.
 After upgrading Enzyme to v3.x in Airbnb's code base, 99.6% of these tests succeeded with no
 modifications at all. Most of the tests that broke we found to be easy to fix, and some we found to
 actually be depending on what could arguably be considered a bug in v2.x, and the breakage was
-desired.
+actually desired.
 
 In this guide, we will go over a couple of the most common breakages that we ran into, and how to
-fix them. Hopefully this will make your upgrade path that much easier.
+fix them. Hopefully this will make your upgrade path that much easier. If during your upgrade you
+find a breakage that doesn't seem to make sense to you, feel free to file an issue.
 
 
 ## Configuring your Adapter
@@ -44,18 +45,20 @@ Enzyme.configure({ adapter: new Adapter() });
 
 The list of adapter npm packages for React semver ranges are as follows:
 
-- `enzyme-adapter-react-16` for `^16.0.0-0`
-- `enzyme-adapter-react-15` for `^15.5.0`
-- `enzyme-adapter-react-15.4` for `>= 15.0.0 && <15.5.0`
-- `enzyme-adapter-react-14` for `^0.14.x`
-- `enzyme-adapter-react-13` for `^0.13.x`
+| Enzyme Adapter Package | React semver compatibility |
+| --- | --- |
+| `enzyme-adapter-react-16` | `^16.0.0` |
+| `enzyme-adapter-react-15` | `^15.5.0` |
+| `enzyme-adapter-react-15.4` | `15.0.0-0 - 15.4.x` |
+| `enzyme-adapter-react-14` | `^0.14.0` |
+| `enzyme-adapter-react-13` | `^0.13.0` |
 
 
 ## Element referential identity is no longer preserved
 
 Enzyme's new architecture means that the react "render tree" is transformed into an intermediate
 representation that is common across all react versions so that Enzyme can properly traverse it
-independent of React's internal representations.  A side effect of this is that Enzyme no longer
+independent of React's internal representations. A side effect of this is that Enzyme no longer
 has access to the actual object references that were returned from `render` in your React
 components. This normally isn't much of a problem, but can manifest as a test failure in some
 cases.
@@ -93,7 +96,8 @@ transformations of the underlying react elements, and are thus different referen
 two elements being found.
 
 Although this is a breaking change, I believe the new behavior is closer to what people would
-actually expect and want.
+actually expect and want. Having Enzyme wrappers be immutable results in more deterministic tests
+that are less prone to flakiness from external factors.
 
 ## `children()` now has slightly different meaning
 
@@ -119,6 +123,8 @@ class Foo extends React.Component {
   }
 }
 ```
+
+TODO: finish talking about this
 
 ## For `mount`, updates are sometimes required when they weren't before
 
@@ -242,7 +248,7 @@ wrapper.find('.count').text(); // => "Count: 0" (would have been "Count: 1" in v
 
 The problem here is that once we grab the instance using `wrapper.instance()`, Enzyme has no way of
 knowing if you are going to execute something that will cause a state transition, and thus does not
-know when to ask for an updated render tree from React.  As a result, `.text()` never changes value.
+know when to ask for an updated render tree from React. As a result, `.text()` never changes value.
 
 The fix here is to use Enzyme's `wrapper.update()` method after a state change has occurred:
 
@@ -261,15 +267,17 @@ wrapper.find('.count').text(); // => "Count: 1"
 ```
 
 In practice we have found that this isn't actually needed that often, and when it is it is not
-difficult to add. This breaking change was worth the architectural benefits of the new adapter
-system in v3.
+difficult to add. Additionally, having the Enzyme wrapper automatically update alongside the real
+render tree can result in flaky tests when writing asynchronous tests. This breaking change was
+worth the architectural benefits of the new adapter system in v3, and we believe is a better choice
+for an assertion library to take.
 
 
 ## `ref(refName)` now returns the actual ref instead of a wrapper
 
 In Enzyme v2, the wrapper returned from `mount(...)` had a prototype method on it `ref(refName)`
 that returned a wrapper around the actual element of that ref. This has now been changed to
-return the actual ref, which I believe is more intuitive.
+return the actual ref, which we believe is a more intuitive API.
 
 Consider the following simple react component:
 
@@ -293,11 +301,11 @@ expect(wrapper.ref('abc')).toBeInstanceOf(wrapper.constructor);
 ```
 
 In v3, the contract is slightly changed. The ref is exactly what React would assign as the ref. In
-this case, it would be an DOM Element:
+this case, it would be a DOM Element:
 
 ```js
 const wrapper = mount(<Box />);
-// this is what would happen with Enzyme v2
+// this is what happens with Enzyme v3
 expect(wrapper.ref('abc')).toBeInstanceOf(Element);
 ```
 
@@ -318,55 +326,28 @@ const wrapper = mount(<Bar />);
 expect(wrapper.ref('abc')).toBeInstanceOf(Box);
 ```
 
-
 In our experience, this is most often what people would actually want and expect out of the `.ref(...)`
 method.
 
 
+## With `mount`, `instance()` can be called at any level of the tree
 
-# New Features in Enzyme v3
+Enzyme now allows for you to grab the `instance()` of a wrapper at any level of the render tree,
+not just at the root.  This means that you can `.find(...)` a specific component, then grab its
+instance and call `.setState(...)` or any other methods on the instance that you'd like.
 
-
-## `instance()` can be called at any level of the tree
-
-TODO: talk about this
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# Migration Guide (for React 0.13 - React 15.x)
-
-
-## Root Wrapper
-
-The initially returned wrapper used to be around the element passed
-into the `mount` API, and for `shallow` it was around the root node of the rendered output of the element passed in. After the upgrade, the
-two APIs are now symmetrical, starting off
-
-<!-- eslint react/prop-types: 0 -->
-```js
-const x = 'x';
-const Foo = props => <div inner={props.outer} />;
-const wrapper = mount(<Foo outer={x} />);
-```
-
-```js
-expect(wrapper.props()).to.deep.equal({ outer: x });
-```
 
 ## for mount, getNode() should not be used. instance() does what it used to.
+
+
+
+## Private properties and methods have been removed
+
+- `.node`
+- `.nodes`
+- `.renderer`
+
+
+## Cheerio has been updated, thus `render(...)` has been updated as well
+
+## CSS Selector

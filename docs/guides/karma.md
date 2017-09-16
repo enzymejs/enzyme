@@ -28,13 +28,6 @@ module.exports = function karmaConfig(config) {
           },
         }],
       },
-      externals: {
-        cheerio: 'window',
-        'react/addons': true,
-        'react/lib/ExecutionEnvironment': true,
-        'react/lib/ReactContext': true,
-        'react-addons-test-utils': 'react-dom',
-      },
     },
     // ...
   });
@@ -55,21 +48,8 @@ module.exports = function karmaConfig(config) {
       transform: [
         ['babelify', { presets: ['airbnb'] }],
       ],
-      configure(bundle) {
-        bundle.on('prebundle', () => {
-          bundle.external('react/addons');
-          bundle.external('react/lib/ReactContext');
-          bundle.external('react/lib/ExecutionEnvironment');
-        });
-      },
     },
     // ...
   });
 };
 ```
-
-
-## Example Projects
-
-- [enzyme-example-karma](https://github.com/lelandrichardson/enzyme-example-karma)
-- [enzyme-example-karma-webpack](https://github.com/lelandrichardson/enzyme-example-karma-webpack)

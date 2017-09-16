@@ -36,7 +36,3 @@ If you are using Jest 0.9 – 14.0 with Enzyme and using Jest's automocking feat
 ```
 
 If you are using a previous version of Jest together with npm3, you may need to unmock [more modules](https://github.com/airbnb/enzyme/blob/78febd90fe2fb184771b8b0356b0fcffbdad386e/docs/guides/jest.md).
-
-## Example Project for Jest prior to version 15
-
-- [enzyme-example-jest](https://github.com/lelandrichardson/enzyme-example-jest)

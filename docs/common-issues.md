@@ -2,44 +2,6 @@
 
 This list aims to be comprehensive. If you find an issue that has been frequently brought up in Github *issues* that is not here, please open a PR to add it.
 
-### Webpack Build Issues
-
-- [Related Github issue](https://github.com/airbnb/enzyme/issues/684)
-
-###### Common Solutions
-
-_Mismatched versions of React and React* libraries._
-
-It is important to ensure all React and React* libraries your project depend on are matching versions.
-If you are using React 15.4.0, you should ensure your React* libraries (like react-test-utils) are equivalently on 15.4.0.
-
-_Bad configuration._
-
-Please see the guide for [webpack](/docs/guides/webpack) to ensure your configuration is correct for weback.
-
-### Error: Cannot find module 'react-dom/lib/ReactTestUtils'
-
-- [Related Github issue](https://github.com/airbnb/enzyme/issues/684)
-- [Related code](https://github.com/airbnb/enzyme/blob/3aeb02461eabf2fd402613991915d8d6f4b88536/src/react-compat.js#L97-L105)
-
-###### Reason
-
-In order to properly support multiple versions of React, we have conditional requirements that npm does not support with tools like
-`peerDependencies`. Instead we manually require and throw errors if the dependency is not met.
-
-###### Solution
-
-Install a matching version of React for `react-test-utils`. Example package.json
-
-```json
-{
-  "devDependencies": {
-    "react": "15.4.0",
-    "react-test-utils": "15.4.0"
-  }
-}
-```
-
 ### Query Selector fails
 
 ###### Reason

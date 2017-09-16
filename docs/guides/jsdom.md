@@ -115,9 +115,3 @@ nvm use 0.12
 ```bash
 nvm use 4
 ```
-
-
-
-## Example Projects
-
-- [enzyme-example-mocha](https://github.com/lelandrichardson/enzyme-example-mocha)
