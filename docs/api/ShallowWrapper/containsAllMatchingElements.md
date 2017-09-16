@@ -24,10 +24,11 @@ like the nodes passed in.
 
 
 ```jsx
+const style = { fontSize: 13 };
 const wrapper = shallow((
   <div>
     <span className="foo">Hello</span>
-    <div style={{ fontSize: 13 }}>Goodbye</div>
+    <div style={style}>Goodbye</div>
     <span>Again</span>
   </div>
 ));

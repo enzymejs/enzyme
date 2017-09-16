@@ -12,20 +12,20 @@ console when tests are not passing when you expect them to.
 
 #### Examples
 ```jsx
-function Book({ title, cover }) {
+function Book({ title, pages }) {
   return (
     <div>
       <h1 className="title">{title}</h1>
-      {cover && <BookCover cover={cover} />}
+      {pages && <NumberOfPages pages={pages} />}
     </div>
   );
 }
 Book.propTypes = {
   title: PropTypes.string.isRequired,
-  cover: PropTypes.string,
+  pages: PropTypes.number,
 };
 Book.defaultProps = {
-  cover: null,
+  pages: null,
 };
 ```
 ```jsx
@@ -43,11 +43,7 @@ Outputs to console:
 const wrapper = shallow((
   <Book
     title="Huckleberry Finn"
-    cover={{
-      url: 'http://some.url/to/img.png',
-      width: 40,
-      height: 80,
-    }}
+    pages="633 pages"
   />
 ));
 console.log(wrapper.debug());
@@ -56,6 +52,6 @@ Outputs to console:
 ```text
 <div>
  <h1 className="title">Huckleberry Finn</h1>
- <BookCover cover={{...}} />
+ <NumberOfPages pages="633 pages" />
 </div>
 ```
