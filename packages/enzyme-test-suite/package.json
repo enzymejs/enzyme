@@ -1,7 +1,7 @@
 {
   "name": "enzyme-test-suite",
   "private": true,
-  "version": "2.9.1",
+  "version": "1.0.0-beta.1",
   "description": "JavaScript Testing utilities for React",
   "homepage": "http://airbnb.io/enzyme/",
   "scripts": {
@@ -28,12 +28,12 @@
   "author": "Leland Richardson <leland.richardson@airbnb.com>",
   "license": "MIT",
   "dependencies": {
-    "semver": "^5.4.1",
     "chai": "^4.1.1",
-    "sinon": "^2.4.1",
+    "enzyme": "^3.0.0-beta.1",
+    "enzyme-adapter-utils": "^1.0.0-beta.1",
     "prop-types": "^15.5.10",
-    "enzyme": "2.9.1",
-    "enzyme-adapter-utils": "2.9.1"
+    "semver": "^5.4.1",
+    "sinon": "^2.4.1"
   },
   "peerDependencies": {
     "react": "^15.5.0"
