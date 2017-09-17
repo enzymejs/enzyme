@@ -331,6 +331,29 @@ describe('selectors', () => {
         expect(wrapper.find('a[href="https://www.foo.com"]')).to.have.lengthOf(1);
         expect(wrapper.find('a[href="foo.com"]')).to.have.lengthOf(1);
       });
+
+      it('parens in displayName', () => {
+        class Foo extends React.Component {
+          render() {
+            return <div />;
+          }
+        }
+        Foo.displayName = 'Wrapped(Foo)';
+        class Bar extends React.Component {
+          render() {
+            return <div />;
+          }
+        }
+        Bar.displayName = 'Wrapped(Twice(Bar))';
+        const wrapper = renderMethod(
+          <div>
+            <Foo />
+            <Bar />
+          </div>,
+        );
+        expect(wrapper.find('Wrapped(Foo)')).to.have.lengthOf(1);
+        expect(wrapper.find('Wrapped(Twice(Bar))')).to.have.lengthOf(1);
+      });
     });
   });
 });
