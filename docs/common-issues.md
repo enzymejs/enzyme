@@ -15,7 +15,7 @@ If you are using React 15.4.0, you should ensure your React* libraries (like rea
 
 _Bad configuration._
 
-Please see the guide for [webpack](/docs/guides/webpack) to ensure your configuration is correct for weback.
+Please see the guide for [webpack](/docs/guides/webpack.md) to ensure your configuration is correct for weback.
 
 ### Error: Cannot find module 'react-dom/lib/ReactTestUtils'
 
