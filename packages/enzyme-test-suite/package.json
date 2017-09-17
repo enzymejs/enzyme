@@ -33,9 +33,11 @@
     "enzyme-adapter-utils": "^1.0.0-beta.4",
     "prop-types": "^15.5.10",
     "semver": "^5.4.1",
-    "sinon": "^2.4.1"
+    "sinon": "^2.4.1",
+    "jsdom": "^6.1.0"
   },
   "peerDependencies": {
-    "react": "^15.5.0"
+    "react": "^15.5.0",
+    "react-dom": "^15.5.0"
   }
 }

@@ -26,18 +26,35 @@ function compositeTypeToNodeType(type) {
       throw new Error(`Enzyme Internal Error: unknown composite type ${type}`);
   }
 }
+function childrenFromInst(inst, el) {
+  if (inst._renderedChildren) {
+    return values(inst._renderedChildren);
+  } else if (el.props) {
+    return values({ '.0': el.props.children });
+  }
+  return [];
+}
+
+function nodeType(inst) {
+  if (inst._compositeType != null) {
+    return compositeTypeToNodeType(inst._compositeType);
+  }
+  return 'host';
+}
 
 function instanceToTree(inst) {
   if (!inst || typeof inst !== 'object') {
     return inst;
   }
   const el = inst._currentElement;
-  if (!el) {
+  if (el == null || el === false) {
     return null;
+  } else if (typeof el !== 'object') {
+    return el;
   }
   if (inst._renderedChildren) {
     return {
-      nodeType: inst._hostNode ? 'host' : compositeTypeToNodeType(inst._compositeType),
+      nodeType: nodeType(inst),
       type: el.type,
       props: el.props,
       key: el.key,
@@ -47,10 +64,6 @@ function instanceToTree(inst) {
     };
   }
   if (inst._hostNode) {
-    if (typeof el !== 'object') {
-      return el;
-    }
-    const children = inst._renderedChildren || { '.0': el.props.children };
     return {
       nodeType: 'host',
       type: el.type,
@@ -58,12 +71,12 @@ function instanceToTree(inst) {
       key: el.key,
       ref: el.ref,
       instance: inst._instance || inst._hostNode || null,
-      rendered: values(children).map(instanceToTree),
+      rendered: childrenFromInst(inst, el).map(instanceToTree),
     };
   }
   if (inst._renderedComponent) {
     return {
-      nodeType: compositeTypeToNodeType(inst._compositeType),
+      nodeType: nodeType(inst),
       type: el.type,
       props: el.props,
       key: el.key,
@@ -72,7 +85,15 @@ function instanceToTree(inst) {
       rendered: instanceToTree(inst._renderedComponent),
     };
   }
-  throw new Error('Enzyme Internal Error: unknown instance encountered');
+  return {
+    nodeType: nodeType(inst),
+    type: el.type,
+    props: el.props,
+    key: el.key,
+    ref: el.ref,
+    instance: inst._instance || null,
+    rendered: childrenFromInst(inst, el).map(instanceToTree),
+  };
 }
 
 class ReactFifteenAdapter extends EnzymeAdapter {

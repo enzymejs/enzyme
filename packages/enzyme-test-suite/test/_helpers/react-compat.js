@@ -7,6 +7,7 @@
 import { is } from './version';
 
 let createClass;
+let renderToString;
 
 if (is('>=15.5 || ^16.0.0-alpha')) {
   // eslint-disable-next-line import/no-extraneous-dependencies
@@ -15,6 +16,14 @@ if (is('>=15.5 || ^16.0.0-alpha')) {
   createClass = require('react').createClass;
 }
 
+if (is('^0.13.0')) {
+  renderToString = require('react').renderToStaticMarkup;
+} else {
+  // eslint-disable-next-line import/no-extraneous-dependencies
+  renderToString = require('react-dom/server').renderToString;
+}
+
 export {
   createClass,
+  renderToString,
 };

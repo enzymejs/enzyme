@@ -1,6 +1,8 @@
 import './_helpers/setupAdapters';
 import React from 'react';
 import { expect } from 'chai';
+import { renderToString } from './_helpers/react-compat';
+import jsdom from 'jsdom';
 
 import { REACT013, REACT16 } from './_helpers/version';
 import configuration from 'enzyme/build/configuration';
@@ -35,6 +37,60 @@ function cleanNode(node) {
 
 describe('Adapter', () => {
   describeWithDOM('mounted render', () => {
+
+    function hydratedTreeMatchesUnhydrated(element) {
+      const markup = renderToString(element);
+      const dom = jsdom.jsdom(`<div id="root">${markup}</div>`);
+
+      const rendererA = adapter.createRenderer({
+        mode: 'mount',
+        attachTo: dom.querySelector('#root'),
+      });
+
+      rendererA.render(element);
+
+      const nodeA = rendererA.getNode();
+
+      cleanNode(nodeA);
+
+      const rendererB = adapter.createRenderer({
+        mode: 'mount',
+      });
+
+      rendererB.render(element);
+
+      const nodeB = rendererB.getNode();
+
+      cleanNode(nodeB);
+      expect(prettyFormat(nodeA)).to.equal(prettyFormat(nodeB));
+    }
+
+    it('hydrated trees match unhydrated trees', () => {
+      class Bam extends React.Component {
+        render() { return (<div>{this.props.children}</div>); }
+      }
+      class Foo extends React.Component {
+        render() { return (<Bam>{this.props.children}</Bam>); }
+      }
+      class One extends React.Component {
+        render() { return (<Foo><span><Foo /></span></Foo>); }
+      }
+      class Two extends React.Component {
+        render() { return (<Foo><span>2</span></Foo>); }
+      }
+      class Three extends React.Component {
+        render() { return (<Foo><span><div /></span></Foo>); }
+      }
+      class Four extends React.Component {
+        render() { return (<Foo><span>{'some string'}4{'another string'}</span></Foo>); }
+      }
+
+      hydratedTreeMatchesUnhydrated(<One />);
+      hydratedTreeMatchesUnhydrated(<Two />);
+      hydratedTreeMatchesUnhydrated(<Three />);
+      hydratedTreeMatchesUnhydrated(<Four />);
+    });
+
     it('treats mixed children correctlyf', () => {
       class Foo extends React.Component {
         render() {
