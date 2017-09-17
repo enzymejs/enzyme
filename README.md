@@ -47,10 +47,6 @@ React:
 | `enzyme-adapter-react-14` | `^0.14.0` |
 | `enzyme-adapter-react-13` | `^0.13.0` |
 
-It is possible for the community to create additional (non-official) adapters that will make enzyme
-work with other libraries. If you have made one, feel free to make a PR to this README and add a
-link to it!
-
 Finally, you need to configure enzyme to use the adapter you want it to use. To do this, you can use
 the top level `configure(...)` API.
 
@@ -60,6 +56,17 @@ import Adapter from 'enzyme-adapter-react-16';
 
 Enzyme.configure({ adapter: new Adapter() });
 ```
+
+3rd Party Adapters
+=============
+
+It is possible for the community to create additional (non-official) adapters that will make enzyme
+work with other libraries. If you have made one and it's not included in the list below, feel free
+to make a PR to this README and add a link to it! The known 3rd party adapters are:
+
+| Adapter Package | For Library | Status |
+| --- | --- | --- |
+| [`preact-enzyme-adapter`](https://github.com/aweary/preact-enzyme-adapater) | [`preact`](https://github.com/developit/preact) | (work in progress) |
 
 Running Enzyme Tests
 ===========

@@ -124,7 +124,37 @@ class Foo extends React.Component {
 }
 ```
 
-TODO: finish talking about this
+Now lets say we have a test which does something like:
+
+```js
+const wrapper = mount(<Foo />);
+```
+
+At this point, there is an ambiguity about what `wrapper.find(Box).children()` should return.
+Although the `<Box ... />` element has a `children` prop of `<div className="div" />`, the actual
+rendered children of the element that the box component renders is a `<div className="box">...</div>`
+element.
+
+Prior Enzyme v3, we would observe the following behavior:
+
+```js
+wrapper.find(Box).children().debug();
+// => <div className="div" />
+```
+
+In Enzyme v3, we now have `.children()` return the *rendered* children. In other words, it returns
+the element that is returned from that component's `render` function.
+
+```js
+wrapper.find(Box).children().debug();
+// =>
+// <div className="box">
+//   <div className="div" />
+// </div>
+```
+
+This may seem like a subtle difference, but making this change will be important for future APIs
+we would like to introduce.
 
 ## For `mount`, updates are sometimes required when they weren't before
 
@@ -330,24 +360,57 @@ In our experience, this is most often what people would actually want and expect
 method.
 
 
-## With `mount`, `instance()` can be called at any level of the tree
+## With `mount`, `.instance()` can be called at any level of the tree
 
 Enzyme now allows for you to grab the `instance()` of a wrapper at any level of the render tree,
 not just at the root.  This means that you can `.find(...)` a specific component, then grab its
 instance and call `.setState(...)` or any other methods on the instance that you'd like.
 
 
-## for mount, getNode() should not be used. instance() does what it used to.
+## With `mount`, `.getNode()` should not be used. `.instance()` does what it used to.
+
+For `mount` wrappers, the `.getNode()` method used to return the actual component instance. This
+method no longer exists, but `.instance()` is functionally equivalent to what `.getNode()` used to
+be.
 
 
+## With `shallow`, `.getNode()` should be replaced with `getElement()`
+
+For shallow wrappers, if you were previously using `.getNode()`, you will want to replace those
+calls with `.getElement()`, which is now functionally equivalent to what `.getNode()` used to do.
+One caveat is that previously `.getNode()` would return the actual element instance that was
+created in the `render` function of the component you were testing, but now it will be a
+structurally equal react element, but not referentially equal. Your tests will need to be updated to
+account for this.
 
 ## Private properties and methods have been removed
+
+There are several properties that are on an Enzyme "wrapper" that were considered to be private and
+were undocumented as a result. Despite being undocumented, people may haev been relying on them. In
+an effort to make making changes less likely to be accidentally breaking in the future, we have
+decided to make these properties properly "private". The following properties will no longer be
+accessible on Enzyme `shallow` or `mount` instances:
 
 - `.node`
 - `.nodes`
 - `.renderer`
+- `.unrendered`
+- `.root`
+- `.options`
 
 
 ## Cheerio has been updated, thus `render(...)` has been updated as well
 
+Enzyme's top level `render` API returns a [Cheerio](https://github.com/cheeriojs/cheerio) object.
+The version of Cheerio that we use has been upgraded to 1.0.0. For debugging issues across Enzyme
+v2.x and v3.x with the `render` API, we recommend checking out [Cheerio's Changelog](https://github.com/cheeriojs/cheerio/blob/48eae25c93702a29b8cd0d09c4a2dce2f912d1f4/History.md) and
+posting an issue on that repo instead of Enzyme's unless you believe it is a bug in Enzyme's use
+of the library.
+
 ## CSS Selector
+
+Enzyme v3 now uses a real CSS selector parser rather than its own incomplete parser implementation.
+This is done with [rst-selector-parser](https://github.com/aweary/rst-selector-parser) a fork of [scalpel](https://github.com/gajus/scalpel/) which is a CSS parser implemented with [nearley](https://nearley.js.org/).
+We don't think this should cause any breakages across Enzyme v2.x to v3.x, but if you believe you
+have found something that did indeed break, please file an issue with us. Thank you to
+[Brandon Dail](https://github.com/aweary) for making this happen!
