@@ -103,6 +103,15 @@ class ReactWrapper {
   }
 
   /**
+   * Returns the root wrapper
+   *
+   * @return {ReactWrapper}
+   */
+  root() {
+    return this[ROOT];
+  }
+
+  /**
    * Returns the wrapped component.
    *
    * @return {ReactComponent}
@@ -1075,7 +1084,6 @@ function privateWarning(prop, extraMessage) {
 privateWarning('node', 'Consider using the getElement() method instead.');
 privateWarning('nodes', 'Consider using the getElements() method instead.');
 privateWarning('renderer', '');
-privateWarning('root', '');
 privateWarning('options', '');
 privateWarning('complexSelector', '');
 
