@@ -394,6 +394,27 @@ describeWithDOM('mount', () => {
       expect(wrapper.find('input.foo').length).to.equal(1);
     });
 
+    it('should work on non-single nodes', () => {
+      const wrapper = mount(
+        <div className="a">
+          <div className="b">
+            <div className="c">Text</div>
+            <div className="c">Text</div>
+            <div className="c">Text</div>
+          </div>
+          <div className="b">
+            <div className="c">Text</div>
+            <div className="c">Text</div>
+            <div className="c">Text</div>
+          </div>
+        </div>,
+      );
+      expect(wrapper.find('.a').length).to.equal(1);
+      expect(wrapper.find('.b').length).to.equal(2);
+      expect(wrapper.find('.b').find('.c').length).to.equal(6);
+    });
+
+
     it('should find an element based on a tag name and id', () => {
       const wrapper = mount(
         <div>

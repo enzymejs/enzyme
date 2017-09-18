@@ -230,6 +230,8 @@ export function nodeHasProperty(node, propKey, propValue) {
 }
 
 export function displayNameOfNode(node) {
+  if (!node) return null;
+
   const { type } = node;
 
   if (!type) return null;

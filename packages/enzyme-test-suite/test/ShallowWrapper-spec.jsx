@@ -531,6 +531,26 @@ describe('shallow', () => {
       expect(wrapper.find('button').length).to.equal(1);
     });
 
+    it('should work on non-single nodes', () => {
+      const wrapper = shallow(
+        <div className="a">
+          <div className="b">
+            <div className="c">Text</div>
+            <div className="c">Text</div>
+            <div className="c">Text</div>
+          </div>
+          <div className="b">
+            <div className="c">Text</div>
+            <div className="c">Text</div>
+            <div className="c">Text</div>
+          </div>
+        </div>,
+      );
+      expect(wrapper.find('.a').length).to.equal(1);
+      expect(wrapper.find('.b').length).to.equal(2);
+      expect(wrapper.find('.b').find('.c').length).to.equal(6);
+    });
+
     it('should find component based on a react prop', () => {
       const wrapper = shallow(
         <div>
