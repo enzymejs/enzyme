@@ -145,6 +145,17 @@ class ShallowWrapper {
     privateSet(this, OPTIONS, root ? root[OPTIONS] : options);
   }
 
+
+  /**
+   * Returns the root wrapper
+   *
+   * @return {ShallowWrapper}
+   */
+  root() {
+    return this[ROOT];
+  }
+
+
   getNodeInternal() {
     if (this.length !== 1) {
       throw new Error(
@@ -1183,7 +1194,6 @@ function privateWarning(prop, extraMessage) {
 privateWarning('node', 'Consider using the getElement() method instead.');
 privateWarning('nodes', 'Consider using the getElements() method instead.');
 privateWarning('renderer', '');
-privateWarning('root', '');
 privateWarning('options', '');
 privateWarning('complexSelector', '');
 
