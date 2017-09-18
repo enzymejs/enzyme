@@ -26,7 +26,7 @@ import {
   treeFilter,
 } from './RSTTraversal';
 
-import { buildPredicate, reduceTreeBySelector } from './selectors';
+import { buildPredicate, reduceTreesBySelector } from './selectors';
 
 const noop = () => {};
 
@@ -467,7 +467,7 @@ class ReactWrapper {
    * @returns {ReactWrapper}
    */
   find(selector) {
-    return reduceTreeBySelector(selector, this);
+    return this.wrap(reduceTreesBySelector(selector, this.getNodesInternal()));
   }
 
   /**

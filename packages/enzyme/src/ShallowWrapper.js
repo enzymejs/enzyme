@@ -29,7 +29,7 @@ import {
   parentsOfNode,
   treeFilter,
 } from './RSTTraversal';
-import { buildPredicate, reduceTreeBySelector } from './selectors';
+import { buildPredicate, reduceTreesBySelector } from './selectors';
 
 const NODE = sym('__node__');
 const NODES = sym('__nodes__');
@@ -545,7 +545,7 @@ class ShallowWrapper {
    * @returns {ShallowWrapper}
    */
   find(selector) {
-    return reduceTreeBySelector(selector, this);
+    return this.wrap(reduceTreesBySelector(selector, this.getNodesInternal()));
   }
 
   /**

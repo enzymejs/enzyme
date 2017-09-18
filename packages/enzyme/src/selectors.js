@@ -1,5 +1,6 @@
 import { createParser } from 'rst-selector-parser';
 import isEmpty from 'lodash/isEmpty';
+import flatten from 'lodash/flatten';
 import unique from 'lodash/uniq';
 import {
   treeFilter,
@@ -31,10 +32,10 @@ const PSEUDO_CLASS = 'pseudoClassSelector';
 const PSEUDO_ELEMENT = 'pseudoElementSelector';
 
 /**
- * Calls reduce on a array of nodes with the passed 
+ * Calls reduce on a array of nodes with the passed
  * function, returning only unique results.
- * @param {Function} fn 
- * @param {Array<Node>} nodes 
+ * @param {Function} fn
+ * @param {Array<Node>} nodes
  */
 function uniqueReduce(fn, nodes) {
   return unique(nodes.reduce(fn, []));
@@ -43,7 +44,7 @@ function uniqueReduce(fn, nodes) {
 /**
  * Takes a CSS selector and returns a set of tokens parsed
  * by scalpel.
- * @param {String} selector 
+ * @param {String} selector
  */
 function safelyGenerateTokens(selector) {
   try {
@@ -56,8 +57,8 @@ function safelyGenerateTokens(selector) {
 /**
  * Takes a node and a token and determines if the node
  * matches the predicate defined by the token.
- * @param {Node} node 
- * @param {Token} token 
+ * @param {Node} node
+ * @param {Token} token
  */
 function nodeMatchesToken(node, token) {
   if (node === null || typeof node === 'string') {
@@ -108,7 +109,7 @@ function nodeMatchesToken(node, token) {
  * Returns a predicate function that checks if a
  * node matches every token in the body of a selector
  * token.
- * @param {Token} token 
+ * @param {Token} token
  */
 function buildPredicateFromToken(token) {
   return node => token.body.every(
@@ -119,7 +120,7 @@ function buildPredicateFromToken(token) {
 /**
  * Returns whether a parsed selector is a complex selector, which
  * is defined as a selector that contains combinators.
- * @param {Array<Token>} tokens 
+ * @param {Array<Token>} tokens
  */
 function isComplexSelector(tokens) {
   return tokens.some(token => token.type !== SELECTOR);
@@ -129,8 +130,8 @@ function isComplexSelector(tokens) {
 /**
  * Takes a component constructor, object, or string representing
  * a simple selector and returns a predicate function that can
- * be applied to a single node. 
- * @param {Function|Object|String} selector 
+ * be applied to a single node.
+ * @param {Function|Object|String} selector
  */
 export function buildPredicate(selector) {
   // If the selector is a function, check if the node's constructor matches
@@ -161,8 +162,8 @@ export function buildPredicate(selector) {
 /**
  * Matches only nodes which are adjacent siblings (direct next sibling)
  * against a predicate, returning those that match.
- * @param {Array<Node>} nodes 
- * @param {Function} predicate 
+ * @param {Array<Node>} nodes
+ * @param {Function} predicate
  * @param {Node} root
  */
 function matchAdjacentSiblings(nodes, predicate, root) {
@@ -188,8 +189,8 @@ function matchAdjacentSiblings(nodes, predicate, root) {
 /**
  * Matches only nodes which are general siblings (any sibling *after*)
  * against a predicate, returning those that match.
- * @param {Array<Node>} nodes 
- * @param {Function} predicate 
+ * @param {Array<Node>} nodes
+ * @param {Function} predicate
  * @param {Node} root
  */
 function matchGeneralSibling(nodes, predicate, root) {
@@ -208,8 +209,8 @@ function matchGeneralSibling(nodes, predicate, root) {
 /**
  * Matches only nodes which are direct children (not grandchildren, etc.)
  * against a predicate, returning those that match.
- * @param {Array<Node>} nodes 
- * @param {Function} predicate 
+ * @param {Array<Node>} nodes
+ * @param {Function} predicate
  */
 function matchDirectChild(nodes, predicate) {
   return uniqueReduce((matches, node) => {
@@ -226,8 +227,8 @@ function matchDirectChild(nodes, predicate) {
 /**
  * Matches all descendant nodes against a predicate,
  * returning those that match.
- * @param {Array<Node>} nodes 
- * @param {Function} predicate 
+ * @param {Array<Node>} nodes
+ * @param {Function} predicate
  */
 function matchDescendant(nodes, predicate) {
   return uniqueReduce(
@@ -241,11 +242,10 @@ function matchDescendant(nodes, predicate) {
  * the selector. The selector can be a simple selector, which
  * is handled by `buildPredicate`, or a complex CSS selector which
  * reduceTreeBySelector parses and reduces the tree based on the combinators.
- * @param {Function|Object|String} selector 
- * @param {ReactWrapper|ShallowWrapper} wrapper 
+ * @param {Function|Object|String} selector
+ * @param {RSTNode} wrapper
  */
-export function reduceTreeBySelector(selector, wrapper) {
-  const root = wrapper.getNodeInternal();
+export function reduceTreeBySelector(selector, root) {
   let results = [];
 
   if (typeof selector === 'function' || typeof selector === 'object') {
@@ -258,12 +258,12 @@ export function reduceTreeBySelector(selector, wrapper) {
       token = tokens[index];
       /**
        * There are two types of tokens in a CSS selector:
-       * 
+       *
        * 1. Selector tokens. These target nodes directly, like
        *    type or attribute selectors. These are easy to apply
        *    because we can travserse the tree and return only
        *    the nodes that match the predicate.
-       * 
+       *
        * 2. Combinator tokens. These tokens chain together
        *    selector nodes. For example > for children, or +
        *    for adjecent siblings. These are harder to match
@@ -311,5 +311,10 @@ export function reduceTreeBySelector(selector, wrapper) {
   } else {
     throw new TypeError('Enzyme::Selector expects a string, object, or Component Constructor');
   }
-  return wrapper.wrap(results);
+  return results;
+}
+
+export function reduceTreesBySelector(selector, roots) {
+  const results = roots.map(n => reduceTreeBySelector(selector, n));
+  return unique(flatten(results));
 }
