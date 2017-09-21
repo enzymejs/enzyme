@@ -2756,6 +2756,32 @@ describe('shallow', () => {
     });
   });
 
+  describe('.getElement()', () => {
+    it('returns nodes with refs as well as well', () => {
+      class Foo extends React.Component {
+        constructor(props) {
+          super(props);
+          this.setRef = this.setRef.bind(this);
+          this.node = null;
+        }
+        setRef(node) {
+          this.node = node;
+        }
+        render() {
+          return (
+            <div>
+              <div ref={this.setRef} className="foo" />
+            </div>
+          );
+        }
+      }
+      const wrapper = shallow(<Foo />);
+      const mockNode = { mock: true };
+      wrapper.find('.foo').getElement().ref(mockNode);
+      expect(wrapper.instance().node).to.equal(mockNode);
+    });
+  });
+
   describe('.debug()', () => {
     it('should pass through to the debugNodes function', () => {
       expect(shallow(<div />).debug()).to.equal('<div />');

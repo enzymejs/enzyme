@@ -117,3 +117,14 @@ export function elementToTree(el) {
     rendered,
   };
 }
+
+export function propsWithKeysAndRef(node) {
+  if (node.ref !== null || node.key !== null) {
+    return {
+      ...node.props,
+      key: node.key,
+      ref: node.ref,
+    };
+  }
+  return node.props;
+}

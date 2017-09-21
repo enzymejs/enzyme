@@ -14,6 +14,7 @@ import {
   assertDomAvailable,
   createRenderWrapper,
   createMountWrapper,
+  propsWithKeysAndRef,
 } from 'enzyme-adapter-utils';
 
 function typeToNodeType(type) {
@@ -196,7 +197,7 @@ class ReactFifteenAdapter extends EnzymeAdapter {
   // eslint-disable-next-line class-methods-use-this, no-unused-vars
   nodeToElement(node) {
     if (!node || typeof node !== 'object') return null;
-    return React.createElement(node.type, node.props);
+    return React.createElement(node.type, propsWithKeysAndRef(node));
   }
 
   elementToNode(element) {
