@@ -17,6 +17,7 @@ import {
   withSetStateAllowed,
   createRenderWrapper,
   createMountWrapper,
+  propsWithKeysAndRef,
 } from 'enzyme-adapter-utils';
 
 const HostRoot = 3;
@@ -276,7 +277,7 @@ class ReactSixteenAdapter extends EnzymeAdapter {
   // eslint-disable-next-line class-methods-use-this, no-unused-vars
   nodeToElement(node) {
     if (!node || typeof node !== 'object') return null;
-    return React.createElement(node.type, node.props);
+    return React.createElement(node.type, propsWithKeysAndRef(node));
   }
 
   elementToNode(element) {
