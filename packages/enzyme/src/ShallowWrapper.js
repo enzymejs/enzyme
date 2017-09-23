@@ -118,7 +118,7 @@ class ShallowWrapper {
       this[RENDERER].render(nodes, options.context);
       const instance = this[RENDERER].getNode().instance;
       if (
-        options.lifecycleExperimental &&
+        !options.disableLifecycleMethods &&
         instance &&
         typeof instance.componentDidMount === 'function'
       ) {
@@ -277,7 +277,7 @@ class ShallowWrapper {
           // make sure that componentWillReceiveProps is called before shouldComponentUpdate
           let originalComponentWillReceiveProps;
           if (
-            this[OPTIONS].lifecycleExperimental &&
+            !this[OPTIONS].disableLifecycleMethods &&
             instance &&
             typeof instance.componentWillReceiveProps === 'function'
           ) {
@@ -288,7 +288,7 @@ class ShallowWrapper {
           // dirty hack: avoid calling shouldComponentUpdate twice
           let originalShouldComponentUpdate;
           if (
-            this[OPTIONS].lifecycleExperimental &&
+            !this[OPTIONS].disableLifecycleMethods &&
             instance &&
             typeof instance.shouldComponentUpdate === 'function'
           ) {
@@ -307,7 +307,7 @@ class ShallowWrapper {
               instance.shouldComponentUpdate = originalShouldComponentUpdate;
             }
             if (
-              this[OPTIONS].lifecycleExperimental &&
+              !this[OPTIONS].disableLifecycleMethods &&
               instance &&
               typeof instance.componentDidUpdate === 'function'
             ) {
