@@ -311,7 +311,11 @@ class ShallowWrapper {
               instance &&
               typeof instance.componentDidUpdate === 'function'
             ) {
-              instance.componentDidUpdate(prevProps, state, prevContext);
+              if (this[RENDERER].supportPrevContextArgumentOfComponentDidUpdate) {
+                instance.componentDidUpdate(prevProps, state, prevContext);
+              } else {
+                instance.componentDidUpdate(prevProps, state);
+              }
             }
             this.update();
           // If it doesn't need to rerender, update only its props.

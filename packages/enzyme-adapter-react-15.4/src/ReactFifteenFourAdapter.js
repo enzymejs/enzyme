@@ -146,6 +146,7 @@ class ReactFifteenFourAdapter extends EnzymeAdapter {
     let isDOM = false;
     let cachedNode = null;
     return {
+      supportPrevContextArgumentOfComponentDidUpdate: true,
       render(el, context) {
         cachedNode = el;
         /* eslint consistent-return: 0 */
