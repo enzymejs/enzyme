@@ -1,6 +1,6 @@
-# Using Enzyme with Tape and AVA
+# Using enzyme with Tape and AVA
 
-Enzyme works well with [Tape](https://github.com/substack/tape) and [AVA](https://github.com/avajs/ava).
+enzyme works well with [Tape](https://github.com/substack/tape) and [AVA](https://github.com/avajs/ava).
 Simply install it and start using it:
 
 ```bash

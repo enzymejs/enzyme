@@ -1,9 +1,9 @@
-# Using Enzyme with Lab and Code
+# Using enzyme with Lab and Code
 
 [Lab](https://github.com/hapijs/lab) is a simple test utility for node & part of the [Hapi.js](https://github.com/hapijs/hapi) framework universe. Lab's initial code borrowed heavily from [Mocha](https://github.com/mochajs/mocha). [Code](https://github.com/hapijs/code) is Lab's standard assertion library and was created as a direct rewrite of [Chai](https://github.com/chaijs).
 
 
-# Example Test: Enzyme + Lab + Code
+# Example Test: enzyme + Lab + Code
 
 ```jsx
 import { shallow, mount, render } from 'enzyme';

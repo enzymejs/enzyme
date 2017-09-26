@@ -1,6 +1,6 @@
 # Working with React 0.13
 
-If you are wanting to use Enzyme with React 0.13, but don't already have React 0.13 installed, you
+If you are wanting to use enzyme with React 0.13, but don't already have React 0.13 installed, you
 should do so:
 
 ```bash

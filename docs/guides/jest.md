@@ -1,10 +1,10 @@
-# Using Jest with Enzyme
+# Using Jest with enzyme
 
 ## Jest version 15 and up
 
-Starting with version 15, Jest [no longer mocks modules by default](https://facebook.github.io/jest/blog/2016/09/01/jest-15.html). Because of this, you no longer have to add _any_ special configuration for Jest to use it with Enzyme.
+Starting with version 15, Jest [no longer mocks modules by default](https://facebook.github.io/jest/blog/2016/09/01/jest-15.html). Because of this, you no longer have to add _any_ special configuration for Jest to use it with enzyme.
 
-Install Jest, and its Babel integrations, as recommended in the [Jest docs](https://facebook.github.io/jest/docs/getting-started.html). Install Enzyme. Then, simply require/import React, Enzyme functions, and your module at the top of a test file.
+Install Jest, and its Babel integrations, as recommended in the [Jest docs](https://facebook.github.io/jest/docs/getting-started.html). Install enzyme. Then, simply require/import React, enzyme functions, and your module at the top of a test file.
 
 ```js
 import React from 'react';
@@ -21,7 +21,7 @@ You do **not** need to include Jest's own renderer, unless you want to use it _o
 
 ## Jest prior to version 15
 
-If you are using Jest 0.9 – 14.0 with Enzyme and using Jest's automocking feature, you will need to mark react and enzyme to be unmocked in your `package.json`:
+If you are using Jest 0.9 – 14.0 with enzyme and using Jest's automocking feature, you will need to mark react and enzyme to be unmocked in your `package.json`:
 
 `package.json`:
 ```json

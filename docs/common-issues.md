@@ -12,13 +12,13 @@ selectors we currently support: https://github.com/airbnb/enzyme/blob/master/doc
 
 ### Testing third party libraries
 
-Some third party libraries are difficult or impossible to test. Enzyme's scope is severly limited to what
-React exposes and provides for us. Things like "portals" are not currently testable with Enzyme directly for that reason.
+Some third party libraries are difficult or impossible to test. enzyme's scope is severly limited to what
+React exposes and provides for us. Things like "portals" are not currently testable with enzyme directly for that reason.
 
 An example:
 
 If you are testing a library that creates a Modal, and it manually appends it to a different part of the DOM, React has lost
-track of this component, and therefore Enzyme has also lost track of it.
+track of this component, and therefore enzyme has also lost track of it.
 
 Even more so, if this library appends dom elements into react components, react still does not know about it. A library like d3 which
 appends DOM elements would be an example here.
@@ -28,7 +28,7 @@ appends DOM elements would be an example here.
 You can use the `render` API to attempt to access and assert on the appended DOM components. This will likely become natively supported
 when React natively supports Portals, which is expected to land with Fiber.
 
-If the third party solution lets you attach a `ref`, that would be the ideal scenario. With a `ref` you can then get that element from Enzyme.
+If the third party solution lets you attach a `ref`, that would be the ideal scenario. With a `ref` you can then get that element from enzyme.
 
 example
 

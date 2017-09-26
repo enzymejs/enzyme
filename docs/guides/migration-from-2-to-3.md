@@ -1,19 +1,19 @@
-# Migration Guide for Enzyme v2.x to v3.x
+# Migration Guide for enzyme v2.x to v3.x
 
-The change from Enzyme v2.x to v3.x is a more significant change than in previous major releases,
-due to the fact that the internal implementation of Enzyme has been almost completely rewritten.
+The change from enzyme v2.x to v3.x is a more significant change than in previous major releases,
+due to the fact that the internal implementation of enzyme has been almost completely rewritten.
 
-The goal of this rewrite was to address a lot of the major issues that have plagued Enzyme since
-its initial release. It was also to simultaneously remove a lot of the dependence that Enzyme has
-on react internals, and to make enzyme more "pluggable", paving the way for Enzyme to be used
+The goal of this rewrite was to address a lot of the major issues that have plagued enzyme since
+its initial release. It was also to simultaneously remove a lot of the dependence that enzyme has
+on react internals, and to make enzyme more "pluggable", paving the way for enzyme to be used
 with "React-like" libraries such as Preact and Inferno.
 
-We have done our best to make Enzyme v3 as API compatible with v2.x as possible, however there are
+We have done our best to make enzyme v3 as API compatible with v2.x as possible, however there are
 a hand full of breaking changes that we decided we needed to make, intentionally, in order to
 support this new architecture and also improve the usability of the library long-term.
 
-Airbnb has one of the largest Enzyme test suites, coming in at around 30,000 enzyme unit tests.
-After upgrading Enzyme to v3.x in Airbnb's code base, 99.6% of these tests succeeded with no
+Airbnb has one of the largest enzyme test suites, coming in at around 30,000 enzyme unit tests.
+After upgrading enzyme to v3.x in Airbnb's code base, 99.6% of these tests succeeded with no
 modifications at all. Most of the tests that broke we found to be easy to fix, and some we found to
 actually be depending on what could arguably be considered a bug in v2.x, and the breakage was
 actually desired.
@@ -25,16 +25,16 @@ find a breakage that doesn't seem to make sense to you, feel free to file an iss
 
 ## Configuring your Adapter
 
-Enzyme now has an "Adapter" system. This means that you now need to install Enzyme along with
-another module that provides the Adapter that tells Enzyme how to work with your version of React
+enzyme now has an "Adapter" system. This means that you now need to install enzyme along with
+another module that provides the Adapter that tells enzyme how to work with your version of React
 (or whatever other react-like library you are using).
 
-At the time of writing this, Enzyme publishes "officially supported" adapters for React 0.13.x,
+At the time of writing this, enzyme publishes "officially supported" adapters for React 0.13.x,
 0.14.x, 15.x, and 16.x. These adapters are npm packages of the form `enzyme-adapter-react-{{version}}`.
 
-You will want to configure Enzyme with the adapter you'd like to use before using enzyme in your
-tests. The way to do this is whith `Enzyme.configure(...)`. For example, if your project depends
-on React 16, you would want to configure Enzyme this way:
+You will want to configure enzyme with the adapter you'd like to use before using enzyme in your
+tests. The way to do this is whith `enzyme.configure(...)`. For example, if your project depends
+on React 16, you would want to configure enzyme this way:
 
 ```js
 import Enzyme from 'enzyme';
@@ -45,7 +45,7 @@ Enzyme.configure({ adapter: new Adapter() });
 
 The list of adapter npm packages for React semver ranges are as follows:
 
-| Enzyme Adapter Package | React semver compatibility |
+| enzyme Adapter Package | React semver compatibility |
 | --- | --- |
 | `enzyme-adapter-react-16` | `^16.0.0` |
 | `enzyme-adapter-react-15` | `^15.5.0` |
@@ -56,9 +56,9 @@ The list of adapter npm packages for React semver ranges are as follows:
 
 ## Element referential identity is no longer preserved
 
-Enzyme's new architecture means that the react "render tree" is transformed into an intermediate
-representation that is common across all react versions so that Enzyme can properly traverse it
-independent of React's internal representations. A side effect of this is that Enzyme no longer
+enzyme's new architecture means that the react "render tree" is transformed into an intermediate
+representation that is common across all react versions so that enzyme can properly traverse it
+independent of React's internal representations. A side effect of this is that enzyme no longer
 has access to the actual object references that were returned from `render` in your React
 components. This normally isn't much of a problem, but can manifest as a test failure in some
 cases.
@@ -91,17 +91,17 @@ const iconCount = wrapper.find(Icon).length;
 In v2.x, `iconCount` would be 1. In v3.x, it will be 2. This is because in v2.x it would find all
 of the elements matching the selector, and then remove any duplicates. Since `ICONS.success` is
 included twice in the render tree, but it's a constant that's reused, it would show up as a
-duplicate in the eyes of Enzyme v2.x. In Enzyme v3, the elements that are traversed are
+duplicate in the eyes of enzyme v2.x. In enzyme v3, the elements that are traversed are
 transformations of the underlying react elements, and are thus different references, resulting in
 two elements being found.
 
 Although this is a breaking change, I believe the new behavior is closer to what people would
-actually expect and want. Having Enzyme wrappers be immutable results in more deterministic tests
+actually expect and want. Having enzyme wrappers be immutable results in more deterministic tests
 that are less prone to flakiness from external factors.
 
 ## `children()` now has slightly different meaning
 
-Enzyme has a `.children()` method which is intended to return the rendered children of a wrapper.
+enzyme has a `.children()` method which is intended to return the rendered children of a wrapper.
 
 When using `mount(...)`, it can sometimes be unclear exactly what this would mean. Consider for
 example the following react components:
@@ -135,14 +135,14 @@ Although the `<Box ... />` element has a `children` prop of `<div className="div
 rendered children of the element that the box component renders is a `<div className="box">...</div>`
 element.
 
-Prior Enzyme v3, we would observe the following behavior:
+Prior enzyme v3, we would observe the following behavior:
 
 ```js
 wrapper.find(Box).children().debug();
 // => <div className="div" />
 ```
 
-In Enzyme v3, we now have `.children()` return the *rendered* children. In other words, it returns
+In enzyme v3, we now have `.children()` return the *rendered* children. In other words, it returns
 the element that is returned from that component's `render` function.
 
 ```js
@@ -191,18 +191,18 @@ class CurrentTime extends React.Component {
 ```
 
 In this code, there is a timer that continuously changes the rendered output of this component. This
-might be a reasonable thing to do in your application. The thing is, Enzyme has no way of knowing
-that these changes are taking place, and no way to automatically update the render tree. In Enzyme
-v2, Enzyme operated *directly* on the in-memory representation of the render tree that React itself
-had. This means that even though Enzyme couldn't know when the render tree was updated, updates
+might be a reasonable thing to do in your application. The thing is, enzyme has no way of knowing
+that these changes are taking place, and no way to automatically update the render tree. In enzyme
+v2, enzyme operated *directly* on the in-memory representation of the render tree that React itself
+had. This means that even though enzyme couldn't know when the render tree was updated, updates
 would be reflected anyway, since React *does* know.
 
-Enzyme v3 architecturally created a layer where React would create an intermediate representation
-of the render tree at an instance in time and pass that to Enzyme to traverse and inspect. This has
+enzyme v3 architecturally created a layer where React would create an intermediate representation
+of the render tree at an instance in time and pass that to enzyme to traverse and inspect. This has
 many advantages, but one of the side effects is that now the intermediate representation does not
 receive automatic updates.
 
-Enzyme does attempt to automatically "update" the root wrapper in most common scenarios, but these
+enzyme does attempt to automatically "update" the root wrapper in most common scenarios, but these
 are only the state changes that it knows about. For all other state changes, you may need to call
 `wrapper.update()` yourself.
 
@@ -236,7 +236,7 @@ class Counter extends React.Component {
 
 This is a basic "counter" component in React. Here our resulting markup is a function of
 `this.state.count`, which can get updated by the `increment` and `decrement` functions. Let's take a
-look at what some Enzyme tests with this component might look like, and when we do or don't have to
+look at what some enzyme tests with this component might look like, and when we do or don't have to
 call `update()`.
 
 ```js
@@ -259,7 +259,7 @@ wrapper.find('.dec').simulate('click');
 wrapper.find('.count').text(); // => "Count: 1"
 ```
 
-In this case Enzyme will automatically check for updates after an event simulation takes place, as
+In this case enzyme will automatically check for updates after an event simulation takes place, as
 it knows that this is a very common place for state changes to occur. In this case there is no
 difference between v2 and v3.
 
@@ -276,11 +276,11 @@ wrapper.instance().decrement();
 wrapper.find('.count').text(); // => "Count: 0" (would have been "Count: 1" in v2)
 ```
 
-The problem here is that once we grab the instance using `wrapper.instance()`, Enzyme has no way of
+The problem here is that once we grab the instance using `wrapper.instance()`, enzyme has no way of
 knowing if you are going to execute something that will cause a state transition, and thus does not
 know when to ask for an updated render tree from React. As a result, `.text()` never changes value.
 
-The fix here is to use Enzyme's `wrapper.update()` method after a state change has occurred:
+The fix here is to use enzyme's `wrapper.update()` method after a state change has occurred:
 
 ```js
 const wrapper = shallow(<Counter />);
@@ -297,7 +297,7 @@ wrapper.find('.count').text(); // => "Count: 1"
 ```
 
 In practice we have found that this isn't actually needed that often, and when it is it is not
-difficult to add. Additionally, having the Enzyme wrapper automatically update alongside the real
+difficult to add. Additionally, having the enzyme wrapper automatically update alongside the real
 render tree can result in flaky tests when writing asynchronous tests. This breaking change was
 worth the architectural benefits of the new adapter system in v3, and we believe is a better choice
 for an assertion library to take.
@@ -305,7 +305,7 @@ for an assertion library to take.
 
 ## `ref(refName)` now returns the actual ref instead of a wrapper
 
-In Enzyme v2, the wrapper returned from `mount(...)` had a prototype method on it `ref(refName)`
+In enzyme v2, the wrapper returned from `mount(...)` had a prototype method on it `ref(refName)`
 that returned a wrapper around the actual element of that ref. This has now been changed to
 return the actual ref, which we believe is a more intuitive API.
 
@@ -326,7 +326,7 @@ share the same constructor:
 
 ```js
 const wrapper = mount(<Box />);
-// this is what would happen with Enzyme v2
+// this is what would happen with enzyme v2
 expect(wrapper.ref('abc')).toBeInstanceOf(wrapper.constructor);
 ```
 
@@ -335,7 +335,7 @@ this case, it would be a DOM Element:
 
 ```js
 const wrapper = mount(<Box />);
-// this is what happens with Enzyme v3
+// this is what happens with enzyme v3
 expect(wrapper.ref('abc')).toBeInstanceOf(Element);
 ```
 
@@ -362,7 +362,7 @@ method.
 
 ## With `mount`, `.instance()` can be called at any level of the tree
 
-Enzyme now allows for you to grab the `instance()` of a wrapper at any level of the render tree,
+enzyme now allows for you to grab the `instance()` of a wrapper at any level of the render tree,
 not just at the root.  This means that you can `.find(...)` a specific component, then grab its
 instance and call `.setState(...)` or any other methods on the instance that you'd like.
 
@@ -385,11 +385,11 @@ account for this.
 
 ## Private properties and methods have been removed
 
-There are several properties that are on an Enzyme "wrapper" that were considered to be private and
+There are several properties that are on an enzyme "wrapper" that were considered to be private and
 were undocumented as a result. Despite being undocumented, people may haev been relying on them. In
 an effort to make making changes less likely to be accidentally breaking in the future, we have
 decided to make these properties properly "private". The following properties will no longer be
-accessible on Enzyme `shallow` or `mount` instances:
+accessible on enzyme `shallow` or `mount` instances:
 
 - `.node`
 - `.nodes`
@@ -401,25 +401,25 @@ accessible on Enzyme `shallow` or `mount` instances:
 
 ## Cheerio has been updated, thus `render(...)` has been updated as well
 
-Enzyme's top level `render` API returns a [Cheerio](https://github.com/cheeriojs/cheerio) object.
-The version of Cheerio that we use has been upgraded to 1.0.0. For debugging issues across Enzyme
+enzyme's top level `render` API returns a [Cheerio](https://github.com/cheeriojs/cheerio) object.
+The version of Cheerio that we use has been upgraded to 1.0.0. For debugging issues across enzyme
 v2.x and v3.x with the `render` API, we recommend checking out [Cheerio's Changelog](https://github.com/cheeriojs/cheerio/blob/48eae25c93702a29b8cd0d09c4a2dce2f912d1f4/History.md) and
-posting an issue on that repo instead of Enzyme's unless you believe it is a bug in Enzyme's use
+posting an issue on that repo instead of enzyme's unless you believe it is a bug in enzyme's use
 of the library.
 
 ## CSS Selector
 
-Enzyme v3 now uses a real CSS selector parser rather than its own incomplete parser implementation.
+enzyme v3 now uses a real CSS selector parser rather than its own incomplete parser implementation.
 This is done with [rst-selector-parser](https://github.com/aweary/rst-selector-parser) a fork of [scalpel](https://github.com/gajus/scalpel/) which is a CSS parser implemented with [nearley](https://nearley.js.org/).
-We don't think this should cause any breakages across Enzyme v2.x to v3.x, but if you believe you
+We don't think this should cause any breakages across enzyme v2.x to v3.x, but if you believe you
 have found something that did indeed break, please file an issue with us. Thank you to
 [Brandon Dail](https://github.com/aweary) for making this happen!
 
 
 ## Node Equality now ignores `undefined` values
 
-We have updated Enzyme to consider node "equality" in a semantically identical way to how react
-treats nodes. More specifically, we've updated Enzyme's algorithms to treat `undefined` props as
+We have updated enzyme to consider node "equality" in a semantically identical way to how react
+treats nodes. More specifically, we've updated enzyme's algorithms to treat `undefined` props as
 equivalent to the absence of a prop. Consider the following example:
 
 <!-- eslint react/prop-types: 0, react/prefer-stateless-function: 0 -->
@@ -431,7 +431,7 @@ class Foo extends React.Component {
 }
 ```
 
-With this component, the behavior in Enzyme v2.x the behavior would have been like:
+With this component, the behavior in enzyme v2.x the behavior would have been like:
 
 ```js
 const wrapper = shallow(<Foo />);
@@ -439,7 +439,7 @@ wrapper.equals(<div />); // => false
 wrapper.equals(<div className={undefined} id={undefined} />); // => true
 ```
 
-With Enzyme v3, the behavior is now as follows:
+With enzyme v3, the behavior is now as follows:
 ```js
 const wrapper = shallow(<Foo />);
 wrapper.equals(<div />); // => true
@@ -448,11 +448,11 @@ wrapper.equals(<div className={undefined} id={undefined} />); // => true
 
 ## Lifecycle methods
 
-Enzyme v2.x had an optional flag that could be passed in to all `shallow` calls which would make it
+enzyme v2.x had an optional flag that could be passed in to all `shallow` calls which would make it
 so that more of the component's lifecycle methods were called (such as `componentDidMount` and
 `componentDidUpdate`).
 
-With Enzyme v3, we have now turned on this mode by default, instead of making it opt-in. It is now
+With enzyme v3, we have now turned on this mode by default, instead of making it opt-in. It is now
 possible to *opt-out* instead. Additionally, you can now opt-out at a global level.
 
 If you'd like to opt out globally, you can run the following:

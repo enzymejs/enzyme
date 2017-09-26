@@ -1,6 +1,6 @@
-# Using Enzyme with Mocha
+# Using enzyme with Mocha
 
-Enzyme was originally designed to work with Mocha, so getting it up and running with Mocha should
+enzyme was originally designed to work with Mocha, so getting it up and running with Mocha should
 be no problem at all. Simply install it and start using it:
 
 ```bash

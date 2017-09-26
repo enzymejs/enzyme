@@ -1,11 +1,11 @@
-# Enzyme Guides
+# enzyme Guides
 
-- [*Using Enzyme with Browserify*](guides/browserify.md)
-- [*Using Enzyme with WebPack*](guides/webpack.md)
-- [*Using Enzyme with JSDOM*](guides/jsdom.md)
-- [*Using Enzyme with Jest*](guides/jest.md)
-- [*Using Enzyme with Karma*](guides/karma.md)
-- [*Using Enzyme with Mocha*](guides/mocha.md)
-- [*Using Enzyme with React Native*](guides/react-native.md)
-- [*Using Enzyme with Lab*](guides/lab.md)
-- [*Using Enzyme with Tape and AVA*](guides/tape-ava.md)
+- [*Using enzyme with Browserify*](guides/browserify.md)
+- [*Using enzyme with WebPack*](guides/webpack.md)
+- [*Using enzyme with JSDOM*](guides/jsdom.md)
+- [*Using enzyme with Jest*](guides/jest.md)
+- [*Using enzyme with Karma*](guides/karma.md)
+- [*Using enzyme with Mocha*](guides/mocha.md)
+- [*Using enzyme with React Native*](guides/react-native.md)
+- [*Using enzyme with Lab*](guides/lab.md)
+- [*Using enzyme with Tape and AVA*](guides/tape-ava.md)

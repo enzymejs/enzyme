@@ -1,6 +1,6 @@
 # Working with React 16
 
-If you are wanting to use Enzyme with React 16, but don't already have React 16 and react-dom
+If you are wanting to use enzyme with React 16, but don't already have React 16 and react-dom
 installed, you should do so:
 
 ```bash
