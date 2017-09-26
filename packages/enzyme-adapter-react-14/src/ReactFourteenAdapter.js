@@ -68,6 +68,13 @@ function instanceToTree(inst) {
 }
 
 class ReactFifteenAdapter extends EnzymeAdapter {
+  constructor() {
+    super();
+    this.options = {
+      ...this.options,
+      supportPrevContextArgumentOfComponentDidUpdate: true,
+    };
+  }
   createMountRenderer(options) {
     assertDomAvailable('mount');
     const domNode = options.attachTo || global.document.createElement('div');
@@ -116,7 +123,6 @@ class ReactFifteenAdapter extends EnzymeAdapter {
     let isDOM = false;
     let cachedNode = null;
     return {
-      supportPrevContextArgumentOfComponentDidUpdate: true,
       render(el, context) {
         cachedNode = el;
         /* eslint consistent-return: 0 */

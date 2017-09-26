@@ -311,7 +311,7 @@ class ShallowWrapper {
               instance &&
               typeof instance.componentDidUpdate === 'function'
             ) {
-              if (this[RENDERER].supportPrevContextArgumentOfComponentDidUpdate) {
+              if (adapter.options.supportPrevContextArgumentOfComponentDidUpdate) {
                 instance.componentDidUpdate(prevProps, state, prevContext);
               } else {
                 instance.componentDidUpdate(prevProps, state);
@@ -405,7 +405,11 @@ class ShallowWrapper {
           instance &&
           typeof instance.componentDidUpdate === 'function'
         ) {
-          instance.componentDidUpdate(prevProps, prevState, prevContext);
+          if (adapter.options.supportPrevContextArgumentOfComponentDidUpdate) {
+            instance.componentDidUpdate(prevProps, prevState, prevContext);
+          } else {
+            instance.componentDidUpdate(prevProps, prevState);
+          }
         }
         this.update();
       });
