@@ -70,8 +70,10 @@ function matchAttributeSelector(node, token) {
       return Object.prototype.hasOwnProperty.call(nodeProps, token.name);
     }
     // Only the exact value operator ("=") can match non-strings
-    if (typeof nodePropValue !== 'string' && operator !== EXACT_ATTRIBUTE_OPERATOR) {
+    if (typeof nodePropValue !== 'string' || typeof value !== 'string') {
+      if (operator !== EXACT_ATTRIBUTE_OPERATOR) {
       return false;
+    }
     }
     switch (operator) {
       /**
