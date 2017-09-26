@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom';
 import ReactDOMServer from 'react-dom/server';
 // eslint-disable-next-line import/no-unresolved, import/extensions
 import TestUtils from 'react-dom/test-utils';
+// eslint-disable-next-line import/no-unresolved, import/extensions
 import ShallowRenderer from 'react-test-renderer/shallow';
 import values from 'object.values';
 import { EnzymeAdapter } from 'enzyme';

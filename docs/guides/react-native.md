@@ -1,7 +1,7 @@
-# Using Enzyme to Test Components in React Native
+# Using enzyme to Test Components in React Native
 
 As of v0.18, React Native uses React as a dependency rather than a forked version of the library,
-which means it is now possible to use Enzyme's `shallow` with React Native components.
+which means it is now possible to use enzyme's `shallow` with React Native components.
 
 Unfortunately, React Native has many environmental dependencies that can be hard to simulate without
 a host device.
@@ -38,8 +38,3 @@ mocha --require react-native-mock/mock --recursive path/to/test/dir
 // This will mutate `react-native`'s require cache with `react-native-mock`'s.
 require('react-native-mock/mock'); // <-- side-effects!!!
 ```
-
-
-## Example Projects
-
-- [enzyme-example-react-native](https://github.com/lelandrichardson/enzyme-example-react-native)

@@ -1,4 +1,4 @@
-# Using Enzyme with JSDOM
+# Using enzyme with JSDOM
 
 [JSDOM](https://github.com/tmpvar/jsdom) is a JavaScript based headless browser that can be used to create a realistic testing environment.
 
@@ -115,9 +115,3 @@ nvm use 0.12
 ```bash
 nvm use 4
 ```
-
-
-
-## Example Projects
-
-- [enzyme-example-mocha](https://github.com/lelandrichardson/enzyme-example-mocha)

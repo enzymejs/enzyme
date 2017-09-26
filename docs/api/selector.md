@@ -1,12 +1,12 @@
-# Enzyme Selectors
+# enzyme Selectors
 
-Many methods in Enzyme's API accept a *selector* as an argument. Selectors in Enzyme can fall into
+Many methods in enzyme's API accept a *selector* as an argument. Selectors in enzyme can fall into
 one of the following four categories:
 
 
 ### 1. A Valid CSS Selector
 
-Enzyme supports a subset of valid CSS selectors to find nodes inside a render tree. Support is as
+enzyme supports a subset of valid CSS selectors to find nodes inside a render tree. Support is as
 follows:
 
 - class syntax (`.foo`, `.foo-bar`, etc.)
@@ -40,7 +40,7 @@ input#input-name
 label[foo=true]
 ```
 
-Enzyme also gives support for the following contextual selectors
+enzyme also gives support for the following contextual selectors
 
 ```
 .foo .bar
@@ -60,7 +60,7 @@ enzyme that will likely be focused on in the future.
 
 ### 2. A React Component Constructor
 
-Enzyme allows you to find components based on their constructor. You can pass in the reference to
+enzyme allows you to find components based on their constructor. You can pass in the reference to
 the component's constructor:
 
 ```jsx
@@ -76,7 +76,7 @@ const myComponents = wrapper.find(MyComponent);
 
 ### 3. A React Component's displayName
 
-Enzyme allows you to find components based on a component's `displayName`. If a component exists
+enzyme allows you to find components based on a component's `displayName`. If a component exists
 in a render tree where its `displayName` is set and has its first character as a capital letter,
 a string can be used to find it:
 
@@ -99,7 +99,7 @@ selector using the tag syntax.
 
 ### 4. Object Property Selector
 
-Enzyme allows you to find components and nodes based on a subset of their properties:
+enzyme allows you to find components and nodes based on a subset of their properties:
 
 
 ```jsx

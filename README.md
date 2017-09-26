@@ -7,12 +7,69 @@ Enzyme
 [![Discord Channel](https://img.shields.io/badge/discord-testing@reactiflux-738bd7.svg?style=flat-square)](https://discord.gg/0ZcbPKXt5bY8vNTA)
 
 
-
 Enzyme is a JavaScript Testing utility for React that makes it easier to assert, manipulate,
 and traverse your React Components' output.
 
 Enzyme's API is meant to be intuitive and flexible by mimicking jQuery's API for DOM manipulation
 and traversal.
+
+Upgrading from Enzyme 2.x or React < 16
+===========
+
+Are you here to check whether or not Enzyme is compatible with React 16? Are you currently using
+Enzyme 2.x? Great! Check out our [migration guide](/docs/guides/migration-from-2-to-3.md) for help
+moving on to Enzyme v3 where React 16 is supported.
+
+### [Installation](/docs/installation/README.md)
+
+To get started with enzyme, you can simply install it via npm. You will need to install enzyme
+along with an Adapter corresponding to the version of react (or other UI Component library) you
+are using. For instance, if you are using enzyme with React 16, you can run:
+
+```bash
+npm i --save-dev enzyme enzyme-adapter-react-16
+```
+
+Each adapter may have additional peer dependencies which you will need to install as well. For instance,
+`enzyme-adapter-react-16` has peer dependencies on `react`, `react-dom`, and `react-test-renderer`.
+
+At the moment, Enzyme has adapters that provide compatibility with `React 16.x`, `React 15.x`,
+`React 0.14.x` and `React 0.13.x`.
+
+The following adapters are officially provided by enzyme, and have the following compatibility with
+React:
+
+| Enzyme Adapter Package | React semver compatibility |
+| --- | --- |
+| `enzyme-adapter-react-16` | `^16.0.0` |
+| `enzyme-adapter-react-15` | `^15.5.0` |
+| `enzyme-adapter-react-15.4` | `15.0.0-0 - 15.4.x` |
+| `enzyme-adapter-react-14` | `^0.14.0` |
+| `enzyme-adapter-react-13` | `^0.13.0` |
+
+Finally, you need to configure enzyme to use the adapter you want it to use. To do this, you can use
+the top level `configure(...)` API.
+
+```js
+import Enzyme from 'enzyme';
+import Adapter from 'enzyme-adapter-react-16';
+
+Enzyme.configure({ adapter: new Adapter() });
+```
+
+3rd Party Adapters
+=============
+
+It is possible for the community to create additional (non-official) adapters that will make enzyme
+work with other libraries. If you have made one and it's not included in the list below, feel free
+to make a PR to this README and add a link to it! The known 3rd party adapters are:
+
+| Adapter Package | For Library | Status |
+| --- | --- | --- |
+| [`preact-enzyme-adapter`](https://github.com/aweary/preact-enzyme-adapater) | [`preact`](https://github.com/developit/preact) | (work in progress) |
+
+Running Enzyme Tests
+===========
 
 Enzyme is unopinionated regarding which test runner or assertion library you use, and should be
 compatible with all major test runners and assertion libraries out there. The documentation and
@@ -48,32 +105,6 @@ testing your React components, you can consider using:
 [Using Enzyme with Lab](/docs/guides/lab.md)
 
 [Using Enzyme with Tape and AVA](/docs/guides/tape-ava.md)
-
-### [Installation](/docs/installation/README.md)
-
-To get started with enzyme, you can simply install it with npm:
-
-```bash
-npm i --save-dev enzyme
-```
-
-Enzyme is currently compatible with `React 15.x`, `React 0.14.x` and `React 0.13.x`. In order to
-achieve this compatibility, some dependencies cannot be explicitly listed in our `package.json`.
-
-If you are using `React 0.14` or `React <15.5`, in addition to `enzyme`, you will have to ensure that
-you also have the following npm modules installed if they were not already:
-
-```bash
-npm i --save-dev react-addons-test-utils react-dom
-```
-
-If you are using `React >=15.5`, in addition to `enzyme`, you will have to ensure that you also have
-the following npm modules installed if they were not already:
-
-```bash
-npm i --save-dev react-test-renderer react-dom
-```
-
 
 Basic Usage
 ===========
