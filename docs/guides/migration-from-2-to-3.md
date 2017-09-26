@@ -422,6 +422,7 @@ We have updated Enzyme to consider node "equality" in a semantically identical w
 treats nodes. More specifically, we've updated Enzyme's algorithms to treat `undefined` props as
 equivalent to the absence of a prop. Consider the following example:
 
+<!-- eslint react/prop-types: 0, react/prefer-stateless-function: 0 -->
 ```js
 class Foo extends React.Component {
   render() {
@@ -443,4 +444,32 @@ With Enzyme v3, the behavior is now as follows:
 const wrapper = shallow(<Foo />);
 wrapper.equals(<div />); // => true
 wrapper.equals(<div className={undefined} id={undefined} />); // => true
+```
+
+## Lifecycle methods
+
+Enzyme v2.x had an optional flag that could be passed in to all `shallow` calls which would make it
+so that more of the component's lifecycle methods were called (such as `componentDidMount` and
+`componentDidUpdate`).
+
+With Enzyme v3, we have now turned on this mode by default, instead of making it opt-in. It is now
+possible to *opt-out* instead. Additionally, you can now opt-out at a global level.
+
+If you'd like to opt out globally, you can run the following:
+
+```js
+import Enzyme from 'enzyme';
+
+Enzyme.configure({ disableLifecycleMethods: true });
+```
+
+This will default enzyme back to the previous behavior globally. If instead you'd only like to opt
+enzyme to the previous behavior for a specific test, you can do the following:
+
+```js
+import { shallow } from 'enzyme';
+
+// ...
+
+const wrapper = shallow(<Component />, { disableLifecycleMethods: true });
 ```

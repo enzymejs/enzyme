@@ -75,6 +75,36 @@ Enzyme uses [lerna](https://github.com/lerna/lerna) to structure its repo, and h
 to publish out of this one repo. We use lerna's "independent" mode, which means that the versioning
 of each package in the repo is versioned independently.
 
+We are waiting on [this issue](https://github.com/lerna/lerna/issues/955) to be fixed, so that
+`peerDependencies` do not get updated with patch updates.
+
+Until this issue is fixed, we will publish each package manually instead of with `lerna publish`. In
+order to do this, we will:
+
+For enzyme:
+
+```bash
+# ... update version in enzyme/package.json, make changes to CHANGELOG, etc.
+cd packages/enzyme
+git commit -m v{version}
+git tag -a -m v{version}
+git push --follow-tags
+npm publish
+```
+
+For other packages
+
+```bash
+# ... update version in {package}/package.json, make changes to CHANGELOG, etc.
+cd packages/{package}
+git commit -m "{package}: v{version}"
+git tag -a -m "{package}: v{version}"
+git push --follow-tags
+npm publish
+```
+
+Once we are able to use `lerna publish`, the process will be as follows:
+
 Lerna by default will only publish packages that have changed since the last release. It will also
 create a tagged commit for each release.
 
