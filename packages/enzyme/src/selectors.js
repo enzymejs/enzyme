@@ -142,7 +142,7 @@ export function buildPredicate(selector) {
   // If the selector is an non-empty object, treat the keys/values as props
   if (typeof selector === 'object') {
     if (!Array.isArray(selector) && selector !== null && !isEmpty(selector)) {
-      const hasUndefinedValues = values(selector).some(value => value === undefined);
+      const hasUndefinedValues = values(selector).some(value => typeof value === 'undefined');
       if (hasUndefinedValues) {
         throw new TypeError('Enzyme::Props can’t have `undefined` values. Try using ‘findWhere()’ instead.');
       }

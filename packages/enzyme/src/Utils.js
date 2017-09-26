@@ -25,7 +25,7 @@ export function isCustomComponentElement(inst, adapter) {
 function propsOfNode(node) {
   return entries((node && node.props) || {})
     .filter(([, value]) => typeof value !== 'undefined')
-    .reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {});
+    .reduce((acc, [key, value]) => Object.assign(acc, { [key]: value }), {});
 }
 
 export function typeOfNode(node) {
@@ -141,7 +141,7 @@ function childrenToArray(children) {
   const result = [];
 
   const push = (el) => {
-    if (el === null || el === false || el === undefined) return;
+    if (el === null || el === false || typeof el === 'undefined') return;
     result.push(el);
   };
 
@@ -161,7 +161,7 @@ export function childrenToSimplifiedArray(nodeChildren) {
     const child = childrenArray[i];
     const previousChild = simplifiedArray.pop();
 
-    if (previousChild === undefined) {
+    if (typeof previousChild === 'undefined') {
       simplifiedArray.push(child);
     } else if (isTextualNode(child) && isTextualNode(previousChild)) {
       simplifiedArray.push(previousChild + child);
@@ -220,11 +220,11 @@ export function nodeHasProperty(node, propKey, propValue) {
   }
   const nodePropValue = nodeProps[propKey];
 
-  if (nodePropValue === undefined) {
+  if (typeof nodePropValue === 'undefined') {
     return false;
   }
 
-  if (propValue !== undefined) {
+  if (typeof propValue !== 'undefined') {
     return is(nodePropValue, propValue);
   }
 

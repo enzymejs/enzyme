@@ -40,11 +40,11 @@ export function treeFilter(tree, fn) {
  * To support sibling selectors we need to be able to find
  * the siblings of a node. The easiest way to do that is find
  * the parent of the node and access its children.
- * 
+ *
  * This would be unneeded if the RST spec included sibling pointers
  * such as node.nextSibling and node.prevSibling
- * @param {*} root 
- * @param {*} targetNode 
+ * @param {*} root
+ * @param {*} targetNode
  */
 export function findParentNode(root, targetNode) {
   const results = treeFilter(
@@ -113,7 +113,7 @@ export function nodeMatchesObjectProps(node, props) {
 }
 
 export function getTextFromNode(node) {
-  if (node === null || node === undefined) {
+  if (node == null) {
     return '';
   }
 

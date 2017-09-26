@@ -699,7 +699,7 @@ class ShallowWrapper {
       throw new Error('ShallowWrapper::state() can only be called on class components');
     }
     const _state = this.single('state', () => this.instance().state);
-    if (name !== undefined) {
+    if (typeof name !== 'undefined') {
       return _state[name];
     }
     return _state;

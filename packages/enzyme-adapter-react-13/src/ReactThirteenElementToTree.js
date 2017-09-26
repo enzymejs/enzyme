@@ -23,7 +23,7 @@ export default function elementToTree(el) {
   let rendered = null;
   if (Array.isArray(children)) {
     rendered = flatten(children, true).map(elementToTree);
-  } else if (children !== undefined) {
+  } else if (typeof children !== 'undefined') {
     rendered = elementToTree(children);
   }
   return {
