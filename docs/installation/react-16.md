@@ -44,7 +44,7 @@ ES5:
 var Enzyme = require('enzyme');
 var Adapter = require('enzyme-adapter-react-16');
 
-configure({ adapter: new Adapter() });
+Enzyme.configure({ adapter: new Adapter() });
 ```
 
 <!-- eslint no-var: 0 -->
