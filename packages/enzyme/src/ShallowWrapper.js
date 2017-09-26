@@ -389,6 +389,7 @@ class ShallowWrapper {
           originalShouldComponentUpdate = instance.shouldComponentUpdate;
           instance.shouldComponentUpdate = (...args) => {
             shouldRender = originalShouldComponentUpdate.apply(instance, args);
+            instance.shouldComponentUpdate = originalShouldComponentUpdate;
             return shouldRender;
           };
         }
@@ -401,9 +402,6 @@ class ShallowWrapper {
           typeof instance.componentDidUpdate === 'function'
         ) {
           instance.componentDidUpdate(prevProps, prevState, prevContext);
-        }
-        if (originalShouldComponentUpdate) {
-          instance.shouldComponentUpdate = originalShouldComponentUpdate;
         }
         this.update();
       });
