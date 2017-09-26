@@ -369,7 +369,40 @@ class ShallowWrapper {
     }
     this.single('setState', () => {
       withSetStateAllowed(() => {
-        this.instance().setState(state, callback);
+        const adapter = getAdapter(this[OPTIONS]);
+        const instance = this.instance();
+        const prevProps = instance.props;
+        const prevState = instance.state;
+        const prevContext = instance.context;
+        let shouldRender = true;
+        // This is a dirty hack but it requires to know the result of shouldComponentUpdate.
+        // When shouldComponentUpdate returns false we shouldn't call componentDidUpdate.
+        // shouldComponentUpdate is called in `instance.setState`
+        // so we replace shouldComponentUpdate to know the result and restore it later.
+        let originalShouldComponentUpdate;
+        if (
+          this[OPTIONS].lifecycleExperimental &&
+          adapter.options.enableComponentDidUpdateOnSetState &&
+          instance &&
+          typeof instance.shouldComponentUpdate === 'function'
+        ) {
+          originalShouldComponentUpdate = instance.shouldComponentUpdate;
+          instance.shouldComponentUpdate = (...args) => {
+            shouldRender = originalShouldComponentUpdate.apply(instance, args);
+            instance.shouldComponentUpdate = originalShouldComponentUpdate;
+            return shouldRender;
+          };
+        }
+        instance.setState(state, callback);
+        if (
+          shouldRender &&
+          this[OPTIONS].lifecycleExperimental &&
+          adapter.options.enableComponentDidUpdateOnSetState &&
+          instance &&
+          typeof instance.componentDidUpdate === 'function'
+        ) {
+          instance.componentDidUpdate(prevProps, prevState, prevContext);
+        }
         this.update();
       });
     });

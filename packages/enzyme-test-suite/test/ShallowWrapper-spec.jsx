@@ -3441,8 +3441,7 @@ describe('shallow', () => {
 
     context('updating state', () => {
       // NOTE: There is a bug in react 16 shallow renderer where prevContext is not passed
-      // into componentDidUpdate. Skip this test for react 16 only. add back in if it gets fixed.
-      itIf(!REACT16, 'should call shouldComponentUpdate, componentWillUpdate and componentDidUpdate', () => {
+      it('should call shouldComponentUpdate, componentWillUpdate and componentDidUpdate', () => {
         const spy = sinon.spy();
 
         class Foo extends React.Component {

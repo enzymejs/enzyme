@@ -146,6 +146,13 @@ function nodeToHostNode(_node) {
 }
 
 class ReactSixteenAdapter extends EnzymeAdapter {
+  constructor() {
+    super();
+    this.options = {
+      ...this.options,
+      enableComponentDidUpdateOnSetState: true,
+    };
+  }
   createMountRenderer(options) {
     assertDomAvailable('mount');
     const domNode = options.attachTo || global.document.createElement('div');
