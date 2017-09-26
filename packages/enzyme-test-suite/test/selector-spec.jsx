@@ -426,6 +426,56 @@ describe('selectors', () => {
         expectAttributeMatch(<div data-foo={NaN} />, '[data-foo=-Infinity]', false);
         expectAttributeMatch(<div data-foo={0} />, '[data-foo=Infinity]', false);
       });
+
+      it('whitespace list attribute selector', () => {
+        expectAttributeMatch(<div rel="foo bar baz" />, '[rel~="bar"]', true);
+        expectAttributeMatch(<div rel="foo bar baz" />, '[rel~="baz"]', true);
+        expectAttributeMatch(<div rel="foo bar baz" />, '[rel~="foo"]', true);
+        expectAttributeMatch(<div rel="foo bar baz" />, '[rel~="foo bar"]', false);
+        expectAttributeMatch(<div rel={1} />, '[rel~=1]', false);
+        expectAttributeMatch(<div rel="1" />, '[rel~=1]', false);
+      });
+
+      it('hypen attribute selector', () => {
+        expectAttributeMatch(<a hrefLang="en-US" />, '[hrefLang|="en"]', true);
+        expectAttributeMatch(<a hrefLang="en-US" />, '[hrefLang|="en-US"]', true);
+        expectAttributeMatch(<a hrefLang="en-US" />, '[hrefLang|="US"]', false);
+        expectAttributeMatch(<a hrefLang="en-US" />, '[hrefLang|="enUS"]', false);
+        expectAttributeMatch(<a hrefLang={1} />, '[hrefLang|=1]', false);
+        expectAttributeMatch(<a hrefLang="1" />, '[hrefLang|=1]', false);
+      });
+
+      it('prefix attribute operator', () => {
+        expectAttributeMatch(<img alt="" src="foo-bar.jpg" />, '[src^="foo"]', true);
+        expectAttributeMatch(<img alt="" src="foo-bar.jpg" />, '[src^="foo-bar"]', true);
+        expectAttributeMatch(<img alt="" src="foo-bar.jpg" />, '[src^="foo-bar.jpg"]', true);
+        expectAttributeMatch(<img alt="" src="foo-bar.jpg" />, '[src^="bar"]', false);
+        expectAttributeMatch(<img alt="" src="foo-bar.jpg" />, '[src^=""]', false);
+        expectAttributeMatch(<img alt="" src={1} />, '[src^=1]', false);
+        expectAttributeMatch(<img alt="" src="1" />, '[src^=1]', false);
+      });
+
+      it('suffix attribute operator', () => {
+        expectAttributeMatch(<img alt="" src="foo-bar.jpg" />, '[src$=".jpg"]', true);
+        expectAttributeMatch(<img alt="" src="foo-bar.jpg" />, '[src$="bar.jpg"]', true);
+        expectAttributeMatch(<img alt="" src="foo-bar.jpg" />, '[src$="foo-bar.jpg"]', true);
+        expectAttributeMatch(<img alt="" src="foo-bar.jpg" />, '[src$="foo"]', false);
+        expectAttributeMatch(<img alt="" src="foo-bar.jpg" />, '[src$=""]', false);
+        expectAttributeMatch(<img alt="" src={1} />, '[src$=1]', false);
+        expectAttributeMatch(<img alt="" src="1" />, '[src$=1]', false);
+      });
+
+      it('substring attribute operator', () => {
+        expectAttributeMatch(<div id="foo bar baz" />, '[id*="foo"]', true);
+        expectAttributeMatch(<div id="foo bar baz" />, '[id*="foo bar"]', true);
+        expectAttributeMatch(<div id="foo bar baz" />, '[id*="foo bar baz"]', true);
+        expectAttributeMatch(<div id="foo bar baz" />, '[id*="foo "]', true);
+        expectAttributeMatch(<div id="foo bar baz" />, '[id*="fo"]', true);
+        expectAttributeMatch(<div id="foo bar baz" />, '[id*="foz"]', false);
+        expectAttributeMatch(<div id="foo bar baz" />, '[id*=1]', false);
+        expectAttributeMatch(<div id={1} />, '[id*=1]', false);
+        expectAttributeMatch(<div id="1" />, '[id*=1]', false);
+      });
     });
   });
 });
