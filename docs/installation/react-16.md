@@ -16,7 +16,7 @@ npm i --save-dev react-test-renderer@16
 Next, to get started with enzyme, you can simply install it with npm:
 
 ```bash
-npm i --save-dev enzyme enzyme-react-adapter-16
+npm i --save-dev enzyme enzyme-adapter-react-16
 ```
 
 And then you're ready to go!  In your test files you can simply `require` or `import` enzyme:
