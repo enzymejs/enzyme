@@ -611,7 +611,7 @@ class ReactWrapper {
       throw new Error('ReactWrapper::state() can only be called on the root');
     }
     const _state = this.single('state', () => this.instance().state);
-    if (name !== undefined) {
+    if (typeof name !== 'undefined') {
       return _state[name];
     }
     return _state;
@@ -635,7 +635,7 @@ class ReactWrapper {
       throw new Error('ReactWrapper::context() can only be called on components with instances');
     }
     const _context = instance.context;
-    if (name !== undefined) {
+    if (typeof name !== 'undefined') {
       return _context[name];
     }
     return _context;

@@ -48,6 +48,13 @@ describe('Utils', () => {
       )).to.equal(false);
     });
 
+    it('should skip undefined props', () => {
+      expect(nodeEqual(
+        <div id="foo" className={undefined} />,
+        <div id="foo" />,
+      )).to.equal(true);
+    });
+
     it('should check children as well', () => {
       expect(nodeEqual(
         <div>

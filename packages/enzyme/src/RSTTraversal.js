@@ -1,4 +1,5 @@
 import flatten from 'lodash/flatten';
+import entries from 'object.entries';
 import isSubset from 'is-subset';
 import functionName from 'function.prototype.name';
 import { nodeHasProperty } from './Utils';
@@ -39,11 +40,11 @@ export function treeFilter(tree, fn) {
  * To support sibling selectors we need to be able to find
  * the siblings of a node. The easiest way to do that is find
  * the parent of the node and access its children.
- * 
+ *
  * This would be unneeded if the RST spec included sibling pointers
  * such as node.nextSibling and node.prevSibling
- * @param {*} root 
- * @param {*} targetNode 
+ * @param {*} root
+ * @param {*} targetNode
  */
 export function findParentNode(root, targetNode) {
   const results = treeFilter(
@@ -98,12 +99,21 @@ export function nodeHasId(node, id) {
 
 export { nodeHasProperty };
 
+const CAN_NEVER_MATCH = {};
+function replaceUndefined(v) {
+  return typeof v !== 'undefined' ? v : CAN_NEVER_MATCH;
+}
+function replaceUndefinedValues(obj) {
+  return entries(obj)
+    .reduce((acc, [k, v]) => ({ ...acc, [k]: replaceUndefined(v) }), {});
+}
+
 export function nodeMatchesObjectProps(node, props) {
-  return isSubset(propsOfNode(node), props);
+  return isSubset(propsOfNode(node), replaceUndefinedValues(props));
 }
 
 export function getTextFromNode(node) {
-  if (node === null || node === undefined) {
+  if (node == null) {
     return '';
   }
 
