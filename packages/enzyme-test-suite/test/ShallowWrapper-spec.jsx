@@ -3475,7 +3475,7 @@ describe('shallow', () => {
           },
         );
         wrapper.setState({ foo: 'baz' });
-        expect(spy.args).to.deep.equal([
+        const expected = [
           [
             'render',
           ],
@@ -3494,13 +3494,16 @@ describe('shallow', () => {
           [
             'render',
           ],
-          [
+        ];
+        if (!REACT16) {
+          expected.push([
             'componentDidUpdate',
             { foo: 'props' }, { foo: 'props' },
             { foo: 'bar' }, { foo: 'baz' },
-            REACT16 ? undefined : { foo: 'context' },
-          ],
-        ]);
+            { foo: 'context' },
+          ]);
+        }
+        expect(spy.args).to.deep.equal(expected);
       });
 
       it('should cancel rendering when Component returns false in shouldComponentUpdate', () => {
