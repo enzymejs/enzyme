@@ -414,3 +414,33 @@ This is done with [rst-selector-parser](https://github.com/aweary/rst-selector-p
 We don't think this should cause any breakages across Enzyme v2.x to v3.x, but if you believe you
 have found something that did indeed break, please file an issue with us. Thank you to
 [Brandon Dail](https://github.com/aweary) for making this happen!
+
+
+## Node Equality now ignores `undefined` values
+
+We have updated Enzyme to consider node "equality" in a semantically identical way to how react
+treats nodes. More specifically, we've updated Enzyme's algorithms to treat `undefined` props as
+equivalent to the absence of a prop. Consider the following example:
+
+```js
+class Foo extends React.Component {
+  render() {
+    return <div className={this.props.foo} id={this.props.bar} />;
+  }
+}
+```
+
+With this component, the behavior in Enzyme v2.x the behavior would have been like:
+
+```js
+const wrapper = shallow(<Foo />);
+wrapper.equals(<div />); // => false
+wrapper.equals(<div className={undefined} id={undefined} />); // => true
+```
+
+With Enzyme v3, the behavior is now as follows:
+```js
+const wrapper = shallow(<Foo />);
+wrapper.equals(<div />); // => true
+wrapper.equals(<div className={undefined} id={undefined} />); // => true
+```
