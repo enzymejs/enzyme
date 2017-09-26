@@ -49,6 +49,7 @@ module.exports = function karma(config) {
     plugins: [
       'karma-chrome-launcher',
       'karma-firefox-launcher',
+      'karma-phantomjs-launcher',
       'karma-mocha',
       'karma-webpack',
       'karma-sourcemap-loader',
@@ -74,6 +75,7 @@ module.exports = function karma(config) {
     ],
 
     browsers: [
+      'PhantomJS',
       process.env.TRAVIS ? 'Chrome_travis' : 'Chrome',
       'Firefox',
     ],
