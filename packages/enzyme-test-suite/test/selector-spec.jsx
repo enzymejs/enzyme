@@ -21,8 +21,16 @@ const tests = [
   },
 ];
 
+let expectAttributeMatch;
+
 describe('selectors', () => {
   tests.forEach(({ describeMethod, name, renderMethod }) => {
+    before(() => {
+      expectAttributeMatch = (element, selector, expected) => {
+        const wrapper = renderMethod(element);
+        expect(wrapper.is(selector)).to.equal(expected);
+      };
+    });
     describeMethod(name, () => {
       it('simple descendent', () => {
         const wrapper = renderMethod((
@@ -349,6 +357,74 @@ describe('selectors', () => {
         ));
         expect(wrapper.find('Wrapped(Foo)')).to.have.lengthOf(1);
         expect(wrapper.find('Wrapped(Twice(Bar))')).to.have.lengthOf(1);
+      });
+
+      it('should parse booleans', () => {
+        expectAttributeMatch(<div hidden />, '[hidden=true]', true);
+        expectAttributeMatch(<div hidden />, '[hidden=false]', false);
+        expectAttributeMatch(<div hidden />, '[hidden="true"]', false);
+        expectAttributeMatch(<div hidden={false} />, '[hidden=false]', true);
+        expectAttributeMatch(<div hidden={false} />, '[hidden=true]', false);
+        expectAttributeMatch(<div hidden={false} />, '[hidden="false"]', false);
+      });
+
+      it('should parse numeric literals', () => {
+        expectAttributeMatch(<div data-foo={2.3} />, '[data-foo=2.3]', true);
+        expectAttributeMatch(<div data-foo={2} />, '[data-foo=2]', true);
+        expectAttributeMatch(<div data-foo={2} />, '[data-foo="2abc"]', false);
+        expectAttributeMatch(<div data-foo={2} />, '[data-foo="abc2"]', false);
+        expectAttributeMatch(<div data-foo={-2} />, '[data-foo=-2]', true);
+        // @TODO this is failing due to a parser issue
+        // expectAttributeMatch(<div data-foo={2e8} />, '[data-foo=2e8]', true);
+        expectAttributeMatch(<div data-foo={Infinity} />, '[data-foo=Infinity]', true);
+        expectAttributeMatch(<div data-foo={Infinity} />, '[data-foo=-Infinity]', false);
+        expectAttributeMatch(<div data-foo={-Infinity} />, '[data-foo=-Infinity]', true);
+        expectAttributeMatch(<div data-foo={-Infinity} />, '[data-foo=Infinity]', false);
+      });
+
+      it('should parse zeroes properly', () => {
+        expectAttributeMatch(<div data-foo={0} />, '[data-foo=0]', true);
+        expectAttributeMatch(<div data-foo={0} />, '[data-foo=+0]', true);
+        expectAttributeMatch(<div data-foo={-0} />, '[data-foo=-0]', true);
+        expectAttributeMatch(<div data-foo={-0} />, '[data-foo=0]', false);
+        expectAttributeMatch(<div data-foo={0} />, '[data-foo=-0]', false);
+        expectAttributeMatch(<div data-foo={1} />, '[data-foo=0]', false);
+        expectAttributeMatch(<div data-foo={2} />, '[data-foo=-0]', false);
+      });
+
+      it('should work with empty strings', () => {
+        expectAttributeMatch(<div className="" />, '[className=""]', true);
+        expectAttributeMatch(<div className={''} />, '[className=""]', true);
+        expectAttributeMatch(<div className={'bar'} />, '[className=""]', false);
+      });
+
+      it('should work with NaN', () => {
+        expectAttributeMatch(<div data-foo={NaN} />, '[data-foo=NaN]', true);
+        expectAttributeMatch(<div data-foo={0} />, '[data-foo=NaN]', false);
+      });
+
+      it('should work with null', () => {
+        expectAttributeMatch(<div data-foo={null} />, '[data-foo=null]', true);
+        expectAttributeMatch(<div data-foo={0} />, '[data-foo=null]', false);
+      });
+
+      it('should work with false', () => {
+        expectAttributeMatch(<div data-foo={false} />, '[data-foo=false]', true);
+        expectAttributeMatch(<div data-foo={0} />, '[data-foo=false]', false);
+      });
+      it('should work with ±Infinity', () => {
+        expectAttributeMatch(<div data-foo={Infinity} />, '[data-foo=Infinity]', true);
+        expectAttributeMatch(<div data-foo={Infinity} />, '[data-foo=+Infinity]', true);
+        expectAttributeMatch(<div data-foo={Infinity} />, '[data-foo=-Infinity]', false);
+        expectAttributeMatch(<div data-foo={Infinity} />, '[data-foo=NaN]', false);
+        expectAttributeMatch(<div data-foo={0} />, '[data-foo=Infinity]', false);
+        expectAttributeMatch(<div data-foo={-Infinity} />, '[data-foo=-Infinity]', true);
+        expectAttributeMatch(<div data-foo={-Infinity} />, '[data-foo=Infinity]', false);
+        expectAttributeMatch(<div data-foo={-Infinity} />, '[data-foo="-Infinity"]', false);
+        expectAttributeMatch(<div data-foo={-Infinity} />, '[data-foo=NaN]', false);
+        expectAttributeMatch(<div data-foo={NaN} />, '[data-foo=Infinity]', false);
+        expectAttributeMatch(<div data-foo={NaN} />, '[data-foo=-Infinity]', false);
+        expectAttributeMatch(<div data-foo={0} />, '[data-foo=Infinity]', false);
       });
     });
   });

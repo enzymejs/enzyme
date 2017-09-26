@@ -4,11 +4,11 @@ import { expect } from 'chai';
 import { elementToTree } from 'enzyme-adapter-utils';
 import {
   hasClassName,
-  nodeHasProperty,
   treeForEach,
   treeFilter,
   pathToNode,
   getTextFromNode,
+  nodeHasProperty
 } from 'enzyme/build/RSTTraversal';
 
 import './_helpers/setupAdapters';
