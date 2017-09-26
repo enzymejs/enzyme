@@ -69,6 +69,38 @@ codebase, however you can always check to see if the source code is compliant by
 npm run lint
 ```
 
+### Publishing
+
+Enzyme uses [lerna](https://github.com/lerna/lerna) to structure its repo, and has multiple packages
+to publish out of this one repo. We use lerna's "independent" mode, which means that the versioning
+of each package in the repo is versioned independently.
+
+Lerna by default will only publish packages that have changed since the last release. It will also
+create a tagged commit for each release.
+
+To publish, run:
+
+```bash
+lerna publish -m "{tag name}"
+```
+
+The tag name is determined by the `-m` CLI option. If `enzyme` is one of the packages that has
+updates, we default to just using that version as the tag name. For instance, when publishing
+`enzyme@3.1.1` and `enzyme-adapter-react-16@1.2.3` we would run:
+
+```bash
+lerna publish -m "v3.1.1"
+```
+
+If `enzyme` is *not* one of the packages being updated, use the other package's name and the version:
+
+```bash
+lerna publish -m "enzyme-adapter-react-16: v1.2.3"
+```
+
+The `lerna publish` command will present interactive prompts asking which version to use for each
+package independently. Just choose whichever
+
 
 ### Building Docs
 
