@@ -3231,7 +3231,7 @@ describe('shallow', () => {
               'componentDidUpdate',
               { foo: 'bar' }, { foo: 'baz' },
               { foo: 'state' }, { foo: 'state' },
-              { foo: 'context' }, // this will be gone in 16
+              REACT16 ? undefined : { foo: 'context' },
             ],
             [
               'componentWillReceiveProps',
@@ -3257,7 +3257,7 @@ describe('shallow', () => {
               'componentDidUpdate',
               { foo: 'baz' }, { foo: 'bax' },
               { foo: 'state' }, { foo: 'state' },
-              { foo: 'context' },
+              REACT16 ? undefined : { foo: 'context' },
             ],
           ],
         );
@@ -3440,7 +3440,6 @@ describe('shallow', () => {
     });
 
     context('updating state', () => {
-      // NOTE: There is a bug in react 16 shallow renderer where prevContext is not passed
       it('should call shouldComponentUpdate, componentWillUpdate and componentDidUpdate', () => {
         const spy = sinon.spy();
 
@@ -3501,7 +3500,7 @@ describe('shallow', () => {
             'componentDidUpdate',
             { foo: 'props' }, { foo: 'props' },
             { foo: 'bar' }, { foo: 'baz' },
-            { foo: 'context' },
+            REACT16 ? undefined : { foo: 'context' },
           ],
         ]);
       });
@@ -3661,7 +3660,7 @@ describe('shallow', () => {
             'componentDidUpdate',
             { foo: 'props' }, { foo: 'props' },
             { foo: 'state' }, { foo: 'state' },
-            { foo: 'bar' },
+            REACT16 ? undefined : { foo: 'bar' },
           ],
         ]);
       });

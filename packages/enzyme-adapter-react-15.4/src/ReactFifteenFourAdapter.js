@@ -98,6 +98,13 @@ function instanceToTree(inst) {
 }
 
 class ReactFifteenFourAdapter extends EnzymeAdapter {
+  constructor() {
+    super();
+    this.options = {
+      ...this.options,
+      supportPrevContextArgumentOfComponentDidUpdate: true,
+    };
+  }
   createMountRenderer(options) {
     assertDomAvailable('mount');
     const domNode = options.attachTo || global.document.createElement('div');

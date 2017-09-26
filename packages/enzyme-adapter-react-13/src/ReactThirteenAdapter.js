@@ -96,6 +96,13 @@ function instanceToTree(inst) {
 }
 
 class ReactThirteenAdapter extends EnzymeAdapter {
+  constructor() {
+    super();
+    this.options = {
+      ...this.options,
+      supportPrevContextArgumentOfComponentDidUpdate: true,
+    };
+  }
   createMountRenderer(options) {
     assertDomAvailable('mount');
     const domNode = options.attachTo || global.document.createElement('div');
