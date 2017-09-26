@@ -11,6 +11,7 @@ import {
   nodeEqual,
   nodeMatches,
   getAdapter,
+  makeOptions,
   sym,
   privateSet,
   cloneElement,
@@ -66,12 +67,13 @@ function filterWhereUnwrapped(wrapper, predicate) {
  * @class ReactWrapper
  */
 class ReactWrapper {
-  constructor(nodes, root, options = {}) {
+  constructor(nodes, root, passedOptions = {}) {
     if (!global.window && !global.document) {
       throw new Error(
         'It looks like you called `mount()` without a global document being loaded.',
       );
     }
+    const options = makeOptions(passedOptions);
 
     if (!root) {
       privateSet(this, UNRENDERED, nodes);
