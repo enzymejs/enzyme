@@ -72,8 +72,8 @@ function matchAttributeSelector(node, token) {
     // Only the exact value operator ("=") can match non-strings
     if (typeof nodePropValue !== 'string' || typeof value !== 'string') {
       if (operator !== EXACT_ATTRIBUTE_OPERATOR) {
-      return false;
-    }
+        return false;
+      }
     }
     switch (operator) {
       /**
@@ -111,10 +111,10 @@ function matchAttributeSelector(node, token) {
        * Represents an element with the att attribute whose value ends with the suffix value.
        * If the value is the empty string then the selector does not represent anything.
        * @example
-       * [type^="image"] matches type="imageobject"
+       * [type$="image"] matches type="imageobject"
        */
       case SUFFIX_ATTRIBUTE_OPERATOR:
-        return value === '' ? false : nodePropValue.substr(0, -value.length) === value;
+        return value === '' ? false : nodePropValue.substr(-value.length) === value;
       /**
        * Represents an element with the att attribute whose value contains at least one
        * instance of the value. If value is the empty string then the
