@@ -14,6 +14,7 @@ import {
   isCustomComponentElement,
   ITERATOR_SYMBOL,
   getAdapter,
+  makeOptions,
   sym,
   privateSet,
   cloneElement,
@@ -108,8 +109,9 @@ function getRootNode(node) {
  * @class ShallowWrapper
  */
 class ShallowWrapper {
-  constructor(nodes, root, options = {}) {
-    validateOptions(options);
+  constructor(nodes, root, passedOptions = {}) {
+    validateOptions(passedOptions);
+    const options = makeOptions(passedOptions);
     if (!root) {
       privateSet(this, ROOT, this);
       privateSet(this, UNRENDERED, nodes);

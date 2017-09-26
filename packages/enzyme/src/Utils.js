@@ -18,6 +18,13 @@ export function getAdapter(options = {}) {
   return adapter;
 }
 
+export function makeOptions(options) {
+  return {
+    ...configuration.get(),
+    ...options,
+  };
+}
+
 export function isCustomComponentElement(inst, adapter) {
   return !!inst && adapter.isValidElement(inst) && typeof inst.type === 'function';
 }
