@@ -1,5 +1,66 @@
 # Change Log
 
+## 3.0.0
+
+### Breaking Changes
+
+Enzyme has several breaking changes from v2 to v3. Please check out our [migration guide](/docs/guides/migration-from-2-to-3.md) for more info. Since there was a rewrite of the core
+library from v2 to v3, it is hard to categorize changes in terms of sem
+
+ - @lelandrichardson: Refactor enzyme to use Adapters, initial React 16 support ([#1007](https://github.com/airbnb/enzyme/pull/1007))
+
+ - @lelandrichardson: Make private properties more private and harder to use ([#1083](https://github.com/airbnb/enzyme/pull/1083))
+
+ - @ljharb: [breaking] update `cheerio` to v1 ([#1093](https://github.com/airbnb/enzyme/pull/1093))
+
+ - @aweary: Integrate with a CSS parser for selector parsing ([#1086](https://github.com/airbnb/enzyme/pull/1086))
+
+ - @vadimdemedes: Skip undefined props when comparing nodes ([#662](https://github.com/airbnb/enzyme/pull/662))
+
+ - @koba04: Breaking: lifecycleExperimental by default ([#1140](https://github.com/airbnb/enzyme/pull/1140))
+
+
+### New Stuff
+
+ - @lelandrichardson: Move to lerna repo structure, multiple modules ([#1074](https://github.com/airbnb/enzyme/pull/1074))
+
+ - @lelandrichardson: Remove all React dependencies from enzyme ([#1084](https://github.com/airbnb/enzyme/pull/1084))
+
+ - @lelandrichardson: Add public root method ([#1127](https://github.com/airbnb/enzyme/pull/1127))
+
+
+
+ ### Fixes
+
+ - @aweary: Remove isFunctionalComponent, use nodeType instead ([#1076](https://github.com/airbnb/enzyme/pull/1076))
+
+ - @LarsHassler: props not merged when shallow rendering in lifecycleExperimental ([#1088](https://github.com/airbnb/enzyme/pull/1088))
+
+ - @ljharb: [Fix] `mount`: do not mutate `Component.contextTypes` ([#1099](https://github.com/airbnb/enzyme/pull/1099))
+
+ - @ljharb: [Fix] `reduce`/`reduceRight`: follow `Array#reduce` when omitting initialValue ([#673](https://github.com/airbnb/enzyme/pull/673))
+
+ - @koba04: Fix componentDidUpdate when updating by setState on v16 ([#1133](https://github.com/airbnb/enzyme/pull/1133))
+
+ - @koba04: Fix componentDidUpdate no longer receives prevContext on React v16 ([#1139](https://github.com/airbnb/enzyme/pull/1139))
+
+
+
+ ### Documentation
+
+ - @ghost: added sinon to mocha guide ([#1075](https://github.com/airbnb/enzyme/pull/1075))
+
+ - @samit4me: Update to GitBook 3 ([#1039](https://github.com/airbnb/enzyme/pull/1039))
+
+ - @therewillbecode: Removed extraneous brackets from example in readme ([#1117](https://github.com/airbnb/enzyme/pull/1117))
+
+ - @silvenon: Add note that mount() requires cleanup ([#1043](https://github.com/airbnb/enzyme/pull/1043))
+
+ - @lelandrichardson: Add docs reflecting v3 ([#1121](https://github.com/airbnb/enzyme/pull/1121))
+
+
+
+
 ## 2.9.1
 
 ### Fixes
