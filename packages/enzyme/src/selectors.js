@@ -3,6 +3,7 @@ import values from 'object.values';
 import isEmpty from 'lodash/isEmpty';
 import flatten from 'lodash/flatten';
 import unique from 'lodash/uniq';
+import is from 'object-is';
 import {
   treeFilter,
   nodeHasId,
@@ -11,7 +12,7 @@ import {
   childrenOfNode,
   hasClassName,
 } from './RSTTraversal';
-import { nodeHasType, nodeHasProperty } from './Utils';
+import { nodeHasType, nodeHasMatchingProperty } from './Utils';
 // our CSS selector parser instance
 const parser = createParser();
 
@@ -31,6 +32,13 @@ const ATTRIBUTE_VALUE = 'attributeValueSelector';
 // @TODO we dont support these, throw if they are used
 const PSEUDO_CLASS = 'pseudoClassSelector';
 const PSEUDO_ELEMENT = 'pseudoElementSelector';
+
+const EXACT_ATTRIBUTE_OPERATOR = '=';
+const WHITELIST_ATTRIBUTE_OPERATOR = '~=';
+const HYPEN_ATTRIBUTE_OPERATOR = '|=';
+const PREFIX_ATTRIBUTE_OPERATOR = '^=';
+const SUFFIX_ATTRIBUTE_OPERATOR = '$=';
+const SUBSTRING_ATTRIBUTE_OPERATOR = '*=';
 
 /**
  * Calls reduce on a array of nodes with the passed
@@ -53,6 +61,71 @@ function safelyGenerateTokens(selector) {
   } catch (err) {
     throw new Error(`Failed to parse selector: ${selector}`);
   }
+}
+
+function matchAttributeSelector(node, token) {
+  return nodeHasMatchingProperty(node, token.name, (nodePropValue, nodeProps) => {
+    const { operator, value } = token;
+    if (token.type === ATTRIBUTE_PRESENCE) {
+      return Object.prototype.hasOwnProperty.call(nodeProps, token.name);
+    }
+    // Only the exact value operator ("=") can match non-strings
+    if (typeof nodePropValue !== 'string' && operator !== EXACT_ATTRIBUTE_OPERATOR) {
+      return false;
+    }
+    switch (operator) {
+      /**
+       * Represents an element with the att attribute whose value is exactly "val".
+       * @example
+       * [attr="val"] matches attr="val"
+       */
+      case EXACT_ATTRIBUTE_OPERATOR:
+        return is(nodePropValue, value);
+      /**
+       * Represents an element with the att attribute whose value is a whitespace-separated
+       * list of words, one of which is exactly 
+       * @example
+       *  [rel~="copyright"] matches rel="copyright other"
+       */
+      case WHITELIST_ATTRIBUTE_OPERATOR:
+        return nodePropValue.split(' ').indexOf(value) !== -1;
+      /**
+       * Represents an element with the att attribute, its value either being exactly the
+       * value or beginning with the value immediately followed by "-"
+       * @example
+       * [hreflang|="en"] matches hreflang="en-US"
+       */
+      case HYPEN_ATTRIBUTE_OPERATOR:
+        return nodePropValue === value || nodePropValue.startsWith(`${value}-`);
+      /**
+       * Represents an element with the att attribute whose value begins with the prefix value.
+       * If the value is the empty string then the selector does not represent anything.
+       * @example
+       * [type^="image"] matches type="imageobject"
+       */
+      case PREFIX_ATTRIBUTE_OPERATOR:
+        return value === '' ? false : nodePropValue.substr(0, value.length) === value;
+      /**
+       * Represents an element with the att attribute whose value ends with the suffix value.
+       * If the value is the empty string then the selector does not represent anything.
+       * @example
+       * [type^="image"] matches type="imageobject"
+       */
+      case SUFFIX_ATTRIBUTE_OPERATOR:
+        return value === '' ? false : nodePropValue.substr(0, -value.length) === value;
+      /**
+       * Represents an element with the att attribute whose value contains at least one
+       * instance of the value. If value is the empty string then the
+       * selector does not represent anything.
+       * @example
+       * [title*="hello"] matches title="well hello there"
+       */
+      case SUBSTRING_ATTRIBUTE_OPERATOR:
+        return value === '' ? false : nodePropValue.indexOf(value) !== -1;
+      default:
+        throw new Error(`Enzyme::Selector: Unknown attribute selector operator "${operator}"`);
+    }
+  });
 }
 
 /**
@@ -90,14 +163,14 @@ function nodeMatchesToken(node, token) {
      * @example '[disabled]' matches <a disabled />
      */
     case ATTRIBUTE_PRESENCE:
-      return nodeHasProperty(node, token.name);
+      return matchAttributeSelector(node, token);
     /**
      * Matches if an attribute is present with the
      * provided value
      * @example '[data-foo=foo]' matches <div data-foo="foo" />
      */
     case ATTRIBUTE_VALUE:
-      return nodeHasProperty(node, token.name, token.value);
+      return matchAttributeSelector(node, token);
     case PSEUDO_ELEMENT:
     case PSEUDO_CLASS:
       throw new Error('Enzyme::Selector does not support psuedo-element or psuedo-class selectors.');

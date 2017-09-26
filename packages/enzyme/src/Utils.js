@@ -219,23 +219,17 @@ export function AND(fns) {
   return x => fnsReversed.every(fn => fn(x));
 }
 
-export function nodeHasProperty(node, propKey, propValue) {
+export function nodeHasMatchingProperty(node, propKey, matcher) {
   const nodeProps = propsOfNode(node);
   const descriptor = Object.getOwnPropertyDescriptor(nodeProps, propKey);
   if (descriptor && descriptor.get) {
     return false;
   }
   const nodePropValue = nodeProps[propKey];
-
   if (typeof nodePropValue === 'undefined') {
     return false;
   }
-
-  if (typeof propValue !== 'undefined') {
-    return is(nodePropValue, propValue);
-  }
-
-  return Object.prototype.hasOwnProperty.call(nodeProps, propKey);
+  return matcher(nodePropValue, nodeProps);
 }
 
 export function displayNameOfNode(node) {
