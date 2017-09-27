@@ -4,18 +4,18 @@ The change from enzyme v2.x to v3.x is a more significant change than in previou
 due to the fact that the internal implementation of enzyme has been almost completely rewritten.
 
 The goal of this rewrite was to address a lot of the major issues that have plagued enzyme since
-its initial release. It was also to simultaneously remove a lot of the dependence that enzyme has
-on react internals, and to make enzyme more "pluggable", paving the way for enzyme to be used
+its initial release. It was also to simultaneously remove a lot of the dependencies that enzyme has
+on React internals, and to make enzyme more "pluggable", paving the way for enzyme to be used
 with "React-like" libraries such as Preact and Inferno.
 
 We have done our best to make enzyme v3 as API compatible with v2.x as possible, however there are
-a hand full of breaking changes that we decided we needed to make, intentionally, in order to
+a handful of breaking changes that we decided we needed to make, intentionally, in order to
 support this new architecture and also improve the usability of the library long-term.
 
 Airbnb has one of the largest enzyme test suites, coming in at around 30,000 enzyme unit tests.
 After upgrading enzyme to v3.x in Airbnb's code base, 99.6% of these tests succeeded with no
 modifications at all. Most of the tests that broke we found to be easy to fix, and some we found to
-actually be depending on what could arguably be considered a bug in v2.x, and the breakage was
+actually depend on what could arguably be considered a bug in v2.x, and the breakage was
 actually desired.
 
 In this guide, we will go over a couple of the most common breakages that we ran into, and how to
@@ -27,13 +27,13 @@ find a breakage that doesn't seem to make sense to you, feel free to file an iss
 
 enzyme now has an "Adapter" system. This means that you now need to install enzyme along with
 another module that provides the Adapter that tells enzyme how to work with your version of React
-(or whatever other react-like library you are using).
+(or whatever other React-like library you are using).
 
 At the time of writing this, enzyme publishes "officially supported" adapters for React 0.13.x,
 0.14.x, 15.x, and 16.x. These adapters are npm packages of the form `enzyme-adapter-react-{{version}}`.
 
 You will want to configure enzyme with the adapter you'd like to use before using enzyme in your
-tests. The way to do this is whith `enzyme.configure(...)`. For example, if your project depends
+tests. The way to do this is with `enzyme.configure(...)`. For example, if your project depends
 on React 16, you would want to configure enzyme this way:
 
 ```js
