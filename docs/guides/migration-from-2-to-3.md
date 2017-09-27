@@ -83,7 +83,7 @@ import { shallow } from 'enzyme';
 import StatusLabel from './path/to/StatusLabel';
 import Icon from './path/to/Icon';
 
-const wrapper = shallow(<StatusIcon id="success" label="Success" />);
+const wrapper = shallow(<StatusLabel id="success" label="Success" />);
 
 const iconCount = wrapper.find(Icon).length;
 ```
