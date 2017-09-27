@@ -4,6 +4,7 @@ import isEmpty from 'lodash/isEmpty';
 import flatten from 'lodash/flatten';
 import unique from 'lodash/uniq';
 import is from 'object-is';
+import has from 'has';
 import {
   treeFilter,
   nodeHasId,
@@ -67,7 +68,7 @@ function matchAttributeSelector(node, token) {
   return nodeHasMatchingProperty(node, token.name, (nodePropValue, nodeProps) => {
     const { operator, value } = token;
     if (token.type === ATTRIBUTE_PRESENCE) {
-      return Object.prototype.hasOwnProperty.call(nodeProps, token.name);
+    return has(nodeProps, token.name);
     }
     // Only the exact value operator ("=") can match non-strings
     if (typeof nodePropValue !== 'string' || typeof value !== 'string') {
