@@ -13,7 +13,7 @@ import {
   childrenOfNode,
   hasClassName,
 } from './RSTTraversal';
-import { nodeHasType, nodeHasMatchingProperty } from './Utils';
+import { nodeHasType, propsOfNode } from './Utils';
 // our CSS selector parser instance
 const parser = createParser();
 
@@ -65,70 +65,77 @@ function safelyGenerateTokens(selector) {
 }
 
 function matchAttributeSelector(node, token) {
-  return nodeHasMatchingProperty(node, token.name, (nodePropValue, nodeProps) => {
-    const { operator, value } = token;
-    if (token.type === ATTRIBUTE_PRESENCE) {
+  const { operator, value, name } = token;
+  const nodeProps = propsOfNode(node);
+  const descriptor = Object.getOwnPropertyDescriptor(nodeProps, name);
+  if (descriptor && descriptor.get) {
+    return false;
+  }
+  const nodePropValue = nodeProps[name];
+  if (typeof nodePropValue === 'undefined') {
+    return false;
+  }
+  if (token.type === ATTRIBUTE_PRESENCE) {
     return has(nodeProps, token.name);
+  }
+  // Only the exact value operator ("=") can match non-strings
+  if (typeof nodePropValue !== 'string' || typeof value !== 'string') {
+    if (operator !== EXACT_ATTRIBUTE_OPERATOR) {
+      return false;
     }
-    // Only the exact value operator ("=") can match non-strings
-    if (typeof nodePropValue !== 'string' || typeof value !== 'string') {
-      if (operator !== EXACT_ATTRIBUTE_OPERATOR) {
-        return false;
-      }
-    }
-    switch (operator) {
-      /**
-       * Represents an element with the att attribute whose value is exactly "val".
-       * @example
-       * [attr="val"] matches attr="val"
-       */
-      case EXACT_ATTRIBUTE_OPERATOR:
-        return is(nodePropValue, value);
-      /**
-       * Represents an element with the att attribute whose value is a whitespace-separated
-       * list of words, one of which is exactly 
-       * @example
-       *  [rel~="copyright"] matches rel="copyright other"
-       */
-      case WHITELIST_ATTRIBUTE_OPERATOR:
-        return nodePropValue.split(' ').indexOf(value) !== -1;
-      /**
-       * Represents an element with the att attribute, its value either being exactly the
-       * value or beginning with the value immediately followed by "-"
-       * @example
-       * [hreflang|="en"] matches hreflang="en-US"
-       */
-      case HYPEN_ATTRIBUTE_OPERATOR:
-        return nodePropValue === value || nodePropValue.startsWith(`${value}-`);
-      /**
-       * Represents an element with the att attribute whose value begins with the prefix value.
-       * If the value is the empty string then the selector does not represent anything.
-       * @example
-       * [type^="image"] matches type="imageobject"
-       */
-      case PREFIX_ATTRIBUTE_OPERATOR:
-        return value === '' ? false : nodePropValue.substr(0, value.length) === value;
-      /**
-       * Represents an element with the att attribute whose value ends with the suffix value.
-       * If the value is the empty string then the selector does not represent anything.
-       * @example
-       * [type$="image"] matches type="imageobject"
-       */
-      case SUFFIX_ATTRIBUTE_OPERATOR:
-        return value === '' ? false : nodePropValue.substr(-value.length) === value;
-      /**
-       * Represents an element with the att attribute whose value contains at least one
-       * instance of the value. If value is the empty string then the
-       * selector does not represent anything.
-       * @example
-       * [title*="hello"] matches title="well hello there"
-       */
-      case SUBSTRING_ATTRIBUTE_OPERATOR:
-        return value === '' ? false : nodePropValue.indexOf(value) !== -1;
-      default:
-        throw new Error(`Enzyme::Selector: Unknown attribute selector operator "${operator}"`);
-    }
-  });
+  }
+  switch (operator) {
+    /**
+     * Represents an element with the att attribute whose value is exactly "val".
+     * @example
+     * [attr="val"] matches attr="val"
+     */
+    case EXACT_ATTRIBUTE_OPERATOR:
+      return is(nodePropValue, value);
+    /**
+     * Represents an element with the att attribute whose value is a whitespace-separated
+     * list of words, one of which is exactly 
+     * @example
+     *  [rel~="copyright"] matches rel="copyright other"
+     */
+    case WHITELIST_ATTRIBUTE_OPERATOR:
+      return nodePropValue.split(' ').indexOf(value) !== -1;
+    /**
+     * Represents an element with the att attribute, its value either being exactly the
+     * value or beginning with the value immediately followed by "-"
+     * @example
+     * [hreflang|="en"] matches hreflang="en-US"
+     */
+    case HYPEN_ATTRIBUTE_OPERATOR:
+      return nodePropValue === value || nodePropValue.startsWith(`${value}-`);
+    /**
+     * Represents an element with the att attribute whose value begins with the prefix value.
+     * If the value is the empty string then the selector does not represent anything.
+     * @example
+     * [type^="image"] matches type="imageobject"
+     */
+    case PREFIX_ATTRIBUTE_OPERATOR:
+      return value === '' ? false : nodePropValue.substr(0, value.length) === value;
+    /**
+     * Represents an element with the att attribute whose value ends with the suffix value.
+     * If the value is the empty string then the selector does not represent anything.
+     * @example
+     * [type$="image"] matches type="imageobject"
+     */
+    case SUFFIX_ATTRIBUTE_OPERATOR:
+      return value === '' ? false : nodePropValue.substr(-value.length) === value;
+    /**
+     * Represents an element with the att attribute whose value contains at least one
+     * instance of the value. If value is the empty string then the
+     * selector does not represent anything.
+     * @example
+     * [title*="hello"] matches title="well hello there"
+     */
+    case SUBSTRING_ATTRIBUTE_OPERATOR:
+      return value === '' ? false : nodePropValue.indexOf(value) !== -1;
+    default:
+      throw new Error(`Enzyme::Selector: Unknown attribute selector operator "${operator}"`);
+  }
 }
 
 /**

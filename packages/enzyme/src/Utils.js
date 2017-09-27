@@ -29,7 +29,7 @@ export function isCustomComponentElement(inst, adapter) {
   return !!inst && adapter.isValidElement(inst) && typeof inst.type === 'function';
 }
 
-function propsOfNode(node) {
+export function propsOfNode(node) {
   return entries((node && node.props) || {})
     .filter(([, value]) => typeof value !== 'undefined')
     .reduce((acc, [key, value]) => Object.assign(acc, { [key]: value }), {});
@@ -217,19 +217,6 @@ export function withSetStateAllowed(fn) {
 export function AND(fns) {
   const fnsReversed = fns.slice().reverse();
   return x => fnsReversed.every(fn => fn(x));
-}
-
-export function nodeHasMatchingProperty(node, propKey, matcher) {
-  const nodeProps = propsOfNode(node);
-  const descriptor = Object.getOwnPropertyDescriptor(nodeProps, propKey);
-  if (descriptor && descriptor.get) {
-    return false;
-  }
-  const nodePropValue = nodeProps[propKey];
-  if (typeof nodePropValue === 'undefined') {
-    return false;
-  }
-  return matcher(nodePropValue, nodeProps);
 }
 
 export function displayNameOfNode(node) {
