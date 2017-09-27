@@ -104,6 +104,5 @@
     "sinon": "^2.4.1",
     "webpack": "^1.13.3"
   },
-  "dependencies": {
-  }
+  "dependencies": {}
 }

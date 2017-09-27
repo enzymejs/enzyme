@@ -383,6 +383,31 @@ describe('shallow', () => {
     });
   });
 
+  describe('.hostNodes()', () => {
+    it('should strip out any non-hostNode', () => {
+      class Foo extends React.Component {
+        render() {
+          return <div {...this.props} />;
+        }
+      }
+      const wrapper = shallow(
+        <div>
+          <Foo className="foo" />
+          <div className="foo" />
+        </div>,
+      );
+
+      const foos = wrapper.find('.foo');
+      expect(foos).to.have.lengthOf(2);
+
+      const hostNodes = foos.hostNodes();
+      expect(hostNodes).to.have.lengthOf(1);
+
+      expect(hostNodes.is('div')).to.equal(true);
+      expect(hostNodes.hasClass('foo')).to.equal(true);
+    });
+  });
+
   describe('.find(selector)', () => {
     it('should be able to match the root DOM element', () => {
       const wrapper = shallow(<div id="ttt" className="ttt">hello</div>);
