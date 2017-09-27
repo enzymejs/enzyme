@@ -492,6 +492,39 @@ describe('Adapter', () => {
     });
   });
 
+  it('render node with updated props', () => {
+    const Dummy = () => null;
+
+    class Counter extends React.Component {
+      constructor(props) {
+        super(props);
+        this.state = { count: 0 };
+      }
+
+      increment() {
+        this.setState({ count: this.state.count + 1 });
+      }
+
+      render() {
+        return <Dummy {...this.state} />;
+      }
+    }
+
+    const options = { mode: 'mount' };
+    const renderer = adapter.createRenderer(options);
+
+    renderer.render(<Counter />);
+
+    let tree = renderer.getNode();
+    expect(tree.rendered.props.count).to.equal(0);
+    tree.instance.increment();
+    tree = renderer.getNode();
+    expect(tree.rendered.props.count).to.equal(1);
+    tree.instance.increment();
+    tree = renderer.getNode();
+    expect(tree.rendered.props.count).to.equal(2);
+  });
+
   it('renders basic shallow as well', () => {
     // eslint-disable-next-line react/require-render-return
     class Bar extends React.Component {
