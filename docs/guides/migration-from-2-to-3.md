@@ -33,7 +33,7 @@ At the time of writing this, enzyme publishes "officially supported" adapters fo
 0.14.x, 15.x, and 16.x. These adapters are npm packages of the form `enzyme-adapter-react-{{version}}`.
 
 You will want to configure enzyme with the adapter you'd like to use before using enzyme in your
-tests. The way to do this is whith `enzyme.configure(...)`. For example, if your project depends
+tests. The way to do this is with `enzyme.configure(...)`. For example, if your project depends
 on React 16, you would want to configure enzyme this way:
 
 ```js
@@ -386,7 +386,7 @@ account for this.
 ## Private properties and methods have been removed
 
 There are several properties that are on an enzyme "wrapper" that were considered to be private and
-were undocumented as a result. Despite being undocumented, people may haev been relying on them. In
+were undocumented as a result. Despite being undocumented, people may have been relying on them. In
 an effort to make making changes less likely to be accidentally breaking in the future, we have
 decided to make these properties properly "private". The following properties will no longer be
 accessible on enzyme `shallow` or `mount` instances:
