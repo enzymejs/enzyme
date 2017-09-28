@@ -164,6 +164,10 @@ class ShallowWrapper {
         'ShallowWrapper::getNode() can only be called when wrapping one node',
       );
     }
+    if (this[ROOT] === this && this[OPTIONS].autoUpdate) {
+      this[NODE] = getRootNode(this[RENDERER].getNode());
+      this[NODES] = [this[NODE]];
+    }
     return this[NODE];
   }
 
@@ -198,6 +202,10 @@ class ShallowWrapper {
   }
 
   getNodesInternal() {
+    if (this[ROOT] === this && this[OPTIONS].autoUpdate) {
+      this[NODE] = getRootNode(this[RENDERER].getNode());
+      this[NODES] = [this[NODE]];
+    }
     return this[NODES];
   }
 

@@ -3683,6 +3683,55 @@ describeWithDOM('mount', () => {
     });
   });
 
+  describe('out-of-band state updates with autoUpdate', () => {
+    class Child extends React.Component {
+      render() {
+        return <span />;
+      }
+    }
+
+    class Test extends React.Component {
+      componentWillMount() {
+        this.state = {};
+      }
+
+      asyncSetState() {
+        setImmediate(() => {
+          this.setState({ showSpan: true });
+        });
+      }
+
+      callbackSetState() {
+        this.setState({ showSpan: true });
+      }
+
+      render() {
+        return (
+          <div>
+            {this.state && this.state.showSpan && <span className="show-me" />}
+            <button className="async-btn" onClick={() => this.asyncSetState()} />
+            <Child callback={() => this.callbackSetState()} />
+          </div>
+        );
+      }
+    }
+
+    it('should have updated output after an asynchronous setState', (done) => {
+      const wrapper = mount(<Test />, { autoUpdate: true });
+      wrapper.find('.async-btn').simulate('click');
+      setImmediate(() => {
+        expect(wrapper.find('.show-me').length).to.equal(1);
+        done();
+      });
+    });
+
+    it('should have updated output after child prop callback invokes setState', () => {
+      const wrapper = mount(<Test />, { autoUpdate: true });
+      wrapper.find(Child).props().callback();
+      expect(wrapper.find('.show-me').length).to.equal(1);
+    });
+  });
+
   describe('#single()', () => {
     it('throws if run on multiple nodes', () => {
       const wrapper = mount(<div><i /><i /></div>).children();
