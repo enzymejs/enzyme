@@ -5,6 +5,7 @@ import {
   nodeEqual,
   nodeMatches,
   displayNameOfNode,
+  spyMethod,
 } from 'enzyme/build/Utils';
 import {
   flatten,
@@ -549,6 +550,55 @@ describe('Utils', () => {
       const nested = [1, [2, [3, [4]], 5], 6, [7, [8, 9]], 10];
       const flat = flatten(nested);
       expect(flat).to.deep.equal([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+    });
+  });
+
+  describe('spyMethod', () => {
+    it('should be able to spy last return value and restore it', () => {
+      class Counter {
+        constructor() {
+          this.count = 1;
+        }
+        incrementAndGet() {
+          this.count = this.count + 1;
+          return this.count;
+        }
+      }
+      const instance = new Counter();
+      const obj = {
+        count: 1,
+        incrementAndGet() {
+          this.count = this.count + 1;
+          return this.count;
+        },
+      };
+
+      // test an instance method and an object property function
+      const targets = [instance, obj];
+      targets.forEach((target) => {
+        const original = target.incrementAndGet;
+        const spy = spyMethod(target, 'incrementAndGet');
+        target.incrementAndGet();
+        target.incrementAndGet();
+        expect(spy.getLastReturnValue()).to.equal(3);
+        spy.restore();
+        expect(target.incrementAndGet).to.equal(original);
+        expect(target.incrementAndGet()).to.equal(4);
+      });
+    });
+
+    it('should be able to restore the property descriptor', () => {
+      const obj = {};
+      const descriptor = {
+        configurable: true,
+        enumerable: true,
+        writable: true,
+        value: () => {},
+      };
+      Object.defineProperty(obj, 'method', descriptor);
+      const spy = spyMethod(obj, 'method');
+      spy.restore();
+      expect(Object.getOwnPropertyDescriptor(obj, 'method')).to.deep.equal(descriptor);
     });
   });
 });

@@ -3,6 +3,7 @@ import isEqual from 'lodash/isEqual';
 import is from 'object-is';
 import entries from 'object.entries';
 import functionName from 'function.prototype.name';
+import has from 'has';
 import configuration from './configuration';
 import validateAdapter from './validateAdapter';
 import { childrenOfNode } from './RSTTraversal';
@@ -241,4 +242,43 @@ export function cloneElement(adapter, el, props) {
     el.type,
     { ...el.props, ...props },
   );
+}
+
+export function spyMethod(instance, methodName) {
+  let lastReturnValue;
+  const originalMethod = instance[methodName];
+  const hasOwn = has(instance, methodName);
+  let descriptor;
+  if (hasOwn) {
+    descriptor = Object.getOwnPropertyDescriptor(instance, methodName);
+  }
+  Object.defineProperty(instance, methodName, {
+    configurable: true,
+    enumerable: !descriptor || !!descriptor.enumerable,
+    value(...args) {
+      const result = originalMethod.apply(this, args);
+      lastReturnValue = result;
+      return result;
+    },
+  });
+  return {
+    restore() {
+      if (hasOwn) {
+        if (descriptor) {
+          Object.defineProperty(instance, methodName, descriptor);
+        } else {
+          /* eslint-disable no-param-reassign */
+          instance[methodName] = originalMethod;
+          /* eslint-enable no-param-reassign */
+        }
+      } else {
+        /* eslint-disable no-param-reassign */
+        delete instance[methodName];
+        /* eslint-enable no-param-reassign */
+      }
+    },
+    getLastReturnValue() {
+      return lastReturnValue;
+    },
+  };
 }
