@@ -18,6 +18,7 @@ import {
   sym,
   privateSet,
   cloneElement,
+  spyMethod,
 } from './Utils';
 import { debugNodes } from './Debug';
 import {
@@ -310,78 +311,61 @@ class ShallowWrapper {
         const { state } = instance;
         const prevProps = instance.props || this[UNRENDERED].props;
         const prevContext = instance.context || this[OPTIONS].context;
-        const nextProps = { ...prevProps, ...props };
         const nextContext = context || prevContext;
         if (context) {
           this[OPTIONS] = { ...this[OPTIONS], context: nextContext };
         }
         this[RENDERER].batchedUpdates(() => {
+          // When shouldComponentUpdate returns false we shouldn't call componentDidUpdate.
+          // so we spy shouldComponentUpdate to get the result.
           let shouldRender = true;
-          // dirty hack:
-          // make sure that componentWillReceiveProps is called before shouldComponentUpdate
-          let originalComponentWillReceiveProps;
-          if (
-            !this[OPTIONS].disableLifecycleMethods &&
-            instance &&
-            typeof instance.componentWillReceiveProps === 'function'
-          ) {
-            instance.componentWillReceiveProps(nextProps, nextContext);
-            originalComponentWillReceiveProps = instance.componentWillReceiveProps;
-            instance.componentWillReceiveProps = () => {};
-          }
-          // dirty hack: avoid calling shouldComponentUpdate twice
-          let originalShouldComponentUpdate;
+          let spy;
           if (
             !this[OPTIONS].disableLifecycleMethods &&
             instance &&
             typeof instance.shouldComponentUpdate === 'function'
           ) {
-            shouldRender = instance.shouldComponentUpdate(nextProps, state, nextContext);
-            originalShouldComponentUpdate = instance.shouldComponentUpdate;
+            spy = spyMethod(instance, 'shouldComponentUpdate');
           }
-          if (shouldRender) {
-            if (props) this[UNRENDERED] = cloneElement(adapter, this[UNRENDERED], props);
-            if (originalShouldComponentUpdate) {
-              instance.shouldComponentUpdate = () => true;
-            }
-
-            this[RENDERER].render(this[UNRENDERED], nextContext);
-
-            if (originalShouldComponentUpdate) {
-              instance.shouldComponentUpdate = originalShouldComponentUpdate;
-            }
+          if (props) this[UNRENDERED] = cloneElement(adapter, this[UNRENDERED], props);
+          this[RENDERER].render(this[UNRENDERED], nextContext);
+          if (spy) {
+            shouldRender = spy.getLastReturnValue();
+            spy.restore();
+          }
+          if (
+            shouldRender &&
+            !this[OPTIONS].disableLifecycleMethods &&
+            instance
+          ) {
             const lifecycles = getAdapterLifecycles(adapter);
-            if (
-              !this[OPTIONS].disableLifecycleMethods &&
-              instance
-            ) {
+
+            if (lifecycles.getSnapshotBeforeUpdate) {
+              let snapshot;
+              if (typeof instance.getSnapshotBeforeUpdate === 'function') {
+                snapshot = instance.getSnapshotBeforeUpdate(prevProps, state);
+              }
               if (
-                lifecycles.getSnapshotBeforeUpdate
-                && typeof instance.getSnapshotBeforeUpdate === 'function'
+                lifecycles.componentDidUpdate &&
+                typeof instance.componentDidUpdate === 'function'
               ) {
-                const snapshot = instance.getSnapshotBeforeUpdate(prevProps, state);
-                if (typeof instance.componentDidUpdate === 'function') {
-                  instance.componentDidUpdate(prevProps, state, snapshot);
-                }
-              } else if (typeof instance.componentDidUpdate === 'function') {
-                if (
-                  lifecycles.componentDidUpdate &&
-                  lifecycles.componentDidUpdate.prevContext
-                ) {
-                  instance.componentDidUpdate(prevProps, state, prevContext);
-                } else {
-                  instance.componentDidUpdate(prevProps, state);
-                }
+                instance.componentDidUpdate(prevProps, state, snapshot);
+              }
+            } else if (
+              lifecycles.componentDidUpdate &&
+              typeof instance.componentDidUpdate === 'function'
+            ) {
+              if (lifecycles.componentDidUpdate.prevContext) {
+                instance.componentDidUpdate(prevProps, state, prevContext);
+              } else {
+                instance.componentDidUpdate(prevProps, state);
               }
             }
-            this.update();
           // If it doesn't need to rerender, update only its props.
           } else if (props) {
             instance.props = props;
           }
-          if (originalComponentWillReceiveProps) {
-            instance.componentWillReceiveProps = originalComponentWillReceiveProps;
-          }
+          this.update();
         });
       });
     });
@@ -438,12 +422,10 @@ class ShallowWrapper {
         const prevProps = instance.props;
         const prevState = instance.state;
         const prevContext = instance.context;
-        let shouldRender = true;
-        // This is a dirty hack but it requires to know the result of shouldComponentUpdate.
         // When shouldComponentUpdate returns false we shouldn't call componentDidUpdate.
-        // shouldComponentUpdate is called in `instance.setState`
-        // so we replace shouldComponentUpdate to know the result and restore it later.
-        let originalShouldComponentUpdate;
+        // so we spy shouldComponentUpdate to get the result.
+        let spy;
+        let shouldRender = true;
         if (
           !this[OPTIONS].disableLifecycleMethods &&
           lifecycles.componentDidUpdate &&
@@ -451,17 +433,15 @@ class ShallowWrapper {
           instance &&
           typeof instance.shouldComponentUpdate === 'function'
         ) {
-          originalShouldComponentUpdate = instance.shouldComponentUpdate;
-          instance.shouldComponentUpdate = (...args) => {
-            shouldRender = originalShouldComponentUpdate.apply(instance, args);
-            instance.shouldComponentUpdate = originalShouldComponentUpdate;
-            return shouldRender;
-          };
+          spy = spyMethod(instance, 'shouldComponentUpdate');
         }
         // We don't pass the setState callback here
         // to guarantee to call the callback after finishing the render
         instance.setState(state);
-
+        if (spy) {
+          shouldRender = spy.getLastReturnValue();
+          spy.restore();
+        }
         if (
           shouldRender &&
           !this[OPTIONS].disableLifecycleMethods &&
