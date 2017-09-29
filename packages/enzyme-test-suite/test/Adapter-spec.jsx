@@ -91,7 +91,7 @@ describe('Adapter', () => {
       hydratedTreeMatchesUnhydrated(<Four />);
     });
 
-    it('treats mixed children correctlyf', () => {
+    it('treats mixed children correctly', () => {
       class Foo extends React.Component {
         render() {
           return (
@@ -493,7 +493,11 @@ describe('Adapter', () => {
   });
 
   it('render node with updated props', () => {
-    const Dummy = () => null;
+    class Dummy extends React.Component {
+      render() {
+        return null;
+      }
+    }
 
     class Counter extends React.Component {
       constructor(props) {
