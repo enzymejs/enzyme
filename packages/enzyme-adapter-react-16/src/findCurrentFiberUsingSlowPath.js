@@ -1,3 +1,4 @@
+// Extracted from https://github.com/facebook/react/blob/7bdf93b17a35a5d8fcf0ceae0bf48ed5e6b16688/src/renderers/shared/fiber/ReactFiberTreeReflection.js#L104-L228
 function findCurrentFiberUsingSlowPath(fiber) {
   const alternate = fiber.alternate;
   if (!alternate) {
