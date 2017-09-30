@@ -19,6 +19,7 @@ import {
   createMountWrapper,
   propsWithKeysAndRef,
 } from 'enzyme-adapter-utils';
+import findCurrentFiberUsingSlowPath from './findCurrentFiberUsingSlowPath';
 
 const HostRoot = 3;
 const ClassComponent = 2;
@@ -63,7 +64,7 @@ function toTree(vnode) {
   // TODO(lmr): I'm not really sure I understand whether or not this is what
   // i should be doing, or if this is a hack for something i'm doing wrong
   // somewhere else. Should talk to sebastian about this perhaps
-  const node = vnode.alternate !== null ? vnode.alternate : vnode;
+  const node = findCurrentFiberUsingSlowPath(vnode);
   switch (node.tag) {
     case HostRoot: // 3
       return toTree(node.child);
@@ -71,7 +72,7 @@ function toTree(vnode) {
       return {
         nodeType: 'class',
         type: node.type,
-        props: { ...vnode.memoizedProps },
+        props: { ...node.memoizedProps },
         key: node.key,
         ref: node.ref,
         instance: node.stateNode,
@@ -83,7 +84,7 @@ function toTree(vnode) {
       return {
         nodeType: 'function',
         type: node.type,
-        props: { ...vnode.memoizedProps },
+        props: { ...node.memoizedProps },
         key: node.key,
         ref: node.ref,
         instance: null,

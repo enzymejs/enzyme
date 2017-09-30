@@ -91,7 +91,7 @@ describe('Adapter', () => {
       hydratedTreeMatchesUnhydrated(<Four />);
     });
 
-    it('treats mixed children correctlyf', () => {
+    it('treats mixed children correctly', () => {
       class Foo extends React.Component {
         render() {
           return (
@@ -490,6 +490,43 @@ describe('Adapter', () => {
         }),
       );
     });
+  });
+
+  it('render node with updated props', () => {
+    class Dummy extends React.Component {
+      render() {
+        return null;
+      }
+    }
+
+    class Counter extends React.Component {
+      constructor(props) {
+        super(props);
+        this.state = { count: 0 };
+      }
+
+      increment() {
+        this.setState({ count: this.state.count + 1 });
+      }
+
+      render() {
+        return <Dummy {...this.state} />;
+      }
+    }
+
+    const options = { mode: 'mount' };
+    const renderer = adapter.createRenderer(options);
+
+    renderer.render(<Counter />);
+
+    let tree = renderer.getNode();
+    expect(tree.rendered.props.count).to.equal(0);
+    tree.instance.increment();
+    tree = renderer.getNode();
+    expect(tree.rendered.props.count).to.equal(1);
+    tree.instance.increment();
+    tree = renderer.getNode();
+    expect(tree.rendered.props.count).to.equal(2);
   });
 
   it('renders basic shallow as well', () => {
