@@ -33,7 +33,7 @@ At the time of writing this, enzyme publishes "officially supported" adapters fo
 0.14.x, 15.x, and 16.x. These adapters are npm packages of the form `enzyme-adapter-react-{{version}}`.
 
 You will want to configure enzyme with the adapter you'd like to use before using enzyme in your
-tests. The way to do this is with `enzyme.configure(...)`. For example, if your project depends
+tests. The way to do this is with `Enzyme.configure(...)`. For example, if your project depends
 on React 16, you would want to configure enzyme this way:
 
 ```js
