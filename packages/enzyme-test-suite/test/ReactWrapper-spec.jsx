@@ -356,6 +356,32 @@ describeWithDOM('mount', () => {
     });
   });
 
+  describe('.hostNodes()', () => {
+    it('should strip out any non-hostNode', () => {
+      class Foo extends React.Component {
+        render() {
+          return <div {...this.props} />;
+        }
+      }
+      const wrapper = mount(
+        <div>
+          <Foo className="foo" />
+          <span className="foo" />
+        </div>,
+      );
+
+      const foos = wrapper.find('.foo');
+      expect(foos).to.have.lengthOf(3);
+
+      const hostNodes = foos.hostNodes();
+      expect(hostNodes).to.have.lengthOf(2);
+      expect(hostNodes.filter('.foo')).to.have.lengthOf(2);
+
+      expect(hostNodes.filter('div')).to.have.lengthOf(1);
+      expect(hostNodes.filter('span')).to.have.lengthOf(1);
+    });
+  });
+
   describe('.find(selector)', () => {
     it('should find an element based on a class name', () => {
       const wrapper = mount(

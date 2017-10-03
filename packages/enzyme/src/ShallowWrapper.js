@@ -1196,6 +1196,16 @@ class ShallowWrapper {
       return this.wrap(el, null, { ...this[OPTIONS], ...options });
     });
   }
+
+  /**
+   * Strips out all the not host-nodes from the list of nodes
+   *
+   * This method is useful if you want to check for the presence of host nodes
+   * (actually rendered HTML elements) ignoring the React nodes.
+   */
+  hostNodes() {
+    return this.filterWhere(n => typeof n.type() === 'string');
+  }
 }
 
 if (ITERATOR_SYMBOL) {

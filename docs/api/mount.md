@@ -71,6 +71,9 @@ Remove nodes in the current wrapper that do not match the provided selector.
 #### [`.filterWhere(predicate) => ReactWrapper`](ReactWrapper/filterWhere.md)
 Remove nodes in the current wrapper that do not return true for the provided predicate function.
 
+#### [`.hostNodes() => ReactWrapper`](ReactWrapper/hostNodes.md)
+Removes nodes that are not host nodes; e.g., this will only return HTML nodes.
+
 #### [`.contains(nodeOrNodes) => Boolean`](ReactWrapper/contains.md)
 Returns whether or not a given node or array of nodes is somewhere in the render tree.
 
