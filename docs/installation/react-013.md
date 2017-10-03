@@ -35,10 +35,10 @@ ES5:
 <!-- eslint no-var: 0 -->
 ```js
 // setup file
-var Enzyme = require('enzyme');
+var enzyme = require('enzyme');
 var Adapter = require('enzyme-adapter-react-13');
 
-configure({ adapter: new Adapter() });
+enzyme.configure({ adapter: new Adapter() });
 ```
 
 <!-- eslint no-var: 0 -->
