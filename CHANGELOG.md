@@ -1,5 +1,33 @@
 # Change Log
 
+## 3.1.0
+
+### New Stuff
+
+- @FezVrasta: Added hostNodes method to ReactWrapper ([#1179](https://github.com/airbnb/enzyme/pull/1179))
+
+### Fixes
+
+- @lelandrichardson: Add an npmignore file to all packagestle ([#1204](https://github.com/airbnb/enzyme/pull/1204))
+
+- @neoziro: Fix node resolving in React 16 adapter ([#100](https://github.com/airbnb/enzyme/pull/100))
+
+- @graingert: upgrade to rst-selector-parser@^2.2.2 ([#1146](https://github.com/airbnb/enzyme/pull/1146))
+
+### Documentation
+
+- @lelandrichardson: Symlink readme to all packages ([#1205](https://github.com/airbnb/enzyme/pull/1205))
+
+- @AndersDJohnson: fix some typos ([#1165](https://github.com/airbnb/enzyme/pull/1165))
+
+- @dubbha: ES5 setup file correction ([#1194](https://github.com/airbnb/enzyme/pull/1194))
+
+- @morrowr08: updated component name being used in example ([#1180](https://github.com/airbnb/enzyme/pull/1180))
+
+- @apandichi: Fixing a few typos... ([#1171](https://github.com/airbnb/enzyme/pull/1171))
+
+- @nuc: Fix typo ([#1142](https://github.com/airbnb/enzyme/pull/1142))
+
 ## 3.0.0
 
 ### Breaking Changes
