@@ -24,6 +24,7 @@ Organizations
  - [Mavens](https://github.com/mavens)
  - [Cucumber](https://cucumber.io)
  - [Genoa Telepsychiatry](https://genoatelepsychiatry.com)
+ - [Zendesk](https://zendesk.com/)
 
 Projects
 ----------
