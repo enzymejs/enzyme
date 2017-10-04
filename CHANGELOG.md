@@ -8,7 +8,7 @@
 
 ### Fixes
 
-- @lelandrichardson: Add an npmignore file to all packagestle ([#1204](https://github.com/airbnb/enzyme/pull/1204))
+- @lelandrichardson: Add an npmignore file to all packages ([#1204](https://github.com/airbnb/enzyme/pull/1204))
 
 - @neoziro: Fix node resolving in React 16 adapter ([#100](https://github.com/airbnb/enzyme/pull/100))
 
