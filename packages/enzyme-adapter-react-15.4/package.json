@@ -35,12 +35,12 @@
     "lodash": "^4.17.4",
     "object.assign": "^4.0.4",
     "object.values": "^1.0.4",
-    "prop-types": "^15.5.10"
+    "prop-types": "^15.5.10",
+    "react-addons-test-utils": "15.0.0-0 - 15.4.x"
   },
   "peerDependencies": {
     "enzyme": "^3.0.0",
     "react": "15.0.0-0 - 15.4.x",
-    "react-addons-test-utils": "15.0.0-0 - 15.4.x",
     "react-dom": "15.0.0-0 - 15.4.x"
   },
   "devDependencies": {
