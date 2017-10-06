@@ -6,7 +6,7 @@ etc.)
 
 Full DOM rendering requires that a full DOM API be available at the global scope. This means that
 it must be run in an environment that at least “looks like” a browser environment. If you do not
-want to run your tests inside of a browser, the recommended approach to using `mount` is to depend
+want to run your tests inside of a browser, the alternative recommended approach to using `mount` is to depend
 on a library called [jsdom](https://github.com/tmpvar/jsdom) which is essentially a headless browser
 implemented completely in JS.
 
