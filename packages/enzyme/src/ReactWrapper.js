@@ -176,13 +176,13 @@ class ReactWrapper {
   }
 
   /**
-   * If the root component contained a ref, you can access it here
-   * and get a wrapper around it.
+   * If the root component contained a ref, you can access it here and get the relevant
+   * react component instance or HTML element instance.
    *
    * NOTE: can only be called on a wrapper instance that is also the root instance.
    *
    * @param {String} refname
-   * @returns {ReactWrapper}
+   * @returns {ReactComponent | HTMLElement}
    */
   ref(refname) {
     if (this[ROOT] !== this) {

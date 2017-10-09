@@ -1,6 +1,6 @@
-# `.ref(refName) => ReactWrapper`
+# `.ref(refName) => ReactComponent | HTMLElement`
 
-Returns a wrapper of the node that matches the provided reference name.
+Returns the node that matches the provided reference name.
 
 
 NOTE: can only be called on a wrapper instance that is also the root instance.
@@ -12,7 +12,7 @@ NOTE: can only be called on a wrapper instance that is also the root instance.
 
 #### Returns
 
-`ReactWrapper`: A wrapper of the node that matches the provided reference name.
+`ReactComponent | HTMLElement`: The node that matches the provided reference name. This can be a react component instance, or an HTML element instance.
 
 
 
@@ -35,8 +35,7 @@ class Foo extends React.Component {
 
 ```jsx
 const wrapper = mount(<Foo />);
-expect(wrapper.ref('secondRef').prop('amount')).to.equal(4);
-expect(wrapper.ref('secondRef').text()).to.equal('Second');
+expect(wrapper.ref('secondRef').innerText).to.equal('Second');
 ```
 
 
