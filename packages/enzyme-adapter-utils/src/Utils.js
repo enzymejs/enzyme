@@ -1,14 +1,8 @@
+import flatten from 'lodash/flatten';
 import createMountWrapper from './createMountWrapper';
 import createRenderWrapper from './createRenderWrapper';
-import elementToTree from './elementToTree';
-import nodeTypeFromType from './nodeTypeFromType';
 
-export {
-  createMountWrapper,
-  createRenderWrapper,
-  elementToTree,
-  nodeTypeFromType,
-};
+export { createMountWrapper, createRenderWrapper };
 
 export function mapNativeEventNames(event) {
   const nativeToReactEventMap = {
@@ -85,6 +79,45 @@ export function assertDomAvailable(feature) {
       `Enzyme's ${feature} expects a DOM environment to be loaded, but found none`,
     );
   }
+}
+
+export function nodeTypeFromType(type) {
+  if (typeof type === 'string') {
+    return 'host';
+  }
+  if (
+    type &&
+    type.prototype &&
+    type.prototype.isReactComponent
+  ) {
+    return 'class';
+  }
+  return 'function';
+}
+
+export function elementToTree(el) {
+  if (el === null || typeof el !== 'object' || !('type' in el)) {
+    return el;
+  }
+  const { type, props, key, ref } = el;
+  const { children } = props;
+  let rendered = null;
+  if (Array.isArray(children)) {
+    rendered = flatten(children, true).map(elementToTree);
+  } else if (children && typeof children.toArray === 'function') {
+    rendered = flatten(children.toArray(), true).map(elementToTree);
+  } else if (typeof children !== 'undefined') {
+    rendered = elementToTree(children);
+  }
+  return {
+    nodeType: nodeTypeFromType(type),
+    type,
+    props,
+    key,
+    ref,
+    instance: null,
+    rendered,
+  };
 }
 
 export function propsWithKeysAndRef(node) {

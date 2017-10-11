@@ -195,32 +195,27 @@ describe('RSTTraversal', () => {
         </div>,
       );
       treeForEach(node, spy);
-      expect(spy.callCount).to.equal(4);
+      expect(spy.callCount).to.equal(3);
     });
 
-    it('should handle non-array iterable children', () => {
+    it('should handle Immutable.js children', () => {
       const spy = sinon.spy();
-      const twoDivIterable = {
-        '@@iterator'() {
-          let i = 0;
-          return {
-            next() {
-              i += 1;
-              if (i < 2) {
-                return { value: <div key={i} />, done: false };
-              }
-              return { value: undefined, done: true };
-            },
-          };
+      // This object mimics only the toArray functionality of Immutable.js
+      const twoDivImmutable = {
+        toArray() {
+          return [
+            <div key="a" />,
+            <div key="b" />,
+          ];
         },
       };
       const node = $(
         <div>
-          {twoDivIterable}
+          {twoDivImmutable}
         </div>,
       );
       treeForEach(node, spy);
-      expect(spy.callCount).to.equal(4);
+      expect(spy.callCount).to.equal(3);
     });
 
     it('should not get trapped from empty strings', () => {
