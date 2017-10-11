@@ -1,4 +1,5 @@
 import flatten from 'lodash/flatten';
+import { isIterable } from 'enzyme-adapter-utils';
 
 export function nodeTypeFromType(type) {
   if (typeof type === 'string') {
@@ -23,8 +24,8 @@ export default function elementToTree(el) {
   let rendered = null;
   if (Array.isArray(children)) {
     rendered = flatten(children, true).map(elementToTree);
-  } else if (children && typeof children.toArray === 'function') {
-    rendered = flatten(children.toArray(), true).map(elementToTree);
+  } else if (isIterable(children) && typeof children !== 'string') {
+    rendered = flatten([...children], true).map(elementToTree);
   } else if (typeof children !== 'undefined') {
     rendered = elementToTree(children);
   }

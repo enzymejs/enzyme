@@ -189,6 +189,8 @@ describe('RSTTraversal', () => {
         <div key="a" />,
         <div key="b" />,
       ];
+      const divA = $(<div key="a" />);
+      const divB = $(<div key="b" />);
       const node = $(
         <div>
           {twoDivArray}
@@ -196,26 +198,46 @@ describe('RSTTraversal', () => {
       );
       treeForEach(node, spy);
       expect(spy.callCount).to.equal(3);
+      const nodes = spy.args.map(arg => arg[0]);
+      expect(nodes).to.deep.equal([node, divA, divB]);
     });
 
-    it('should handle Immutable.js children', () => {
+    it('should handle Map children', () => {
       const spy = sinon.spy();
-      // This object mimics only the toArray functionality of Immutable.js
-      const twoDivImmutable = {
-        toArray() {
-          return [
-            <div key="a" />,
-            <div key="b" />,
-          ];
-        },
-      };
+      const twoDivMap = new Map([
+        [<div key="a" />],
+        [<div key="b" />],
+      ]);
+      const divA = $(<div key="a" />);
+      const divB = $(<div key="b" />);
       const node = $(
         <div>
-          {twoDivImmutable}
+          {twoDivMap}
         </div>,
       );
       treeForEach(node, spy);
       expect(spy.callCount).to.equal(3);
+      const nodes = spy.args.map(arg => arg[0]);
+      expect(nodes).to.deep.equal([node, divA, divB]);
+    });
+
+    it('should handle Set children', () => {
+      const spy = sinon.spy();
+      const twoDivSet = new Set([
+        <div key="a" />,
+        <div key="b" />,
+      ]);
+      const divA = $(<div key="a" />);
+      const divB = $(<div key="b" />);
+      const node = $(
+        <div>
+          {twoDivSet}
+        </div>,
+      );
+      treeForEach(node, spy);
+      expect(spy.callCount).to.equal(3);
+      const nodes = spy.args.map(arg => arg[0]);
+      expect(nodes).to.deep.equal([node, divA, divB]);
     });
 
     it('should not get trapped from empty strings', () => {
