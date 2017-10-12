@@ -2801,6 +2801,25 @@ describe('shallow', () => {
       expect(wrapper.find('.bar').get(2)).to.deep.equal(wrapper.find('.bux').getElement());
       expect(wrapper.find('.bar').get(3)).to.deep.equal(wrapper.find('.baz').getElement());
     });
+
+    it('does not add a "null" key to elements with a ref and no key', () => {
+      class Foo extends React.Component {
+        constructor(props) {
+          super(props);
+          this.setRef = this.setRef.bind(this);
+        }
+        setRef(node) {
+          this.node = node;
+        }
+        render() {
+          return (
+            <div ref={this.setRef} className="foo" />
+          );
+        }
+      }
+      const wrapper = shallow(<Foo />);
+      expect(wrapper.get(0).key).to.equal(null);
+    });
   });
 
   describe('.getElement()', () => {
@@ -2826,6 +2845,25 @@ describe('shallow', () => {
       const mockNode = { mock: true };
       wrapper.find('.foo').getElement().ref(mockNode);
       expect(wrapper.instance().node).to.equal(mockNode);
+    });
+
+    it('does not add a "null" key to elements with a ref and no key', () => {
+      class Foo extends React.Component {
+        constructor(props) {
+          super(props);
+          this.setRef = this.setRef.bind(this);
+        }
+        setRef(node) {
+          this.node = node;
+        }
+        render() {
+          return (
+            <div ref={this.setRef} className="foo" />
+          );
+        }
+      }
+      const wrapper = shallow(<Foo />);
+      expect(wrapper.getElement().key).to.equal(null);
     });
   });
 

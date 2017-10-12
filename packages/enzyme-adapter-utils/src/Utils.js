@@ -133,7 +133,7 @@ export function elementToTree(el) {
     nodeType: nodeTypeFromType(type),
     type,
     props,
-    key,
+    key: key || undefined,
     ref,
     instance: null,
     rendered,
