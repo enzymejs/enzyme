@@ -35,13 +35,13 @@
     "lodash": "^4.17.4",
     "object.assign": "^4.0.4",
     "object.values": "^1.0.4",
-    "prop-types": "^15.5.10"
+    "prop-types": "^15.5.10",
+    "react-test-renderer": "^16.0.0-0"
   },
   "peerDependencies": {
     "enzyme": "^3.0.0",
     "react": "^16.0.0-0",
-    "react-dom": "^16.0.0-0",
-    "react-test-renderer": "^16.0.0-0"
+    "react-dom": "^16.0.0-0"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
