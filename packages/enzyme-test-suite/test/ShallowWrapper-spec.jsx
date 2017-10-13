@@ -1028,7 +1028,7 @@ describe('shallow', () => {
       expect(wrapper.first('div').text()).to.equal('yolo');
     });
 
-    it('should call componentWillReceiveProps, shouldComponentUpdate and componentWillUpdate with merged newProps', () => {
+    it('should call componentWillReceiveProps, shouldComponentUpdate, componentWillUpdate, and componentDidUpdate with merged newProps', () => {
       const spy = sinon.spy();
 
       class Foo extends React.Component {
@@ -1041,6 +1041,9 @@ describe('shallow', () => {
         }
         componentWillUpdate(nextProps) {
           spy('componentWillUpdate', this.props, nextProps);
+        }
+        componentDidUpdate(prevProps) {
+          spy('componentDidUpdate', prevProps, this.props);
         }
         render() {
           return (
@@ -1066,6 +1069,11 @@ describe('shallow', () => {
         ],
         [
           'componentWillUpdate',
+          { a: 'a', b: 'b' },
+          { a: 'a', b: 'c', d: 'e' },
+        ],
+        [
+          'componentDidUpdate',
           { a: 'a', b: 'b' },
           { a: 'a', b: 'c', d: 'e' },
         ],
@@ -3098,7 +3106,7 @@ describe('shallow', () => {
         ]);
       });
 
-      // componentDidUpdate does not seem to get called in react 16 beta.
+      // componentDidUpdate is not called in react 16
       itIf(REACT16, 'calls expected methods for setState', () => {
         wrapper.setState({ bar: 'bar' });
         expect(spy.args).to.deep.equal([
@@ -3519,15 +3527,13 @@ describe('shallow', () => {
           [
             'render',
           ],
-        ];
-        if (!REACT16) {
-          expected.push([
+          [
             'componentDidUpdate',
             { foo: 'props' }, { foo: 'props' },
             { foo: 'bar' }, { foo: 'baz' },
-            { foo: 'context' },
-          ]);
-        }
+            REACT16 ? undefined : { foo: 'context' },
+          ],
+        ];
         expect(spy.args).to.deep.equal(expected);
       });
 

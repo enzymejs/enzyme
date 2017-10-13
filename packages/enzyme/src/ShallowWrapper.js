@@ -235,7 +235,7 @@ class ShallowWrapper {
 
   /**
    * A method is for re-render with new props and context.
-   * This calls componentDidUpdate method if lifecycleExperimental is enabled.
+   * This calls componentDidUpdate method if disableLifecycleMethods is not enabled.
    *
    * NOTE: can only be called on a wrapper instance that is also the root instance.
    *
@@ -373,7 +373,7 @@ class ShallowWrapper {
         // so we replace shouldComponentUpdate to know the result and restore it later.
         let originalShouldComponentUpdate;
         if (
-          this[OPTIONS].lifecycleExperimental &&
+          !this[OPTIONS].disableLifecycleMethods &&
           adapter.options.enableComponentDidUpdateOnSetState &&
           instance &&
           typeof instance.shouldComponentUpdate === 'function'
@@ -388,7 +388,7 @@ class ShallowWrapper {
         instance.setState(state, callback);
         if (
           shouldRender &&
-          this[OPTIONS].lifecycleExperimental &&
+          !this[OPTIONS].disableLifecycleMethods &&
           adapter.options.enableComponentDidUpdateOnSetState &&
           instance &&
           typeof instance.componentDidUpdate === 'function'
