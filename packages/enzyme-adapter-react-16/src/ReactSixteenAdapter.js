@@ -25,6 +25,7 @@ const HostRoot = 3;
 const ClassComponent = 2;
 const Fragment = 10;
 const FunctionalComponent = 1;
+const HostPortal = 4;
 const HostComponent = 5;
 const HostText = 6;
 
@@ -67,6 +68,8 @@ function toTree(vnode) {
   const node = findCurrentFiberUsingSlowPath(vnode);
   switch (node.tag) {
     case HostRoot: // 3
+      return toTree(node.child);
+    case HostPortal:
       return toTree(node.child);
     case ClassComponent:
       return {
