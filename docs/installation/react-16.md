@@ -23,12 +23,6 @@ And then you're ready to go!  In your test files you can simply `require` or `im
 
 Typescript:
 
-You will need to additionally install the types files for enzyme and enzyme-adapter-react-16:
-```bash
-npm i --save-dev @types/enzyme
-npm i --save-dev @types/enzyme-adapter-react-16
-```
-
 ```ts
 // setup file
 import { configure } from 'enzyme';
