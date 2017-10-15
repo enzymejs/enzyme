@@ -21,6 +21,29 @@ npm i --save-dev enzyme enzyme-adapter-react-16
 
 And then you're ready to go!  In your test files you can simply `require` or `import` enzyme:
 
+Typescript:
+
+You will need to additionally install the types files for enzyme and enzyme-adapter-react-16:
+```bash
+npm i --save-dev @types/enzyme
+npm i --save-dev @types/enzyme-adapter-react-16
+```
+
+```ts
+// setup file
+import { configure } from 'enzyme';
+import * as Adapter from 'enzyme-adapter-react-16';
+
+configure({ adapter: new Adapter() });
+```
+
+```ts
+// test file
+import { shallow, mount, render } from 'enzyme';
+
+const wrapper = shallow(<Foo />);
+```
+
 ES6:
 ```js
 // setup file
