@@ -7,12 +7,6 @@ installed, you should do so:
 npm i --save react@16 react-dom@16
 ```
 
-Further, enzyme requires the test utilities addon be installed:
-
-```bash
-npm i --save-dev react-test-renderer@16
-```
-
 Next, to get started with enzyme, you can simply install it with npm:
 
 ```bash

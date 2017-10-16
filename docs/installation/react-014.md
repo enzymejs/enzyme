@@ -7,12 +7,6 @@ installed, you should do so:
 npm i --save react@0.14 react-dom@0.14
 ```
 
-Further, enzyme with React 0.14 requires the test utilities addon be installed:
-
-```bash
-npm i --save-dev react-addons-test-utils@0.14
-```
-
 Next, to get started with enzyme, you can simply install it with npm:
 
 ```bash
