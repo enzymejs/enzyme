@@ -4,7 +4,7 @@
 
 Starting with version 15, Jest [no longer mocks modules by default](https://facebook.github.io/jest/blog/2016/09/01/jest-15.html). Because of this, you no longer have to add _any_ special configuration for Jest to use it with enzyme.
 
-Install Jest, and its Babel integrations, as recommended in the [Jest docs](https://facebook.github.io/jest/docs/getting-started.html). Install enzyme. Then, simply require/import React, enzyme functions, and your module at the top of a test file.
+Install Jest, and its Babel integrations, as recommended in the [Jest docs](https://facebook.github.io/jest/docs/en/getting-started.html). Install enzyme. Then, simply require/import React, enzyme functions, and your module at the top of a test file.
 
 ```js
 import React from 'react';
