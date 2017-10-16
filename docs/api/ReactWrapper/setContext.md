@@ -25,7 +25,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 function SimpleComponent(props, context) {
-  return <div>{name}</div>;
+  return <div>{context.name}</div>;
 }
 SimpleComponent.contextTypes = {
   name: PropTypes.string,
