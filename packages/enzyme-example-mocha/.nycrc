@@ -1,0 +1,9 @@
+{
+  "reporter": [
+    "lcov",
+    "text-summary"
+  ],
+  "extension": [
+    ".jsx"
+  ]
+}
