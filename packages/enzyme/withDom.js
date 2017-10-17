@@ -1,14 +1,20 @@
 require('raf/polyfill');
 
+/* eslint
+  no-console: 0,
+  prefer-template: 0
+*/
+
 if (!global.document) {
   try {
+    // eslint-disable-next-line global-require, import/no-extraneous-dependencies
     const jsdom = require('jsdom').jsdom; // could throw
 
     global.document = jsdom('');
-    global.window = document.defaultView;
-    Object.keys(document.defaultView).forEach((property) => {
+    global.window = global.document.defaultView;
+    Object.keys(global.document.defaultView).forEach((property) => {
       if (typeof global[property] === 'undefined') {
-        global[property] = document.defaultView[property];
+        global[property] = global.document.defaultView[property];
       }
     });
 
