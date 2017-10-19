@@ -1,4 +1,3 @@
-import flatten from 'lodash/flatten';
 import createMountWrapper from './createMountWrapper';
 import createRenderWrapper from './createRenderWrapper';
 
@@ -95,12 +94,23 @@ export function nodeTypeFromType(type) {
   return 'function';
 }
 
-export function isIterable(obj) {
+function isIterable(obj) {
   return (
     obj != null &&
     typeof Symbol === 'function' &&
     typeof Symbol.iterator === 'symbol' &&
     typeof obj[Symbol.iterator] === 'function'
+  );
+}
+
+export function isArrayLike(obj) {
+  return Array.isArray(obj) || (isIterable(obj) && typeof obj !== 'string');
+}
+
+export function flatten(arrs) {
+  return arrs.reduce(
+    (flattened, item) => flattened.concat(isArrayLike(item) ? flatten([...item]) : item),
+    [],
   );
 }
 
@@ -111,9 +121,7 @@ export function elementToTree(el) {
   const { type, props, key, ref } = el;
   const { children } = props;
   let rendered = null;
-  if (Array.isArray(children)) {
-    rendered = flatten(children, true).map(elementToTree);
-  } else if (isIterable(children) && typeof children !== 'string') {
+  if (isArrayLike(children)) {
     rendered = flatten([...children], true).map(elementToTree);
   } else if (typeof children !== 'undefined') {
     rendered = elementToTree(children);

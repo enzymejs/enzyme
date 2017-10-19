@@ -202,6 +202,32 @@ describe('RSTTraversal', () => {
       expect(nodes).to.deep.equal([node, divA, divB]);
     });
 
+    it('should handle array siblings', () => {
+      const spy = sinon.spy();
+      const array1 = [
+        <div key="a" />,
+        <div key="b" />,
+      ];
+      const array2 = [
+        <div key="c" />,
+        <div key="d" />,
+      ];
+      const divA = $(<div key="a" />);
+      const divB = $(<div key="b" />);
+      const divC = $(<div key="c" />);
+      const divD = $(<div key="d" />);
+      const node = $(
+        <div>
+          {array1}
+          {array2}
+        </div>,
+      );
+      treeForEach(node, spy);
+      expect(spy.callCount).to.equal(5);
+      const nodes = spy.args.map(arg => arg[0]);
+      expect(nodes).to.deep.equal([node, divA, divB, divC, divD]);
+    });
+
     it('should handle Map children', () => {
       const spy = sinon.spy();
       const twoDivMap = new Map([
@@ -221,6 +247,32 @@ describe('RSTTraversal', () => {
       expect(nodes).to.deep.equal([node, divA, divB]);
     });
 
+    it('should handle Map siblings', () => {
+      const spy = sinon.spy();
+      const map1 = new Map([
+        [<div key="a" />],
+        [<div key="b" />],
+      ]);
+      const map2 = new Map([
+        [<div key="c" />],
+        [<div key="d" />],
+      ]);
+      const divA = $(<div key="a" />);
+      const divB = $(<div key="b" />);
+      const divC = $(<div key="c" />);
+      const divD = $(<div key="d" />);
+      const node = $(
+        <div>
+          {map1}
+          {map2}
+        </div>,
+      );
+      treeForEach(node, spy);
+      expect(spy.callCount).to.equal(5);
+      const nodes = spy.args.map(arg => arg[0]);
+      expect(nodes).to.deep.equal([node, divA, divB, divC, divD]);
+    });
+
     it('should handle Set children', () => {
       const spy = sinon.spy();
       const twoDivSet = new Set([
@@ -238,6 +290,32 @@ describe('RSTTraversal', () => {
       expect(spy.callCount).to.equal(3);
       const nodes = spy.args.map(arg => arg[0]);
       expect(nodes).to.deep.equal([node, divA, divB]);
+    });
+
+    it('should handle Set siblings', () => {
+      const spy = sinon.spy();
+      const set1 = new Set([
+        <div key="a" />,
+        <div key="b" />,
+      ]);
+      const set2 = new Set([
+        <div key="c" />,
+        <div key="d" />,
+      ]);
+      const divA = $(<div key="a" />);
+      const divB = $(<div key="b" />);
+      const divC = $(<div key="c" />);
+      const divD = $(<div key="d" />);
+      const node = $(
+        <div>
+          {set1}
+          {set2}
+        </div>,
+      );
+      treeForEach(node, spy);
+      expect(spy.callCount).to.equal(5);
+      const nodes = spy.args.map(arg => arg[0]);
+      expect(nodes).to.deep.equal([node, divA, divB, divC, divD]);
     });
 
     it('should not get trapped from empty strings', () => {
