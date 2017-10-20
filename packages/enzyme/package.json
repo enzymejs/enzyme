@@ -33,6 +33,9 @@
   ],
   "author": "Leland Richardson <leland.richardson@airbnb.com>",
   "license": "MIT",
+  "engines": {
+    "node": ">=5"
+  },
   "dependencies": {
     "cheerio": "^1.0.0-rc.2",
     "function.prototype.name": "^1.0.3",
