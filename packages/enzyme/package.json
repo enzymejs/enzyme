@@ -43,7 +43,7 @@
     "object.entries": "^1.0.4",
     "object.values": "^1.0.4",
     "raf": "^3.3.2",
-    "rst-selector-parser": "^2.2.2"
+    "rst-selector-parser": "^2.2.3"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
