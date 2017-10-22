@@ -96,7 +96,7 @@ export function generateEmptyRenderData() {
     { message: 'false', value: false, expectResponse: true },
     { message: 'null', value: null, expectResponse: true },
 
-    // Returns false for empty, valid returns
+    // // Returns false for empty, valid returns
     { message: 'React component', value: <TestHelper />, expectResponse: false },
     { message: 'React element', value: <span />, expectResponse: false },
     { message: 'React element', value: <noscript />, expectResponse: false },

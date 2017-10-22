@@ -487,13 +487,15 @@ describe('debug', () => {
       }
 
       expect(shallow(<Bar id="2" />).debug()).to.eql(
-        `<div className="bar">
-  <Foo baz="bax">
-    <span>
-      From Bar
-    </span>
-  </Foo>
-</div>`,
+        `<Bar id="2">
+  <div className="bar">
+    <Foo baz="bax">
+      <span>
+        From Bar
+      </span>
+    </Foo>
+  </div>
+</Bar>`,
       );
     });
   });
@@ -511,11 +513,13 @@ describe('debug', () => {
       }
 
       expect(debugNodes(shallow(<Foo />).getNodesInternal())).to.eql(
-        `<div className="foo">
-  <span>
-    inside Foo
-  </span>
-</div>`,
+        `<Foo>
+  <div className="foo">
+    <span>
+      inside Foo
+    </span>
+  </div>
+</Foo>`,
       );
     });
 
@@ -542,7 +546,7 @@ describe('debug', () => {
         }
       }
 
-      expect(debugNodes(shallow(<Bar />).children().getElements())).to.eql(
+      expect(debugNodes(shallow(<Bar />).rendered().children().getElements())).to.eql(
         `<Foo />
 
 
@@ -566,7 +570,7 @@ describe('debug', () => {
         }
       }
 
-      expect(debugNodes(shallow(<Foo />).children().getNodesInternal())).to.eql(
+      expect(debugNodes(shallow(<Foo />).rendered().children().getNodesInternal())).to.eql(
         `<span>
   span1 text
 </span>
@@ -608,21 +612,25 @@ describe('debug', () => {
       }
 
       expect(shallow(<Bar />).debug({ ignoreProps: false })).to.eql(
-        `<div className="class1">
-  <Foo fooVal="baz" />
-  <span className="class2">
-    span text
-  </span>
-</div>`,
+        `<Bar>
+  <div className="class1">
+    <Foo fooVal="baz" />
+    <span className="class2">
+      span text
+    </span>
+  </div>
+</Bar>`,
       );
 
       expect(shallow(<Bar />).debug({ ignoreProps: true })).to.eql(
-        `<div>
-  <Foo />
-  <span>
-    span text
-  </span>
-</div>`,
+        `<Bar>
+  <div>
+    <Foo />
+    <span>
+      span text
+    </span>
+  </div>
+</Bar>`,
       );
     });
   });

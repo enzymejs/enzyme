@@ -37,15 +37,15 @@ describe('shallow', () => {
 
       const wrapper = shallow(<Foo bar />);
 
-      expect(wrapper.type()).to.equal(Box);
-      expect(wrapper.props().bam).to.equal(true);
+      expect(wrapper.type()).to.equal(Foo);
+      expect(wrapper.rendered().type()).to.equal(Box);
+      expect(wrapper.props().bam).to.equal(undefined);
+      expect(wrapper.rendered().props().bam).to.equal(true);
       expect(wrapper.instance()).to.be.instanceOf(Foo);
-      expect(wrapper.children().at(0).type()).to.equal('div');
+      expect(wrapper.rendered().children().type()).to.equal('div');
       expect(wrapper.find(Box).children().props().className).to.equal('div');
       expect(wrapper.find(Box).children().at(0).props().className).to.equal('div');
       expect(wrapper.find(Box).children().props().className).to.equal('div');
-      expect(wrapper.children().type()).to.equal('div');
-      expect(wrapper.children().props().bam).to.equal(undefined);
     });
   });
 
@@ -155,7 +155,7 @@ describe('shallow', () => {
         </div>
       );
       const wrapper = shallow(<Foo foo="qux" />);
-      expect(wrapper.type()).to.equal('div');
+      expect(wrapper.rendered().type()).to.equal('div');
       expect(wrapper.find('.bar')).to.have.length(1);
       expect(wrapper.find('.qoo').text()).to.equal('qux');
     });
@@ -1020,10 +1020,10 @@ describe('shallow', () => {
 
       const context = { x: 'yolo' };
       const wrapper = shallow(<Foo x={5} />, { context });
-      expect(wrapper.first('div').text()).to.equal('yolo');
+      expect(wrapper.text()).to.equal('yolo');
 
       wrapper.setProps({ x: 5 }); // Just force a re-render
-      expect(wrapper.first('div').text()).to.equal('yolo');
+      expect(wrapper.text()).to.equal('yolo');
     });
 
     it('should call componentWillReceiveProps, shouldComponentUpdate and componentWillUpdate with merged newProps', () => {
@@ -1110,10 +1110,10 @@ describe('shallow', () => {
 
         const context = { x: 'yolo' };
         const wrapper = shallow(<Foo x={5} />, { context });
-        expect(wrapper.first('div').text()).to.equal('yolo');
+        expect(wrapper.text()).to.equal('yolo');
 
         wrapper.setProps({ x: 5 }); // Just force a re-render
-        expect(wrapper.first('div').text()).to.equal('yolo');
+        expect(wrapper.text()).to.equal('yolo');
       });
     });
   });
@@ -1698,7 +1698,8 @@ describe('shallow', () => {
 
       const wrapper = shallow(<Foo foo="hi" bar="bye" />);
 
-      expect(wrapper.props()).to.eql({ className: 'bye', id: 'hi' });
+      expect(wrapper.props()).to.eql({ foo: 'hi', bar: 'bye' });
+      expect(wrapper.rendered().props()).to.eql({ className: 'bye', id: 'hi' });
     });
 
     describeIf(!REACT013, 'stateless function components', () => {
@@ -1709,7 +1710,8 @@ describe('shallow', () => {
 
         const wrapper = shallow(<Foo foo="hi" bar="bye" />);
 
-        expect(wrapper.props()).to.eql({ className: 'bye', id: 'hi' });
+        expect(wrapper.props()).to.eql({ foo: 'hi', bar: 'bye' });
+        expect(wrapper.rendered().props()).to.eql({ className: 'bye', id: 'hi' });
       });
     });
   });
@@ -1754,10 +1756,15 @@ describe('shallow', () => {
 
       const wrapper = shallow(<Foo foo="hi" bar="bye" />);
 
-      expect(wrapper.prop('className')).to.equal('bye');
-      expect(wrapper.prop('id')).to.equal('hi');
-      expect(wrapper.prop('foo')).to.equal(undefined);
-      expect(wrapper.prop('bar')).to.equal(undefined);
+      expect(wrapper.prop('className')).to.equal(undefined);
+      expect(wrapper.prop('id')).to.equal(undefined);
+      expect(wrapper.prop('foo')).to.equal('hi');
+      expect(wrapper.prop('bar')).to.equal('bye');
+
+      expect(wrapper.rendered().prop('className')).to.equal('bye');
+      expect(wrapper.rendered().prop('id')).to.equal('hi');
+      expect(wrapper.rendered().prop('foo')).to.equal(undefined);
+      expect(wrapper.rendered().prop('bar')).to.equal(undefined);
     });
 
     describeIf(!REACT013, 'stateless function components', () => {
@@ -1768,10 +1775,15 @@ describe('shallow', () => {
 
         const wrapper = shallow(<Foo foo="hi" bar="bye" />);
 
-        expect(wrapper.prop('className')).to.equal('bye');
-        expect(wrapper.prop('id')).to.equal('hi');
-        expect(wrapper.prop('foo')).to.equal(undefined);
-        expect(wrapper.prop('bar')).to.equal(undefined);
+        expect(wrapper.prop('className')).to.equal(undefined);
+        expect(wrapper.prop('id')).to.equal(undefined);
+        expect(wrapper.prop('foo')).to.equal('hi');
+        expect(wrapper.prop('bar')).to.equal('bye');
+
+        expect(wrapper.rendered().prop('className')).to.equal('bye');
+        expect(wrapper.rendered().prop('id')).to.equal('hi');
+        expect(wrapper.rendered().prop('foo')).to.equal(undefined);
+        expect(wrapper.rendered().prop('bar')).to.equal(undefined);
       });
     });
   });
@@ -1894,10 +1906,10 @@ describe('shallow', () => {
           ]}
         />,
       );
-      expect(wrapper.children().length).to.equal(3);
-      expect(wrapper.children().at(0).hasClass('foo')).to.equal(true);
-      expect(wrapper.children().at(1).hasClass('bar')).to.equal(true);
-      expect(wrapper.children().at(2).hasClass('baz')).to.equal(true);
+      expect(wrapper.rendered().children().length).to.equal(3);
+      expect(wrapper.rendered().children().at(0).hasClass('foo')).to.equal(true);
+      expect(wrapper.rendered().children().at(1).hasClass('bar')).to.equal(true);
+      expect(wrapper.rendered().children().at(2).hasClass('baz')).to.equal(true);
     });
 
     it('should optionally allow a selector to filter by', () => {
@@ -1931,10 +1943,10 @@ describe('shallow', () => {
             ]}
           />,
         );
-        expect(wrapper.children().length).to.equal(3);
-        expect(wrapper.children().at(0).hasClass('foo')).to.equal(true);
-        expect(wrapper.children().at(1).hasClass('bar')).to.equal(true);
-        expect(wrapper.children().at(2).hasClass('baz')).to.equal(true);
+        expect(wrapper.rendered().children().length).to.equal(3);
+        expect(wrapper.rendered().children().at(0).hasClass('foo')).to.equal(true);
+        expect(wrapper.rendered().children().at(1).hasClass('bar')).to.equal(true);
+        expect(wrapper.rendered().children().at(2).hasClass('baz')).to.equal(true);
       });
     });
 
@@ -2539,7 +2551,7 @@ describe('shallow', () => {
         const context = { name: 'foo' };
         const wrapper = shallow(<Foo />);
         expect(wrapper.find(Bar)).to.have.length(1);
-        expect(wrapper.find(Bar).shallow({ context }).text()).to.equal('foo');
+        expect(wrapper.find(Bar).shallow({ context }).rendered().text()).to.equal('foo');
       });
 
       it('should not throw if context is passed in but contextTypes is missing', () => {
@@ -2623,7 +2635,7 @@ describe('shallow', () => {
 
           const context = { name: 'foo' };
           const wrapper = shallow(<Foo />);
-          expect(wrapper.find(Bar).shallow({ context }).text()).to.equal('foo');
+          expect(wrapper.find(Bar).shallow({ context }).rendered().text()).to.equal('foo');
         });
 
         it('should not throw if context is passed in but contextTypes is missing', () => {
@@ -3866,7 +3878,7 @@ describe('shallow', () => {
     const wrapper = shallow(<Foo />);
     expect(wrapper).to.have.length(1);
     expect(wrapper.html()).to.equal(null);
-    expect(wrapper.type()).to.equal(null);
+    expect(wrapper.rendered().length).to.equal(0);
     const rendered = wrapper.render();
     expect(rendered.length).to.equal(0);
     expect(rendered.html()).to.equal(null);
@@ -3878,7 +3890,7 @@ describe('shallow', () => {
     const wrapper = shallow(<Foo />);
     expect(wrapper).to.have.length(1);
     expect(wrapper.html()).to.equal(null);
-    expect(wrapper.type()).to.equal(null);
+    expect(wrapper.rendered().length).to.equal(0);
     const rendered = wrapper.render();
     expect(rendered.length).to.equal(0);
     expect(rendered.html()).to.equal(null);
@@ -4264,7 +4276,7 @@ describe('shallow', () => {
         Foo.displayName = 'CustomWrapper';
 
         const wrapper = shallow(<Wrapper />);
-        expect(wrapper.name()).to.equal('CustomWrapper');
+        expect(wrapper.rendered().name()).to.equal('CustomWrapper');
       });
 
       describeIf(!REACT013, 'stateless function components', () => {
@@ -4277,7 +4289,7 @@ describe('shallow', () => {
           SFC.displayName = 'CustomWrapper';
 
           const wrapper = shallow(<Wrapper />);
-          expect(wrapper.name()).to.equal('CustomWrapper');
+          expect(wrapper.rendered().name()).to.equal('CustomWrapper');
         });
       });
 
@@ -4296,7 +4308,7 @@ describe('shallow', () => {
           });
 
           const wrapper = shallow(<Wrapper />);
-          expect(wrapper.name()).to.equal('CustomWrapper');
+          expect(wrapper.rendered().name()).to.equal('CustomWrapper');
         });
       });
     });
@@ -4312,7 +4324,7 @@ describe('shallow', () => {
         }
 
         const wrapper = shallow(<Wrapper />);
-        expect(wrapper.name()).to.equal('Foo');
+        expect(wrapper.rendered().name()).to.equal('Foo');
       });
 
       describeIf(!REACT013, 'stateless function components', () => {
@@ -4323,7 +4335,7 @@ describe('shallow', () => {
           const Wrapper = () => <SFC />;
 
           const wrapper = shallow(<Wrapper />);
-          expect(wrapper.name()).to.equal('SFC');
+          expect(wrapper.rendered().name()).to.equal('SFC');
         });
       });
     });
@@ -4377,7 +4389,7 @@ describe('shallow', () => {
 
     it('throws on a DOM node', () => {
       const wrapper = shallow(<RendersDOM />);
-      expect(wrapper.is('div')).to.equal(true);
+      expect(wrapper.rendered().is('div')).to.equal(true);
 
       expect(() => { wrapper.dive(); }).to.throw(
         TypeError,
@@ -4387,7 +4399,7 @@ describe('shallow', () => {
 
     it('throws on a non-component', () => {
       const wrapper = shallow(<RendersNull />);
-      expect(wrapper.type()).to.equal(null);
+      expect(wrapper.rendered().length).to.equal(0);
 
       expect(() => { wrapper.dive(); }).to.throw(
         TypeError,
@@ -4405,10 +4417,10 @@ describe('shallow', () => {
 
     it('dives + shallow-renders when there is one component child', () => {
       const wrapper = shallow(<DoubleWrapsRendersDOM />);
-      expect(wrapper.is(WrapsRendersDOM)).to.equal(true);
+      expect(wrapper.rendered().is(WrapsRendersDOM)).to.equal(true);
 
       const underwater = wrapper.dive();
-      expect(underwater.is(RendersDOM)).to.equal(true);
+      expect(underwater.rendered().is(RendersDOM)).to.equal(true);
     });
 
     it('should merge and pass options through', () => {
