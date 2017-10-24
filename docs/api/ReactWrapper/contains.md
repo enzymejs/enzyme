@@ -6,7 +6,7 @@ It will determine if an element in the wrapper matches the expected element by c
 
 #### Arguments
 
-1. `nodeOrNodes` (`ReactElement|Array<ReactElement>`): The node or array of nodes whose presence you are detecting in the current instance's
+`nodeOrNodes` (`ReactElement|Array<ReactElement>`): The node or array of nodes whose presence you are detecting in the current instance's
 render tree.
 
 
