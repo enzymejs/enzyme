@@ -102,6 +102,49 @@ Although this is a breaking change, I believe the new behavior is closer to what
 actually expect and want. Having enzyme wrappers be immutable results in more deterministic tests
 that are less prone to flakiness from external factors.
 
+### Calling `props()` after a state change
+
+In `enzyme` v2, executing an event that would change a component state (and in turn update props) would return those updated props via the `.props` method.
+
+Now, in `enzyme` v3, you are required to re-find the component; for example:
+
+```jsx
+class Toggler extends React.Component {
+  constructor(...args) {
+    super(...args);
+    this.state = { on: false };
+  }
+
+  toggle() {
+    this.setState(({ on }) => ({ on: !on }));
+  }
+
+  render() {
+    const { on } = this.state;
+    return (<div id="root">{on ? 'on' : 'off'}</div>);
+  }
+}
+
+it('passes in enzyme v2, fails in v3', () => {
+  const wrapper = mount(<Toggler />);
+  const root = wrapper.find('#root');
+  expect(root.text()).to.equal('off');
+
+  wrapper.instance().toggle();
+
+  expect(root.text()).to.equal('on');
+});
+
+it('passes in v2 and v3', () => {
+  const wrapper = mount(<Toggler />);
+  expect(wrapper.find('#root').text()).to.equal('off');
+
+  wrapper.instance().toggle();
+
+  expect(wrapper.find('#root').text()).to.equal('on');
+});
+```
+
 ## `children()` now has slightly different meaning
 
 enzyme has a `.children()` method which is intended to return the rendered children of a wrapper.
