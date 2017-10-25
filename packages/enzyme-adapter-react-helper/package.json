@@ -1,0 +1,60 @@
+{
+  "name": "enzyme-adapter-react-helper",
+  "version": "0.0.0",
+  "description": "JavaScript Testing utilities for React",
+  "homepage": "http://airbnb.io/enzyme/",
+  "main": "build",
+  "scripts": {
+    "prebuild": "npm run clean",
+    "prepublish": "npm run build",
+    "clean": "rimraf build",
+    "lint": "eslint --ext js,jsx .",
+    "pretest": "npm run lint",
+    "build": "babel src --out-dir build",
+    "watch": "npm run build -- -w"
+  },
+  "bin": {
+    "enzyme-adapter-react-install": "./build/enzyme-adapter-react-install.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/airbnb/enzyme.git"
+  },
+  "keywords": [
+    "javascript",
+    "shallow rendering",
+    "shallowRender",
+    "test",
+    "reactjs",
+    "react",
+    "flux",
+    "testing",
+    "test utils",
+    "assertion helpers",
+    "tdd",
+    "mocha"
+  ],
+  "author": "Bruce Paul <brucewpaul@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "babel-cli": "^6.24.1",
+    "babel-plugin-transform-replace-object-assign": "^0.2.1",
+    "babel-preset-airbnb": "^2.4.0",
+    "enzyme": "^3.1.0",
+    "eslint": "^4.9.0",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-plugin-import": "^2.8.0",
+    "react": ">=0.13",
+    "rimraf": "^2.6.1"
+  },
+  "peerDependencies": {
+    "enzyme": "^3.0.0",
+    "react": ">=0.13"
+  },
+  "dependencies": {
+    "install-peerdeps": "^1.4.1",
+    "npm-run": "^4.1.2",
+    "object.assign": "^4.0.4",
+    "semver": "^5.4.1"
+  }
+}
