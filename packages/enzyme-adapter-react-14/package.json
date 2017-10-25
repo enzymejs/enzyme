@@ -38,12 +38,12 @@
     "lodash": "^4.17.4",
     "object.assign": "^4.0.4",
     "object.values": "^1.0.4",
-    "prop-types": "^15.5.10",
-    "react-addons-test-utils": "^0.14.0"
+    "prop-types": "^15.5.10"
   },
   "peerDependencies": {
     "enzyme": "^3.0.0",
     "react": "^0.14.0",
+    "react-addons-test-utils": "^0.14.0",
     "react-dom": "^0.14.0"
   },
   "devDependencies": {
