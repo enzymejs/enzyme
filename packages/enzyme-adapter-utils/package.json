@@ -43,6 +43,7 @@
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
+    "babel-plugin-transform-replace-object-assign": "^0.2.1",
     "eslint": "^4.4.1",
     "in-publish": "^2.0.0",
     "rimraf": "^2.6.1",

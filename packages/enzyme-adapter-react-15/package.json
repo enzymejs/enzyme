@@ -48,6 +48,7 @@
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
+    "babel-plugin-transform-replace-object-assign": "^0.2.1",
     "enzyme": "^3.0.0",
     "eslint": "^4.4.1",
     "in-publish": "^2.0.0",
