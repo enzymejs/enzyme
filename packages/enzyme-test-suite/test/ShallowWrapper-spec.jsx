@@ -4471,7 +4471,7 @@ describe('shallow', () => {
     });
   });
 
-  describe('out-of-band state updates', () => {
+  describe('out-of-band state updates with autoUpdate', () => {
     class Child extends React.Component {
       render() {
         return <span />;
@@ -4511,19 +4511,17 @@ describe('shallow', () => {
     }
 
     it('should have updated output after an asynchronous setState', (done) => {
-      const wrapper = shallow(<Test />);
+      const wrapper = shallow(<Test />, { autoUpdate: true });
       wrapper.find('.async-btn').simulate('click');
       setImmediate(() => {
-        wrapper.update();
         expect(wrapper.find('.show-me').length).to.equal(1);
         done();
       });
     });
 
     it('should have updated output after child prop callback invokes setState', () => {
-      const wrapper = shallow(<Test />);
+      const wrapper = shallow(<Test />, { autoUpdate: true });
       wrapper.find(Child).props().callback();
-      wrapper.update();
       expect(wrapper.find('.show-me').length).to.equal(1);
     });
   });

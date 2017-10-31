@@ -124,6 +124,10 @@ class ReactWrapper {
         'ReactWrapper::getNode() can only be called when wrapping one node',
       );
     }
+    if (this[ROOT] === this && this[OPTIONS].autoUpdate) {
+      this[NODE] = this[RENDERER].getNode();
+      this[NODES] = [this[NODE]];
+    }
     return this[NODES][0];
   }
 
@@ -133,6 +137,10 @@ class ReactWrapper {
    * @return {Array<ReactComponent>}
    */
   getNodesInternal() {
+    if (this[ROOT] === this && this[OPTIONS].autoUpdate) {
+      this[NODE] = this[RENDERER].getNode();
+      this[NODES] = [this[NODE]];
+    }
     return this[NODES];
   }
 
@@ -675,7 +683,7 @@ class ReactWrapper {
    */
   parents(selector) {
     const allParents = this.wrap(
-      this.single('parents', n => parentsOfNode(n, this[ROOT].getNodeInternal())),
+      this.single('parents', n => parentsOfNode(n, this[ROOT][NODE])),
     );
     return selector ? allParents.filter(selector) : allParents;
   }
