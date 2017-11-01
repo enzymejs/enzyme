@@ -22,7 +22,7 @@ sudo: false
 matrix:
   fast_finish: true
   include:
-    - node_js: "node"
+    - node_js: "lts/*"
       env: LINT=true
     - node_js: "6"
       env: KARMA=true REACT=0.13
