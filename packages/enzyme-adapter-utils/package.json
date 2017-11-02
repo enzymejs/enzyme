@@ -1,6 +1,6 @@
 {
   "name": "enzyme-adapter-utils",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "JavaScript Testing utilities for React",
   "homepage": "http://airbnb.io/enzyme/",
   "main": "build",
