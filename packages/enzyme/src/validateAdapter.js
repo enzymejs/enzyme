@@ -14,9 +14,6 @@ export default function validateAdapter(adapter) {
     `);
   }
   if (!(adapter instanceof EnzymeAdapter)) {
-    throw new Error(
-      'Enzyme Internal Error: configured enzyme adapter did not inherit from the EnzymeAdapter ' +
-      'base class',
-    );
+    throw new Error('Enzyme Internal Error: configured enzyme adapter did not inherit from the EnzymeAdapter base class');
   }
 }

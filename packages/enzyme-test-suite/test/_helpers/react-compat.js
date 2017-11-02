@@ -13,14 +13,14 @@ if (is('>=15.5 || ^16.0.0-alpha')) {
   // eslint-disable-next-line import/no-extraneous-dependencies
   createClass = require('create-react-class');
 } else {
-  createClass = require('react').createClass;
+  ({ createClass } = require('react'));
 }
 
 if (is('^0.13.0')) {
   renderToString = require('react').renderToStaticMarkup;
 } else {
   // eslint-disable-next-line import/no-extraneous-dependencies
-  renderToString = require('react-dom/server').renderToString;
+  ({ renderToString } = require('react-dom/server'));
 }
 
 export {

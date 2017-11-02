@@ -113,9 +113,7 @@ function nodeMatchesToken(node, token) {
  * @param {Token} token
  */
 function buildPredicateFromToken(token) {
-  return node => token.body.every(
-    bodyToken => nodeMatchesToken(node, bodyToken),
-  );
+  return node => token.body.every(bodyToken => nodeMatchesToken(node, bodyToken));
 }
 
 /**
@@ -148,9 +146,7 @@ export function buildPredicate(selector) {
       }
       return node => nodeMatchesObjectProps(node, selector);
     }
-    throw new TypeError(
-      'Enzyme::Selector does not support an array, null, or empty object as a selector',
-    );
+    throw new TypeError('Enzyme::Selector does not support an array, null, or empty object as a selector');
   }
   // If the selector is a string, parse it as a simple CSS selector
   if (typeof selector === 'string') {
@@ -281,7 +277,7 @@ export function reduceTreeBySelector(selector, root) {
       } else {
         // We can assume there always all previously matched tokens since selectors
         // cannot start with combinators.
-        const type = token.type;
+        const { type } = token;
         // We assume the next token is a selector, so move the index
         // forward and build the predicate.
         index += 1;

@@ -1,7 +1,5 @@
 function unimplementedError(methodName, classname) {
-  return new Error(
-    `${methodName} is a required method of ${classname}, but was not implemented.`,
-  );
+  return new Error(`${methodName} is a required method of ${classname}, but was not implemented.`);
 }
 
 class EnzymeAdapter {

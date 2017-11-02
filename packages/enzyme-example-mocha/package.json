@@ -19,7 +19,7 @@
     "babel": "^6.23.0",
     "babel-core": "^6.26.0",
     "babel-preset-airbnb": "^2.4.0",
-    "eslint": "^4.9.0",
+    "eslint": "^4.10.0",
     "eslint-config-airbnb": "^16.1.0",
     "eslint-plugin-import": "^2.8.0",
     "eslint-plugin-jsx-a11y": "^6.0.2",

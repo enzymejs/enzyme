@@ -74,9 +74,7 @@ export function withSetStateAllowed(fn) {
 
 export function assertDomAvailable(feature) {
   if (!global || !global.document || !global.document.createElement) {
-    throw new Error(
-      `Enzyme's ${feature} expects a DOM environment to be loaded, but found none`,
-    );
+    throw new Error(`Enzyme's ${feature} expects a DOM environment to be loaded, but found none`);
   }
 }
 
@@ -118,7 +116,12 @@ export function elementToTree(el) {
   if (el === null || typeof el !== 'object' || !('type' in el)) {
     return el;
   }
-  const { type, props, key, ref } = el;
+  const {
+    type,
+    props,
+    key,
+    ref,
+  } = el;
   const { children } = props;
   let rendered = null;
   if (isArrayLike(children)) {

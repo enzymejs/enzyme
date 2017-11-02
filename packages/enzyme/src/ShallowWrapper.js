@@ -73,18 +73,14 @@ function validateOptions(options) {
     typeof lifecycleExperimental !== 'undefined' &&
     typeof lifecycleExperimental !== 'boolean'
   ) {
-    throw new Error(
-      'lifecycleExperimental must be either true or false if provided',
-    );
+    throw new Error('lifecycleExperimental must be either true or false if provided');
   }
 
   if (
     typeof disableLifecycleMethods !== 'undefined' &&
     typeof disableLifecycleMethods !== 'boolean'
   ) {
-    throw new Error(
-      'disableLifecycleMethods must be either true or false if provided',
-    );
+    throw new Error('disableLifecycleMethods must be either true or false if provided');
   }
 
   if (
@@ -92,9 +88,7 @@ function validateOptions(options) {
     disableLifecycleMethods != null &&
     lifecycleExperimental === disableLifecycleMethods
   ) {
-    throw new Error(
-      'lifecycleExperimental and disableLifecycleMethods cannot be set to the same value',
-    );
+    throw new Error('lifecycleExperimental and disableLifecycleMethods cannot be set to the same value');
   }
 }
 
@@ -118,7 +112,7 @@ class ShallowWrapper {
       const renderer = getAdapter(options).createRenderer({ mode: 'shallow', ...options });
       privateSet(this, RENDERER, renderer);
       this[RENDERER].render(nodes, options.context);
-      const instance = this[RENDERER].getNode().instance;
+      const { instance } = this[RENDERER].getNode();
       if (
         !options.disableLifecycleMethods &&
         instance &&
@@ -160,9 +154,7 @@ class ShallowWrapper {
 
   getNodeInternal() {
     if (this.length !== 1) {
-      throw new Error(
-        'ShallowWrapper::getNode() can only be called when wrapping one node',
-      );
+      throw new Error('ShallowWrapper::getNode() can only be called when wrapping one node');
     }
     return this[NODE];
   }
@@ -174,9 +166,7 @@ class ShallowWrapper {
    */
   getElement() {
     if (this.length !== 1) {
-      throw new Error(
-        'ShallowWrapper::getElement() can only be called when wrapping one node',
-      );
+      throw new Error('ShallowWrapper::getElement() can only be called when wrapping one node');
     }
     return getAdapter(this[OPTIONS]).nodeToElement(this[NODE]);
   }
@@ -192,9 +182,7 @@ class ShallowWrapper {
 
   // eslint-disable-next-line class-methods-use-this
   getNode() {
-    throw new Error(
-      'ShallowWrapper::getNode() is no longer supported. Use ShallowWrapper::getElement() instead',
-    );
+    throw new Error('ShallowWrapper::getNode() is no longer supported. Use ShallowWrapper::getElement() instead');
   }
 
   getNodesInternal() {
@@ -203,9 +191,7 @@ class ShallowWrapper {
 
   // eslint-disable-next-line class-methods-use-this
   getNodes() {
-    throw new Error(
-      'ShallowWrapper::getNodes() is no longer supported. Use ShallowWrapper::getElements() instead',
-    );
+    throw new Error('ShallowWrapper::getNodes() is no longer supported. Use ShallowWrapper::getElements() instead');
   }
 
   /**
@@ -265,7 +251,7 @@ class ShallowWrapper {
         // rerendering with props/context is still a valid thing to do. In
         // this case, state will be undefined, but props/context will exist.
         const instance = this.instance() || {};
-        const state = instance.state;
+        const { state } = instance;
         const prevProps = instance.props || this[UNRENDERED].props;
         const prevContext = instance.context || this[OPTIONS].context;
         const nextProps = { ...prevProps, ...props };
@@ -433,10 +419,7 @@ class ShallowWrapper {
       throw new Error('ShallowWrapper::setContext() can only be called on the root');
     }
     if (!this[OPTIONS].context) {
-      throw new Error(
-        'ShallowWrapper::setContext() can only be called on a wrapper that was originally passed ' +
-        'a context option',
-      );
+      throw new Error('ShallowWrapper::setContext() can only be called on a wrapper that was originally passed a context option');
     }
     return this.rerender(null, context);
   }
@@ -456,10 +439,7 @@ class ShallowWrapper {
   contains(nodeOrNodes) {
     const adapter = getAdapter(this[OPTIONS]);
     if (!isReactElementAlike(nodeOrNodes, adapter)) {
-      throw new Error(
-        'ShallowWrapper::contains() can only be called with ReactElement (or array of them), ' +
-        'string or number as argument.',
-      );
+      throw new Error('ShallowWrapper::contains() can only be called with ReactElement (or array of them), string or number as argument.');
     }
     const predicate = Array.isArray(nodeOrNodes)
       ? other => containsChildrenSubArray(
@@ -762,16 +742,10 @@ class ShallowWrapper {
       throw new Error('ShallowWrapper::context() can only be called on the root');
     }
     if (!this[OPTIONS].context) {
-      throw new Error(
-        'ShallowWrapper::context() can only be called on a wrapper that was originally passed ' +
-        'a context option',
-      );
+      throw new Error('ShallowWrapper::context() can only be called on a wrapper that was originally passed a context option');
     }
     if (this.instance() === null) {
-      throw new Error(
-        'ShallowWrapper::context() can only be called on wrapped nodes that have a non-null ' +
-        'instance',
-      );
+      throw new Error('ShallowWrapper::context() can only be called on wrapped nodes that have a non-null instance');
     }
     const _context = this.single('context', () => this.instance().context);
     if (name) {
@@ -811,9 +785,7 @@ class ShallowWrapper {
    * @returns {ShallowWrapper}
    */
   parents(selector) {
-    const allParents = this.wrap(
-      this.single('parents', n => parentsOfNode(n, this[ROOT][NODE])),
-    );
+    const allParents = this.wrap(this.single('parents', n => parentsOfNode(n, this[ROOT][NODE])));
     return selector ? allParents.filter(selector) : allParents;
   }
 
@@ -844,9 +816,9 @@ class ShallowWrapper {
    * @returns {ShallowWrapper}
    */
   shallow(options) {
-    return this.single('shallow', n => this.wrap(
-      getAdapter(this[OPTIONS]).nodeToElement(n), null, options),
-    );
+    return this.single('shallow', n => (
+      this.wrap(getAdapter(this[OPTIONS]).nodeToElement(n), null, options)
+    ));
   }
 
   /**
@@ -900,10 +872,7 @@ class ShallowWrapper {
   hasClass(className) {
     if (className && className.indexOf('.') !== -1) {
       // eslint-disable-next-line no-console
-      console.warn(
-        'It looks like you\'re calling `ShallowWrapper::hasClass()` with a CSS selector. ' +
-        'hasClass() expects a class name, not a CSS selector.',
-      );
+      console.warn('It looks like you\'re calling `ShallowWrapper::hasClass()` with a CSS selector. hasClass() expects a class name, not a CSS selector.');
     }
     return this.single('hasClass', n => hasClassName(n, className));
   }
@@ -1132,9 +1101,7 @@ class ShallowWrapper {
     const fnName = typeof name === 'string' ? name : 'unknown';
     const callback = typeof fn === 'function' ? fn : name;
     if (this.length !== 1) {
-      throw new Error(
-        `Method “${fnName}” is only meant to be run on a single node. ${this.length} found instead.`,
-      );
+      throw new Error(`Method “${fnName}” is only meant to be run on a single node. ${this.length} found instead.`);
     }
     return callback.call(this, this.getNodeInternal());
   }

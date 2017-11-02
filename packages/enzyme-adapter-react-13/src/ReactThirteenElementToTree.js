@@ -18,7 +18,12 @@ export default function elementToTree(el) {
   if (el === null || typeof el !== 'object' || !('type' in el)) {
     return el;
   }
-  const { type, props, key, ref } = el;
+  const {
+    type,
+    props,
+    key,
+    ref,
+  } = el;
   const { children } = props;
   let rendered = null;
   if (isArrayLike(children)) {

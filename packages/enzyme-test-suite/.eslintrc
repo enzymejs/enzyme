@@ -1,4 +1,9 @@
 {
+  "extends": "airbnb",
+  "root": true,
+  "env": {
+    "mocha": true,
+  },
   "rules": {
     "no-param-reassign": 0,
     "padded-blocks": 0,
@@ -12,7 +17,11 @@
     "import/no-extraneous-dependencies": [2, {
       "devDependencies": true
     }],
+    "jsx-a11y/click-events-have-key-events": 0,
     "jsx-a11y/no-static-element-interactions": 0,
-    "jsx-a11y/anchor-has-content": 0
-  }
+    "jsx-a11y/anchor-has-content": 0,
+    "jsx-a11y/anchor-is-valid": 0,
+    "jsx-a11y/label-has-for": 0,
+    "react/jsx-curly-brace-presence": 0,
+  },
 }

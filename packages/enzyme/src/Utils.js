@@ -1,4 +1,4 @@
-/* eslint no-use-before-define:0 */
+/* eslint no-use-before-define: 0 */
 import isEqual from 'lodash/isEqual';
 import is from 'object-is';
 import entries from 'object.entries';
@@ -13,7 +13,7 @@ export function getAdapter(options = {}) {
     validateAdapter(options.adapter);
     return options.adapter;
   }
-  const adapter = configuration.get().adapter;
+  const { adapter } = configuration.get();
   validateAdapter(adapter);
   return adapter;
 }

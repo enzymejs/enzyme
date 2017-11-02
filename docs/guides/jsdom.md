@@ -43,7 +43,7 @@ Here is the sample of [jsdom old API](https://github.com/tmpvar/jsdom/blob/maste
 ```js
 /* setup.js */
 
-const jsdom = require('jsdom').jsdom;
+const { jsdom } = require('jsdom');
 
 global.document = jsdom('');
 global.window = document.defaultView;

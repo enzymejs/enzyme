@@ -1,11 +1,11 @@
-import './_helpers/setupAdapters';
 import React from 'react';
 import { expect } from 'chai';
-import { renderToString } from './_helpers/react-compat';
 import jsdom from 'jsdom';
-
-import { REACT013, REACT16 } from './_helpers/version';
 import configuration from 'enzyme/build/configuration';
+
+import './_helpers/setupAdapters';
+import { renderToString } from './_helpers/react-compat';
+import { REACT013, REACT16 } from './_helpers/version';
 import { itIf, describeWithDOM } from './_helpers';
 
 const { adapter } = configuration.get();
@@ -305,68 +305,66 @@ describe('Adapter', () => {
 
       cleanNode(tree);
 
-      expect(prettyFormat(tree)).to.equal(
-        prettyFormat({
+      expect(prettyFormat(tree)).to.equal(prettyFormat({
+        nodeType: 'class',
+        type: Bam,
+        props: {},
+        key: null,
+        ref: null,
+        instance: null,
+        rendered: {
           nodeType: 'class',
-          type: Bam,
-          props: {},
+          type: Bar,
+          props: { special: true },
           key: null,
           ref: null,
           instance: null,
           rendered: {
-            nodeType: 'class',
-            type: Bar,
-            props: { special: true },
+            nodeType: 'function',
+            type: Foo,
+            props: { className: 'special' },
             key: null,
             ref: null,
             instance: null,
             rendered: {
-              nodeType: 'function',
-              type: Foo,
-              props: { className: 'special' },
+              nodeType: 'host',
+              type: 'div',
+              props: { className: 'Foo special' },
               key: null,
               ref: null,
               instance: null,
-              rendered: {
-                nodeType: 'host',
-                type: 'div',
-                props: { className: 'Foo special' },
-                key: null,
-                ref: null,
-                instance: null,
-                rendered: [
-                  {
+              rendered: [
+                {
+                  nodeType: 'host',
+                  type: 'span',
+                  props: { className: 'Foo2' },
+                  key: null,
+                  ref: null,
+                  instance: null,
+                  rendered: ['Literal'],
+                },
+                {
+                  nodeType: 'function',
+                  type: Qoo,
+                  props: {},
+                  key: null,
+                  ref: null,
+                  instance: null,
+                  rendered: {
                     nodeType: 'host',
                     type: 'span',
-                    props: { className: 'Foo2' },
+                    props: { className: 'Qoo' },
                     key: null,
                     ref: null,
                     instance: null,
-                    rendered: ['Literal'],
+                    rendered: ['Hello World!'],
                   },
-                  {
-                    nodeType: 'function',
-                    type: Qoo,
-                    props: {},
-                    key: null,
-                    ref: null,
-                    instance: null,
-                    rendered: {
-                      nodeType: 'host',
-                      type: 'span',
-                      props: { className: 'Qoo' },
-                      key: null,
-                      ref: null,
-                      instance: null,
-                      rendered: ['Hello World!'],
-                    },
-                  },
-                ],
-              },
+                },
+              ],
             },
           },
-        }),
-      );
+        },
+      }));
     });
 
     it('renders complicated trees of composites and hosts', () => {
@@ -427,68 +425,66 @@ describe('Adapter', () => {
 
       cleanNode(tree);
 
-      expect(prettyFormat(tree)).to.equal(
-        prettyFormat({
+      expect(prettyFormat(tree)).to.equal(prettyFormat({
+        nodeType: 'class',
+        type: Bam,
+        props: {},
+        key: null,
+        ref: null,
+        instance: null,
+        rendered: {
           nodeType: 'class',
-          type: Bam,
-          props: {},
+          type: Bar,
+          props: { special: true },
           key: null,
           ref: null,
           instance: null,
           rendered: {
             nodeType: 'class',
-            type: Bar,
-            props: { special: true },
+            type: Foo,
+            props: { className: 'special' },
             key: null,
             ref: null,
             instance: null,
             rendered: {
-              nodeType: 'class',
-              type: Foo,
-              props: { className: 'special' },
+              nodeType: 'host',
+              type: 'div',
+              props: { className: 'Foo special' },
               key: null,
               ref: null,
               instance: null,
-              rendered: {
-                nodeType: 'host',
-                type: 'div',
-                props: { className: 'Foo special' },
-                key: null,
-                ref: null,
-                instance: null,
-                rendered: [
-                  {
+              rendered: [
+                {
+                  nodeType: 'host',
+                  type: 'span',
+                  props: { className: 'Foo2' },
+                  key: null,
+                  ref: null,
+                  instance: null,
+                  rendered: ['Literal'],
+                },
+                {
+                  nodeType: 'class',
+                  type: Qoo,
+                  props: {},
+                  key: null,
+                  ref: null,
+                  instance: null,
+                  rendered: {
                     nodeType: 'host',
                     type: 'span',
-                    props: { className: 'Foo2' },
+                    props: { className: 'Qoo' },
                     key: null,
                     ref: null,
                     instance: null,
-                    rendered: ['Literal'],
+                    rendered: ['Hello World!'],
                   },
-                  {
-                    nodeType: 'class',
-                    type: Qoo,
-                    props: {},
-                    key: null,
-                    ref: null,
-                    instance: null,
-                    rendered: {
-                      nodeType: 'host',
-                      type: 'span',
-                      props: { className: 'Qoo' },
-                      key: null,
-                      ref: null,
-                      instance: null,
-                      rendered: ['Hello World!'],
-                    },
-                  },
-                ],
-              },
+                },
+              ],
             },
           },
-        }),
-      );
+        },
+      }));
     });
   });
 
@@ -570,53 +566,50 @@ describe('Adapter', () => {
 
     cleanNode(tree);
 
-    expect(prettyFormat(tree)).to.equal(
-      prettyFormat({
+    expect(prettyFormat(tree)).to.equal(prettyFormat({
+      nodeType: 'class',
+      type: Bam,
+      props: {},
+      key: null,
+      ref: null,
+      instance: null,
+      rendered: {
         nodeType: 'class',
-        type: Bam,
+        type: Bar,
         props: {},
         key: null,
         ref: null,
         instance: null,
-        rendered: {
-          nodeType: 'class',
-          type: Bar,
-          props: {},
-          key: null,
-          ref: null,
-          instance: null,
-          rendered: [
-            {
-              nodeType: 'class',
-              type: Foo,
-              props: {},
-              key: null,
-              ref: null,
-              instance: null,
-              rendered: null,
-            },
-            {
-              nodeType: 'class',
-              type: Foo,
-              props: {},
-              key: null,
-              ref: null,
-              instance: null,
-              rendered: null,
-            },
-            {
-              nodeType: 'class',
-              type: Foo,
-              props: {},
-              key: null,
-              ref: null,
-              instance: null,
-              rendered: null,
-            },
-          ],
-        },
-      }),
-    );
+        rendered: [
+          {
+            nodeType: 'class',
+            type: Foo,
+            props: {},
+            key: null,
+            ref: null,
+            instance: null,
+            rendered: null,
+          },
+          {
+            nodeType: 'class',
+            type: Foo,
+            props: {},
+            key: null,
+            ref: null,
+            instance: null,
+            rendered: null,
+          },
+          {
+            nodeType: 'class',
+            type: Foo,
+            props: {},
+            key: null,
+            ref: null,
+            instance: null,
+            rendered: null,
+          },
+        ],
+      },
+    }));
   });
-
 });

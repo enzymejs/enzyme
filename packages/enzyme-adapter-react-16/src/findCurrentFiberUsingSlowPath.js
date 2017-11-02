@@ -1,6 +1,6 @@
 // Extracted from https://github.com/facebook/react/blob/7bdf93b17a35a5d8fcf0ceae0bf48ed5e6b16688/src/renderers/shared/fiber/ReactFiberTreeReflection.js#L104-L228
 function findCurrentFiberUsingSlowPath(fiber) {
-  const alternate = fiber.alternate;
+  const { alternate } = fiber;
   if (!alternate) {
     return fiber;
   }
@@ -21,7 +21,7 @@ function findCurrentFiberUsingSlowPath(fiber) {
     // assume that the child is current. This happens when we bailout on low
     // priority: the bailed out fiber's child reuses the current child.
     if (parentA.child === parentB.child) {
-      let child = parentA.child;
+      let { child } = parentA;
       while (child) {
         if (child === a) {
           // We've determined that A is the current branch.
@@ -52,7 +52,7 @@ function findCurrentFiberUsingSlowPath(fiber) {
       //
       // Search parent A's child set
       let didFindChild = false;
-      let child = parentA.child;
+      let { child } = parentA;
       while (child) {
         if (child === a) {
           didFindChild = true;
@@ -70,7 +70,7 @@ function findCurrentFiberUsingSlowPath(fiber) {
       }
       if (!didFindChild) {
         // Search parent B's child set
-        child = parentB.child;
+        ({ child } = parentB);
         while (child) {
           if (child === a) {
             didFindChild = true;

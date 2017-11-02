@@ -2,7 +2,8 @@ require('raf/polyfill');
 
 /* eslint
   no-console: 0,
-  prefer-template: 0
+  prefer-template: 0,
+  prefer-destructuring: 0,
 */
 
 if (!global.document) {

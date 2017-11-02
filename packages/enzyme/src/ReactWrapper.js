@@ -69,9 +69,7 @@ function filterWhereUnwrapped(wrapper, predicate) {
 class ReactWrapper {
   constructor(nodes, root, passedOptions = {}) {
     if (!global.window && !global.document) {
-      throw new Error(
-        'It looks like you called `mount()` without a global document being loaded.',
-      );
+      throw new Error('It looks like you called `mount()` without a global document being loaded.');
     }
     const options = makeOptions(passedOptions);
 
@@ -120,9 +118,7 @@ class ReactWrapper {
    */
   getNodeInternal() {
     if (this.length !== 1) {
-      throw new Error(
-        'ReactWrapper::getNode() can only be called when wrapping one node',
-      );
+      throw new Error('ReactWrapper::getNode() can only be called when wrapping one node');
     }
     return this[NODES][0];
   }
@@ -143,9 +139,7 @@ class ReactWrapper {
    */
   getElement() {
     if (this.length !== 1) {
-      throw new Error(
-        'ReactWrapper::getElement() can only be called when wrapping one node',
-      );
+      throw new Error('ReactWrapper::getElement() can only be called when wrapping one node');
     }
     return getAdapter(this[OPTIONS]).nodeToElement(this[NODE]);
   }
@@ -161,16 +155,12 @@ class ReactWrapper {
 
   // eslint-disable-next-line class-methods-use-this
   getNode() {
-    throw new Error(
-      'ReactWrapper::getNode() is no longer supported. Use ReactWrapper::instance() instead',
-    );
+    throw new Error('ReactWrapper::getNode() is no longer supported. Use ReactWrapper::instance() instead');
   }
 
   // eslint-disable-next-line class-methods-use-this
   getNodes() {
-    throw new Error(
-      'ReactWrapper::getNodes() is no longer supported.',
-    );
+    throw new Error('ReactWrapper::getNodes() is no longer supported.');
   }
 
   /**
@@ -345,10 +335,7 @@ class ReactWrapper {
       throw new Error('ReactWrapper::setContext() can only be called on the root');
     }
     if (!this[OPTIONS].context) {
-      throw new Error(
-        'ShallowWrapper::setContext() can only be called on a wrapper that was originally passed ' +
-        'a context option',
-      );
+      throw new Error('ShallowWrapper::setContext() can only be called on a wrapper that was originally passed a context option');
     }
     this[RENDERER].render(this[UNRENDERED], context, () => this.update());
     return this;
@@ -674,9 +661,7 @@ class ReactWrapper {
    * @returns {ReactWrapper}
    */
   parents(selector) {
-    const allParents = this.wrap(
-      this.single('parents', n => parentsOfNode(n, this[ROOT].getNodeInternal())),
-    );
+    const allParents = this.wrap(this.single('parents', n => parentsOfNode(n, this[ROOT].getNodeInternal())));
     return selector ? allParents.filter(selector) : allParents;
   }
 
@@ -749,10 +734,7 @@ class ReactWrapper {
   hasClass(className) {
     if (className && className.indexOf('.') !== -1) {
       // eslint-disable-next-line no-console
-      console.warn(
-        'It looks like you\'re calling `ReactWrapper::hasClass()` with a CSS selector. ' +
-        'hasClass() expects a class name, not a CSS selector.',
-      );
+      console.warn('It looks like you\'re calling `ReactWrapper::hasClass()` with a CSS selector. hasClass() expects a class name, not a CSS selector.');
     }
     return this.single('hasClass', n => hasClassName(n, className));
   }
@@ -980,9 +962,7 @@ class ReactWrapper {
     const fnName = typeof name === 'string' ? name : 'unknown';
     const callback = typeof fn === 'function' ? fn : name;
     if (this.length !== 1) {
-      throw new Error(
-        `Method “${fnName}” is only meant to be run on a single node. ${this.length} found instead.`,
-      );
+      throw new Error(`Method “${fnName}” is only meant to be run on a single node. ${this.length} found instead.`);
     }
     return callback.call(this, this.getNodeInternal());
   }
@@ -1037,10 +1017,7 @@ class ReactWrapper {
       throw new Error('ReactWrapper::detach() can only be called on the root');
     }
     if (!this[OPTIONS].attachTo) {
-      throw new Error(
-        'ReactWrapper::detach() can only be called on when the `attachTo` option was passed into ' +
-        '`mount()`.',
-      );
+      throw new Error('ReactWrapper::detach() can only be called on when the `attachTo` option was passed into `mount()`.');
     }
     this[RENDERER].unmount();
   }

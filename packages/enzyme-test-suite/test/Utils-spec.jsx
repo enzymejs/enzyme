@@ -1,8 +1,5 @@
-import './_helpers/setupAdapters';
 import React from 'react';
 import { expect } from 'chai';
-
-import { describeIf } from './_helpers';
 import {
   childrenToSimplifiedArray,
   nodeEqual,
@@ -13,6 +10,10 @@ import {
   mapNativeEventNames,
   propFromEvent,
 } from 'enzyme-adapter-utils';
+
+import './_helpers/setupAdapters';
+
+import { describeIf } from './_helpers';
 import { REACT013 } from './_helpers/version';
 
 describe('Utils', () => {

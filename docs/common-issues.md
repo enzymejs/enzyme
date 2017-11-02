@@ -42,6 +42,6 @@ class Comp extends React.Component {
 }
 
 const wrapper = mount(<Comp />);
-const portal = wrapper.instance().portal;
+const { portal } = wrapper.instance();
 // assert on `portal`
 ```
