@@ -819,6 +819,39 @@ describeWithDOM('mount', () => {
         expect(wrapper.find('a[href="/page#anchor"]')).to.have.lengthOf(1);
       });
     });
+
+    it('updates when the top level wrapper\'s .update() method is called', () => {
+      class Input extends React.Component {
+        constructor() {
+          super();
+          this.state = { value: 'some text' };
+          this.updateValue = this.updateValue.bind(this);
+        }
+
+        updateValue(value) {
+          this.setState({ value });
+        }
+
+        render() {
+          return (
+            <div>
+              <input value={this.state.value} onChange={this.updateValue} />
+              <p>{this.state.value}</p>
+            </div>
+          );
+        }
+      }
+
+      const inputWrapper = mount(<Input />);
+      const paragraph = inputWrapper.find('p');
+      const input = inputWrapper.find('input');
+
+      const callback = input.prop('onChange');
+      callback('some different text');
+      inputWrapper.update();
+
+      expect(paragraph.prop('children')).to.equal('some different text');
+    });
   });
 
   describe('.findWhere(predicate)', () => {
