@@ -39,6 +39,10 @@ npm run react:14
 npm run react:15
 ```
 
+```bash
+# switch to React 16
+npm run react:16
+```
 
 ### Running Tests
 
