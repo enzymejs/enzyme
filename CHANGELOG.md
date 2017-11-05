@@ -1,5 +1,11 @@
 # Change Log
 
+## 3.1.1
+
+### Fixes
+
+- @koba04: Fix to call componentDidUpdate on setState of React v16 ([#1261](https://github.com/airbnb/enzyme/pull/1261))
+
 ## 3.1.0
 
 ### New Stuff
