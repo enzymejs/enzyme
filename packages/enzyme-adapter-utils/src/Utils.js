@@ -92,13 +92,25 @@ export function nodeTypeFromType(type) {
   return 'function';
 }
 
-function isIterable(obj) {
-  return (
-    obj != null &&
-    typeof Symbol === 'function' &&
-    typeof Symbol.iterator === 'symbol' &&
-    typeof obj[Symbol.iterator] === 'function'
+function getIteratorFn(obj) {
+  const iteratorFn = obj && (
+    (
+      typeof Symbol === 'function' &&
+      typeof Symbol.iterator === 'symbol' &&
+      obj[Symbol.iterator]
+    ) ||
+    obj['@@iterator']
   );
+
+  if (typeof iteratorFn === 'function') {
+    return iteratorFn;
+  }
+
+  return undefined;
+}
+
+function isIterable(obj) {
+  return Boolean(getIteratorFn(obj));
 }
 
 export function isArrayLike(obj) {
@@ -106,10 +118,29 @@ export function isArrayLike(obj) {
 }
 
 export function flatten(arrs) {
-  return arrs.reduce(
-    (flattened, item) => flattened.concat(isArrayLike(item) ? flatten([...item]) : item),
-    [],
-  );
+  let flatArrs = [];
+
+  const iteratorFn = getIteratorFn(arrs);
+  const iterator = iteratorFn.call(arrs);
+
+  let step = iterator.next();
+
+  while (!step.done) {
+    const item = step.value;
+    let flatItem;
+
+    if (isArrayLike(item)) {
+      flatItem = flatten(item);
+    } else {
+      flatItem = item;
+    }
+
+    flatArrs = flatArrs.concat(flatItem);
+
+    step = iterator.next();
+  }
+
+  return flatArrs;
 }
 
 export function elementToTree(el) {
@@ -125,7 +156,7 @@ export function elementToTree(el) {
   const { children } = props;
   let rendered = null;
   if (isArrayLike(children)) {
-    rendered = flatten([...children], true).map(elementToTree);
+    rendered = flatten(children).map(elementToTree);
   } else if (typeof children !== 'undefined') {
     rendered = elementToTree(children);
   }

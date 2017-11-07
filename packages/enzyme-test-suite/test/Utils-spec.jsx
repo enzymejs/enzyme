@@ -7,6 +7,7 @@ import {
   displayNameOfNode,
 } from 'enzyme/build/Utils';
 import {
+  flatten,
   mapNativeEventNames,
   propFromEvent,
 } from 'enzyme-adapter-utils';
@@ -540,6 +541,14 @@ describe('Utils', () => {
       const children = ['with', 1, <div />, 'other node'];
       const simplified = ['with1', <div />, 'other node'];
       expectEqualArrays(childrenToSimplifiedArray(children), simplified);
+    });
+  });
+
+  describe('flatten', () => {
+    it('should recursively flatten a nested iterable structure', () => {
+      const nested = [1, [2, [3, [4]], 5], 6, [7, [8, 9]], 10];
+      const flat = flatten(nested);
+      expect(flat).to.deep.equal([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
     });
   });
 });

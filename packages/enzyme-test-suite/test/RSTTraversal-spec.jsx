@@ -225,6 +225,115 @@ describe('RSTTraversal', () => {
       expect(nodes).to.deep.equal([node, divA, divB, divC, divD]);
     });
 
+    describe('support for arbitrary iterable children', () => {
+      const makeDivIterator = (lowerBound, upperBound) => {
+        let counter = lowerBound;
+
+        return {
+          next() {
+            if (counter < upperBound) {
+              const key = String.fromCharCode('a'.charCodeAt(0) + counter);
+
+              const nextValue = {
+                value: <div key={key} />,
+                done: false,
+              };
+
+              counter += 1;
+
+              return nextValue;
+            }
+
+            return { done: true };
+          },
+        };
+      };
+
+      it('should handle iterable with Symbol.iterator property children', () => {
+        const spy = sinon.spy();
+
+        const iterableChildren = { [Symbol.iterator]: () => makeDivIterator(0, 2) };
+
+        const divA = $(<div key="a" />);
+        const divB = $(<div key="b" />);
+        const node = $((
+          <div>
+            {iterableChildren}
+          </div>
+        ));
+
+        treeForEach(node, spy);
+        expect(spy.callCount).to.equal(3);
+        const nodes = spy.args.map(arg => arg[0]);
+        expect(nodes).to.deep.equal([node, divA, divB]);
+      });
+
+      it('should handle iterable with Symbol.iterator property siblings', () => {
+        const spy = sinon.spy();
+
+        const iterableChildren1 = { [Symbol.iterator]: () => makeDivIterator(0, 2) };
+        const iterableChildren2 = { [Symbol.iterator]: () => makeDivIterator(2, 4) };
+
+        const divA = $(<div key="a" />);
+        const divB = $(<div key="b" />);
+        const divC = $(<div key="c" />);
+        const divD = $(<div key="d" />);
+        const node = $((
+          <div>
+            {iterableChildren1}
+            {iterableChildren2}
+          </div>
+        ));
+
+        treeForEach(node, spy);
+        expect(spy.callCount).to.equal(5);
+        const nodes = spy.args.map(arg => arg[0]);
+        expect(nodes).to.deep.equal([node, divA, divB, divC, divD]);
+      });
+
+      it('should handle iterable with @@iterator property children', () => {
+        const spy = sinon.spy();
+
+        const legacyIterableChildren = { '@@iterator': () => makeDivIterator(0, 2) };
+
+        const divA = $(<div key="a" />);
+        const divB = $(<div key="b" />);
+        const node = $((
+          <div>
+            {legacyIterableChildren}
+          </div>
+        ));
+
+        treeForEach(node, spy);
+        expect(spy.callCount).to.equal(3);
+        const nodes = spy.args.map(arg => arg[0]);
+        expect(nodes).to.deep.equal([node, divA, divB]);
+      });
+
+      it('should handle iterable with @@iterator property siblings', () => {
+        const spy = sinon.spy();
+
+        const legacyIterableChildren1 = { '@@iterator': () => makeDivIterator(0, 2) };
+        const legacyIterableChildren2 = { '@@iterator': () => makeDivIterator(2, 4) };
+
+        const divA = $(<div key="a" />);
+        const divB = $(<div key="b" />);
+        const divC = $(<div key="c" />);
+        const divD = $(<div key="d" />);
+        const node = $((
+          <div>
+            {legacyIterableChildren1}
+            {legacyIterableChildren2}
+          </div>
+        ));
+
+        treeForEach(node, spy);
+        expect(spy.callCount).to.equal(5);
+        const nodes = spy.args.map(arg => arg[0]);
+        expect(nodes).to.deep.equal([node, divA, divB, divC, divD]);
+      });
+    });
+
     it('should not get trapped from empty strings', () => {
       const spy = sinon.spy();
       const node = $((
