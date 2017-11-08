@@ -110,11 +110,11 @@ function getIteratorFn(obj) {
 }
 
 function isIterable(obj) {
-  return Boolean(getIteratorFn(obj));
+  return !!getIteratorFn(obj);
 }
 
 export function isArrayLike(obj) {
-  return Array.isArray(obj) || (isIterable(obj) && typeof obj !== 'string');
+  return Array.isArray(obj) || (typeof obj !== 'string' && isIterable(obj));
 }
 
 export function flatten(arrs) {

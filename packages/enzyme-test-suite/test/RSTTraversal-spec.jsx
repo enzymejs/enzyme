@@ -227,12 +227,13 @@ describe('RSTTraversal', () => {
 
     describe('support for arbitrary iterable children', () => {
       const makeDivIterator = (lowerBound, upperBound) => {
+        const baseCode = 'a'.charCodeAt(0);
         let counter = lowerBound;
 
         return {
           next() {
             if (counter < upperBound) {
-              const key = String.fromCharCode('a'.charCodeAt(0) + counter);
+              const key = String.fromCharCode(baseCode + counter);
 
               const nextValue = {
                 value: <div key={key} />,
