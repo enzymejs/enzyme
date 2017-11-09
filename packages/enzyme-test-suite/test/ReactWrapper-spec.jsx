@@ -11,7 +11,7 @@ import {
 import { ITERATOR_SYMBOL, sym } from 'enzyme/build/Utils';
 
 import './_helpers/setupAdapters';
-import { createClass } from './_helpers/react-compat';
+import { createClass, createPortal } from './_helpers/react-compat';
 import {
   describeWithDOM,
   describeIf,
@@ -756,6 +756,23 @@ describeWithDOM('mount', () => {
       expect(wrapper.find('[data-foo="bar baz"]')).to.have.length(0);
       expect(wrapper.find('[data-foo="foo  bar"]')).to.have.length(0);
       expect(wrapper.find('[data-foo="bar  baz quz"]')).to.have.length(0);
+    });
+
+    itIf(REACT16, 'should find elements through portals', () => {
+      const containerDiv = global.document.createElement('div');
+
+      class FooPortal extends React.Component {
+        render() {
+          return createPortal(
+            this.props.children,
+            containerDiv,
+          );
+        }
+      }
+
+      const wrapper = mount(<FooPortal><h1>Successful Portal!</h1></FooPortal>);
+      expect(wrapper.find('h1').length).to.equal(1);
+      expect(containerDiv.querySelectorAll('h1').length).to.equal(1);
     });
 
     describeIf(!REACT013, 'stateless function components', () => {

@@ -69,7 +69,7 @@ function toTree(vnode) {
   switch (node.tag) {
     case HostRoot: // 3
       return toTree(node.child);
-    case HostPortal:
+    case HostPortal: // 4
       return toTree(node.child);
     case ClassComponent:
       return {
