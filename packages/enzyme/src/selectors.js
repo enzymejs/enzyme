@@ -36,7 +36,7 @@ const PSEUDO_ELEMENT = 'pseudoElementSelector';
 
 const EXACT_ATTRIBUTE_OPERATOR = '=';
 const WHITELIST_ATTRIBUTE_OPERATOR = '~=';
-const HYPEN_ATTRIBUTE_OPERATOR = '|=';
+const HYPHENATED_ATTRIBUTE_OPERATOR = '|=';
 const PREFIX_ATTRIBUTE_OPERATOR = '^=';
 const SUFFIX_ATTRIBUTE_OPERATOR = '$=';
 const SUBSTRING_ATTRIBUTE_OPERATOR = '*=';
@@ -106,7 +106,7 @@ function matchAttributeSelector(node, token) {
      * @example
      * [hreflang|="en"] matches hreflang="en-US"
      */
-    case HYPEN_ATTRIBUTE_OPERATOR:
+    case HYPHENATED_ATTRIBUTE_OPERATOR:
       return nodePropValue === value || nodePropValue.startsWith(`${value}-`);
     /**
      * Represents an element with the att attribute whose value begins with the prefix value.
