@@ -94,7 +94,7 @@ function matchAttributeSelector(node, token) {
       return is(nodePropValue, value);
     /**
      * Represents an element with the att attribute whose value is a whitespace-separated
-     * list of words, one of which is exactly 
+     * list of words, one of which is exactly
      * @example
      *  [rel~="copyright"] matches rel="copyright other"
      */
