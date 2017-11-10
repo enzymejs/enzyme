@@ -118,6 +118,15 @@ export function isArrayLike(obj) {
 }
 
 export function flatten(arrs) {
+  // optimize for the most common case
+  if (Array.isArray(arrs)) {
+    return arrs.reduce(
+      (flatArrs, item) => flatArrs.concat(isArrayLike(item) ? flatten(item) : item),
+      [],
+    );
+  }
+
+  // fallback for arbitrary iterable children
   let flatArrs = [];
 
   const iteratorFn = getIteratorFn(arrs);
