@@ -156,6 +156,43 @@ describe('Adapter', () => {
       }));
     });
 
+    itIf(REACT16, 'renders react portals', () => {
+      // eslint-disable-next-line global-require, import/no-unresolved
+      const ReactDOM = require('react-dom'); // only available in 0.14+
+
+      const document = jsdom.jsdom();
+      const options = { mode: 'mount' };
+      const renderer = adapter.createRenderer(options);
+      const Foo = () => (
+        ReactDOM.createPortal(
+          <div className="Foo">Hello World!</div>,
+          document.body,
+        )
+      );
+
+      renderer.render(<Foo />);
+
+      const node = renderer.getNode();
+
+      cleanNode(node);
+
+      expect(prettyFormat(node)).to.equal(prettyFormat({
+        nodeType: 'function',
+        type: Foo,
+        props: {},
+        ref: null,
+        instance: null,
+        rendered: {
+          nodeType: 'host',
+          type: 'div',
+          props: { className: 'Foo' },
+          ref: null,
+          instance: null,
+          rendered: ['Hello World!'],
+        },
+      }));
+    });
+
     itIf(!REACT013, 'renders simple components returning host components', () => {
       const options = { mode: 'mount' };
       const renderer = adapter.createRenderer(options);
