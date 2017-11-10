@@ -418,13 +418,13 @@ describe('selectors', () => {
         expectAttributeMatch(<div data-foo={Infinity} />, '[data-foo=-Infinity]', false);
         expectAttributeMatch(<div data-foo={Infinity} />, '[data-foo=NaN]', false);
         expectAttributeMatch(<div data-foo={0} />, '[data-foo=Infinity]', false);
+        expectAttributeMatch(<div data-foo={0} />, '[data-foo=-Infinity]', false);
         expectAttributeMatch(<div data-foo={-Infinity} />, '[data-foo=-Infinity]', true);
         expectAttributeMatch(<div data-foo={-Infinity} />, '[data-foo=Infinity]', false);
         expectAttributeMatch(<div data-foo={-Infinity} />, '[data-foo="-Infinity"]', false);
         expectAttributeMatch(<div data-foo={-Infinity} />, '[data-foo=NaN]', false);
         expectAttributeMatch(<div data-foo={NaN} />, '[data-foo=Infinity]', false);
         expectAttributeMatch(<div data-foo={NaN} />, '[data-foo=-Infinity]', false);
-        expectAttributeMatch(<div data-foo={0} />, '[data-foo=Infinity]', false);
       });
 
       it('whitespace list attribute selector', () => {
