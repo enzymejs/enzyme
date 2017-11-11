@@ -66,6 +66,7 @@ to make a PR to this README and add a link to it! The known 3rd party adapters a
 | Adapter Package | For Library | Status |
 | --- | --- | --- |
 | [`preact-enzyme-adapter`](https://github.com/aweary/preact-enzyme-adapater) | [`preact`](https://github.com/developit/preact) | (work in progress) |
+|[`enzyme-adapter-inferno`](https://github.com/bbc/enzyme-adapter-inferno)|[`inferno`](https://github.com/infernojs/inferno)|(work in progress)|
 
 Running Enzyme Tests
 ===========
