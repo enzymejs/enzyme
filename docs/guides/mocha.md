@@ -10,11 +10,11 @@ npm i --save-dev enzyme
 ```jsx
 import React from 'react';
 import { expect } from 'chai';
-import { mount, shallow } from 'enzyme';
-import sinon from 'sinon';
+import { mount } from 'enzyme';
+import { spy } from 'sinon';
 import Foo from './src/Foo';
 
-sinon.spy(Foo.prototype, 'componentDidMount');
+spy(Foo.prototype, 'componentDidMount');
 
 describe('<Foo />', () => {
   it('calls componentDidMount', () => {
