@@ -1648,11 +1648,12 @@ describe('shallow', () => {
           <div>&nbsp;</div>
           <div>&nbsp;&nbsp;</div>
         </div>
-      )
+      );
+
       const wrapper = shallow(Space);
       const mounted = mount(Space);
+
       expect(wrapper.text()).to.equal(mounted.text());
-    })
     });
 
     describeIf(!REACT013, 'stateless function components', () => {
