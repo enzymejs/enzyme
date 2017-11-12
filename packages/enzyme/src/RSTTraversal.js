@@ -127,5 +127,7 @@ export function getTextFromNode(node) {
 
   return childrenOfNode(node).map(getTextFromNode)
     .join('')
-    .replace(/\s+/, ' ');
+    .replace(/^[ \t\n\r]+$/g, '') // remove empty nodes
+    .replace(/[ \t\n\r]+/, ' ') // remove double spaces
+    .replace(/(^[ \t\n\r]*|[ \t\n\r]*$)/, ''); // remove spaces from beginning or end
 }

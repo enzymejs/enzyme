@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { expect } from 'chai';
 import sinon from 'sinon';
-import { shallow, render, ShallowWrapper } from 'enzyme';
+import { shallow, render, ShallowWrapper, mount } from 'enzyme';
 import { ITERATOR_SYMBOL, withSetStateAllowed, sym } from 'enzyme/build/Utils';
 
 import './_helpers/setupAdapters';
@@ -1631,6 +1631,28 @@ describe('shallow', () => {
 
     it('should handle html entities', () => {
       matchesRender(<div>&gt;</div>);
+    });
+
+    it('should handle spaces with same behavior as ReactWarpper.text()', () => {
+      const Space = (
+        <div>
+          <div> test  </div>
+          <div>Hello
+
+
+            World</div>
+          <div>Hello World</div>
+          <div>Hello
+            World</div>
+          <div>Hello     World</div>
+          <div>&nbsp;</div>
+          <div>&nbsp;&nbsp;</div>
+        </div>
+      )
+      const wrapper = shallow(Space);
+      const mounted = mount(Space);
+      expect(wrapper.text()).to.equal(mounted.text());
+    })
     });
 
     describeIf(!REACT013, 'stateless function components', () => {
