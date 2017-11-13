@@ -73,7 +73,7 @@ Promise.resolve()
     const peerDeps = adapterJson.peerDependencies;
     const installs = Object.keys(peerDeps)
       .filter(key => !key.startsWith('enzyme'))
-      .map(key => `${key}@'${peerDeps[key]}'`)
+      .map(key => `${key}@"${peerDeps[key]}"`)
       .join(' ');
 
     testJson.dependencies[adapterName] = adapterJson.version;
