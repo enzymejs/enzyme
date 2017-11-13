@@ -1633,17 +1633,19 @@ describe('shallow', () => {
       matchesRender(<div>&gt;</div>);
     });
 
-    it('should handle spaces with same behavior as ReactWarpper.text()', () => {
+    it('should handle spaces with same behavior as ReactWrapper.text()', () => {
       const Space = (
         <div>
           <div> test  </div>
           <div>Hello
 
 
-            World</div>
+            World
+          </div>
           <div>Hello World</div>
           <div>Hello
-            World</div>
+            World
+          </div>
           <div>Hello     World</div>
           <div>&nbsp;</div>
           <div>&nbsp;&nbsp;</div>
