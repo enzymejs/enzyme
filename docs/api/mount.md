@@ -162,7 +162,7 @@ Simulates an event on the current node.
 #### [`.setState(nextState) => ReactWrapper`](ReactWrapper/setState.md)
 Manually sets state of the root component.
 
-#### [`.setProps(nextProps) => ReactWrapper`](ReactWrapper/setProps.md)
+#### [`.setProps(nextProps[, callback]) => ReactWrapper`](ReactWrapper/setProps.md)
 Manually sets props of the root component.
 
 #### [`.setContext(context) => ReactWrapper`](ReactWrapper/setContext.md)
