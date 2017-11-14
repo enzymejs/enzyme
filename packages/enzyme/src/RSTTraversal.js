@@ -126,6 +126,5 @@ export function getTextFromNode(node) {
   }
 
   return childrenOfNode(node).map(getTextFromNode)
-    .join('')
-    .replace(/\s+/, ' ');
+    .join('');
 }
