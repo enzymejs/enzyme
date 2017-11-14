@@ -15,5 +15,5 @@ Returns whether or not the current node is empty.
 
 ```jsx
 const wrapper = shallow(<div className="some-class" />);
-expect(wrapper.find('.other-class').isEmpty()).to.be(true);
+expect(wrapper.find('.other-class').isEmpty()).to.equal(true);
 ```

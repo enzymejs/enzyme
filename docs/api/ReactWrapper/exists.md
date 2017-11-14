@@ -14,5 +14,5 @@ Returns whether or not the current node exists.
 
 ```jsx
 const wrapper = mount(<div className="some-class" />);
-expect(wrapper.find('.other-class').exists()).to.be(false);
+expect(wrapper.find('.other-class').exists()).to.equal(false);
 ```

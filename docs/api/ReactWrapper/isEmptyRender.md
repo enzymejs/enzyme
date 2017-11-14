@@ -14,5 +14,5 @@ function Foo() {
 }
 
 const wrapper = mount(<Foo />);
-expect(wrapper.isEmptyRender()).to.be(true);
+expect(wrapper.isEmptyRender()).to.equal(true);
 ```
