@@ -43,7 +43,7 @@
     "object.assign": "^4.0.4",
     "object.entries": "^1.0.4",
     "object.values": "^1.0.4",
-    "raf": "^3.3.2",
+    "raf": "^3.4.0",
     "rst-selector-parser": "^2.2.3"
   },
   "devDependencies": {
