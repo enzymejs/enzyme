@@ -7,18 +7,18 @@ import npmRun from 'npm-run';
 const reactEnv = process.env.REACT;
 const reactArg = process.argv[2];
 
-if (reactEnv && !semver.valid(reactEnv)) {
-  throw new Error('REACT environment variable is not a valid semver');
+if (reactEnv && !semver.validRange(reactEnv)) {
+  throw new Error('REACT environment variable is not a valid semver range');
 }
 
-if (reactArg && !semver.valid(reactArg)) {
-  throw new Error('Argument supplied to enzyme-adapter-react-install is not a valid semver');
+if (reactArg && !semver.validRange(reactArg)) {
+  throw new Error('Argument supplied to enzyme-adapter-react-install is not a valid semver range');
 }
 
 const reactVersion = reactEnv || reactArg;
 
-if (!semver.satisfies(reactVersion, '>=0.13')) {
-  throw new Error('semver is not valid. Please provide a valid semver as an argument or environment variable.');
+if (!semver.intersects(reactVersion, '>=0.13')) {
+  throw new Error('semver range is not valid. Please provide a valid semver range as an argument or environment variable.');
 }
 
 console.log('Cleaning up React and related packages...');
