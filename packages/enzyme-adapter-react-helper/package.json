@@ -38,6 +38,7 @@
   "license": "MIT",
   "devDependencies": {
     "babel-cli": "^6.24.1",
+    "babel-plugin-add-module-exports": "^0.2.1",
     "babel-plugin-transform-replace-object-assign": "^0.2.1",
     "babel-preset-airbnb": "^2.4.0",
     "enzyme": "^3.1.0",
