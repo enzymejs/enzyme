@@ -1,5 +1,15 @@
 # Change Log
 
+## 3.2.0
+
+### New Stuff
+
+- @aweary: Support all attribute selector operators ([#1157](https://github.com/airbnb/enzyme/pull/1157))
+
+### Fixes
+
+- @idanilt: Change ShallowWrapper.text() trim spaces with same behavior as ReactWrapper.text() ([#1350](https://github.com/airbnb/enzyme/pull/1350))
+
 ## 3.1.1
 
 ### Fixes

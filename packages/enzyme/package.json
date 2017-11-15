@@ -1,6 +1,6 @@
 {
   "name": "enzyme",
-  "version": "3.1.1",
+  "version": "3.2.0",
   "description": "JavaScript Testing utilities for React",
   "homepage": "http://airbnb.io/enzyme/",
   "main": "build",
