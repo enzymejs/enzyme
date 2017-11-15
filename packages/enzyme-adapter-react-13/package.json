@@ -44,7 +44,7 @@
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "enzyme": "^3.0.0",
-    "eslint": "^4.10.0",
+    "eslint": "^4.11.0",
     "eslint-config-airbnb": "^16.1.0",
     "eslint-plugin-import": "^2.8.0",
     "eslint-plugin-jsx-a11y": "^6.0.2",
