@@ -45,6 +45,7 @@
     "eslint": "^4.11.0",
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-react": "^7.5.1",
     "react": ">=0.13",
     "rimraf": "^2.6.1"
   },
