@@ -183,7 +183,7 @@ function nodeMatchesToken(node, token) {
       return matchAttributeSelector(node, token);
     case PSEUDO_ELEMENT:
     case PSEUDO_CLASS:
-      throw new Error('Enzyme::Selector does not support psuedo-element or psuedo-class selectors.');
+      throw new Error('Enzyme::Selector does not support pseudo-element or pseudo-class selectors.');
     default:
       throw new Error(`Unknown token type: ${token.type}`);
   }
