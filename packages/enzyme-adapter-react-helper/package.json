@@ -57,6 +57,7 @@
     "install-peerdeps": "^1.4.1",
     "npm-run": "^4.1.2",
     "object.assign": "^4.0.4",
+    "object.getownpropertydescriptors": "^2.0.3",
     "semver": "^5.4.1"
   }
 }
