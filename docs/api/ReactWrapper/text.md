@@ -21,8 +21,12 @@ expect(wrapper.text()).to.equal('important');
 ```
 
 ```jsx
-const wrapper = mount(<div><Foo /><b>important</b></div>);
-expect(wrapper.text()).to.equal('<Foo />important');
+function Foo() {
+  return <div>This is</div>;
+}
+
+const wrapper = mount(<div><Foo /> <b>really</b> important</div>);
+expect(wrapper.text()).to.equal('This is really important');
 ```
 
 
