@@ -5,6 +5,7 @@ import entries from 'object.entries';
 import functionName from 'function.prototype.name';
 import configuration from './configuration';
 import validateAdapter from './validateAdapter';
+import { childrenOfNode } from './RSTTraversal';
 
 export const ITERATOR_SYMBOL = typeof Symbol === 'function' && Symbol.iterator;
 
@@ -179,12 +180,6 @@ export function childrenToSimplifiedArray(nodeChildren) {
   }
 
   return simplifiedArray;
-}
-
-function childrenOfNode(node) {
-  const props = propsOfNode(node);
-  const { children } = props;
-  return childrenToArray(children);
 }
 
 function isTextualNode(node) {
