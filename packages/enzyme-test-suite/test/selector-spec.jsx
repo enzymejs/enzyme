@@ -205,12 +205,12 @@ describe('selectors', () => {
 
       it('throws for pseudo-element selectors', () => {
         const wrapper = renderMethod(<div className="foo" />);
-        expect(() => wrapper.find('div::after')).to.throw('Enzyme::Selector does not support psuedo-element or psuedo-class selectors.');
+        expect(() => wrapper.find('div::after')).to.throw('Enzyme::Selector does not support pseudo-element or pseudo-class selectors.');
       });
 
       it('throws for pseudo-class selectors', () => {
         const wrapper = renderMethod(<div className="foo" />);
-        expect(() => wrapper.find('div:hover')).to.throw('Enzyme::Selector does not support psuedo-element or psuedo-class selectors.');
+        expect(() => wrapper.find('div:hover')).to.throw('Enzyme::Selector does not support pseudo-element or pseudo-class selectors.');
       });
 
       it('.foo + div > span', () => {
