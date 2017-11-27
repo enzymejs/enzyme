@@ -10,21 +10,36 @@ function assertFunction(fn) {
   return fn;
 }
 
-function safeSFC(fn) {
-  assertFunction(fn);
+function copyStatics(source, target) {
+  assertFunction(source);
 
-  class SafeSFC extends React.Component {
-    render() {
-      return fn(this.props, this.context);
-    }
-  }
-  SafeSFC.displayName = fn.displayName || fn.name;
+  // eslint-disable-next-line no-param-reassign
+  target.displayName = source.displayName || source.name;
   const {
     prototype: oldProto,
     ...descriptors
-  } = gOPDs(fn);
-  Object.defineProperties(SafeSFC, descriptors);
-  return SafeSFC;
+  } = gOPDs(source);
+  Object.defineProperties(target, descriptors);
+
+  return target;
 }
 
-export default ifReact('>= 0.14', assertFunction, safeSFC);
+function nullToNoScript(fn) {
+  // eslint-disable-next-line prefer-arrow-callback
+  return copyStatics(fn, function NullHandler(...args) {
+    const element = fn(...args);
+    return element === null ? <noscript /> : element;
+  });
+}
+
+const maybeNullWrapper = ifReact('^0.14', nullToNoScript, assertFunction);
+
+function safeSFC(fn) {
+  return copyStatics(fn, class SafeSFC extends React.Component {
+    render() {
+      return maybeNullWrapper(fn(this.props, this.context));
+    }
+  });
+}
+
+export default ifReact('>= 0.14', maybeNullWrapper, safeSFC);

@@ -1,5 +1,5 @@
 {
-  "extends": "airbnb-base",
+  "extends": "airbnb",
   "root": true,
   "rules": {
     "max-len": 0,
