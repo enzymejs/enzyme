@@ -41,6 +41,7 @@ export function mapNativeEventNames(event) {
     beforeinput: 'beforeInput',
     mouseenter: 'mouseEnter',
     mouseleave: 'mouseLeave',
+    transitionend: 'transitionEnd',
   };
 
   return nativeToReactEventMap[event] || event;
