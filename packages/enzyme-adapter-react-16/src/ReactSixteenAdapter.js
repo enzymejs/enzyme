@@ -19,7 +19,7 @@ import {
   createMountWrapper,
   propsWithKeysAndRef,
 } from 'enzyme-adapter-utils';
-import findCurrentFiberUsingSlowPath from './findCurrentFiberUsingSlowPath';
+import { findCurrentFiberUsingSlowPath } from 'react-reconciler/reflection';
 
 const HostRoot = 3;
 const ClassComponent = 2;
