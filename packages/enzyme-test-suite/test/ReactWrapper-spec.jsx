@@ -344,7 +344,9 @@ describeWithDOM('mount', () => {
 
     describeIf(!REACT013, 'stateless components', () => {
       it('should match composite components', () => {
-        const Foo = () => <div />;
+        function Foo() {
+          return <div />;
+        }
         const wrapper = mount((
           <div>
             <Foo />
@@ -352,6 +354,45 @@ describeWithDOM('mount', () => {
         ));
         const b = <Foo />;
         expect(wrapper.contains(b)).to.equal(true);
+      });
+
+      it('should match composite components if rendered by function', () => {
+        function Foo() {
+          return <div />;
+        }
+        const renderStatelessComponent = () => <Foo />;
+        const wrapper = mount((
+          <div>
+            {renderStatelessComponent()}
+          </div>
+        ));
+        const b = <Foo />;
+        expect(wrapper.contains(b)).to.equal(true);
+      });
+
+      it('should match composite components based on component display name', () => {
+        function Foo() {
+          return <div />;
+        }
+        const wrapper = mount((
+          <div>
+            <Foo />
+          </div>
+        ));
+        expect(wrapper.contains('Foo')).to.equal(true);
+      });
+
+      it('should match composite components based on component display name if rendered by function', () => {
+        function Foo() {
+          return <div />;
+        }
+        const renderStatelessComponent = () => <Foo />;
+        const wrapper = mount((
+          <div>
+            {renderStatelessComponent()}
+          </div>
+        ));
+        expect(wrapper.contains('Foo')).to.equal(true);
       });
     });
   });
@@ -481,6 +522,29 @@ describeWithDOM('mount', () => {
         </div>
       ));
       expect(wrapper.find('Foo').type()).to.equal(Foo);
+    });
+
+    describeIf(!REACT013, 'stateless components', () => {
+      it('should find a stateless component based on a component displayName', () => {
+        const Foo = () => <div />;
+        const wrapper = mount((
+          <div>
+            <Foo className="foo" />
+          </div>
+        ));
+        expect(wrapper.find('Foo').type()).to.equal(Foo);
+      });
+
+      it('should find a stateless component based on a component displayName if rendered by function', () => {
+        const Foo = () => <div />;
+        const renderStatelessComponent = () => <Foo className="foo" />;
+        const wrapper = mount((
+          <div>
+            {renderStatelessComponent()}
+          </div>
+        ));
+        expect(wrapper.find('Foo').type()).to.equal(Foo);
+      });
     });
 
     it('should find component based on a react prop', () => {
