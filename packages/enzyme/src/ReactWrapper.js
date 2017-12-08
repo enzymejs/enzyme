@@ -358,7 +358,8 @@ class ReactWrapper {
    * @returns {Boolean}
    */
   matchesElement(node) {
-    return this.single('matchesElement', () => nodeMatches(node, this.getNodeInternal(), (a, b) => a <= b));
+    const rstNode = getAdapter().elementToNode(node);
+    return this.single('matchesElement', () => nodeMatches(rstNode, this.getNodeInternal(), (a, b) => a <= b));
   }
 
   /**
