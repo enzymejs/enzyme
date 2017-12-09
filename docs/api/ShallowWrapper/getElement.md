@@ -1,13 +1,13 @@
-# `.getNode() => ReactElement`
+# `.getElement() => ReactElement`
 
-Returns the wrapper's underlying node.
+Returns the wrapped ReactElement.
 
 If the current wrapper is wrapping the root component, returns the root component's latest render output.
 
 
 #### Returns
 
-`ReactElement`: The retrieved node.
+`ReactElement`: The retrieved ReactElement.
 
 
 
@@ -26,11 +26,11 @@ function MyComponent() {
 }
 
 const wrapper = shallow(<MyComponent />);
-expect(wrapper.getNode()).to.equal(element);
+expect(wrapper.getElement()).to.equal(element);
 ```
 
 
 
 #### Related Methods
 
-- [`.getNodes() => Array<ReactElement>`](getNodes.md)
+- [`.getElements() => Array<ReactElement>`](getElements.md)
