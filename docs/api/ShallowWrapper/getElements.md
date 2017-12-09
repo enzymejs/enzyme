@@ -1,13 +1,13 @@
-# `.getNodes() => Array<ReactElement>`
+# `.getElements() => Array<ReactElement>`
 
-Returns the wrapper's underlying nodes.
+Returns the wrapped ReactElements
 
 If the current wrapper is wrapping the root component, returns the root component's latest render output wrapped in an array.
 
 
 #### Returns
 
-`Array<ReactElement>`: The retrieved nodes.
+`Array<ReactElement>`: The retrieved ReactElements.
 
 
 
@@ -27,11 +27,11 @@ function Test() {
 }
 
 const wrapper = shallow(<Test />);
-expect(wrapper.find('span').getNodes()).to.deep.equal([one, two]);
+expect(wrapper.find('span').getElements()).to.deep.equal([one, two]);
 ```
 
 
 
 #### Related Methods
 
-- [`.getNode() => ReactElement`](getNode.md)
+- [`.getElement() => ReactElement`](getElement.md)
