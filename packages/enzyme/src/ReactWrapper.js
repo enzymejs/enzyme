@@ -383,7 +383,7 @@ class ReactWrapper {
       ? other => containsChildrenSubArray(
         nodeEqual,
         other,
-        nodeOrNodes.map(adapter.elementToNode),
+        nodeOrNodes.map(node => adapter.elementToNode(node)),
       )
       : other => nodeEqual(adapter.elementToNode(nodeOrNodes), other);
 
