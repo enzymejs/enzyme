@@ -377,16 +377,15 @@ class ReactWrapper {
    * @returns {Boolean}
    */
   contains(nodeOrNodes) {
-    const isArray = Array.isArray(nodeOrNodes);
-    let predicate;
+    const adapter = getAdapter(this[OPTIONS]);
 
-    if (isArray) {
-      const rstNodes = nodeOrNodes.map(getAdapter().elementToNode);
-      predicate = other => containsChildrenSubArray(nodeEqual, other, rstNodes);
-    } else {
-      const rstNode = getAdapter().elementToNode(nodeOrNodes);
-      predicate = other => nodeEqual(rstNode, other);
-    }
+    const predicate = Array.isArray(nodeOrNodes)
+      ? other => containsChildrenSubArray(
+        nodeEqual,
+        other,
+        nodeOrNodes.map(adapter.elementToNode),
+      )
+      : other => nodeEqual(adapter.elementToNode(nodeOrNodes), other);
 
     return findWhereUnwrapped(this, predicate).length > 0;
   }
@@ -408,7 +407,7 @@ class ReactWrapper {
    * @returns {Boolean}
    */
   containsMatchingElement(node) {
-    const rstNode = getAdapter().elementToNode(node);
+    const rstNode = getAdapter(this[OPTIONS]).elementToNode(node);
     const predicate = other => nodeMatches(rstNode, other, (a, b) => a <= b);
     return findWhereUnwrapped(this, predicate).length > 0;
   }
@@ -436,9 +435,7 @@ class ReactWrapper {
       throw new TypeError('nodes should be an Array');
     }
 
-    const rstNodes = nodes.map(getAdapter().elementToNode);
-
-    return rstNodes.every(rstNode => this.containsMatchingElement(rstNode));
+    return nodes.every(node => this.containsMatchingElement(node));
   }
 
   /**
@@ -460,9 +457,7 @@ class ReactWrapper {
    * @returns {Boolean}
    */
   containsAnyMatchingElements(nodes) {
-    if (!Array.isArray(nodes)) { return false; }
-    const rstNodes = nodes.map(getAdapter().elementToNode);
-    return rstNodes.some(rstNode => this.containsMatchingElement(rstNode));
+    return Array.isArray(nodes) && nodes.some(node => this.containsMatchingElement(node));
   }
 
   /**
