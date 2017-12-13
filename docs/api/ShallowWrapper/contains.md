@@ -56,6 +56,17 @@ expect(wrapper.contains([
 ])).to.equal(false);
 ```
 
+```jsx
+const calculatedValue = 2 + 2;
+
+const wrapper = shallow((
+  <div>
+    <div data-foo="foo" data-bar="bar">{calculatedValue}</div>
+  </div>
+));
+
+expect(wrapper.contains(<div data-foo="foo" data-bar="bar">{4}</div>)).to.equal(true);
+```
 
 #### Common Gotchas
 
