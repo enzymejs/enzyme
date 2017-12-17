@@ -36,7 +36,7 @@
   "dependencies": {
     "lodash": "^4.17.4",
     "object.assign": "^4.0.4",
-    "prop-types": "^15.5.10"
+    "prop-types": "^15.6.0"
   },
   "peerDependencies": {
     "react": "0.13.x || 0.14.x || ^15.0.0-0 || ^16.0.0-0"

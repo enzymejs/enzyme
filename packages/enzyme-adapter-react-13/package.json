@@ -31,11 +31,11 @@
   "author": "Leland Richardson <leland.richardson@airbnb.com>",
   "license": "MIT",
   "dependencies": {
-    "enzyme-adapter-utils": "^1.1.0",
+    "enzyme-adapter-utils": "^1.2.0",
     "lodash": "^4.17.4",
     "object.assign": "^4.0.4",
     "object.values": "^1.0.4",
-    "prop-types": "^15.5.10"
+    "prop-types": "^15.6.0"
   },
   "peerDependencies": {
     "enzyme": "^3.0.0",
