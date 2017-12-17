@@ -29,10 +29,10 @@
     "nyc": "^11.3.0"
   },
   "dependencies": {
-    "chai": "^3.5.0",
-    "enzyme": "^3.0.0",
-    "enzyme-adapter-react-16": "^1.0.0",
-    "react": "^16.0.0",
-    "react-dom": "^16.0.0"
+    "chai": "^4.1.2",
+    "enzyme": "^3.2.0",
+    "enzyme-adapter-react-16": "^1.1.0",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0"
   }
 }
