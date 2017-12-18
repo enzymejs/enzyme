@@ -18,7 +18,10 @@ const writeJSON = (fpath, json, pretty = false) => writeFile(
     : JSON.stringify(json)
 );
 const primraf = path => promisify(cb => rimraf(path, cb));
-const run = cmd => promisify(cb => child_process.exec(cmd, cb));
+const run = (cmd, ...args) => promisify(cb => {
+  const child = child_process.spawn(cmd, args, { stdio: 'inherit' });
+  child.on('exit', cb);
+});
 
 // This script is executed with a single argument, indicating the version of
 // react and adapters etc. that we want to set ourselves up for testing.
@@ -63,7 +66,7 @@ const rmrfs = []
 
 Promise.resolve()
   .then(() => Promise.all(rmrfs.map(s => primraf(s))))
-  .then(() => run('npm i'))
+  .then(() => run('npm', 'i'))
   .then(() => Promise.all([
     getJSON(adapterPackageJsonPath),
     getJSON(testPackageJsonPath),
@@ -73,20 +76,19 @@ Promise.resolve()
     const peerDeps = adapterJson.peerDependencies;
     const installs = Object.keys(peerDeps)
       .filter(key => !key.startsWith('enzyme'))
-      .map(key => `${key}@"${peerDeps[key]}"`)
-      .join(' ');
+      .map(key => `${key}@${peerDeps[key]}`);
 
     testJson.dependencies[adapterName] = adapterJson.version;
 
     return Promise.all([
       // npm install the peer deps at the root
-      run(`npm i --no-save ${installs}`),
+      run('npm', 'i', '--no-save', ...installs),
 
       // add the adapter to the dependencies of the test suite
       writeJSON(testPackageJsonPath, testJson, true),
     ]);
   })
-  .then(() => run('lerna bootstrap'))
+  .then(() => run('lerna', 'bootstrap'))
   .then(() => getJSON(testPackageJsonPath))
   .then(testJson => {
     // now that we've lerna bootstrapped, we can remove the adapter from the
