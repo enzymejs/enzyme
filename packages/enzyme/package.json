@@ -54,6 +54,7 @@
     "eslint-plugin-jsx-a11y": "^6.0.3",
     "eslint-plugin-react": "^7.5.1",
     "in-publish": "^2.0.0",
+    "jsdom": "^6.5.1",
     "rimraf": "^2.6.2",
     "safe-publish-latest": "^1.1.1"
   }
