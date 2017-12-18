@@ -3,7 +3,7 @@
 Shallow rendering is useful to constrain yourself to testing a component as a unit, and to ensure
 that your tests aren't indirectly asserting on behavior of child components.
 
-As of Enzyme v3, the `shallow` API does call React lifecycle methods such as `componentDidMount` and `componentDidUpdate`.
+As of Enzyme v3, the `shallow` API does call React lifecycle methods such as `componentDidMount` and `componentDidUpdate`. You can read more about this in the [version 3 migration guide](../guides/migration-from-2-to-3.md#lifecycle-methods).
 
 ```jsx
 import { shallow } from 'enzyme';
