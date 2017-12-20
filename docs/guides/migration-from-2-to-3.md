@@ -415,6 +415,61 @@ We don't think this should cause any breakages across enzyme v2.x to v3.x, but i
 have found something that did indeed break, please file an issue with us. Thank you to
 [Brandon Dail](https://github.com/aweary) for making this happen!
 
+## CSS Selector results and `hostNodes()`
+
+enzyme v3 now returns **all** nodes in the result set and not just html nodes.
+Consider this example:
+
+<!-- eslint react/prop-types: 0, react/prefer-stateless-function: 0 -->
+
+```js
+const HelpLink = ({ text, ...rest }) => <a {...rest}>{text}</a>;
+
+const HelpLinkContainer = ({ text, ...rest }) => (
+  <HelpLink text={text} {...rest} />
+);
+
+const wrapper = mount(<HelpLinkContainer aria-expanded="true" text="foo" />);
+```
+
+In enzyme v3, the expression `wrapper.find("[aria-expanded=true]").length)` will
+return 3 and not 1 as in previous versions. A closer look using
+[`debug`](../api/ReactWrapper/debug.md) reveals:
+
+<!-- eslint react/prop-types: 0, react/prefer-stateless-function: 0 -->
+
+```
+// console.log(wrapper.find('[aria-expanded="true"]').debug());
+
+<HelpLinkContainer aria-expanded={true} text="foo">
+  <HelpLink text="foo" aria-expanded="true">
+    <a aria-expanded="true">
+      foo
+    </a>
+  </HelpLink>
+</HelpLinkContainer>
+
+<HelpLink text="foo" aria-expanded="true">
+  <a aria-expanded="true">
+    foo
+  </a>
+</HelpLink>
+
+<a aria-expanded="true">
+  foo
+</a>
+```
+
+To return only the html nodes use the
+[`hostNodes()`](../api/ReactWrapper/hostNodes.md) function.
+
+`wrapper.find("[aria-expanded=true]").hostNodes().debug()` will now return:
+
+<!-- eslint react/prop-types: 0, react/prefer-stateless-function: 0 -->
+
+```
+<a aria-expanded="true">foo</a>;
+```
 
 ## Node Equality now ignores `undefined` values
 

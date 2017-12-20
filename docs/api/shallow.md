@@ -139,11 +139,11 @@ Returns a static HTML rendering of the current node.
 #### [`.get(index) => ReactElement`](ShallowWrapper/get.md)
 Returns the node at the provided index of the current wrapper.
 
-#### [`.getNode() => ReactElement`](ShallowWrapper/getNode.md)
-Returns the wrapper's underlying node.
+#### [`.getElement() => ReactElement`](ShallowWrapper/getElement.md)
+Returns the wrapped ReactElement.
 
-#### [`.getNodes() => Array<ReactElement>`](ShallowWrapper/getNodes.md)
-Returns the wrapper's underlying nodes.
+#### [`.getElements() => Array<ReactElement>`](ShallowWrapper/getElements.md)
+Returns the wrapped ReactElements.
 
 #### [`.at(index) => ShallowWrapper`](ShallowWrapper/at.md)
 Returns a wrapper of the node at the provided index of the current wrapper.
