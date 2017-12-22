@@ -1,5 +1,17 @@
 # Using Jest with enzyme
 
+## Configure with Jest
+
+To run the setup file to configure Enzyme and the Adapter with Jest direct `setupTestFrameworkScriptFile` to literally the string `<rootDir>` and the path to your setup file.
+
+```json
+{
+  "jest": {
+    "setupTestFrameworkScriptFile": "<rootDir>src/setupTests.js"
+  }
+}
+```
+
 ## Jest version 15 and up
 
 Starting with version 15, Jest [no longer mocks modules by default](https://facebook.github.io/jest/blog/2016/09/01/jest-15.html). Because of this, you no longer have to add _any_ special configuration for Jest to use it with enzyme.
