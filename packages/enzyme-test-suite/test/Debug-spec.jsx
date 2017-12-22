@@ -202,6 +202,11 @@ describe('debug', () => {
       ))).to.equal('<div id="foo" />');
     });
 
+    it('should render a boxed String object as a string', () => {
+      expect(debugElement((
+        <div className={Object('foo')} />
+      ))).to.equal('<div className="foo" />');
+    });
   });
 
   describeWithDOM('debugInst(inst)', () => {

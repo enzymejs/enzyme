@@ -2,6 +2,7 @@ import without from 'lodash/without';
 import escape from 'lodash/escape';
 import compact from 'lodash/compact';
 import functionName from 'function.prototype.name';
+import isString from 'is-string';
 
 import {
   propsOfNode,
@@ -32,6 +33,9 @@ function propString(prop) {
     case 'boolean':
       return `{${prop}}`;
     case 'object':
+      if (isString(prop)) {
+        return `"${prop}"`;
+      }
       return '{{...}}';
     default:
       return `{[${typeof prop}]}`;

@@ -37,6 +37,7 @@
     "cheerio": "^1.0.0-rc.2",
     "function.prototype.name": "^1.0.3",
     "has": "^1.0.1",
+    "is-string": "^1.0.4",
     "is-subset": "^0.1.1",
     "lodash": "^4.17.4",
     "object-is": "^1.0.1",
