@@ -202,10 +202,10 @@ describe('debug', () => {
       ))).to.equal('<div id="foo" />');
     });
 
-    it('should render a boxed String object as a string', () => {
+    it('should render boxed primitives as the primitive', () => {
       expect(debugElement((
-        <div className={Object('foo')} />
-      ))).to.equal('<div className="foo" />');
+        <div a={Object('foo')} b={Object(3)} c={Object(true)} />
+      ))).to.equal('<div a="foo" b={3} c={true} />');
     });
   });
 

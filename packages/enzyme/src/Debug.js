@@ -3,11 +3,17 @@ import escape from 'lodash/escape';
 import compact from 'lodash/compact';
 import functionName from 'function.prototype.name';
 import isString from 'is-string';
+import isNumber from 'is-number-object';
+import isCallable from 'is-callable';
+import isBoolean from 'is-boolean';
+import inspect from 'object-inspect';
 
 import {
   propsOfNode,
   childrenOfNode,
 } from './RSTTraversal';
+
+const booleanValue = Function.bind.call(Function.call, Boolean.prototype.valueOf);
 
 export function typeName(node) {
   return typeof node.type === 'function'
@@ -24,22 +30,22 @@ export function indent(depth, string) {
 }
 
 function propString(prop) {
-  switch (typeof prop) {
-    case 'function':
-      return '{[Function]}';
-    case 'string':
-      return `"${prop}"`;
-    case 'number':
-    case 'boolean':
-      return `{${prop}}`;
-    case 'object':
-      if (isString(prop)) {
-        return `"${prop}"`;
-      }
-      return '{{...}}';
-    default:
-      return `{[${typeof prop}]}`;
+  if (isString(prop)) {
+    return inspect(String(prop), { quoteStyle: 'double' });
   }
+  if (isNumber(prop)) {
+    return `{${inspect(Number(prop))}}`;
+  }
+  if (isBoolean(prop)) {
+    return `{${inspect(booleanValue(prop))}}`;
+  }
+  if (isCallable(prop)) {
+    return `{${inspect(prop)}}`;
+  }
+  if (typeof prop === 'object') {
+    return '{{...}}';
+  }
+  return `{[${typeof prop}]}`;
 }
 
 function propsString(node) {
