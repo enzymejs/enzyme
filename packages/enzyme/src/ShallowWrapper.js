@@ -385,7 +385,9 @@ class ShallowWrapper {
             return shouldRender;
           };
         }
-        instance.setState(state, callback);
+        // We don't pass the setState callback here
+        // to guarantee to call the callback after finishing the render
+        instance.setState(state);
         if (
           shouldRender &&
           !this[OPTIONS].disableLifecycleMethods &&
@@ -400,6 +402,10 @@ class ShallowWrapper {
           }
         }
         this.update();
+        // call the setState callback
+        if (callback) {
+          callback.call(instance);
+        }
       });
     });
     return this;

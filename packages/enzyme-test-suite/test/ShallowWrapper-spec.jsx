@@ -1378,8 +1378,10 @@ describe('shallow', () => {
       }
       const wrapper = shallow(<Foo />);
       expect(wrapper.state()).to.eql({ id: 'foo' });
-      wrapper.setState({ id: 'bar' }, () => {
+      wrapper.setState({ id: 'bar' }, function callback() {
         expect(wrapper.state()).to.eql({ id: 'bar' });
+        expect(this.state).to.eql({ id: 'bar' });
+        expect(wrapper.find('div').prop('className')).to.eql('bar');
       });
     });
 
