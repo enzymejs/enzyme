@@ -5,7 +5,7 @@ import functionName from 'function.prototype.name';
 import isString from 'is-string';
 import isNumber from 'is-number-object';
 import isCallable from 'is-callable';
-import isBoolean from 'is-boolean';
+import isBoolean from 'is-boolean-object';
 import inspect from 'object-inspect';
 
 import {
