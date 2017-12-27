@@ -35,7 +35,7 @@
   "license": "MIT",
   "dependencies": {
     "lodash": "^4.17.4",
-    "object.assign": "^4.0.4",
+    "object.assign": "^4.1.0",
     "prop-types": "^15.6.0"
   },
   "peerDependencies": {
