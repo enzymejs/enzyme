@@ -5,7 +5,7 @@
   "scripts": {
     "lint": "eslint ./src/**/*.js*",
     "pretest": "npm run lint",
-    "test": "nyc mocha --require test/.setup.js --compilers js:babel-core/register src/*.spec.js*",
+    "test": "nyc mocha src/*.spec.js*",
     "test-watch": "npm test -- --watch"
   },
   "repository": {
@@ -16,9 +16,8 @@
   "license": "MIT",
   "homepage": "https://github.com/airbnb/enzyme.git",
   "devDependencies": {
-    "babel": "^6.23.0",
-    "babel-core": "^6.26.0",
     "babel-preset-airbnb": "^2.4.0",
+    "babel-register": "^6.26.0",
     "eslint": "^4.14.0",
     "eslint-config-airbnb": "^16.1.0",
     "eslint-plugin-import": "^2.8.0",
