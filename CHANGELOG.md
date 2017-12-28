@@ -1,5 +1,17 @@
 # Change Log
 
+## 3.3.0
+
+### New Stuff
+
+- @ljharb/@joeldenning: `debug`: handle boxed primitives ([#1450](https://github.com/airbnb/enzyme/pull/1450))
+
+### Refactors
+- @eddyerburgh: Use RSTTraversal childrenOfNode in Utils ([#1381](https://github.com/airbnb/enzyme/pull/1381))
+
+### Fixes
+- @nicoder: Fix typo in error message ([#1379](https://github.com/airbnb/enzyme/pull/1379))
+
 ## 3.2.0
 
 ### New Stuff
