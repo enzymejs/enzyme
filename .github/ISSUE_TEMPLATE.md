@@ -11,3 +11,33 @@ Before submitting, please read over our commonly reported issues to prevent dupl
 * [Cannot find module 'react-dom/lib/ReactTestUtils'](../blob/master/docs/common-issues.md#error-cannot-find-module-react-domlibreacttestutils)
 * [Query Selector fails](../blob/master/docs/common-issues.md#query-selector-fails)
 * [Testing third party libraries](../blob/master/docs/common-issues.md#testing-third-party-libraries)
+
+If you havn't found any duplicated issues, please report it with your enviroment!
+
+### Current behavior
+
+### Expected behavior
+
+### Your environment
+
+#### API
+
+- [ ] shallow
+- [ ] mount
+- [ ] render
+
+#### Version
+
+| library         | version
+| ---------------- | -------
+| Enzyme           | 
+| React            |  
+
+#### Adapter
+
+- [ ] enzyme-adapter-react-16
+- [ ] enzyme-adapter-react-15
+- [ ] enzyme-adapter-react-15.4
+- [ ] enzyme-adapter-react-14
+- [ ] enzyme-adapter-react-13
+- [ ] others ( ) 
