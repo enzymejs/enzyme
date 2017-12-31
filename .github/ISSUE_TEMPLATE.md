@@ -41,5 +41,4 @@ If you havn't found any duplicated issues, please report it with your enviroment
 - [ ] enzyme-adapter-react-14
 - [ ] enzyme-adapter-react-13
 - [ ] enzyme-adapter-react-helper
-- [ ] enzyme-adapter-react-13
 - [ ] others ( ) 
