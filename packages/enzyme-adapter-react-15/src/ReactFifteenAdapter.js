@@ -253,6 +253,10 @@ class ReactFifteenAdapter extends EnzymeAdapter {
   createElement(...args) {
     return React.createElement(...args);
   }
+
+  invokeSetStateCallback(instance, callback) {
+    callback.call(instance, undefined);
+  }
 }
 
 module.exports = ReactFifteenAdapter;

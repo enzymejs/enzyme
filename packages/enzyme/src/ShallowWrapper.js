@@ -404,7 +404,7 @@ class ShallowWrapper {
         this.update();
         // call the setState callback
         if (callback) {
-          callback.call(instance);
+          adapter.invokeSetStateCallback(instance, callback);
         }
       });
     });

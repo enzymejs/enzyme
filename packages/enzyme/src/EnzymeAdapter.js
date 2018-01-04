@@ -30,6 +30,11 @@ class EnzymeAdapter {
   createElement(type, props, ...children) {
     throw unimplementedError('createElement', 'EnzymeAdapter');
   }
+
+  // eslint-disable-next-line class-methods-use-this
+  invokeSetStateCallback(instance, callback) {
+    callback.call(instance);
+  }
 }
 
 EnzymeAdapter.MODES = {

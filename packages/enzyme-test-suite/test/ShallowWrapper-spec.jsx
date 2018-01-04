@@ -8,11 +8,15 @@ import { ITERATOR_SYMBOL, withSetStateAllowed, sym } from 'enzyme/build/Utils';
 import './_helpers/setupAdapters';
 import { createClass } from './_helpers/react-compat';
 import { describeIf, itIf, itWithData, generateEmptyRenderData } from './_helpers';
-import { REACT013, REACT014, REACT16, is } from './_helpers/version';
+import { REACT013, REACT014, REACT16, REACT154, REACT155, REACT156, is } from './_helpers/version';
 
 // The shallow renderer in react 16 does not yet support batched updates. When it does,
 // we should be able to go un-skip all of the tests that are skipped with this flag.
 const BATCHING = !REACT16;
+
+
+// some React versions pass undefined as an argument of setState callback.
+const CALLING_SETSTATE_CALLBACK_WITH_UNDEFINED = REACT154 || REACT155 || REACT156;
 
 const getElementPropSelector = prop => x => x.props[prop];
 const getWrapperPropSelector = prop => x => x.prop(prop);
@@ -1378,10 +1382,11 @@ describe('shallow', () => {
       }
       const wrapper = shallow(<Foo />);
       expect(wrapper.state()).to.eql({ id: 'foo' });
-      wrapper.setState({ id: 'bar' }, function callback() {
+      wrapper.setState({ id: 'bar' }, function callback(...args) {
         expect(wrapper.state()).to.eql({ id: 'bar' });
         expect(this.state).to.eql({ id: 'bar' });
         expect(wrapper.find('div').prop('className')).to.eql('bar');
+        expect(args).to.eql(CALLING_SETSTATE_CALLBACK_WITH_UNDEFINED ? [undefined] : []);
       });
     });
 

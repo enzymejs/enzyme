@@ -17,6 +17,9 @@ import {
   propsWithKeysAndRef,
 } from 'enzyme-adapter-utils';
 
+const MINOR_VERSION = React.version.split('.')[1];
+const CALLING_SETSTATE_CALLBACK_WITH_UNDEFINED = MINOR_VERSION >= 4;
+
 function compositeTypeToNodeType(type) {
   switch (type) {
     case 0:
@@ -251,6 +254,14 @@ class ReactFifteenFourAdapter extends EnzymeAdapter {
 
   createElement(...args) {
     return React.createElement(...args);
+  }
+
+  invokeSetStateCallback(instance, callback) {
+    if (CALLING_SETSTATE_CALLBACK_WITH_UNDEFINED) {
+      callback.call(instance, undefined);
+    } else {
+      callback.call(instance);
+    }
   }
 }
 
