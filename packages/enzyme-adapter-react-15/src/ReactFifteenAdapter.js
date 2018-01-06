@@ -255,7 +255,7 @@ class ReactFifteenAdapter extends EnzymeAdapter {
   }
 
   invokeSetStateCallback(instance, callback) {
-    // React in <= 15.3, and >= 16 pass undefined to a setState callback
+    // React in >= 15.4, and < 16 pass undefined to a setState callback
     callback.call(instance, undefined);
   }
 }

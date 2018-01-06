@@ -256,11 +256,11 @@ class ReactFifteenFourAdapter extends EnzymeAdapter {
   }
 
   invokeSetStateCallback(instance, callback) {
-    // React in <= 15.3, and >= 16 pass undefined to a setState callback
+    // React in >= 15.4, and < 16 pass undefined to a setState callback
     if (MINOR_VERSION >= 4) {
       callback.call(instance, undefined);
     } else {
-      callback.call(instance);
+      super.invokeSetStateCallback(instance, callback);
     }
   }
 }
