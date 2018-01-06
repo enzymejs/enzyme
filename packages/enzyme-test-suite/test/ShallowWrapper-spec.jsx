@@ -8,7 +8,7 @@ import { ITERATOR_SYMBOL, withSetStateAllowed, sym } from 'enzyme/build/Utils';
 import './_helpers/setupAdapters';
 import { createClass } from './_helpers/react-compat';
 import { describeIf, itIf, itWithData, generateEmptyRenderData } from './_helpers';
-import { REACT013, REACT014, REACT16, REACT154, REACT155, REACT156, is } from './_helpers/version';
+import { REACT013, REACT014, REACT15, REACT150, REACT151, REACT152, REACT153, REACT16, is } from './_helpers/version';
 
 // The shallow renderer in react 16 does not yet support batched updates. When it does,
 // we should be able to go un-skip all of the tests that are skipped with this flag.
@@ -16,7 +16,8 @@ const BATCHING = !REACT16;
 
 
 // some React versions pass undefined as an argument of setState callback.
-const CALLING_SETSTATE_CALLBACK_WITH_UNDEFINED = REACT154 || REACT155 || REACT156;
+const CALLING_SETSTATE_CALLBACK_WITH_UNDEFINED =
+  REACT15 && !REACT150 && !REACT151 && !REACT152 && !REACT153;
 
 const getElementPropSelector = prop => x => x.props[prop];
 const getWrapperPropSelector = prop => x => x.prop(prop);
