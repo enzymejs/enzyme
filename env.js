@@ -38,10 +38,9 @@ const version = process.argv[2];
 // 6. install all of the package's peer deps at the top level
 
 var root = process.cwd();
-var adapterName = 'enzyme-adapter-react-' + version;
+var adapterName = `enzyme-adapter-react-${version}`;
 var adapterPackageJsonPath = path.join(root, 'packages', adapterName, 'package.json');
 var testPackageJsonPath = path.join(root, 'packages', 'enzyme-test-suite', 'package.json');
-var utilsPackageJsonPath = path.join(root, 'packages', 'enzyme-adapter-utils', 'package.json');
 
 if (!fs.statSync(adapterPackageJsonPath)) {
   throw new Error('Adapter not found: "' + adapterName + '"');
@@ -70,7 +69,6 @@ Promise.resolve()
   .then(() => Promise.all([
     getJSON(adapterPackageJsonPath),
     getJSON(testPackageJsonPath),
-    getJSON(utilsPackageJsonPath),
   ]))
   .then(([adapterJson, testJson]) => {
     const peerDeps = adapterJson.peerDependencies;
