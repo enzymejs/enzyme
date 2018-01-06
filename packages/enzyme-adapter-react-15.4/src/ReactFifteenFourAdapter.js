@@ -16,8 +16,7 @@ import {
   createMountWrapper,
   propsWithKeysAndRef,
 } from 'enzyme-adapter-utils';
-
-const MINOR_VERSION = React.version.split('.')[1];
+import ifReact from 'enzyme-adapter-react-helper/build/ifReact';
 
 function compositeTypeToNodeType(type) {
   switch (type) {
@@ -257,11 +256,11 @@ class ReactFifteenFourAdapter extends EnzymeAdapter {
 
   invokeSetStateCallback(instance, callback) {
     // React in >= 15.4, and < 16 pass undefined to a setState callback
-    if (MINOR_VERSION >= 4) {
-      callback.call(instance, undefined);
-    } else {
-      super.invokeSetStateCallback(instance, callback);
-    }
+    ifReact(
+      '^15.4',
+      () => { callback.call(instance, undefined); },
+      () => { super.invokeSetStateCallback(instance, callback); },
+    );
   }
 }
 
