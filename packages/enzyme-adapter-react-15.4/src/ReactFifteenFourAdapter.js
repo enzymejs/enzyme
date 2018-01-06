@@ -16,6 +16,7 @@ import {
   createMountWrapper,
   propsWithKeysAndRef,
 } from 'enzyme-adapter-utils';
+import ifReact from 'enzyme-adapter-react-helper/build/ifReact';
 
 function compositeTypeToNodeType(type) {
   switch (type) {
@@ -251,6 +252,15 @@ class ReactFifteenFourAdapter extends EnzymeAdapter {
 
   createElement(...args) {
     return React.createElement(...args);
+  }
+
+  invokeSetStateCallback(instance, callback) {
+    // React in >= 15.4, and < 16 pass undefined to a setState callback
+    ifReact(
+      '^15.4',
+      () => { callback.call(instance, undefined); },
+      () => { super.invokeSetStateCallback(instance, callback); },
+    );
   }
 }
 

@@ -253,6 +253,11 @@ class ReactFifteenAdapter extends EnzymeAdapter {
   createElement(...args) {
     return React.createElement(...args);
   }
+
+  invokeSetStateCallback(instance, callback) {
+    // React in >= 15.4, and < 16 pass undefined to a setState callback
+    callback.call(instance, undefined);
+  }
 }
 
 module.exports = ReactFifteenAdapter;
