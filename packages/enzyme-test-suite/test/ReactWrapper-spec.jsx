@@ -369,31 +369,6 @@ describeWithDOM('mount', () => {
         const b = <Foo />;
         expect(wrapper.contains(b)).to.equal(true);
       });
-
-      it('should match composite components based on component display name', () => {
-        function Foo() {
-          return <div />;
-        }
-        const wrapper = mount((
-          <div>
-            <Foo />
-          </div>
-        ));
-        expect(wrapper.contains('Foo')).to.equal(true);
-      });
-
-      it('should match composite components based on component display name if rendered by function', () => {
-        function Foo() {
-          return <div />;
-        }
-        const renderStatelessComponent = () => <Foo />;
-        const wrapper = mount((
-          <div>
-            {renderStatelessComponent()}
-          </div>
-        ));
-        expect(wrapper.contains('Foo')).to.equal(true);
-      });
     });
   });
 
