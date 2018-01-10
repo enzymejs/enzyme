@@ -391,6 +391,11 @@ expect(wrapper.ref('abc')).toBeInstanceOf(Box);
 In our experience, this is most often what people would actually want and expect out of the `.ref(...)`
 method.
 
+To get the wrapper that was returned by enzyme 2:
+```js
+const wrapper = mount(<Bar />);
+const refWrapper = wrapper.findWhere(n => n.instance() === wrapper.ref('abc'));
+```
 
 ## With `mount`, `.instance()` can be called at any level of the tree
 
