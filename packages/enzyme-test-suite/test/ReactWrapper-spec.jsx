@@ -3140,6 +3140,19 @@ describeWithDOM('mount', () => {
       expect(wrapper.find('.bar').at(2).hasClass('bux')).to.equal(true);
       expect(wrapper.find('.bar').at(3).hasClass('baz')).to.equal(true);
     });
+
+    it('`.at()` does not affect the results of `.exists()`', () => {
+      const wrapper = mount((
+        <div>
+          <div className="foo" />
+        </div>
+      ));
+      expect(wrapper.find('.bar').exists()).to.equal(false);
+      expect(wrapper.find('.bar').at(0).exists()).to.equal(false);
+
+      expect(wrapper.find('.foo').exists()).to.equal(true);
+      expect(wrapper.find('.foo').at(0).exists()).to.equal(true);
+    });
   });
 
   describe('.get(index)', () => {
