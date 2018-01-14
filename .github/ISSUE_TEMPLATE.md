@@ -12,7 +12,7 @@ Before submitting, please read over our commonly reported issues to prevent dupl
 * [Query Selector fails](../blob/master/docs/common-issues.md#query-selector-fails)
 * [Testing third party libraries](../blob/master/docs/common-issues.md#testing-third-party-libraries)
 
-If you havn't found any duplicated issues, please report it with your enviroment!
+If you haven't found any duplicated issues, please report it with your environment!
 
 ### Current behavior
 
