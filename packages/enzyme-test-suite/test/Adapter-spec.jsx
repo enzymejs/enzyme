@@ -2,8 +2,10 @@ import React from 'react';
 import { expect } from 'chai';
 import jsdom from 'jsdom';
 import configuration from 'enzyme/build/configuration';
+import { configure, shallow } from 'enzyme';
 
 import './_helpers/setupAdapters';
+import Adapter from './_helpers/adapter';
 import { renderToString } from './_helpers/react-compat';
 import { REACT013, REACT16 } from './_helpers/version';
 import { itIf, describeWithDOM } from './_helpers';
@@ -36,8 +38,30 @@ function cleanNode(node) {
 }
 
 describe('Adapter', () => {
-  describeWithDOM('mounted render', () => {
+  describe('error message', () => {
+    afterEach(() => {
+      configure({ adapter });
+    });
 
+    it('fails to render when no adapter is configured', () => {
+      configure({ adapter: undefined });
+      expect(() => shallow(<div />)).to.throw(Error, /Enzyme expects an adapter to be configured, but found none/);
+    });
+
+    it('fails to render when an object that does not inherit from the base class is configured', () => {
+      expect(() => configure({ adapter: {} })).to.throw(Error, /configured enzyme adapter did not inherit from the EnzymeAdapter base class/);
+    });
+
+    it('fails to render when an adapter constructor is configured', () => {
+      expect(() => configure({ adapter: Adapter })).to.throw(Error, /you provided an adapter \*constructor\*/);
+    });
+
+    it('fails to render when a non-adapter-constructor function is configured', () => {
+      expect(() => configure({ adapter() {} })).to.throw(Error, /an enzyme adapter must be an object instance; you provided a function/);
+    });
+  });
+
+  describeWithDOM('mounted render', () => {
     function hydratedTreeMatchesUnhydrated(element) {
       const markup = renderToString(element);
       const dom = jsdom.jsdom(`<div id="root">${markup}</div>`);
@@ -763,5 +787,4 @@ describe('Adapter', () => {
       },
     }));
   });
-
 });
