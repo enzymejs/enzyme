@@ -451,7 +451,7 @@ class ShallowWrapper {
       ? other => containsChildrenSubArray(
         nodeEqual,
         other,
-        nodeOrNodes.map(adapter.elementToNode),
+        nodeOrNodes.map(node => adapter.elementToNode(node)),
       )
       : other => nodeEqual(adapter.elementToNode(nodeOrNodes), other);
 
@@ -476,7 +476,8 @@ class ShallowWrapper {
    * @returns {Boolean}
    */
   containsMatchingElement(node) {
-    const predicate = other => nodeMatches(node, other, (a, b) => a <= b);
+    const rstNode = getAdapter().elementToNode(node);
+    const predicate = other => nodeMatches(rstNode, other, (a, b) => a <= b);
     return findWhereUnwrapped(this, predicate).length > 0;
   }
 
@@ -564,7 +565,10 @@ class ShallowWrapper {
    * @returns {Boolean}
    */
   matchesElement(node) {
-    return this.single('matchesElement', () => nodeMatches(node, this.getNodeInternal(), (a, b) => a <= b));
+    return this.single('matchesElement', () => {
+      const rstNode = getAdapter().elementToNode(node);
+      return nodeMatches(rstNode, this.getNodeInternal(), (a, b) => a <= b);
+    });
   }
 
   /**

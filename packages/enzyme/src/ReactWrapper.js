@@ -358,7 +358,10 @@ class ReactWrapper {
    * @returns {Boolean}
    */
   matchesElement(node) {
-    return this.single('matchesElement', () => nodeMatches(node, this.getNodeInternal(), (a, b) => a <= b));
+    return this.single('matchesElement', () => {
+      const rstNode = getAdapter().elementToNode(node);
+      return nodeMatches(rstNode, this.getNodeInternal(), (a, b) => a <= b);
+    });
   }
 
   /**
@@ -374,9 +377,16 @@ class ReactWrapper {
    * @returns {Boolean}
    */
   contains(nodeOrNodes) {
+    const adapter = getAdapter(this[OPTIONS]);
+
     const predicate = Array.isArray(nodeOrNodes)
-      ? other => containsChildrenSubArray(nodeEqual, other, nodeOrNodes)
-      : other => nodeEqual(nodeOrNodes, other);
+      ? other => containsChildrenSubArray(
+        nodeEqual,
+        other,
+        nodeOrNodes.map(node => adapter.elementToNode(node)),
+      )
+      : other => nodeEqual(adapter.elementToNode(nodeOrNodes), other);
+
     return findWhereUnwrapped(this, predicate).length > 0;
   }
 
@@ -397,7 +407,8 @@ class ReactWrapper {
    * @returns {Boolean}
    */
   containsMatchingElement(node) {
-    const predicate = other => nodeMatches(node, other, (a, b) => a <= b);
+    const rstNode = getAdapter(this[OPTIONS]).elementToNode(node);
+    const predicate = other => nodeMatches(rstNode, other, (a, b) => a <= b);
     return findWhereUnwrapped(this, predicate).length > 0;
   }
 
