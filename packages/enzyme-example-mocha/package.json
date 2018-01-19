@@ -18,14 +18,14 @@
   "devDependencies": {
     "babel-preset-airbnb": "^2.4.0",
     "babel-register": "^6.26.0",
-    "eslint": "^4.14.0",
+    "eslint": "^4.15.0",
     "eslint-config-airbnb": "^16.1.0",
     "eslint-plugin-import": "^2.8.0",
     "eslint-plugin-jsx-a11y": "^6.0.3",
     "eslint-plugin-react": "^7.5.1",
     "jsdom": "^11.5.1",
     "mocha": "^3.5.3",
-    "nyc": "^11.3.0"
+    "nyc": "^11.4.1"
   },
   "dependencies": {
     "chai": "^4.1.2",
