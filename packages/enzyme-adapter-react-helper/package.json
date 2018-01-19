@@ -59,6 +59,6 @@
     "npm-run": "^4.1.2",
     "object.assign": "^4.1.0",
     "object.getownpropertydescriptors": "^2.0.3",
-    "semver": "^5.4.1"
+    "semver": "^5.5.0"
   }
 }
