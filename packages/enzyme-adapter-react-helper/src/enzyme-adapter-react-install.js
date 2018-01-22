@@ -1,6 +1,8 @@
 #! /usr/bin/env node
 /* eslint no-console: 0 */
 
+import 'airbnb-js-shims';
+
 import semver from 'semver';
 import npmRun from 'npm-run';
 
