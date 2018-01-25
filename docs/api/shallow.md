@@ -192,7 +192,7 @@ Calls `.forceUpdate()` on the root component instance.
 #### [`.debug() => String`](ShallowWrapper/debug.md)
 Returns a string representation of the current shallow render tree for debugging purposes.
 
-#### [`.type() => String|Function`](ShallowWrapper/type.md)
+#### [`.type() => String|Function|null`](ShallowWrapper/type.md)
 Returns the type of the current node of the wrapper.
 
 #### [`.name() => String`](ShallowWrapper/name.md)
