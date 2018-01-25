@@ -57,14 +57,6 @@ expect(spy.calledOnce).to.equal(true);
 ```
 
 
-#### Common Gotchas
-
-`setProps()` will not trigger the lifecycle method `componentDidUpdate` when using `shallow()` unless you set `lifecycleExperimental` to true.
-
-```jsx
-const wrapper = shallow(<MyComponent />, { lifecycleExperimental: true });
-```
-
 #### Related Methods
 
 - [`.setState(state) => Self`](setState.md)
