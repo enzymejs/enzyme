@@ -63,3 +63,4 @@ expect(wrapper.contains([
 when you are calling it you are calling it with a ReactElement or a JSX expression.
 - Keep in mind that this method determines equality based on the equality of the node's children as
 well.
+- Every attribute of the wrapped element must be matched by the element you're checking. To permit (and ignore) additional attributes on the wrapped element, use containsMatchingElement() instead.
