@@ -3964,6 +3964,17 @@ describe('shallow', () => {
     expect(rendered.html()).to.equal(null);
   });
 
+  itIf(REACT16, 'works with class components that return arrays', () => {
+    class Foo extends React.Component {
+      render() {
+        return [<div />, <div />];
+      }
+    }
+    const wrapper = shallow(<Foo />);
+    expect(wrapper).to.have.lengthOf(2);
+    expect(wrapper.find('div')).to.have.lengthOf(2);
+  });
+
   itIf(is('>=15 || ^16.0.0-alpha'), 'works with SFCs that return null', () => {
     const Foo = () => null;
 

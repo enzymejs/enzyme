@@ -63,6 +63,20 @@ function filterWhereUnwrapped(wrapper, predicate) {
   return wrapper.wrap(compact(wrapper.getNodesInternal().filter(predicate)));
 }
 
+function privateSetNodes(wrapper, nodes) {
+  if (!nodes) {
+    privateSet(wrapper, NODE, null);
+    privateSet(wrapper, NODES, []);
+  } else if (!Array.isArray(nodes)) {
+    privateSet(wrapper, NODE, nodes);
+    privateSet(wrapper, NODES, [nodes]);
+  } else {
+    privateSet(wrapper, NODE, nodes[0]);
+    privateSet(wrapper, NODES, nodes);
+  }
+  privateSet(wrapper, 'length', wrapper[NODES].length);
+}
+
 /**
  * @class ReactWrapper
  */
@@ -79,25 +93,12 @@ class ReactWrapper {
       privateSet(this, RENDERER, renderer);
       renderer.render(nodes, options.context);
       privateSet(this, ROOT, this);
-      const node = this[RENDERER].getNode();
-      privateSet(this, NODE, node);
-      privateSet(this, NODES, [node]);
-      this.length = 1;
+      privateSetNodes(this, this[RENDERER].getNode());
     } else {
       privateSet(this, UNRENDERED, null);
       privateSet(this, RENDERER, root[RENDERER]);
       privateSet(this, ROOT, root);
-      if (!nodes) {
-        privateSet(this, NODE, null);
-        privateSet(this, NODES, []);
-      } else if (!Array.isArray(nodes)) {
-        privateSet(this, NODE, nodes);
-        privateSet(this, NODES, [nodes]);
-      } else {
-        privateSet(this, NODE, nodes[0]);
-        privateSet(this, NODES, nodes);
-      }
-      this.length = this[NODES].length;
+      privateSetNodes(this, nodes);
     }
     privateSet(this, OPTIONS, root ? root[OPTIONS] : options);
   }
@@ -223,11 +224,7 @@ class ReactWrapper {
     if (this[ROOT] !== this) {
       throw new Error('ReactWrapper::update() can only be called on the root');
     }
-    this.single('update', () => {
-      const node = this[RENDERER].getNode();
-      this[NODE] = node;
-      this[NODES] = [node];
-    });
+    privateSetNodes(this, this[RENDERER].getNode());
     return this;
   }
 
@@ -258,9 +255,7 @@ class ReactWrapper {
     if (this[ROOT] !== this) {
       throw new Error('ReactWrapper::mount() can only be called on the root');
     }
-    this.single('mount', () => {
-      this[RENDERER].render(this[UNRENDERED], this[OPTIONS].context, () => this.update());
-    });
+    this[RENDERER].render(this[UNRENDERED], this[OPTIONS].context, () => this.update());
     return this;
   }
 

@@ -231,7 +231,9 @@ class ReactSixteenAdapter extends EnzymeAdapter {
           key: cachedNode.key || undefined,
           ref: cachedNode.ref,
           instance: renderer._instance,
-          rendered: elementToTree(output),
+          rendered: Array.isArray(output)
+            ? flatten(output).map(elementToTree)
+            : elementToTree(output),
         };
       },
       simulateEvent(node, event, ...args) {

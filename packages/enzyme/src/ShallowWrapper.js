@@ -99,6 +99,17 @@ function getRootNode(node) {
   return node.rendered;
 }
 
+function privateSetNodes(wrapper, nodes) {
+  if (!Array.isArray(nodes)) {
+    privateSet(wrapper, NODE, nodes);
+    privateSet(wrapper, NODES, [nodes]);
+  } else {
+    privateSet(wrapper, NODE, nodes[0]);
+    privateSet(wrapper, NODES, nodes);
+  }
+  privateSet(wrapper, 'length', wrapper[NODES].length);
+}
+
 /**
  * @class ShallowWrapper
  */
@@ -122,25 +133,15 @@ class ShallowWrapper {
           instance.componentDidMount();
         });
       }
-      privateSet(this, NODE, getRootNode(this[RENDERER].getNode()));
-      privateSet(this, NODES, [this[NODE]]);
-      this.length = 1;
+      privateSetNodes(this, getRootNode(this[RENDERER].getNode()));
     } else {
       privateSet(this, ROOT, root);
       privateSet(this, UNRENDERED, null);
       privateSet(this, RENDERER, root[RENDERER]);
-      if (!Array.isArray(nodes)) {
-        privateSet(this, NODE, nodes);
-        privateSet(this, NODES, [nodes]);
-      } else {
-        privateSet(this, NODE, nodes[0]);
-        privateSet(this, NODES, nodes);
-      }
-      this.length = this[NODES].length;
+      privateSetNodes(this, nodes);
     }
     privateSet(this, OPTIONS, root ? root[OPTIONS] : options);
   }
-
 
   /**
    * Returns the root wrapper
@@ -227,8 +228,7 @@ class ShallowWrapper {
       throw new Error('ShallowWrapper::update() can only be called on the root');
     }
     this.single('update', () => {
-      this[NODE] = getRootNode(this[RENDERER].getNode());
-      this[NODES] = [this[NODE]];
+      privateSetNodes(this, getRootNode(this[RENDERER].getNode()));
     });
     return this;
   }
