@@ -29,6 +29,8 @@ const FunctionalComponent = 1;
 const HostPortal = 4;
 const HostComponent = 5;
 const HostText = 6;
+const ContextConsumer = 12;
+const ContextProvider = 13;
 
 function nodeAndSiblingsArray(nodeWithSibling) {
   const array = [];
@@ -71,6 +73,10 @@ function toTree(vnode) {
     case HostRoot: // 3
       return toTree(node.child);
     case HostPortal: // 4
+      return toTree(node.child);
+    case ContextProvider:
+      return toTree(node.child);
+    case ContextConsumer:
       return toTree(node.child);
     case ClassComponent:
       return {
