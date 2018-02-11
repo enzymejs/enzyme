@@ -15,6 +15,7 @@ import {
   createRenderWrapper,
   createMountWrapper,
   propsWithKeysAndRef,
+  ensureKeyOrUndefined,
 } from 'enzyme-adapter-utils';
 
 function typeToNodeType(type) {
@@ -47,7 +48,7 @@ function instanceToTree(inst) {
       nodeType: 'host',
       type: el.type,
       props: el.props,
-      key: el.key || undefined,
+      key: ensureKeyOrUndefined(el.key),
       ref: el.ref,
       instance: ReactDOM.findDOMNode(inst.getPublicInstance()) || null,
       rendered: values(children).map(instanceToTree),
@@ -58,7 +59,7 @@ function instanceToTree(inst) {
       nodeType: typeToNodeType(el.type),
       type: el.type,
       props: el.props,
-      key: el.key || undefined,
+      key: ensureKeyOrUndefined(el.key),
       ref: el.ref,
       instance: inst._instance || null,
       rendered: instanceToTree(inst._renderedComponent),
@@ -145,7 +146,7 @@ class ReactFifteenAdapter extends EnzymeAdapter {
           nodeType: typeToNodeType(cachedNode.type),
           type: cachedNode.type,
           props: cachedNode.props,
-          key: cachedNode.key || undefined,
+          key: ensureKeyOrUndefined(cachedNode.key),
           ref: cachedNode.ref,
           instance: renderer._instance._instance,
           rendered: elementToTree(output),

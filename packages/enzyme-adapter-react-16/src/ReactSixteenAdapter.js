@@ -18,6 +18,7 @@ import {
   createRenderWrapper,
   createMountWrapper,
   propsWithKeysAndRef,
+  ensureKeyOrUndefined,
 } from 'enzyme-adapter-utils';
 import { findCurrentFiberUsingSlowPath } from 'react-reconciler/reflection';
 
@@ -76,7 +77,7 @@ function toTree(vnode) {
         nodeType: 'class',
         type: node.type,
         props: { ...node.memoizedProps },
-        key: node.key || undefined,
+        key: ensureKeyOrUndefined(node.key),
         ref: node.ref,
         instance: node.stateNode,
         rendered: childrenToTree(node.child),
@@ -88,7 +89,7 @@ function toTree(vnode) {
         nodeType: 'function',
         type: node.type,
         props: { ...node.memoizedProps },
-        key: node.key || undefined,
+        key: ensureKeyOrUndefined(node.key),
         ref: node.ref,
         instance: null,
         rendered: childrenToTree(node.child),
@@ -102,7 +103,7 @@ function toTree(vnode) {
         nodeType: 'host',
         type: node.type,
         props: { ...node.memoizedProps },
-        key: node.key || undefined,
+        key: ensureKeyOrUndefined(node.key),
         ref: node.ref,
         instance: node.stateNode,
         rendered: renderedNodes,
@@ -228,7 +229,7 @@ class ReactSixteenAdapter extends EnzymeAdapter {
           nodeType: nodeTypeFromType(cachedNode.type),
           type: cachedNode.type,
           props: cachedNode.props,
-          key: cachedNode.key || undefined,
+          key: ensureKeyOrUndefined(cachedNode.key),
           ref: cachedNode.ref,
           instance: renderer._instance,
           rendered: Array.isArray(output)

@@ -12,6 +12,7 @@ import {
   createRenderWrapper,
   createMountWrapper,
   propsWithKeysAndRef,
+  ensureKeyOrUndefined,
 } from 'enzyme-adapter-utils';
 import mapNativeEventNames from './ReactThirteenMapNativeEventNames';
 import elementToTree from './ReactThirteenElementToTree';
@@ -75,7 +76,7 @@ function instanceToTree(inst) {
       nodeType: 'host',
       type: el.type,
       props: el._store.props,
-      key: el.key || undefined,
+      key: ensureKeyOrUndefined(el.key),
       ref: el.ref,
       instance: inst._instance.getDOMNode(),
       rendered: values(children).map(instanceToTree),
@@ -86,7 +87,7 @@ function instanceToTree(inst) {
       nodeType: 'class',
       type: el.type,
       props: el._store.props,
-      key: el.key || undefined,
+      key: ensureKeyOrUndefined(el.key),
       ref: el.ref,
       instance: inst._instance || inst._hostNode || null,
       rendered: instanceToTree(inst._renderedComponent),
@@ -174,7 +175,7 @@ class ReactThirteenAdapter extends EnzymeAdapter {
           nodeType: 'class',
           type: cachedNode.type,
           props: cachedNode.props,
-          key: cachedNode.key || undefined,
+          key: ensureKeyOrUndefined(cachedNode.key),
           ref: cachedNode.ref,
           instance: renderer._instance._instance,
           rendered: elementToTree(output),

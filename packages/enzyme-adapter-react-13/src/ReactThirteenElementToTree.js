@@ -1,4 +1,4 @@
-import { flatten, isArrayLike } from 'enzyme-adapter-utils';
+import { flatten, isArrayLike, ensureKeyOrUndefined } from 'enzyme-adapter-utils';
 
 export function nodeTypeFromType(type) {
   if (typeof type === 'string') {
@@ -35,7 +35,7 @@ export default function elementToTree(el) {
     nodeType: nodeTypeFromType(type),
     type,
     props,
-    key: key || undefined,
+    key: ensureKeyOrUndefined(key),
     ref,
     instance: null,
     rendered,
