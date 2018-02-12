@@ -97,6 +97,10 @@ function getRootNode(node) {
   return node.rendered;
 }
 
+function getRootNodeInternal(wrapper) {
+  return wrapper[ROOT][NODE];
+}
+
 function privateSetNodes(wrapper, nodes) {
   if (!Array.isArray(nodes)) {
     privateSet(wrapper, NODE, nodes);
@@ -150,10 +154,12 @@ class ShallowWrapper {
     return this[ROOT];
   }
 
-
   getNodeInternal() {
     if (this.length !== 1) {
       throw new Error('ShallowWrapper::getNode() can only be called when wrapping one node');
+    }
+    if (this[ROOT] === this) {
+      this.update();
     }
     return this[NODE];
   }
@@ -167,7 +173,7 @@ class ShallowWrapper {
     if (this.length !== 1) {
       throw new Error('ShallowWrapper::getElement() can only be called when wrapping one node');
     }
-    return getAdapter(this[OPTIONS]).nodeToElement(this[NODE]);
+    return getAdapter(this[OPTIONS]).nodeToElement(this.getNodeInternal());
   }
 
   /**
@@ -176,7 +182,7 @@ class ShallowWrapper {
    * @return {Array<ReactElement>}
    */
   getElements() {
-    return this[NODES].map(getAdapter(this[OPTIONS]).nodeToElement);
+    return this.getNodesInternal().map(getAdapter(this[OPTIONS]).nodeToElement);
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -185,6 +191,9 @@ class ShallowWrapper {
   }
 
   getNodesInternal() {
+    if (this[ROOT] === this && this.length === 1) {
+      this.update();
+    }
     return this[NODES];
   }
 
@@ -225,9 +234,10 @@ class ShallowWrapper {
     if (this[ROOT] !== this) {
       throw new Error('ShallowWrapper::update() can only be called on the root');
     }
-    this.single('update', () => {
-      privateSetNodes(this, getRootNode(this[RENDERER].getNode()));
-    });
+    if (this.length !== 1) {
+      throw new Error('ShallowWrapper::update() can only be called when wrapping one node');
+    }
+    privateSetNodes(this, getRootNode(this[RENDERER].getNode()));
     return this;
   }
 
@@ -793,7 +803,7 @@ class ShallowWrapper {
    * @returns {ShallowWrapper}
    */
   parents(selector) {
-    const allParents = this.wrap(this.single('parents', n => parentsOfNode(n, this[ROOT][NODE])));
+    const allParents = this.wrap(this.single('parents', n => parentsOfNode(n, getRootNodeInternal(this))));
     return selector ? allParents.filter(selector) : allParents;
   }
 
@@ -1189,7 +1199,7 @@ if (ITERATOR_SYMBOL) {
   Object.defineProperty(ShallowWrapper.prototype, ITERATOR_SYMBOL, {
     configurable: true,
     value: function iterator() {
-      const iter = this[NODES][ITERATOR_SYMBOL]();
+      const iter = this.getNodesInternal()[ITERATOR_SYMBOL]();
       const adapter = getAdapter(this[OPTIONS]);
       return {
         next() {

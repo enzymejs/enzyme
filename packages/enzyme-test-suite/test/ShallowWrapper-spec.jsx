@@ -4650,13 +4650,16 @@ describe('shallow', () => {
       }
     }
 
-    it('should have updated output after an asynchronous setState', (done) => {
+    it('should have updated output after an asynchronous setState', () => {
       const wrapper = shallow(<Test />);
       wrapper.find('.async-btn').simulate('click');
-      setImmediate(() => {
-        wrapper.update();
+      return new Promise((resolve) => {
+        setImmediate(() => {
+          wrapper.update();
+          resolve();
+        });
+      }).then(() => {
         expect(wrapper.find('.show-me').length).to.equal(1);
-        done();
       });
     });
 
@@ -4689,6 +4692,88 @@ describe('shallow', () => {
       const wrapper = shallow(<div />);
       wrapper.single((node) => {
         expect(node).to.equal(wrapper[sym('__node__')]);
+      });
+    });
+  });
+
+  describe('setState through a props method', () => {
+    class Child extends React.Component {
+      render() {
+        return <button onClick={this.props.onClick}>click</button>;
+      }
+    }
+
+    it('should be able to get the latest state value', () => {
+      class App extends React.Component {
+        constructor(props) {
+          super(props);
+          this.state = {
+            count: 0,
+          };
+        }
+        onIncrement() {
+          this.setState({
+            count: this.state.count + 1,
+          });
+        }
+        render() {
+          return (
+            <div>
+              <Child onClick={() => this.onIncrement()} />
+              <p>{this.state.count}</p>
+            </div>
+          );
+        }
+      }
+      const wrapper = shallow(<App />);
+      const p = wrapper.find('p');
+      expect(wrapper.find('p').text()).to.equal('0');
+      wrapper.find(Child).prop('onClick')();
+      // this is still 0 because the wrapper won't be updated
+      expect(p.text()).to.equal('0');
+      expect(wrapper.find('p').text()).to.equal('1');
+    });
+  });
+
+  describe('setState through a props method in async', () => {
+    class Child extends React.Component {
+      render() {
+        return <button onClick={this.props.onClick}>click</button>;
+      }
+    }
+
+    it('should be able to get the latest state value', () => {
+      let App;
+      const promise = new Promise((resolve) => {
+        App = class extends React.Component {
+          constructor(props) {
+            super(props);
+            this.state = {
+              count: 0,
+            };
+          }
+          onIncrement() {
+            setTimeout(() => {
+              this.setState({
+                count: this.state.count + 1,
+              }, resolve);
+            });
+          }
+          render() {
+            return (
+              <div>
+                <Child onClick={() => this.onIncrement()} />
+                <p>{this.state.count}</p>
+              </div>
+            );
+          }
+        };
+      });
+      const wrapper = shallow(<App />);
+      expect(wrapper.find('p').text()).to.equal('0');
+      wrapper.find(Child).prop('onClick')();
+      return promise.then(() => {
+        expect(wrapper.find('p').text()).to.equal('1');
       });
     });
   });
