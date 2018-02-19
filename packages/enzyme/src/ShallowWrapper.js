@@ -19,9 +19,7 @@ import {
   privateSet,
   cloneElement,
 } from './Utils';
-import {
-  debugNodes,
-} from './Debug';
+import { debugNodes } from './Debug';
 import {
   propsOfNode,
   getTextFromNode,
