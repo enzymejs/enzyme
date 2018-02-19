@@ -30,7 +30,7 @@ npm i --save-dev enzyme enzyme-adapter-react-16
 ```
 
 Each adapter may have additional peer dependencies which you will need to install as well. For instance,
-`enzyme-adapter-react-16` has peer dependencies on `react`, `react-dom`, and `react-test-renderer`.
+`enzyme-adapter-react-16` has peer dependencies on `react` and `react-dom`.
 
 At the moment, Enzyme has adapters that provide compatibility with `React 16.x`, `React 15.x`,
 `React 0.14.x` and `React 0.13.x`.
