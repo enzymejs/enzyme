@@ -1,7 +1,7 @@
 # Future Work
 
 Discussion of additional features and support for enzyme should be initiated by opening a
-[Github issue](https://github.com/airbnb/enzyme/issues).
+[GitHub issue](https://github.com/airbnb/enzyme/issues).
 
 There are several things we'd like to address with enzyme that often get asked. Here are a couple
 of projects that we plan on addressing in the near future:

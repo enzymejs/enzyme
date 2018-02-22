@@ -1,6 +1,6 @@
 # Common Issues
 
-This list aims to be comprehensive. If you find an issue that has been frequently brought up in Github *issues* that is not here, please open a PR to add it.
+This list aims to be comprehensive. If you find an issue that has been frequently brought up in GitHub *Issues* that is not here, please open a PR to add it.
 
 ### Query Selector fails
 
