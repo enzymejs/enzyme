@@ -193,6 +193,55 @@ describe('selectors', () => {
         siblings.map(sibling => expect(sibling.text()).to.not.equal('Top'));
       });
 
+      it('not() pseudo selector', () => {
+        const wrapper = renderMethod((
+          <div>
+            <span className="bar" >first</span>
+            <span />
+            <span className="foo" />
+            <span />
+            <span />
+          </div>
+        ));
+        expect(wrapper.find('span:not(.foo, .bar)')).to.have.lengthOf(3);
+      });
+
+      it(':empty pseudo selector', () => {
+        const wrapper = renderMethod((
+          <div>
+            <span className="bar" >first</span>
+            <span />
+            <span className="foo" />
+            <span />
+            <span />
+          </div>
+        ));
+        expect(wrapper.find('.foo:empty')).to.have.lengthOf(1);
+        expect(wrapper.find('.bar:empty')).to.have.lengthOf(0);
+      });
+
+      it('first-child pseudo', () => {
+        const wrapper = renderMethod((
+          <div>
+            <span>first</span>
+            <span />
+            <span />
+          </div>
+        ));
+        expect(wrapper.find('span:first-child').text()).to.equal('first');
+      });
+
+      it('last-child pseudo', () => {
+        const wrapper = renderMethod((
+          <div>
+            <span />
+            <span />
+            <span>last</span>
+          </div>
+        ));
+        expect(wrapper.find('span:last-child').text()).to.equal('last');
+      });
+
       it('throws for complex selectors in simple selector methods', () => {
         const wrapper = renderMethod(<div className="foo" />);
         ['is', 'filter', 'not', 'every'].forEach((method) => {
@@ -203,14 +252,14 @@ describe('selectors', () => {
         });
       });
 
-      it('throws for pseudo-element selectors', () => {
+      it('throws for unsupported pseudo-element selectors', () => {
         const wrapper = renderMethod(<div className="foo" />);
-        expect(() => wrapper.find('div::after')).to.throw('Enzyme::Selector does not support pseudo-element or pseudo-class selectors.');
+        expect(() => wrapper.find('div::after')).to.throw('Enzyme::Selector does not support the "after" pseudo-element or pseudo-class selectors.');
       });
 
-      it('throws for pseudo-class selectors', () => {
+      it('throws for unsupported pseudo-class selectors', () => {
         const wrapper = renderMethod(<div className="foo" />);
-        expect(() => wrapper.find('div:hover')).to.throw('Enzyme::Selector does not support pseudo-element or pseudo-class selectors.');
+        expect(() => wrapper.find('div:hover')).to.throw('Enzyme::Selector does not support the "hover" pseudo-element or pseudo-class selectors.');
       });
 
       it('.foo + div > span', () => {

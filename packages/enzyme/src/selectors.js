@@ -138,13 +138,36 @@ function matchAttributeSelector(node, token) {
   }
 }
 
+
+function matchPseudoSelector(node, token, root) {
+  const { name, parameters } = token;
+  if (name === 'not') {
+    // eslint-disable-next-line no-use-before-define
+    return parameters.every(selector => reduceTreeBySelector(selector, node).length === 0);
+  }
+  if (name === 'empty') {
+    return treeFilter(node, n => n !== node).length === 0;
+  }
+  if (name === 'first-child') {
+    const { rendered } = findParentNode(root, node);
+    const [firstChild] = rendered;
+    return firstChild === node;
+  }
+  if (name === 'last-child') {
+    const { rendered } = findParentNode(root, node);
+    return rendered[rendered.length - 1] === node;
+  }
+
+  throw new TypeError(`Enzyme::Selector does not support the "${token.name}" pseudo-element or pseudo-class selectors.`);
+}
+
 /**
  * Takes a node and a token and determines if the node
  * matches the predicate defined by the token.
  * @param {Node} node
  * @param {Token} token
  */
-function nodeMatchesToken(node, token) {
+function nodeMatchesToken(node, token, root) {
   if (node === null || typeof node === 'string') {
     return false;
   }
@@ -183,7 +206,7 @@ function nodeMatchesToken(node, token) {
       return matchAttributeSelector(node, token);
     case PSEUDO_ELEMENT:
     case PSEUDO_CLASS:
-      throw new Error('Enzyme::Selector does not support pseudo-element or pseudo-class selectors.');
+      return matchPseudoSelector(node, token, root);
     default:
       throw new Error(`Unknown token type: ${token.type}`);
   }
@@ -195,8 +218,8 @@ function nodeMatchesToken(node, token) {
  * token.
  * @param {Token} token
  */
-function buildPredicateFromToken(token) {
-  return node => token.body.every(bodyToken => nodeMatchesToken(node, bodyToken));
+function buildPredicateFromToken(token, root) {
+  return node => token.body.every(bodyToken => nodeMatchesToken(node, bodyToken, root));
 }
 
 /**
@@ -355,7 +378,7 @@ export function reduceTreeBySelector(selector, root) {
        *    to determine if a selector node applies or not.
        */
       if (token.type === SELECTOR) {
-        const predicate = buildPredicateFromToken(token);
+        const predicate = buildPredicateFromToken(token, root);
         results = results.concat(treeFilter(root, predicate));
       } else {
         // We can assume there always all previously matched tokens since selectors
@@ -365,7 +388,7 @@ export function reduceTreeBySelector(selector, root) {
         // forward and build the predicate.
         index += 1;
         token = tokens[index];
-        const predicate = buildPredicateFromToken(token);
+        const predicate = buildPredicateFromToken(token, root);
         // We match against only the nodes which have already been matched,
         // since a combinator is meant to refine a previous selector.
         switch (type) {
