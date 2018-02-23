@@ -845,7 +845,7 @@ class ShallowWrapper {
    * @returns {String}
    */
   key() {
-    return this.single('key', n => n.key);
+    return this.single('key', n => (n.key === undefined ? null : n.key));
   }
 
   /**

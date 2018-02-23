@@ -3153,6 +3153,15 @@ describeWithDOM('mount', () => {
       expect(wrapper.at(1).key()).to.equal('bar');
       expect(wrapper.at(2).key()).to.equal('');
     });
+
+    it('should return null when no key is specified', () => {
+      const wrapper = mount((
+        <ul>
+          <li>foo</li>
+        </ul>
+      )).find('li');
+      expect(wrapper.key()).to.equal(null);
+    });
   });
 
   describe('.matchesElement(node)', () => {
