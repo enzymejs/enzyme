@@ -56,6 +56,12 @@ describeWithDOM('mount', () => {
       expect(wrapper.children().instance()).to.be.instanceOf(Box);
       expect(wrapper.children().props().bam).to.equal(true);
     });
+
+    it('should call ref', () => {
+      const spy = sinon.spy();
+      mount(<div ref={spy} />);
+      expect(spy).to.have.property('callCount', 1);
+    });
   });
 
   describe('context', () => {
