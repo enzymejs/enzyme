@@ -1,6 +1,6 @@
 # `.mount() => Self`
 
-A method that re-mounts the component. This can be used to simulate a component going through
+A method that re-mounts the component, if it is not currently mounted. This can be used to simulate a component going through
 an unmount/mount lifecycle.
 
 #### Returns
