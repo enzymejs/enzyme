@@ -438,7 +438,7 @@ return 3 and not 1 as in previous versions. A closer look using
 
 <!-- eslint react/prop-types: 0, react/prefer-stateless-function: 0 -->
 
-```
+```jsx
 // console.log(wrapper.find('[aria-expanded="true"]').debug());
 
 <HelpLinkContainer aria-expanded={true} text="foo">
@@ -467,7 +467,7 @@ To return only the html nodes use the
 
 <!-- eslint react/prop-types: 0, react/prefer-stateless-function: 0 -->
 
-```
+```jsx
 <a aria-expanded="true">foo</a>;
 ```
 
