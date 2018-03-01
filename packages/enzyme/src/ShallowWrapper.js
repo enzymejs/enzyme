@@ -1132,8 +1132,9 @@ class ShallowWrapper {
   /**
    * Returns an HTML-like string of the shallow render for debugging purposes.
    *
-   * @param {Object} options - (Optional) Property bag of additional options.
-   * options.ignoreProps - if true, props are omitted from the string.
+   * @param {Object} [options] - Property bag of additional options.
+   * @param {boolean} [options.ignoreProps] - if true, props are omitted from the string.
+   * @param {boolean} [options.verbose] - if true, arrays and objects to be verbosely printed.
    * @returns {String}
    */
   debug(options = {}) {

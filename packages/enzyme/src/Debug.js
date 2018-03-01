@@ -29,7 +29,7 @@ export function indent(depth, string) {
   return string.split('\n').map(x => `${spaces(depth)}${x}`).join('\n');
 }
 
-function propString(prop) {
+function propString(prop, options) {
   if (isString(prop)) {
     return inspect(String(prop), { quoteStyle: 'double' });
   }
@@ -43,15 +43,19 @@ function propString(prop) {
     return `{${inspect(prop)}}`;
   }
   if (typeof prop === 'object') {
+    if (options.verbose) {
+      return `{${inspect(prop)}}`;
+    }
+
     return '{{...}}';
   }
   return `{[${typeof prop}]}`;
 }
 
-function propsString(node) {
+function propsString(node, options) {
   const props = propsOfNode(node);
   const keys = without(Object.keys(props), 'children');
-  return keys.map(key => `${key}=${propString(props[key])}`).join(' ');
+  return keys.map(key => `${key}=${propString(props[key], options)}`).join(' ');
 }
 
 function indentChildren(childrenStrs, indentLength) {
@@ -67,7 +71,7 @@ export function debugNode(node, indentLength = 2, options = {}) {
   const childrenStrs = compact(childrenOfNode(node).map(n => debugNode(n, indentLength, options)));
   const type = typeName(node);
 
-  const props = options.ignoreProps ? '' : propsString(node);
+  const props = options.ignoreProps ? '' : propsString(node, options);
   const beforeProps = props ? ' ' : '';
   const afterProps = childrenStrs.length
     ? '>'

@@ -629,6 +629,36 @@ describe('debug', () => {
 </div>`
       ));
     });
+
+    it('options.verbose causes arrays and objects to be verbosely printed', () => {
+      class Foo extends React.Component {
+        render() {
+          const nestedData = {
+            a: [1, 3, { true: true }],
+            b: false,
+            c: { d: 'f' },
+          };
+          nestedData.d = nestedData.a;
+          const arry = [1, 2, { f: nestedData.c }];
+          return (
+            <div data-json={nestedData} data-arry={arry}>Test Component</div>
+          );
+        }
+      }
+
+      const wrapper = shallow(<Foo />);
+      expect(wrapper.debug({ verbose: true })).to.equal((
+        `<div data-json={{ a: [ 1, 3, { true: true } ], b: false, c: { d: 'f' }, d: [ 1, 3, { true: true } ] }} data-arry={[ 1, 2, { f: { d: 'f' } } ]}>
+  Test Component
+</div>`
+      ));
+
+      expect(wrapper.debug({ verbose: false })).to.equal((
+        `<div data-json={{...}} data-arry={{...}}>
+  Test Component
+</div>`
+      ));
+    });
   });
 
   describeWithDOM('debug React wrapper', () => {
@@ -682,6 +712,40 @@ describe('debug', () => {
     </span>
   </div>
 </Bar>`
+      ));
+    });
+
+    it('options.verbose causes arrays and objects to be verbosely printed', () => {
+      class Foo extends React.Component {
+        render() {
+          const nestedData = {
+            a: [1, 3, { true: true }],
+            b: false,
+            c: { d: 'f' },
+          };
+          nestedData.d = nestedData.a;
+          const arry = [1, 2, { f: nestedData.c }];
+          return (
+            <div data-json={nestedData} data-arry={arry}>Test Component</div>
+          );
+        }
+      }
+
+      const wrapper = mount(<Foo />);
+      expect(wrapper.debug({ verbose: true })).to.equal((
+        `<Foo>
+  <div data-json={{ a: [ 1, 3, { true: true } ], b: false, c: { d: 'f' }, d: [ 1, 3, { true: true } ] }} data-arry={[ 1, 2, { f: { d: 'f' } } ]}>
+    Test Component
+  </div>
+</Foo>`
+      ));
+
+      expect(wrapper.debug({ verbose: false })).to.equal((
+        `<Foo>
+  <div data-json={{...}} data-arry={{...}}>
+    Test Component
+  </div>
+</Foo>`
       ));
     });
   });
