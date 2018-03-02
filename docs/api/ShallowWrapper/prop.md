@@ -20,11 +20,28 @@ of the root node of the component.
 
 ```jsx
 import PropTypes from 'prop-types';
+import ValidateNumberInputComponent from './ValidateNumberInputComponent';
 
-function MyComponent({ includedProp }) {
-  return (
-    <div className="foo bar" includedProp={includedProp}>Hello</div>
-  );
+class MyComponent extends React.Component {
+  state = {
+    number: 0;
+  };
+
+  onValidNumberInput = this.onValidNumberInput.bind(this);
+  onValidNumberInput(e) {
+    const number = e.target.value;
+    if (!number || typeof number === 'number') {
+      this.setState(() => ({ number }));
+    }
+  };
+
+  render {
+    return (
+      <div className="foo bar" includedProp={includedProp}>
+        <ValidateNumberInputComponent onChangeHandler={onValidNumberInput} />
+      </div>
+    );
+  }
 }
 MyComponent.propTypes = {
   includedProp: PropTypes.string.isRequired,
@@ -32,6 +49,14 @@ MyComponent.propTypes = {
 
 const wrapper = shallow(<MyComponent includedProp="Success!" excludedProp="I'm not included" />);
 expect(wrapper.prop('includedProp')).to.equal('Success!');
+
+const validInput = 1;
+wrapper.find('ValidNumberInputComponent').prop('onChangeHandler')(validInput);
+expect(wrapper.state('number')).to.equal(number);
+
+const invalidInput = 'invalid input';
+wrapper.find('ValidNumberInputComponent').prop('onChangeHandler')(invalidInput);
+expect(wrapper.state('number')).to.equal(0);
 
 // Warning: .prop(key) only returns values for props that exist in the root node.
 // See the note above about wrapper.instance().props to return all props in the React component.
