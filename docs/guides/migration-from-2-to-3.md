@@ -437,7 +437,7 @@ return 3 and not 1 as in previous versions. A closer look using
 [`debug`](../api/ReactWrapper/debug.md) reveals:
 
 <!-- eslint react/prop-types: 0, react/prefer-stateless-function: 0 -->
-
+<!-- eslint-skip -->
 ```jsx
 // console.log(wrapper.find('[aria-expanded="true"]').debug());
 
@@ -465,7 +465,7 @@ To return only the html nodes use the
 
 `wrapper.find("[aria-expanded=true]").hostNodes().debug()` will now return:
 
-<!-- eslint react/prop-types: 0, react/prefer-stateless-function: 0 -->
+<!-- eslint react/prop-types: 0, react/prefer-stateless-function: 0, no-unused-expressions: 0, jsx-a11y/anchor-is-valid: 0 -->
 
 ```jsx
 <a aria-expanded="true">foo</a>;
