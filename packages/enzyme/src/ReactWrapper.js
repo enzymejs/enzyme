@@ -470,7 +470,7 @@ class ReactWrapper {
    * NOTE: can only be called on a wrapper of a single node.
    *
    * @param {String|Function} selector
-   * @returns {boolean}
+   * @returns {Boolean}
    */
   is(selector) {
     const predicate = buildPredicate(selector);
@@ -480,7 +480,7 @@ class ReactWrapper {
   /**
    * Returns true if the component rendered nothing, i.e., null or false.
    *
-   * @returns {boolean}
+   * @returns {Boolean}
    */
   isEmptyRender() {
     return this.single('isEmptyRender', n => n.rendered === null);
@@ -938,7 +938,7 @@ class ReactWrapper {
   /**
    * Delegates to exists()
    *
-   * @returns {boolean}
+   * @returns {Boolean}
    */
   isEmpty() {
     // eslint-disable-next-line no-console
@@ -949,7 +949,7 @@ class ReactWrapper {
   /**
    * Returns true if the current wrapper has nodes. False otherwise.
    *
-   * @returns {boolean}
+   * @returns {Boolean}
    */
   exists() {
     return this.length > 0;
