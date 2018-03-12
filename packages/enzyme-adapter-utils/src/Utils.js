@@ -3,7 +3,9 @@ import createRenderWrapper from './createRenderWrapper';
 
 export { createMountWrapper, createRenderWrapper };
 
-export function mapNativeEventNames(event) {
+export function mapNativeEventNames(event, {
+  animation = false, // should be true for React 15+
+} = {}) {
   const nativeToReactEventMap = {
     compositionend: 'compositionEnd',
     compositionstart: 'compositionStart',
@@ -42,6 +44,11 @@ export function mapNativeEventNames(event) {
     mouseenter: 'mouseEnter',
     mouseleave: 'mouseLeave',
     transitionend: 'transitionEnd',
+    ...(animation && {
+      animationstart: 'animationStart',
+      animationiteration: 'animationIteration',
+      animationend: 'animationEnd',
+    }),
   };
 
   return nativeToReactEventMap[event] || event;

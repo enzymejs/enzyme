@@ -467,6 +467,18 @@ describe('Utils', () => {
         expect(result).to.equal('dragEnter');
       });
     });
+
+    describe('conditionally supported events', () => {
+      it('ignores unsupported events', () => {
+        const result = mapNativeEventNames('animationiteration');
+        expect(result).to.equal('animationiteration');
+      });
+
+      it('transforms events when supported', () => {
+        const result = mapNativeEventNames('animationiteration', { animation: true });
+        expect(result).to.equal('animationIteration');
+      });
+    });
   });
 
   describe('displayNameOfNode', () => {
