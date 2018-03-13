@@ -65,7 +65,7 @@ const wrapper = shallow((
   </div>
 ));
 
-expect(wrapper.contains(<div data-foo="foo" data-bar="bar">{4}</div>)).to.equal(true);
+expect(wrapper.contains(<div data-foo="foo" data-bar="bar">{4}</div>)).toBe(true);
 ```
 
 #### Common Gotchas
