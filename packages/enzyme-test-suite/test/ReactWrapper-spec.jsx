@@ -1105,21 +1105,56 @@ describeWithDOM('mount', () => {
       });
     });
 
-    it('should not pass in null or false nodes', () => {
+    it('does not pass in null or false nodes', () => {
       const wrapper = mount((
-        <div>
+        <section>
           <div className="foo bar" />
+          <div>foo bar</div>
           {null}
           {false}
-        </div>
+        </section>
       ));
       const stub = sinon.stub();
-      stub.returns(true);
-      const spy = sinon.spy(stub);
-      wrapper.findWhere(spy);
-      expect(spy.callCount).to.equal(2);
+      wrapper.findWhere(stub);
+
+      const passedNodes = stub.getCalls().map(({ args: [firstArg] }) => firstArg);
+      const hasDOMNodes = passedNodes.map(n => [n.debug(), n.getDOMNode() && true]);
+      const expected = [
+        [wrapper.debug(), true], // root
+        ['<div className="foo bar" />', true], // first div
+        ['<div>\n  foo bar\n</div>', true], // second div
+        ['foo bar', null], // second div's contents
+      ];
+      expect(hasDOMNodes).to.eql(expected);
+
+      // the root, plus the 2 renderable children, plus the grandchild text
+      expect(stub).to.have.property('callCount', 4);
     });
 
+    it('allows `.text()` to be called on text nodes', () => {
+      const wrapper = mount((
+        <section>
+          <div className="foo bar" />
+          <div>foo bar</div>
+          {null}
+          {false}
+        </section>
+      ));
+
+      const stub = sinon.stub();
+      wrapper.findWhere(stub);
+
+      const passedNodes = stub.getCalls().map(({ args: [firstArg] }) => firstArg);
+
+      const textContents = passedNodes.map(n => [n.debug(), n.text()]);
+      const expected = [
+        [wrapper.debug(), 'foo bar'], // root
+        ['<div className="foo bar" />', ''], // first div
+        ['<div>\n  foo bar\n</div>', 'foo bar'], // second div
+        ['foo bar', null], // second div's contents
+      ];
+      expect(textContents).to.eql(expected);
+    });
   });
 
   describe('.setProps(newProps[, callback])', () => {
