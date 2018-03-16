@@ -99,17 +99,27 @@ describe('shallow', () => {
     itIf(REACT163, 'should find elements through Context elements', () => {
       const { Provider, Consumer } = createContext('');
 
-      class Foo extends React.Component {
+      class Consumes extends React.Component {
         render() {
           return (
-            <Consumer>{value => <span>{value}</span>}</Consumer>
+            <span>
+              <Consumer>{value => <span>{value}</span>}</Consumer>
+            </span>
           );
         }
       }
 
-      const wrapper = mount(<Provider value="foo"><div><Foo /></div></Provider>);
+      class Provides extends React.Component {
+        render() {
+          return (
+            <Provider value="foo"><div><Consumes /></div></Provider>
+          );
+        }
+      }
 
-      expect(wrapper.find('span').text()).to.equal('foo');
+      expect(shallow(<Consumes />).find('span')).to.have.length(1);
+      expect(shallow(<Provides />).find(Consumes)).to.have.length(1);
+
     });
 
     describeIf(!REACT013, 'stateless function components', () => {
