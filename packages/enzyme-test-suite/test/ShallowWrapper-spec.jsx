@@ -6,9 +6,9 @@ import { shallow, render, ShallowWrapper, mount } from 'enzyme';
 import { ITERATOR_SYMBOL, withSetStateAllowed, sym } from 'enzyme/build/Utils';
 
 import './_helpers/setupAdapters';
-import { createClass } from './_helpers/react-compat';
+import { createClass, createContext } from './_helpers/react-compat';
 import { describeIf, itIf, itWithData, generateEmptyRenderData } from './_helpers';
-import { REACT013, REACT014, REACT15, REACT150_4, REACT16, is } from './_helpers/version';
+import { REACT013, REACT014, REACT15, REACT150_4, REACT16, REACT163, is } from './_helpers/version';
 
 // The shallow renderer in react 16 does not yet support batched updates. When it does,
 // we should be able to go un-skip all of the tests that are skipped with this flag.
@@ -94,6 +94,22 @@ describe('shallow', () => {
 
       expect(wrapper.context().name).to.equal(context.name);
       expect(wrapper.context('name')).to.equal(context.name);
+    });
+
+    itIf(REACT163, 'should find elements through Context elements', () => {
+      const { Provider, Consumer } = createContext('');
+
+      class Foo extends React.Component {
+        render() {
+          return (
+            <Consumer>{value => <span>{value}</span>}</Consumer>
+          );
+        }
+      }
+
+      const wrapper = mount(<Provider value="foo"><div><Foo /></div></Provider>);
+
+      expect(wrapper.find('span').text()).to.equal('foo');
     });
 
     describeIf(!REACT013, 'stateless function components', () => {
