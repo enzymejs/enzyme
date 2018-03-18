@@ -8,6 +8,7 @@ As of Enzyme v3, the `shallow` API does call React lifecycle methods such as `co
 ```jsx
 import { shallow } from 'enzyme';
 import sinon from 'sinon';
+import Foo from './Foo';
 
 describe('<MyComponent />', () => {
   it('should render three <Foo /> components', () => {
