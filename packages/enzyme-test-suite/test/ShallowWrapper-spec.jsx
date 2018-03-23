@@ -6,7 +6,7 @@ import { shallow, render, ShallowWrapper, mount } from 'enzyme';
 import { ITERATOR_SYMBOL, withSetStateAllowed, sym } from 'enzyme/build/Utils';
 
 import './_helpers/setupAdapters';
-import { createClass, createContext } from './_helpers/react-compat';
+import { createClass, createContext, forwardRef } from './_helpers/react-compat';
 import { describeIf, itIf, itWithData, generateEmptyRenderData } from './_helpers';
 import { REACT013, REACT014, REACT15, REACT150_4, REACT16, REACT163, is } from './_helpers/version';
 
@@ -119,7 +119,19 @@ describe('shallow', () => {
 
       expect(shallow(<Consumes />).find('span')).to.have.length(1);
       expect(shallow(<Provides />).find(Consumes)).to.have.length(1);
+    });
 
+    itIf(REACT163, 'should find elements through forwardedRef elements', () => {
+      const SomeComponent = React.forwardRef((props, ref) => (
+        <div ref={ref}>
+          <span className="child1" />
+          <span className="child2" />
+        </div>
+      ));
+
+      const wrapper = shallow(<SomeComponent />);
+
+      expect(wrapper.find('.child2')).to.have.length(1);
     });
 
     describeIf(!REACT013, 'stateless function components', () => {
