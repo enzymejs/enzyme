@@ -47,6 +47,7 @@ const HostText = 6;
 const Mode = 11;
 const ContextConsumerType = 12;
 const ContextProviderType = 13;
+const ForwardRefType = 14;
 
 function nodeAndSiblingsArray(nodeWithSibling) {
   const array = [];
@@ -111,6 +112,7 @@ function toTree(vnode) {
         instance: null,
         rendered: childrenToTree(node.child),
       };
+
     case HostComponent: { // 5
       let renderedNodes = flatten(nodeAndSiblingsArray(node.child).map(toTree));
       if (renderedNodes.length === 0) {
@@ -133,6 +135,17 @@ function toTree(vnode) {
     case ContextProviderType: // 13
     case ContextConsumerType: // 12
       return childrenToTree(node.child);
+    case ForwardRefType: {
+      return {
+        nodeType: 'function',
+        type: node.type,
+        props: { ...node.memoizedProps },
+        key: ensureKeyOrUndefined(node.key),
+        ref: node.ref,
+        instance: null,
+        rendered: childrenToTree(node.child),
+      };
+    }
     default:
       throw new Error(`Enzyme Internal Error: unknown node with tag ${node.tag}`);
   }

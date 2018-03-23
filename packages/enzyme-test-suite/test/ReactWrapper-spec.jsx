@@ -23,6 +23,7 @@ import {
   createPortal,
   createRef,
   Fragment,
+  forwardRef,
 } from './_helpers/react-compat';
 import {
   describeWithDOM,
@@ -208,6 +209,45 @@ describeWithDOM('mount', () => {
       const wrapper = mount(<Provider value="foo"><div><Foo /></div></Provider>);
 
       expect(wrapper.find('span').text()).to.equal('foo');
+    });
+
+    describeIf(is('>= 16.3'), 'forwarded ref Components', () => {
+      wrap().withConsoleThrows().it('should mount without complaint', () => {
+        const SomeComponent = forwardRef((props, ref) => (
+          <div {...props} ref={ref} />
+        ));
+
+        expect(() => mount(<SomeComponent />)).not.to.throw();
+      });
+
+      it('should find elements through forwardedRef elements', () => {
+        const testRef = () => {};
+        const SomeComponent = forwardRef((props, ref) => (
+          <div ref={ref}>
+            <span className="child1" />
+            <span className="child2" />
+          </div>
+        ));
+
+        const wrapper = mount(<div><SomeComponent ref={testRef} /></div>);
+
+        expect(wrapper.find('.child2')).to.have.lengthOf(1);
+      });
+
+      it('should find forwardRef element', () => {
+        const SomeComponent = forwardRef((props, ref) => (
+          <div ref={ref}>
+            <span className="child1" />
+          </div>
+        ));
+        const Parent = () => <span><SomeComponent foo="hello" /></span>;
+
+        const wrapper = mount(<Parent foo="hello" />);
+        const results = wrapper.find(SomeComponent);
+
+        expect(results).to.have.lengthOf(1);
+        expect(results.props()).to.eql({ foo: 'hello' });
+      });
     });
 
     describeIf(is('> 0.13'), 'stateless function components (SFCs)', () => {

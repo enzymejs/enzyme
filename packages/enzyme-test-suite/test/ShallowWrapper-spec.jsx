@@ -22,6 +22,7 @@ import {
   createContext,
   createRef,
   Fragment,
+  forwardRef,
 } from './_helpers/react-compat';
 import {
   describeIf,
@@ -145,7 +146,19 @@ describe('shallow', () => {
 
       expect(shallow(<Consumes />).find('span')).to.have.lengthOf(1);
       expect(shallow(<Provides />).find(Consumes)).to.have.lengthOf(1);
+    });
 
+    itIf(is('>= 16.3'), 'should find elements through forwarded refs elements', () => {
+      const SomeComponent = forwardRef((props, ref) => (
+        <div ref={ref}>
+          <span className="child1" />
+          <span className="child2" />
+        </div>
+      ));
+
+      const wrapper = shallow(<SomeComponent />);
+
+      expect(wrapper.find('.child2')).to.have.length(1);
     });
 
     describeIf(is('> 0.13'), 'stateless function components', () => {
