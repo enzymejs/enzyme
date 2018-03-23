@@ -189,6 +189,7 @@ class ReactSixteenTwoAdapter extends EnzymeAdapter {
     const { attachTo, hydrateIn } = options;
     const domNode = hydrateIn || attachTo || global.document.createElement('div');
     let instance = null;
+    const adapter = this;
     return {
       render(el, context, callback) {
         if (instance === null) {
@@ -199,7 +200,7 @@ class ReactSixteenTwoAdapter extends EnzymeAdapter {
             context,
             ...(ref && { ref }),
           };
-          const ReactWrapperComponent = createMountWrapper(el, options);
+          const ReactWrapperComponent = createMountWrapper(el, { ...options, adapter });
           const wrappedEl = React.createElement(ReactWrapperComponent, wrapperProps);
           instance = hydrateIn
             ? ReactDOM.hydrate(wrappedEl, domNode)
