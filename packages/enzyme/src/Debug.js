@@ -12,13 +12,41 @@ import {
   propsOfNode,
   childrenOfNode,
 } from './RSTTraversal';
+import {
+  typeOf,
+  AsyncMode,
+  ContextProvider,
+  ContextConsumer,
+  Element,
+  ForwardRef,
+  Fragment,
+  Portal,
+  StrictMode,
+} from './Utils';
 
 const booleanValue = Function.bind.call(Function.call, Boolean.prototype.valueOf);
 
+
 export function typeName(node) {
-  return typeof node.type === 'function'
-    ? (node.type.displayName || functionName(node.type) || 'Component')
-    : node.type;
+  const { type } = node;
+  switch (typeOf(node)) {
+    case AsyncMode: return 'AsyncMode';
+    case ContextProvider: return 'ContextProvider';
+    case ContextConsumer: return 'ContextConsumer';
+    case Portal: return 'Portal';
+    case StrictMode: return 'StrictMode';
+    case ForwardRef: {
+      const name = type.render.displayName || functionName(type.render);
+      return name ? `ForwardRef(${name})` : 'ForwardRef';
+    }
+    case Fragment:
+      return 'Fragment';
+    case Element:
+    default:
+      return typeof node.type === 'function'
+        ? (type.displayName || functionName(type) || 'Component')
+        : type || 'unknown';
+  }
 }
 
 export function spaces(n) {
@@ -66,6 +94,7 @@ function indentChildren(childrenStrs, indentLength) {
 
 export function debugNode(node, indentLength = 2, options = {}) {
   if (typeof node === 'string' || typeof node === 'number') return escape(node);
+  if (typeof node === 'function') return '[function child]';
   if (!node) return '';
 
   const childrenStrs = compact(childrenOfNode(node).map(n => debugNode(n, indentLength, options)));
