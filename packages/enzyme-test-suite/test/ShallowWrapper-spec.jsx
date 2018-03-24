@@ -122,7 +122,7 @@ describe('shallow', () => {
     });
 
     itIf(REACT163, 'should find elements through forwardedRef elements', () => {
-      const SomeComponent = React.forwardRef((props, ref) => (
+      const SomeComponent = forwardRef((props, ref) => (
         <div ref={ref}>
           <span className="child1" />
           <span className="child2" />

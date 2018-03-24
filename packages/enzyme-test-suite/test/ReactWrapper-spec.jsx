@@ -11,7 +11,7 @@ import {
 import { ITERATOR_SYMBOL, sym } from 'enzyme/build/Utils';
 
 import './_helpers/setupAdapters';
-import { createClass, createContext, createPortal } from './_helpers/react-compat';
+import { createClass, createContext, createPortal, forwardRef } from './_helpers/react-compat';
 import {
   describeWithDOM,
   describeIf,
@@ -186,7 +186,7 @@ describeWithDOM('mount', () => {
       it('should mount without complaint', () => {
         const warningStub = sinon.stub(console, 'error');
 
-        const SomeComponent = React.forwardRef((props, ref) => (
+        const SomeComponent = forwardRef((props, ref) => (
           <div {...props} ref={ref} />
         ));
 
@@ -199,7 +199,7 @@ describeWithDOM('mount', () => {
 
       it('should find elements through forwardedRef elements', () => {
         const testRef = () => {};
-        const SomeComponent = React.forwardRef((props, ref) => (
+        const SomeComponent = forwardRef((props, ref) => (
           <div ref={ref}>
             <span className="child1" />
             <span className="child2" />
