@@ -29,6 +29,7 @@ const FunctionalComponent = 1;
 const HostPortal = 4;
 const HostComponent = 5;
 const HostText = 6;
+const StrictMode = 11;
 
 function nodeAndSiblingsArray(nodeWithSibling) {
   const array = [];
@@ -83,6 +84,7 @@ function toTree(vnode) {
         rendered: childrenToTree(node.child),
       };
     case Fragment: // 10
+    case StrictMode: // 11
       return childrenToTree(node.child);
     case FunctionalComponent: // 1
       return {
