@@ -11,7 +11,7 @@ import {
 import { ITERATOR_SYMBOL, sym } from 'enzyme/build/Utils';
 
 import './_helpers/setupAdapters';
-import { createClass, createPortal } from './_helpers/react-compat';
+import { createClass, createContext, createPortal } from './_helpers/react-compat';
 import {
   describeWithDOM,
   describeIf,
@@ -19,7 +19,7 @@ import {
   itWithData,
   generateEmptyRenderData,
 } from './_helpers';
-import { REACT013, REACT014, REACT16, is } from './_helpers/version';
+import { REACT013, REACT014, REACT16, REACT163, is } from './_helpers/version';
 
 const getElementPropSelector = prop => x => x.props[prop];
 const getWrapperPropSelector = prop => x => x.prop(prop);
@@ -163,6 +163,22 @@ describeWithDOM('mount', () => {
 
       expect(wrapper.context().name).to.equal(context.name);
       expect(wrapper.context('name')).to.equal(context.name);
+    });
+
+    itIf(REACT163, 'should find elements through Context elements', () => {
+      const { Provider, Consumer } = createContext('');
+
+      class Foo extends React.Component {
+        render() {
+          return (
+            <Consumer>{value => <span>{value}</span>}</Consumer>
+          );
+        }
+      }
+
+      const wrapper = mount(<Provider value="foo"><div><Foo /></div></Provider>);
+
+      expect(wrapper.find('span').text()).to.equal('foo');
     });
 
     describeIf(!REACT013, 'stateless components', () => {
