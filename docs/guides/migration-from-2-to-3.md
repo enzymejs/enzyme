@@ -135,7 +135,7 @@ Although the `<Box ... />` element has a `children` prop of `<div className="div
 rendered children of the element that the box component renders is a `<div className="box">...</div>`
 element.
 
-Prior enzyme v3, we would observe the following behavior:
+Prior enzyme v2, we would observe the following behavior:
 
 ```js
 wrapper.find(Box).children().debug();
