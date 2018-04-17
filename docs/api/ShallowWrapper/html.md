@@ -43,4 +43,5 @@ expect(wrapper.html()).to.equal('<div><b>important</b></div>');
 
 #### Related Methods
 
-[`.text() => String`](text.md)
+- [`.text() => String`](text.md)
+- [`.debug() => String`](debug.md)
