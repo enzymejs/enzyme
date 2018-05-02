@@ -38,7 +38,7 @@ const version = process.argv[2];
 // 6. install all of the package's peer deps at the top level
 
 var root = process.cwd();
-var adapterName = `enzyme-adapter-react-${version}`;
+var adapterName = `enzyme-adapter-react-renderer`;
 var adapterPackageJsonPath = path.join(root, 'packages', adapterName, 'package.json');
 var testPackageJsonPath = path.join(root, 'packages', 'enzyme-test-suite', 'package.json');
 
