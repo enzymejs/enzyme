@@ -1,2 +1,6 @@
 /* eslint global-require: 0 */
-module.exports = require('./ReactTestRendererAdapter');
+const Adapter = require('./ReactTestRendererAdapter');
+const MountWrapper = require('./ReactMountWrapper');
+
+module.exports = Adapter;
+module.exports.wrapper = MountWrapper;

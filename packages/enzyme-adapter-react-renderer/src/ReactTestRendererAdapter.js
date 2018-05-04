@@ -1,22 +1,37 @@
 import { EnzymeAdapter } from 'enzyme';
-import ReactTestRenderer from 'react-test-renderer';
+import { createMountWrapper } from 'enzyme-adapter-utils';
+import React from 'react';
+import ReactDOM from 'react-dom';
 
 class ReactTestRendererAdapter extends EnzymeAdapter {
   constructor() {
     super();
   }
   createMountRenderer(options) {
+    const domNode = options.attachTo || global.document.createElement('div');
     let instance = null;
     return {
-      render(element) {
-        instance = ReactTestRenderer.create(element);
-      },
-      getNode() {
-        return instance.toTree();
+      render(el, context, callback) {
+        if (instance === null) {
+          const ReactWrapperComponent = createMountWrapper(el, options);
+          const wrappedEl = React.createElement(ReactWrapperComponent, {
+            Component: el.type,
+            props: el.props,
+            context,
+          });
+          instance = ReactDOM.render(wrappedEl, domNode);
+          if (typeof callback === 'function') {
+            callback();
+          }
+        } else {
+          instance.setChildProps(el.props, context, callback);
+        }
+        return instance;
       },
       unmount() {
-        instance.unmount();
-      }
+        ReactDOM.unmountComponentAtNode(domNode);
+        instance = null;
+      },
     };
   }
   createRenderer(options) {
