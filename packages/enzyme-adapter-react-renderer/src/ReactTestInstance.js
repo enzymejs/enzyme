@@ -1,4 +1,7 @@
-import {findCurrentFiberUsingSlowPath} from 'react-reconciler/reflection';
+// COPIED FROM https://github.com/facebook/react/blob/master/packages/react-test-renderer/src/ReactTestRenderer.js
+// Ideally ReactTestInstance would be exported from the react-test-renderer package
+
+import { findCurrentFiberUsingSlowPath } from 'react-reconciler/reflection';
 import invariant from 'invariant';
 
 export const IndeterminateComponent = 0; // Before we know whether it is functional or class
@@ -17,12 +20,7 @@ export const ContextConsumer = 12;
 export const ContextProvider = 13;
 export const ForwardRef = 14;
 
-const validWrapperTypes = new Set([
-  FunctionalComponent,
-  ClassComponent,
-  HostComponent,
-  ForwardRef,
-]);
+const validWrapperTypes = new Set([FunctionalComponent, ClassComponent, HostComponent, ForwardRef]);
 
 function getPublicInstance(inst) {
   switch (inst.tag) {
@@ -51,27 +49,18 @@ function wrapFiber(fiber) {
   return wrapper;
 }
 
-function expectOne(
-  all,
-  message,
-) {
+function expectOne(all, message) {
   if (all.length === 1) {
     return all[0];
   }
 
   const prefix =
-    all.length === 0
-      ? 'No instances found '
-      : `Expected 1 but found ${all.length} instances `;
+    all.length === 0 ? 'No instances found ' : `Expected 1 but found ${all.length} instances `;
 
   throw new Error(prefix + message);
 }
 
-function findAll(
-  root,
-  predicate,
-  options,
-) {
+function findAll(root, predicate, options) {
   const deep = options ? options.deep : true;
   const results = [];
 
@@ -126,9 +115,8 @@ class ReactTestInstance {
   get instance() {
     if (this._fiber.tag === HostComponent) {
       return getPublicInstance(this._fiber.stateNode);
-    } else {
-      return this._fiber.stateNode;
     }
+    return this._fiber.stateNode;
   }
 
   get type() {
@@ -141,9 +129,7 @@ class ReactTestInstance {
 
   get parent() {
     const parent = this._fiber.return;
-    return parent === null || parent.tag === HostRoot
-      ? null
-      : wrapFiber(parent);
+    return parent === null || parent.tag === HostRoot ? null : wrapFiber(parent);
   }
 
   get children() {
@@ -165,7 +151,7 @@ class ReactTestInstance {
           children.push(wrapFiber(node));
           break;
         case HostText:
-          children.push('' + node.memoizedProps);
+          children.push(`${node.memoizedProps}`);
           break;
         case Fragment:
         case ContextProvider:
@@ -176,8 +162,7 @@ class ReactTestInstance {
         default:
           invariant(
             false,
-            'Unsupported component type %s in test renderer. ' +
-              'This is probably a bug in React.',
+            'Unsupported component type %s in test renderer. ' + 'This is probably a bug in React.',
             node.tag,
           );
       }
@@ -190,10 +175,10 @@ class ReactTestInstance {
         if (node.return === startingNode) {
           break outer;
         }
-        node = (node.return);
+        node = node.return;
       }
-      (node.sibling).return = node.return;
-      node = (node.sibling);
+      node.sibling.return = node.return;
+      node = node.sibling;
     }
     return children;
   }
@@ -201,48 +186,35 @@ class ReactTestInstance {
   // Custom search functions
   find(predicate) {
     return expectOne(
-      this.findAll(predicate, {deep: false}),
+      this.findAll(predicate, { deep: false }),
       `matching custom predicate: ${predicate.toString()}`,
     );
   }
 
   findByType(type) {
     return expectOne(
-      this.findAllByType(type, {deep: false}),
+      this.findAllByType(type, { deep: false }),
       `with node type: "${type.displayName || type.name}"`,
     );
   }
 
   findByProps(props) {
     return expectOne(
-      this.findAllByProps(props, {deep: false}),
+      this.findAllByProps(props, { deep: false }),
       `with props: ${JSON.stringify(props)}`,
     );
   }
 
-  findAll(
-    predicate,
-    options = null,
-  ) {
+  findAll(predicate, options = null) {
     return findAll(this, predicate, options);
   }
 
-  findAllByType(
-    type,
-    options = null,
-  ) {
+  findAllByType(type, options = null) {
     return findAll(this, node => node.type === type, options);
   }
 
-  findAllByProps(
-    props,
-    options = null,
-  ) {
-    return findAll(
-      this,
-      node => node.props && propsMatch(node.props, props),
-      options,
-    );
+  findAllByProps(props, options = null) {
+    return findAll(this, node => node.props && propsMatch(node.props, props), options);
   }
 }
 

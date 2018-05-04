@@ -5,6 +5,8 @@ import ReactDOMServer from 'react-dom/server';
 import ReactTestRendererAdapter from './ReactTestRendererAdapter';
 import ReactTestInstance from './ReactTestInstance';
 
+import { reduceTreesBySelector } from './selectors';
+
 const noop = () => {};
 
 const flatMap = (collection, fn) =>
@@ -70,12 +72,44 @@ class ReactMountWrapper {
     return _context;
   }
 
+  /**
+   * Finds every node in the render tree of the current wrapper that matches the provided selector.
+   *
+   * @param {String|Function} selector
+   * @returns {ReactWrapper}
+   */
   find(selector) {
     return new ReactMountWrapper(
-      flatMap(this.instances, instance => instance.findAllByType(selector)),
+      reduceTreesBySelector(selector, this.instances),
       this.rootWrapper,
       this.rootNode,
     );
+  }
+
+  /**
+   * Finds all nodes in the current wrapper nodes' render trees that match the provided predicate
+   * function.
+   *
+   * @param {Function} predicate
+   * @returns {ReactWrapper}
+   */
+  findWhere(predicate) {
+    return new ReactMountWrapper(
+      flatMap(this.instances, instance =>
+        instance.findAll(testInstance =>
+          predicate(new ReactMountWrapper([testInstance], this.rootWrapper, this.rootNode)))),
+      this.rootWrapper,
+      this.rootNode,
+    );
+  }
+
+  /**
+   * Returns a wrapper around the first node of the current wrapper.
+   *
+   * @returns {ReactWrapper}
+   */
+  first() {
+    return this.at(0);
   }
 
   /**
@@ -120,6 +154,15 @@ class ReactMountWrapper {
   }
 
   /**
+   * Returns a wrapper around the last node of the current wrapper.
+   *
+   * @returns {ReactWrapper}
+   */
+  last() {
+    return this.at(this.length - 1);
+  }
+
+  /**
    * Returns the name of the root node of this wrapper.
    *
    * In order of precedence => type.displayName -> type.name -> type.
@@ -131,6 +174,16 @@ class ReactMountWrapper {
       const { type } = instance;
       return type.displayName || type.name || type;
     });
+  }
+
+  /**
+   * Returns the value of  prop with the given name of the root node.
+   *
+   * @param {String} propName
+   * @returns {*}
+   */
+  prop(propName) {
+    return this.props()[propName];
   }
 
   /**
