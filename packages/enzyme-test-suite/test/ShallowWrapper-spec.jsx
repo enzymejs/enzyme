@@ -3932,6 +3932,46 @@ describe('shallow', () => {
       });
     });
 
+    describeIf(REACT16, 'support getSnapshotBeforeUpdate', () => {
+      it('should call getSnapshotBeforeUpdate and pass snapshot to componentDidUpdate', () => {
+        const spy = sinon.spy();
+        class Foo extends React.Component {
+          constructor(props) {
+            super(props);
+            this.state = {
+              foo: 'bar',
+            };
+          }
+          componentDidUpdate(prevProps, prevState, snapshot) {
+            spy('componentDidUpdate', prevProps, this.props, prevState, this.state, snapshot);
+          }
+          getSnapshotBeforeUpdate(prevProps, prevState) {
+            spy('getSnapshotBeforeUpdate', prevProps, this.props, prevState, this.state);
+            return { snapshot: 'ok' };
+          }
+          render() {
+            spy('render');
+            return <div>foo</div>;
+          }
+        }
+        const wrapper = shallow(<Foo name="foo" />);
+        spy.reset();
+        wrapper.setProps({ name: 'bar' });
+        expect(spy.args).to.deep.equal([
+          ['render'],
+          ['getSnapshotBeforeUpdate', { name: 'foo' }, { name: 'bar' }, { foo: 'bar' }, { foo: 'bar' }],
+          ['componentDidUpdate', { name: 'foo' }, { name: 'bar' }, { foo: 'bar' }, { foo: 'bar' }, { snapshot: 'ok' }],
+        ]);
+        spy.reset();
+        wrapper.setState({ foo: 'baz' });
+        expect(spy.args).to.deep.equal([
+          ['render'],
+          ['getSnapshotBeforeUpdate', { name: 'bar' }, { name: 'bar' }, { foo: 'bar' }, { foo: 'baz' }],
+          ['componentDidUpdate', { name: 'bar' }, { name: 'bar' }, { foo: 'bar' }, { foo: 'baz' }, { snapshot: 'ok' }],
+        ]);
+      });
+    });
+
     it('should not call when disableLifecycleMethods flag is true', () => {
       const spy = sinon.spy();
       class Foo extends React.Component {

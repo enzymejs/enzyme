@@ -304,13 +304,22 @@ class ShallowWrapper {
             }
             if (
               !this[OPTIONS].disableLifecycleMethods &&
-              instance &&
-              typeof instance.componentDidUpdate === 'function'
+              instance
             ) {
-              if (adapter.options.supportPrevContextArgumentOfComponentDidUpdate) {
-                instance.componentDidUpdate(prevProps, state, prevContext);
-              } else {
-                instance.componentDidUpdate(prevProps, state);
+              if (
+                adapter.options.supportGetSnapshotBeforeUpdate
+                && typeof instance.getSnapshotBeforeUpdate === 'function'
+              ) {
+                const snapshot = instance.getSnapshotBeforeUpdate(prevProps, state);
+                if (typeof instance.componentDidUpdate === 'function') {
+                  instance.componentDidUpdate(prevProps, state, snapshot);
+                }
+              } else if (typeof instance.componentDidUpdate === 'function') {
+                if (adapter.options.supportPrevContextArgumentOfComponentDidUpdate) {
+                  instance.componentDidUpdate(prevProps, state, prevContext);
+                } else {
+                  instance.componentDidUpdate(prevProps, state);
+                }
               }
             }
             this.update();
@@ -400,13 +409,22 @@ class ShallowWrapper {
           shouldRender &&
           !this[OPTIONS].disableLifecycleMethods &&
           adapter.options.enableComponentDidUpdateOnSetState &&
-          instance &&
-          typeof instance.componentDidUpdate === 'function'
+          instance
         ) {
-          if (adapter.options.supportPrevContextArgumentOfComponentDidUpdate) {
-            instance.componentDidUpdate(prevProps, prevState, prevContext);
-          } else {
-            instance.componentDidUpdate(prevProps, prevState);
+          if (
+            adapter.options.supportGetSnapshotBeforeUpdate &&
+            typeof instance.getSnapshotBeforeUpdate === 'function'
+          ) {
+            const snapshot = instance.getSnapshotBeforeUpdate(prevProps, prevState);
+            if (typeof instance.componentDidUpdate === 'function') {
+              instance.componentDidUpdate(prevProps, prevState, snapshot);
+            }
+          } else if (typeof instance.componentDidUpdate === 'function') {
+            if (adapter.options.supportPrevContextArgumentOfComponentDidUpdate) {
+              instance.componentDidUpdate(prevProps, prevState, prevContext);
+            } else {
+              instance.componentDidUpdate(prevProps, prevState);
+            }
           }
         }
         this.update();

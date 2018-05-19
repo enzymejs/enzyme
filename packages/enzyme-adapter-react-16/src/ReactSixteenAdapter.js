@@ -163,6 +163,7 @@ class ReactSixteenAdapter extends EnzymeAdapter {
     this.options = {
       ...this.options,
       enableComponentDidUpdateOnSetState: true,
+      supportGetSnapshotBeforeUpdate: true,
     };
   }
   createMountRenderer(options) {
