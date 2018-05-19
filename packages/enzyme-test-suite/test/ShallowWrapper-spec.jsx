@@ -3276,7 +3276,7 @@ describe('shallow', () => {
             return <div>foo</div>;
           }
         }
-        shallow(<Foo />, { lifecycleExperimental: true });
+        shallow(<Foo />);
         expect(spy.args).to.deep.equal([
           ['componentWillMount'],
           ['render'],
