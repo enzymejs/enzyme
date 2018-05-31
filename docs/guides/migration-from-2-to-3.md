@@ -156,6 +156,25 @@ wrapper.find(Box).children().debug();
 This may seem like a subtle difference, but making this change will be important for future APIs
 we would like to introduce.
 
+## `find()` now returns host nodes and DOM nodes
+
+In some cases find will return a host node and DOM node. Take the following for example: 
+
+```
+const Foo = () => <div/>;
+const wrapper = mount(
+  <div>
+    <Foo className="bar" />
+    <div className="bar"/>
+   </div>
+);
+console.log(wrapper.find('.bar').length); // 2
+```
+
+Since `<Foo/>` has the className `bar` it is returned as the _hostNode_. As expected the `<div>` with the className `bar` is also returned
+
+To avoid this you can explicity query for the DOM node: `wrapper.find('div.bar')`. Alternatively if you would like to only find host nodes use [hostNodes()](http://airbnb.io/enzyme/docs/api/ShallowWrapper/hostNodes.md#hostnodes--shallowwrapper) 
+
 ## For `mount`, updates are sometimes required when they weren't before
 
 React applications are dynamic. When testing your react components, you often want to test them
