@@ -1,14 +1,12 @@
 # `.instance() => ReactComponent`
 
-Gets the instance of the component being rendered as the root node passed into `mount()`.
-
-NOTE: can only be called on a wrapper instance that is also the root instance.
+Returns the wrapper's underlying instance.
 
 
 
 #### Returns
 
-`ReactComponent`: The component instance.
+`ReactComponent|DOMComponent`: The retrieved instance.
 
 
 
