@@ -54,8 +54,8 @@
     "react": "0.13.x || 0.14.x || ^15.0.0-0 || ^16.0.0-0"
   },
   "dependencies": {
-    "airbnb-js-shims": "^1.4.0",
-    "install-peerdeps": "^1.4.1",
+    "airbnb-js-shims": "^1.6.0",
+    "install-peerdeps": "^1.7.0",
     "npm-run": "^5.0.1",
     "object.assign": "^4.1.0",
     "object.getownpropertydescriptors": "^2.0.3",
