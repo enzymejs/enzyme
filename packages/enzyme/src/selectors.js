@@ -344,7 +344,7 @@ function matchDescendant(nodes, predicate) {
  * is handled by `buildPredicate`, or a complex CSS selector which
  * reduceTreeBySelector parses and reduces the tree based on the combinators.
  * @param {Function|Object|String} selector
- * @param {RSTNode} wrapper
+ * @param {RSTNode} root
  */
 export function reduceTreeBySelector(selector, root) {
   if (typeof selector === 'function' || typeof selector === 'object') {
@@ -355,20 +355,19 @@ export function reduceTreeBySelector(selector, root) {
   if (typeof selector === 'string') {
     const tokens = safelyGenerateTokens(selector);
     let index = 0;
-    let token = null;
     while (index < tokens.length) {
-      token = tokens[index];
+      const token = tokens[index];
       /**
        * There are two types of tokens in a CSS selector:
        *
        * 1. Selector tokens. These target nodes directly, like
        *    type or attribute selectors. These are easy to apply
-       *    because we can travserse the tree and return only
+       *    because we can traverse the tree and return only
        *    the nodes that match the predicate.
        *
        * 2. Combinator tokens. These tokens chain together
        *    selector nodes. For example > for children, or +
-       *    for adjecent siblings. These are harder to match
+       *    for adjacent siblings. These are harder to match
        *    as we have to track where in the tree we are
        *    to determine if a selector node applies or not.
        */
@@ -382,8 +381,7 @@ export function reduceTreeBySelector(selector, root) {
         // We assume the next token is a selector, so move the index
         // forward and build the predicate.
         index += 1;
-        token = tokens[index];
-        const predicate = buildPredicateFromToken(token, root);
+        const predicate = buildPredicateFromToken(tokens[index], root);
         // We match against only the nodes which have already been matched,
         // since a combinator is meant to refine a previous selector.
         switch (type) {
@@ -405,7 +403,7 @@ export function reduceTreeBySelector(selector, root) {
             break;
           }
           default:
-            throw new Error(`Unkown combinator selector: ${type}`);
+            throw new Error(`Unknown combinator selector: ${type}`);
         }
       }
       index += 1;
