@@ -343,7 +343,7 @@ function matchDirectChild(nodes, predicate) {
 function matchDescendant(nodes, predicate) {
   return uniqueReduce(
     (matches, node) => matches.concat(treeFilter(node, predicate)),
-    nodes,
+    flat(nodes.map(childrenOfNode)),
   );
 }
 

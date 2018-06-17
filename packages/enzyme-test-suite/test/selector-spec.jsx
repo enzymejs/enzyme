@@ -46,6 +46,7 @@ describe('selectors', () => {
 
         expect(wrapper.find('span')).to.have.lengthOf(2);
         expect(wrapper.find('.top-div span')).to.have.lengthOf(1);
+        expect(wrapper.find('div div')).to.have.lengthOf(2);
       });
 
       it('nested descendent', () => {
@@ -68,7 +69,7 @@ describe('selectors', () => {
       });
 
       it('deep descendent', () => {
-        const wrapper = renderMethod((
+        const htmlWrapper = renderMethod((
           <div>
             <div>
               <div className="inner">
@@ -83,8 +84,43 @@ describe('selectors', () => {
           </div>
         ));
 
-        expect(wrapper.find('h1')).to.have.lengthOf(2);
-        expect(wrapper.find('div .inner span .way-inner h1')).to.have.lengthOf(1);
+        expect(htmlWrapper.find('h1')).to.have.lengthOf(2);
+        expect(htmlWrapper.find('div .inner span .way-inner h1')).to.have.lengthOf(1);
+        expect(htmlWrapper.find('div div div div')).to.have.lengthOf(1);
+        expect(htmlWrapper.find('div div div')).to.have.lengthOf(2);
+        expect(htmlWrapper.find('div span div')).to.have.lengthOf(1);
+
+        class ExampleComponent extends React.Component {
+          render() {
+            return <span>Hello world</span>;
+          }
+        }
+
+        const complexWrapper = renderMethod((
+          <div>
+            <div>
+              <ExampleComponent>
+                <main />
+              </ExampleComponent>
+            </div>
+            <ExampleComponent>
+              <nav />
+              <main />
+            </ExampleComponent>
+          </div>
+        ));
+
+        expect(complexWrapper.find('div ExampleComponent')).to.have.lengthOf(2);
+        expect(complexWrapper.find('div div ExampleComponent')).to.have.lengthOf(1);
+        if (name === 'shallow') {
+          expect(complexWrapper.find('div ExampleComponent nav')).to.have.lengthOf(1);
+          expect(complexWrapper.find('div ExampleComponent main')).to.have.lengthOf(2);
+        } else { // shallow does not render the contents of components
+          expect(complexWrapper.find('div ExampleComponent span')).to.have.lengthOf(2);
+          expect(complexWrapper.find('div div ExampleComponent span')).to.have.lengthOf(1);
+          expect(complexWrapper.find('div span')).to.have.lengthOf(2);
+          expect(complexWrapper.find('div div span')).to.have.lengthOf(1);
+        }
       });
 
       it('direct descendent', () => {
