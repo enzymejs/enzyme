@@ -538,6 +538,34 @@ describeWithDOM('mount', () => {
       });
     });
 
+    describeIf(REACT16, 'forwardRef component', () => {
+      it('should find the forwardRef component', () => {
+        const FancyButton = React.forwardRef((props, forwardedRef) => (
+          <button ref={forwardedRef} />
+        ));
+
+        class App extends React.Component {
+          constructor() {
+            super();
+            this.buttonRef = null;
+          }
+
+          render() {
+            return (
+              <FancyButton
+                ref={(buttonRef) => {
+                  this.buttonRef = buttonRef;
+                }}
+              />
+            );
+          }
+        }
+
+        const wrapper = mount(<App />);
+        expect(wrapper.find(FancyButton).length).toBe(1);
+      });
+    });
+
     it('should find component based on a react prop', () => {
       const wrapper = mount((
         <div>
