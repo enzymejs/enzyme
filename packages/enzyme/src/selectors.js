@@ -13,7 +13,7 @@ import {
   childrenOfNode,
   hasClassName,
 } from './RSTTraversal';
-import { nodeHasType, propsOfNode } from './Utils';
+import { nodeHasType, propsOfNode, typeOf, ForwardRef } from './Utils';
 // our CSS selector parser instance
 const parser = createParser();
 
@@ -226,6 +226,12 @@ export function buildPredicate(selector) {
       const hasUndefinedValues = values(selector).some(value => typeof value === 'undefined');
       if (hasUndefinedValues) {
         throw new TypeError('Enzyme::Props can’t have `undefined` values. Try using ‘findWhere()’ instead.');
+      }
+      // the selector could also be a forwardRef
+      if (typeOf(selector) === ForwardRef) {
+        // re-build the predicate based on what is wrapped by forwardRef
+        // rather than the forwardRef itself
+        return buildPredicate(selector.render().props);
       }
       return node => nodeMatchesObjectProps(node, selector);
     }

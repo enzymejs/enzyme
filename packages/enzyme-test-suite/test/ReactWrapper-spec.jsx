@@ -210,6 +210,21 @@ describeWithDOM('mount', () => {
 
         expect(wrapper.find('.child2')).to.have.length(1);
       });
+
+      it('should find the forwardRef element itself', () => {
+        const testRef = () => {};
+        const OtherComponent = () => (
+          <div />
+        );
+        const SomeComponent = forwardRef((props, ref) => (
+          <OtherComponent className="dumb" ref={ref} />
+        ));
+
+        const wrapper = mount(<div><SomeComponent ref={testRef} /></div>);
+
+        expect(wrapper.find(SomeComponent)).to.have.length(1);
+        expect(wrapper.find(OtherComponent)).to.have.length(1);
+      });
     });
 
     describeIf(!REACT013, 'stateless components', () => {
