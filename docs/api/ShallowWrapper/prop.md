@@ -23,22 +23,28 @@ import PropTypes from 'prop-types';
 import ValidateNumberInputComponent from './ValidateNumberInputComponent';
 
 class MyComponent extends React.Component {
-  state = {
-    number: 0;
-  };
+  constructor(...args) {
+    super(...args);
 
-  onValidNumberInput = this.onValidNumberInput.bind(this);
+    this.state = {
+      number: 0,
+    };
+    this.onValidNumberInput = this.onValidNumberInput.bind(this);
+  }
+
   onValidNumberInput(e) {
     const number = e.target.value;
     if (!number || typeof number === 'number') {
-      this.setState(() => ({ number }));
+      this.setState({ number });
     }
-  };
+  }
 
-  render {
+  render() {
+    const { includedProp } = this.props;
+    const { number } = this.state;
     return (
       <div className="foo bar" includedProp={includedProp}>
-        <ValidateNumberInputComponent onChangeHandler={onValidNumberInput} />
+        <ValidateNumberInputComponent onChangeHandler={onValidNumberInput} number={number} />
       </div>
     );
   }
