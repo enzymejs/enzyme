@@ -573,11 +573,11 @@ class ReactWrapper {
    * @returns {ReactWrapper}
    */
   simulate(event, mock = {}) {
-    this.single('simulate', (n) => {
+    return this.single('simulate', (n) => {
       this[RENDERER].simulateEvent(n, event, mock);
       this[ROOT].update();
+      return this;
     });
-    return this;
   }
 
   /**

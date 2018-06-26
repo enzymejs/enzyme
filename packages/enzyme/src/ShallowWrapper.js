@@ -709,6 +709,7 @@ class ShallowWrapper {
     return this.single('simulate', (n) => {
       this[RENDERER].simulateEvent(n, event, ...args);
       this[ROOT].update();
+      return this;
     });
   }
 

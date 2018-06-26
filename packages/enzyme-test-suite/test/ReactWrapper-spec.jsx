@@ -1500,6 +1500,21 @@ describeWithDOM('mount', () => {
         .to.throw(TypeError, "ReactWrapper::simulate() event 'invalidEvent' does not exist");
     });
 
+    describeIf(!REACT013, 'stateless function component', () => {
+      it('should pass in event data', () => {
+        const spy = sinon.spy();
+        const Foo = () => (
+          <a onClick={spy}>foo</a>
+        );
+
+        const wrapper = mount(<Foo />);
+
+        wrapper.simulate('click', { someSpecialData: 'foo' });
+        expect(spy.calledOnce).to.equal(true);
+        expect(spy.args[0][0].someSpecialData).to.equal('foo');
+      });
+    });
+
     describe('Normalizing JS event names', () => {
       it('should convert lowercase events to React camelcase', () => {
         const spy = sinon.spy();
@@ -1539,19 +1554,37 @@ describeWithDOM('mount', () => {
       });
     });
 
-    describeIf(!REACT013, 'stateless function component', () => {
-      it('should pass in event data', () => {
-        const spy = sinon.spy();
-        const Foo = () => (
-          <a onClick={spy}>foo</a>
-        );
+    it('should be batched updates', () => {
+      let renderCount = 0;
+      class Foo extends React.Component {
+        constructor(props) {
+          super(props);
+          this.state = {
+            count: 0,
+          };
+          this.onClick = this.onClick.bind(this);
+        }
+        onClick() {
+          this.setState({ count: this.state.count + 1 });
+          this.setState({ count: this.state.count + 1 });
+        }
+        render() {
+          renderCount += 1;
+          return (
+            <a onClick={this.onClick}>{this.state.count}</a>
+          );
+        }
+      }
 
-        const wrapper = mount(<Foo />);
+      const wrapper = mount(<Foo />);
+      wrapper.simulate('click');
+      expect(wrapper.text()).to.equal('1');
+      expect(renderCount).to.equal(2);
+    });
 
-        wrapper.simulate('click', { someSpecialData: 'foo' });
-        expect(spy.calledOnce).to.equal(true);
-        expect(spy.args[0][0].someSpecialData).to.equal('foo');
-      });
+    it('chains', () => {
+      const wrapper = mount(<div />);
+      expect(wrapper.simulate('click')).to.equal(wrapper);
     });
   });
 

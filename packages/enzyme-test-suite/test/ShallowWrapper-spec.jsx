@@ -1386,6 +1386,11 @@ describe('shallow', () => {
       expect(wrapper.text()).to.equal('1');
       expect(renderCount).to.equal(2);
     });
+
+    it('chains', () => {
+      const wrapper = shallow(<div />);
+      expect(wrapper.simulate('click')).to.equal(wrapper);
+    });
   });
 
   describe('.setState(newState[, callback])', () => {
