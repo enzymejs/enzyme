@@ -38,7 +38,8 @@
     "lodash": "^4.17.4",
     "object.assign": "^4.1.0",
     "object.values": "^1.0.4",
-    "prop-types": "^15.6.0"
+    "prop-types": "^15.6.0",
+    "react-is": "^16.4.1"
   },
   "peerDependencies": {
     "enzyme": "^3.0.0",

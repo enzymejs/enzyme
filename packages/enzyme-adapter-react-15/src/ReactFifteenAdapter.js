@@ -7,6 +7,7 @@ import TestUtils from 'react-dom/test-utils';
 // eslint-disable-next-line import/no-unresolved, import/extensions
 import ShallowRenderer from 'react-test-renderer/shallow';
 import values from 'object.values';
+import { isElement } from 'react-is';
 import { EnzymeAdapter } from 'enzyme';
 import {
   elementToTree,
@@ -251,7 +252,7 @@ class ReactFifteenAdapter extends EnzymeAdapter {
   }
 
   isValidElement(element) {
-    return React.isValidElement(element);
+    return isElement(element);
   }
 
   createElement(...args) {
