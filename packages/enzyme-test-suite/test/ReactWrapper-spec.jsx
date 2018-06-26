@@ -3866,4 +3866,36 @@ describeWithDOM('mount', () => {
       });
     });
   });
+
+  describe('#wrap()', () => {
+    class Foo extends React.Component {
+      render() {
+        return (
+          <div>
+            <a href="#1">Hello</a>
+            <a href="#2">Hello</a>
+          </div>
+        );
+      }
+    }
+
+    it('returns itself when it is already a ReactWrapper', () => {
+      const wrapperDiv = mount(<div />);
+      const wrapperFoo = mount(<Foo />);
+      expect(wrapperDiv.wrap(wrapperFoo)).to.equal(wrapperFoo);
+      expect(wrapperFoo.wrap(wrapperDiv)).to.equal(wrapperDiv);
+    });
+
+    it('wraps when it is not already a ReactWrapper', () => {
+      const wrapper = mount(<Foo />);
+      const el = wrapper.find('a').at(1);
+      const wrappedEl = wrapper.wrap(el.getElement());
+      expect(wrappedEl).to.be.instanceOf(ReactWrapper);
+      expect(wrappedEl.props()).to.eql(el.props());
+
+      // TODO: enable this instead of that:
+      // expect(wrappedEl.mount().debug()).to.equal(el.debug());
+      expect(wrappedEl.debug()).to.equal('<a href="#2" />');
+    });
+  });
 });

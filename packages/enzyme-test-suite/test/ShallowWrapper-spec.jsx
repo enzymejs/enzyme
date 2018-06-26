@@ -4782,4 +4782,33 @@ describe('shallow', () => {
       });
     });
   });
+
+  describe('#wrap()', () => {
+    class Foo extends React.Component {
+      render() {
+        return (
+          <div>
+            <a href="#1">Hello</a>
+            <a href="#2">Hello</a>
+          </div>
+        );
+      }
+    }
+
+    it('returns itself when it is already a ShallowWrapper', () => {
+      const wrapperDiv = shallow(<div />);
+      const wrapperFoo = shallow(<Foo />);
+      expect(wrapperDiv.wrap(wrapperFoo)).to.equal(wrapperFoo);
+      expect(wrapperFoo.wrap(wrapperDiv)).to.equal(wrapperDiv);
+    });
+
+    it('wraps when it is not already a ShallowWrapper', () => {
+      const wrapper = shallow(<Foo />);
+      const el = wrapper.find('a').at(1);
+      const wrappedEl = wrapper.wrap(el.getElement());
+      expect(wrappedEl).to.be.instanceOf(ShallowWrapper);
+      expect(wrappedEl.props()).to.eql(el.props());
+      expect(wrappedEl.shallow().debug()).to.equal(el.debug());
+    });
+  });
 });
