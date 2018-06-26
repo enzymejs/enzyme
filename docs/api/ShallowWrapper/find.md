@@ -20,14 +20,14 @@ Finds every node in the render tree of the current wrapper that matches the prov
 CSS Selectors:
 ```jsx
 const wrapper = shallow(<MyComponent />);
-expect(wrapper.find('.foo')).to.have.length(1);
-expect(wrapper.find('.bar')).to.have.length(3);
+expect(wrapper.find('.foo')).toHaveLength(1);
+expect(wrapper.find('.bar')).toHaveLength(3);
 
 // compound selector
-expect(wrapper.find('div.some-class')).to.have.length(3);
+expect(wrapper.find('div.some-class')).toHaveLength(3);
 
 // CSS id selector
-expect(wrapper.find('#foo')).to.have.length(1);
+expect(wrapper.find('#foo')).toHaveLength(1);
 ```
 
 Component Constructors:
@@ -35,19 +35,19 @@ Component Constructors:
 import Foo from '../components/Foo';
 
 const wrapper = shallow(<MyComponent />);
-expect(wrapper.find(Foo)).to.have.length(1);
+expect(wrapper.find(Foo)).toHaveLength(1);
 ```
 
 Component Display Name:
 ```jsx
 const wrapper = shallow(<MyComponent />);
-expect(wrapper.find('Foo')).to.have.length(1);
+expect(wrapper.find('Foo')).toHaveLength(1);
 ```
 
 Object Property Selector:
 ```jsx
 const wrapper = shallow(<MyComponent />);
-expect(wrapper.find({ prop: 'value' })).to.have.length(1);
+expect(wrapper.find({ prop: 'value' })).toHaveLength(1);
 ```
 
 
