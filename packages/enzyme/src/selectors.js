@@ -304,12 +304,8 @@ function matchGeneralSibling(nodes, predicate, root) {
   return uniqueReduce((matches, node) => {
     const parent = findParentNode(root, node);
     const nodeIndex = parent.rendered.indexOf(node);
-    parent.rendered.forEach((sibling, i) => {
-      if (i > nodeIndex && predicate(sibling)) {
-        matches.push(sibling);
-      }
-    });
-    return matches;
+    const youngerSiblings = parent.rendered.slice(nodeIndex + 1);
+    return matches.concat(youngerSiblings.filter(predicate));
   }, nodes);
 }
 
@@ -320,15 +316,10 @@ function matchGeneralSibling(nodes, predicate, root) {
  * @param {Function} predicate
  */
 function matchDirectChild(nodes, predicate) {
-  return uniqueReduce((matches, node) => {
-    const children = childrenOfNode(node);
-    children.forEach((child) => {
-      if (predicate(child)) {
-        matches.push(child);
-      }
-    });
-    return matches;
-  }, nodes);
+  return uniqueReduce(
+    (matches, node) => matches.concat(childrenOfNode(node).filter(predicate)),
+    nodes,
+  );
 }
 
 /**
@@ -353,11 +344,12 @@ function matchDescendant(nodes, predicate) {
  * @param {RSTNode} wrapper
  */
 export function reduceTreeBySelector(selector, root) {
-  let results = [];
-
   if (typeof selector === 'function' || typeof selector === 'object') {
-    results = treeFilter(root, buildPredicate(selector));
-  } else if (typeof selector === 'string') {
+    return treeFilter(root, buildPredicate(selector));
+  }
+
+  let results = [];
+  if (typeof selector === 'string') {
     const tokens = safelyGenerateTokens(selector);
     let index = 0;
     let token = null;
