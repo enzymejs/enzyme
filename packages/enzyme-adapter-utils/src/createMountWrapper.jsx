@@ -3,6 +3,11 @@ import PropTypes from 'prop-types';
 
 /* eslint react/forbid-prop-types: 0 */
 
+// TODO: use react-is?
+const specialType = PropTypes.shape({
+  $$typeof: PropTypes.any.isRequired,
+}).isRequired;
+
 /**
  * This is a utility component to wrap around the nodes we are
  * passing in to `mount()`. Theoretically, you could do everything
@@ -55,7 +60,7 @@ export default function createMountWrapper(node, options = {}) {
     }
   }
   WrapperComponent.propTypes = {
-    Component: PropTypes.oneOfType([PropTypes.func, PropTypes.string]).isRequired,
+    Component: PropTypes.oneOfType([PropTypes.func, PropTypes.string, specialType]).isRequired,
     props: PropTypes.object.isRequired,
     context: PropTypes.object,
   };

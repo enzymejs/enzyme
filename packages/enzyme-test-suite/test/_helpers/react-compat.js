@@ -10,6 +10,7 @@ let createClass;
 let renderToString;
 let createPortal;
 let createContext;
+let forwardRef;
 
 if (is('>=15.5 || ^16.0.0-alpha || ^16.3.0-alpha')) {
   // eslint-disable-next-line import/no-extraneous-dependencies
@@ -37,9 +38,16 @@ if (is('^16.3.0-0')) {
   createContext = null;
 }
 
+if (is('^16.3.0-0')) {
+  ({ forwardRef } = require('react'));
+} else {
+  forwardRef = null;
+}
+
 export {
   createClass,
   renderToString,
   createPortal,
   createContext,
+  forwardRef,
 };

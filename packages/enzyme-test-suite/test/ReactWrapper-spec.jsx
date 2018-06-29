@@ -11,7 +11,7 @@ import {
 import { ITERATOR_SYMBOL, sym } from 'enzyme/build/Utils';
 
 import './_helpers/setupAdapters';
-import { createClass, createContext, createPortal } from './_helpers/react-compat';
+import { createClass, createContext, createPortal, forwardRef } from './_helpers/react-compat';
 import {
   describeWithDOM,
   describeIf,
@@ -186,6 +186,52 @@ describeWithDOM('mount', () => {
       const wrapper = mount(<Provider value="foo"><div><Foo /></div></Provider>);
 
       expect(wrapper.find('span').text()).to.equal('foo');
+    });
+
+    describeIf(REACT163, 'forwarded ref Components', () => {
+
+      it('should mount without complaint', () => {
+        const warningStub = sinon.stub(console, 'error');
+
+        const SomeComponent = forwardRef((props, ref) => (
+          <div {...props} ref={ref} />
+        ));
+
+        mount(<SomeComponent />);
+
+        expect(warningStub.called).to.equal(false);
+
+        warningStub.restore();
+      });
+
+      it('should find elements through forwardedRef elements', () => {
+        const testRef = () => {};
+        const SomeComponent = forwardRef((props, ref) => (
+          <div ref={ref}>
+            <span className="child1" />
+            <span className="child2" />
+          </div>
+        ));
+
+        const wrapper = mount(<div><SomeComponent ref={testRef} /></div>);
+
+        expect(wrapper.find('.child2')).to.have.length(1);
+      });
+
+      it('should find the forwardRef element itself', () => {
+        const testRef = () => {};
+        const OtherComponent = () => (
+          <div />
+        );
+        const SomeComponent = forwardRef((props, ref) => (
+          <OtherComponent className="dumb" ref={ref} />
+        ));
+
+        const wrapper = mount(<div><SomeComponent ref={testRef} /></div>);
+
+        expect(wrapper.find(SomeComponent)).to.have.length(1);
+        expect(wrapper.find(OtherComponent)).to.have.length(1);
+      });
     });
 
     describeIf(!REACT013, 'stateless components', () => {

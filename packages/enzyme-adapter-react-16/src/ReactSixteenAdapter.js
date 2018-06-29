@@ -33,6 +33,7 @@ const HostText = 6;
 const Mode = 11;
 const ContextConsumer = 12;
 const ContextProvider = 13;
+const ForwardRef = 14;
 
 function nodeAndSiblingsArray(nodeWithSibling) {
   const array = [];
@@ -113,10 +114,11 @@ function toTree(vnode) {
     }
     case HostText: // 6
       return node.memoizedProps;
-    case Fragment: // 10
-    case Mode: // 11
-    case ContextProvider: // 13
-    case ContextConsumer: // 12
+    case Fragment:
+    case ContextProvider:
+    case ContextConsumer:
+    case Mode:
+    case ForwardRef:
       return childrenToTree(node.child);
     default:
       throw new Error(`Enzyme Internal Error: unknown node with tag ${node.tag}`);

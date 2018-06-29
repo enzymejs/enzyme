@@ -6,7 +6,7 @@ import { shallow, render, ShallowWrapper, mount } from 'enzyme';
 import { ITERATOR_SYMBOL, withSetStateAllowed, sym } from 'enzyme/build/Utils';
 
 import './_helpers/setupAdapters';
-import { createClass, createContext } from './_helpers/react-compat';
+import { createClass, createContext, forwardRef, createPortal } from './_helpers/react-compat';
 import { describeIf, itIf, itWithData, generateEmptyRenderData } from './_helpers';
 import { REACT013, REACT014, REACT15, REACT150_4, REACT16, REACT163, is } from './_helpers/version';
 
@@ -119,7 +119,19 @@ describe('shallow', () => {
 
       expect(shallow(<Consumes />).find('span')).to.have.length(1);
       expect(shallow(<Provides />).find(Consumes)).to.have.length(1);
+    });
 
+    itIf(REACT163, 'should find elements through forwardedRef elements', () => {
+      const SomeComponent = forwardRef((props, ref) => (
+        <div ref={ref}>
+          <span className="child1" />
+          <span className="child2" />
+        </div>
+      ));
+
+      const wrapper = shallow(<SomeComponent />);
+
+      expect(wrapper.find('.child2')).to.have.length(1);
     });
 
     describeIf(!REACT013, 'stateless function components', () => {
@@ -2968,6 +2980,36 @@ describe('shallow', () => {
   describe('.debug()', () => {
     it('should pass through to the debugNodes function', () => {
       expect(shallow(<div />).debug()).to.equal('<div />');
+    });
+
+    itIf(REACT163, 'should handle internal types gracefully', () => {
+      const { Provider, Consumer } = createContext(null);
+      // eslint-disable-next-line prefer-arrow-callback
+      const Forwarded = forwardRef(function MyComponent(props) {
+        return (
+          <Provider value={5}>
+            <Forwarded />
+            <div {...props}>
+              <React.Fragment>
+                <Consumer>{() => <div />}</Consumer>
+                {createPortal(<span />, { nodeType: 1 })}
+              </React.Fragment>
+            </div>
+          </Provider>
+        );
+      });
+
+      expect(shallow(<Forwarded />).debug()).to.equal(`<ContextProvider value={5}>
+  <ForwardRef(MyComponent) />
+  <div>
+    <Fragment>
+      <ContextConsumer>
+        [function child]
+      </ContextConsumer>
+      <Portal />
+    </Fragment>
+  </div>
+</ContextProvider>`);
     });
   });
 

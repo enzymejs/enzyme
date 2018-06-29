@@ -7,7 +7,46 @@ import configuration from './configuration';
 import validateAdapter from './validateAdapter';
 import { childrenOfNode } from './RSTTraversal';
 
+const hasSymbol = typeof Symbol === 'function' && Symbol.for;
+
 export const ITERATOR_SYMBOL = typeof Symbol === 'function' && Symbol.iterator;
+
+// TODO use react-is when a version is released with no peer dependency on React
+export const AsyncMode = hasSymbol ? Symbol.for('react.async_mode') : 0xeacf;
+export const ContextProvider = hasSymbol ? Symbol.for('react.provider') : 0xeacd;
+export const ContextConsumer = hasSymbol ? Symbol.for('react.context') : 0xeace;
+export const Element = hasSymbol ? Symbol.for('react.element') : 0xeac7;
+export const ForwardRef = hasSymbol ? Symbol.for('react.forward_ref') : 0xead0;
+export const Fragment = hasSymbol ? Symbol.for('react.fragment') : 0xeacb;
+export const Portal = hasSymbol ? Symbol.for('react.portal') : 0xeaca;
+export const StrictMode = hasSymbol ? Symbol.for('react.strict_mode') : 0xeacc;
+
+export function typeOf(node) {
+  if (node !== null) {
+    const { type, $$typeof } = node;
+
+    switch (type || $$typeof) {
+      case AsyncMode:
+      case Fragment:
+      case StrictMode:
+        return type;
+      default: {
+        const $$typeofType = type && type.$$typeof;
+
+        switch ($$typeofType) {
+          case ContextConsumer:
+          case ForwardRef:
+          case Portal:
+          case ContextProvider:
+            return $$typeofType;
+          default:
+            return type || $$typeof;
+        }
+      }
+    }
+  }
+  return undefined;
+}
 
 export function getAdapter(options = {}) {
   if (options.adapter) {
