@@ -1967,6 +1967,25 @@ describeWithDOM('mount', () => {
         expect(wrapper.text()).to.equal('footest');
       });
     });
+
+    it('handles non-breaking spaces correctly', () => {
+      class Foo extends React.Component {
+        render() {
+          return (
+            <div>
+              &nbsp; &nbsp;
+            </div>
+          );
+        }
+      }
+      const wrapper = mount(<Foo />);
+      const charCodes = wrapper.text().split('').map(x => x.charCodeAt(0));
+      expect(charCodes).to.eql([
+        0x00a0, // non-breaking space
+        0x20, // normal space
+        0x00a0,  // non-breaking space
+      ]);
+    });
   });
 
   describe('.props()', () => {

@@ -1712,6 +1712,25 @@ describe('shallow', () => {
       expect(wrapper.text()).to.equal(mounted.text());
     });
 
+    it('handles non-breaking spaces correctly', () => {
+      class Foo extends React.Component {
+        render() {
+          return (
+            <div>
+              &nbsp; &nbsp;
+            </div>
+          );
+        }
+      }
+      const wrapper = shallow(<Foo />);
+      const charCodes = wrapper.text().split('').map(x => x.charCodeAt(0));
+      expect(charCodes).to.eql([
+        0x00a0, // non-breaking space
+        0x20, // normal space
+        0x00a0,  // non-breaking space
+      ]);
+    });
+
     describeIf(!REACT013, 'stateless function components', () => {
       it('should handle nodes with mapped children', () => {
         const Foo = props => (
