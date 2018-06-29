@@ -532,7 +532,10 @@ class ReactWrapper {
    */
   text() {
     const adapter = getAdapter(this[OPTIONS]);
-    return this.single('text', n => adapter.nodeToHostNode(n).textContent);
+    return this.single('text', (n) => {
+      const node = adapter.nodeToHostNode(n);
+      return node && node.textContent;
+    });
   }
 
   /**
