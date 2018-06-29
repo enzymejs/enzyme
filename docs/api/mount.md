@@ -90,8 +90,8 @@ Returns whether or not the current root node has the given class name or not.
 #### [`.is(selector) => Boolean`](ReactWrapper/is.md)
 Returns whether or not the current node matches a provided selector.
 
-#### [`.exists() => Boolean`](ReactWrapper/exists.md)
-Returns whether or not the current node exists.
+#### [`.exists([selector]) => Boolean`](ReactWrapper/exists.md)
+Returns whether or not the current node exists, or, if given a selector, whether that selector has any matching results.
 
 #### [`.isEmpty() => Boolean`](ReactWrapper/isEmpty.md)
 *Deprecated*: Use [.exists()](ReactWrapper/exists.md) instead.

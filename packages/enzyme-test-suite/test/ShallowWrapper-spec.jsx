@@ -2858,12 +2858,30 @@ describe('shallow', () => {
   });
 
   describe('.exists()', () => {
-    it('should return true if node exists in wrapper', () => {
-      const wrapper = shallow((
-        <div className="foo" />
-      ));
-      expect(wrapper.find('.bar').exists()).to.equal(false);
-      expect(wrapper.find('.foo').exists()).to.equal(true);
+    it('has no required arguments', () => {
+      expect(ShallowWrapper.prototype.exists).to.have.lengthOf(0);
+    });
+
+    describe('without argument', () => {
+      it('should return true if node exists in wrapper', () => {
+        const wrapper = shallow((
+          <div className="foo" />
+        ));
+        expect(wrapper.find('.bar').exists()).to.equal(false);
+        expect(wrapper.find('.foo').exists()).to.equal(true);
+      });
+    });
+    describe('with argument', () => {
+      it('should return .find(arg).exists() instead', () => {
+        const wrapper = shallow(<div />);
+        const fakeFindExistsReturnVal = Symbol('fake .find(arg).exists() return value');
+        const fakeSelector = '.someClass';
+        wrapper.find = sinon.stub().returns({ exists: () => fakeFindExistsReturnVal });
+        const existsResult = wrapper.exists(fakeSelector);
+        expect(wrapper.find.callCount).to.equal(1);
+        expect(wrapper.find.firstCall.args[0]).to.equal(fakeSelector);
+        expect(existsResult).to.equal(fakeFindExistsReturnVal);
+      });
     });
   });
 

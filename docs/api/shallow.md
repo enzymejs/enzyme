@@ -97,8 +97,8 @@ Returns whether or not the current node has the given class name or not.
 #### [`.is(selector) => Boolean`](ShallowWrapper/is.md)
 Returns whether or not the current node matches a provided selector.
 
-#### [`.exists() => Boolean`](ShallowWrapper/exists.md)
-Returns whether or not the current node exists.
+#### [`.exists([selector]) => Boolean`](ShallowWrapper/exists.md)
+Returns whether or not the current node exists, or, if given a selector, whether that selector has any matching results.
 
 #### [`.isEmpty() => Boolean`](ShallowWrapper/isEmpty.md)
 *Deprecated*: Use [.exists()](ShallowWrapper/exists.md) instead.

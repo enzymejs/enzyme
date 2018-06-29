@@ -2943,10 +2943,28 @@ describeWithDOM('mount', () => {
   });
 
   describe('.exists()', () => {
-    it('should return true if node exists in wrapper', () => {
-      const wrapper = mount(<div className="foo" />);
-      expect(wrapper.find('.bar').exists()).to.equal(false);
-      expect(wrapper.find('.foo').exists()).to.equal(true);
+    it('has no required arguments', () => {
+      expect(ReactWrapper.prototype.exists).to.have.lengthOf(0);
+    });
+
+    describe('without arguments', () => {
+      it('should return true if node exists in wrapper', () => {
+        const wrapper = mount(<div className="foo" />);
+        expect(wrapper.find('.bar').exists()).to.equal(false);
+        expect(wrapper.find('.foo').exists()).to.equal(true);
+      });
+    });
+    describe('with argument', () => {
+      it('should return .find(arg).exists() instead', () => {
+        const wrapper = mount(<div />);
+        const fakeFindExistsReturnVal = Symbol('fake .find(arg).exists() return value');
+        const fakeSelector = '.someClass';
+        wrapper.find = sinon.stub().returns({ exists: () => fakeFindExistsReturnVal });
+        const existsResult = wrapper.exists(fakeSelector);
+        expect(wrapper.find.callCount).to.equal(1);
+        expect(wrapper.find.firstCall.args[0]).to.equal(fakeSelector);
+        expect(existsResult).to.equal(fakeFindExistsReturnVal);
+      });
     });
   });
 
