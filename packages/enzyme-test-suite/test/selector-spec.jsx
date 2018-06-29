@@ -193,6 +193,11 @@ describe('selectors', () => {
         siblings.map(sibling => expect(sibling.text()).to.not.equal('Top'));
       });
 
+      it('handles using general siblings on root', () => {
+        const wrapper = renderMethod(<div className="foo" />);
+        expect(wrapper.find('.foo ~ .bar')).to.have.lengthOf(0);
+      });
+
       it('not() pseudo selector', () => {
         const wrapper = renderMethod((
           <div>

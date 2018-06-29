@@ -303,6 +303,9 @@ function matchAdjacentSiblings(nodes, predicate, root) {
 function matchGeneralSibling(nodes, predicate, root) {
   return uniqueReduce((matches, node) => {
     const parent = findParentNode(root, node);
+    if (!parent) {
+      return matches;
+    }
     const nodeIndex = parent.rendered.indexOf(node);
     const youngerSiblings = parent.rendered.slice(nodeIndex + 1);
     return matches.concat(youngerSiblings.filter(predicate));
