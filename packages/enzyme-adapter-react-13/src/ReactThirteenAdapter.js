@@ -99,9 +99,17 @@ function instanceToTree(inst) {
 class ReactThirteenAdapter extends EnzymeAdapter {
   constructor() {
     super();
+
+    const { lifecycles } = this.options;
     this.options = {
       ...this.options,
-      supportPrevContextArgumentOfComponentDidUpdate: true,
+      supportPrevContextArgumentOfComponentDidUpdate: true, // TODO: remove, semver-major
+      lifecycles: {
+        ...lifecycles,
+        componentDidUpdate: {
+          prevContext: true,
+        },
+      },
     };
   }
   createMountRenderer(options) {

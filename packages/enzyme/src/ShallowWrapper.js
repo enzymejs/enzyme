@@ -66,7 +66,13 @@ function filterWhereUnwrapped(wrapper, predicate) {
  * @param {Object} options
  */
 function validateOptions(options) {
-  const { lifecycleExperimental, disableLifecycleMethods } = options;
+  const {
+    lifecycleExperimental,
+    disableLifecycleMethods,
+    enableComponentDidUpdateOnSetState,
+    supportPrevContextArgumentOfComponentDidUpdate,
+    lifecycles,
+  } = options;
   if (
     typeof lifecycleExperimental !== 'undefined' &&
     typeof lifecycleExperimental !== 'boolean'
@@ -88,6 +94,48 @@ function validateOptions(options) {
   ) {
     throw new Error('lifecycleExperimental and disableLifecycleMethods cannot be set to the same value');
   }
+
+  if (
+    typeof enableComponentDidUpdateOnSetState !== 'undefined' &&
+    lifecycles.componentDidUpdate &&
+    lifecycles.componentDidUpdate.onSetState !== enableComponentDidUpdateOnSetState
+  ) {
+    throw new TypeError('the legacy enableComponentDidUpdateOnSetState option should be matched by `lifecycles: { componentDidUpdate: { onSetState: true } }`, for compatibility');
+  }
+
+  if (
+    typeof supportPrevContextArgumentOfComponentDidUpdate !== 'undefined' &&
+    lifecycles.componentDidUpdate &&
+    lifecycles.componentDidUpdate.prevContext !== supportPrevContextArgumentOfComponentDidUpdate
+  ) {
+    throw new TypeError('the legacy supportPrevContextArgumentOfComponentDidUpdate option should be matched by `lifecycles: { componentDidUpdate: { prevContext: true } }`, for compatibility');
+  }
+}
+
+function getAdapterLifecycles({ options }) {
+  const {
+    lifecycles = {},
+    enableComponentDidUpdateOnSetState,
+    supportPrevContextArgumentOfComponentDidUpdate,
+  } = options;
+
+  const hasLegacySetStateArg = typeof enableComponentDidUpdateOnSetState !== 'undefined';
+  const hasLegacyPrevContextArg = typeof supportPrevContextArgumentOfComponentDidUpdate !== 'undefined';
+  const componentDidUpdate = hasLegacySetStateArg || hasLegacyPrevContextArg
+    ? {
+      ...(hasLegacySetStateArg && {
+        onSetState: !!enableComponentDidUpdateOnSetState,
+      }),
+      ...(hasLegacyPrevContextArg && {
+        prevContext: !!supportPrevContextArgumentOfComponentDidUpdate,
+      }),
+    }
+    : null;
+
+  return {
+    ...lifecycles,
+    ...(componentDidUpdate && { componentDidUpdate }),
+  };
 }
 
 function getRootNode(node) {
@@ -302,12 +350,13 @@ class ShallowWrapper {
             if (originalShouldComponentUpdate) {
               instance.shouldComponentUpdate = originalShouldComponentUpdate;
             }
+            const lifecycles = getAdapterLifecycles(adapter);
             if (
               !this[OPTIONS].disableLifecycleMethods &&
               instance
             ) {
               if (
-                adapter.options.supportGetSnapshotBeforeUpdate
+                lifecycles.getSnapshotBeforeUpdate
                 && typeof instance.getSnapshotBeforeUpdate === 'function'
               ) {
                 const snapshot = instance.getSnapshotBeforeUpdate(prevProps, state);
@@ -315,7 +364,10 @@ class ShallowWrapper {
                   instance.componentDidUpdate(prevProps, state, snapshot);
                 }
               } else if (typeof instance.componentDidUpdate === 'function') {
-                if (adapter.options.supportPrevContextArgumentOfComponentDidUpdate) {
+                if (
+                  lifecycles.componentDidUpdate &&
+                  lifecycles.componentDidUpdate.prevContext
+                ) {
                   instance.componentDidUpdate(prevProps, state, prevContext);
                 } else {
                   instance.componentDidUpdate(prevProps, state);
@@ -379,6 +431,9 @@ class ShallowWrapper {
     this.single('setState', () => {
       withSetStateAllowed(() => {
         const adapter = getAdapter(this[OPTIONS]);
+
+        const lifecycles = getAdapterLifecycles(adapter);
+
         const instance = this.instance();
         const prevProps = instance.props;
         const prevState = instance.state;
@@ -391,7 +446,8 @@ class ShallowWrapper {
         let originalShouldComponentUpdate;
         if (
           !this[OPTIONS].disableLifecycleMethods &&
-          adapter.options.enableComponentDidUpdateOnSetState &&
+          lifecycles.componentDidUpdate &&
+          lifecycles.componentDidUpdate.onSetState &&
           instance &&
           typeof instance.shouldComponentUpdate === 'function'
         ) {
@@ -405,14 +461,16 @@ class ShallowWrapper {
         // We don't pass the setState callback here
         // to guarantee to call the callback after finishing the render
         instance.setState(state);
+
         if (
           shouldRender &&
           !this[OPTIONS].disableLifecycleMethods &&
-          adapter.options.enableComponentDidUpdateOnSetState &&
+          lifecycles.componentDidUpdate &&
+          lifecycles.componentDidUpdate.onSetState &&
           instance
         ) {
           if (
-            adapter.options.supportGetSnapshotBeforeUpdate &&
+            lifecycles.getSnapshotBeforeUpdate &&
             typeof instance.getSnapshotBeforeUpdate === 'function'
           ) {
             const snapshot = instance.getSnapshotBeforeUpdate(prevProps, prevState);
@@ -420,7 +478,7 @@ class ShallowWrapper {
               instance.componentDidUpdate(prevProps, prevState, snapshot);
             }
           } else if (typeof instance.componentDidUpdate === 'function') {
-            if (adapter.options.supportPrevContextArgumentOfComponentDidUpdate) {
+            if (lifecycles.componentDidUpdate.prevContext) {
               instance.componentDidUpdate(prevProps, prevState, prevContext);
             } else {
               instance.componentDidUpdate(prevProps, prevState);
