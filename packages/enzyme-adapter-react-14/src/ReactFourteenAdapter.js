@@ -21,7 +21,7 @@ import {
 
 function typeToNodeType(type) {
   if (typeof type === 'function') {
-    if (typeof type.prototype.render === 'function') {
+    if (type.prototype && typeof type.prototype.render === 'function') {
       return 'class';
     }
     return 'function';

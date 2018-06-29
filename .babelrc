@@ -3,4 +3,7 @@
   "plugins": [
     ["transform-replace-object-assign", "object.assign"],
   ],
+  ignore: [
+    "packages/enzyme-test-suite/test/_helpers/untranspiled*",
+  ],
 }

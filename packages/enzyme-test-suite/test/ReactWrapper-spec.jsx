@@ -20,6 +20,7 @@ import {
   generateEmptyRenderData,
 } from './_helpers';
 import { REACT013, REACT014, REACT16, REACT163, is } from './_helpers/version';
+import realArrowFunction from './_helpers/realArrowFunction';
 
 const getElementPropSelector = prop => x => x.props[prop];
 const getWrapperPropSelector = prop => x => x.prop(prop);
@@ -1102,6 +1103,15 @@ describeWithDOM('mount', () => {
   </div>
 </SFC>`
         ));
+      });
+
+      it('works with a nested SFC', () => {
+        const Bar = realArrowFunction(<div>Hello</div>);
+        class Foo extends React.Component {
+          render() { return <Bar />; }
+        }
+        const wrapper = mount(<Foo />);
+        expect(wrapper.text()).to.equal('Hello');
       });
     });
 
