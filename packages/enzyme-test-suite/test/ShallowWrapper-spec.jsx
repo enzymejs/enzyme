@@ -1727,7 +1727,7 @@ describe('shallow', () => {
       expect(charCodes).to.eql([
         0x00a0, // non-breaking space
         0x20, // normal space
-        0x00a0,  // non-breaking space
+        0x00a0, // non-breaking space
       ]);
     });
 
