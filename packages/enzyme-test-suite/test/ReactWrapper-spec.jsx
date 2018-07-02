@@ -1996,6 +1996,13 @@ describeWithDOM('mount', () => {
         0x00a0, // non-breaking space
       ]);
     });
+
+    it('should render falsy numbers', () => {
+      [0, -0, '0', NaN].forEach((x) => {
+        const wrapper = mount(<div>{x}</div>);
+        expect(wrapper.text()).to.equal(String(x));
+      });
+    });
   });
 
   describe('.props()', () => {

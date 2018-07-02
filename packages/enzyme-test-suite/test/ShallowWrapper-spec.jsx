@@ -1764,6 +1764,13 @@ describe('shallow', () => {
         expect(wrapper.text()).to.equal('<Foo />test');
       });
     });
+
+    it('should render falsy numbers', () => {
+      [0, -0, '0', NaN].forEach((x) => {
+        const wrapper = shallow(<div>{x}</div>);
+        expect(wrapper.text()).to.equal(String(x));
+      });
+    });
   });
 
   describe('.props()', () => {
