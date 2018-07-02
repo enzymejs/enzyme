@@ -12,10 +12,15 @@ import {
   propsOfNode,
   childrenOfNode,
 } from './RSTTraversal';
+import { getAdapter } from './Utils';
 
 const booleanValue = Function.bind.call(Function.call, Boolean.prototype.valueOf);
 
 export function typeName(node) {
+  const adapter = getAdapter();
+  if (adapter.displayNameOfNode) {
+    return getAdapter().displayNameOfNode(node) || 'Component';
+  }
   return typeof node.type === 'function'
     ? (node.type.displayName || functionName(node.type) || 'Component')
     : node.type;

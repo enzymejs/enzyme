@@ -1,5 +1,8 @@
 import { expect } from 'chai';
 import React from 'react';
+import wrap from 'mocha-wrap';
+import sinon from 'sinon';
+
 import { mount, shallow } from 'enzyme';
 import { get } from 'enzyme/build/configuration';
 import {
@@ -23,30 +26,56 @@ const { adapter } = get();
 const debugElement = element => debugNode(adapter.elementToNode(element));
 
 describe('debug', () => {
-  describe('typeName(node)', () => {
-    it('returns `.type` when not a function', () => {
-      const type = {};
-      expect(typeName({ type })).to.equal(type);
+  wrap()
+    .withOverride(() => adapter, 'displayNameOfNode', () => undefined)
+    .describe('typeName(node)', () => {
+      it('returns `.type` when not a function', () => {
+        const type = {};
+        expect(typeName({ type })).to.equal(type);
+      });
+
+      describe('when `.type` is a function', () => {
+        it('returns the function’s name', () => {
+          function Foo() {}
+          expect(typeName({ type: Foo })).to.equal('Foo');
+        });
+
+        it('returns the function’s `.displayName` when present', () => {
+          function Foo() {}
+          Foo.displayName = 'Bar';
+          expect(typeName({ type: Foo })).to.equal('Bar');
+        });
+
+        it('returns "Component" when the function is anonymous', () => {
+          const anon = Object(() => {});
+          expect(typeName({ type: anon })).to.equal('Component');
+        });
+      });
+
+      wrap()
+        .withOverride(() => adapter, 'displayNameOfNode', () => sinon.stub())
+        .describe('when the adapter has a `displayNameOfNode` function', () => {
+          it('calls it, and returns its return value', () => {
+            const stub = adapter.displayNameOfNode;
+            const sentinel = {};
+            stub.returns(sentinel);
+
+            const node = {};
+            expect(typeName(node)).to.equal(sentinel);
+
+            expect(stub).to.have.property('callCount', 1);
+            const { args } = stub.firstCall;
+            expect(args).to.eql([node]);
+          });
+
+          it('returns "Component" when `adapter.displayNameOfNode` returns something falsy', () => {
+            const stub = adapter.displayNameOfNode;
+            stub.returns('');
+
+            expect(typeName()).to.equal('Component');
+          });
+        });
     });
-
-    describe('when `.type` is a function', () => {
-      it('returns the function’s name', () => {
-        function Foo() {}
-        expect(typeName({ type: Foo })).to.equal('Foo');
-      });
-
-      it('returns the function’s `.displayName` when present', () => {
-        function Foo() {}
-        Foo.displayName = 'Bar';
-        expect(typeName({ type: Foo })).to.equal('Bar');
-      });
-
-      it('returns "Component" when the function is anonymous', () => {
-        const anon = Object(() => {});
-        expect(typeName({ type: anon })).to.equal('Component');
-      });
-    });
-  });
 
   describe('spaces(n)', () => {
     it('should return n spaces', () => {
