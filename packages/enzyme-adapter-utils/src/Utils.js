@@ -1,3 +1,4 @@
+import functionName from 'function.prototype.name';
 import createMountWrapper from './createMountWrapper';
 import createRenderWrapper from './createRenderWrapper';
 
@@ -84,6 +85,16 @@ export function assertDomAvailable(feature) {
   if (!global || !global.document || !global.document.createElement) {
     throw new Error(`Enzyme's ${feature} expects a DOM environment to be loaded, but found none`);
   }
+}
+
+export function displayNameOfNode(node) {
+  if (!node) return null;
+
+  const { type } = node;
+
+  if (!type) return null;
+
+  return type.displayName || (typeof type === 'function' ? functionName(type) : type.name || type);
 }
 
 export function nodeTypeFromType(type) {

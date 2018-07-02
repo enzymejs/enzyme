@@ -34,6 +34,7 @@
   "author": "Leland Richardson <leland.richardson@airbnb.com>",
   "license": "MIT",
   "dependencies": {
+    "function.prototype.name": "^1.0.3",
     "object.assign": "^4.1.0",
     "prop-types": "^15.6.0"
   },
