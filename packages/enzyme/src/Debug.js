@@ -66,6 +66,10 @@ function indentChildren(childrenStrs, indentLength) {
 
 export function debugNode(node, indentLength = 2, options = {}) {
   if (typeof node === 'string' || typeof node === 'number') return escape(node);
+  if (typeof node === 'function') {
+    const name = functionName(node);
+    return `[function${name ? ` ${name}` : ''}]`;
+  }
   if (!node) return '';
 
   const childrenStrs = compact(childrenOfNode(node).map(n => debugNode(n, indentLength, options)));

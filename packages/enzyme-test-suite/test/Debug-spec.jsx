@@ -748,5 +748,35 @@ describe('debug', () => {
 </Foo>`
       ));
     });
+
+    it('handles function children', () => {
+      class Abomination extends React.Component {
+        render() {
+          /* eslint no-unused-vars: 0, func-names: 0 */
+          return (
+            <div>
+              {function Foo() { /* hi */ }}
+              {<span />}
+              {arrow => arrow('function')}
+              {[1, 2, NaN]}
+              {function (anonymous) {}}
+            </div>
+          );
+        }
+      }
+
+      const wrapper = shallow(<Abomination />);
+      expect(wrapper.debug()).to.equal((
+        `<div>
+  [function Foo]
+  <span />
+  [function]
+  1
+  2
+  NaN
+  [function]
+</div>`
+      ));
+    });
   });
 });
