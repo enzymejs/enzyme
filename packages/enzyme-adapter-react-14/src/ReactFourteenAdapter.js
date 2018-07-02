@@ -69,7 +69,7 @@ function instanceToTree(inst) {
   throw new Error('Enzyme Internal Error: unknown instance encountered');
 }
 
-class ReactFifteenAdapter extends EnzymeAdapter {
+class ReactFourteenAdapter extends EnzymeAdapter {
   constructor() {
     super();
     this.options = {
@@ -229,4 +229,4 @@ class ReactFifteenAdapter extends EnzymeAdapter {
   }
 }
 
-module.exports = ReactFifteenAdapter;
+module.exports = ReactFourteenAdapter;
