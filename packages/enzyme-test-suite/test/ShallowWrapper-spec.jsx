@@ -500,400 +500,114 @@ describe('shallow', () => {
     });
   });
 
-  describe('.find(selector)', () => {
-    it('should be able to match the root DOM element', () => {
-      const wrapper = shallow(<div id="ttt" className="ttt">hello</div>);
-      expect(wrapper.find('#ttt')).to.have.lengthOf(1);
-      expect(wrapper.find('.ttt')).to.have.lengthOf(1);
-    });
+  wrap()
+    .withOverride(() => getAdapter(), 'isValidElementType', () => undefined)
+    .describe('.find(selector)', () => {
+      it('should be able to match the root DOM element', () => {
+        const wrapper = shallow(<div id="ttt" className="ttt">hello</div>);
+        expect(wrapper.find('#ttt')).to.have.lengthOf(1);
+        expect(wrapper.find('.ttt')).to.have.lengthOf(1);
+      });
 
-    it('should find an element based on a class name', () => {
-      const wrapper = shallow((
-        <div>
-          <input className="foo" />
-        </div>
-      ));
-      expect(wrapper.find('.foo').type()).to.equal('input');
-    });
-
-    it('should find an element that has dot in attribute', () => {
-      const wrapper = shallow((
-        <div>
-          <div data-baz="foo.bar" />
-        </div>
-      ));
-
-      const elements = wrapper.find('[data-baz="foo.bar"]');
-      expect(elements).to.have.lengthOf(1);
-    });
-
-    it('should find an element that with class and attribute', () => {
-      const wrapper = shallow((
-        <div>
-          <div data-baz="bar" className="classBar" />
-        </div>
-      ));
-
-      const elements = wrapper.find('.classBar[data-baz="bar"]');
-      expect(elements).to.have.lengthOf(1);
-    });
-
-    it('should find an element that with multiple classes and one attribute', () => {
-      const wrapper = shallow((
-        <div>
-          <div data-baz="bar" className="classBar classFoo" />
-        </div>
-      ));
-
-      const elements = wrapper.find('.classBar.classFoo[data-baz="bar"]');
-      expect(elements).to.have.lengthOf(1);
-    });
-
-    it('should find an element that with class and class with hyphen', () => {
-      const wrapper = shallow((
-        <div>
-          <div data-baz="bar" className="classBar class-Foo" />
-        </div>
-      ));
-
-      const elements = wrapper.find('.classBar.class-Foo');
-      expect(elements).to.have.lengthOf(1);
-    });
-
-    it('should find an element based on a tag name and class name', () => {
-      const wrapper = shallow((
-        <div>
-          <input className="foo" />
-        </div>
-      ));
-      expect(wrapper.find('input.foo')).to.have.lengthOf(1);
-    });
-
-    it('should find an element based on a tag name and id', () => {
-      const wrapper = shallow((
-        <div>
-          <input id="foo" />
-        </div>
-      ));
-      expect(wrapper.find('input#foo')).to.have.lengthOf(1);
-    });
-
-    it('should find an element based on a tag name, id, and class name', () => {
-      const wrapper = shallow((
-        <div>
-          <input id="foo" className="bar" />
-        </div>
-      ));
-      expect(wrapper.find('input#foo.bar')).to.have.lengthOf(1);
-    });
-
-    it('should find an element based on a tag name', () => {
-      const wrapper = shallow((
-        <div>
-          <input className="foo" />
-          <button className="bar">Button</button>
-          <textarea className="magic" />
-          <select className="reality" />
-        </div>
-      ));
-      expect(wrapper.find('input').props().className).to.equal('foo');
-      expect(wrapper.find('button').props().className).to.equal('bar');
-      expect(wrapper.find('textarea').props().className).to.equal('magic');
-      expect(wrapper.find('select').props().className).to.equal('reality');
-    });
-
-    it('should find a component based on a constructor', () => {
-      class Foo extends React.Component {
-        render() { return <div />; }
-      }
-      const wrapper = shallow((
-        <div>
-          <Foo className="foo" />
-        </div>
-      ));
-      expect(wrapper.find(Foo).type()).to.equal(Foo);
-    });
-
-    it('should find a component based on a display name', () => {
-      class Foo extends React.Component {
-        render() { return <div />; }
-      }
-      const wrapper = shallow((
-        <div>
-          <Foo className="foo" />
-        </div>
-      ));
-      expect(wrapper.find('Foo').type()).to.equal(Foo);
-    });
-
-    it('should find multiple elements based on a class name', () => {
-      const wrapper = shallow((
-        <div>
-          <input className="foo" />
-          <button className="foo" />
-        </div>
-      ));
-      expect(wrapper.find('.foo')).to.have.lengthOf(2);
-    });
-
-    it('should find multiple elements based on a tag name', () => {
-      const wrapper = shallow((
-        <div>
-          <input className="foo" />
-          <input />
-          <button />
-        </div>
-      ));
-      expect(wrapper.find('input')).to.have.lengthOf(2);
-      expect(wrapper.find('button')).to.have.lengthOf(1);
-    });
-
-    it('should work on non-single nodes', () => {
-      const wrapper = shallow((
-        <div className="a">
-          <div className="b">
-            <div className="c">Text</div>
-            <div className="c">Text</div>
-            <div className="c">Text</div>
+      it('should find an element based on a class name', () => {
+        const wrapper = shallow((
+          <div>
+            <input className="foo" />
           </div>
-          <div className="b">
-            <div className="c">Text</div>
-            <div className="c">Text</div>
-            <div className="c">Text</div>
+        ));
+        expect(wrapper.find('.foo').type()).to.equal('input');
+      });
+
+      it('should find an element that has dot in attribute', () => {
+        const wrapper = shallow((
+          <div>
+            <div data-baz="foo.bar" />
           </div>
-        </div>
-      ));
-      expect(wrapper.find('.a')).to.have.lengthOf(1);
-      expect(wrapper.find('.b')).to.have.lengthOf(2);
-      expect(wrapper.find('.b').find('.c')).to.have.lengthOf(6);
-    });
+        ));
 
-    it('should find component based on a react prop', () => {
-      const wrapper = shallow((
-        <div>
-          <span title="foo" />
-        </div>
-      ));
+        const elements = wrapper.find('[data-baz="foo.bar"]');
+        expect(elements).to.have.lengthOf(1);
+      });
 
-      expect(wrapper.find('[title="foo"]')).to.have.lengthOf(1);
-      expect(wrapper.find('[title]')).to.have.lengthOf(1);
-    });
-
-    it('works with an adjacent sibling selector', () => {
-      const a = 'some';
-      const b = 'text';
-      const wrapper = shallow((
-        <div>
-          <div className="row">
-            {a}
-            {b}
+      it('should find an element that with class and attribute', () => {
+        const wrapper = shallow((
+          <div>
+            <div data-baz="bar" className="classBar" />
           </div>
-          <div className="row">
-            {a}
-            {b}
+        ));
+
+        const elements = wrapper.find('.classBar[data-baz="bar"]');
+        expect(elements).to.have.lengthOf(1);
+      });
+
+      it('should find an element that with multiple classes and one attribute', () => {
+        const wrapper = shallow((
+          <div>
+            <div data-baz="bar" className="classBar classFoo" />
           </div>
-        </div>
-      ));
-      expect(wrapper.find('.row')).to.have.lengthOf(2);
-      expect(wrapper.find('.row + .row')).to.have.lengthOf(1);
-    });
+        ));
 
-    it('should throw for non-numeric attribute values without quotes', () => {
-      const wrapper = shallow((
-        <div>
-          <input type="text" />
-          <input type="hidden" />
-          <input type="text" />
-        </div>
-      ));
-      expect(() => wrapper.find('[type=text]')).to.throw(
-        Error,
-        'Failed to parse selector: [type=text]',
-      );
-      expect(() => wrapper.find('[type=hidden]')).to.throw(
-        Error,
-        'Failed to parse selector: [type=hidden]',
-      );
-      expect(() => wrapper.find('[type="text"]')).to.not.throw(
-        Error,
-        'Failed to parse selector: [type="text"]',
-      );
-    });
+        const elements = wrapper.find('.classBar.classFoo[data-baz="bar"]');
+        expect(elements).to.have.lengthOf(1);
+      });
 
-    it('should error sensibly if any of the search props are undefined', () => {
-      const wrapper = shallow((
-        <div>
-          <input type={undefined} />
-        </div>
-      ));
+      it('should find an element that with class and class with hyphen', () => {
+        const wrapper = shallow((
+          <div>
+            <div data-baz="bar" className="classBar class-Foo" />
+          </div>
+        ));
 
-      expect(() => wrapper.find({ type: undefined })).to.throw(
-        TypeError,
-        'Enzyme::Props can’t have `undefined` values. Try using ‘findWhere()’ instead.',
-      );
-    });
+        const elements = wrapper.find('.classBar.class-Foo');
+        expect(elements).to.have.lengthOf(1);
+      });
 
-    it('should compound tag and prop selector', () => {
-      const wrapper = shallow((
-        <div>
-          <span preserveAspectRatio="xMaxYMax" />
-        </div>
-      ));
+      it('should find an element based on a tag name and class name', () => {
+        const wrapper = shallow((
+          <div>
+            <input className="foo" />
+          </div>
+        ));
+        expect(wrapper.find('input.foo')).to.have.lengthOf(1);
+      });
 
-      expect(wrapper.find('span[preserveAspectRatio="xMaxYMax"]')).to.have.lengthOf(1);
-      expect(wrapper.find('span[preserveAspectRatio]')).to.have.lengthOf(1);
-    });
+      it('should find an element based on a tag name and id', () => {
+        const wrapper = shallow((
+          <div>
+            <input id="foo" />
+          </div>
+        ));
+        expect(wrapper.find('input#foo')).to.have.lengthOf(1);
+      });
 
-    it('should support data prop selectors', () => {
-      const wrapper = shallow((
-        <div>
-          <span data-foo="bar" />
-        </div>
-      ));
+      it('should find an element based on a tag name, id, and class name', () => {
+        const wrapper = shallow((
+          <div>
+            <input id="foo" className="bar" />
+          </div>
+        ));
+        expect(wrapper.find('input#foo.bar')).to.have.lengthOf(1);
+      });
 
-      expect(wrapper.find('[data-foo="bar"]')).to.have.lengthOf(1);
-      expect(wrapper.find('[data-foo]')).to.have.lengthOf(1);
-    });
+      it('should find an element based on a tag name', () => {
+        const wrapper = shallow((
+          <div>
+            <input className="foo" />
+            <button className="bar">Button</button>
+            <textarea className="magic" />
+            <select className="reality" />
+          </div>
+        ));
+        expect(wrapper.find('input').props().className).to.equal('foo');
+        expect(wrapper.find('button').props().className).to.equal('bar');
+        expect(wrapper.find('textarea').props().className).to.equal('magic');
+        expect(wrapper.find('select').props().className).to.equal('reality');
+      });
 
-    it('should find components with multiple matching react props', () => {
-      function noop() {}
-      const wrapper = shallow((
-        <div>
-          <span htmlFor="foo" onChange={noop} preserveAspectRatio="xMaxYMax" />
-        </div>
-      ));
-
-      expect(wrapper.find('span[htmlFor="foo"][onChange]')).to.have.lengthOf(1);
-      expect(wrapper.find('span[htmlFor="foo"][preserveAspectRatio="xMaxYMax"]')).to.have.lengthOf(1);
-      expect(wrapper.find('[htmlFor][preserveAspectRatio]')).to.have.lengthOf(1);
-    });
-
-    it('should support boolean and numeric values for matching props', () => {
-      const wrapper = shallow((
-        <div>
-          <span value={1} />
-          <a value={false} />
-        </div>
-      ));
-
-      expect(wrapper.find('span[value=1]')).to.have.lengthOf(1);
-      expect(wrapper.find('span[value=2]')).to.have.lengthOf(0);
-      expect(wrapper.find('a[value=false]')).to.have.lengthOf(1);
-      expect(wrapper.find('a[value=true]')).to.have.lengthOf(0);
-    });
-
-    it('should not find key or ref via property selector', () => {
-      const arrayOfComponents = [<div key="1" />, <div key="2" />];
-
-      const wrapper = shallow((
-        <div>
-          <div ref="foo" />
-          {arrayOfComponents}
-        </div>
-      ));
-
-      expect(wrapper.find('div[ref="foo"]')).to.have.lengthOf(0);
-      expect(wrapper.find('div[key="1"]')).to.have.lengthOf(0);
-      expect(wrapper.find('[ref]')).to.have.lengthOf(0);
-      expect(wrapper.find('[key]')).to.have.lengthOf(0);
-    });
-
-    it('should find multiple elements based on a constructor', () => {
-      const wrapper = shallow((
-        <div>
-          <input className="foo" />
-          <input />
-          <button />
-        </div>
-      ));
-      expect(wrapper.find('input')).to.have.lengthOf(2);
-      expect(wrapper.find('button')).to.have.lengthOf(1);
-    });
-
-    it('should support object property selectors', () => {
-      const wrapper = shallow((
-        <div>
-          <input data-test="ref" className="foo" type="text" />
-          <input data-test="ref" type="text" />
-          <button data-test="ref" prop={undefined} />
-          <span data-test="ref" prop={null} />
-          <div data-test="ref" prop={123} />
-          <input data-test="ref" prop={false} />
-          <a data-test="ref" prop />
-        </div>
-      ));
-      expect(wrapper.find({ a: 1 })).to.have.lengthOf(0);
-      expect(wrapper.find({ 'data-test': 'ref' })).to.have.lengthOf(7);
-      expect(wrapper.find({ className: 'foo' })).to.have.lengthOf(1);
-      expect(wrapper.find({ prop: null })).to.have.lengthOf(1);
-      expect(wrapper.find({ prop: 123 })).to.have.lengthOf(1);
-      expect(wrapper.find({ prop: false })).to.have.lengthOf(1);
-      expect(wrapper.find({ prop: true })).to.have.lengthOf(1);
-    });
-
-    it('should support complex and nested object property selectors', () => {
-      const testFunction = () => ({});
-      const wrapper = shallow((
-        <div>
-          <span more={[{ id: 1 }]} data-test="ref" prop onChange={testFunction} />
-          <a more={[{ id: 1 }]} data-test="ref" />
-          <div more={{ item: { id: 1 } }} data-test="ref" />
-          <input style={{ height: 20 }} data-test="ref" />
-        </div>
-      ));
-      expect(wrapper.find({ 'data-test': 'ref' })).to.have.lengthOf(4);
-      expect(wrapper.find({ more: { a: 1 } })).to.have.lengthOf(0);
-      expect(wrapper.find({ more: [{ id: 1 }] })).to.have.lengthOf(2);
-      expect(wrapper.find({ more: { item: { id: 1 } } })).to.have.lengthOf(1);
-      expect(wrapper.find({ style: { height: 20 } })).to.have.lengthOf(1);
-      expect(wrapper.find({
-        more: [{ id: 1 }],
-        'data-test': 'ref',
-        prop: true,
-        onChange: testFunction,
-      })).to.have.lengthOf(1);
-    });
-
-    it('should throw when given empty object, null, or an array', () => {
-      const wrapper = shallow((
-        <div>
-          <input className="foo" type="text" />
-        </div>
-      ));
-      expect(() => wrapper.find({})).to.throw(
-        TypeError,
-        'Enzyme::Selector does not support an array, null, or empty object as a selector',
-      );
-      expect(() => wrapper.find([])).to.throw(
-        TypeError,
-        'Enzyme::Selector does not support an array, null, or empty object as a selector',
-      );
-      expect(() => wrapper.find(null)).to.throw(
-        TypeError,
-        'Enzyme::Selector does not support an array, null, or empty object as a selector',
-      );
-    });
-
-    it('Should query attributes with spaces in their values', () => {
-      const wrapper = shallow((
-        <div>
-          <h1 data-foo="foo bar">Hello</h1>
-          <h1 data-foo="bar baz quz">World</h1>
-        </div>
-      ));
-      expect(wrapper.find('[data-foo]')).to.have.lengthOf(2);
-      expect(wrapper.find('[data-foo="foo bar"]')).to.have.lengthOf(1);
-      expect(wrapper.find('[data-foo="bar baz quz"]')).to.have.lengthOf(1);
-      expect(wrapper.find('[data-foo="bar baz"]')).to.have.lengthOf(0);
-      expect(wrapper.find('[data-foo="foo  bar"]')).to.have.lengthOf(0);
-      expect(wrapper.find('[data-foo="bar  baz quz"]')).to.have.lengthOf(0);
-    });
-
-    describeIf(is('> 0.13'), 'stateless function components', () => {
       it('should find a component based on a constructor', () => {
-        const Foo = () => (
-          <div />
-        );
+        class Foo extends React.Component {
+          render() { return <div />; }
+        }
         const wrapper = shallow((
           <div>
             <Foo className="foo" />
@@ -902,10 +616,28 @@ describe('shallow', () => {
         expect(wrapper.find(Foo).type()).to.equal(Foo);
       });
 
-      it('should find a component based on a display name', () => {
-        const Foo = () => (
-          <div />
-        );
+      wrap()
+        .withOverride(() => getAdapter(), 'isValidElementType', () => () => false)
+        .it('throws when an adapter’s `isValidElementType` lies', () => {
+          class Foo extends React.Component {
+            render() { return <div />; }
+          }
+          const wrapper = shallow((
+            <div>
+              <Foo className="foo" />
+            </div>
+          ));
+
+          expect(() => wrapper.find(Foo)).to.throw(
+            TypeError,
+            'Enzyme::Selector expects a string, object, or valid element type (Component Constructor)',
+          );
+        });
+
+      it('should find a component based on a component display name', () => {
+        class Foo extends React.Component {
+          render() { return <div />; }
+        }
         const wrapper = shallow((
           <div>
             <Foo className="foo" />
@@ -913,56 +645,344 @@ describe('shallow', () => {
         ));
         expect(wrapper.find('Foo').type()).to.equal(Foo);
       });
-    });
 
-    describe('works with attribute selectors containing #', () => {
-      let wrapper;
-      beforeEach(() => {
-        wrapper = shallow((
+      it('should find multiple elements based on a class name', () => {
+        const wrapper = shallow((
           <div>
-            <a id="test" href="/page">Hello</a>
-            <a href="/page#anchor">World</a>
+            <input className="foo" />
+            <button className="foo" />
           </div>
         ));
+        expect(wrapper.find('.foo')).to.have.lengthOf(2);
       });
 
-      it('works with an ID', () => {
-        expect(wrapper.find('a#test')).to.have.lengthOf(1);
+      it('should find multiple elements based on a tag name', () => {
+        const wrapper = shallow((
+          <div>
+            <input className="foo" />
+            <input />
+            <button />
+          </div>
+        ));
+        expect(wrapper.find('input')).to.have.lengthOf(2);
+        expect(wrapper.find('button')).to.have.lengthOf(1);
       });
 
-      it('works with a normal attribute', () => {
-        expect(wrapper.find('a[href="/page"]')).to.have.lengthOf(1);
-      });
-
-      it('works with an attribute with a #', () => {
-        expect(wrapper.find('a[href="/page#anchor"]')).to.have.lengthOf(1);
-      });
-    });
-
-    describe('works with data- attributes', () => {
-      class Foo extends React.Component {
-        render() {
-          return (
-            <div>
-              <i className="ficon ficon-12 some-icon" />
-              <span className="custom class">
-                <i className="ficon ficon-book ficon-24" data-custom-tag="bookIcon" />
-                <i className="ficon ficon-book ficon-24" data-custom-tag="bookIcon" />
-              </span>
+      it('should work on non-single nodes', () => {
+        const wrapper = shallow((
+          <div className="a">
+            <div className="b">
+              <div className="c">Text</div>
+              <div className="c">Text</div>
+              <div className="c">Text</div>
             </div>
-          );
-        }
-      }
+            <div className="b">
+              <div className="c">Text</div>
+              <div className="c">Text</div>
+              <div className="c">Text</div>
+            </div>
+          </div>
+        ));
+        expect(wrapper.find('.a')).to.have.lengthOf(1);
+        expect(wrapper.find('.b')).to.have.lengthOf(2);
+        expect(wrapper.find('.b').find('.c')).to.have.lengthOf(6);
+      });
 
-      it('finds elements by data attribute', () => {
-        const wrapper = shallow(<Foo />);
-        expect(wrapper.html()).to.contain('data-custom-tag="bookIcon"'); // sanity check
-        const elements = wrapper.find('[data-custom-tag="bookIcon"]');
-        expect(elements).to.have.lengthOf(2);
-        expect(elements.filter('i')).to.have.lengthOf(2);
+      it('should find component based on a react prop', () => {
+        const wrapper = shallow((
+          <div>
+            <span title="foo" />
+          </div>
+        ));
+
+        expect(wrapper.find('[title="foo"]')).to.have.lengthOf(1);
+        expect(wrapper.find('[title]')).to.have.lengthOf(1);
+      });
+
+      it('works with an adjacent sibling selector', () => {
+        const a = 'some';
+        const b = 'text';
+        const wrapper = shallow((
+          <div>
+            <div className="row">
+              {a}
+              {b}
+            </div>
+            <div className="row">
+              {a}
+              {b}
+            </div>
+          </div>
+        ));
+        expect(wrapper.find('.row')).to.have.lengthOf(2);
+        expect(wrapper.find('.row + .row')).to.have.lengthOf(1);
+      });
+
+      it('should throw for non-numeric attribute values without quotes', () => {
+        const wrapper = shallow((
+          <div>
+            <input type="text" />
+            <input type="hidden" />
+            <input type="text" />
+          </div>
+        ));
+        expect(() => wrapper.find('[type=text]')).to.throw(
+          Error,
+          'Failed to parse selector: [type=text]',
+        );
+        expect(() => wrapper.find('[type=hidden]')).to.throw(
+          Error,
+          'Failed to parse selector: [type=hidden]',
+        );
+        expect(() => wrapper.find('[type="text"]')).to.not.throw(
+          Error,
+          'Failed to parse selector: [type="text"]',
+        );
+      });
+
+      it('should error sensibly if any of the search props are undefined', () => {
+        const wrapper = shallow((
+          <div>
+            <input type={undefined} />
+          </div>
+        ));
+
+        expect(() => wrapper.find({ type: undefined })).to.throw(
+          TypeError,
+          'Enzyme::Props can’t have `undefined` values. Try using ‘findWhere()’ instead.',
+        );
+      });
+
+      it('should compound tag and prop selector', () => {
+        const wrapper = shallow((
+          <div>
+            <span preserveAspectRatio="xMaxYMax" />
+          </div>
+        ));
+
+        expect(wrapper.find('span[preserveAspectRatio="xMaxYMax"]')).to.have.lengthOf(1);
+        expect(wrapper.find('span[preserveAspectRatio]')).to.have.lengthOf(1);
+      });
+
+      it('should support data prop selectors', () => {
+        const wrapper = shallow((
+          <div>
+            <span data-foo="bar" />
+          </div>
+        ));
+
+        expect(wrapper.find('[data-foo="bar"]')).to.have.lengthOf(1);
+        expect(wrapper.find('[data-foo]')).to.have.lengthOf(1);
+      });
+
+      it('should find components with multiple matching react props', () => {
+        function noop() {}
+        const wrapper = shallow((
+          <div>
+            <span htmlFor="foo" onChange={noop} preserveAspectRatio="xMaxYMax" />
+          </div>
+        ));
+
+        expect(wrapper.find('span[htmlFor="foo"][onChange]')).to.have.lengthOf(1);
+        expect(wrapper.find('span[htmlFor="foo"][preserveAspectRatio="xMaxYMax"]')).to.have.lengthOf(1);
+        expect(wrapper.find('[htmlFor][preserveAspectRatio]')).to.have.lengthOf(1);
+      });
+
+      it('should support boolean and numeric values for matching props', () => {
+        const wrapper = shallow((
+          <div>
+            <span value={1} />
+            <a value={false} />
+          </div>
+        ));
+
+        expect(wrapper.find('span[value=1]')).to.have.lengthOf(1);
+        expect(wrapper.find('span[value=2]')).to.have.lengthOf(0);
+        expect(wrapper.find('a[value=false]')).to.have.lengthOf(1);
+        expect(wrapper.find('a[value=true]')).to.have.lengthOf(0);
+      });
+
+      it('should not find key or ref via property selector', () => {
+        const arrayOfComponents = [<div key="1" />, <div key="2" />];
+
+        const wrapper = shallow((
+          <div>
+            <div ref="foo" />
+            {arrayOfComponents}
+          </div>
+        ));
+
+        expect(wrapper.find('div[ref="foo"]')).to.have.lengthOf(0);
+        expect(wrapper.find('div[key="1"]')).to.have.lengthOf(0);
+        expect(wrapper.find('[ref]')).to.have.lengthOf(0);
+        expect(wrapper.find('[key]')).to.have.lengthOf(0);
+      });
+
+      it('should find multiple elements based on a constructor', () => {
+        const wrapper = shallow((
+          <div>
+            <input className="foo" />
+            <input />
+            <button />
+          </div>
+        ));
+        expect(wrapper.find('input')).to.have.lengthOf(2);
+        expect(wrapper.find('button')).to.have.lengthOf(1);
+      });
+
+      it('should support object property selectors', () => {
+        const wrapper = shallow((
+          <div>
+            <input data-test="ref" className="foo" type="text" />
+            <input data-test="ref" type="text" />
+            <button data-test="ref" prop={undefined} />
+            <span data-test="ref" prop={null} />
+            <div data-test="ref" prop={123} />
+            <input data-test="ref" prop={false} />
+            <a data-test="ref" prop />
+          </div>
+        ));
+        expect(wrapper.find({ a: 1 })).to.have.lengthOf(0);
+        expect(wrapper.find({ 'data-test': 'ref' })).to.have.lengthOf(7);
+        expect(wrapper.find({ className: 'foo' })).to.have.lengthOf(1);
+        expect(wrapper.find({ prop: null })).to.have.lengthOf(1);
+        expect(wrapper.find({ prop: 123 })).to.have.lengthOf(1);
+        expect(wrapper.find({ prop: false })).to.have.lengthOf(1);
+        expect(wrapper.find({ prop: true })).to.have.lengthOf(1);
+      });
+
+      it('should support complex and nested object property selectors', () => {
+        const testFunction = () => ({});
+        const wrapper = shallow((
+          <div>
+            <span more={[{ id: 1 }]} data-test="ref" prop onChange={testFunction} />
+            <a more={[{ id: 1 }]} data-test="ref" />
+            <div more={{ item: { id: 1 } }} data-test="ref" />
+            <input style={{ height: 20 }} data-test="ref" />
+          </div>
+        ));
+        expect(wrapper.find({ 'data-test': 'ref' })).to.have.lengthOf(4);
+        expect(wrapper.find({ more: { a: 1 } })).to.have.lengthOf(0);
+        expect(wrapper.find({ more: [{ id: 1 }] })).to.have.lengthOf(2);
+        expect(wrapper.find({ more: { item: { id: 1 } } })).to.have.lengthOf(1);
+        expect(wrapper.find({ style: { height: 20 } })).to.have.lengthOf(1);
+        expect(wrapper.find({
+          more: [{ id: 1 }],
+          'data-test': 'ref',
+          prop: true,
+          onChange: testFunction,
+        })).to.have.lengthOf(1);
+      });
+
+      it('should throw when given empty object, null, or an array', () => {
+        const wrapper = shallow((
+          <div>
+            <input className="foo" type="text" />
+          </div>
+        ));
+        expect(() => wrapper.find({})).to.throw(
+          TypeError,
+          'Enzyme::Selector does not support an array, null, or empty object as a selector',
+        );
+        expect(() => wrapper.find([])).to.throw(
+          TypeError,
+          'Enzyme::Selector does not support an array, null, or empty object as a selector',
+        );
+        expect(() => wrapper.find(null)).to.throw(
+          TypeError,
+          'Enzyme::Selector does not support an array, null, or empty object as a selector',
+        );
+      });
+
+      it('Should query attributes with spaces in their values', () => {
+        const wrapper = shallow((
+          <div>
+            <h1 data-foo="foo bar">Hello</h1>
+            <h1 data-foo="bar baz quz">World</h1>
+          </div>
+        ));
+        expect(wrapper.find('[data-foo]')).to.have.lengthOf(2);
+        expect(wrapper.find('[data-foo="foo bar"]')).to.have.lengthOf(1);
+        expect(wrapper.find('[data-foo="bar baz quz"]')).to.have.lengthOf(1);
+        expect(wrapper.find('[data-foo="bar baz"]')).to.have.lengthOf(0);
+        expect(wrapper.find('[data-foo="foo  bar"]')).to.have.lengthOf(0);
+        expect(wrapper.find('[data-foo="bar  baz quz"]')).to.have.lengthOf(0);
+      });
+
+      describeIf(is('> 0.13'), 'stateless function components', () => {
+        it('should find a component based on a constructor', () => {
+          const Foo = () => (
+            <div />
+          );
+          const wrapper = shallow((
+            <div>
+              <Foo className="foo" />
+            </div>
+          ));
+          expect(wrapper.find(Foo).type()).to.equal(Foo);
+        });
+
+        it('should find a component based on a display name', () => {
+          const Foo = () => (
+            <div />
+          );
+          const wrapper = shallow((
+            <div>
+              <Foo className="foo" />
+            </div>
+          ));
+          expect(wrapper.find('Foo').type()).to.equal(Foo);
+        });
+      });
+
+      describe('works with attribute selectors containing #', () => {
+        let wrapper;
+        beforeEach(() => {
+          wrapper = shallow((
+            <div>
+              <a id="test" href="/page">Hello</a>
+              <a href="/page#anchor">World</a>
+            </div>
+          ));
+        });
+
+        it('works with an ID', () => {
+          expect(wrapper.find('a#test')).to.have.lengthOf(1);
+        });
+
+        it('works with a normal attribute', () => {
+          expect(wrapper.find('a[href="/page"]')).to.have.lengthOf(1);
+        });
+
+        it('works with an attribute with a #', () => {
+          expect(wrapper.find('a[href="/page#anchor"]')).to.have.lengthOf(1);
+        });
+      });
+
+      describe('works with data- attributes', () => {
+        class Foo extends React.Component {
+          render() {
+            return (
+              <div>
+                <i className="ficon ficon-12 some-icon" />
+                <span className="custom class">
+                  <i className="ficon ficon-book ficon-24" data-custom-tag="bookIcon" />
+                  <i className="ficon ficon-book ficon-24" data-custom-tag="bookIcon" />
+                </span>
+              </div>
+            );
+          }
+        }
+
+        it('finds elements by data attribute', () => {
+          const wrapper = shallow(<Foo />);
+          expect(wrapper.html()).to.contain('data-custom-tag="bookIcon"'); // sanity check
+          const elements = wrapper.find('[data-custom-tag="bookIcon"]');
+          expect(elements).to.have.lengthOf(2);
+          expect(elements.filter('i')).to.have.lengthOf(2);
+        });
       });
     });
-  });
 
   describe('.findWhere(predicate)', () => {
     it('should return all elements for a truthy test', () => {

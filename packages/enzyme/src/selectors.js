@@ -13,7 +13,7 @@ import {
   childrenOfNode,
   hasClassName,
 } from './RSTTraversal';
-import { nodeHasType, propsOfNode } from './Utils';
+import { getAdapter, nodeHasType, propsOfNode } from './Utils';
 // our CSS selector parser instance
 const parser = createParser();
 
@@ -239,8 +239,22 @@ function isComplexSelector(tokens) {
  * @param {Function|Object|String} selector
  */
 export function buildPredicate(selector) {
-  // If the selector is a function, check if the node's constructor matches
-  if (typeof selector === 'function') {
+  // If the selector is a string, parse it as a simple CSS selector
+  if (typeof selector === 'string') {
+    const tokens = safelyGenerateTokens(selector);
+    if (isComplexSelector(tokens)) {
+      throw new TypeError('This method does not support complex CSS selectors');
+    }
+    // Simple selectors only have a single selector token
+    return buildPredicateFromToken(tokens[0]);
+  }
+
+  // If the selector is an element type, check if the node's type matches
+  const adapter = getAdapter();
+  const isElementType = adapter.isValidElementType
+    ? adapter.isValidElementType(selector)
+    : typeof selector === 'function';
+  if (isElementType) {
     return node => node && node.type === selector;
   }
   // If the selector is an non-empty object, treat the keys/values as props
@@ -254,16 +268,8 @@ export function buildPredicate(selector) {
     }
     throw new TypeError('Enzyme::Selector does not support an array, null, or empty object as a selector');
   }
-  // If the selector is a string, parse it as a simple CSS selector
-  if (typeof selector === 'string') {
-    const tokens = safelyGenerateTokens(selector);
-    if (isComplexSelector(tokens)) {
-      throw new TypeError('This method does not support complex CSS selectors');
-    }
-    // Simple selectors only have a single selector token
-    return buildPredicateFromToken(tokens[0]);
-  }
-  throw new TypeError('Enzyme::Selector expects a string, object, or Component Constructor');
+
+  throw new TypeError('Enzyme::Selector expects a string, object, or valid element type (Component Constructor)');
 }
 
 /**
