@@ -21,6 +21,7 @@ import {
 } from './_helpers';
 import { REACT013, REACT014, REACT16, REACT163, is } from './_helpers/version';
 import realArrowFunction from './_helpers/realArrowFunction';
+import sloppyReturnThis from './_helpers/untranspiledSloppyReturnThis';
 
 const getElementPropSelector = prop => x => x.props[prop];
 const getWrapperPropSelector = prop => x => x.prop(prop);
@@ -2056,6 +2057,49 @@ describeWithDOM('mount', () => {
         const wrapper = mount(<Foo foo="hi" bar="bye" />);
 
         expect(wrapper.props()).to.eql({ bar: 'bye', foo: 'hi' });
+      });
+
+      const SloppyReceiver = sloppyReturnThis((
+        receiver,
+        props = { NO_PROPS: true },
+        context,
+      ) => (
+        <div
+          data-is-global={receiver === global}
+          data-is-undefined={typeof receiver === 'undefined'}
+          {...props}
+          {...context}
+        />
+      ));
+
+      const StrictReceiver = function SFC(
+        props = { NO_PROPS: true },
+        context,
+      ) {
+        return (
+          <div
+            data-is-global={this === global}
+            data-is-undefined={typeof this === 'undefined'}
+            {...props}
+            {...context}
+          />
+        );
+      };
+
+      it('does not provide a `this` to a sloppy-mode SFC', () => {
+        const wrapper = mount(<SloppyReceiver />);
+        expect(wrapper.childAt(0).props()).to.be.an('object').that.has.all.keys({
+          'data-is-global': true,
+          'data-is-undefined': false,
+        });
+      });
+
+      it('does not provide a `this` to a strict-mode SFC', () => {
+        const wrapper = mount(<StrictReceiver />);
+        expect(wrapper.childAt(0).props()).to.be.an('object').that.has.all.keys({
+          'data-is-global': false,
+          'data-is-undefined': true,
+        });
       });
     });
   });

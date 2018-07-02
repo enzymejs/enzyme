@@ -232,6 +232,18 @@ class ReactSixteenAdapter extends EnzymeAdapter {
           isDOM = true;
         } else {
           isDOM = false;
+          const { type: Component } = el;
+          const isStateful = Component.prototype && (
+            Component.prototype.isReactComponent
+            || Array.isArray(Component.__reactAutoBindPairs) // fallback for createClass components
+          );
+          if (!isStateful) {
+            const wrappedEl = Object.assign(
+              (...args) => Component(...args), // eslint-disable-line new-cap
+              Component,
+            );
+            return withSetStateAllowed(() => renderer.render({ ...el, type: wrappedEl }, context));
+          }
           return withSetStateAllowed(() => renderer.render(el, context));
         }
       },
