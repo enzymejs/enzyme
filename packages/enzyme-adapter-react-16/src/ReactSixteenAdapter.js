@@ -1,4 +1,5 @@
 /* eslint no-use-before-define: 0 */
+import functionName from 'function.prototype.name';
 import React from 'react';
 import ReactDOM from 'react-dom';
 // eslint-disable-next-line import/no-unresolved
@@ -7,9 +8,21 @@ import ReactDOMServer from 'react-dom/server';
 import ShallowRenderer from 'react-test-renderer/shallow';
 // eslint-disable-next-line import/no-unresolved
 import TestUtils from 'react-dom/test-utils';
-import { isElement } from 'react-is';
+import {
+  isElement,
+  isValidElementType,
+  AsyncMode,
+  Fragment,
+  ContextConsumer,
+  ContextProvider,
+  StrictMode,
+  ForwardRef,
+  Profiler,
+  Portal,
+} from 'react-is';
 import { EnzymeAdapter } from 'enzyme';
 import {
+  displayNameOfNode,
   elementToTree,
   nodeTypeFromType,
   mapNativeEventNames,
@@ -25,14 +38,14 @@ import { findCurrentFiberUsingSlowPath } from 'react-reconciler/reflection';
 
 const HostRoot = 3;
 const ClassComponent = 2;
-const Fragment = 10;
+const FragmentType = 10;
 const FunctionalComponent = 1;
 const HostPortal = 4;
 const HostComponent = 5;
 const HostText = 6;
 const Mode = 11;
-const ContextConsumer = 12;
-const ContextProvider = 13;
+const ContextConsumerType = 12;
+const ContextProviderType = 13;
 
 function nodeAndSiblingsArray(nodeWithSibling) {
   const array = [];
@@ -113,10 +126,10 @@ function toTree(vnode) {
     }
     case HostText: // 6
       return node.memoizedProps;
-    case Fragment: // 10
+    case FragmentType: // 10
     case Mode: // 11
-    case ContextProvider: // 13
-    case ContextConsumer: // 12
+    case ContextProviderType: // 13
+    case ContextConsumerType: // 12
       return childrenToTree(node.child);
     default:
       throw new Error(`Enzyme Internal Error: unknown node with tag ${node.tag}`);
@@ -337,8 +350,39 @@ class ReactSixteenAdapter extends EnzymeAdapter {
     return nodeToHostNode(node);
   }
 
+  displayNameOfNode(node) {
+    if (!node) return null;
+    const { type, $$typeof } = node;
+
+    switch (type || $$typeof) {
+      case AsyncMode: return 'AsyncMode';
+      case Fragment: return 'Fragment';
+      case StrictMode: return 'StrictMode';
+      case Profiler: return 'Profiler';
+      case Portal: return 'Portal';
+
+      default: {
+        const $$typeofType = type && type.$$typeof;
+
+        switch ($$typeofType) {
+          case ContextConsumer: return 'ContextConsumer';
+          case ContextProvider: return 'ContextProvider';
+          case ForwardRef: {
+            const name = type.render.displayName || functionName(type.render);
+            return name ? `ForwardRef(${name})` : 'ForwardRef';
+          }
+          default: return displayNameOfNode(node);
+        }
+      }
+    }
+  }
+
   isValidElement(element) {
     return isElement(element);
+  }
+
+  isValidElementType(object) {
+    return isValidElementType(object);
   }
 
   createElement(...args) {

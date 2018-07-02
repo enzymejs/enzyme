@@ -6,6 +6,7 @@ import ReactContext from 'react/lib/ReactContext';
 import values from 'object.values';
 import { EnzymeAdapter } from 'enzyme';
 import {
+  displayNameOfNode,
   propFromEvent,
   withSetStateAllowed,
   assertDomAvailable,
@@ -249,6 +250,10 @@ class ReactThirteenAdapter extends EnzymeAdapter {
     return React.createElement(node.type, propsWithKeysAndRef(node));
   }
 
+  displayNameOfNode(node) {
+    return displayNameOfNode(node);
+  }
+
   elementToNode(element) {
     return elementToTree(element);
   }
@@ -259,6 +264,10 @@ class ReactThirteenAdapter extends EnzymeAdapter {
 
   isValidElement(element) {
     return React.isValidElement(element);
+  }
+
+  isValidElementType(object) {
+    return typeof object === 'string' || typeof object === 'function';
   }
 
   createElement(...args) {

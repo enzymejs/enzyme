@@ -5,9 +5,10 @@ import ReactDOMServer from 'react-dom/server';
 // eslint-disable-next-line import/no-unresolved, import/extensions
 import TestUtils from 'react-addons-test-utils';
 import values from 'object.values';
-import { isElement } from 'react-is';
+import { isElement, isValidElementType } from 'react-is';
 import { EnzymeAdapter } from 'enzyme';
 import {
+  displayNameOfNode,
   elementToTree,
   mapNativeEventNames,
   propFromEvent,
@@ -262,8 +263,16 @@ class ReactFifteenFourAdapter extends EnzymeAdapter {
     return ReactDOM.findDOMNode(node.instance);
   }
 
+  displayNameOfNode(node) {
+    return displayNameOfNode(node);
+  }
+
   isValidElement(element) {
     return isElement(element);
+  }
+
+  isValidElementType(object) {
+    return isValidElementType(object);
   }
 
   createElement(...args) {

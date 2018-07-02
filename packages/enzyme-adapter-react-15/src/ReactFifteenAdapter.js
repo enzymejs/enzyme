@@ -7,9 +7,10 @@ import TestUtils from 'react-dom/test-utils';
 // eslint-disable-next-line import/no-unresolved, import/extensions
 import ShallowRenderer from 'react-test-renderer/shallow';
 import values from 'object.values';
-import { isElement } from 'react-is';
+import { isElement, isValidElementType } from 'react-is';
 import { EnzymeAdapter } from 'enzyme';
 import {
+  displayNameOfNode,
   elementToTree,
   mapNativeEventNames,
   propFromEvent,
@@ -262,8 +263,16 @@ class ReactFifteenAdapter extends EnzymeAdapter {
     return ReactDOM.findDOMNode(node.instance);
   }
 
+  displayNameOfNode(node) {
+    return displayNameOfNode(node);
+  }
+
   isValidElement(element) {
     return isElement(element);
+  }
+
+  isValidElementType(object) {
+    return isValidElementType(object);
   }
 
   createElement(...args) {

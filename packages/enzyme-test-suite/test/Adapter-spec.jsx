@@ -6,7 +6,16 @@ import { configure, shallow } from 'enzyme';
 
 import './_helpers/setupAdapters';
 import Adapter from './_helpers/adapter';
-import { renderToString } from './_helpers/react-compat';
+import {
+  renderToString,
+  createContext,
+  createPortal,
+  forwardRef,
+  Fragment,
+  StrictMode,
+  AsyncMode,
+  Profiler,
+} from './_helpers/react-compat';
 import { is } from './_helpers/version';
 import { itIf, describeWithDOM } from './_helpers';
 
@@ -800,5 +809,101 @@ describe('Adapter', () => {
         rendered: null,
       },
     }));
+  });
+
+  describe('determines valid element types', () => {
+    itIf(is('> 0.13'), 'supports stateless function components', () => {
+      const SFC = () => null;
+
+      expect(adapter.isValidElementType(SFC)).to.equal(true);
+    });
+
+    it('supports custom components', () => {
+      class Component extends React.Component {
+        render() { return null; }
+      }
+
+      expect(adapter.isValidElementType(Component)).to.equal(true);
+    });
+
+    it('supports HTML elements', () => {
+      expect(adapter.isValidElementType('div')).to.equal(true);
+    });
+
+    itIf(is('>= 16'), 'supports Portals', () => {
+      expect(adapter.isValidElementType(createPortal(<div />, { nodeType: 1 }))).to.equal(false);
+    });
+
+    itIf(is('>= 16.3'), 'supports Context', () => {
+      const Context = createContext({ });
+      expect(adapter.isValidElementType(Context.Consumer)).to.equal(true);
+      expect(adapter.isValidElementType(Context.Provider)).to.equal(true);
+    });
+
+    itIf(is('>= 16.3'), 'supports forward refs', () => {
+      expect(adapter.isValidElementType(forwardRef(() => null))).to.equal(true);
+    });
+  });
+
+  describe('provides node displayNames', () => {
+    const getDisplayName = el => adapter.displayNameOfNode(adapter.elementToNode(el));
+
+    itIf(is('> 0.13'), 'supports stateless function components', () => {
+      const SFC = () => null;
+
+      expect(getDisplayName(<SFC />)).to.equal('SFC');
+    });
+
+    it('supports custom components', () => {
+      class Component extends React.Component {
+        render() { return null; }
+      }
+      class Something extends React.Component {
+        render() { return null; }
+      }
+      Something.displayName = 'MyComponent';
+
+      expect(getDisplayName(<Component />)).to.equal('Component');
+      expect(getDisplayName(<Something />)).to.equal('MyComponent');
+    });
+
+    it('supports HTML elements', () => {
+      expect(getDisplayName(<div />)).to.equal('div');
+    });
+
+    itIf(is('>= 16.2'), 'supports Fragments', () => {
+      expect(getDisplayName(<Fragment />)).to.equal('Fragment');
+    });
+
+    itIf(is('>= 16'), 'supports Portals', () => {
+      expect(getDisplayName(createPortal(<div />, { nodeType: 1 }))).to.equal('Portal');
+    });
+
+    itIf(is('>= 16.3'), 'supports Context', () => {
+      const Context = createContext({});
+      expect(getDisplayName(<Context.Consumer />)).to.equal('ContextConsumer');
+      expect(getDisplayName(<Context.Provider />)).to.equal('ContextProvider');
+    });
+
+    itIf(is('>= 16.3'), 'supports forward refs', () => {
+      const ForwaredRef = forwardRef(() => null);
+      // eslint-disable-next-line prefer-arrow-callback
+      const NamedForwardedRef = forwardRef(function Named() { return null; });
+
+      expect(getDisplayName(<ForwaredRef />)).to.equal('ForwardRef');
+      expect(getDisplayName(<NamedForwardedRef />)).to.equal('ForwardRef(Named)');
+    });
+
+    itIf(is('>= 16.3'), 'supports StrictMode', () => {
+      expect(getDisplayName(<StrictMode />)).to.equal('StrictMode');
+    });
+
+    itIf(is('>= 16.3'), 'supports AsyncMode', () => {
+      expect(getDisplayName(<AsyncMode />)).to.equal('AsyncMode');
+    });
+
+    itIf(is('>= 16.4'), 'supports Profiler', () => {
+      expect(getDisplayName(<Profiler />)).to.equal('Profiler');
+    });
   });
 });

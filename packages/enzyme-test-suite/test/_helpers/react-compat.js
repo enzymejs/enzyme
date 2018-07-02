@@ -10,6 +10,11 @@ let createClass;
 let renderToString;
 let createPortal;
 let createContext;
+let forwardRef;
+let Fragment;
+let StrictMode;
+let AsyncMode;
+let Profiler;
 
 if (is('>=15.5 || ^16.0.0-alpha || ^16.3.0-alpha')) {
   // eslint-disable-next-line import/no-extraneous-dependencies
@@ -31,10 +36,32 @@ if (is('^16.0.0-alpha || ^16.3.0-alpha')) {
   createPortal = null;
 }
 
+if (is('^16.2.0-0')) {
+  ({ Fragment } = require('react'));
+} else {
+  Fragment = null;
+}
+
 if (is('^16.3.0-0')) {
-  ({ createContext } = require('react'));
+  ({
+    createContext,
+    forwardRef,
+    StrictMode,
+    unstable_AsyncMode: AsyncMode,
+  } = require('react'));
 } else {
   createContext = null;
+  forwardRef = null;
+  StrictMode = null;
+  AsyncMode = null;
+}
+
+if (is('^16.4.0-0')) {
+  ({
+    unstable_Profiler: Profiler,
+  } = require('react'));
+} else {
+  Profiler = null;
 }
 
 export {
@@ -42,4 +69,9 @@ export {
   renderToString,
   createPortal,
   createContext,
+  forwardRef,
+  Fragment,
+  StrictMode,
+  AsyncMode,
+  Profiler,
 };
