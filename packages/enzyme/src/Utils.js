@@ -61,6 +61,13 @@ export function typeOfNode(node) {
 
 export function nodeHasType(node, type) {
   if (!type || !node) return false;
+
+  const adapter = getAdapter();
+  if (adapter.displayNameOfNode) {
+    const displayName = adapter.displayNameOfNode(node);
+    return displayName === type;
+  }
+
   if (!node.type) return false;
   if (typeof node.type === 'string') return node.type === type;
   return (

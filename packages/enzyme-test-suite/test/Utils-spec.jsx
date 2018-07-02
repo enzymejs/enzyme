@@ -1,5 +1,7 @@
 import React from 'react';
 import { expect } from 'chai';
+import wrap from 'mocha-wrap';
+import sinon from 'sinon';
 import {
   childrenToSimplifiedArray,
   nodeEqual,
@@ -7,6 +9,7 @@ import {
   displayNameOfNode,
   spyMethod,
   nodeHasType,
+  getAdapter,
 } from 'enzyme/build/Utils';
 import {
   flatten,
@@ -616,56 +619,84 @@ describe('Utils', () => {
     });
   });
 
-  describe('nodeHasType', () => {
-    it('is `false` if either argument is falsy', () => {
-      expect(nodeHasType(null, {})).to.equal(false);
-      expect(nodeHasType({}, null)).to.equal(false);
-    });
-
-    it('is `false` if `node` has a falsy `type`', () => {
-      expect(nodeHasType({}, {})).to.equal(false);
-      expect(nodeHasType({ type: null }, {})).to.equal(false);
-      expect(nodeHasType({ type: false }, {})).to.equal(false);
-      expect(nodeHasType({ type: '' }, {})).to.equal(false);
-      expect(nodeHasType({ type: 0 }, {})).to.equal(false);
-    });
-
-    it('compares `node.type` to `type` when `node.type` is a non-empty string', () => {
-      expect(nodeHasType({ type: 'foo' }, 'foo')).to.equal(true);
-      expect(nodeHasType({ type: 'foo' }, 'bar')).to.equal(false);
-    });
-
-    describe('when only `node.type.displayName` matches `type`', () => {
-      const x = {};
-      it('is `true` when `node.type` is an object', () => {
-        expect(nodeHasType(
-          { type: { displayName: x } },
-          x,
-        )).to.equal(true);
+  wrap()
+    .withOverride(() => getAdapter(), 'displayNameOfNode', () => undefined)
+    .describe('nodeHasType', () => {
+      it('is `false` if either argument is falsy', () => {
+        expect(nodeHasType(null, {})).to.equal(false);
+        expect(nodeHasType({}, null)).to.equal(false);
       });
 
-      it('is `true` when `node.type` is a function', () => {
-        expect(nodeHasType(
-          { type: Object.assign(() => {}, { displayName: x }) },
-          x,
-        )).to.equal(true);
+      it('is `false` if `node` has a falsy `type`', () => {
+        expect(nodeHasType({}, {})).to.equal(false);
+        expect(nodeHasType({ type: null }, {})).to.equal(false);
+        expect(nodeHasType({ type: false }, {})).to.equal(false);
+        expect(nodeHasType({ type: '' }, {})).to.equal(false);
+        expect(nodeHasType({ type: 0 }, {})).to.equal(false);
       });
+
+      it('compares `node.type` to `type` when `node.type` is a non-empty string', () => {
+        expect(nodeHasType({ type: 'foo' }, 'foo')).to.equal(true);
+        expect(nodeHasType({ type: 'foo' }, 'bar')).to.equal(false);
+      });
+
+      describe('when only `node.type.displayName` matches `type`', () => {
+        const x = {};
+        it('is `true` when `node.type` is an object', () => {
+          expect(nodeHasType(
+            { type: { displayName: x } },
+            x,
+          )).to.equal(true);
+        });
+
+        it('is `true` when `node.type` is a function', () => {
+          expect(nodeHasType(
+            { type: Object.assign(() => {}, { displayName: x }) },
+            x,
+          )).to.equal(true);
+        });
+      });
+
+      describe('when only `node.type.name` matches `type`', () => {
+        const x = {};
+        it('is `true` when `node.type` is an object', () => {
+          expect(nodeHasType(
+            { type: { name: x } },
+            x,
+          )).to.equal(true);
+        });
+
+        it('is `true` when `node.type` is a function', () => {
+          function namedType() {}
+
+          expect(nodeHasType({ type: namedType }, 'namedType')).to.equal(true);
+        });
+      });
+
+      wrap()
+        .withOverride(() => getAdapter(), 'displayNameOfNode', () => sinon.stub())
+        .describe('when the adapter has a `displayNameOfNode` function', () => {
+          it('is `true` when `displayNameOfNode` matches `type`', () => {
+            const stub = getAdapter().displayNameOfNode;
+            const sentinel = {};
+            stub.returns(sentinel);
+
+            const node = {};
+            expect(nodeHasType(node, sentinel)).to.equal(true);
+
+            expect(stub).to.have.property('callCount', 1);
+            const { args } = stub.firstCall;
+            expect(args).to.eql([node]);
+          });
+
+          it('is `false` when `displayNameOfNode` does not match `type`', () => {
+            const stub = getAdapter().displayNameOfNode;
+            const sentinel = {};
+            stub.returns(sentinel);
+
+            const node = {};
+            expect(nodeHasType(node, {})).to.equal(false);
+          });
+        });
     });
-
-    describe('when only `node.type.name` matches `type`', () => {
-      const x = {};
-      it('is `true` when `node.type` is an object', () => {
-        expect(nodeHasType(
-          { type: { name: x } },
-          x,
-        )).to.equal(true);
-      });
-
-      it('is `true` when `node.type` is a function', () => {
-        function namedType() {}
-
-        expect(nodeHasType({ type: namedType }, 'namedType')).to.equal(true);
-      });
-    });
-  });
 });
