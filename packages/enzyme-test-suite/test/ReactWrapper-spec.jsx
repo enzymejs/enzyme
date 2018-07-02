@@ -3,12 +3,17 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { expect } from 'chai';
 import sinon from 'sinon';
+import wrap from 'mocha-wrap';
 import {
   mount,
   render,
   ReactWrapper,
 } from 'enzyme';
-import { ITERATOR_SYMBOL, sym } from 'enzyme/build/Utils';
+import {
+  ITERATOR_SYMBOL,
+  sym,
+  getAdapter,
+} from 'enzyme/build/Utils';
 
 import './_helpers/setupAdapters';
 import { createClass, createContext, createPortal } from './_helpers/react-compat';
@@ -3992,88 +3997,111 @@ describeWithDOM('mount', () => {
     });
   });
 
-  describe('.name()', () => {
-    describe('node with displayName', () => {
-      it('should return the displayName of the node', () => {
-        class Foo extends React.Component {
-          render() { return <div />; }
-        }
-
-        Foo.displayName = 'CustomWrapper';
-
-        const wrapper = mount(<Foo />);
-        expect(wrapper.name()).to.equal('CustomWrapper');
-      });
-
-      describeIf(is('> 0.13'), 'stateless function components', () => {
-        it('should return the name of the node', () => {
-          function SFC() {
-            return <div />;
+  wrap()
+    .withOverride(() => getAdapter(), 'displayNameOfNode', () => undefined)
+    .describe('.name()', () => {
+      describe('node with displayName', () => {
+        it('should return the displayName of the node', () => {
+          class Foo extends React.Component {
+            render() { return <div />; }
           }
 
-          SFC.displayName = 'CustomWrapper';
-
-          const wrapper = mount(<SFC />);
-          expect(wrapper.name()).to.equal('CustomWrapper');
-        });
-      });
-
-      describe('createClass', () => {
-        it('should return the name of the node', () => {
-          const Foo = createClass({
-            displayName: 'CustomWrapper',
-            render() {
-              return <div />;
-            },
-          });
+          Foo.displayName = 'CustomWrapper';
 
           const wrapper = mount(<Foo />);
           expect(wrapper.name()).to.equal('CustomWrapper');
         });
+
+        describeIf(is('> 0.13'), 'stateless function components', () => {
+          it('should return the name of the node', () => {
+            function SFC() {
+              return <div />;
+            }
+
+            SFC.displayName = 'CustomWrapper';
+
+            const wrapper = mount(<SFC />);
+            expect(wrapper.name()).to.equal('CustomWrapper');
+          });
+        });
+
+        describe('createClass', () => {
+          it('should return the name of the node', () => {
+            const Foo = createClass({
+              displayName: 'CustomWrapper',
+              render() {
+                return <div />;
+              },
+            });
+
+            const wrapper = mount(<Foo />);
+            expect(wrapper.name()).to.equal('CustomWrapper');
+          });
+        });
+
+        wrap()
+          .withOverride(() => getAdapter(), 'displayNameOfNode', () => sinon.stub())
+          .describe('adapter has `displayNameOfNode`', () => {
+            it('delegates to the adapter’s `displayNameOfNode`', () => {
+              class Foo extends React.Component {
+                render() { return <div />; }
+              }
+              const stub = getAdapter().displayNameOfNode;
+              const sentinel = {};
+              stub.returns(sentinel);
+
+              const wrapper = mount(<Foo />);
+
+              expect(wrapper.name()).to.equal(sentinel);
+
+              expect(stub).to.have.property('callCount', 1);
+              const { args } = stub.firstCall;
+              expect(args).to.eql([wrapper.getNodeInternal()]);
+            });
+          });
       });
-    });
 
-    describe('node without displayName', () => {
-      it('should return the name of the node', () => {
-        class Foo extends React.Component {
-          render() { return <div />; }
-        }
-
-        const wrapper = mount(<Foo />);
-        expect(wrapper.name()).to.equal('Foo');
-      });
-
-      describeIf(is('> 0.13'), 'stateless function components', () => {
+      describe('node without displayName', () => {
         it('should return the name of the node', () => {
-          function SFC() {
-            return <div />;
+          class Foo extends React.Component {
+            render() { return <div />; }
           }
 
-          const wrapper = mount(<SFC />);
-          expect(wrapper.name()).to.equal('SFC');
+          const wrapper = mount(<Foo />);
+          expect(wrapper.name()).to.equal('Foo');
+        });
+
+        describeIf(is('> 0.13'), 'stateless function components', () => {
+          it('should return the name of the node', () => {
+            function SFC() {
+              return <div />;
+            }
+
+            const wrapper = mount(<SFC />);
+            expect(wrapper.name()).to.equal('SFC');
+          });
+        });
+      });
+
+      describe('DOM node', () => {
+        it('should return the name of the node', () => {
+          const wrapper = mount(<div />);
+          expect(wrapper.name()).to.equal('div');
+        });
+      });
+
+      describe('.ref()', () => {
+        it('unavailable ref should return undefined', () => {
+          class WithoutRef extends React.Component {
+            render() { return <div />; }
+          }
+          const wrapper = mount(<WithoutRef />);
+          const ref = wrapper.ref('not-a-ref');
+
+          expect(ref).to.equal(undefined);
         });
       });
     });
-
-    describe('DOM node', () => {
-      it('should return the name of the node', () => {
-        const wrapper = mount(<div />);
-        expect(wrapper.name()).to.equal('div');
-      });
-    });
-
-    describe('.ref()', () => {
-      it('unavailable ref should return undefined', () => {
-        class WithoutRef extends React.Component {
-          render() { return <div />; }
-        }
-        const wrapper = mount(<WithoutRef />);
-        const ref = wrapper.ref('not-a-ref');
-
-        expect(ref).to.equal(undefined);
-      });
-    });
-  });
 
   describeIf(ITERATOR_SYMBOL, '@@iterator', () => {
     it('should be iterable', () => {

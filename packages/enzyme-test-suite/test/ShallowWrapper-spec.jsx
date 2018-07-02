@@ -2,13 +2,19 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { expect } from 'chai';
 import sinon from 'sinon';
+import wrap from 'mocha-wrap';
 import {
   shallow,
   render,
   ShallowWrapper,
   mount,
 } from 'enzyme';
-import { ITERATOR_SYMBOL, withSetStateAllowed, sym } from 'enzyme/build/Utils';
+import {
+  ITERATOR_SYMBOL,
+  withSetStateAllowed,
+  sym,
+  getAdapter,
+} from 'enzyme/build/Utils';
 
 import './_helpers/setupAdapters';
 import { createClass, createContext } from './_helpers/react-compat';
@@ -4855,91 +4861,114 @@ describe('shallow', () => {
     });
   });
 
-  describe('.name()', () => {
-    describe('node with displayName', () => {
-      it('should return the displayName of the node', () => {
-        class Foo extends React.Component {
-          render() { return <div />; }
-        }
-
-        class Wrapper extends React.Component {
-          render() { return <Foo />; }
-        }
-
-        Foo.displayName = 'CustomWrapper';
-
-        const wrapper = shallow(<Wrapper />);
-        expect(wrapper.name()).to.equal('CustomWrapper');
-      });
-
-      describeIf(is('> 0.13'), 'stateless function components', () => {
-        it('should return the name of the node', () => {
-          function SFC() {
-            return <div />;
+  wrap()
+    .withOverride(() => getAdapter(), 'displayNameOfNode', () => undefined)
+    .describe('.name()', () => {
+      describe('node with displayName', () => {
+        it('should return the displayName of the node', () => {
+          class Foo extends React.Component {
+            render() { return <div />; }
           }
-          const Wrapper = () => <SFC />;
 
-          SFC.displayName = 'CustomWrapper';
+          class Wrapper extends React.Component {
+            render() { return <Foo />; }
+          }
+
+          Foo.displayName = 'CustomWrapper';
 
           const wrapper = shallow(<Wrapper />);
           expect(wrapper.name()).to.equal('CustomWrapper');
         });
-      });
 
-      describe('createClass', () => {
-        it('should return the name of the node', () => {
-          const Foo = createClass({
-            displayName: 'CustomWrapper',
-            render() {
+        describeIf(is('> 0.13'), 'stateless function components', () => {
+          it('should return the name of the node', () => {
+            function SFC() {
               return <div />;
-            },
-          });
-          const Wrapper = createClass({
-            render() {
-              return <Foo />;
-            },
-          });
+            }
+            const Wrapper = () => <SFC />;
 
-          const wrapper = shallow(<Wrapper />);
-          expect(wrapper.name()).to.equal('CustomWrapper');
+            SFC.displayName = 'CustomWrapper';
+
+            const wrapper = shallow(<Wrapper />);
+            expect(wrapper.name()).to.equal('CustomWrapper');
+          });
         });
+
+        describe('createClass', () => {
+          it('should return the name of the node', () => {
+            const Foo = createClass({
+              displayName: 'CustomWrapper',
+              render() {
+                return <div />;
+              },
+            });
+            const Wrapper = createClass({
+              render() {
+                return <Foo />;
+              },
+            });
+
+            const wrapper = shallow(<Wrapper />);
+            expect(wrapper.name()).to.equal('CustomWrapper');
+          });
+        });
+
+        wrap()
+          .withOverride(() => getAdapter(), 'displayNameOfNode', () => sinon.stub())
+          .describe('adapter has `displayNameOfNode`', () => {
+            it('delegates to the adapter’s `displayNameOfNode`', () => {
+              class Foo extends React.Component {
+                render() { return <div />; }
+              }
+              const stub = getAdapter().displayNameOfNode;
+              const sentinel = {};
+              stub.returns(sentinel);
+
+              const wrapper = shallow(<Foo />);
+
+              expect(wrapper.name()).to.equal(sentinel);
+
+              expect(stub).to.have.property('callCount', 1);
+              const { args } = stub.firstCall;
+              expect(args).to.eql([wrapper.getNodeInternal()]);
+            });
+          });
       });
-    });
 
-    describe('node without displayName', () => {
-      it('should return the name of the node', () => {
-        class Foo extends React.Component {
-          render() { return <div />; }
-        }
-
-        class Wrapper extends React.Component {
-          render() { return <Foo />; }
-        }
-
-        const wrapper = shallow(<Wrapper />);
-        expect(wrapper.name()).to.equal('Foo');
-      });
-
-      describeIf(is('> 0.13'), 'stateless function components', () => {
+      describe('node without displayName', () => {
         it('should return the name of the node', () => {
-          function SFC() {
-            return <div />;
+          class Foo extends React.Component {
+            render() { return <div />; }
           }
-          const Wrapper = () => <SFC />;
+
+          class Wrapper extends React.Component {
+            render() { return <Foo />; }
+          }
 
           const wrapper = shallow(<Wrapper />);
-          expect(wrapper.name()).to.equal('SFC');
+          expect(wrapper.name()).to.equal('Foo');
+        });
+
+        describeIf(is('> 0.13'), 'stateless function components', () => {
+          it('should return the name of the node', () => {
+            function SFC() {
+              return <div />;
+            }
+            const Wrapper = () => <SFC />;
+
+            const wrapper = shallow(<Wrapper />);
+            expect(wrapper.name()).to.equal('SFC');
+          });
+        });
+      });
+
+      describe('DOM node', () => {
+        it('should return the name of the node', () => {
+          const wrapper = shallow(<div />);
+          expect(wrapper.name()).to.equal('div');
         });
       });
     });
-
-    describe('DOM node', () => {
-      it('should return the name of the node', () => {
-        const wrapper = shallow(<div />);
-        expect(wrapper.name()).to.equal('div');
-      });
-    });
-  });
 
   describe('.dive()', () => {
     class RendersDOM extends React.Component {

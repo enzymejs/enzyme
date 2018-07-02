@@ -731,7 +731,10 @@ class ReactWrapper {
    * @returns {String}
    */
   name() {
-    return this.single('name', n => displayNameOfNode(n));
+    const adapter = getAdapter(this[OPTIONS]);
+    return this.single('name', n => (
+      adapter.displayNameOfNode ? adapter.displayNameOfNode(n) : displayNameOfNode(n)
+    ));
   }
 
   /**
