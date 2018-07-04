@@ -2945,7 +2945,7 @@ describe('shallow', () => {
           }
         }
         const result = shallow(<Foo />);
-        expect(result.state('count')).to.equal(2);
+        expect(result.state()).to.have.property('count', 2);
         expect(spy).to.have.property('callCount', 2);
       });
     });
@@ -2981,19 +2981,17 @@ describe('shallow', () => {
 
           render() {
             spy('render');
-            return <div>{this.state.foo}</div>;
+            const { foo } = this.state;
+            return <div>{foo}</div>;
           }
         }
         Foo.contextTypes = {
           foo: PropTypes.string,
         };
 
-        const wrapper = shallow(
-          <Foo foo="bar" />,
-          {
-            context: { foo: 'context' },
-          },
-        );
+        const wrapper = shallow(<Foo foo="bar" />, {
+          context: { foo: 'context' },
+        });
         wrapper.setProps({ foo: 'baz' });
         wrapper.setProps({ foo: 'bax' });
         expect(spy.args).to.deep.equal([
@@ -3593,6 +3591,276 @@ describe('shallow', () => {
         expect(spy).to.have.property('callCount', 3);
         expect(result.state('count')).to.equal(1);
       });
+    });
+
+    context('unmounting phase', () => {
+      it('should call componentWillUnmount', () => {
+        const spy = sinon.spy();
+        class Foo extends React.Component {
+          componentWillUnmount() {
+            spy();
+          }
+          render() {
+            return <div>foo</div>;
+          }
+        }
+        const wrapper = shallow(<Foo />);
+        wrapper.unmount();
+        expect(spy).to.have.property('callCount', 1);
+      });
+    });
+
+    context('component instance', () => {
+      it('should call `componentDidUpdate` when component’s `setState` is called', () => {
+        const spy = sinon.spy();
+        class Foo extends React.Component {
+          constructor(props) {
+            super(props);
+            this.state = {
+              foo: 'init',
+            };
+          }
+          componentDidUpdate() {
+            spy();
+          }
+          onChange() {
+            // enzyme can't handle the update because `this` is a ReactComponent instance,
+            // not a ShallowWrapper instance.
+            this.setState({ foo: 'onChange update' });
+          }
+          render() {
+            return <div>{this.state.foo}</div>;
+          }
+        }
+        const wrapper = shallow(<Foo />);
+
+        wrapper.setState({ foo: 'wrapper setState update' });
+        expect(wrapper.state('foo')).to.equal('wrapper setState update');
+        expect(spy).to.have.property('callCount', 1);
+
+        wrapper.instance().onChange();
+        expect(wrapper.state('foo')).to.equal('onChange update');
+        expect(spy).to.have.property('callCount', 2);
+      });
+    });
+
+    describeIf(REACT16, 'support getSnapshotBeforeUpdate', () => {
+      it('should call getSnapshotBeforeUpdate and pass snapshot to componentDidUpdate', () => {
+        const spy = sinon.spy();
+        class Foo extends React.Component {
+          constructor(props) {
+            super(props);
+            this.state = {
+              foo: 'bar',
+            };
+          }
+          componentDidUpdate(prevProps, prevState, snapshot) {
+            spy('componentDidUpdate', prevProps, this.props, prevState, this.state, snapshot);
+          }
+          getSnapshotBeforeUpdate(prevProps, prevState) {
+            spy('getSnapshotBeforeUpdate', prevProps, this.props, prevState, this.state);
+            return { snapshot: 'ok' };
+          }
+          render() {
+            spy('render');
+            return <div>foo</div>;
+          }
+        }
+        const wrapper = shallow(<Foo name="foo" />);
+        spy.resetHistory();
+        wrapper.setProps({ name: 'bar' });
+        expect(spy.args).to.deep.equal([
+          ['render'],
+          ['getSnapshotBeforeUpdate', { name: 'foo' }, { name: 'bar' }, { foo: 'bar' }, { foo: 'bar' }],
+          ['componentDidUpdate', { name: 'foo' }, { name: 'bar' }, { foo: 'bar' }, { foo: 'bar' }, { snapshot: 'ok' }],
+        ]);
+        spy.resetHistory();
+        wrapper.setState({ foo: 'baz' });
+        expect(spy.args).to.deep.equal([
+          ['render'],
+          ['getSnapshotBeforeUpdate', { name: 'bar' }, { name: 'bar' }, { foo: 'bar' }, { foo: 'baz' }],
+          ['componentDidUpdate', { name: 'bar' }, { name: 'bar' }, { foo: 'bar' }, { foo: 'baz' }, { snapshot: 'ok' }],
+        ]);
+      });
+    });
+
+    it('should not call when disableLifecycleMethods flag is true', () => {
+      const spy = sinon.spy();
+      class Foo extends React.Component {
+        componentDidMount() {
+          spy();
+        }
+        render() {
+          return <div>foo</div>;
+        }
+      }
+      shallow(<Foo />, { disableLifecycleMethods: true });
+      expect(spy).to.have.property('callCount', 0);
+    });
+
+    it('should call shouldComponentUpdate when disableLifecycleMethods flag is true', () => {
+      const spy = sinon.spy();
+      class Foo extends React.Component {
+        constructor(props) {
+          super(props);
+          this.state = {
+            foo: 'bar',
+          };
+        }
+        shouldComponentUpdate() {
+          spy();
+          return false;
+        }
+        render() {
+          return <div>{this.state.foo}</div>;
+        }
+      }
+      const wrapper = shallow(
+        <Foo foo="foo" />,
+        {
+          context: { foo: 'foo' },
+          disableLifecycleMethods: true,
+        },
+      );
+      expect(spy).to.have.property('callCount', 0);
+      wrapper.setProps({ foo: 'bar' });
+      expect(spy).to.have.property('callCount', 1);
+      wrapper.setState({ foo: 'bar' });
+      expect(spy).to.have.property('callCount', 2);
+      wrapper.setContext({ foo: 'bar' });
+      expect(spy).to.have.property('callCount', 3);
+    });
+  });
+
+  it('works with class components that return null', () => {
+    class Foo extends React.Component {
+      render() {
+        return null;
+      }
+    }
+    const wrapper = shallow(<Foo />);
+    expect(wrapper).to.have.length(1);
+    expect(wrapper.html()).to.equal(null);
+    expect(wrapper.type()).to.equal(null);
+    const rendered = wrapper.render();
+    expect(rendered.length).to.equal(0);
+    expect(rendered.html()).to.equal(null);
+  });
+
+  itIf(REACT16, 'works with class components that return arrays', () => {
+    class Foo extends React.Component {
+      render() {
+        return [<div />, <div />];
+      }
+    }
+    const wrapper = shallow(<Foo />);
+    expect(wrapper).to.have.lengthOf(2);
+    expect(wrapper.find('div')).to.have.lengthOf(2);
+  });
+
+  itIf(is('>=15 || ^16.0.0-alpha'), 'works with SFCs that return null', () => {
+    const Foo = () => null;
+
+    const wrapper = shallow(<Foo />);
+    expect(wrapper).to.have.length(1);
+    expect(wrapper.html()).to.equal(null);
+    expect(wrapper.type()).to.equal(null);
+    const rendered = wrapper.render();
+    expect(rendered.length).to.equal(0);
+    expect(rendered.html()).to.equal(null);
+  });
+
+  describe('.tap()', () => {
+    it('should call the passed function with current ShallowWrapper and returns itself', () => {
+      const spy = sinon.spy();
+      const wrapper = shallow((
+        <ul>
+          <li>xxx</li>
+          <li>yyy</li>
+          <li>zzz</li>
+        </ul>
+      )).find('li');
+      const result = wrapper.tap(spy);
+      expect(spy.calledWith(wrapper)).to.equal(true);
+      expect(result).to.equal(wrapper);
+    });
+  });
+
+  describe('.key()', () => {
+    it('should return the key of the node', () => {
+      const wrapper = shallow((
+        <ul>
+          {['foo', 'bar', ''].map(s => <li key={s}>{s}</li>)}
+        </ul>
+      )).find('li');
+      expect(wrapper.at(0).key()).to.equal('foo');
+      expect(wrapper.at(1).key()).to.equal('bar');
+      expect(wrapper.at(2).key()).to.equal('');
+    });
+
+    it('should return null when no key is specified', () => {
+      const wrapper = shallow((
+        <ul>
+          <li>foo</li>
+        </ul>
+      )).find('li');
+      expect(wrapper.key()).to.equal(null);
+    });
+  });
+
+  describe('.matchesElement(node)', () => {
+    it('should match on a root node that looks like the rendered one', () => {
+      const spy = sinon.spy();
+      const wrapper = shallow((
+        <div>
+          <div onClick={spy} style={{ fontSize: 12, color: 'red' }}>Hello World</div>
+        </div>
+      )).first();
+      expect(wrapper.matchesElement(<div><div>Hello World</div></div>)).to.equal(true);
+      expect(wrapper.matchesElement((
+        <div>
+          <div onClick={spy} style={{ fontSize: 12, color: 'red' }}>Hello World</div>
+        </div>
+      ))).to.equal(true);
+      expect(wrapper.matchesElement((
+        <div>
+          <div onClick={spy}>Hello World</div>
+        </div>
+      ))).to.equal(true);
+      expect(wrapper.matchesElement((
+        <div>
+          <div style={{ fontSize: 12, color: 'red' }}>Hello World</div>
+        </div>
+      ))).to.equal(true);
+      expect(spy).to.have.property('callCount', 0);
+    });
+
+    it('should not match on a root node that doesn\'t looks like the rendered one', () => {
+      const spy = sinon.spy();
+      const spy2 = sinon.spy();
+      const wrapper = shallow((
+        <div>
+          <div onClick={spy} style={{ fontSize: 12, color: 'red' }}>Hello World</div>
+        </div>
+      )).first();
+      expect(wrapper.matchesElement(<div><div>Bonjour le monde</div></div>)).to.equal(false);
+      expect(wrapper.matchesElement((
+        <div>
+          <div onClick={spy} style={{ fontSize: 12, color: 'blue' }}>Hello World</div>
+        </div>
+      ))).to.equal(false);
+      expect(wrapper.matchesElement((
+        <div>
+          <div onClick={spy2}>Hello World</div>
+        </div>
+      ))).to.equal(false);
+      expect(wrapper.matchesElement((
+        <div>
+          <div style={{ fontSize: 13, color: 'red' }}>Hello World</div>
+        </div>
+      ))).to.equal(false);
+      expect(spy).to.have.property('callCount', 0);
+      expect(spy2).to.have.property('callCount', 0);
     });
 
     context('unmounting phase', () => {
