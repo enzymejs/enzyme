@@ -3987,4 +3987,59 @@ describeWithDOM('mount', () => {
       expect(wrappedEl.debug()).to.equal('<a href="#2" />');
     });
   });
+
+  describe('cloning elements', () => {
+    class Foo extends React.Component {
+      render() {
+        const { children } = this.props;
+        const mappedChildren = [];
+        React.Children.forEach(children, (child, i) => {
+          const clonedChild = React.cloneElement(child, {
+            key: i,
+            onClick() {
+              return child.props.name;
+            },
+          });
+          mappedChildren.push(clonedChild);
+        });
+        return (
+          <div>
+            {mappedChildren}
+          </div>
+        );
+      }
+    }
+
+    it('merges cloned element props', () => {
+      const wrapper = mount((
+        <Foo>
+          <span data-foo="1">1</span>
+          <div data-bar="2">2</div>
+        </Foo>
+      ));
+
+      const children = wrapper.childAt(0).children();
+      expect(children).to.have.lengthOf(2);
+
+      const span = children.at(0);
+      expect(span.is('span')).to.equal(true);
+      const spanProps = span.props();
+      expect(spanProps).to.have.keys({
+        children: 1,
+        'data-foo': 1,
+        onClick: spanProps.onClick,
+      });
+      expect(spanProps.onClick).to.be.a('function');
+
+      const div = children.at(1);
+      expect(div.is('div')).to.equal(true);
+      const divProps = div.props();
+      expect(divProps).to.have.keys({
+        children: 2,
+        'data-bar': 2,
+        onClick: divProps.onClick,
+      });
+      expect(divProps.onClick).to.be.a('function');
+    });
+  });
 });
