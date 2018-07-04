@@ -34,6 +34,10 @@ enzyme also gives support for the following contextual selectors
 .foo input
 ```
 
+**Note**
+
+* In certain cases, the descendant selector (`.foo .bar`) does not exclude parents like a CSS selector would; if the left and right both match the parent, both matching children _and parent_ will be returned (eg: `.foo span` on `<div class="foo"><span /></div>` finds one result, but `.foo div` on `<div class="foo"><div /></div>` finds two results). In order to maintain backwards compatibility, there are [no plans to update this](https://github.com/airbnb/enzyme/pull/1680#issuecomment-401677554). You can work around this by using `.children()`, ie `.find(".foo").children().find("div")`.
+
 **Want more CSS support?**
 
 PRs implementing more support for CSS selectors will be accepted and is an area of development for
