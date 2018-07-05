@@ -148,7 +148,7 @@ class ReactFifteenFourAdapter extends EnzymeAdapter {
         return instance ? instanceToTree(instance._reactInternalInstance).rendered : null;
       },
       simulateEvent(node, event, mock) {
-        const mappedEvent = mapNativeEventNames(event);
+        const mappedEvent = mapNativeEventNames(event, { animation: true });
         const eventFn = TestUtils.Simulate[mappedEvent];
         if (!eventFn) {
           throw new TypeError(`ReactWrapper::simulate() event '${event}' does not exist`);

@@ -205,7 +205,7 @@ class ReactSixteenAdapter extends EnzymeAdapter {
         return instance ? toTree(instance._reactInternalFiber).rendered : null;
       },
       simulateEvent(node, event, mock) {
-        const mappedEvent = mapNativeEventNames(event);
+        const mappedEvent = mapNativeEventNames(event, { animation: true });
         const eventFn = TestUtils.Simulate[mappedEvent];
         if (!eventFn) {
           throw new TypeError(`ReactWrapper::simulate() event '${event}' does not exist`);
