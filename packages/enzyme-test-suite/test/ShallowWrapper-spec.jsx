@@ -118,8 +118,8 @@ describe('shallow', () => {
         }
       }
 
-      expect(shallow(<Consumes />).find('span')).to.have.length(1);
-      expect(shallow(<Provides />).find(Consumes)).to.have.length(1);
+      expect(shallow(<Consumes />).find('span')).to.have.lengthOf(1);
+      expect(shallow(<Provides />).find(Consumes)).to.have.lengthOf(1);
 
     });
 
@@ -186,7 +186,7 @@ describe('shallow', () => {
       );
       const wrapper = shallow(<Foo foo="qux" />);
       expect(wrapper.type()).to.equal('div');
-      expect(wrapper.find('.bar')).to.have.length(1);
+      expect(wrapper.find('.bar')).to.have.lengthOf(1);
       expect(wrapper.find('.qoo').text()).to.equal('qux');
     });
   });
@@ -455,8 +455,8 @@ describe('shallow', () => {
   describe('.find(selector)', () => {
     it('should be able to match the root DOM element', () => {
       const wrapper = shallow(<div id="ttt" className="ttt">hello</div>);
-      expect(wrapper.find('#ttt')).to.have.length(1);
-      expect(wrapper.find('.ttt')).to.have.length(1);
+      expect(wrapper.find('#ttt')).to.have.lengthOf(1);
+      expect(wrapper.find('.ttt')).to.have.lengthOf(1);
     });
 
     it('should find an element based on a class name', () => {
@@ -476,7 +476,7 @@ describe('shallow', () => {
       ));
 
       const elements = wrapper.find('[data-baz="foo.bar"]');
-      expect(elements.length).to.equal(1);
+      expect(elements).to.have.lengthOf(1);
     });
 
     it('should find an element that with class and attribute', () => {
@@ -487,7 +487,7 @@ describe('shallow', () => {
       ));
 
       const elements = wrapper.find('.classBar[data-baz="bar"]');
-      expect(elements.length).to.equal(1);
+      expect(elements).to.have.lengthOf(1);
     });
 
     it('should find an element that with multiple classes and one attribute', () => {
@@ -498,7 +498,7 @@ describe('shallow', () => {
       ));
 
       const elements = wrapper.find('.classBar.classFoo[data-baz="bar"]');
-      expect(elements.length).to.equal(1);
+      expect(elements).to.have.lengthOf(1);
     });
 
     it('should find an element that with class and class with hyphen', () => {
@@ -509,7 +509,7 @@ describe('shallow', () => {
       ));
 
       const elements = wrapper.find('.classBar.class-Foo');
-      expect(elements.length).to.equal(1);
+      expect(elements).to.have.lengthOf(1);
     });
 
     it('should find an element based on a tag name and class name', () => {
@@ -518,7 +518,7 @@ describe('shallow', () => {
           <input className="foo" />
         </div>
       ));
-      expect(wrapper.find('input.foo').length).to.equal(1);
+      expect(wrapper.find('input.foo')).to.have.lengthOf(1);
     });
 
     it('should find an element based on a tag name and id', () => {
@@ -527,7 +527,7 @@ describe('shallow', () => {
           <input id="foo" />
         </div>
       ));
-      expect(wrapper.find('input#foo').length).to.equal(1);
+      expect(wrapper.find('input#foo')).to.have.lengthOf(1);
     });
 
     it('should find an element based on a tag name, id, and class name', () => {
@@ -536,7 +536,7 @@ describe('shallow', () => {
           <input id="foo" className="bar" />
         </div>
       ));
-      expect(wrapper.find('input#foo.bar').length).to.equal(1);
+      expect(wrapper.find('input#foo.bar')).to.have.lengthOf(1);
     });
 
     it('should find an element based on a tag name', () => {
@@ -585,7 +585,7 @@ describe('shallow', () => {
           <button className="foo" />
         </div>
       ));
-      expect(wrapper.find('.foo').length).to.equal(2);
+      expect(wrapper.find('.foo')).to.have.lengthOf(2);
     });
 
     it('should find multiple elements based on a tag name', () => {
@@ -596,8 +596,8 @@ describe('shallow', () => {
           <button />
         </div>
       ));
-      expect(wrapper.find('input').length).to.equal(2);
-      expect(wrapper.find('button').length).to.equal(1);
+      expect(wrapper.find('input')).to.have.lengthOf(2);
+      expect(wrapper.find('button')).to.have.lengthOf(1);
     });
 
     it('should work on non-single nodes', () => {
@@ -615,9 +615,9 @@ describe('shallow', () => {
           </div>
         </div>
       ));
-      expect(wrapper.find('.a').length).to.equal(1);
-      expect(wrapper.find('.b').length).to.equal(2);
-      expect(wrapper.find('.b').find('.c').length).to.equal(6);
+      expect(wrapper.find('.a')).to.have.lengthOf(1);
+      expect(wrapper.find('.b')).to.have.lengthOf(2);
+      expect(wrapper.find('.b').find('.c')).to.have.lengthOf(6);
     });
 
     it('should find component based on a react prop', () => {
@@ -627,8 +627,8 @@ describe('shallow', () => {
         </div>
       ));
 
-      expect(wrapper.find('[title="foo"]')).to.have.length(1);
-      expect(wrapper.find('[title]')).to.have.length(1);
+      expect(wrapper.find('[title="foo"]')).to.have.lengthOf(1);
+      expect(wrapper.find('[title]')).to.have.lengthOf(1);
     });
 
     it('works with an adjacent sibling selector', () => {
@@ -692,8 +692,8 @@ describe('shallow', () => {
         </div>
       ));
 
-      expect(wrapper.find('span[preserveAspectRatio="xMaxYMax"]')).to.have.length(1);
-      expect(wrapper.find('span[preserveAspectRatio]')).to.have.length(1);
+      expect(wrapper.find('span[preserveAspectRatio="xMaxYMax"]')).to.have.lengthOf(1);
+      expect(wrapper.find('span[preserveAspectRatio]')).to.have.lengthOf(1);
     });
 
     it('should support data prop selectors', () => {
@@ -703,8 +703,8 @@ describe('shallow', () => {
         </div>
       ));
 
-      expect(wrapper.find('[data-foo="bar"]')).to.have.length(1);
-      expect(wrapper.find('[data-foo]')).to.have.length(1);
+      expect(wrapper.find('[data-foo="bar"]')).to.have.lengthOf(1);
+      expect(wrapper.find('[data-foo]')).to.have.lengthOf(1);
     });
 
     it('should find components with multiple matching react props', () => {
@@ -715,9 +715,9 @@ describe('shallow', () => {
         </div>
       ));
 
-      expect(wrapper.find('span[htmlFor="foo"][onChange]')).to.have.length(1);
-      expect(wrapper.find('span[htmlFor="foo"][preserveAspectRatio="xMaxYMax"]')).to.have.length(1);
-      expect(wrapper.find('[htmlFor][preserveAspectRatio]')).to.have.length(1);
+      expect(wrapper.find('span[htmlFor="foo"][onChange]')).to.have.lengthOf(1);
+      expect(wrapper.find('span[htmlFor="foo"][preserveAspectRatio="xMaxYMax"]')).to.have.lengthOf(1);
+      expect(wrapper.find('[htmlFor][preserveAspectRatio]')).to.have.lengthOf(1);
     });
 
     it('should support boolean and numeric values for matching props', () => {
@@ -728,10 +728,10 @@ describe('shallow', () => {
         </div>
       ));
 
-      expect(wrapper.find('span[value=1]')).to.have.length(1);
-      expect(wrapper.find('span[value=2]')).to.have.length(0);
-      expect(wrapper.find('a[value=false]')).to.have.length(1);
-      expect(wrapper.find('a[value=true]')).to.have.length(0);
+      expect(wrapper.find('span[value=1]')).to.have.lengthOf(1);
+      expect(wrapper.find('span[value=2]')).to.have.lengthOf(0);
+      expect(wrapper.find('a[value=false]')).to.have.lengthOf(1);
+      expect(wrapper.find('a[value=true]')).to.have.lengthOf(0);
     });
 
     it('should not find key or ref via property selector', () => {
@@ -744,10 +744,10 @@ describe('shallow', () => {
         </div>
       ));
 
-      expect(wrapper.find('div[ref="foo"]')).to.have.length(0);
-      expect(wrapper.find('div[key="1"]')).to.have.length(0);
-      expect(wrapper.find('[ref]')).to.have.length(0);
-      expect(wrapper.find('[key]')).to.have.length(0);
+      expect(wrapper.find('div[ref="foo"]')).to.have.lengthOf(0);
+      expect(wrapper.find('div[key="1"]')).to.have.lengthOf(0);
+      expect(wrapper.find('[ref]')).to.have.lengthOf(0);
+      expect(wrapper.find('[key]')).to.have.lengthOf(0);
     });
 
     it('should find multiple elements based on a constructor', () => {
@@ -758,8 +758,8 @@ describe('shallow', () => {
           <button />
         </div>
       ));
-      expect(wrapper.find('input').length).to.equal(2);
-      expect(wrapper.find('button').length).to.equal(1);
+      expect(wrapper.find('input')).to.have.lengthOf(2);
+      expect(wrapper.find('button')).to.have.lengthOf(1);
     });
 
     it('should support object property selectors', () => {
@@ -774,13 +774,13 @@ describe('shallow', () => {
           <a data-test="ref" prop />
         </div>
       ));
-      expect(wrapper.find({ a: 1 })).to.have.length(0);
-      expect(wrapper.find({ 'data-test': 'ref' })).to.have.length(7);
-      expect(wrapper.find({ className: 'foo' })).to.have.length(1);
-      expect(wrapper.find({ prop: null })).to.have.length(1);
-      expect(wrapper.find({ prop: 123 })).to.have.length(1);
-      expect(wrapper.find({ prop: false })).to.have.length(1);
-      expect(wrapper.find({ prop: true })).to.have.length(1);
+      expect(wrapper.find({ a: 1 })).to.have.lengthOf(0);
+      expect(wrapper.find({ 'data-test': 'ref' })).to.have.lengthOf(7);
+      expect(wrapper.find({ className: 'foo' })).to.have.lengthOf(1);
+      expect(wrapper.find({ prop: null })).to.have.lengthOf(1);
+      expect(wrapper.find({ prop: 123 })).to.have.lengthOf(1);
+      expect(wrapper.find({ prop: false })).to.have.lengthOf(1);
+      expect(wrapper.find({ prop: true })).to.have.lengthOf(1);
     });
 
     it('should support complex and nested object property selectors', () => {
@@ -793,17 +793,17 @@ describe('shallow', () => {
           <input style={{ height: 20 }} data-test="ref" />
         </div>
       ));
-      expect(wrapper.find({ 'data-test': 'ref' })).to.have.length(4);
-      expect(wrapper.find({ more: { a: 1 } })).to.have.length(0);
-      expect(wrapper.find({ more: [{ id: 1 }] })).to.have.length(2);
-      expect(wrapper.find({ more: { item: { id: 1 } } })).to.have.length(1);
-      expect(wrapper.find({ style: { height: 20 } })).to.have.length(1);
+      expect(wrapper.find({ 'data-test': 'ref' })).to.have.lengthOf(4);
+      expect(wrapper.find({ more: { a: 1 } })).to.have.lengthOf(0);
+      expect(wrapper.find({ more: [{ id: 1 }] })).to.have.lengthOf(2);
+      expect(wrapper.find({ more: { item: { id: 1 } } })).to.have.lengthOf(1);
+      expect(wrapper.find({ style: { height: 20 } })).to.have.lengthOf(1);
       expect(wrapper.find({
         more: [{ id: 1 }],
         'data-test': 'ref',
         prop: true,
         onChange: testFunction,
-      })).to.have.length(1);
+      })).to.have.lengthOf(1);
     });
 
     it('should throw when given empty object, null, or an array', () => {
@@ -885,7 +885,7 @@ describe('shallow', () => {
           <input />
         </div>
       ));
-      expect(wrapper.findWhere(() => true).length).to.equal(3);
+      expect(wrapper.findWhere(() => true)).to.have.lengthOf(3);
     });
 
     it('should return no elements for a falsy test', () => {
@@ -895,7 +895,7 @@ describe('shallow', () => {
           <input />
         </div>
       ));
-      expect(wrapper.findWhere(() => false).length).to.equal(0);
+      expect(wrapper.findWhere(() => false)).to.have.lengthOf(0);
     });
 
     it('should call the predicate with the wrapped node as the first argument', () => {
@@ -965,7 +965,7 @@ describe('shallow', () => {
         const foundNotSpan = wrapper.findWhere(n => (
           n.type() !== 'span' && n.props()['data-foo'] === selector
         ));
-        expect(foundNotSpan).to.have.length(0);
+        expect(foundNotSpan).to.have.lengthOf(0);
       });
     });
 
@@ -997,9 +997,9 @@ describe('shallow', () => {
         }
       }
       const wrapper = shallow(<Foo id="foo" />);
-      expect(wrapper.find('.foo').length).to.equal(1);
+      expect(wrapper.find('.foo')).to.have.lengthOf(1);
       wrapper.setProps({ id: 'bar', foo: 'bla' });
-      expect(wrapper.find('.bar').length).to.equal(1);
+      expect(wrapper.find('.bar')).to.have.lengthOf(1);
     });
 
     it('should call componentWillReceiveProps for new renders', () => {
@@ -1133,9 +1133,9 @@ describe('shallow', () => {
         );
 
         const wrapper = shallow(<Foo id="foo" />);
-        expect(wrapper.find('.foo').length).to.equal(1);
+        expect(wrapper.find('.foo')).to.have.lengthOf(1);
         wrapper.setProps({ id: 'bar', foo: 'bla' });
-        expect(wrapper.find('.bar').length).to.equal(1);
+        expect(wrapper.find('.bar')).to.have.lengthOf(1);
       });
 
       it('should merge newProps with oldProps', () => {
@@ -1253,9 +1253,9 @@ describe('shallow', () => {
 
       const wrapper = shallow(<Foo />);
 
-      expect(wrapper.find('.clicks-0').length).to.equal(1);
+      expect(wrapper.find('.clicks-0')).to.have.lengthOf(1);
       wrapper.simulate('click');
-      expect(wrapper.find('.clicks-1').length).to.equal(1);
+      expect(wrapper.find('.clicks-1')).to.have.lengthOf(1);
     });
 
 
@@ -1408,9 +1408,9 @@ describe('shallow', () => {
         }
       }
       const wrapper = shallow(<Foo />);
-      expect(wrapper.find('.foo').length).to.equal(1);
+      expect(wrapper.find('.foo')).to.have.lengthOf(1);
       wrapper.setState({ id: 'bar' });
-      expect(wrapper.find('.bar').length).to.equal(1);
+      expect(wrapper.find('.bar')).to.have.lengthOf(1);
     });
 
     it('should call the callback when setState has completed', () => {
@@ -1551,9 +1551,9 @@ describe('shallow', () => {
         </div>
       ));
 
-      expect(wrapper.find('.foo').not('.bar').length).to.equal(1);
-      expect(wrapper.find('.baz').not('.foo').length).to.equal(2);
-      expect(wrapper.find('.foo').not('div').length).to.equal(0);
+      expect(wrapper.find('.foo').not('.bar')).to.have.lengthOf(1);
+      expect(wrapper.find('.baz').not('.foo')).to.have.lengthOf(2);
+      expect(wrapper.find('.foo').not('div')).to.have.lengthOf(0);
     });
   });
 
@@ -1572,10 +1572,10 @@ describe('shallow', () => {
         </div>
       ));
 
-      expect(wrapper.find('.foo').filter('.bar').length).to.equal(3);
-      expect(wrapper.find('.bar').filter('.foo').length).to.equal(3);
-      expect(wrapper.find('.bar').filter('.bax').length).to.equal(0);
-      expect(wrapper.find('.foo').filter('.baz.bar').length).to.equal(2);
+      expect(wrapper.find('.foo').filter('.bar')).to.have.lengthOf(3);
+      expect(wrapper.find('.bar').filter('.foo')).to.have.lengthOf(3);
+      expect(wrapper.find('.bar').filter('.bax')).to.have.lengthOf(0);
+      expect(wrapper.find('.foo').filter('.baz.bar')).to.have.lengthOf(2);
     });
 
     it('should only look in the current wrappers nodes, not their children', () => {
@@ -1588,7 +1588,7 @@ describe('shallow', () => {
         </div>
       ));
 
-      expect(wrapper.find('.foo').filter('.bar').length).to.equal(1);
+      expect(wrapper.find('.foo').filter('.bar')).to.have.lengthOf(1);
     });
   });
 
@@ -1608,7 +1608,7 @@ describe('shallow', () => {
       stub.onCall(2).returns(false);
 
       const baz = wrapper.find('.foo').filterWhere(stub);
-      expect(baz.length).to.equal(1);
+      expect(baz).to.have.lengthOf(1);
       expect(baz.hasClass('baz')).to.equal(true);
     });
 
@@ -1978,7 +1978,7 @@ describe('shallow', () => {
   describe('.children([selector])', () => {
     it('should return empty wrapper for node with no children', () => {
       const wrapper = shallow(<div />);
-      expect(wrapper.children().length).to.equal(0);
+      expect(wrapper.children()).to.have.lengthOf(0);
     });
 
     it('should skip the falsy children', () => {
@@ -2001,9 +2001,9 @@ describe('shallow', () => {
           </div>
         </div>
       ));
-      expect(wrapper.childAt(0).children().length).to.equal(1);
-      expect(wrapper.childAt(1).children().length).to.equal(1);
-      expect(wrapper.childAt(2).children().length).to.equal(1);
+      expect(wrapper.childAt(0).children()).to.have.lengthOf(1);
+      expect(wrapper.childAt(1).children()).to.have.lengthOf(1);
+      expect(wrapper.childAt(2).children()).to.have.lengthOf(1);
     });
 
     it('should return the children nodes of the root', () => {
@@ -2014,7 +2014,7 @@ describe('shallow', () => {
           <div className="baz" />
         </div>
       ));
-      expect(wrapper.children().length).to.equal(3);
+      expect(wrapper.children()).to.have.lengthOf(3);
       expect(wrapper.children().at(0).hasClass('foo')).to.equal(true);
       expect(wrapper.children().at(1).hasClass('bar')).to.equal(true);
       expect(wrapper.children().at(2).hasClass('baz')).to.equal(true);
@@ -2029,7 +2029,7 @@ describe('shallow', () => {
           <div className="baz" />
         </div>
       ));
-      expect(wrapper.children().length).to.equal(2);
+      expect(wrapper.children()).to.have.lengthOf(2);
       expect(wrapper.children().at(0).hasClass('foo')).to.equal(true);
       expect(wrapper.children().at(1).hasClass('baz')).to.equal(true);
     });
@@ -2053,7 +2053,7 @@ describe('shallow', () => {
           ]}
         />
       ));
-      expect(wrapper.children().length).to.equal(3);
+      expect(wrapper.children()).to.have.lengthOf(3);
       expect(wrapper.children().at(0).hasClass('foo')).to.equal(true);
       expect(wrapper.children().at(1).hasClass('bar')).to.equal(true);
       expect(wrapper.children().at(2).hasClass('baz')).to.equal(true);
@@ -2068,7 +2068,7 @@ describe('shallow', () => {
         </div>
       ));
       const children = wrapper.children('.bip');
-      expect(children.length).to.equal(2);
+      expect(children).to.have.lengthOf(2);
       expect(children.at(0).hasClass('bar')).to.equal(true);
       expect(children.at(1).hasClass('baz')).to.equal(true);
     });
@@ -2090,7 +2090,7 @@ describe('shallow', () => {
             ]}
           />
         ));
-        expect(wrapper.children().length).to.equal(3);
+        expect(wrapper.children()).to.have.lengthOf(3);
         expect(wrapper.children().at(0).hasClass('foo')).to.equal(true);
         expect(wrapper.children().at(1).hasClass('bar')).to.equal(true);
         expect(wrapper.children().at(2).hasClass('baz')).to.equal(true);
@@ -2130,7 +2130,7 @@ describe('shallow', () => {
 
       const parents = wrapper.find('.baz').parents();
 
-      expect(parents.length).to.equal(3);
+      expect(parents).to.have.lengthOf(3);
       expect(parents.at(0).hasClass('bar')).to.equal(true);
       expect(parents.at(1).hasClass('foo')).to.equal(true);
       expect(parents.at(2).hasClass('bax')).to.equal(true);
@@ -2149,7 +2149,7 @@ describe('shallow', () => {
 
       const parents = wrapper.find('.bar').parents();
 
-      expect(parents.length).to.equal(2);
+      expect(parents).to.have.lengthOf(2);
       expect(parents.at(0).hasClass('foo')).to.equal(true);
       expect(parents.at(1).hasClass('bax')).to.equal(true);
     });
@@ -2167,7 +2167,7 @@ describe('shallow', () => {
 
       const parents = wrapper.find('.baz').parents('.foo');
 
-      expect(parents.length).to.equal(2);
+      expect(parents).to.have.lengthOf(2);
       expect(parents.at(0).hasClass('foo')).to.equal(true);
       expect(parents.at(1).hasClass('bax')).to.equal(true);
     });
@@ -2220,7 +2220,7 @@ describe('shallow', () => {
       ));
 
       const parents = wrapper.find('.baz').parent();
-      expect(parents).to.have.length(3);
+      expect(parents).to.have.lengthOf(3);
       expect(parents.at(0).hasClass('foo')).to.equal(true);
       expect(parents.at(1).hasClass('bar')).to.equal(true);
       expect(parents.at(2).hasClass('bax')).to.equal(true);
@@ -2241,7 +2241,7 @@ describe('shallow', () => {
 
       const closestFoo = wrapper.find('.bar').closest('.foo');
       expect(closestFoo.hasClass('baz')).to.equal(true);
-      expect(closestFoo.length).to.equal(1);
+      expect(closestFoo).to.have.lengthOf(1);
     });
 
     it('should only ever return a wrapper of a single node', () => {
@@ -2506,7 +2506,7 @@ describe('shallow', () => {
           <div className="foo baz" />
         </div>
       ));
-      expect(wrapper.find('.foo').slice()).to.have.length(3);
+      expect(wrapper.find('.foo').slice()).to.have.lengthOf(3);
       expect(wrapper.find('.foo').slice().at(0).hasClass('bax')).to.equal(true);
       expect(wrapper.find('.foo').slice().at(1).hasClass('bar')).to.equal(true);
       expect(wrapper.find('.foo').slice().at(2).hasClass('baz')).to.equal(true);
@@ -2519,7 +2519,7 @@ describe('shallow', () => {
           <div className="foo baz" />
         </div>
       ));
-      expect(wrapper.find('.foo').slice(1)).to.have.length(2);
+      expect(wrapper.find('.foo').slice(1)).to.have.lengthOf(2);
       expect(wrapper.find('.foo').slice(1).at(0).hasClass('bar')).to.equal(true);
       expect(wrapper.find('.foo').slice(1).at(1).hasClass('baz')).to.equal(true);
     });
@@ -2531,7 +2531,7 @@ describe('shallow', () => {
           <div className="foo baz" />
         </div>
       ));
-      expect(wrapper.find('.foo').slice(1, 2)).to.have.length(1);
+      expect(wrapper.find('.foo').slice(1, 2)).to.have.lengthOf(1);
       expect(wrapper.find('.foo').slice(1, 2).at(0).hasClass('bar')).to.equal(true);
     });
     it('should return a new wrapper if begin and end are set (negative)', () => {
@@ -2542,7 +2542,7 @@ describe('shallow', () => {
           <div className="foo baz" />
         </div>
       ));
-      expect(wrapper.find('.foo').slice(-2, -1)).to.have.length(1);
+      expect(wrapper.find('.foo').slice(-2, -1)).to.have.lengthOf(1);
       expect(wrapper.find('.foo').slice(-2, -1).at(0).hasClass('bar')).to.equal(true);
     });
   });
@@ -2639,7 +2639,7 @@ describe('shallow', () => {
 
       const nodes = wrapper.find('.foo').flatMap(w => w.children().getElements());
 
-      expect(nodes.length).to.equal(6);
+      expect(nodes).to.have.lengthOf(6);
       expect(nodes.at(0).hasClass('bar')).to.equal(true);
       expect(nodes.at(1).hasClass('bar')).to.equal(true);
       expect(nodes.at(2).hasClass('baz')).to.equal(true);
@@ -2670,9 +2670,9 @@ describe('shallow', () => {
         }
       }
       const wrapper = shallow(<Foo />);
-      expect(wrapper.find('.in-bar')).to.have.length(0);
-      expect(wrapper.find(Bar)).to.have.length(1);
-      expect(wrapper.find(Bar).shallow().find('.in-bar')).to.have.length(1);
+      expect(wrapper.find('.in-bar')).to.have.lengthOf(0);
+      expect(wrapper.find(Bar)).to.have.lengthOf(1);
+      expect(wrapper.find(Bar).shallow().find('.in-bar')).to.have.lengthOf(1);
     });
 
     describe('context', () => {
@@ -2697,7 +2697,7 @@ describe('shallow', () => {
 
         const context = { name: 'foo' };
         const wrapper = shallow(<Foo />);
-        expect(wrapper.find(Bar)).to.have.length(1);
+        expect(wrapper.find(Bar)).to.have.lengthOf(1);
         expect(wrapper.find(Bar).shallow({ context }).text()).to.equal('foo');
       });
 
@@ -2763,9 +2763,9 @@ describe('shallow', () => {
         );
 
         const wrapper = shallow(<Foo />);
-        expect(wrapper.find('.in-bar')).to.have.length(0);
-        expect(wrapper.find(Bar)).to.have.length(1);
-        expect(wrapper.find(Bar).shallow().find('.in-bar')).to.have.length(1);
+        expect(wrapper.find('.in-bar')).to.have.lengthOf(0);
+        expect(wrapper.find(Bar)).to.have.lengthOf(1);
+        expect(wrapper.find(Bar).shallow().find('.in-bar')).to.have.lengthOf(1);
       });
 
       describe('context', () => {
@@ -3148,7 +3148,7 @@ describe('shallow', () => {
       const renderedFoo = wrapper.find(Foo).render();
       expect(renderedFoo.is('.in-foo')).to.equal(true);
       expect(renderedFoo.is('.in-bar')).to.equal(false);
-      expect(renderedFoo.find('.in-bar')).to.have.length(0);
+      expect(renderedFoo.find('.in-bar')).to.have.lengthOf(0);
     });
 
     describeIf(!REACT013, 'stateless functional components', () => {
@@ -3168,7 +3168,7 @@ describe('shallow', () => {
         const renderedFoo = wrapper.find(Foo).render();
         expect(renderedFoo.is('.in-foo')).to.equal(true);
         expect(renderedFoo.is('.in-bar')).to.equal(false);
-        expect(renderedFoo.find('.in-bar')).to.have.length(0);
+        expect(renderedFoo.find('.in-bar')).to.have.lengthOf(0);
       });
     });
   });
@@ -4115,11 +4115,11 @@ describe('shallow', () => {
       }
     }
     const wrapper = shallow(<Foo />);
-    expect(wrapper).to.have.length(1);
+    expect(wrapper).to.have.lengthOf(1);
     expect(wrapper.html()).to.equal(null);
     expect(wrapper.type()).to.equal(null);
     const rendered = wrapper.render();
-    expect(rendered.length).to.equal(0);
+    expect(rendered).to.have.lengthOf(0);
     expect(rendered.html()).to.equal(null);
   });
 
@@ -4138,11 +4138,11 @@ describe('shallow', () => {
     const Foo = () => null;
 
     const wrapper = shallow(<Foo />);
-    expect(wrapper).to.have.length(1);
+    expect(wrapper).to.have.lengthOf(1);
     expect(wrapper.html()).to.equal(null);
     expect(wrapper.type()).to.equal(null);
     const rendered = wrapper.render();
-    expect(rendered.length).to.equal(0);
+    expect(rendered).to.have.lengthOf(0);
     expect(rendered.html()).to.equal(null);
   });
 
@@ -4792,7 +4792,7 @@ describe('shallow', () => {
           resolve();
         });
       }).then(() => {
-        expect(wrapper.find('.show-me').length).to.equal(1);
+        expect(wrapper.find('.show-me')).to.have.lengthOf(1);
       });
     });
 
@@ -4800,7 +4800,7 @@ describe('shallow', () => {
       const wrapper = shallow(<Test />);
       wrapper.find(Child).props().callback();
       wrapper.update();
-      expect(wrapper.find('.show-me').length).to.equal(1);
+      expect(wrapper.find('.show-me')).to.have.lengthOf(1);
     });
   });
 

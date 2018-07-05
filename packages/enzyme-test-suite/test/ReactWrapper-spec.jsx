@@ -102,7 +102,7 @@ describeWithDOM('mount', () => {
       };
       const context = { name: 'foo' };
       const wrapper = mount(<ComplexComponent />, { context, childContextTypes });
-      expect(wrapper.find(SimpleComponent)).to.have.length(1);
+      expect(wrapper.find(SimpleComponent)).to.have.lengthOf(1);
     });
 
     describe('does not attempt to mutate Component.childContextTypes', () => {
@@ -217,7 +217,7 @@ describeWithDOM('mount', () => {
 
         const context = { name: 'foo' };
         const wrapper = mount(<ComplexComponent />, { context, childContextTypes });
-        expect(wrapper.find(SimpleComponent)).to.have.length(1);
+        expect(wrapper.find(SimpleComponent)).to.have.lengthOf(1);
       });
 
       it('should not throw if context is passed in but contextTypes is missing', () => {
@@ -274,7 +274,7 @@ describeWithDOM('mount', () => {
       );
       const wrapper = mount(<Foo foo="qux" />);
       expect(wrapper.type()).to.equal(Foo);
-      expect(wrapper.find('.bar')).to.have.length(1);
+      expect(wrapper.find('.bar')).to.have.lengthOf(1);
       expect(wrapper.find('.qoo').text()).to.equal('qux');
     });
 
@@ -300,9 +300,9 @@ describeWithDOM('mount', () => {
       );
       const wrapper = mount(<Test />);
       const children = wrapper.find('.box').children();
-      expect(children).to.have.length(3);
+      expect(children).to.have.lengthOf(3);
       expect(children.at(0).props().test).to.equal('123');
-      expect(wrapper.find(TestItem)).to.have.length(3);
+      expect(wrapper.find(TestItem)).to.have.lengthOf(3);
       expect(wrapper.find(TestItem).first().props().test).to.equal('123');
     });
   });
@@ -457,7 +457,7 @@ describeWithDOM('mount', () => {
           <div className="foo" />
         </div>
       ));
-      expect(wrapper.find('input.foo').length).to.equal(1);
+      expect(wrapper.find('input.foo')).to.have.lengthOf(1);
     });
 
     it('should work on non-single nodes', () => {
@@ -475,9 +475,9 @@ describeWithDOM('mount', () => {
           </div>
         </div>
       ));
-      expect(wrapper.find('.a').length).to.equal(1);
-      expect(wrapper.find('.b').length).to.equal(2);
-      expect(wrapper.find('.b').find('.c').length).to.equal(6);
+      expect(wrapper.find('.a')).to.have.lengthOf(1);
+      expect(wrapper.find('.b')).to.have.lengthOf(2);
+      expect(wrapper.find('.b').find('.c')).to.have.lengthOf(6);
     });
 
 
@@ -487,7 +487,7 @@ describeWithDOM('mount', () => {
           <input id="foo" />
         </div>
       ));
-      expect(wrapper.find('input#foo').length).to.equal(1);
+      expect(wrapper.find('input#foo')).to.have.lengthOf(1);
     });
 
     it('should find an element based on a tag name, id, and class name', () => {
@@ -496,7 +496,7 @@ describeWithDOM('mount', () => {
           <input id="foo" className="bar" />
         </div>
       ));
-      expect(wrapper.find('input#foo.bar').length).to.equal(1);
+      expect(wrapper.find('input#foo.bar')).to.have.lengthOf(1);
     });
 
     it('should find a component based on a constructor', () => {
@@ -554,8 +554,8 @@ describeWithDOM('mount', () => {
         </div>
       ));
 
-      expect(wrapper.find('[htmlFor="foo"]')).to.have.length(1);
-      expect(wrapper.find('[htmlFor]')).to.have.length(2);
+      expect(wrapper.find('[htmlFor="foo"]')).to.have.lengthOf(1);
+      expect(wrapper.find('[htmlFor]')).to.have.lengthOf(2);
     });
 
     it('should error sensibly if any of the search props are undefined', () => {
@@ -578,8 +578,8 @@ describeWithDOM('mount', () => {
         </div>
       ));
 
-      expect(wrapper.find('span[htmlFor="foo"]')).to.have.length(1);
-      expect(wrapper.find('span[htmlFor]')).to.have.length(1);
+      expect(wrapper.find('span[htmlFor="foo"]')).to.have.lengthOf(1);
+      expect(wrapper.find('span[htmlFor]')).to.have.lengthOf(1);
     });
 
     it('works with an adjacent sibling selector', () => {
@@ -633,17 +633,17 @@ describeWithDOM('mount', () => {
         </div>
       ));
 
-      expect(wrapper.find('[data-foo="bar"]')).to.have.length(1);
-      expect(wrapper.find('[data-foo]')).to.have.length(1);
+      expect(wrapper.find('[data-foo="bar"]')).to.have.lengthOf(1);
+      expect(wrapper.find('[data-foo]')).to.have.lengthOf(1);
 
-      expect(wrapper.find('[data-foo-123]')).to.have.length(1);
-      expect(wrapper.find('[data-foo-123="bar2"]')).to.have.length(1);
+      expect(wrapper.find('[data-foo-123]')).to.have.lengthOf(1);
+      expect(wrapper.find('[data-foo-123="bar2"]')).to.have.lengthOf(1);
 
-      expect(wrapper.find('[data-123-foo]')).to.have.length(1);
-      expect(wrapper.find('[data-123-foo="bar3"]')).to.have.length(1);
+      expect(wrapper.find('[data-123-foo]')).to.have.lengthOf(1);
+      expect(wrapper.find('[data-123-foo="bar3"]')).to.have.lengthOf(1);
 
-      expect(wrapper.find('[data-foo_bar]')).to.have.length(1);
-      expect(wrapper.find('[data-foo_bar="bar4"]')).to.have.length(1);
+      expect(wrapper.find('[data-foo_bar]')).to.have.lengthOf(1);
+      expect(wrapper.find('[data-foo_bar="bar4"]')).to.have.lengthOf(1);
     });
 
     it('should find components with multiple matching props', () => {
@@ -654,8 +654,8 @@ describeWithDOM('mount', () => {
         </div>
       ));
 
-      expect(wrapper.find('span[htmlFor="foo"][onChange]')).to.have.length(1);
-      expect(wrapper.find('span[htmlFor="foo"][preserveAspectRatio="xMaxYMax"]')).to.have.length(1);
+      expect(wrapper.find('span[htmlFor="foo"][onChange]')).to.have.lengthOf(1);
+      expect(wrapper.find('span[htmlFor="foo"][preserveAspectRatio="xMaxYMax"]')).to.have.lengthOf(1);
     });
 
     it('should not find property when undefined', () => {
@@ -665,7 +665,7 @@ describeWithDOM('mount', () => {
         </div>
       ));
 
-      expect(wrapper.find('[data-foo]')).to.have.length(0);
+      expect(wrapper.find('[data-foo]')).to.have.lengthOf(0);
     });
 
     it('should support boolean and numeric values for matching props', () => {
@@ -680,10 +680,10 @@ describeWithDOM('mount', () => {
         </div>
       ));
 
-      expect(wrapper.find('span[value=1]')).to.have.length(1);
-      expect(wrapper.find('span[value=2]')).to.have.length(0);
-      expect(wrapper.find('a[value=false]')).to.have.length(1);
-      expect(wrapper.find('a[value=true]')).to.have.length(0);
+      expect(wrapper.find('span[value=1]')).to.have.lengthOf(1);
+      expect(wrapper.find('span[value=2]')).to.have.lengthOf(0);
+      expect(wrapper.find('a[value=false]')).to.have.lengthOf(1);
+      expect(wrapper.find('a[value=true]')).to.have.lengthOf(0);
     });
 
     it('should not find key or ref via property selector', () => {
@@ -702,10 +702,10 @@ describeWithDOM('mount', () => {
 
       const wrapper = mount(<Foo />);
 
-      expect(wrapper.find('div[ref="foo"]')).to.have.length(0);
-      expect(wrapper.find('div[key="1"]')).to.have.length(0);
-      expect(wrapper.find('[ref]')).to.have.length(0);
-      expect(wrapper.find('[key]')).to.have.length(0);
+      expect(wrapper.find('div[ref="foo"]')).to.have.lengthOf(0);
+      expect(wrapper.find('div[key="1"]')).to.have.lengthOf(0);
+      expect(wrapper.find('[ref]')).to.have.lengthOf(0);
+      expect(wrapper.find('[key]')).to.have.lengthOf(0);
     });
 
     it('should find multiple elements based on a class name', () => {
@@ -715,7 +715,7 @@ describeWithDOM('mount', () => {
           <button className="foo" />
         </div>
       ));
-      expect(wrapper.find('.foo').length).to.equal(2);
+      expect(wrapper.find('.foo')).to.have.lengthOf(2);
     });
 
     it('should find multiple elements based on a tag name', () => {
@@ -726,8 +726,8 @@ describeWithDOM('mount', () => {
           <button />
         </div>
       ));
-      expect(wrapper.find('input').length).to.equal(2);
-      expect(wrapper.find('button').length).to.equal(1);
+      expect(wrapper.find('input')).to.have.lengthOf(2);
+      expect(wrapper.find('button')).to.have.lengthOf(1);
     });
 
     it('should find multiple elements based on a constructor', () => {
@@ -738,8 +738,8 @@ describeWithDOM('mount', () => {
           <button />
         </div>
       ));
-      expect(wrapper.find('input').length).to.equal(2);
-      expect(wrapper.find('button').length).to.equal(1);
+      expect(wrapper.find('input')).to.have.lengthOf(2);
+      expect(wrapper.find('button')).to.have.lengthOf(1);
     });
 
     it('should support object property selectors', () => {
@@ -754,13 +754,13 @@ describeWithDOM('mount', () => {
           <a data-test="ref" data-prop />
         </div>
       ));
-      expect(wrapper.find({ a: 1 })).to.have.length(0);
-      expect(wrapper.find({ 'data-test': 'ref' })).to.have.length(7);
-      expect(wrapper.find({ className: 'foo' })).to.have.length(1);
-      expect(wrapper.find({ 'data-prop': null })).to.have.length(1);
-      expect(wrapper.find({ 'data-prop': 123 })).to.have.length(1);
-      expect(wrapper.find({ 'data-prop': false })).to.have.length(1);
-      expect(wrapper.find({ 'data-prop': true })).to.have.length(1);
+      expect(wrapper.find({ a: 1 })).to.have.lengthOf(0);
+      expect(wrapper.find({ 'data-test': 'ref' })).to.have.lengthOf(7);
+      expect(wrapper.find({ className: 'foo' })).to.have.lengthOf(1);
+      expect(wrapper.find({ 'data-prop': null })).to.have.lengthOf(1);
+      expect(wrapper.find({ 'data-prop': 123 })).to.have.lengthOf(1);
+      expect(wrapper.find({ 'data-prop': false })).to.have.lengthOf(1);
+      expect(wrapper.find({ 'data-prop': true })).to.have.lengthOf(1);
     });
 
     it('should support complex and nested object property selectors', () => {
@@ -773,17 +773,17 @@ describeWithDOM('mount', () => {
           <input data-more={{ height: 20 }} data-test="ref" />
         </div>
       ));
-      expect(wrapper.find({ 'data-test': 'ref' })).to.have.length(4);
-      expect(wrapper.find({ 'data-more': { a: 1 } })).to.have.length(0);
-      expect(wrapper.find({ 'data-more': [{ id: 1 }] })).to.have.length(2);
-      expect(wrapper.find({ 'data-more': { item: { id: 1 } } })).to.have.length(1);
-      expect(wrapper.find({ 'data-more': { height: 20 } })).to.have.length(1);
+      expect(wrapper.find({ 'data-test': 'ref' })).to.have.lengthOf(4);
+      expect(wrapper.find({ 'data-more': { a: 1 } })).to.have.lengthOf(0);
+      expect(wrapper.find({ 'data-more': [{ id: 1 }] })).to.have.lengthOf(2);
+      expect(wrapper.find({ 'data-more': { item: { id: 1 } } })).to.have.lengthOf(1);
+      expect(wrapper.find({ 'data-more': { height: 20 } })).to.have.lengthOf(1);
       expect(wrapper.find({
         'data-more': [{ id: 1 }],
         'data-test': 'ref',
         'data-prop': true,
         onChange: testFunction,
-      })).to.have.length(1);
+      })).to.have.lengthOf(1);
     });
 
     it('should throw when given empty object, null, or an array', () => {
@@ -813,12 +813,12 @@ describeWithDOM('mount', () => {
           <h1 data-foo="bar baz quz">World</h1>
         </div>
       ));
-      expect(wrapper.find('[data-foo]')).to.have.length(2);
-      expect(wrapper.find('[data-foo="foo bar"]')).to.have.length(1);
-      expect(wrapper.find('[data-foo="bar baz quz"]')).to.have.length(1);
-      expect(wrapper.find('[data-foo="bar baz"]')).to.have.length(0);
-      expect(wrapper.find('[data-foo="foo  bar"]')).to.have.length(0);
-      expect(wrapper.find('[data-foo="bar  baz quz"]')).to.have.length(0);
+      expect(wrapper.find('[data-foo]')).to.have.lengthOf(2);
+      expect(wrapper.find('[data-foo="foo bar"]')).to.have.lengthOf(1);
+      expect(wrapper.find('[data-foo="bar baz quz"]')).to.have.lengthOf(1);
+      expect(wrapper.find('[data-foo="bar baz"]')).to.have.lengthOf(0);
+      expect(wrapper.find('[data-foo="foo  bar"]')).to.have.lengthOf(0);
+      expect(wrapper.find('[data-foo="bar  baz quz"]')).to.have.lengthOf(0);
     });
 
     itIf(REACT16, 'should find elements through portals', () => {
@@ -834,8 +834,8 @@ describeWithDOM('mount', () => {
       }
 
       const wrapper = mount(<FooPortal><h1>Successful Portal!</h1></FooPortal>);
-      expect(wrapper.find('h1').length).to.equal(1);
-      expect(containerDiv.querySelectorAll('h1').length).to.equal(1);
+      expect(wrapper.find('h1')).to.have.lengthOf(1);
+      expect(containerDiv.querySelectorAll('h1')).to.have.lengthOf(1);
     });
 
     describeIf(!REACT013, 'stateless function components', () => {
@@ -871,8 +871,8 @@ describeWithDOM('mount', () => {
 
         const wrapper = mount(<Foo />);
 
-        expect(wrapper.find('div[key="1"]')).to.have.length(0);
-        expect(wrapper.find('[key]')).to.have.length(0);
+        expect(wrapper.find('div[key="1"]')).to.have.lengthOf(0);
+        expect(wrapper.find('[key]')).to.have.lengthOf(0);
       });
     });
 
@@ -909,7 +909,7 @@ describeWithDOM('mount', () => {
           <input />
         </div>
       ));
-      expect(wrapper.findWhere(() => true).length).to.equal(3);
+      expect(wrapper.findWhere(() => true)).to.have.lengthOf(3);
     });
 
     it('should return no elements for a falsy test', () => {
@@ -919,7 +919,7 @@ describeWithDOM('mount', () => {
           <input />
         </div>
       ));
-      expect(wrapper.findWhere(() => false).length).to.equal(0);
+      expect(wrapper.findWhere(() => false)).to.have.lengthOf(0);
     });
 
     it('should call the predicate with the wrapped node as the first argument', () => {
@@ -992,7 +992,7 @@ describeWithDOM('mount', () => {
       const foundNotSpan = wrapper.findWhere(n => (
         n.type() !== 'span' && n.props()['data-foo'] === selector
       ));
-      expect(foundNotSpan).to.have.length(0);
+      expect(foundNotSpan).to.have.lengthOf(0);
     });
 
     it('should return props object when props() is called', () => {
@@ -1073,7 +1073,7 @@ describeWithDOM('mount', () => {
         const foundNotSpan = wrapper.findWhere(n => (
           n.type() !== 'span' && n.props()['data-foo'] === selector
         ));
-        expect(foundNotSpan).to.have.length(0);
+        expect(foundNotSpan).to.have.lengthOf(0);
       });
 
       it('should return props object when props() is called', () => {
@@ -1180,9 +1180,9 @@ describeWithDOM('mount', () => {
         }
       }
       const wrapper = mount(<Foo id="foo" />);
-      expect(wrapper.find('.foo').length).to.equal(1);
+      expect(wrapper.find('.foo')).to.have.lengthOf(1);
       wrapper.setProps({ id: 'bar', foo: 'bla' });
-      expect(wrapper.find('.bar').length).to.equal(1);
+      expect(wrapper.find('.bar')).to.have.lengthOf(1);
     });
 
     it('should call componentWillReceiveProps for new renders', () => {
@@ -1283,13 +1283,13 @@ describeWithDOM('mount', () => {
         }
       }
       const wrapper = mount(<Foo id="foo" />);
-      expect(wrapper.find('.foo').length).to.equal(1);
+      expect(wrapper.find('.foo')).to.have.lengthOf(1);
 
       wrapper[sym('__renderer__')].batchedUpdates(() => {
         wrapper.setProps({ id: 'bar', foo: 'bla' }, () => {
-          expect(wrapper.find('.bar').length).to.equal(1);
+          expect(wrapper.find('.bar')).to.have.lengthOf(1);
         });
-        expect(wrapper.find('.bar').length).to.equal(0);
+        expect(wrapper.find('.bar')).to.have.lengthOf(0);
       });
     });
 
@@ -1302,9 +1302,9 @@ describeWithDOM('mount', () => {
         );
 
         const wrapper = mount(<Foo id="foo" />);
-        expect(wrapper.find('.foo').length).to.equal(1);
+        expect(wrapper.find('.foo')).to.have.lengthOf(1);
         wrapper.setProps({ id: 'bar', foo: 'bla' });
-        expect(wrapper.find('.bar').length).to.equal(1);
+        expect(wrapper.find('.bar')).to.have.lengthOf(1);
       });
 
       it('should merge newProps with oldProps', () => {
@@ -1518,9 +1518,9 @@ describeWithDOM('mount', () => {
 
       const wrapper = mount(<Foo />);
 
-      expect(wrapper.find('.clicks-0').length).to.equal(1);
+      expect(wrapper.find('.clicks-0')).to.have.lengthOf(1);
       wrapper.simulate('click');
-      expect(wrapper.find('.clicks-1').length).to.equal(1);
+      expect(wrapper.find('.clicks-1')).to.have.lengthOf(1);
     });
 
     it('should pass in event data', () => {
@@ -1648,9 +1648,9 @@ describeWithDOM('mount', () => {
         }
       }
       const wrapper = mount(<Foo />);
-      expect(wrapper.find('.foo').length).to.equal(1);
+      expect(wrapper.find('.foo')).to.have.lengthOf(1);
       wrapper.setState({ id: 'bar' });
-      expect(wrapper.find('.bar').length).to.equal(1);
+      expect(wrapper.find('.bar')).to.have.lengthOf(1);
     });
 
     it('allows setState inside of componentDidMount', () => {
@@ -1811,9 +1811,9 @@ describeWithDOM('mount', () => {
         </div>
       ));
 
-      expect(wrapper.find('.foo').not('.bar').length).to.equal(1);
-      expect(wrapper.find('.baz').not('.foo').length).to.equal(2);
-      expect(wrapper.find('.foo').not('div').length).to.equal(0);
+      expect(wrapper.find('.foo').not('.bar')).to.have.lengthOf(1);
+      expect(wrapper.find('.baz').not('.foo')).to.have.lengthOf(2);
+      expect(wrapper.find('.foo').not('div')).to.have.lengthOf(0);
     });
   });
 
@@ -1832,10 +1832,10 @@ describeWithDOM('mount', () => {
         </div>
       ));
 
-      expect(wrapper.find('.foo').filter('.bar').length).to.equal(3);
-      expect(wrapper.find('.bar').filter('.foo').length).to.equal(3);
-      expect(wrapper.find('.bar').filter('.bax').length).to.equal(0);
-      expect(wrapper.find('.foo').filter('.baz.bar').length).to.equal(2);
+      expect(wrapper.find('.foo').filter('.bar')).to.have.lengthOf(3);
+      expect(wrapper.find('.bar').filter('.foo')).to.have.lengthOf(3);
+      expect(wrapper.find('.bar').filter('.bax')).to.have.lengthOf(0);
+      expect(wrapper.find('.foo').filter('.baz.bar')).to.have.lengthOf(2);
     });
 
     it('should only look in the current wrappers nodes, not their children', () => {
@@ -1848,7 +1848,7 @@ describeWithDOM('mount', () => {
         </div>
       ));
 
-      expect(wrapper.find('.foo').filter('.bar').length).to.equal(1);
+      expect(wrapper.find('.foo').filter('.bar')).to.have.lengthOf(1);
     });
   });
 
@@ -1868,7 +1868,7 @@ describeWithDOM('mount', () => {
       stub.onCall(2).returns(false);
 
       const baz = wrapper.find('.foo').filterWhere(stub);
-      expect(baz.length).to.equal(1);
+      expect(baz).to.have.lengthOf(1);
       expect(baz.hasClass('baz')).to.equal(true);
     });
 
@@ -2207,7 +2207,7 @@ describeWithDOM('mount', () => {
   describe('.children([selector])', () => {
     it('should return empty wrapper for node with no children', () => {
       const wrapper = mount(<div />);
-      expect(wrapper.children().length).to.equal(0);
+      expect(wrapper.children()).to.have.lengthOf(0);
     });
 
     it('should return the children nodes of the root', () => {
@@ -2218,7 +2218,7 @@ describeWithDOM('mount', () => {
           <div className="baz" />
         </div>
       ));
-      expect(wrapper.children().length).to.equal(3);
+      expect(wrapper.children()).to.have.lengthOf(3);
       expect(wrapper.children().at(0).hasClass('foo')).to.equal(true);
       expect(wrapper.children().at(1).hasClass('bar')).to.equal(true);
       expect(wrapper.children().at(2).hasClass('baz')).to.equal(true);
@@ -2233,7 +2233,7 @@ describeWithDOM('mount', () => {
           <div className="baz" />
         </div>
       ));
-      expect(wrapper.children().length).to.equal(2);
+      expect(wrapper.children()).to.have.lengthOf(2);
       expect(wrapper.children().at(0).hasClass('foo')).to.equal(true);
       expect(wrapper.children().at(1).hasClass('baz')).to.equal(true);
     });
@@ -2257,7 +2257,7 @@ describeWithDOM('mount', () => {
           ]}
         />
       ));
-      expect(wrapper.children().children().length).to.equal(3);
+      expect(wrapper.children().children()).to.have.lengthOf(3);
       expect(wrapper.children().children().at(0).hasClass('foo')).to.equal(true);
       expect(wrapper.children().children().at(1).hasClass('bar')).to.equal(true);
       expect(wrapper.children().children().at(2).hasClass('baz')).to.equal(true);
@@ -2272,7 +2272,7 @@ describeWithDOM('mount', () => {
         </div>
       ));
       const children = wrapper.children('.bip');
-      expect(children.length).to.equal(2);
+      expect(children).to.have.lengthOf(2);
       expect(children.at(0).hasClass('bar')).to.equal(true);
       expect(children.at(1).hasClass('baz')).to.equal(true);
     });
@@ -2280,7 +2280,7 @@ describeWithDOM('mount', () => {
     it('should not attempt to get an instance for text nodes', () => {
       const wrapper = mount(<div>B<span />C</div>);
       const children = wrapper.children();
-      expect(children.length).to.equal(1);
+      expect(children).to.have.lengthOf(1);
     });
 
     describeIf(!REACT013, 'stateless function components', () => {
@@ -2300,7 +2300,7 @@ describeWithDOM('mount', () => {
             ]}
           />
         ));
-        expect(wrapper.children().children().length).to.equal(3);
+        expect(wrapper.children().children()).to.have.lengthOf(3);
         expect(wrapper.children().children().at(0).hasClass('foo')).to.equal(true);
         expect(wrapper.children().children().at(1).hasClass('bar')).to.equal(true);
         expect(wrapper.children().children().at(2).hasClass('baz')).to.equal(true);
@@ -2339,7 +2339,7 @@ describeWithDOM('mount', () => {
 
       const parents = wrapper.find('.baz').parents();
 
-      expect(parents.length).to.equal(3);
+      expect(parents).to.have.lengthOf(3);
       expect(parents.at(0).hasClass('bar')).to.equal(true);
       expect(parents.at(1).hasClass('foo')).to.equal(true);
       expect(parents.at(2).hasClass('bax')).to.equal(true);
@@ -2358,7 +2358,7 @@ describeWithDOM('mount', () => {
 
       const parents = wrapper.find('.bar').parents();
 
-      expect(parents.length).to.equal(2);
+      expect(parents).to.have.lengthOf(2);
       expect(parents.at(0).hasClass('foo')).to.equal(true);
       expect(parents.at(1).hasClass('bax')).to.equal(true);
     });
@@ -2376,7 +2376,7 @@ describeWithDOM('mount', () => {
 
       const parents = wrapper.find('.baz').parents('.foo');
 
-      expect(parents.length).to.equal(2);
+      expect(parents).to.have.lengthOf(2);
       expect(parents.at(0).hasClass('foo')).to.equal(true);
       expect(parents.at(1).hasClass('bax')).to.equal(true);
     });
@@ -2413,7 +2413,7 @@ describeWithDOM('mount', () => {
       ));
 
       const parents = wrapper.find('.baz').parent();
-      expect(parents).to.have.length(3);
+      expect(parents).to.have.lengthOf(3);
       expect(parents.at(0).hasClass('foo')).to.equal(true);
       expect(parents.at(1).hasClass('bar')).to.equal(true);
       expect(parents.at(2).hasClass('bax')).to.equal(true);
@@ -2434,7 +2434,7 @@ describeWithDOM('mount', () => {
 
       const closestFoo = wrapper.find('.bar').closest('.foo');
       expect(closestFoo.hasClass('baz')).to.equal(true);
-      expect(closestFoo.length).to.equal(1);
+      expect(closestFoo).to.have.lengthOf(1);
     });
 
     it('should only ever return a wrapper of a single node', () => {
@@ -2785,7 +2785,7 @@ describeWithDOM('mount', () => {
           <div className="foo baz" />
         </div>
       ));
-      expect(wrapper.find('.foo').slice()).to.have.length(3);
+      expect(wrapper.find('.foo').slice()).to.have.lengthOf(3);
       expect(wrapper.find('.foo').slice().at(0).hasClass('bax')).to.equal(true);
       expect(wrapper.find('.foo').slice().at(1).hasClass('bar')).to.equal(true);
       expect(wrapper.find('.foo').slice().at(2).hasClass('baz')).to.equal(true);
@@ -2799,7 +2799,7 @@ describeWithDOM('mount', () => {
           <div className="foo baz" />
         </div>
       ));
-      expect(wrapper.find('.foo').slice(1)).to.have.length(2);
+      expect(wrapper.find('.foo').slice(1)).to.have.lengthOf(2);
       expect(wrapper.find('.foo').slice(1).at(0).hasClass('bar')).to.equal(true);
       expect(wrapper.find('.foo').slice(1).at(1).hasClass('baz')).to.equal(true);
     });
@@ -2812,7 +2812,7 @@ describeWithDOM('mount', () => {
           <div className="foo baz" />
         </div>
       ));
-      expect(wrapper.find('.foo').slice(1, 2)).to.have.length(1);
+      expect(wrapper.find('.foo').slice(1, 2)).to.have.lengthOf(1);
       expect(wrapper.find('.foo').slice(1, 2).at(0).hasClass('bar')).to.equal(true);
     });
 
@@ -2824,7 +2824,7 @@ describeWithDOM('mount', () => {
           <div className="foo baz" />
         </div>
       ));
-      expect(wrapper.find('.foo').slice(-2, -1)).to.have.length(1);
+      expect(wrapper.find('.foo').slice(-2, -1)).to.have.lengthOf(1);
       expect(wrapper.find('.foo').slice(-2, -1).at(0).hasClass('bar')).to.equal(true);
     });
   });
@@ -2922,7 +2922,7 @@ describeWithDOM('mount', () => {
 
       const nodes = wrapper.find('.foo').flatMap(w => w.children().getNodesInternal());
 
-      expect(nodes.length).to.equal(6);
+      expect(nodes).to.have.lengthOf(6);
       expect(nodes.at(0).hasClass('bar')).to.equal(true);
       expect(nodes.at(1).hasClass('bar')).to.equal(true);
       expect(nodes.at(2).hasClass('baz')).to.equal(true);
@@ -3163,7 +3163,7 @@ describeWithDOM('mount', () => {
         }
       }
       const wrapper = mount(<Bar />);
-      expect(wrapper.render().find('.in-foo')).to.have.length(1);
+      expect(wrapper.render().find('.in-foo')).to.have.lengthOf(1);
     });
 
     describeIf(!REACT013, 'stateless function components', () => {
@@ -3175,7 +3175,7 @@ describeWithDOM('mount', () => {
           </div>
         );
         const wrapper = mount(<Bar />);
-        expect(wrapper.render().find('.in-foo')).to.have.length(1);
+        expect(wrapper.render().find('.in-foo')).to.have.lengthOf(1);
       });
     });
   });
@@ -3208,24 +3208,24 @@ describeWithDOM('mount', () => {
       const initialBodyChildren = document.body.childNodes.length;
       global.document.body.appendChild(div);
 
-      expect(document.body.childNodes).to.have.length(initialBodyChildren + 1);
-      expect(div.childNodes).to.have.length(0);
+      expect(document.body.childNodes).to.have.lengthOf(initialBodyChildren + 1);
+      expect(div.childNodes).to.have.lengthOf(0);
 
       const wrapper = mount(<Foo />, { attachTo: div });
 
-      expect(wrapper.find('.in-foo')).to.have.length(1);
-      expect(document.body.childNodes).to.have.length(initialBodyChildren + 1);
-      expect(div.childNodes).to.have.length(1);
+      expect(wrapper.find('.in-foo')).to.have.lengthOf(1);
+      expect(document.body.childNodes).to.have.lengthOf(initialBodyChildren + 1);
+      expect(div.childNodes).to.have.lengthOf(1);
 
       wrapper.detach();
 
-      expect(document.body.childNodes).to.have.length(initialBodyChildren + 1);
-      expect(div.childNodes).to.have.length(0);
+      expect(document.body.childNodes).to.have.lengthOf(initialBodyChildren + 1);
+      expect(div.childNodes).to.have.lengthOf(0);
 
       global.document.body.removeChild(div);
 
-      expect(document.body.childNodes).to.have.length(initialBodyChildren);
-      expect(div.childNodes).to.have.length(0);
+      expect(document.body.childNodes).to.have.lengthOf(initialBodyChildren);
+      expect(div.childNodes).to.have.lengthOf(0);
     });
 
     it('should allow for multiple attaches/detaches on same node', () => {
@@ -3245,32 +3245,32 @@ describeWithDOM('mount', () => {
       const initialBodyChildren = document.body.childNodes.length;
       global.document.body.appendChild(div);
 
-      expect(document.body.childNodes).to.have.length(initialBodyChildren + 1);
-      expect(div.childNodes).to.have.length(0);
+      expect(document.body.childNodes).to.have.lengthOf(initialBodyChildren + 1);
+      expect(div.childNodes).to.have.lengthOf(0);
 
       wrapper = mount(<Foo />, { attachTo: div });
 
-      expect(wrapper.find('.in-foo')).to.have.length(1);
-      expect(document.body.childNodes).to.have.length(initialBodyChildren + 1);
-      expect(div.childNodes).to.have.length(1);
+      expect(wrapper.find('.in-foo')).to.have.lengthOf(1);
+      expect(document.body.childNodes).to.have.lengthOf(initialBodyChildren + 1);
+      expect(div.childNodes).to.have.lengthOf(1);
 
       wrapper.detach();
 
       wrapper = mount(<Bar />, { attachTo: div });
 
-      expect(wrapper.find('.in-bar')).to.have.length(1);
-      expect(document.body.childNodes).to.have.length(initialBodyChildren + 1);
-      expect(div.childNodes).to.have.length(1);
+      expect(wrapper.find('.in-bar')).to.have.lengthOf(1);
+      expect(document.body.childNodes).to.have.lengthOf(initialBodyChildren + 1);
+      expect(div.childNodes).to.have.lengthOf(1);
 
       wrapper.detach();
 
-      expect(document.body.childNodes).to.have.length(initialBodyChildren + 1);
-      expect(div.childNodes).to.have.length(0);
+      expect(document.body.childNodes).to.have.lengthOf(initialBodyChildren + 1);
+      expect(div.childNodes).to.have.lengthOf(0);
 
       global.document.body.removeChild(div);
 
-      expect(document.body.childNodes).to.have.length(initialBodyChildren);
-      expect(div.childNodes).to.have.length(0);
+      expect(document.body.childNodes).to.have.lengthOf(initialBodyChildren);
+      expect(div.childNodes).to.have.lengthOf(0);
     });
 
     it('will attach to the body successfully', () => {
@@ -3281,12 +3281,12 @@ describeWithDOM('mount', () => {
       }
       const wrapper = mount(<Bar />, { attachTo: document.body });
 
-      expect(wrapper.find('.in-bar')).to.have.length(1);
-      expect(document.body.childNodes).to.have.length(1);
+      expect(wrapper.find('.in-bar')).to.have.lengthOf(1);
+      expect(document.body.childNodes).to.have.lengthOf(1);
 
       wrapper.detach();
 
-      expect(document.body.childNodes).to.have.length(0);
+      expect(document.body.childNodes).to.have.lengthOf(0);
     });
   });
 
@@ -3297,11 +3297,11 @@ describeWithDOM('mount', () => {
       }
     }
     const wrapper = mount(<Foo />);
-    expect(wrapper).to.have.length(1);
+    expect(wrapper).to.have.lengthOf(1);
     expect(wrapper.type()).to.equal(Foo);
     expect(wrapper.html()).to.equal(null);
     const rendered = wrapper.render();
-    expect(rendered.length).to.equal(0);
+    expect(rendered).to.have.lengthOf(0);
     expect(rendered.html()).to.equal(null);
   });
 
@@ -3322,11 +3322,11 @@ describeWithDOM('mount', () => {
     const Foo = () => null;
 
     const wrapper = mount(<Foo />);
-    expect(wrapper).to.have.length(1);
+    expect(wrapper).to.have.lengthOf(1);
     expect(wrapper.type()).to.equal(Foo);
     expect(wrapper.html()).to.equal(null);
     const rendered = wrapper.render();
-    expect(rendered.length).to.equal(0);
+    expect(rendered).to.have.lengthOf(0);
     expect(rendered.html()).to.equal(null);
   });
 
@@ -3414,24 +3414,24 @@ describeWithDOM('mount', () => {
         const initialBodyChildren = document.body.childNodes.length;
         global.document.body.appendChild(div);
 
-        expect(document.body.childNodes).to.have.length(initialBodyChildren + 1);
-        expect(div.childNodes).to.have.length(0);
+        expect(document.body.childNodes).to.have.lengthOf(initialBodyChildren + 1);
+        expect(div.childNodes).to.have.lengthOf(0);
 
         const wrapper = mount(<Foo />, { attachTo: div });
 
-        expect(wrapper.find('.in-foo')).to.have.length(1);
-        expect(document.body.childNodes).to.have.length(initialBodyChildren + 1);
-        expect(div.childNodes).to.have.length(1);
+        expect(wrapper.find('.in-foo')).to.have.lengthOf(1);
+        expect(document.body.childNodes).to.have.lengthOf(initialBodyChildren + 1);
+        expect(div.childNodes).to.have.lengthOf(1);
 
         wrapper.detach();
 
-        expect(document.body.childNodes).to.have.length(initialBodyChildren + 1);
-        expect(div.childNodes).to.have.length(0);
+        expect(document.body.childNodes).to.have.lengthOf(initialBodyChildren + 1);
+        expect(div.childNodes).to.have.lengthOf(0);
 
         global.document.body.removeChild(div);
 
-        expect(document.body.childNodes).to.have.length(initialBodyChildren);
-        expect(div.childNodes).to.have.length(0);
+        expect(document.body.childNodes).to.have.lengthOf(initialBodyChildren);
+        expect(div.childNodes).to.have.lengthOf(0);
       });
 
       it('should allow for multiple attaches/detaches on same node', () => {
@@ -3443,32 +3443,32 @@ describeWithDOM('mount', () => {
         const initialBodyChildren = document.body.childNodes.length;
         global.document.body.appendChild(div);
 
-        expect(document.body.childNodes).to.have.length(initialBodyChildren + 1);
-        expect(div.childNodes).to.have.length(0);
+        expect(document.body.childNodes).to.have.lengthOf(initialBodyChildren + 1);
+        expect(div.childNodes).to.have.lengthOf(0);
 
         wrapper = mount(<Foo />, { attachTo: div });
 
-        expect(wrapper.find('.in-foo')).to.have.length(1);
-        expect(document.body.childNodes).to.have.length(initialBodyChildren + 1);
-        expect(div.childNodes).to.have.length(1);
+        expect(wrapper.find('.in-foo')).to.have.lengthOf(1);
+        expect(document.body.childNodes).to.have.lengthOf(initialBodyChildren + 1);
+        expect(div.childNodes).to.have.lengthOf(1);
 
         wrapper.detach();
 
         wrapper = mount(<Bar />, { attachTo: div });
 
-        expect(wrapper.find('.in-bar')).to.have.length(1);
-        expect(document.body.childNodes).to.have.length(initialBodyChildren + 1);
-        expect(div.childNodes).to.have.length(1);
+        expect(wrapper.find('.in-bar')).to.have.lengthOf(1);
+        expect(document.body.childNodes).to.have.lengthOf(initialBodyChildren + 1);
+        expect(div.childNodes).to.have.lengthOf(1);
 
         wrapper.detach();
 
-        expect(document.body.childNodes).to.have.length(initialBodyChildren + 1);
-        expect(div.childNodes).to.have.length(0);
+        expect(document.body.childNodes).to.have.lengthOf(initialBodyChildren + 1);
+        expect(div.childNodes).to.have.lengthOf(0);
 
         global.document.body.removeChild(div);
 
-        expect(document.body.childNodes).to.have.length(initialBodyChildren + 0);
-        expect(div.childNodes).to.have.length(0);
+        expect(document.body.childNodes).to.have.lengthOf(initialBodyChildren + 0);
+        expect(div.childNodes).to.have.lengthOf(0);
       });
 
       it('will attach to the body successfully', () => {
@@ -3476,12 +3476,12 @@ describeWithDOM('mount', () => {
 
         const wrapper = mount(<Bar />, { attachTo: document.body });
 
-        expect(wrapper.find('.in-bar')).to.have.length(1);
-        expect(document.body.childNodes).to.have.length(1);
+        expect(wrapper.find('.in-bar')).to.have.lengthOf(1);
+        expect(document.body.childNodes).to.have.lengthOf(1);
 
         wrapper.detach();
 
-        expect(document.body.childNodes).to.have.length(0);
+        expect(document.body.childNodes).to.have.lengthOf(0);
       });
     });
   });
