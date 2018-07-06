@@ -175,7 +175,8 @@ class ReactSixteenAdapter extends EnzymeAdapter {
   }
   createMountRenderer(options) {
     assertDomAvailable('mount');
-    const domNode = options.attachTo || global.document.createElement('div');
+    const { attachTo, hydrateIn } = options;
+    const domNode = hydrateIn || attachTo || global.document.createElement('div');
     let instance = null;
     return {
       render(el, context, callback) {
@@ -189,7 +190,9 @@ class ReactSixteenAdapter extends EnzymeAdapter {
           };
           const ReactWrapperComponent = createMountWrapper(el, options);
           const wrappedEl = React.createElement(ReactWrapperComponent, wrapperProps);
-          instance = ReactDOM.render(wrappedEl, domNode);
+          instance = hydrateIn
+            ? ReactDOM.hydrate(wrappedEl, domNode)
+            : ReactDOM.render(wrappedEl, domNode);
           if (typeof callback === 'function') {
             callback();
           }

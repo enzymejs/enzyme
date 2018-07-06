@@ -3,12 +3,12 @@
 Detaches the react tree from the DOM. Runs `ReactDOM.unmountComponentAtNode()` under the hood.
 
 This method will most commonly be used as a "cleanup" method if you decide to use the
-`attachTo` option in `mount(node, options)`.
+`attachTo` or `hydrateIn` option in `mount(node, options)`.
 
 The method is intentionally not "fluent" (in that it doesn't return `this`) because you should
 not be doing anything with this wrapper after this method is called.
 
-Using the `attachTo` is not generally recommended unless it is absolutely necessary to test
+Using `attachTo`/`hydrateIn` is not generally recommended unless it is absolutely necessary to test
 something.  It is your responsibility to clean up after yourself at the end of the test if you do
 decide to use it, though.
 
@@ -20,6 +20,10 @@ With the `attachTo` option, you can mount components to attached DOM elements:
 ```jsx
 // render a component directly into document.body
 const wrapper = mount(<Bar />, { attachTo: document.body });
+
+// Or, with the `hydrateIn` option, you can mount components on top of existing DOM elements:
+// hydrate a component directly onto document.body
+const hydratedWrapper = mount(<Bar />, { hydrateIn: document.body });
 
 // we can see that the component is rendered into the document
 expect(wrapper.find('.in-bar')).to.have.length(1);
@@ -44,6 +48,8 @@ expect(div.childNodes).to.have.length(0);
 
 // mount a component passing div into the `attachTo` option
 const wrapper = mount(<Foo />, { attachTo: div });
+// or, mount a component passing div into the `hydrateIn` option
+const hydratedWrapper = mount(<Foo />, { hydrateIn: div });
 
 // we can see now the component is rendered into the document
 expect(wrapper.find('.in-foo')).to.have.length(1);

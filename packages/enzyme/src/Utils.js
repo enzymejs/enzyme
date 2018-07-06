@@ -21,9 +21,25 @@ export function getAdapter(options = {}) {
 }
 
 export function makeOptions(options) {
+  const { attachTo, hydrateIn } = options;
+
+  if (attachTo && hydrateIn && attachTo !== hydrateIn) {
+    throw new TypeError('If both the `attachTo` and `hydrateIn` options are provided, they must be === (for backwards compatibility)');
+  }
+
+  // neither present: both undefined
+  // only attachTo present: attachTo set, hydrateIn undefined
+  // only hydrateIn present: both set to hydrateIn
+  // both present (and ===, per above): both set to hydrateIn
+  const mountTargets = {
+    attachTo: hydrateIn || attachTo || undefined,
+    hydrateIn: hydrateIn || undefined,
+  };
+
   return {
     ...configuration.get(),
     ...options,
+    ...mountTargets,
   };
 }
 
