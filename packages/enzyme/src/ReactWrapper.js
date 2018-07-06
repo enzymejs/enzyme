@@ -688,7 +688,11 @@ class ReactWrapper {
    * @returns {ReactWrapper}
    */
   closest(selector) {
-    return this.is(selector) ? this : this.parents().filter(selector).first();
+    if (this.is(selector)) {
+      return this;
+    }
+    const matchingAncestors = this.parents().filter(selector);
+    return matchingAncestors.length > 0 ? matchingAncestors.first() : this.findWhere(() => false);
   }
 
   /**

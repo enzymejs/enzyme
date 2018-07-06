@@ -2506,6 +2506,21 @@ describeWithDOM('mount', () => {
 
       expect(wrapper.find('.bux').closest('.baz').hasClass('bux')).to.equal(true);
     });
+
+    it('should not find a nonexistent match', () => {
+      const wrapper = mount((
+        <div className="foo">
+          <div className="bar" />
+        </div>
+      ));
+
+      expect(wrapper.find('.fooooo')).to.have.lengthOf(0);
+
+      const bar = wrapper.find('.bar');
+      expect(bar).to.have.lengthOf(1);
+
+      expect(bar.closest('.fooooo')).to.have.lengthOf(0);
+    });
   });
 
   describe('.hasClass(className)', () => {
