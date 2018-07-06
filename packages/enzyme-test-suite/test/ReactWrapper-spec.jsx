@@ -2648,6 +2648,16 @@ describeWithDOM('mount', () => {
         expect(wrapper.hasClass('foo')).to.equal(false);
       });
     });
+
+    it('works with a non-string `className` prop', () => {
+      class Foo extends React.Component {
+        render() {
+          return <div {...this.props} />;
+        }
+      }
+      const wrapper = mount(<Foo className={{ classA: true, classB: false }} />);
+      expect(wrapper.hasClass('foo')).to.equal(false);
+    });
   });
 
   describe('.forEach(fn)', () => {

@@ -2369,6 +2369,16 @@ describe('shallow', () => {
       expect(wrapper.hasClass('FoOo')).to.equal(true);
       expect(wrapper.hasClass('doesnt-exist')).to.equal(false);
     });
+
+    it('works with a non-string `className` prop', () => {
+      class Foo extends React.Component {
+        render() {
+          return <Foo {...this.props} />;
+        }
+      }
+      const wrapper = shallow(<Foo className={{ classA: true, classB: false }} />);
+      expect(wrapper.hasClass('foo')).to.equal(false);
+    });
   });
 
   describe('.forEach(fn)', () => {
@@ -2643,6 +2653,7 @@ describe('shallow', () => {
       expect(wrapper.find('.foo').some('.foo')).to.equal(true);
       expect(wrapper.find('.foo').some('.bar')).to.equal(false);
     });
+
     it('should throw if called on root', () => {
       const wrapper = shallow((
         <div>
