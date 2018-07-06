@@ -4174,4 +4174,18 @@ describeWithDOM('mount', () => {
       expect(divProps.onClick).to.be.a('function');
     });
   });
+
+  describe('.root()', () => {
+    it('returns the root component instance', () => {
+      class Fixture extends React.Component {
+        render() {
+          return <div><span /><span /></div>;
+        }
+      }
+      const wrapper = mount(<Fixture />);
+      const root = wrapper.root();
+      expect(root.is(Fixture)).to.equal(true);
+      expect(root.childAt(0).children().debug()).to.equal('<span />\n\n\n<span />');
+    });
+  });
 });

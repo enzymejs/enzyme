@@ -5088,4 +5088,18 @@ describe('shallow', () => {
       expect(divProps.onClick).to.be.a('function');
     });
   });
+
+  describe('.root()', () => {
+    it('returns the root DOM node', () => {
+      class Fixture extends React.Component {
+        render() {
+          return <div><span /><span /></div>;
+        }
+      }
+      const wrapper = shallow(<Fixture />);
+      const root = wrapper.root();
+      expect(root.is('div')).to.equal(true);
+      expect(root.children().debug()).to.equal('<span />\n\n\n<span />');
+    });
+  });
 });
