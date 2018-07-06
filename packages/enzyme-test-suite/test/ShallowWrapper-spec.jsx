@@ -1407,6 +1407,48 @@ describe('shallow', () => {
       const wrapper = shallow(<div />);
       expect(wrapper.simulate('click')).to.equal(wrapper);
     });
+
+    it('works with .parent()/.parents()/.closest()', () => {
+      function getWrapper() {
+        const onClick = sinon.stub();
+        const wrapper = shallow((
+          <div className="div-elem">
+            <span className="parent-elem" onClick={onClick}>
+              <span className="child-elem">click me</span>
+            </span>
+          </div>
+        ));
+        return { wrapper, onClick };
+      }
+
+      it('child should fire onClick', () => {
+        const { wrapper, onClick } = getWrapper();
+
+        wrapper.find('.child-elem').simulate('click');
+        expect(onClick).to.have.property('callCount', 1);
+      });
+
+      it('parents should fire onClick', () => {
+        const { wrapper, onClick } = getWrapper();
+
+        wrapper.find('.child-elem').parents('.parent-elem').simulate('click');
+        expect(onClick).to.have.property('callCount', 1);
+      });
+
+      it('closest should fire onClick', () => {
+        const { wrapper, onClick } = getWrapper();
+
+        wrapper.find('.child-elem').closest('.parent-elem').simulate('click');
+        expect(onClick).to.have.property('callCount', 1);
+      });
+
+      it('parent should fire onClick', () => {
+        const { wrapper, onClick } = getWrapper();
+
+        wrapper.find('.child-elem').parent().simulate('click');
+        expect(onClick).toHaveBeenCalledTimes(4);
+      });
+    });
   });
 
   describe('.setState(newState[, callback])', () => {
