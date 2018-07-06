@@ -2348,6 +2348,24 @@ describeWithDOM('mount', () => {
         expect(wrapper.children().children().at(2).hasClass('baz')).to.equal(true);
       });
     });
+
+    it('returns duplicates untouched', () => {
+      class Foo extends React.Component {
+        render() {
+          const foo = 'Foo';
+          return (
+            <div>
+              {foo} Bar {foo} Bar {foo}
+            </div>
+          )
+        }
+      }
+
+      const wrapper = mount(<Foo />);
+      const children = wrapper.children();
+      const textNodes = children.map(x => x.text());
+      expect(textNodes).to.eql(['Foo Bar Foo Bar Foo']);
+    });
   });
 
   describe('.childAt(index)', () => {

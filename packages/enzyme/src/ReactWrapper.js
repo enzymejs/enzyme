@@ -1,6 +1,5 @@
 import cheerio from 'cheerio';
 import flatten from 'lodash/flatten';
-import unique from 'lodash/uniq';
 import compact from 'lodash/compact';
 
 import {
@@ -888,8 +887,7 @@ class ReactWrapper {
   flatMap(fn) {
     const nodes = this.getNodesInternal().map((n, i) => fn.call(this, this.wrap(n), i));
     const flattened = flatten(nodes, true);
-    const uniques = unique(flattened);
-    const compacted = compact(uniques);
+    const compacted = compact(flattened);
     return this.wrap(compacted);
   }
 
