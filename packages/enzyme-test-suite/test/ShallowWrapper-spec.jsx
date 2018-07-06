@@ -2162,7 +2162,7 @@ describe('shallow', () => {
             <div>
               {foo} Bar {foo} Bar {foo}
             </div>
-          )
+          );
         }
       }
 

@@ -2357,7 +2357,7 @@ describeWithDOM('mount', () => {
             <div>
               {foo} Bar {foo} Bar {foo}
             </div>
-          )
+          );
         }
       }
 
