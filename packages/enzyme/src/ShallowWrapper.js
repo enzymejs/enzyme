@@ -1116,7 +1116,7 @@ class ShallowWrapper {
    * @returns {ReactElement}
    */
   get(index) {
-    return getAdapter(this[OPTIONS]).nodeToElement(this.getNodesInternal()[index]);
+    return this.getElements()[index];
   }
 
   /**
@@ -1126,7 +1126,11 @@ class ShallowWrapper {
    * @returns {ShallowWrapper}
    */
   at(index) {
-    return this.wrap(this.getNodesInternal()[index]);
+    const nodes = this.getNodesInternal();
+    if (index < nodes.length) {
+      return this.wrap(nodes[index]);
+    }
+    return this.wrap([]);
   }
 
   /**
