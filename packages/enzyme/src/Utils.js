@@ -4,6 +4,8 @@ import is from 'object-is';
 import entries from 'object.entries';
 import functionName from 'function.prototype.name';
 import has from 'has';
+import flat from 'array.prototype.flat';
+
 import configuration from './configuration';
 import validateAdapter from './validateAdapter';
 import { childrenOfNode } from './RSTTraversal';
@@ -72,11 +74,12 @@ function internalChildrenCompare(a, b, lenComp, isLoose) {
   if (!Array.isArray(a) && !Array.isArray(b)) {
     return nodeCompare(a, b, lenComp);
   }
-  if (!a && !b) return true;
-  if (a.length !== b.length) return false;
-  if (a.length === 0 && b.length === 0) return true;
-  for (let i = 0; i < a.length; i += 1) {
-    if (!nodeCompare(a[i], b[i], lenComp)) return false;
+  const flatA = flat(a, Infinity);
+  const flatB = flat(b, Infinity);
+  if (flatA.length !== flatB.length) return false;
+  if (flatA.length === 0 && flatB.length === 0) return true;
+  for (let i = 0; i < flatA.length; i += 1) {
+    if (!nodeCompare(flatA[i], flatB[i], lenComp)) return false;
   }
   return true;
 }

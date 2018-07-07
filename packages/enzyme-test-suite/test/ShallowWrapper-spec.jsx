@@ -425,6 +425,35 @@ describe('shallow', () => {
         expect(shallow(<Foo />).equals(<Foo />)).to.equal(false);
       });
     });
+
+    it('flattens arrays of children to compare', () => {
+      class TwoChildren extends React.Component {
+        render() {
+          return (
+            <div className="parent-component-class">
+              <div key="a" className="asd" />
+              <div key="b" className="fgh" />
+            </div>
+          );
+        }
+      }
+
+      class TwoChildrenOneArrayed extends React.Component {
+        render() {
+          return (
+            <div className="parent-component-class">
+              <div key="a" className="asd" />
+              {[<div key="b" className="fgh" />]}
+            </div>
+          );
+        }
+      }
+      const twoChildren = shallow(<TwoChildren />);
+      const twoChildrenOneArrayed = shallow(<TwoChildrenOneArrayed />);
+
+      expect(twoChildren.equals(twoChildrenOneArrayed.getElement())).to.equal(true);
+      expect(twoChildrenOneArrayed.equals(twoChildren.getElement())).to.equal(true);
+    });
   });
 
   describe('.hostNodes()', () => {
