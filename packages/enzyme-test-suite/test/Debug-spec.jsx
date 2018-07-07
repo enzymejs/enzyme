@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import React from 'react';
 import { mount, shallow } from 'enzyme';
-import configuration from 'enzyme/build/configuration';
+import { get } from 'enzyme/build/configuration';
 import {
   spaces,
   indent,
@@ -17,7 +17,7 @@ import {
 } from './_helpers';
 import { REACT013 } from './_helpers/version';
 
-const { adapter } = configuration.get();
+const { adapter } = get();
 
 const debugElement = element => debugNode(adapter.elementToNode(element));
 

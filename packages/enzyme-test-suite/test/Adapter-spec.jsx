@@ -1,7 +1,7 @@
 import React from 'react';
 import { expect } from 'chai';
 import jsdom from 'jsdom';
-import configuration from 'enzyme/build/configuration';
+import { get } from 'enzyme/build/configuration';
 import { configure, shallow } from 'enzyme';
 
 import './_helpers/setupAdapters';
@@ -10,7 +10,7 @@ import { renderToString } from './_helpers/react-compat';
 import { REACT013, REACT16 } from './_helpers/version';
 import { itIf, describeWithDOM } from './_helpers';
 
-const { adapter } = configuration.get();
+const { adapter } = get();
 
 const prettyFormat = o => JSON.stringify(o, null, 2);
 

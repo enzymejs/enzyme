@@ -6,7 +6,7 @@ import functionName from 'function.prototype.name';
 import has from 'has';
 import flat from 'array.prototype.flat';
 
-import configuration from './configuration';
+import { get } from './configuration';
 import validateAdapter from './validateAdapter';
 import { childrenOfNode } from './RSTTraversal';
 
@@ -17,7 +17,7 @@ export function getAdapter(options = {}) {
     validateAdapter(options.adapter);
     return options.adapter;
   }
-  const { adapter } = configuration.get();
+  const { adapter } = get();
   validateAdapter(adapter);
   return adapter;
 }
@@ -39,7 +39,7 @@ export function makeOptions(options) {
   };
 
   return {
-    ...configuration.get(),
+    ...get(),
     ...options,
     ...mountTargets,
   };
