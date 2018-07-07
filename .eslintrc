@@ -6,6 +6,7 @@
     "mocha": true
   },
   "rules": {
+    "react/jsx-one-expression-per-line": 0, // TODO: re-enable once fixed
     "id-length": 0,
     "new-cap": [2, { "capIsNewExceptions": ["AND"] }],
     "react/jsx-pascal-case": [2, { "allowAllCaps": true }],

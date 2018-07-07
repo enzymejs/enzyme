@@ -2,13 +2,31 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { expect } from 'chai';
 import sinon from 'sinon';
-import { shallow, render, ShallowWrapper, mount } from 'enzyme';
+import {
+  shallow,
+  render,
+  ShallowWrapper,
+  mount,
+} from 'enzyme';
 import { ITERATOR_SYMBOL, withSetStateAllowed, sym } from 'enzyme/build/Utils';
 
 import './_helpers/setupAdapters';
 import { createClass, createContext } from './_helpers/react-compat';
-import { describeIf, itIf, itWithData, generateEmptyRenderData } from './_helpers';
-import { REACT013, REACT014, REACT15, REACT150_4, REACT16, REACT163, is } from './_helpers/version';
+import {
+  describeIf,
+  itIf,
+  itWithData,
+  generateEmptyRenderData,
+} from './_helpers';
+import {
+  REACT013,
+  REACT014,
+  REACT15,
+  REACT150_4,
+  REACT16,
+  REACT163,
+  is,
+} from './_helpers/version';
 import sloppyReturnThis from './_helpers/untranspiledSloppyReturnThis';
 
 // The shallow renderer in react 16 does not yet support batched updates. When it does,
@@ -1047,7 +1065,6 @@ describe('shallow', () => {
     });
 
     it('should call componentWillReceiveProps for new renders', () => {
-
       const spy = sinon.spy();
 
       class Foo extends React.Component {
@@ -1055,6 +1072,7 @@ describe('shallow', () => {
           super(props);
           this.componentWillReceiveProps = spy;
         }
+
         render() {
           return (
             <div className={this.props.id}>
@@ -1123,16 +1141,20 @@ describe('shallow', () => {
         componentWillReceiveProps(nextProps) {
           spy('componentWillReceiveProps', this.props, nextProps);
         }
+
         shouldComponentUpdate(nextProps) {
           spy('shouldComponentUpdate', this.props, nextProps);
           return true;
         }
+
         componentWillUpdate(nextProps) {
           spy('componentWillUpdate', this.props, nextProps);
         }
+
         componentDidUpdate(prevProps) {
           spy('componentDidUpdate', prevProps, this.props);
         }
+
         render() {
           return (
             <div />
@@ -1414,10 +1436,12 @@ describe('shallow', () => {
           };
           this.onClick = this.onClick.bind(this);
         }
+
         onClick() {
           this.setState({ count: this.state.count + 1 });
           this.setState({ count: this.state.count + 1 });
         }
+
         render() {
           renderCount += 1;
           return (
@@ -1487,6 +1511,7 @@ describe('shallow', () => {
           super(props);
           this.state = { id: 'foo' };
         }
+
         render() {
           return (
             <div className={this.state.id} />
@@ -1505,6 +1530,7 @@ describe('shallow', () => {
           super(props);
           this.state = { id: 'foo' };
         }
+
         render() {
           return (
             <div className={this.state.id} />
@@ -1867,7 +1893,6 @@ describe('shallow', () => {
 
       it.skip('handles innerHTML', () => {
         const wrapper = shallow(<div><div dangerouslySetInnerHTML={{ __html: '{}' }} /></div>);
-        console.log(wrapper.debug());
         expect(wrapper.text()).to.equal('{}');
       });
     });
@@ -1976,7 +2001,7 @@ describe('shallow', () => {
     it('should return the props of key `name`', () => {
       const fn = () => ({});
       const wrapper = shallow((
-        <div id="fooId" className="bax" onClick={fn} >
+        <div id="fooId" className="bax" onClick={fn}>
           <div className="baz" />
           <div className="foo" />
         </div>
@@ -2042,6 +2067,7 @@ describe('shallow', () => {
           super(props);
           this.state = { foo: 'foo' };
         }
+
         render() { return <div>{this.state.foo}</div>; }
       }
       const wrapper = shallow(<Foo />);
@@ -2054,6 +2080,7 @@ describe('shallow', () => {
           super(props);
           this.state = { foo: 'foo' };
         }
+
         render() { return <div>{this.state.foo}</div>; }
       }
       const wrapper = shallow(<Foo />);
@@ -2067,6 +2094,7 @@ describe('shallow', () => {
           super(props);
           this.state = { foo: 'foo' };
         }
+
         render() { return <div>{this.state.foo}</div>; }
       }
       const wrapper = shallow(<Foo />);
@@ -3141,9 +3169,11 @@ describe('shallow', () => {
           super(props);
           this.setRef = this.setRef.bind(this);
         }
+
         setRef(node) {
           this.node = node;
         }
+
         render() {
           return (
             <div ref={this.setRef} className="foo" />
@@ -3163,9 +3193,11 @@ describe('shallow', () => {
           this.setRef = this.setRef.bind(this);
           this.node = null;
         }
+
         setRef(node) {
           this.node = node;
         }
+
         render() {
           return (
             <div>
@@ -3186,9 +3218,11 @@ describe('shallow', () => {
           super(props);
           this.setRef = this.setRef.bind(this);
         }
+
         setRef(node) {
           this.node = node;
         }
+
         render() {
           return (
             <div ref={this.setRef} className="foo" />
@@ -3273,6 +3307,7 @@ describe('shallow', () => {
           super(props);
           this.componentWillUnmount = spy;
         }
+
         render() {
           return (
             <div className={this.props.id}>
@@ -3295,6 +3330,7 @@ describe('shallow', () => {
           return (<div className="in-foo" />);
         }
       }
+
       class Bar extends React.Component {
         render() {
           return (
@@ -3322,6 +3358,7 @@ describe('shallow', () => {
         const Foo = () => (
           <div className="in-foo" />
         );
+
         const Bar = () => (
           <div className="in-bar">
             <Foo />
@@ -3375,28 +3412,23 @@ describe('shallow', () => {
       let wrapper;
       const spy = sinon.spy();
       class Foo extends React.Component {
-        componentWillMount() {
-          spy('componentWillMount');
-        }
-        componentDidMount() {
-          spy('componentDidMount');
-        }
-        componentWillReceiveProps() {
-          spy('componentWillReceiveProps');
-        }
+        componentWillMount() { spy('componentWillMount'); }
+
+        componentDidMount() { spy('componentDidMount'); }
+
+        componentWillReceiveProps() { spy('componentWillReceiveProps'); }
+
         shouldComponentUpdate() {
           spy('shouldComponentUpdate');
           return true;
         }
-        componentWillUpdate() {
-          spy('componentWillUpdate');
-        }
-        componentDidUpdate() {
-          spy('componentDidUpdate');
-        }
-        componentWillUnmount() {
-          spy('componentWillUnmount');
-        }
+
+        componentWillUpdate() { spy('componentWillUpdate'); }
+
+        componentDidUpdate() { spy('componentDidUpdate'); }
+
+        componentWillUnmount() { spy('componentWillUnmount'); }
+
         render() {
           spy('render');
           return <div>foo</div>;
@@ -3522,9 +3554,11 @@ describe('shallow', () => {
           componentWillMount() {
             spy('componentWillMount');
           }
+
           componentDidMount() {
             spy('componentDidMount');
           }
+
           render() {
             spy('render');
             return <div>foo</div>;
@@ -3547,14 +3581,17 @@ describe('shallow', () => {
               count: 0,
             };
           }
+
           componentWillMount() {
             this.setState({ count: this.state.count + 1 });
             this.setState({ count: this.state.count + 1 });
           }
+
           componentDidMount() {
             this.setState({ count: this.state.count + 1 });
             this.setState({ count: this.state.count + 1 });
           }
+
           render() {
             spy();
             return <div>{this.state.count}</div>;
@@ -3577,19 +3614,24 @@ describe('shallow', () => {
               foo: 'state',
             };
           }
+
           componentWillReceiveProps(nextProps, nextContext) {
             spy('componentWillReceiveProps', this.props, nextProps, nextContext);
           }
+
           shouldComponentUpdate(nextProps, nextState, nextContext) {
             spy('shouldComponentUpdate', this.props, nextProps, this.state, nextState, nextContext);
             return true;
           }
+
           componentWillUpdate(nextProps, nextState, nextContext) {
             spy('componentWillUpdate', this.props, nextProps, this.state, nextState, nextContext);
           }
+
           componentDidUpdate(prevProps, prevState, prevContext) {
             spy('componentDidUpdate', prevProps, this.props, prevState, this.state, prevContext);
           }
+
           render() {
             spy('render');
             return <div>{this.state.foo}</div>;
@@ -3673,16 +3715,20 @@ describe('shallow', () => {
           componentWillReceiveProps(nextProps) {
             spy('componentWillReceiveProps', this.props, nextProps);
           }
+
           shouldComponentUpdate(nextProps) {
             spy('shouldComponentUpdate', this.props, nextProps);
             return true;
           }
+
           componentWillUpdate(nextProps) {
             spy('componentWillUpdate', this.props, nextProps);
           }
+
           componentDidUpdate(prevProps) {
             spy('componentDidUpdate', prevProps, this.props);
           }
+
           render() {
             return (
               <div />
@@ -3725,16 +3771,20 @@ describe('shallow', () => {
           componentWillReceiveProps() {
             spy('componentWillReceiveProps');
           }
+
           shouldComponentUpdate() {
             spy('shouldComponentUpdate');
             return false;
           }
+
           componentWillUpdate() {
             spy('componentWillUpdate');
           }
+
           componentDidUpdate() {
             spy('componentDidUpdate');
           }
+
           render() {
             spy('render');
             return <div>foo</div>;
@@ -3765,10 +3815,12 @@ describe('shallow', () => {
               count: 0,
             };
           }
+
           componentWillReceiveProps() {
             this.setState({ count: this.state.count + 1 });
             this.setState({ count: this.state.count + 1 });
           }
+
           render() {
             spy();
             return <div>{this.props.foo}</div>;
@@ -3791,6 +3843,7 @@ describe('shallow', () => {
               count: 0,
             };
           }
+
           componentWillUpdate() {
             if (!this.updated) {
               this.updated = true;
@@ -3798,6 +3851,7 @@ describe('shallow', () => {
               this.setState({ count: this.state.count + 1 });
             }
           }
+
           render() {
             spy();
             return <div>{this.props.foo}</div>;
@@ -3820,6 +3874,7 @@ describe('shallow', () => {
               count: 0,
             };
           }
+
           componentDidUpdate() {
             if (!this.updated) {
               this.updated = true;
@@ -3829,6 +3884,7 @@ describe('shallow', () => {
               /* eslint-enable react/no-did-update-set-state */
             }
           }
+
           render() {
             spy();
             return <div>{this.props.foo}</div>;
@@ -3853,16 +3909,20 @@ describe('shallow', () => {
               foo: 'bar',
             };
           }
+
           shouldComponentUpdate(nextProps, nextState, nextContext) {
             spy('shouldComponentUpdate', this.props, nextProps, this.state, nextState, nextContext);
             return true;
           }
+
           componentWillUpdate(nextProps, nextState, nextContext) {
             spy('componentWillUpdate', this.props, nextProps, this.state, nextState, nextContext);
           }
+
           componentDidUpdate(prevProps, prevState, prevContext) {
             spy('componentDidUpdate', prevProps, this.props, prevState, this.state, prevContext);
           }
+
           render() {
             spy('render');
             return <div>{this.state.foo}</div>;
@@ -3917,16 +3977,20 @@ describe('shallow', () => {
               foo: 'bar',
             };
           }
+
           shouldComponentUpdate() {
             spy('shouldComponentUpdate');
             return false;
           }
+
           componentWillUpdate() {
             spy('componentWillUpdate');
           }
+
           componentDidUpdate() {
             spy('componentDidUpdate');
           }
+
           render() {
             spy('render');
             return <div>{this.state.foo}</div>;
@@ -3950,6 +4014,7 @@ describe('shallow', () => {
               count: 0,
             };
           }
+
           componentWillUpdate() {
             if (!this.updated) {
               this.updated = true;
@@ -3957,6 +4022,7 @@ describe('shallow', () => {
               this.setState({ count: this.state.count + 1 });
             }
           }
+
           render() {
             spy();
             return <div>{this.state.name}</div>;
@@ -3980,6 +4046,7 @@ describe('shallow', () => {
               count: 0,
             };
           }
+
           componentDidUpdate() {
             if (!this.updated) {
               this.updated = true;
@@ -3989,6 +4056,7 @@ describe('shallow', () => {
               /* eslint-enable react/no-did-update-set-state */
             }
           }
+
           render() {
             spy();
             return <div>{this.state.name}</div>;
@@ -4012,16 +4080,20 @@ describe('shallow', () => {
               foo: 'state',
             };
           }
+
           shouldComponentUpdate(nextProps, nextState, nextContext) {
             spy('shouldComponentUpdate', this.props, nextProps, this.state, nextState, nextContext);
             return true;
           }
+
           componentWillUpdate(nextProps, nextState, nextContext) {
             spy('componentWillUpdate', this.props, nextProps, this.state, nextState, nextContext);
           }
+
           componentDidUpdate(prevProps, prevState, prevContext) {
             spy('componentDidUpdate', prevProps, this.props, prevState, this.state, prevContext);
           }
+
           render() {
             spy('render');
             return <div>{this.state.foo}</div>;
@@ -4074,12 +4146,15 @@ describe('shallow', () => {
             spy('shouldComponentUpdate');
             return false;
           }
+
           componentWillUpdate() {
             spy('componentWillUpdate');
           }
+
           componentDidUpdate() {
             spy('componentDidUpdate');
           }
+
           render() {
             spy('render');
             return <div>foo</div>;
@@ -4108,6 +4183,7 @@ describe('shallow', () => {
               count: 0,
             };
           }
+
           componentWillUpdate() {
             if (!this.updated) {
               this.updated = true;
@@ -4115,6 +4191,7 @@ describe('shallow', () => {
               this.setState({ count: this.state.count + 1 });
             }
           }
+
           render() {
             spy();
             return <div>{this.state.name}</div>;
@@ -4142,6 +4219,7 @@ describe('shallow', () => {
               count: 0,
             };
           }
+
           componentDidUpdate() {
             if (!this.updated) {
               this.updated = true;
@@ -4151,6 +4229,7 @@ describe('shallow', () => {
               /* eslint-enable react/no-did-update-set-state */
             }
           }
+
           render() {
             spy();
             return <div>{this.state.name}</div>;
@@ -4176,6 +4255,7 @@ describe('shallow', () => {
           componentWillUnmount() {
             spy();
           }
+
           render() {
             return <div>foo</div>;
           }
@@ -4196,13 +4276,16 @@ describe('shallow', () => {
               foo: 'bar',
             };
           }
+
           componentDidUpdate(prevProps, prevState, snapshot) {
             spy('componentDidUpdate', prevProps, this.props, prevState, this.state, snapshot);
           }
+
           getSnapshotBeforeUpdate(prevProps, prevState) {
             spy('getSnapshotBeforeUpdate', prevProps, this.props, prevState, this.state);
             return { snapshot: 'ok' };
           }
+
           render() {
             spy('render');
             return <div>foo</div>;
@@ -4232,6 +4315,7 @@ describe('shallow', () => {
         componentDidMount() {
           spy();
         }
+
         render() {
           return <div>foo</div>;
         }
@@ -4249,10 +4333,12 @@ describe('shallow', () => {
             foo: 'bar',
           };
         }
+
         shouldComponentUpdate() {
           spy();
           return false;
         }
+
         render() {
           return <div>{this.state.foo}</div>;
         }
@@ -5010,11 +5096,13 @@ describe('shallow', () => {
             count: 0,
           };
         }
+
         onIncrement() {
           this.setState({
             count: this.state.count + 1,
           });
         }
+
         render() {
           return (
             <div>
@@ -5051,6 +5139,7 @@ describe('shallow', () => {
               count: 0,
             };
           }
+
           onIncrement() {
             setTimeout(() => {
               this.setState({
@@ -5058,6 +5147,7 @@ describe('shallow', () => {
               }, resolve);
             });
           }
+
           render() {
             return (
               <div>

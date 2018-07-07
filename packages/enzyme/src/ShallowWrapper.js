@@ -73,40 +73,34 @@ function validateOptions(options) {
     supportPrevContextArgumentOfComponentDidUpdate,
     lifecycles,
   } = options;
-  if (
-    typeof lifecycleExperimental !== 'undefined' &&
-    typeof lifecycleExperimental !== 'boolean'
-  ) {
+  if (typeof lifecycleExperimental !== 'undefined' && typeof lifecycleExperimental !== 'boolean') {
     throw new Error('lifecycleExperimental must be either true or false if provided');
   }
 
-  if (
-    typeof disableLifecycleMethods !== 'undefined' &&
-    typeof disableLifecycleMethods !== 'boolean'
-  ) {
+  if (typeof disableLifecycleMethods !== 'undefined' && typeof disableLifecycleMethods !== 'boolean') {
     throw new Error('disableLifecycleMethods must be either true or false if provided');
   }
 
   if (
-    lifecycleExperimental != null &&
-    disableLifecycleMethods != null &&
-    lifecycleExperimental === disableLifecycleMethods
+    lifecycleExperimental != null
+    && disableLifecycleMethods != null
+    && lifecycleExperimental === disableLifecycleMethods
   ) {
     throw new Error('lifecycleExperimental and disableLifecycleMethods cannot be set to the same value');
   }
 
   if (
-    typeof enableComponentDidUpdateOnSetState !== 'undefined' &&
-    lifecycles.componentDidUpdate &&
-    lifecycles.componentDidUpdate.onSetState !== enableComponentDidUpdateOnSetState
+    typeof enableComponentDidUpdateOnSetState !== 'undefined'
+    && lifecycles.componentDidUpdate
+    && lifecycles.componentDidUpdate.onSetState !== enableComponentDidUpdateOnSetState
   ) {
     throw new TypeError('the legacy enableComponentDidUpdateOnSetState option should be matched by `lifecycles: { componentDidUpdate: { onSetState: true } }`, for compatibility');
   }
 
   if (
-    typeof supportPrevContextArgumentOfComponentDidUpdate !== 'undefined' &&
-    lifecycles.componentDidUpdate &&
-    lifecycles.componentDidUpdate.prevContext !== supportPrevContextArgumentOfComponentDidUpdate
+    typeof supportPrevContextArgumentOfComponentDidUpdate !== 'undefined'
+    && lifecycles.componentDidUpdate
+    && lifecycles.componentDidUpdate.prevContext !== supportPrevContextArgumentOfComponentDidUpdate
   ) {
     throw new TypeError('the legacy supportPrevContextArgumentOfComponentDidUpdate option should be matched by `lifecycles: { componentDidUpdate: { prevContext: true } }`, for compatibility');
   }
@@ -175,9 +169,9 @@ class ShallowWrapper {
       this[RENDERER].render(nodes, options.context);
       const { instance } = this[RENDERER].getNode();
       if (
-        !options.disableLifecycleMethods &&
-        instance &&
-        typeof instance.componentDidMount === 'function'
+        !options.disableLifecycleMethods
+        && instance
+        && typeof instance.componentDidMount === 'function'
       ) {
         this[RENDERER].batchedUpdates(() => {
           instance.componentDidMount();
@@ -320,9 +314,9 @@ class ShallowWrapper {
           let shouldRender = true;
           let spy;
           if (
-            !this[OPTIONS].disableLifecycleMethods &&
-            instance &&
-            typeof instance.shouldComponentUpdate === 'function'
+            !this[OPTIONS].disableLifecycleMethods
+            && instance
+            && typeof instance.shouldComponentUpdate === 'function'
           ) {
             spy = spyMethod(instance, 'shouldComponentUpdate');
           }
@@ -333,9 +327,9 @@ class ShallowWrapper {
             spy.restore();
           }
           if (
-            shouldRender &&
-            !this[OPTIONS].disableLifecycleMethods &&
-            instance
+            shouldRender
+            && !this[OPTIONS].disableLifecycleMethods
+            && instance
           ) {
             const lifecycles = getAdapterLifecycles(adapter);
 
@@ -345,14 +339,14 @@ class ShallowWrapper {
                 snapshot = instance.getSnapshotBeforeUpdate(prevProps, state);
               }
               if (
-                lifecycles.componentDidUpdate &&
-                typeof instance.componentDidUpdate === 'function'
+                lifecycles.componentDidUpdate
+                && typeof instance.componentDidUpdate === 'function'
               ) {
                 instance.componentDidUpdate(prevProps, state, snapshot);
               }
             } else if (
-              lifecycles.componentDidUpdate &&
-              typeof instance.componentDidUpdate === 'function'
+              lifecycles.componentDidUpdate
+              && typeof instance.componentDidUpdate === 'function'
             ) {
               if (lifecycles.componentDidUpdate.prevContext) {
                 instance.componentDidUpdate(prevProps, state, prevContext);
@@ -426,11 +420,11 @@ class ShallowWrapper {
         let spy;
         let shouldRender = true;
         if (
-          !this[OPTIONS].disableLifecycleMethods &&
-          lifecycles.componentDidUpdate &&
-          lifecycles.componentDidUpdate.onSetState &&
-          instance &&
-          typeof instance.shouldComponentUpdate === 'function'
+          !this[OPTIONS].disableLifecycleMethods
+          && lifecycles.componentDidUpdate
+          && lifecycles.componentDidUpdate.onSetState
+          && instance
+          && typeof instance.shouldComponentUpdate === 'function'
         ) {
           spy = spyMethod(instance, 'shouldComponentUpdate');
         }
@@ -442,15 +436,15 @@ class ShallowWrapper {
           spy.restore();
         }
         if (
-          shouldRender &&
-          !this[OPTIONS].disableLifecycleMethods &&
-          lifecycles.componentDidUpdate &&
-          lifecycles.componentDidUpdate.onSetState &&
-          instance
+          shouldRender
+          && !this[OPTIONS].disableLifecycleMethods
+          && lifecycles.componentDidUpdate
+          && lifecycles.componentDidUpdate.onSetState
+          && instance
         ) {
           if (
-            lifecycles.getSnapshotBeforeUpdate &&
-            typeof instance.getSnapshotBeforeUpdate === 'function'
+            lifecycles.getSnapshotBeforeUpdate
+            && typeof instance.getSnapshotBeforeUpdate === 'function'
           ) {
             const snapshot = instance.getSnapshotBeforeUpdate(prevProps, prevState);
             if (typeof instance.componentDidUpdate === 'function') {
@@ -926,7 +920,7 @@ class ShallowWrapper {
    * @returns {String|Function|null}
    */
   type() {
-    return this.single('type', typeOfNode);
+    return this.single('type', n => typeOfNode(n));
   }
 
   /**
@@ -937,7 +931,7 @@ class ShallowWrapper {
    * @returns {String}
    */
   name() {
-    return this.single('name', displayNameOfNode);
+    return this.single('name', n => displayNameOfNode(n));
   }
 
   /**

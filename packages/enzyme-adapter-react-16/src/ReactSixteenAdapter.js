@@ -1,11 +1,11 @@
 /* eslint no-use-before-define: 0 */
 import React from 'react';
 import ReactDOM from 'react-dom';
-// eslint-disable-next-line import/no-unresolved, import/extensions
+// eslint-disable-next-line import/no-unresolved
 import ReactDOMServer from 'react-dom/server';
-// eslint-disable-next-line import/no-unresolved, import/extensions
+// eslint-disable-next-line import/no-unresolved
 import ShallowRenderer from 'react-test-renderer/shallow';
-// eslint-disable-next-line import/no-unresolved, import/extensions
+// eslint-disable-next-line import/no-unresolved
 import TestUtils from 'react-dom/test-utils';
 import { isElement } from 'react-is';
 import { EnzymeAdapter } from 'enzyme';
@@ -130,7 +130,8 @@ function childrenToTree(node) {
   const children = nodeAndSiblingsArray(node);
   if (children.length === 0) {
     return null;
-  } else if (children.length === 1) {
+  }
+  if (children.length === 1) {
     return toTree(children[0]);
   }
   return flatten(children.map(toTree));
@@ -173,6 +174,7 @@ class ReactSixteenAdapter extends EnzymeAdapter {
       },
     };
   }
+
   createMountRenderer(options) {
     assertDomAvailable('mount');
     const { attachTo, hydrateIn } = options;

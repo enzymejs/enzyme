@@ -26,6 +26,7 @@ class Foo extends React.Component {
     this.componentWillMount = willMount;
     this.componentDidMount = didMount;
   }
+
   render() {
     const { id } = this.props;
     return (

@@ -549,8 +549,9 @@ class ReactWrapper {
       if (n === null) return null;
       const adapter = getAdapter(this[OPTIONS]);
       const node = adapter.nodeToHostNode(n);
-      return node === null ? null :
-        node.outerHTML.replace(/\sdata-(reactid|reactroot)+="([^"]*)+"/g, '');
+      return node === null
+        ? null
+        : node.outerHTML.replace(/\sdata-(reactid|reactroot)+="([^"]*)+"/g, '');
     });
   }
 

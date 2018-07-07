@@ -29,6 +29,7 @@ class Foo extends React.Component {
     super(props);
     this.state = { name: 'foo' };
   }
+
   render() {
     const { name } = this.state;
     return (

@@ -201,7 +201,7 @@ describe('selectors', () => {
       it('not() pseudo selector', () => {
         const wrapper = renderMethod((
           <div>
-            <span className="bar" >first</span>
+            <span className="bar">first</span>
             <span />
             <span className="foo" />
             <span />
@@ -214,7 +214,7 @@ describe('selectors', () => {
       it(':empty pseudo selector', () => {
         const wrapper = renderMethod((
           <div>
-            <span className="bar" >first</span>
+            <span className="bar">first</span>
             <span />
             <span className="foo" />
             <span />

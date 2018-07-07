@@ -350,7 +350,7 @@ describe('RSTTraversal', () => {
       const spy = sinon.spy();
       const node = $((
         <div>
-          <button />
+          <button type="button" />
           <nav>
             <input />
           </nav>
@@ -369,8 +369,8 @@ describe('RSTTraversal', () => {
   describe('treeFilter', () => {
     const tree = $((
       <div>
-        <button />
-        <button />
+        <button type="button" />
+        <button type="button" />
         <nav>
           <input />
         </nav>
@@ -403,7 +403,7 @@ describe('RSTTraversal', () => {
       const node = <label htmlFor="foo" />;
       const tree = $((
         <div>
-          <button />
+          <button type="button" />
           <nav>
             {node}
             <input id="foo" />
@@ -422,7 +422,7 @@ describe('RSTTraversal', () => {
       const node = <label htmlFor="foo" />;
       const tree = $((
         <div>
-          <button />
+          <button type="button" />
           <nav>
             {node}
             <div><input id="foo" /></div>

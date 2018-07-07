@@ -2,7 +2,7 @@ import React from 'react';
 import Enzyme, { shallow, mount } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import { expect } from 'chai';
-import Foo from '../src/Foo';
+import Foo from './Foo';
 
 Enzyme.configure({ adapter: new Adapter() });
 

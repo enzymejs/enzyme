@@ -89,6 +89,7 @@ describe('Adapter', () => {
       expect(prettyFormat(nodeA)).to.equal(prettyFormat(nodeB));
     }
 
+    /* eslint react/destructuring-assignment: 0 */
     class BamBam extends React.Component {
       render() { return (<div>{this.props.children}</div>); }
     }
@@ -548,7 +549,7 @@ describe('Adapter', () => {
       }
 
       increment() {
-        this.setState({ count: this.state.count + 1 });
+        this.setState(({ count }) => ({ count: count + 1 }));
       }
 
       render() {
@@ -578,6 +579,7 @@ describe('Adapter', () => {
         super(props);
         throw new Error('Bar constructor should not be called');
       }
+
       render() {
         throw new Error('Bar render method should not be called');
       }
@@ -661,6 +663,7 @@ describe('Adapter', () => {
         super(props);
         throw new Error('Inner constructor should not be called');
       }
+
       render() {
         throw new Error('Inner render method should not be called');
       }
@@ -671,9 +674,11 @@ describe('Adapter', () => {
         super(props);
         this.setRef = this.setRef.bind(this);
       }
+
       setRef(r) {
         this.inner = r;
       }
+
       render() {
         return <Inner ref={this.setRef} />;
       }
@@ -712,6 +717,7 @@ describe('Adapter', () => {
         super(props);
         throw new Error('Inner constructor should not be called');
       }
+
       render() {
         throw new Error('Inner render method should not be called');
       }
@@ -757,6 +763,7 @@ describe('Adapter', () => {
         super(props);
         throw new Error('Inner constructor should not be called');
       }
+
       render() {
         throw new Error('Inner render method should not be called');
       }

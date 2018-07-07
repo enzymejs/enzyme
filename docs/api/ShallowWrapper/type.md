@@ -26,7 +26,7 @@ expect(wrapper.type()).to.equal('div');
 function Foo() {
   return (
     <div>
-      <button className="btn">Button</button>
+      <button type="button" className="btn">Button</button>
     </div>
   );
 }

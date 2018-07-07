@@ -571,6 +571,7 @@ describe('Utils', () => {
         constructor() {
           this.count = 1;
         }
+
         incrementAndGet() {
           this.count = this.count + 1;
           return this.count;

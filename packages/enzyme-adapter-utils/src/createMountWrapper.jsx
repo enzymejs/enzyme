@@ -15,17 +15,21 @@ export default function createMountWrapper(node, options = {}) {
   class WrapperComponent extends React.Component {
     constructor(...args) {
       super(...args);
+      const { props, context } = this.props;
       this.state = {
         mount: true,
-        props: this.props.props,
-        context: this.props.context,
+        props,
+        context,
       };
     }
+
     setChildProps(newProps, newContext, callback = undefined) {
-      const props = { ...this.state.props, ...newProps };
-      const context = { ...this.state.context, ...newContext };
+      const { props: oldProps, context: oldContext } = this.state;
+      const props = { ...oldProps, ...newProps };
+      const context = { ...oldContext, ...newContext };
       this.setState({ props, context }, callback);
     }
+
     getInstance() {
       const component = this._reactInternalInstance._renderedComponent;
       const inst = component.getPublicInstance();
@@ -34,6 +38,7 @@ export default function createMountWrapper(node, options = {}) {
       }
       return inst;
     }
+
     getWrappedComponent() {
       const component = this._reactInternalInstance._renderedComponent;
       const inst = component.getPublicInstance();
@@ -42,9 +47,11 @@ export default function createMountWrapper(node, options = {}) {
       }
       return inst;
     }
+
     setChildContext(context) {
       return new Promise(resolve => this.setState({ context }, resolve));
     }
+
     render() {
       const { Component } = this.props;
       const { mount, props } = this.state;

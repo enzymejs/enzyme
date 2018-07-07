@@ -85,6 +85,7 @@ class ReactFourteenAdapter extends EnzymeAdapter {
       },
     };
   }
+
   createMountRenderer(options) {
     assertDomAvailable('mount');
     const domNode = options.attachTo || global.document.createElement('div');

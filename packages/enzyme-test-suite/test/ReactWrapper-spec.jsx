@@ -19,7 +19,13 @@ import {
   itWithData,
   generateEmptyRenderData,
 } from './_helpers';
-import { REACT013, REACT014, REACT16, REACT163, is } from './_helpers/version';
+import {
+  REACT013,
+  REACT014,
+  REACT16,
+  REACT163,
+  is,
+} from './_helpers/version';
 import realArrowFunction from './_helpers/realArrowFunction';
 import sloppyReturnThis from './_helpers/untranspiledSloppyReturnThis';
 
@@ -31,7 +37,8 @@ describeWithDOM('mount', () => {
     it('does what i expect', () => {
       class Box extends React.Component {
         render() {
-          return <div className="box">{this.props.children}</div>;
+          const { children } = this.props;
+          return <div className="box">{children}</div>;
         }
       }
       class Foo extends React.Component {
@@ -73,7 +80,8 @@ describeWithDOM('mount', () => {
           name: PropTypes.string,
         },
         render() {
-          return <div>{this.context.name}</div>;
+          const { name } = this.context;
+          return <div>{name}</div>;
         },
       });
 
@@ -88,7 +96,8 @@ describeWithDOM('mount', () => {
           name: PropTypes.string,
         },
         render() {
-          return <div>{this.context.name}</div>;
+          const { name } = this.context;
+          return <div>{name}</div>;
         },
       });
       const ComplexComponent = createClass({
@@ -115,9 +124,10 @@ describeWithDOM('mount', () => {
 
       class ClassComponent extends React.Component {
         render() {
+          const { a } = this.context;
           return (
             <div>
-              {this.context.a}
+              {a}
               <SimpleComponent />
             </div>
           );
@@ -148,7 +158,8 @@ describeWithDOM('mount', () => {
     it('should not throw if context is passed in but contextTypes is missing', () => {
       const SimpleComponent = createClass({
         render() {
-          return <div>{this.context.name}</div>;
+          const { name } = this.context;
+          return <div>{name}</div>;
         },
       });
 
@@ -162,7 +173,8 @@ describeWithDOM('mount', () => {
           name: PropTypes.string,
         },
         render() {
-          return <div>{this.context.name}</div>;
+          const { name } = this.context;
+          return <div>{name}</div>;
         },
       });
 
@@ -712,7 +724,7 @@ describeWithDOM('mount', () => {
       const wrapper = mount((
         <div>
           <input className="foo" />
-          <button className="foo" />
+          <button type="button" className="foo" />
         </div>
       ));
       expect(wrapper.find('.foo')).to.have.lengthOf(2);
@@ -723,7 +735,7 @@ describeWithDOM('mount', () => {
         <div>
           <input className="foo" />
           <input />
-          <button />
+          <button type="button" />
         </div>
       ));
       expect(wrapper.find('input')).to.have.lengthOf(2);
@@ -735,7 +747,7 @@ describeWithDOM('mount', () => {
         <div>
           <input className="foo" />
           <input />
-          <button />
+          <button type="button" />
         </div>
       ));
       expect(wrapper.find('input')).to.have.lengthOf(2);
@@ -747,7 +759,7 @@ describeWithDOM('mount', () => {
         <div>
           <input data-test="ref" className="foo" type="text" />
           <input data-test="ref" type="text" />
-          <button data-test="ref" data-prop={undefined} />
+          <button data-test="ref" data-prop={undefined} type="button" />
           <span data-test="ref" data-prop={null} />
           <div data-test="ref" data-prop={123} />
           <input data-test="ref" data-prop={false} />
@@ -1193,6 +1205,7 @@ describeWithDOM('mount', () => {
           super(props);
           this.componentWillReceiveProps = spy;
         }
+
         render() {
           return (
             <div className={this.props.id}>
@@ -1444,6 +1457,7 @@ describeWithDOM('mount', () => {
           this.componentWillMount = willMount;
           this.componentDidMount = didMount;
         }
+
         render() {
           return (
             <div className={this.props.id}>
@@ -1476,6 +1490,7 @@ describeWithDOM('mount', () => {
           super(props);
           this.componentWillUnmount = spy;
         }
+
         render() {
           return (
             <div className={this.props.id}>
@@ -1501,13 +1516,14 @@ describeWithDOM('mount', () => {
         }
 
         incrementCount() {
-          this.setState({ count: this.state.count + 1 });
+          this.setState(({ count }) => ({ count: count + 1 }));
         }
 
         render() {
+          const { count } = this.state;
           return (
             <a
-              className={`clicks-${this.state.count}`}
+              className={`clicks-${count}`}
               onClick={this.incrementCount}
             >
               foo
@@ -1610,10 +1626,12 @@ describeWithDOM('mount', () => {
           };
           this.onClick = this.onClick.bind(this);
         }
+
         onClick() {
           this.setState({ count: this.state.count + 1 });
           this.setState({ count: this.state.count + 1 });
         }
+
         render() {
           renderCount += 1;
           return (
@@ -1683,6 +1701,7 @@ describeWithDOM('mount', () => {
           super(props);
           this.state = { id: 'foo' };
         }
+
         render() {
           return (
             <div className={this.state.id} />
@@ -1703,9 +1722,11 @@ describeWithDOM('mount', () => {
           super(props);
           this.state = { mounted: false };
         }
+
         componentDidMount() {
           this.setState({ mounted: true });
         }
+
         render() {
           return <div>{this.state.mounted ? 'a' : 'b'}</div>;
         }
@@ -1720,6 +1741,7 @@ describeWithDOM('mount', () => {
           super(props);
           this.state = { id: 'foo' };
         }
+
         render() {
           return (
             <div className={this.state.id} />
@@ -1739,6 +1761,7 @@ describeWithDOM('mount', () => {
           super(props);
           this.state = { id: 'foo' };
         }
+
         render() {
           return (
             <div className={this.state.id} />
@@ -1756,6 +1779,7 @@ describeWithDOM('mount', () => {
           super(props);
           this.state = { id: 'foo' };
         }
+
         render() {
           return (
             <div className={this.state.id} />
@@ -2150,7 +2174,7 @@ describeWithDOM('mount', () => {
     it('should return the props of key `name`', () => {
       const fn = () => ({});
       const wrapper = mount((
-        <div id="fooId" className="bax" onClick={fn} >
+        <div id="fooId" className="bax" onClick={fn}>
           <div className="baz" />
           <div className="foo" />
         </div>
@@ -2214,6 +2238,7 @@ describeWithDOM('mount', () => {
           super(props);
           this.state = { foo: 'foo' };
         }
+
         render() { return <div>{this.state.foo}</div>; }
       }
       const wrapper = mount(<Foo />);
@@ -2226,6 +2251,7 @@ describeWithDOM('mount', () => {
           super(props);
           this.state = { foo: 'foo' };
         }
+
         render() { return <div>{this.state.foo}</div>; }
       }
       const wrapper = mount(<Foo />);
@@ -2239,6 +2265,7 @@ describeWithDOM('mount', () => {
           super(props);
           this.state = { foo: 'foo' };
         }
+
         render() { return <div>{this.state.foo}</div>; }
       }
       const wrapper = mount(<Foo />);
@@ -3177,9 +3204,11 @@ describeWithDOM('mount', () => {
           super(props);
           this.setRef = this.setRef.bind(this);
         }
+
         setRef(node) {
           this.node = node;
         }
+
         render() {
           return (
             <div ref={this.setRef} className="foo" />

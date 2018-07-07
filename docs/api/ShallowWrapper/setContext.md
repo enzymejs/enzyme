@@ -21,6 +21,7 @@ NOTE: can only be called on a wrapper instance that is also the root instance.
 #### Example
 
 ```jsx
+import React from 'react';
 import PropTypes from 'prop-types';
 
 function SimpleComponent(props, context) {

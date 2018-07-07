@@ -20,6 +20,7 @@ class ImpureRender extends React.Component {
     super(props);
     this.count = 0;
   }
+
   render() {
     this.count += 1;
     return <div>{this.count}</div>;

@@ -321,10 +321,11 @@ describe('debug', () => {
     it('renders passed children properly', () => {
       class Foo extends React.Component {
         render() {
+          const { children } = this.props;
           return (
             <div className="foo">
               <span>From Foo</span>
-              {this.props.children}
+              {children}
             </div>
           );
         }
@@ -431,10 +432,10 @@ describe('debug', () => {
       });
 
       it('renders passed children properly', () => {
-        const Foo = props => (
+        const Foo = ({ children }) => (
           <div className="foo">
             <span>From Foo</span>
-            {props.children}
+            {children}
           </div>
         );
 
@@ -592,9 +593,10 @@ describe('debug', () => {
     it('options.ignoreProps causes props to be omitted', () => {
       class Foo extends React.Component {
         render() {
+          const { fooVal } = this.props;
           return (
             <div className="foo">
-              {this.props.fooVal}
+              {fooVal}
             </div>
           );
         }
@@ -665,9 +667,10 @@ describe('debug', () => {
     it('options.ignoreProps causes props to be omitted', () => {
       class Foo extends React.Component {
         render() {
+          const { fooVal } = this.props;
           return (
             <div className="foo">
-              {this.props.fooVal}
+              {fooVal}
             </div>
           );
         }

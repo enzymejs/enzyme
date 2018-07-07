@@ -5,6 +5,7 @@ export default function createRenderWrapper(node, context, childContextTypes) {
     getChildContext() {
       return context;
     }
+
     render() {
       return node;
     }

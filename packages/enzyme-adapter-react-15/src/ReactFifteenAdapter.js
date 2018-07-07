@@ -33,7 +33,8 @@ function compositeTypeToNodeType(type) {
 function childrenFromInst(inst, el) {
   if (inst._renderedChildren) {
     return values(inst._renderedChildren);
-  } else if (el.props) {
+  }
+  if (el.props) {
     return values({ '.0': el.props.children });
   }
   return [];
@@ -53,7 +54,8 @@ function instanceToTree(inst) {
   const el = inst._currentElement;
   if (el == null || el === false) {
     return null;
-  } else if (typeof el !== 'object') {
+  }
+  if (typeof el !== 'object') {
     return el;
   }
   if (inst._renderedChildren) {
@@ -116,6 +118,7 @@ class ReactFifteenAdapter extends EnzymeAdapter {
       },
     };
   }
+
   createMountRenderer(options) {
     assertDomAvailable('mount');
     const domNode = options.attachTo || global.document.createElement('div');

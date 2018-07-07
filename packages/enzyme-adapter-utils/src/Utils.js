@@ -90,11 +90,7 @@ export function nodeTypeFromType(type) {
   if (typeof type === 'string') {
     return 'host';
   }
-  if (
-    type &&
-    type.prototype &&
-    type.prototype.isReactComponent
-  ) {
+  if (type && type.prototype && type.prototype.isReactComponent) {
     return 'class';
   }
   return 'function';
@@ -102,12 +98,8 @@ export function nodeTypeFromType(type) {
 
 function getIteratorFn(obj) {
   const iteratorFn = obj && (
-    (
-      typeof Symbol === 'function' &&
-      typeof Symbol.iterator === 'symbol' &&
-      obj[Symbol.iterator]
-    ) ||
-    obj['@@iterator']
+    (typeof Symbol === 'function' && typeof Symbol.iterator === 'symbol' && obj[Symbol.iterator])
+    || obj['@@iterator']
   );
 
   if (typeof iteratorFn === 'function') {

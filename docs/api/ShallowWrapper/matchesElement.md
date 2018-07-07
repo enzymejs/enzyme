@@ -26,9 +26,11 @@ class MyComponent extends React.Component {
     super(props);
     this.handleClick = this.handleClick.bind(this);
   }
+
   handleClick() {
     // ...
   }
+
   render() {
     return (
       <button type="button" onClick={this.handleClick} className="foo bar">Hello</button>

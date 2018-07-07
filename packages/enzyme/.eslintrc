@@ -6,6 +6,7 @@
     "mocha": true
   },
   "rules": {
+    "react/destructuring-assignment": 1, // TODO: re-enable once it detects components
     "id-length": 0,
     "new-cap": [2, { "capIsNewExceptions": ["AND"] }],
     "react/jsx-pascal-case": [2, { "allowAllCaps": true }],

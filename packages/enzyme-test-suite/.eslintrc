@@ -23,5 +23,11 @@
     "jsx-a11y/anchor-is-valid": 0,
     "jsx-a11y/label-has-for": 0,
     "react/jsx-curly-brace-presence": 0,
+    "react/no-danger": 1,
+    "react/jsx-one-expression-per-line": 0,
+    "react/no-this-in-sfc": 0, // TODO: re-enable once fixed
+    "react/destructuring-assignment": 1,
+    "react/no-access-state-in-setstate": 1,
+    "react/button-has-type": 1,
   },
 }

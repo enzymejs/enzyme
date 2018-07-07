@@ -6,6 +6,7 @@ class EnzymeAdapter {
   constructor() {
     this.options = {};
   }
+
   // Provided a bag of options, return an `EnzymeRenderer`. Some options can be implementation
   // specific, like `attach` etc. for React, but not part of this interface explicitly.
   // eslint-disable-next-line class-methods-use-this, no-unused-vars
