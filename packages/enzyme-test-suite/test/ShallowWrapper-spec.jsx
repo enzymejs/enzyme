@@ -1858,6 +1858,19 @@ describe('shallow', () => {
         expect(wrapper.text()).to.equal(String(x));
       });
     });
+
+    describe('text content with curly braces', () => {
+      it('handles literal strings', () => {
+        const wrapper = shallow(<div><div>{'{}'}</div></div>);
+        expect(wrapper.text()).to.equal('{}');
+      });
+
+      it.skip('handles innerHTML', () => {
+        const wrapper = shallow(<div><div dangerouslySetInnerHTML={{ __html: '{}' }} /></div>);
+        console.log(wrapper.debug());
+        expect(wrapper.text()).to.equal('{}');
+      });
+    });
   });
 
   describe('.props()', () => {
