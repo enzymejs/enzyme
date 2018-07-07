@@ -2,7 +2,6 @@ import flatten from 'lodash/flatten';
 import entries from 'object.entries';
 import isSubset from 'is-subset';
 import functionName from 'function.prototype.name';
-import { nodeHasProperty } from './Utils';
 
 export function propsOfNode(node) {
   return (node && node.props) || {};
@@ -95,9 +94,6 @@ export function parentsOfNode(node, root) {
 export function nodeHasId(node, id) {
   return propsOfNode(node).id === id;
 }
-
-
-export { nodeHasProperty };
 
 const CAN_NEVER_MATCH = {};
 function replaceUndefined(v) {
