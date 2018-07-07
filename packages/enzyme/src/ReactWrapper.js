@@ -919,7 +919,11 @@ class ReactWrapper {
    * @returns {ReactWrapper}
    */
   at(index) {
-    return this.wrap(this.getNodesInternal()[index]);
+    const nodes = this.getNodesInternal();
+    if (index < nodes.length) {
+      return this.wrap(nodes[index]);
+    }
+    return this.wrap([]);
   }
 
   /**
