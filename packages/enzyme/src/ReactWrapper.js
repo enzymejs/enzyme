@@ -1062,6 +1062,7 @@ if (ITERATOR_SYMBOL) {
       const iter = this[NODES][ITERATOR_SYMBOL]();
       const adapter = getAdapter(this[OPTIONS]);
       return {
+        [ITERATOR_SYMBOL]() { return this; },
         next() {
           const next = iter.next();
           if (next.done) {

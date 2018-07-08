@@ -4018,6 +4018,26 @@ describeWithDOM('mount', () => {
       expect(c1).to.deep.equal(c);
       expect(d1).to.deep.equal(d);
     });
+
+    it('returns an iterable iterator', () => {
+      class Foo extends React.Component {
+        render() {
+          return (
+            <div>
+              <a href="#1">Hello</a>
+              <a href="#2">Hello</a>
+              <a href="#3">Hello</a>
+              <a href="#4">Hello</a>
+            </div>
+          );
+        }
+      }
+      const wrapper = mount(<Foo />);
+
+      const iter = wrapper[ITERATOR_SYMBOL]();
+      expect(iter).to.have.property(ITERATOR_SYMBOL).and.be.a('function');
+      expect(iter[ITERATOR_SYMBOL]()).to.equal(iter);
+    });
   });
 
   describe('.instance()', () => {
