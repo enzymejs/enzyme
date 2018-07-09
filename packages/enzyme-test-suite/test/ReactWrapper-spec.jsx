@@ -1198,28 +1198,51 @@ describeWithDOM('mount', () => {
     });
 
     it('should call componentWillReceiveProps for new renders', () => {
-      const spy = sinon.spy();
+      const stateValue = {};
 
       class Foo extends React.Component {
         constructor(props) {
           super(props);
-          this.componentWillReceiveProps = spy;
+          this.state = { stateValue };
         }
 
+        componentWillReceiveProps() {}
+
+        UNSAFE_componentWillReceiveProps() {} // eslint-disable-line camelcase
+
         render() {
+          const { id } = this.props;
+          const { stateValue: val } = this.state;
           return (
-            <div className={this.props.id}>
-              {this.props.id}
+            <div className={id}>
+              {val}
             </div>
           );
         }
       }
+      Foo.contextTypes = {
+        foo() { return null; },
+      };
+      const cWRP = sinon.stub(Foo.prototype, 'componentWillReceiveProps');
+      // eslint-disable-next-line camelcase
+      const U_cWRP = sinon.stub(Foo.prototype, 'UNSAFE_componentWillReceiveProps');
+
       const nextProps = { id: 'bar', foo: 'bla' };
-      const wrapper = mount(<Foo id="foo" />);
-      expect(spy.calledOnce).to.equal(false);
+      const context = { foo: 'bar' };
+      const wrapper = mount(<Foo id="foo" />, { context });
+
+      expect(cWRP).to.have.property('callCount', 0);
+      expect(U_cWRP).to.have.property('callCount', 0);
+
       wrapper.setProps(nextProps);
-      expect(spy.calledOnce).to.equal(true);
-      expect(spy.calledWith(nextProps)).to.equal(true);
+
+      expect(cWRP).to.have.property('callCount', 1);
+      expect(cWRP.calledWith(nextProps, context)).to.equal(true);
+
+      if (REACT163) {
+        expect(U_cWRP).to.have.property('callCount', 1);
+        expect(U_cWRP.calledWith(nextProps, context)).to.equal(true);
+      }
     });
 
     it('should merge newProps with oldProps', () => {
