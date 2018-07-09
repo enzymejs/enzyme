@@ -1082,7 +1082,7 @@ describe('shallow', () => {
           const { stateValue: val } = this.state;
           return (
             <div className={id}>
-              {val}
+              {String(val)}
             </div>
           );
         }
