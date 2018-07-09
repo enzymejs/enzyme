@@ -1,6 +1,6 @@
 {
   "name": "enzyme-adapter-react-15.4",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "JavaScript Testing utilities for React",
   "homepage": "http://airbnb.io/enzyme/",
   "main": "build",
@@ -35,7 +35,7 @@
   "license": "MIT",
   "dependencies": {
     "enzyme-adapter-react-helper": "^1.2.2",
-    "enzyme-adapter-utils": "^1.3.0",
+    "enzyme-adapter-utils": "^1.4.0",
     "object.assign": "^4.1.0",
     "object.values": "^1.0.4",
     "prop-types": "^15.6.0",
