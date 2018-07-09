@@ -16,7 +16,12 @@ import {
 } from 'enzyme/build/Utils';
 
 import './_helpers/setupAdapters';
-import { createClass, createContext, createPortal } from './_helpers/react-compat';
+import {
+  createClass,
+  createContext,
+  createPortal,
+  Fragment,
+} from './_helpers/react-compat';
 import {
   describeWithDOM,
   describeIf,
@@ -774,6 +779,43 @@ describeWithDOM('mount', () => {
         ));
         expect(wrapper.find('input')).to.have.lengthOf(2);
         expect(wrapper.find('button')).to.have.lengthOf(1);
+      });
+
+      itIf(is('>= 16.2'), 'should support fragments', () => {
+        const wrapper = mount((
+          <Fragment>
+            <p>hello</p>
+            <span>boo</span>
+          </Fragment>
+        ));
+
+        expect(wrapper).to.have.lengthOf(2);
+      });
+
+      itIf(is('>= 16'), 'should find elements through portals', () => {
+        const containerDiv = global.document.createElement('div');
+        class FooPortal extends React.Component {
+          render() {
+            return createPortal(
+              this.props.children,
+              containerDiv,
+            );
+          }
+        }
+
+
+        const wrapper = mount((
+          <FooPortal>
+            <h1>Successful Portal!</h1>
+            <span />
+          </FooPortal>
+        ));
+
+        expect(wrapper.find('h1')).to.have.lengthOf(1);
+
+        expect(wrapper.find('span')).to.have.lengthOf(1);
+
+        expect(containerDiv.querySelectorAll('h1')).to.have.lengthOf(1);
       });
 
       it('should support object property selectors', () => {

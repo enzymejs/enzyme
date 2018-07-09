@@ -26,6 +26,14 @@ export function itIf(test, a, b) {
   }
 }
 
+itIf.only = (test, a, b) => {
+  if (test) {
+    it.only(a, b);
+  } else {
+    it.skip(a, b);
+  }
+};
+
 /**
  * Simple wrapper around mocha it which allows an array of possible values to test against.
  * Each test will be wrapped in a try/catch block to handle any errors.

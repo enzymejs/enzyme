@@ -86,9 +86,10 @@ function toTree(vnode) {
   const node = findCurrentFiberUsingSlowPath(vnode);
   switch (node.tag) {
     case HostRoot: // 3
-      return toTree(node.child);
-    case HostPortal: // 4
-      return toTree(node.child);
+      return childrenToTree(node.child);
+    case HostPortal: { // 4
+      return childrenToTree(node.child);
+    }
     case ClassComponent:
       return {
         nodeType: 'class',
@@ -251,11 +252,13 @@ class ReactSixteenAdapter extends EnzymeAdapter {
         } else {
           isDOM = false;
           const { type: Component } = el;
+
           const isStateful = Component.prototype && (
             Component.prototype.isReactComponent
             || Array.isArray(Component.__reactAutoBindPairs) // fallback for createClass components
           );
-          if (!isStateful) {
+
+          if (!isStateful && typeof Component === 'function') {
             const wrappedEl = Object.assign(
               (...args) => Component(...args), // eslint-disable-line new-cap
               Component,
