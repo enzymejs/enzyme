@@ -1293,6 +1293,44 @@ describeWithDOM('mount', () => {
       expect(wrapper.props().d).to.equal('e');
     });
 
+    it('should use defaultProps if new props includes undefined values', () => {
+      const initialState = { a: 42 };
+      const context = { b: 7 };
+      class Foo extends React.Component {
+        constructor(...args) {
+          super(...args);
+          this.state = initialState;
+        }
+
+        componentWillReceiveProps() {}
+
+        render() {
+          return <div className={this.props.className} />;
+        }
+      }
+
+      const cWRP = sinon.stub(Foo.prototype, 'componentWillReceiveProps');
+
+      Foo.defaultProps = {
+        className: 'default-class',
+      };
+      Foo.contextTypes = {
+        b: PropTypes.number,
+      };
+
+      const wrapper = mount(<Foo className="original" />, { context });
+
+      // Set undefined in order to use defaultProps if any
+      wrapper.setProps({ className: undefined });
+
+      expect(cWRP).to.have.property('callCount', 1);
+      const [args] = cWRP.args;
+      expect(args).to.eql([
+        { className: Foo.defaultProps.className },
+        context,
+      ]);
+    });
+
     itIf(!REACT16, 'should throw if an exception occurs during render', () => {
       class Trainwreck extends React.Component {
         render() {
