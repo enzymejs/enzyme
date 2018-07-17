@@ -1240,6 +1240,66 @@ describe('shallow', () => {
       ]);
     });
 
+    it('should throw if an exception occurs during render', () => {
+      class Trainwreck extends React.Component {
+        render() {
+          const { user } = this.props;
+          return (
+            <div>
+              {user.name.givenName}
+            </div>
+          );
+        }
+      }
+
+      const similarException = ((() => {
+        const user = {};
+        try {
+          return user.name.givenName;
+        } catch (e) {
+          return e;
+        }
+      })());
+
+      const validUser = {
+        name: {
+          givenName: 'Brian',
+        },
+      };
+
+      const wrapper = shallow(<Trainwreck user={validUser} />);
+
+      const setInvalidProps = () => {
+        wrapper.setProps({
+          user: {},
+        });
+      };
+
+      expect(setInvalidProps).to.throw(TypeError, similarException.message);
+    });
+
+    it('should call the callback when setProps has completed', () => {
+      class Foo extends React.Component {
+        render() {
+          const { id } = this.props;
+          return (
+            <div className={id}>
+              {id}
+            </div>
+          );
+        }
+      }
+      const wrapper = shallow(<Foo id="foo" />);
+      expect(wrapper.find('.foo')).to.have.lengthOf(1);
+
+      wrapper[sym('__renderer__')].batchedUpdates(() => {
+        wrapper.setProps({ id: 'bar', foo: 'bla' }, () => {
+          expect(wrapper.find('.bar')).to.have.lengthOf(1);
+        });
+        expect(wrapper.find('.bar')).to.have.lengthOf(0);
+      });
+    });
+
     it('should call componentWillReceiveProps, shouldComponentUpdate, componentWillUpdate, and componentDidUpdate with merged newProps', () => {
       const spy = sinon.spy();
 
@@ -1340,6 +1400,42 @@ describe('shallow', () => {
 
         wrapper.setProps({ x: 5 }); // Just force a re-render
         expect(wrapper.first('div').text()).to.equal('yolo');
+      });
+
+      it('should throw if an exception occurs during render', () => {
+        const Trainwreck = ({ user }) => (
+          <div>
+            {user.name.givenName}
+          </div>
+        );
+
+        const validUser = {
+          name: {
+            givenName: 'Brian',
+          },
+        };
+
+        const similarException = ((() => {
+          const user = {};
+          try {
+            return user.name.givenName;
+          } catch (e) {
+            return e;
+          }
+        })());
+
+        const wrapper = shallow(<Trainwreck user={validUser} />);
+
+        const setInvalidProps = () => {
+          wrapper.setProps({
+            user: {},
+          });
+        };
+
+        expect(setInvalidProps).to.throw(
+          TypeError,
+          similarException.message,
+        );
       });
     });
   });
