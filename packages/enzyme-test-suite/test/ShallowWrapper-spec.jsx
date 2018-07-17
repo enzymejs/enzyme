@@ -937,6 +937,30 @@ describe('shallow', () => {
         expect(wrapper.find('a[href="/page#anchor"]')).to.have.lengthOf(1);
       });
     });
+
+    describe('works with data- attributes', () => {
+      class Foo extends React.Component {
+        render() {
+          return (
+            <div>
+              <i className="ficon ficon-12 some-icon" />
+              <span className="custom class">
+                <i className="ficon ficon-book ficon-24" data-custom-tag="bookIcon" />
+                <i className="ficon ficon-book ficon-24" data-custom-tag="bookIcon" />
+              </span>
+            </div>
+          );
+        }
+      }
+
+      it('finds elements by data attribute', () => {
+        const wrapper = shallow(<Foo />);
+        expect(wrapper.html()).to.contain('data-custom-tag="bookIcon"'); // sanity check
+        const elements = wrapper.find('[data-custom-tag="bookIcon"]');
+        expect(elements).to.have.lengthOf(2);
+        expect(elements.filter('i')).to.have.lengthOf(2);
+      });
+    });
   });
 
   describe('.findWhere(predicate)', () => {
