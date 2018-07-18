@@ -23,7 +23,7 @@ if (REACT013) {
 } else if (REACT15) {
   Adapter = require('enzyme-adapter-react-15.4');
 } else if (REACT16) {
-  Adapter = require('enzyme-adapter-react-16');
+  Adapter = require('enzyme-adapter-react-renderer');
 }
 
 module.exports = Adapter;
