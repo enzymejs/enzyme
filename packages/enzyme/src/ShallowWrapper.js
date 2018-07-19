@@ -533,7 +533,8 @@ class ShallowWrapper {
    * @returns {Boolean}
    */
   containsMatchingElement(node) {
-    const rstNode = getAdapter().elementToNode(node);
+    const adapter = getAdapter(this[OPTIONS]);
+    const rstNode = adapter.elementToNode(node);
     const predicate = other => nodeMatches(rstNode, other, (a, b) => a <= b);
     return findWhereUnwrapped(this, predicate).length > 0;
   }
@@ -623,7 +624,8 @@ class ShallowWrapper {
    */
   matchesElement(node) {
     return this.single('matchesElement', () => {
-      const rstNode = getAdapter().elementToNode(node);
+      const adapter = getAdapter(this[OPTIONS]);
+      const rstNode = adapter.elementToNode(node);
       return nodeMatches(rstNode, this.getNodeInternal(), (a, b) => a <= b);
     });
   }
