@@ -2061,6 +2061,36 @@ describeWithDOM('mount', () => {
           expect(spy).to.have.property('callCount', 1);
         });
       });
+
+      describeIf(is('>= 15'), 'animation events', () => {
+        it('should convert lowercase events to React camelcase', () => {
+          const spy = sinon.spy();
+          class Foo extends React.Component {
+            render() {
+              return (
+                <a onAnimationIteration={spy}>foo</a>
+              );
+            }
+          }
+
+          const wrapper = mount(<Foo />);
+
+          wrapper.simulate('animationiteration');
+          expect(spy).to.have.property('callCount', 1);
+        });
+
+        it('should convert lowercase events to React camelcase in stateless components', () => {
+          const spy = sinon.spy();
+          const Foo = () => (
+            <a onAnimationIteration={spy}>foo</a>
+          );
+
+          const wrapper = mount(<Foo />);
+
+          wrapper.simulate('animationiteration');
+          expect(spy).to.have.property('callCount', 1);
+        });
+      });
     });
 
     it('should be batched updates', () => {

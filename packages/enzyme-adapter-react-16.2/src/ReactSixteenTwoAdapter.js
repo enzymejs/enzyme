@@ -167,6 +167,8 @@ function nodeToHostNode(_node) {
   return ReactDOM.findDOMNode(node.instance);
 }
 
+const eventOptions = { animation: true };
+
 class ReactSixteenTwoAdapter extends EnzymeAdapter {
   constructor() {
     super();
@@ -220,7 +222,7 @@ class ReactSixteenTwoAdapter extends EnzymeAdapter {
         return instance ? toTree(instance._reactInternalFiber).rendered : null;
       },
       simulateEvent(node, event, mock) {
-        const mappedEvent = mapNativeEventNames(event, { animation: true });
+        const mappedEvent = mapNativeEventNames(event, eventOptions);
         const eventFn = TestUtils.Simulate[mappedEvent];
         if (!eventFn) {
           throw new TypeError(`ReactWrapper::simulate() event '${event}' does not exist`);
@@ -285,7 +287,7 @@ class ReactSixteenTwoAdapter extends EnzymeAdapter {
         };
       },
       simulateEvent(node, event, ...args) {
-        const handler = node.props[propFromEvent(event)];
+        const handler = node.props[propFromEvent(event, eventOptions)];
         if (handler) {
           withSetStateAllowed(() => {
             // TODO(lmr): create/use synthetic events

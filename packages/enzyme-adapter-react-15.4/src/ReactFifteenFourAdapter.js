@@ -103,6 +103,8 @@ function instanceToTree(inst) {
   };
 }
 
+const eventOptions = { animation: true };
+
 class ReactFifteenFourAdapter extends EnzymeAdapter {
   constructor() {
     super();
@@ -153,7 +155,7 @@ class ReactFifteenFourAdapter extends EnzymeAdapter {
         return instance ? instanceToTree(instance._reactInternalInstance).rendered : null;
       },
       simulateEvent(node, event, mock) {
-        const mappedEvent = mapNativeEventNames(event, { animation: true });
+        const mappedEvent = mapNativeEventNames(event, eventOptions);
         const eventFn = TestUtils.Simulate[mappedEvent];
         if (!eventFn) {
           throw new TypeError(`ReactWrapper::simulate() event '${event}' does not exist`);
@@ -201,7 +203,7 @@ class ReactFifteenFourAdapter extends EnzymeAdapter {
         };
       },
       simulateEvent(node, event, ...args) {
-        const handler = node.props[propFromEvent(event)];
+        const handler = node.props[propFromEvent(event, eventOptions)];
         if (handler) {
           withSetStateAllowed(() => {
             // TODO(lmr): create/use synthetic events
