@@ -563,13 +563,13 @@ describe('Adapter', () => {
     renderer.render(<Counter />);
 
     let tree = renderer.getNode();
-    expect(tree.rendered.props.count).to.equal(0);
+    expect(tree.rendered.props).to.have.property('count', 0);
     tree.instance.increment();
     tree = renderer.getNode();
-    expect(tree.rendered.props.count).to.equal(1);
+    expect(tree.rendered.props).to.have.property('count', 1);
     tree.instance.increment();
     tree = renderer.getNode();
-    expect(tree.rendered.props.count).to.equal(2);
+    expect(tree.rendered.props).to.have.property('count', 2);
   });
 
   it('renders basic shallow as well', () => {

@@ -18,7 +18,7 @@ exports.lab = lab;
 lab.suite('A suite', () => {
   lab.test('calls componentDidMount', (done) => {
     const wrapper = mount(<Foo />);
-    Code.expect(Foo.prototype.componentDidMount.calledOnce).to.equal(true);
+    Code.expect(Foo.prototype.componentDidMount.callCount).to.equal(1);
     done();
   });
 });

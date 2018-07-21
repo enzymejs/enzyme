@@ -40,13 +40,13 @@ Foo.propTypes = {
   id: PropTypes.string.isRequired,
 };
 const wrapper = mount(<Foo id="foo" />);
-expect(willMount.callCount).to.equal(1);
-expect(didMount.callCount).to.equal(1);
-expect(willUnmount.callCount).to.equal(0);
+expect(willMount).to.have.property('callCount', 1);
+expect(didMount).to.have.property('callCount', 1);
+expect(willUnmount).to.have.property('callCount', 0);
 wrapper.unmount();
-expect(willMount.callCount).to.equal(1);
-expect(didMount.callCount).to.equal(1);
-expect(willUnmount.callCount).to.equal(1);
+expect(willMount).to.have.property('callCount', 1);
+expect(didMount).to.have.property('callCount', 1);
+expect(willUnmount).to.have.property('callCount', 1);
 ```
 
 

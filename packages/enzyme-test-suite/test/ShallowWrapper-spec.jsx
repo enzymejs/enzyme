@@ -992,7 +992,7 @@ describe('shallow', () => {
       stub.returns(true);
       const spy = sinon.spy(stub);
       wrapper.findWhere(spy);
-      expect(spy.callCount).to.equal(4);
+      expect(spy).to.have.property('callCount', 4);
       expect(spy.args[0][0]).to.be.instanceOf(ShallowWrapper);
       expect(spy.args[1][0]).to.be.instanceOf(ShallowWrapper);
       expect(spy.args[2][0]).to.be.instanceOf(ShallowWrapper);
@@ -1062,7 +1062,7 @@ describe('shallow', () => {
       stub.returns(true);
       const spy = sinon.spy(stub);
       wrapper.findWhere(spy);
-      expect(spy.callCount).to.equal(2);
+      expect(spy).to.have.property('callCount', 2);
     });
   });
 
@@ -1433,9 +1433,9 @@ describe('shallow', () => {
 
         const wrapper = shallow(<Foo onClick={spy} />);
 
-        expect(spy.calledOnce).to.equal(false);
+        expect(spy).to.have.property('callCount', 0);
         wrapper.find('a').simulate('click');
-        expect(spy.calledOnce).to.equal(true);
+        expect(spy).to.have.property('callCount', 1);
       });
 
       it('should pass in event data', () => {
@@ -1469,10 +1469,10 @@ describe('shallow', () => {
         const wrapper = shallow(<Foo />);
 
         wrapper.simulate('dblclick');
-        expect(spy.calledOnce).to.equal(true);
+        expect(spy).to.have.property('callCount', 1);
 
         wrapper.simulate('click');
-        expect(clickSpy.calledOnce).to.equal(true);
+        expect(clickSpy).to.have.property('callCount', 1);
       });
 
       describeIf(is('> 0.13'), 'normalizing mouseenter', () => {
@@ -1489,7 +1489,7 @@ describe('shallow', () => {
           const wrapper = shallow(<Foo />);
 
           wrapper.simulate('mouseenter');
-          expect(spy.calledOnce).to.equal(true);
+          expect(spy).to.have.property('callCount', 1);
         });
 
         it('should convert lowercase events to React camelcase in stateless components', () => {
@@ -1501,7 +1501,7 @@ describe('shallow', () => {
           const wrapper = shallow(<Foo />);
 
           wrapper.simulate('mouseenter');
-          expect(spy.calledOnce).to.equal(true);
+          expect(spy).to.have.property('callCount', 1);
         });
       });
     });
@@ -1817,7 +1817,7 @@ describe('shallow', () => {
       stub.returns(true);
       const spy = sinon.spy(stub);
       wrapper.find('.foo').filterWhere(spy);
-      expect(spy.callCount).to.equal(3);
+      expect(spy).to.have.property('callCount', 3);
       expect(spy.args[0][0]).to.be.instanceOf(ShallowWrapper);
       expect(spy.args[1][0]).to.be.instanceOf(ShallowWrapper);
       expect(spy.args[2][0]).to.be.instanceOf(ShallowWrapper);
@@ -2561,7 +2561,7 @@ describe('shallow', () => {
 
       wrapper.find('.foo').forEach(spy);
 
-      expect(spy.callCount).to.equal(3);
+      expect(spy).to.have.property('callCount', 3);
       expect(spy.args[0][0]).to.be.instanceOf(ShallowWrapper);
       expect(spy.args[0][0].hasClass('bax')).to.equal(true);
       expect(spy.args[0][1]).to.equal(0);
@@ -2587,7 +2587,7 @@ describe('shallow', () => {
 
       wrapper.find('.foo').map(spy);
 
-      expect(spy.callCount).to.equal(3);
+      expect(spy).to.have.property('callCount', 3);
       expect(spy.args[0][0]).to.be.instanceOf(ShallowWrapper);
       expect(spy.args[0][0].hasClass('bax')).to.equal(true);
       expect(spy.args[0][1]).to.equal(0);
@@ -2634,7 +2634,7 @@ describe('shallow', () => {
 
       wrapper.find('.foo').reduce(spy, 0);
 
-      expect(spy.callCount).to.equal(3);
+      expect(spy).to.have.property('callCount', 3);
       expect(spy.args[0][1]).to.be.instanceOf(ShallowWrapper);
       expect(spy.args[0][1].hasClass('bax')).to.equal(true);
       expect(spy.args[1][1]).to.be.instanceOf(ShallowWrapper);
@@ -2704,7 +2704,7 @@ describe('shallow', () => {
 
       wrapper.find('.foo').reduceRight(spy, 0);
 
-      expect(spy.callCount).to.equal(3);
+      expect(spy).to.have.property('callCount', 3);
       expect(spy.args[0][1]).to.be.instanceOf(ShallowWrapper);
       expect(spy.args[0][1].hasClass('baz')).to.equal(true);
       expect(spy.args[1][1]).to.be.instanceOf(ShallowWrapper);
@@ -3190,7 +3190,7 @@ describe('shallow', () => {
         const fakeSelector = '.someClass';
         wrapper.find = sinon.stub().returns({ exists: () => fakeFindExistsReturnVal });
         const existsResult = wrapper.exists(fakeSelector);
-        expect(wrapper.find.callCount).to.equal(1);
+        expect(wrapper.find).to.have.property('callCount', 1);
         expect(wrapper.find.firstCall.args[0]).to.equal(fakeSelector);
         expect(existsResult).to.equal(fakeFindExistsReturnVal);
       });
@@ -3397,9 +3397,9 @@ describe('shallow', () => {
         }
       }
       const wrapper = shallow(<Foo id="foo" />);
-      expect(spy.calledOnce).to.equal(false);
+      expect(spy).to.have.property('callCount', 0);
       wrapper.unmount();
-      expect(spy.calledOnce).to.equal(true);
+      expect(spy).to.have.property('callCount', 1);
     });
   });
 
@@ -3679,7 +3679,7 @@ describe('shallow', () => {
         }
         const result = shallow(<Foo />, { lifecycleExperimental: true });
         expect(result.state('count')).to.equal(2);
-        expect(spy.callCount).to.equal(2);
+        expect(spy).to.have.property('callCount', 2);
       });
     });
 
@@ -4540,7 +4540,7 @@ describe('shallow', () => {
           <div style={{ fontSize: 12, color: 'red' }}>Hello World</div>
         </div>
       ))).to.equal(true);
-      expect(spy.callCount).to.equal(0);
+      expect(spy).to.have.property('callCount', 0);
     });
 
     it('should not match on a root node that doesn\'t looks like the rendered one', () => {
@@ -4567,8 +4567,8 @@ describe('shallow', () => {
           <div style={{ fontSize: 13, color: 'red' }}>Hello World</div>
         </div>
       ))).to.equal(false);
-      expect(spy.callCount).to.equal(0);
-      expect(spy2.callCount).to.equal(0);
+      expect(spy).to.have.property('callCount', 0);
+      expect(spy2).to.have.property('callCount', 0);
     });
   });
 
@@ -4618,8 +4618,8 @@ describe('shallow', () => {
           <div style={{ fontSize: 13, color: 'blue' }}>Goodbye World</div>
         </div>
       ))).to.equal(true);
-      expect(spy1.callCount).to.equal(0);
-      expect(spy2.callCount).to.equal(0);
+      expect(spy1).to.have.property('callCount', 0);
+      expect(spy2).to.have.property('callCount', 0);
     });
 
     it('should match on a single node that looks like a rendered one', () => {
@@ -4649,8 +4649,8 @@ describe('shallow', () => {
       expect(wrapper.containsMatchingElement((
         <div onClick={spy2}>Goodbye World</div>
       ))).to.equal(true);
-      expect(spy1.callCount).to.equal(0);
-      expect(spy2.callCount).to.equal(0);
+      expect(spy1).to.have.property('callCount', 0);
+      expect(spy2).to.have.property('callCount', 0);
     });
 
     it('should not match on a single node that doesn\'t looks like a rendered one', () => {
@@ -4769,8 +4769,8 @@ describe('shallow', () => {
         <div onClick={spy1} style={{ fontSize: 12, color: 'red' }}>Hello World</div>,
         <div onClick={spy2}>Goodbye World</div>,
       ])).to.equal(true);
-      expect(spy1.callCount).to.equal(0);
-      expect(spy2.callCount).to.equal(0);
+      expect(spy1).to.have.property('callCount', 0);
+      expect(spy2).to.have.property('callCount', 0);
     });
 
     it('should not match on nodes that doesn\'t all looks like one of rendered nodes', () => {
@@ -4787,8 +4787,8 @@ describe('shallow', () => {
         <div onClick={spy1} style={{ fontSize: 12, color: 'red' }}>Bonjour le monde</div>,
         <div onClick={spy2}>Goodbye World</div>,
       ])).to.equal(false);
-      expect(spy1.callCount).to.equal(0);
-      expect(spy2.callCount).to.equal(0);
+      expect(spy1).to.have.property('callCount', 0);
+      expect(spy2).to.have.property('callCount', 0);
     });
   });
 
@@ -4834,8 +4834,8 @@ describe('shallow', () => {
         <div onClick={spy1} style={{ fontSize: 12, color: 'red' }}>Bonjour le monde</div>,
         <div onClick={spy2}>Goodbye World</div>,
       ])).to.equal(true);
-      expect(spy1.callCount).to.equal(0);
-      expect(spy2.callCount).to.equal(0);
+      expect(spy1).to.have.property('callCount', 0);
+      expect(spy2).to.have.property('callCount', 0);
     });
     it('should not match on an array with no nodes that looks like a rendered nodes', () => {
       const spy1 = sinon.spy();
@@ -4850,8 +4850,8 @@ describe('shallow', () => {
         <div onClick={spy1} style={{ fontSize: 12, color: 'red' }}>Bonjour le monde</div>,
         <div onClick={spy2}>Au revoir le monde</div>,
       ])).to.equal(false);
-      expect(spy1.callCount).to.equal(0);
-      expect(spy2.callCount).to.equal(0);
+      expect(spy1).to.have.property('callCount', 0);
+      expect(spy2).to.have.property('callCount', 0);
     });
   });
 

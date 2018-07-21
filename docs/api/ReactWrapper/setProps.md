@@ -52,9 +52,9 @@ import sinon from 'sinon';
 const spy = sinon.spy(MyComponent.prototype, 'componentWillReceiveProps');
 
 const wrapper = mount(<MyComponent foo="bar" />);
-expect(spy.calledOnce).to.equal(false);
+expect(spy).to.have.property('callCount', 0);
 wrapper.setProps({ foo: 'foo' });
-expect(spy.calledOnce).to.equal(true);
+expect(spy).to.have.property('callCount', 1);
 ```
 
 

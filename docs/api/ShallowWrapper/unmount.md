@@ -36,7 +36,7 @@ Foo.propTypes = {
   id: PropTypes.string.isRequired,
 };
 const wrapper = shallow(<Foo id="foo" />);
-expect(spy.calledOnce).to.equal(false);
+expect(spy).to.have.property('callCount', 0);
 wrapper.unmount();
-expect(spy.calledOnce).to.equal(true);
+expect(spy).to.have.property('callCount', 1);
 ```

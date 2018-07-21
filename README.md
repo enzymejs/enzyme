@@ -204,7 +204,7 @@ import Foo from './Foo';
 describe('<Foo />', () => {
   it('renders three `.foo-bar`s', () => {
     const wrapper = render(<Foo />);
-    expect(wrapper.find('.foo-bar').length).to.equal(3);
+    expect(wrapper.find('.foo-bar')).to.have.lengthOf(3);
   });
 
   it('renders the title', () => {

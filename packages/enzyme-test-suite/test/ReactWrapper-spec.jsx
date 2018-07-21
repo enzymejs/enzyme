@@ -968,7 +968,7 @@ describeWithDOM('mount', () => {
       stub.returns(true);
       const spy = sinon.spy(stub);
       wrapper.findWhere(spy);
-      expect(spy.callCount).to.equal(4);
+      expect(spy).to.have.property('callCount', 4);
       expect(spy.args[0][0]).to.be.instanceOf(ReactWrapper);
       expect(spy.args[1][0]).to.be.instanceOf(ReactWrapper);
       expect(spy.args[2][0]).to.be.instanceOf(ReactWrapper);
@@ -1549,17 +1549,17 @@ describeWithDOM('mount', () => {
         }
       }
       const wrapper = mount(<Foo id="foo" />);
-      expect(willMount.callCount).to.equal(1);
-      expect(didMount.callCount).to.equal(1);
-      expect(willUnmount.callCount).to.equal(0);
+      expect(willMount).to.have.property('callCount', 1);
+      expect(didMount).to.have.property('callCount', 1);
+      expect(willUnmount).to.have.property('callCount', 0);
       wrapper.unmount();
-      expect(willMount.callCount).to.equal(1);
-      expect(didMount.callCount).to.equal(1);
-      expect(willUnmount.callCount).to.equal(1);
+      expect(willMount).to.have.property('callCount', 1);
+      expect(didMount).to.have.property('callCount', 1);
+      expect(willUnmount).to.have.property('callCount', 1);
       wrapper.mount();
-      expect(willMount.callCount).to.equal(2);
-      expect(didMount.callCount).to.equal(2);
-      expect(willUnmount.callCount).to.equal(1);
+      expect(willMount).to.have.property('callCount', 2);
+      expect(didMount).to.have.property('callCount', 2);
+      expect(willUnmount).to.have.property('callCount', 1);
     });
   });
 
@@ -1582,9 +1582,9 @@ describeWithDOM('mount', () => {
         }
       }
       const wrapper = mount(<Foo id="foo" />);
-      expect(spy.calledOnce).to.equal(false);
+      expect(spy).to.have.property('callCount', 0);
       wrapper.unmount();
-      expect(spy.calledOnce).to.equal(true);
+      expect(spy).to.have.property('callCount', 1);
     });
   });
 
@@ -1634,8 +1634,8 @@ describeWithDOM('mount', () => {
       const wrapper = mount(<Foo />);
 
       wrapper.simulate('click', { someSpecialData: 'foo' });
-      expect(spy.calledOnce).to.equal(true);
-      expect(spy.args[0][0].someSpecialData).to.equal('foo');
+      expect(spy).to.have.property('callCount', 1);
+      expect(spy.args[0][0]).to.have.property('someSpecialData', 'foo');
     });
 
     it('should throw a descriptive error for invalid events', () => {
@@ -1654,8 +1654,8 @@ describeWithDOM('mount', () => {
         const wrapper = mount(<Foo />);
 
         wrapper.simulate('click', { someSpecialData: 'foo' });
-        expect(spy.calledOnce).to.equal(true);
-        expect(spy.args[0][0].someSpecialData).to.equal('foo');
+        expect(spy).to.have.property('callCount', 1);
+        expect(spy.args[0][0]).to.have.property('someSpecialData', 'foo');
       });
     });
 
@@ -1674,9 +1674,9 @@ describeWithDOM('mount', () => {
         const wrapper = mount(<Foo />);
 
         wrapper.simulate('dblclick');
-        expect(spy.calledOnce).to.equal(true);
+        expect(spy).to.have.property('callCount', 1);
         wrapper.simulate('click');
-        expect(clickSpy.calledOnce).to.equal(true);
+        expect(clickSpy).to.have.property('callCount', 1);
       });
 
       describeIf(is('> 0.13'), 'normalizing mouseenter', () => {
@@ -1693,7 +1693,7 @@ describeWithDOM('mount', () => {
           const wrapper = mount(<Foo />);
 
           wrapper.simulate('mouseenter');
-          expect(spy.calledOnce).to.equal(true);
+          expect(spy).to.have.property('callCount', 1);
         });
       });
     });
@@ -2033,7 +2033,7 @@ describeWithDOM('mount', () => {
       stub.returns(true);
       const spy = sinon.spy(stub);
       wrapper.find('.foo').filterWhere(spy);
-      expect(spy.callCount).to.equal(3);
+      expect(spy).to.have.property('callCount', 3);
       expect(spy.args[0][0]).to.be.instanceOf(ReactWrapper);
       expect(spy.args[1][0]).to.be.instanceOf(ReactWrapper);
       expect(spy.args[2][0]).to.be.instanceOf(ReactWrapper);
@@ -2800,7 +2800,7 @@ describeWithDOM('mount', () => {
 
       wrapper.find('.foo').forEach(spy);
 
-      expect(spy.callCount).to.equal(3);
+      expect(spy).to.have.property('callCount', 3);
       expect(spy.args[0][0]).to.be.instanceOf(ReactWrapper);
       expect(spy.args[0][0].hasClass('bax')).to.equal(true);
       expect(spy.args[0][1]).to.equal(0);
@@ -2826,7 +2826,7 @@ describeWithDOM('mount', () => {
 
       wrapper.find('.foo').map(spy);
 
-      expect(spy.callCount).to.equal(3);
+      expect(spy).to.have.property('callCount', 3);
       expect(spy.args[0][0]).to.be.instanceOf(ReactWrapper);
       expect(spy.args[0][0].hasClass('bax')).to.equal(true);
       expect(spy.args[0][1]).to.equal(0);
@@ -2873,7 +2873,7 @@ describeWithDOM('mount', () => {
 
       wrapper.find('.foo').reduce(spy, 0);
 
-      expect(spy.callCount).to.equal(3);
+      expect(spy).to.have.property('callCount', 3);
       expect(spy.args[0][1]).to.be.instanceOf(ReactWrapper);
       expect(spy.args[0][1].hasClass('bax')).to.equal(true);
       expect(spy.args[1][1]).to.be.instanceOf(ReactWrapper);
@@ -2940,7 +2940,7 @@ describeWithDOM('mount', () => {
 
       wrapper.find('.foo').reduceRight(spy, 0);
 
-      expect(spy.callCount).to.equal(3);
+      expect(spy).to.have.property('callCount', 3);
       expect(spy.args[0][1]).to.be.instanceOf(ReactWrapper);
       expect(spy.args[0][1].hasClass('baz')).to.equal(true);
       expect(spy.args[1][1]).to.be.instanceOf(ReactWrapper);
@@ -3199,7 +3199,7 @@ describeWithDOM('mount', () => {
       const existsSpy = sinon.spy();
       fooNode.exists = existsSpy;
       fooNode.isEmpty();
-      expect(existsSpy.called).to.equal(true);
+      expect(existsSpy).to.have.property('called', true);
     });
 
     it('should return true if wrapper is empty', () => {
@@ -3227,7 +3227,7 @@ describeWithDOM('mount', () => {
         const fakeSelector = '.someClass';
         wrapper.find = sinon.stub().returns({ exists: () => fakeFindExistsReturnVal });
         const existsResult = wrapper.exists(fakeSelector);
-        expect(wrapper.find.callCount).to.equal(1);
+        expect(wrapper.find).to.have.property('callCount', 1);
         expect(wrapper.find.firstCall.args[0]).to.equal(fakeSelector);
         expect(existsResult).to.equal(fakeFindExistsReturnVal);
       });
@@ -3606,7 +3606,7 @@ describeWithDOM('mount', () => {
           <div style={{ fontSize: 12, color: 'red' }}>Hello World</div>
         </div>
       ))).to.equal(true);
-      expect(spy.callCount).to.equal(0);
+      expect(spy).to.have.property('callCount', 0);
     });
     it('should not match on a root node that doesn\'t looks like the rendered one', () => {
       const spy = sinon.spy();
@@ -3632,8 +3632,8 @@ describeWithDOM('mount', () => {
           <div style={{ fontSize: 13, color: 'red' }}>Hello World</div>
         </div>
       ))).to.equal(false);
-      expect(spy.callCount).to.equal(0);
-      expect(spy2.callCount).to.equal(0);
+      expect(spy).to.have.property('callCount', 0);
+      expect(spy2).to.have.property('callCount', 0);
     });
 
     describeIf(is('> 0.13'), 'stateless function components', () => {
@@ -3762,8 +3762,8 @@ describeWithDOM('mount', () => {
           <div style={{ fontSize: 13, color: 'blue' }}>Goodbye World</div>
         </div>
       ))).to.equal(true);
-      expect(spy1.callCount).to.equal(0);
-      expect(spy2.callCount).to.equal(0);
+      expect(spy1).to.have.property('callCount', 0);
+      expect(spy2).to.have.property('callCount', 0);
     });
 
     it('should match on a single node that looks like a rendered one', () => {
@@ -3789,8 +3789,8 @@ describeWithDOM('mount', () => {
       expect(wrapper.containsMatchingElement((
         <div onClick={spy2}>Goodbye World</div>
       ))).to.equal(true);
-      expect(spy1.callCount).to.equal(0);
-      expect(spy2.callCount).to.equal(0);
+      expect(spy1).to.have.property('callCount', 0);
+      expect(spy2).to.have.property('callCount', 0);
     });
 
     it('should not match on a single node that doesn\'t looks like a rendered one', () => {
@@ -3907,8 +3907,8 @@ describeWithDOM('mount', () => {
         <div onClick={spy1} style={{ fontSize: 12, color: 'red' }}>Hello World</div>,
         <div onClick={spy2}>Goodbye World</div>,
       ])).to.equal(true);
-      expect(spy1.callCount).to.equal(0);
-      expect(spy2.callCount).to.equal(0);
+      expect(spy1).to.have.property('callCount', 0);
+      expect(spy2).to.have.property('callCount', 0);
     });
     it('should not match on nodes that doesn\'t all looks like one of rendered nodes', () => {
       const spy1 = sinon.spy();
@@ -3924,8 +3924,8 @@ describeWithDOM('mount', () => {
         <div onClick={spy1} style={{ fontSize: 12, color: 'red' }}>Bonjour le monde</div>,
         <div onClick={spy2}>Goodbye World</div>,
       ])).to.equal(false);
-      expect(spy1.callCount).to.equal(0);
-      expect(spy2.callCount).to.equal(0);
+      expect(spy1).to.have.property('callCount', 0);
+      expect(spy2).to.have.property('callCount', 0);
     });
   });
 
@@ -3971,8 +3971,8 @@ describeWithDOM('mount', () => {
         <div onClick={spy1} style={{ fontSize: 12, color: 'red' }}>Bonjour le monde</div>,
         <div onClick={spy2}>Goodbye World</div>,
       ])).to.equal(true);
-      expect(spy1.callCount).to.equal(0);
-      expect(spy2.callCount).to.equal(0);
+      expect(spy1).to.have.property('callCount', 0);
+      expect(spy2).to.have.property('callCount', 0);
     });
     it('should not match on an array with no nodes that looks like a rendered nodes', () => {
       const spy1 = sinon.spy();
@@ -3987,8 +3987,8 @@ describeWithDOM('mount', () => {
         <div onClick={spy1} style={{ fontSize: 12, color: 'red' }}>Bonjour le monde</div>,
         <div onClick={spy2}>Au revoir le monde</div>,
       ])).to.equal(false);
-      expect(spy1.callCount).to.equal(0);
-      expect(spy2.callCount).to.equal(0);
+      expect(spy1).to.have.property('callCount', 0);
+      expect(spy2).to.have.property('callCount', 0);
     });
   });
 

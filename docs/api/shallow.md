@@ -34,7 +34,7 @@ describe('<MyComponent />', () => {
     const onButtonClick = sinon.spy();
     const wrapper = shallow(<Foo onButtonClick={onButtonClick} />);
     wrapper.find('button').simulate('click');
-    expect(onButtonClick.calledOnce).to.equal(true);
+    expect(onButtonClick).to.have.property('callCount', 1);
   });
 });
 

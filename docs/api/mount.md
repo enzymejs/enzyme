@@ -19,7 +19,7 @@ describe('<Foo />', () => {
   it('calls componentDidMount', () => {
     sinon.spy(Foo.prototype, 'componentDidMount');
     const wrapper = mount(<Foo />);
-    expect(Foo.prototype.componentDidMount.calledOnce).to.equal(true);
+    expect(Foo.prototype.componentDidMount).to.have.property('callCount', 1);
   });
 
   it('allows us to set props', () => {
@@ -35,7 +35,7 @@ describe('<Foo />', () => {
       <Foo onButtonClick={onButtonClick} />
     ));
     wrapper.find('button').simulate('click');
-    expect(onButtonClick.calledOnce).to.equal(true);
+    expect(onButtonClick).to.have.property('callCount', 1);
   });
 });
 ```
