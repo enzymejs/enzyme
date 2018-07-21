@@ -5,11 +5,11 @@ import { render } from 'enzyme';
 
 import './_helpers/setupAdapters';
 import { describeWithDOM, describeIf } from './_helpers';
-import { REACT013 } from './_helpers/version';
+import { is } from './_helpers/version';
 import { createClass } from './_helpers/react-compat';
 
 describeWithDOM('render', () => {
-  describeIf(!REACT013, 'context', () => {
+  describeIf(is('> 0.13'), 'context', () => {
     it('can pass in context', () => {
       const SimpleComponent = createClass({
         contextTypes: {

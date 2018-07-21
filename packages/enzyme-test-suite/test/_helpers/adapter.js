@@ -4,25 +4,19 @@
  * versions of React at a time. This file basically figures out which
  * version of React is loaded, and exports the correct adapter for configuring.
  */
-const {
-  REACT013,
-  REACT014,
-  REACT15,
-  REACT155,
-  REACT16,
-} = require('./version');
+const { is } = require('./version');
 
 let Adapter = null;
 
-if (REACT013) {
+if (is('^0.13')) {
   Adapter = require('enzyme-adapter-react-13');
-} else if (REACT014) {
+} else if (is('^0.14')) {
   Adapter = require('enzyme-adapter-react-14');
-} else if (REACT155) {
+} else if (is('^15.5')) {
   Adapter = require('enzyme-adapter-react-15');
-} else if (REACT15) {
+} else if (is('^15') && is('< 15.5')) {
   Adapter = require('enzyme-adapter-react-15.4');
-} else if (REACT16) {
+} else if (is('^16')) {
   Adapter = require('enzyme-adapter-react-16');
 }
 

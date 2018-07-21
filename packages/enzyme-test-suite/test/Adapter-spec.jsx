@@ -7,7 +7,7 @@ import { configure, shallow } from 'enzyme';
 import './_helpers/setupAdapters';
 import Adapter from './_helpers/adapter';
 import { renderToString } from './_helpers/react-compat';
-import { REACT013, REACT16 } from './_helpers/version';
+import { is } from './_helpers/version';
 import { itIf, describeWithDOM } from './_helpers';
 
 const { adapter } = get();
@@ -116,7 +116,7 @@ describe('Adapter', () => {
       hydratedTreeMatchesUnhydrated(<Four />);
     });
 
-    itIf(REACT16, 'works with ReactDOM.hydrate', () => {
+    itIf(is('>= 16'), 'works with ReactDOM.hydrate', () => {
       hydratedTreeMatchesUnhydrated(<One />, true);
       hydratedTreeMatchesUnhydrated(<Two />, true);
       hydratedTreeMatchesUnhydrated(<Three />, true);
@@ -155,7 +155,7 @@ describe('Adapter', () => {
           instance: null,
           rendered: [
             'hello',
-            REACT16 ? '4' : 4,
+            is('>= 16') ? '4' : 4,
             'world',
           ],
         },
@@ -188,7 +188,7 @@ describe('Adapter', () => {
       }));
     });
 
-    itIf(REACT16, 'renders react portals', () => {
+    itIf(is('>= 16'), 'renders react portals', () => {
       // eslint-disable-next-line global-require, import/no-unresolved
       const ReactDOM = require('react-dom'); // only available in 0.14+
 
@@ -225,7 +225,7 @@ describe('Adapter', () => {
       }));
     });
 
-    itIf(!REACT013, 'renders simple components returning host components', () => {
+    itIf(is('> 0.13'), 'renders simple components returning host components', () => {
       const options = { mode: 'mount' };
       const renderer = adapter.createRenderer(options);
 
@@ -318,7 +318,7 @@ describe('Adapter', () => {
     });
 
 
-    itIf(!REACT013, 'renders complicated trees of composites and hosts', () => {
+    itIf(is('> 0.13'), 'renders complicated trees of composites and hosts', () => {
       // SFC returning host. no children props.
       const Qoo = () => <span className="Qoo">Hello World!</span>;
 

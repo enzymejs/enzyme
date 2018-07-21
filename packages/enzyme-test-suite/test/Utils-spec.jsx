@@ -16,7 +16,7 @@ import {
 import './_helpers/setupAdapters';
 
 import { describeIf } from './_helpers';
-import { REACT013 } from './_helpers/version';
+import { is } from './_helpers/version';
 
 describe('Utils', () => {
   describe('nodeEqual', () => {
@@ -493,7 +493,7 @@ describe('Utils', () => {
         expect(displayNameOfNode(<Foo />)).to.equal('CustomWrapper');
       });
 
-      describeIf(!REACT013, 'stateless function components', () => {
+      describeIf(is('> 0.13'), 'stateless function components', () => {
         it('should return the displayName', () => {
           const Foo = () => <div />;
           Foo.displayName = 'CustomWrapper';
@@ -520,7 +520,7 @@ describe('Utils', () => {
         expect(displayNameOfNode(<Foo />)).to.equal('');
       });
 
-      describeIf(!REACT013, 'stateless function components', () => {
+      describeIf(is('> 0.13'), 'stateless function components', () => {
         it('should return the name', () => {
           const Foo = () => <div />;
 

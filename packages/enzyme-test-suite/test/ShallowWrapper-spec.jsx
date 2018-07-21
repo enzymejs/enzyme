@@ -19,12 +19,7 @@ import {
   generateEmptyRenderData,
 } from './_helpers';
 import {
-  REACT013,
-  REACT014,
-  REACT15,
-  REACT150_4,
   REACT16,
-  REACT163,
   is,
 } from './_helpers/version';
 import sloppyReturnThis from './_helpers/untranspiledSloppyReturnThis';
@@ -34,7 +29,7 @@ import sloppyReturnThis from './_helpers/untranspiledSloppyReturnThis';
 const BATCHING = !REACT16;
 
 // some React versions pass undefined as an argument of setState callback.
-const CALLING_SETSTATE_CALLBACK_WITH_UNDEFINED = REACT15 && !REACT150_4;
+const CALLING_SETSTATE_CALLBACK_WITH_UNDEFINED = is('^15.5');
 
 const getElementPropSelector = prop => x => x.props[prop];
 const getWrapperPropSelector = prop => x => x.prop(prop);
@@ -115,7 +110,7 @@ describe('shallow', () => {
       expect(wrapper.context('name')).to.equal(context.name);
     });
 
-    itIf(REACT163, 'should find elements through Context elements', () => {
+    itIf(is('>= 16.3'), 'should find elements through Context elements', () => {
       const { Provider, Consumer } = createContext('');
 
       class Consumes extends React.Component {
@@ -141,7 +136,7 @@ describe('shallow', () => {
 
     });
 
-    describeIf(!REACT013, 'stateless function components', () => {
+    describeIf(is('> 0.13'), 'stateless function components', () => {
       it('can pass in context', () => {
         const SimpleComponent = (props, context) => (
           <div>{context.name}</div>
@@ -162,7 +157,7 @@ describe('shallow', () => {
         expect(() => shallow(<SimpleComponent />, { context })).not.to.throw();
       });
 
-      itIf(!REACT16, 'is introspectable through context API', () => {
+      itIf(is('< 16'), 'is introspectable through context API', () => {
         const SimpleComponent = (props, context) => (
           <div>{context.name}</div>
         );
@@ -174,7 +169,7 @@ describe('shallow', () => {
         expect(wrapper.context('name')).to.equal(context.name);
       });
 
-      itIf(REACT16, 'is not introspectable through context API', () => {
+      itIf(is('>= 16'), 'is not introspectable through context API', () => {
         const SimpleComponent = (props, context) => (
           <div>{context.name}</div>
         );
@@ -194,7 +189,7 @@ describe('shallow', () => {
     });
   });
 
-  describeIf(!REACT013, 'stateless function components', () => {
+  describeIf(is('> 0.13'), 'stateless function components', () => {
     it('works with stateless components', () => {
       const Foo = ({ foo }) => (
         <div>
@@ -339,7 +334,7 @@ describe('shallow', () => {
       );
     });
 
-    describeIf(!REACT013, 'stateless function components', () => {
+    describeIf(is('> 0.13'), 'stateless function components', () => {
       it('should match composite components', () => {
         function Foo() {
           return <div />;
@@ -415,7 +410,7 @@ describe('shallow', () => {
       expect(shallow(<Foo />).equals(<Foo />)).to.equal(false);
     });
 
-    describeIf(!REACT013, 'stateless components', () => {
+    describeIf(is('> 0.13'), 'stateless components', () => {
       it('should match composite stateless components', () => {
         const Foo = () => (
           <div />
@@ -888,7 +883,7 @@ describe('shallow', () => {
       expect(wrapper.find('[data-foo="bar  baz quz"]')).to.have.lengthOf(0);
     });
 
-    describeIf(!REACT013, 'stateless function components', () => {
+    describeIf(is('> 0.13'), 'stateless function components', () => {
       it('should find a component based on a constructor', () => {
         const Foo = () => (
           <div />
@@ -1007,7 +1002,7 @@ describe('shallow', () => {
       expect(spy.args[3][0].hasClass('bux')).to.equal(true);
     });
 
-    describeIf(!REACT013, 'stateless function components', () => {
+    describeIf(is('> 0.13'), 'stateless function components', () => {
       it('finds nodes', () => {
         const SFC = function SFC({ selector }) {
           return (
@@ -1130,7 +1125,7 @@ describe('shallow', () => {
       expect(cWRP).to.have.property('callCount', 1);
       expect(cWRP.calledWith(nextProps, context)).to.equal(true);
 
-      if (REACT163) {
+      if (is('>= 16.3')) {
         expect(U_cWRP).to.have.property('callCount', 1);
         expect(U_cWRP.calledWith(nextProps, context)).to.equal(true);
       }
@@ -1275,7 +1270,7 @@ describe('shallow', () => {
       ]);
     });
 
-    describeIf(!REACT013, 'stateless function components', () => {
+    describeIf(is('> 0.13'), 'stateless function components', () => {
       it('should set props for a component multiple times', () => {
         const Foo = props => (
           <div className={props.id}>
@@ -1351,7 +1346,7 @@ describe('shallow', () => {
       );
     });
 
-    describeIf(!REACT013, 'stateless functional components', () => {
+    describeIf(is('> 0.13'), 'stateless functional components', () => {
       const SFC = (props, context) => (
         <div>{context.name}</div>
       );
@@ -1429,7 +1424,7 @@ describe('shallow', () => {
       expect(spy.args[0][1]).to.equal(b);
     });
 
-    describeIf(!REACT013, 'stateless function components', () => {
+    describeIf(is('> 0.13'), 'stateless function components', () => {
       it('should simulate events', () => {
         const spy = sinon.spy();
         const Foo = props => (
@@ -1480,7 +1475,7 @@ describe('shallow', () => {
         expect(clickSpy.calledOnce).to.equal(true);
       });
 
-      describeIf(!REACT013, 'normalizing mouseenter', () => {
+      describeIf(is('> 0.13'), 'normalizing mouseenter', () => {
         it('should convert lowercase events to React camelcase', () => {
           const spy = sinon.spy();
           class Foo extends React.Component {
@@ -1635,7 +1630,7 @@ describe('shallow', () => {
       });
     });
 
-    describeIf(!REACT013, 'stateless function components', () => {
+    describeIf(is('> 0.13'), 'stateless function components', () => {
       it('should throw when trying to access state', () => {
         const Foo = () => (
           <div>abc</div>
@@ -1929,7 +1924,7 @@ describe('shallow', () => {
       ]);
     });
 
-    describeIf(!REACT013, 'stateless function components', () => {
+    describeIf(is('> 0.13'), 'stateless function components', () => {
       it('should handle nodes with mapped children', () => {
         const Foo = props => (
           <div>
@@ -2026,7 +2021,7 @@ describe('shallow', () => {
       expect(wrapper.props()).to.eql({ className: 'bye', id: 'hi' });
     });
 
-    describeIf(!REACT013, 'stateless function components', () => {
+    describeIf(is('> 0.13'), 'stateless function components', () => {
       it('should return props of root rendered node', () => {
         const Foo = ({ bar, foo }) => (
           <div className={bar} id={foo} />
@@ -2128,7 +2123,7 @@ describe('shallow', () => {
       expect(wrapper.prop('bar')).to.equal(undefined);
     });
 
-    describeIf(!REACT013, 'stateless function components', () => {
+    describeIf(is('> 0.13'), 'stateless function components', () => {
       it('should return props of root rendered node', () => {
         const Foo = ({ bar, foo }) => (
           <div className={bar} id={foo} />
@@ -2285,7 +2280,7 @@ describe('shallow', () => {
       expect(children.at(1).hasClass('baz')).to.equal(true);
     });
 
-    describeIf(!REACT013, 'stateless function components', () => {
+    describeIf(is('> 0.13'), 'stateless function components', () => {
       it('should handle mixed children with and without arrays', () => {
         const Foo = props => (
           <div>
@@ -3015,7 +3010,7 @@ describe('shallow', () => {
       });
     });
 
-    describeIf(!REACT013, 'stateless function components', () => {
+    describeIf(is('> 0.13'), 'stateless function components', () => {
       it('should return a shallow rendered instance of the current node', () => {
         const Bar = () => (
           <div>
@@ -3066,7 +3061,7 @@ describe('shallow', () => {
           expect(() => wrapper.find(Bar).shallow({ context })).to.not.throw();
         });
 
-        itIf(!REACT16, 'is introspectable through context API', () => {
+        itIf(is('< 16'), 'is introspectable through context API', () => {
           const Bar = (props, context) => (
             <div>{context.name}</div>
           );
@@ -3084,7 +3079,7 @@ describe('shallow', () => {
           expect(wrapper.context('name')).to.equal(context.name);
         });
 
-        itIf(REACT16, 'will throw when trying to inspect context', () => {
+        itIf(is('>= 16'), 'will throw when trying to inspect context', () => {
           const Bar = (props, context) => (
             <div>{context.name}</div>
           );
@@ -3361,7 +3356,7 @@ describe('shallow', () => {
       ));
     });
 
-    describeIf(!REACT013, 'stateless function components', () => {
+    describeIf(is('> 0.13'), 'stateless function components', () => {
       it('should render out nested composite components', () => {
         const Foo = () => (
           <div className="in-foo" />
@@ -3438,7 +3433,7 @@ describe('shallow', () => {
       expect(renderedFoo.find('.in-bar')).to.have.lengthOf(0);
     });
 
-    describeIf(!REACT013, 'stateless functional components', () => {
+    describeIf(is('> 0.13'), 'stateless functional components', () => {
       it('returns a cheerio wrapper around the current node', () => {
         const Foo = () => (
           <div className="in-foo" />
@@ -3550,7 +3545,7 @@ describe('shallow', () => {
         ]);
       });
 
-      describeIf(!REACT014 && !REACT16, 'setContext', () => {
+      describeIf(is('0.13 || 15 || > 16'), 'setContext', () => {
         it('calls expected methods when receiving new context', () => {
           wrapper.setContext({ foo: 'foo' });
           expect(spy.args).to.deep.equal([
@@ -3562,7 +3557,7 @@ describe('shallow', () => {
         });
       });
 
-      describeIf(REACT16, 'setContext', () => {
+      describeIf(is('16'), 'setContext', () => {
         it('calls expected methods when receiving new context', () => {
           wrapper.setContext({ foo: 'foo' });
           expect(spy.args).to.deep.equal([
@@ -3573,7 +3568,7 @@ describe('shallow', () => {
         });
       });
 
-      describeIf(REACT014, 'setContext', () => {
+      describeIf(is('0.14'), 'setContext', () => {
         it('calls expected methods when receiving new context', () => {
           wrapper.setContext({ foo: 'foo' });
           expect(spy.args).to.deep.equal([
@@ -3584,7 +3579,7 @@ describe('shallow', () => {
         });
       });
 
-      itIf(!REACT16, 'calls expected methods for setState', () => {
+      itIf(is('< 16'), 'calls expected methods for setState', () => {
         wrapper.setState({ bar: 'bar' });
         expect(spy.args).to.deep.equal([
           ['shouldComponentUpdate'],
@@ -3595,7 +3590,7 @@ describe('shallow', () => {
       });
 
       // componentDidUpdate is not called in react 16
-      itIf(REACT16, 'calls expected methods for setState', () => {
+      itIf(is('>= 16'), 'calls expected methods for setState', () => {
         wrapper.setState({ bar: 'bar' });
         expect(spy.args).to.deep.equal([
           ['shouldComponentUpdate'],
@@ -3762,7 +3757,7 @@ describe('shallow', () => {
             'componentDidUpdate',
             { foo: 'bar' }, { foo: 'baz' },
             { foo: 'state' }, { foo: 'state' },
-            REACT16 ? undefined : { foo: 'context' },
+            is('>= 16') ? undefined : { foo: 'context' },
           ],
           [
             'componentWillReceiveProps',
@@ -3788,7 +3783,7 @@ describe('shallow', () => {
             'componentDidUpdate',
             { foo: 'baz' }, { foo: 'bax' },
             { foo: 'state' }, { foo: 'state' },
-            REACT16 ? undefined : { foo: 'context' },
+            is('>= 16') ? undefined : { foo: 'context' },
           ],
         ]);
       });
@@ -4047,7 +4042,7 @@ describe('shallow', () => {
             'componentDidUpdate',
             { foo: 'props' }, { foo: 'props' },
             { foo: 'bar' }, { foo: 'baz' },
-            REACT16 ? undefined : { foo: 'context' },
+            is('>= 16') ? undefined : { foo: 'context' },
           ],
         ];
         expect(spy.args).to.deep.equal(expected);
@@ -4219,7 +4214,7 @@ describe('shallow', () => {
             'componentDidUpdate',
             { foo: 'props' }, { foo: 'props' },
             { foo: 'state' }, { foo: 'state' },
-            REACT16 ? undefined : { foo: 'bar' },
+            is('>= 16') ? undefined : { foo: 'bar' },
           ],
         ]);
       });
@@ -4351,7 +4346,7 @@ describe('shallow', () => {
       });
     });
 
-    describeIf(REACT16, 'support getSnapshotBeforeUpdate', () => {
+    describeIf(is('>= 16'), 'support getSnapshotBeforeUpdate', () => {
       it('should call getSnapshotBeforeUpdate and pass snapshot to componentDidUpdate', () => {
         const spy = sinon.spy();
         class Foo extends React.Component {
@@ -4460,7 +4455,7 @@ describe('shallow', () => {
     expect(rendered.html()).to.equal(null);
   });
 
-  itIf(REACT16, 'works with class components that return arrays', () => {
+  itIf(is('>= 16'), 'works with class components that return arrays', () => {
     class Foo extends React.Component {
       render() {
         return [<div />, <div />];
@@ -4877,7 +4872,7 @@ describe('shallow', () => {
         expect(wrapper.name()).to.equal('CustomWrapper');
       });
 
-      describeIf(!REACT013, 'stateless function components', () => {
+      describeIf(is('> 0.13'), 'stateless function components', () => {
         it('should return the name of the node', () => {
           function SFC() {
             return <div />;
@@ -4925,7 +4920,7 @@ describe('shallow', () => {
         expect(wrapper.name()).to.equal('Foo');
       });
 
-      describeIf(!REACT013, 'stateless function components', () => {
+      describeIf(is('> 0.13'), 'stateless function components', () => {
         it('should return the name of the node', () => {
           function SFC() {
             return <div />;

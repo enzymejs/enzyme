@@ -12,7 +12,7 @@ import {
 
 import './_helpers/setupAdapters';
 import { describeIf } from './_helpers';
-import { REACT013 } from './_helpers/version';
+import { is } from './_helpers/version';
 
 const $ = elementToTree;
 
@@ -472,7 +472,7 @@ describe('RSTTraversal', () => {
       expect(result).to.equal('<Subject />');
     });
 
-    describeIf(!REACT013, 'stateless function components', () => {
+    describeIf(is('> 0.13'), 'stateless function components', () => {
 
       it('should return displayName for functions that provides one', () => {
         const Subject = () => <div />;

@@ -20,10 +20,7 @@ import {
   generateEmptyRenderData,
 } from './_helpers';
 import {
-  REACT013,
-  REACT014,
   REACT16,
-  REACT163,
   is,
 } from './_helpers/version';
 import realArrowFunction from './_helpers/realArrowFunction';
@@ -185,7 +182,7 @@ describeWithDOM('mount', () => {
       expect(wrapper.context('name')).to.equal(context.name);
     });
 
-    itIf(REACT163, 'should find elements through Context elements', () => {
+    itIf(is('>= 16.3'), 'should find elements through Context elements', () => {
       const { Provider, Consumer } = createContext('');
 
       class Foo extends React.Component {
@@ -201,7 +198,7 @@ describeWithDOM('mount', () => {
       expect(wrapper.find('span').text()).to.equal('foo');
     });
 
-    describeIf(!REACT013, 'stateless components', () => {
+    describeIf(is('> 0.13'), 'stateless components', () => {
       it('can pass in context', () => {
         const SimpleComponent = (props, context) => (
           <div>{context.name}</div>
@@ -241,7 +238,7 @@ describeWithDOM('mount', () => {
         expect(() => mount(<SimpleComponent />, { context })).to.not.throw();
       });
 
-      itIf(!REACT16, 'is introspectable through context API', () => {
+      itIf(is('< 16'), 'is introspectable through context API', () => {
         const SimpleComponent = (props, context) => (
           <div>{context.name}</div>
         );
@@ -254,7 +251,7 @@ describeWithDOM('mount', () => {
         expect(wrapper.context('name')).to.equal(context.name);
       });
 
-      itIf(!REACT16, 'works with stateless components', () => {
+      itIf(is('< 16'), 'works with stateless components', () => {
         const Foo = ({ foo }) => (
           <div>
             <div className="bar">bar</div>
@@ -276,7 +273,7 @@ describeWithDOM('mount', () => {
     });
   });
 
-  describeIf(!REACT013, 'stateless components', () => {
+  describeIf(is('> 0.13'), 'stateless components', () => {
     it('works with stateless components', () => {
       const Foo = ({ foo }) => (
         <div>
@@ -378,7 +375,7 @@ describeWithDOM('mount', () => {
       expect(wrapper.contains(passes2)).to.equal(true);
     });
 
-    describeIf(!REACT013, 'stateless components', () => {
+    describeIf(is('> 0.13'), 'stateless components', () => {
       it('should match composite components', () => {
         function Foo() {
           return <div />;
@@ -535,7 +532,7 @@ describeWithDOM('mount', () => {
       expect(wrapper.find('Foo').type()).to.equal(Foo);
     });
 
-    describeIf(!REACT013, 'stateless components', () => {
+    describeIf(is('> 0.13'), 'stateless components', () => {
       it('should find a stateless component based on a component displayName', () => {
         const Foo = () => <div />;
         const wrapper = mount((
@@ -833,7 +830,7 @@ describeWithDOM('mount', () => {
       expect(wrapper.find('[data-foo="bar  baz quz"]')).to.have.lengthOf(0);
     });
 
-    itIf(REACT16, 'should find elements through portals', () => {
+    itIf(is('>= 16'), 'should find elements through portals', () => {
       const containerDiv = global.document.createElement('div');
 
       class FooPortal extends React.Component {
@@ -850,7 +847,7 @@ describeWithDOM('mount', () => {
       expect(containerDiv.querySelectorAll('h1')).to.have.lengthOf(1);
     });
 
-    describeIf(!REACT013, 'stateless function components', () => {
+    describeIf(is('> 0.13'), 'stateless function components', () => {
       it('should find a component based on a constructor', () => {
         const Foo = () => <div />;
         const wrapper = mount((
@@ -1065,7 +1062,7 @@ describeWithDOM('mount', () => {
       ));
     });
 
-    describeIf(!REACT013, 'stateless functional components', () => {
+    describeIf(is('> 0.13'), 'stateless functional components', () => {
       it('finds nodes', () => {
         const SFC = function SFC({ selector }) {
           return (
@@ -1263,7 +1260,7 @@ describeWithDOM('mount', () => {
       expect(cWRP).to.have.property('callCount', 1);
       expect(cWRP.calledWith(nextProps, context)).to.equal(true);
 
-      if (REACT163) {
+      if (is('>= 16.3')) {
         expect(U_cWRP).to.have.property('callCount', 1);
         expect(U_cWRP.calledWith(nextProps, context)).to.equal(true);
       }
@@ -1391,7 +1388,7 @@ describeWithDOM('mount', () => {
       });
     });
 
-    describeIf(!REACT013, 'stateless function components', () => {
+    describeIf(is('> 0.13'), 'stateless function components', () => {
       it('should set props for a component multiple times', () => {
         const Foo = props => (
           <div className={props.id}>
@@ -1498,7 +1495,7 @@ describeWithDOM('mount', () => {
       );
     });
 
-    describeIf(!REACT013, 'stateless function components', () => {
+    describeIf(is('> 0.13'), 'stateless function components', () => {
       it('should set context for a component multiple times', () => {
         const SimpleComponent = (props, context) => (
           <div>{context.name}</div>
@@ -1647,7 +1644,7 @@ describeWithDOM('mount', () => {
         .to.throw(TypeError, "ReactWrapper::simulate() event 'invalidEvent' does not exist");
     });
 
-    describeIf(!REACT013, 'stateless function component', () => {
+    describeIf(is('> 0.13'), 'stateless function component', () => {
       it('should pass in event data', () => {
         const spy = sinon.spy();
         const Foo = () => (
@@ -1682,7 +1679,7 @@ describeWithDOM('mount', () => {
         expect(clickSpy.calledOnce).to.equal(true);
       });
 
-      describeIf(!REACT013, 'normalizing mouseenter', () => {
+      describeIf(is('> 0.13'), 'normalizing mouseenter', () => {
         it('should convert lowercase events to React camelcase', () => {
           const spy = sinon.spy();
           class Foo extends React.Component {
@@ -2099,7 +2096,7 @@ describeWithDOM('mount', () => {
       matchesRender(<div>&gt;</div>);
     });
 
-    describeIf(!REACT013, 'stateless function components', () => {
+    describeIf(is('> 0.13'), 'stateless function components', () => {
       it('should handle nodes with mapped children', () => {
         const Foo = props => (
           <div>{props.items.map(x => x)}</div>
@@ -2199,7 +2196,7 @@ describeWithDOM('mount', () => {
       expect(wrapper.props()).to.eql({ bar: 'bye', foo: 'hi' });
     });
 
-    describeIf(!REACT013, 'stateless function components', () => {
+    describeIf(is('> 0.13'), 'stateless function components', () => {
       it('called on root should return props of root node', () => {
         const Foo = ({ bar, foo }) => (
           <div className={bar} id={foo} />
@@ -2300,7 +2297,7 @@ describeWithDOM('mount', () => {
       expect(wrapper.prop('bar')).to.equal('bye');
     });
 
-    describeIf(!REACT013, 'stateless function components', () => {
+    describeIf(is('> 0.13'), 'stateless function components', () => {
       it('should return props of root rendered node', () => {
         const Foo = ({ bar, foo }) => (
           <div className={bar} id={foo} />
@@ -2437,7 +2434,7 @@ describeWithDOM('mount', () => {
       expect(children).to.have.lengthOf(1);
     });
 
-    describeIf(!REACT013, 'stateless function components', () => {
+    describeIf(is('> 0.13'), 'stateless function components', () => {
       it('should handle mixed children with and without arrays', () => {
         const Foo = props => (
           <div>
@@ -2688,7 +2685,7 @@ describeWithDOM('mount', () => {
       });
     });
 
-    describeIf(!REACT013, 'with stateless components', () => {
+    describeIf(is('> 0.13'), 'with stateless components', () => {
       it('should return whether or not node has a certain class', () => {
         const Foo = () => <div className="foo bar baz some-long-string FoOo" />;
         const wrapper = mount(<Foo />);
@@ -3323,7 +3320,7 @@ describeWithDOM('mount', () => {
       // React 13 and 14 return instances whereas 15+ returns actual DOM nodes. In this case,
       // the public API of enzyme is to just return what `this.refs[refName]` would be expected
       // to return for the version of react you're using.
-      if (REACT013 || REACT014) {
+      if (is('< 15')) {
         expect(wrapper.ref('secondRef').getDOMNode().getAttribute('data-amount')).to.equal('4');
         expect(wrapper.ref('secondRef').getDOMNode().textContent).to.equal('Second');
       } else {
@@ -3363,7 +3360,7 @@ describeWithDOM('mount', () => {
       expect(wrapper.find(Foo).html()).to.equal('<div class="in-foo"></div>');
     });
 
-    describeIf(!REACT013, 'stateless function components', () => {
+    describeIf(is('> 0.13'), 'stateless function components', () => {
       it('should render out nested composite components', () => {
         const Foo = () => <div className="in-foo" />;
         const Bar = () => (
@@ -3399,7 +3396,7 @@ describeWithDOM('mount', () => {
       expect(wrapper.render().find('.in-foo')).to.have.lengthOf(1);
     });
 
-    describeIf(!REACT013, 'stateless function components', () => {
+    describeIf(is('> 0.13'), 'stateless function components', () => {
       it('should return a cheerio wrapper around the current node', () => {
         const Foo = () => <div className="in-foo" />;
         const Bar = () => (
@@ -3538,7 +3535,7 @@ describeWithDOM('mount', () => {
     expect(rendered.html()).to.equal(null);
   });
 
-  itIf(REACT16, 'works with class components that return arrays', () => {
+  itIf(is('>= 16'), 'works with class components that return arrays', () => {
     class Foo extends React.Component {
       render() {
         return [<div />, <div />];
@@ -3639,7 +3636,7 @@ describeWithDOM('mount', () => {
       expect(spy2.callCount).to.equal(0);
     });
 
-    describeIf(!REACT013, 'stateless function components', () => {
+    describeIf(is('> 0.13'), 'stateless function components', () => {
       it('should attach and stuff', () => {
         const Foo = () => <div className="in-foo" />;
 
@@ -4008,7 +4005,7 @@ describeWithDOM('mount', () => {
         expect(wrapper.name()).to.equal('CustomWrapper');
       });
 
-      describeIf(!REACT013, 'stateless function components', () => {
+      describeIf(is('> 0.13'), 'stateless function components', () => {
         it('should return the name of the node', () => {
           function SFC() {
             return <div />;
@@ -4046,7 +4043,7 @@ describeWithDOM('mount', () => {
         expect(wrapper.name()).to.equal('Foo');
       });
 
-      describeIf(!REACT013, 'stateless function components', () => {
+      describeIf(is('> 0.13'), 'stateless function components', () => {
         it('should return the name of the node', () => {
           function SFC() {
             return <div />;
@@ -4198,7 +4195,7 @@ describeWithDOM('mount', () => {
       );
     });
 
-    describeIf(!REACT013, 'stateless components', () => {
+    describeIf(is('> 0.13'), 'stateless components', () => {
       const SFC = () => (
         <div className="outer">
           <div className="inner">

@@ -15,7 +15,7 @@ import {
   describeIf,
   itIf,
 } from './_helpers';
-import { REACT013 } from './_helpers/version';
+import { is } from './_helpers/version';
 
 const { adapter } = get();
 
@@ -133,7 +133,7 @@ describe('debug', () => {
       ));
     });
 
-    itIf(!REACT013, 'should render stateless components as tags w/ name', () => {
+    itIf(is('> 0.13'), 'should render stateless components as tags w/ name', () => {
       const Foo = () => <div />;
 
       expect(debugElement((
@@ -360,7 +360,7 @@ describe('debug', () => {
       ));
     });
 
-    describeIf(!REACT013, 'stateless function components', () => {
+    describeIf(is('> 0.13'), 'stateless function components', () => {
       it('renders basic debug of mounted components', () => {
         const Foo = () => (
           <div className="foo">
