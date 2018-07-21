@@ -441,11 +441,26 @@ describe('Utils', () => {
   });
 
   describe('propFromEvent', () => {
-    const fn = propFromEvent;
-
     it('should work', () => {
-      expect(fn('click')).to.equal('onClick');
-      expect(fn('mouseEnter')).to.equal('onMouseEnter');
+      expect(propFromEvent('click')).to.equal('onClick');
+      expect(propFromEvent('mouseEnter')).to.equal('onMouseEnter');
+    });
+
+    describe('conditionally supported events', () => {
+      it('ignores unsupported events', () => {
+        const result = propFromEvent('animationIteration');
+        expect(result).to.equal('onAnimationIteration');
+      });
+
+      it('transforms animation events when supported', () => {
+        const result = propFromEvent('animationIteration', { animation: true });
+        expect(result).to.equal('onAnimationIteration');
+      });
+
+      it('transforms pointer events when supported', () => {
+        const result = propFromEvent('pointerOver', { pointerEvents: true });
+        expect(result).to.equal('onPointerOver');
+      });
     });
   });
 
@@ -478,9 +493,14 @@ describe('Utils', () => {
         expect(result).to.equal('animationiteration');
       });
 
-      it('transforms events when supported', () => {
+      it('transforms animation events when supported', () => {
         const result = mapNativeEventNames('animationiteration', { animation: true });
         expect(result).to.equal('animationIteration');
+      });
+
+      it('transforms pointer events when supported', () => {
+        const result = mapNativeEventNames('pointerover', { pointerEvents: true });
+        expect(result).to.equal('pointerOver');
       });
     });
   });
