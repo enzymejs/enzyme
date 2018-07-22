@@ -7,6 +7,7 @@ import {
   indent,
   debugNode,
   debugNodes,
+  typeName,
 } from 'enzyme/build/Debug';
 
 import './_helpers/setupAdapters';
@@ -22,6 +23,31 @@ const { adapter } = get();
 const debugElement = element => debugNode(adapter.elementToNode(element));
 
 describe('debug', () => {
+  describe('typeName(node)', () => {
+    it('returns `.type` when not a function', () => {
+      const type = {};
+      expect(typeName({ type })).to.equal(type);
+    });
+
+    describe('when `.type` is a function', () => {
+      it('returns the function’s name', () => {
+        function Foo() {}
+        expect(typeName({ type: Foo })).to.equal('Foo');
+      });
+
+      it('returns the function’s `.displayName` when present', () => {
+        function Foo() {}
+        Foo.displayName = 'Bar';
+        expect(typeName({ type: Foo })).to.equal('Bar');
+      });
+
+      it('returns "Component" when the function is anonymous', () => {
+        const anon = Object(() => {});
+        expect(typeName({ type: anon })).to.equal('Component');
+      });
+    });
+  });
+
   describe('spaces(n)', () => {
     it('should return n spaces', () => {
       expect(spaces(4)).to.equal('    ');
