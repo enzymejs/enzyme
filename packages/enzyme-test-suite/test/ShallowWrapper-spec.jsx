@@ -1296,8 +1296,8 @@ describe('shallow', () => {
         wrapper.setProps({ id: 'bar', foo: 'bla' }, () => {
           expect(wrapper.find('.bar')).to.have.lengthOf(1);
         });
-        expect(wrapper.find('.bar')).to.have.lengthOf(0);
       });
+      expect(wrapper.find('.foo')).to.have.lengthOf(0);
     });
 
     it('should call componentWillReceiveProps, shouldComponentUpdate, componentWillUpdate, and componentDidUpdate with merged newProps', () => {

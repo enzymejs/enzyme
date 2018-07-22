@@ -30,6 +30,8 @@ import {
 } from './RSTTraversal';
 import { buildPredicate, reduceTreesBySelector } from './selectors';
 
+const noop = () => {};
+
 const NODE = sym('__node__');
 const NODES = sym('__nodes__');
 const RENDERER = sym('__renderer__');
@@ -376,13 +378,19 @@ class ShallowWrapper {
    * NOTE: can only be called on a wrapper instance that is also the root instance.
    *
    * @param {Object} props object
+   * @param {Function} cb - callback function
    * @returns {ShallowWrapper}
    */
-  setProps(props) {
+  setProps(props, callback = noop) {
     if (this[ROOT] !== this) {
       throw new Error('ShallowWrapper::setProps() can only be called on the root');
     }
-    return this.rerender(props);
+    if (typeof callback !== 'function') {
+      throw new TypeError('ShallowWrapper::setProps() expects a function as its second argument');
+    }
+    this.rerender(props);
+    callback();
+    return this;
   }
 
   /**
