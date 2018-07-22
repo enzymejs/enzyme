@@ -12,7 +12,7 @@
     "postversion": "git push && git push --tags && npm run clean && npm run docs:publish",
     "version": "lerna run build",
     "clean": "lerna run clean",
-    "lint": "lerna run lint",
+    "lint": "lerna exec --parallel 'npm run lint -- --quiet'",
     "postlint": "npm run docs:lint",
     "check": "lerna run lint && npm run test:all",
     "prebuild": "npm run clean",
