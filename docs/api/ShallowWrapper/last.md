@@ -16,3 +16,8 @@ Reduce the set of matched nodes to the last in the set.
 const wrapper = shallow(<MyComponent />);
 expect(wrapper.find(Foo).last().props().foo).to.equal('bar');
 ```
+
+
+#### Related Methods
+
+- [`.first() => ShallowWrapper`](first.md)
