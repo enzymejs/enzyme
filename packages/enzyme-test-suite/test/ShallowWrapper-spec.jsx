@@ -5173,7 +5173,7 @@ describe('shallow', () => {
     });
   });
 
-  describeIf(ITERATOR_SYMBOL, '@@iterator', () => {
+  describeIf(!!ITERATOR_SYMBOL, '@@iterator', () => {
     it('should be iterable', () => {
       class Foo extends React.Component {
         render() {

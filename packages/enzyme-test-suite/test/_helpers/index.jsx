@@ -7,6 +7,10 @@ import React from 'react';
  * determines whether or not the test will be run
  */
 export function describeIf(test, a, b) {
+  if (typeof test !== 'boolean') {
+    throw new TypeError(`a boolean is required, you passed a ${typeof test}`);
+  }
+
   if (test) {
     describe(a, b);
   } else {
@@ -19,6 +23,10 @@ export function describeIf(test, a, b) {
  * determines whether or not the test will be run
  */
 export function itIf(test, a, b) {
+  if (typeof test !== 'boolean') {
+    throw new TypeError(`a boolean is required, you passed a ${typeof test}`);
+  }
+
   if (test) {
     it(a, b);
   } else {
