@@ -453,6 +453,22 @@ class ReactWrapper {
   }
 
   /**
+   * Whether or not a given react element exists in the current render tree.
+   *
+   * Example:
+   * ```
+   * const wrapper = mount(<MyComponent />);
+   * expect(wrapper.contains(<div className="foo bar" />)).to.equal(true);
+   * ```
+   *
+   * @param {ReactElement} node
+   * @returns {Boolean}
+   */
+  equals(node) {
+    return this.single('equals', () => nodeEqual(this.getNodeInternal(), node));
+  }
+
+  /**
    * Finds every node in the render tree of the current wrapper that matches the provided selector.
    *
    * @param {String|Function} selector

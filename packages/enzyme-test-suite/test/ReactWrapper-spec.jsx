@@ -415,6 +415,110 @@ describeWithDOM('mount', () => {
     });
   });
 
+  describe('.equals(node)', () => {
+    it('should allow matches on the root node', () => {
+      const a = <div className="foo" />;
+      const b = <div className="foo" />;
+      const c = <div className="bar" />;
+      expect(mount(a).equals(b)).to.equal(true);
+      expect(mount(a).equals(c)).to.equal(false);
+    });
+
+    it('should NOT allow matches on a nested node', () => {
+      const wrapper = mount((
+        <div>
+          <div className="foo" />
+        </div>
+      ));
+      const b = <div className="foo" />;
+      expect(wrapper.equals(b)).to.equal(false);
+    });
+
+    it('should match composite components', () => {
+      class Foo extends React.Component {
+        render() { return <div />; }
+      }
+      const wrapper = mount((
+        <div>
+          <Foo />
+        </div>
+      ));
+      const b = <div><Foo /></div>;
+      expect(wrapper.equals(b)).to.equal(true);
+    });
+
+    it.skip('should not expand `node` content', () => {
+      class Bar extends React.Component {
+        render() { return <div />; }
+      }
+
+      class Foo extends React.Component {
+        render() { return <Bar />; }
+      }
+
+      expect(mount(<Foo />).equals(<Bar />)).to.equal(true);
+      expect(mount(<Foo />).equals(<Foo />)).to.equal(false);
+    });
+
+    describeIf(is('> 0.13'), 'stateless function components (SFCs)', () => {
+      it('should match composite SFCs', () => {
+        const Foo = () => (
+          <div />
+        );
+
+        const wrapper = mount((
+          <div>
+            <Foo />
+          </div>
+        ));
+        const b = <div><Foo /></div>;
+        expect(wrapper.equals(b)).to.equal(true);
+      });
+
+      it.skip('should not expand `node` content', () => {
+        const Bar = () => (
+          <div />
+        );
+
+        const Foo = () => (
+          <Bar />
+        );
+
+        expect(mount(<Foo />).equals(<Bar />)).to.equal(true);
+        expect(mount(<Foo />).equals(<Foo />)).to.equal(false);
+      });
+    });
+
+    it.skip('flattens arrays of children to compare', () => {
+      class TwoChildren extends React.Component {
+        render() {
+          return (
+            <div className="parent-component-class">
+              <div key="a" className="asd" />
+              <div key="b" className="fgh" />
+            </div>
+          );
+        }
+      }
+
+      class TwoChildrenOneArrayed extends React.Component {
+        render() {
+          return (
+            <div className="parent-component-class">
+              <div key="a" className="asd" />
+              {[<div key="b" className="fgh" />]}
+            </div>
+          );
+        }
+      }
+      const twoChildren = mount(<TwoChildren />);
+      const twoChildrenOneArrayed = mount(<TwoChildrenOneArrayed />);
+
+      expect(twoChildren.equals(twoChildrenOneArrayed.getElement())).to.equal(true);
+      expect(twoChildrenOneArrayed.equals(twoChildren.getElement())).to.equal(true);
+    });
+  });
+
   describe('.hostNodes()', () => {
     it('should strip out any non-hostNode', () => {
       class Foo extends React.Component {
