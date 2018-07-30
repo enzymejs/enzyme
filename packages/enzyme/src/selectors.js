@@ -1,7 +1,7 @@
 import { createParser } from 'rst-selector-parser';
 import values from 'object.values';
 import isEmpty from 'lodash/isEmpty';
-import flatten from 'lodash/flatten';
+import flat from 'array.prototype.flat';
 import unique from 'lodash/uniq';
 import is from 'object-is';
 import has from 'has';
@@ -422,5 +422,5 @@ export function reduceTreeBySelector(selector, root) {
 
 export function reduceTreesBySelector(selector, roots) {
   const results = roots.map(n => reduceTreeBySelector(selector, n));
-  return unique(flatten(results));
+  return unique(flat(results, 1));
 }

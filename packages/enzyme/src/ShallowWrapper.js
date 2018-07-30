@@ -1,4 +1,4 @@
-import flatten from 'lodash/flatten';
+import flat from 'array.prototype.flat';
 import compact from 'lodash/compact';
 import cheerio from 'cheerio';
 
@@ -1099,7 +1099,7 @@ class ShallowWrapper {
    */
   flatMap(fn) {
     const nodes = this.getNodesInternal().map((n, i) => fn.call(this, this.wrap(n), i));
-    const flattened = flatten(nodes, true);
+    const flattened = flat(nodes, 1);
     const compacted = compact(flattened);
     return this.wrap(compacted);
   }

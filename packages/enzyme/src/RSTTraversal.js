@@ -1,4 +1,4 @@
-import flatten from 'lodash/flatten';
+import flat from 'array.prototype.flat';
 import entries from 'object.entries';
 import isSubset from 'is-subset';
 import functionName from 'function.prototype.name';
@@ -9,7 +9,7 @@ export function propsOfNode(node) {
 
 export function childrenOfNode(node) {
   if (!node) return [];
-  return Array.isArray(node.rendered) ? flatten(node.rendered, true) : [node.rendered];
+  return Array.isArray(node.rendered) ? flat(node.rendered, 1) : [node.rendered];
 }
 
 export function hasClassName(node, className) {
