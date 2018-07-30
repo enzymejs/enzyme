@@ -11,6 +11,7 @@ import {
 } from 'enzyme';
 import {
   ITERATOR_SYMBOL,
+  withSetStateAllowed,
   sym,
   getAdapter,
 } from 'enzyme/build/Utils';
@@ -208,7 +209,7 @@ describeWithDOM('mount', () => {
       expect(wrapper.find('span').text()).to.equal('foo');
     });
 
-    describeIf(is('> 0.13'), 'stateless components', () => {
+    describeIf(is('> 0.13'), 'stateless function components (SFCs)', () => {
       it('can pass in context', () => {
         const SimpleComponent = (props, context) => (
           <div>{context.name}</div>
@@ -261,7 +262,7 @@ describeWithDOM('mount', () => {
         expect(wrapper.context('name')).to.equal(context.name);
       });
 
-      itIf(is('< 16'), 'works with stateless components', () => {
+      itIf(is('< 16'), 'works with SFCs', () => {
         const Foo = ({ foo }) => (
           <div>
             <div className="bar">bar</div>
@@ -283,8 +284,8 @@ describeWithDOM('mount', () => {
     });
   });
 
-  describeIf(is('> 0.13'), 'stateless components', () => {
-    it('works with stateless components', () => {
+  describeIf(is('> 0.13'), 'stateless function components (SFCs)', () => {
+    it('works with SFCs', () => {
       const Foo = ({ foo }) => (
         <div>
           <div className="bar">bar</div>
@@ -297,7 +298,7 @@ describeWithDOM('mount', () => {
       expect(wrapper.find('.qoo').text()).to.equal('qux');
     });
 
-    it('supports findDOMNode with stateless components', () => {
+    it('supports findDOMNode with SFCs', () => {
       const Foo = ({ foo }) => (
         <div>{foo}</div>
       );
@@ -385,7 +386,7 @@ describeWithDOM('mount', () => {
       expect(wrapper.contains(passes2)).to.equal(true);
     });
 
-    describeIf(is('> 0.13'), 'stateless components', () => {
+    describeIf(is('> 0.13'), 'stateless function components (SFCs)', () => {
       it('should match composite components', () => {
         function Foo() {
           return <div />;
@@ -666,7 +667,7 @@ describeWithDOM('mount', () => {
         expect(wrapper.find('Foo').type()).to.equal(Foo);
       });
 
-      describeIf(is('> 0.13'), 'stateless components', () => {
+      describeIf(is('> 0.13'), 'stateless function components (SFCs)', () => {
         it('should find a stateless component based on a component displayName', () => {
           const Foo = () => <div />;
           const wrapper = mount((
@@ -1210,7 +1211,9 @@ describeWithDOM('mount', () => {
 
       const content = 'blah';
       const wrapper = mount(<Foo data={content} />);
+      // TODO: shallow has children, mount does not
       expect(wrapper.props()).to.deep.equal({ data: content });
+      expect(wrapper.childAt(0).props()).to.deep.equal({ 'data-foo': content, children: 'Test Component' });
     });
 
     it('should return shallow rendered string when debug() is called', () => {
@@ -1290,6 +1293,7 @@ describeWithDOM('mount', () => {
         const content = 'blah';
         const wrapper = mount(<SFC data={content} />);
         expect(wrapper.props()).to.deep.equal({ data: content });
+        expect(wrapper.childAt(0).props()).to.deep.equal({ 'data-foo': content, children: 'Test SFC' });
       });
 
       it('should return shallow rendered string when debug() is called', () => {
@@ -1369,6 +1373,21 @@ describeWithDOM('mount', () => {
         ['foo bar', null], // second div's contents
       ];
       expect(textContents).to.eql(expected);
+    });
+
+    it('should not pass in null or false nodes', () => {
+      const wrapper = mount((
+        <div>
+          <div className="foo bar" />
+          {null}
+          {false}
+        </div>
+      ));
+      const stub = sinon.stub();
+      stub.returns(true);
+      const spy = sinon.spy(stub);
+      wrapper.findWhere(spy);
+      expect(spy).to.have.property('callCount', 2);
     });
   });
 
@@ -1801,31 +1820,6 @@ describeWithDOM('mount', () => {
       expect(willMount).to.have.property('callCount', 2);
       expect(didMount).to.have.property('callCount', 2);
       expect(willUnmount).to.have.property('callCount', 1);
-    });
-  });
-
-  describe('.unmount()', () => {
-    it('should call componentWillUnmount()', () => {
-      const spy = sinon.spy();
-
-      class Foo extends React.Component {
-        constructor(props) {
-          super(props);
-          this.componentWillUnmount = spy;
-        }
-
-        render() {
-          return (
-            <div className={this.props.id}>
-              {this.props.id}
-            </div>
-          );
-        }
-      }
-      const wrapper = mount(<Foo id="foo" />);
-      expect(spy).to.have.property('callCount', 0);
-      wrapper.unmount();
-      expect(spy).to.have.property('callCount', 1);
     });
   });
 
@@ -2926,7 +2920,7 @@ describeWithDOM('mount', () => {
       });
     });
 
-    describeIf(is('> 0.13'), 'with stateless components', () => {
+    describeIf(is('> 0.13'), 'with stateless function components (SFCs)', () => {
       it('should return whether or not node has a certain class', () => {
         const Foo = () => <div className="foo bar baz some-long-string FoOo" />;
         const wrapper = mount(<Foo />);
@@ -3617,6 +3611,31 @@ describeWithDOM('mount', () => {
     });
   });
 
+  describe('.unmount()', () => {
+    it('should call componentWillUnmount()', () => {
+      const spy = sinon.spy();
+
+      class Foo extends React.Component {
+        constructor(props) {
+          super(props);
+          this.componentWillUnmount = spy;
+        }
+
+        render() {
+          return (
+            <div className={this.props.id}>
+              {this.props.id}
+            </div>
+          );
+        }
+      }
+      const wrapper = mount(<Foo id="foo" />);
+      expect(spy).to.have.property('callCount', 0);
+      wrapper.unmount();
+      expect(spy).to.have.property('callCount', 1);
+    });
+  });
+
   describe('.render()', () => {
     it('should return a cheerio wrapper around the current node', () => {
       class Foo extends React.Component {
@@ -3648,22 +3667,6 @@ describeWithDOM('mount', () => {
         const wrapper = mount(<Bar />);
         expect(wrapper.render().find('.in-foo')).to.have.lengthOf(1);
       });
-    });
-  });
-
-  describe('.tap()', () => {
-    it('should call the passed function with current ShallowWrapper and returns itself', () => {
-      const spy = sinon.spy();
-      const wrapper = mount((
-        <ul>
-          <li>xxx</li>
-          <li>yyy</li>
-          <li>zzz</li>
-        </ul>
-      )).find('li');
-      const result = wrapper.tap(spy);
-      expect(spy.calledWith(wrapper)).to.equal(true);
-      expect(result).to.equal(wrapper);
     });
   });
 
@@ -3799,6 +3802,22 @@ describeWithDOM('mount', () => {
     const rendered = wrapper.render();
     expect(rendered).to.have.lengthOf(0);
     expect(rendered.html()).to.equal(null);
+  });
+
+  describe('.tap()', () => {
+    it('should call the passed function with current ShallowWrapper and returns itself', () => {
+      const spy = sinon.spy();
+      const wrapper = mount((
+        <ul>
+          <li>xxx</li>
+          <li>yyy</li>
+          <li>zzz</li>
+        </ul>
+      )).find('li');
+      const result = wrapper.tap(spy);
+      expect(spy.calledWith(wrapper)).to.equal(true);
+      expect(result).to.equal(wrapper);
+    });
   });
 
   describe('.key()', () => {
@@ -4409,6 +4428,55 @@ describeWithDOM('mount', () => {
     });
   });
 
+  describe('.getElement()', () => {
+    it('returns nodes with refs as well as well', () => {
+      class Foo extends React.Component {
+        constructor(props) {
+          super(props);
+          this.setRef = this.setRef.bind(this);
+          this.node = null;
+        }
+
+        setRef(node) {
+          this.node = node;
+        }
+
+        render() {
+          return (
+            <div>
+              <div ref={this.setRef} className="foo" />
+            </div>
+          );
+        }
+      }
+      const wrapper = mount(<Foo />);
+      const mockNode = { mock: true };
+      wrapper.find('.foo').getElement().ref(mockNode);
+      expect(wrapper.instance().node).to.equal(mockNode);
+    });
+
+    it('does not add a "null" key to elements with a ref and no key', () => {
+      class Foo extends React.Component {
+        constructor(props) {
+          super(props);
+          this.setRef = this.setRef.bind(this);
+        }
+
+        setRef(node) {
+          this.node = node;
+        }
+
+        render() {
+          return (
+            <div ref={this.setRef} className="foo" />
+          );
+        }
+      }
+      const wrapper = mount(<Foo />);
+      expect(wrapper.getElement().key).to.equal(null);
+    });
+  });
+
   describe('.getElements()', () => {
     it('should return the wrapped elements', () => {
       class Test extends React.Component {
@@ -4427,7 +4495,67 @@ describeWithDOM('mount', () => {
     });
   });
 
-  describe('.getDOMNode', () => {
+  describe('out-of-band state updates', () => {
+    class Child extends React.Component {
+      render() {
+        return <span />;
+      }
+    }
+
+    class Test extends React.Component {
+      componentWillMount() {
+        this.state = {};
+      }
+
+      safeSetState(newState) {
+        withSetStateAllowed(() => {
+          this.setState(newState);
+        });
+      }
+
+      asyncSetState() {
+        setImmediate(() => {
+          this.safeSetState({ showSpan: true });
+        });
+      }
+
+      callbackSetState() {
+        this.safeSetState({ showSpan: true });
+      }
+
+      render() {
+        return (
+          <div>
+            {this.state && this.state.showSpan && <span className="show-me" />}
+            <button className="async-btn" onClick={() => this.asyncSetState()} />
+            <Child callback={() => this.callbackSetState()} />
+          </div>
+        );
+      }
+    }
+
+    it('should have updated output after an asynchronous setState', () => {
+      const wrapper = mount(<Test />);
+      wrapper.find('.async-btn').simulate('click');
+      return new Promise((resolve) => {
+        setImmediate(() => {
+          wrapper.update();
+          resolve();
+        });
+      }).then(() => {
+        expect(wrapper.find('.show-me')).to.have.lengthOf(1);
+      });
+    });
+
+    it('should have updated output after child prop callback invokes setState', () => {
+      const wrapper = mount(<Test />);
+      wrapper.find(Child).props().callback();
+      wrapper.update();
+      expect(wrapper.find('.show-me')).to.have.lengthOf(1);
+    });
+  });
+
+  describe('.getDOMNode()', () => {
     class Test extends React.Component {
       render() {
         return (
@@ -4459,7 +4587,7 @@ describeWithDOM('mount', () => {
       );
     });
 
-    describeIf(is('> 0.13'), 'stateless components', () => {
+    describeIf(is('> 0.13'), 'stateless function components (SFCs)', () => {
       const SFC = () => (
         <div className="outer">
           <div className="inner">
@@ -4510,6 +4638,93 @@ describeWithDOM('mount', () => {
       const wrapper = mount(<div />);
       wrapper.single((node) => {
         expect(node).to.equal(wrapper.getNodeInternal());
+      });
+    });
+  });
+
+  describe('setState through a props method', () => {
+    class Child extends React.Component {
+      render() {
+        return <button onClick={this.props.onClick}>click</button>;
+      }
+    }
+
+    it('should be able to get the latest state value', () => {
+      class App extends React.Component {
+        constructor(props) {
+          super(props);
+          this.state = {
+            count: 0,
+          };
+        }
+
+        onIncrement() {
+          this.setState({
+            count: this.state.count + 1,
+          });
+        }
+
+        render() {
+          return (
+            <div>
+              <Child onClick={() => this.onIncrement()} />
+              <p>{this.state.count}</p>
+            </div>
+          );
+        }
+      }
+      const wrapper = mount(<App />);
+      const p = wrapper.find('p');
+      expect(wrapper.find('p').text()).to.equal('0');
+      wrapper.find(Child).prop('onClick')();
+      // TOOD: this is a difference between mount and shallow
+      // this is 1, because the wrapper has updated
+      expect(p.text()).to.equal('1');
+      expect(wrapper.find('p').text()).to.equal('1');
+    });
+  });
+
+  describe('setState through a props method in async', () => {
+    class Child extends React.Component {
+      render() {
+        return <button onClick={this.props.onClick}>click</button>;
+      }
+    }
+
+    it('should be able to get the latest state value', () => {
+      let App;
+      const promise = new Promise((resolve) => {
+        App = class extends React.Component {
+          constructor(props) {
+            super(props);
+            this.state = {
+              count: 0,
+            };
+          }
+
+          onIncrement() {
+            setTimeout(() => {
+              this.setState({
+                count: this.state.count + 1,
+              }, resolve);
+            });
+          }
+
+          render() {
+            return (
+              <div>
+                <Child onClick={() => this.onIncrement()} />
+                <p>{this.state.count}</p>
+              </div>
+            );
+          }
+        };
+      });
+      const wrapper = mount(<App />);
+      expect(wrapper.find('p').text()).to.equal('0');
+      wrapper.find(Child).prop('onClick')();
+      return promise.then(() => {
+        expect(wrapper.find('p').text()).to.equal('1');
       });
     });
   });
