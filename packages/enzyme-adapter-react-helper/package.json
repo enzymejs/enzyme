@@ -11,7 +11,7 @@
     "prebuild": "npm run clean",
     "build": "babel src --out-dir build",
     "watch": "npm run build -- -w",
-    "prepublish": "npm run build && safe-publish-latest"
+    "prepublish": "npm run build && safe-publish-latest && cp ../../LICENSE.md ./"
   },
   "bin": {
     "enzyme-adapter-react-install": "./build/enzyme-adapter-react-install.js"

@@ -37,4 +37,13 @@ npm-shrinkwrap.json
 package-lock.json
 yarn.lock
 
+.DS_Store
+._.DS_Store
+
 packages/*/build/
+
+# Temporarily copied
+packages/*/LICENSE.md
+packages/enzyme/README.md
+packages/enzyme-adapter-react-*/README.md
+packages/enzyme-adapter-utils*/README.md
