@@ -1,6 +1,6 @@
 import { get } from "./configuration";
 
-const mountedWrappers = [];
+let mountedWrappers = [];
 
 /**
  * Stores a reference to a testing wrapper for later unmounting
