@@ -1,5 +1,5 @@
 import ReactWrapper from './ReactWrapper';
-import {trackMountedWrapper} from './mountTracking';
+import { trackMountedWrapper } from './mountTracking';
 
 /**
  * Mounts and renders a react component into the document and provides a testing wrapper around it.

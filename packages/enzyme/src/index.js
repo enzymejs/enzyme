@@ -6,7 +6,7 @@ import mount from './mount';
 import shallow from './shallow';
 import render from './render';
 import { merge as configure } from './configuration';
-import {trackMountedWrapper, unmountAllWrappers} from './mountTracking';
+import { trackMountedWrapper, unmountAllWrappers } from './mountTracking';
 
 module.exports = {
   render,

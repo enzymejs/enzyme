@@ -1,5 +1,5 @@
-import ShallowWrapper from "./ShallowWrapper";
-import { trackMountedWrapper } from "./mountTracking";
+import ShallowWrapper from './ShallowWrapper';
+import { trackMountedWrapper } from './mountTracking';
 
 /**
  * Shallow renders a react component and provides a testing wrapper around it.

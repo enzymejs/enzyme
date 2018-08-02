@@ -1,15 +1,15 @@
-import { get } from "./configuration";
+import { get } from './configuration';
 
 let mountedWrappers = [];
 
 /**
  * Stores a reference to a testing wrapper for later unmounting
  * via unmountAllWrappers()
- * 
- * @param {ReactWrapper|ShallowWrapper} wrapper 
+ *
+ * @param {ReactWrapper|ShallowWrapper} wrapper
  */
 export function trackMountedWrapper(wrapper) {
-  const {enableMountTracking} = get();
+  const { enableMountTracking } = get();
   if (enableMountTracking) {
     mountedWrappers.push(wrapper);
   }
@@ -17,7 +17,7 @@ export function trackMountedWrapper(wrapper) {
 
 /**
  * Unmounts all actively mounted Enzyme wrappers.
- * 
+ *
  * Usually, this can be run once for an entire test suite after all each test
  * (and its nested hooks)have been run. However, in some cases this may need
  * to be run this manually.This is most commonly needed when a component uses
