@@ -59,6 +59,8 @@ import Adapter from 'enzyme-adapter-react-16';
 Enzyme.configure({ adapter: new Adapter() });
 ```
 
+See [the installation docs](/docs/installation/README.md) for more details on configuring `enzyme`.
+
 3rd Party Adapters
 =============
 
