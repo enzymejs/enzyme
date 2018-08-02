@@ -15,6 +15,7 @@ import {
   sym,
 } from 'enzyme/build/Utils';
 import getAdapter from 'enzyme/build/getAdapter';
+import * as mountTracking from 'enzyme/build/mountTracking';
 
 import './_helpers/setupAdapters';
 import {
@@ -74,6 +75,15 @@ describe('shallow', () => {
       expect(wrapper.find(Box).children().props().className).to.equal('div');
       expect(wrapper.children().type()).to.equal('div');
       expect(wrapper.children().props().bam).to.equal(undefined);
+    });
+
+    it('should call trackMountedWrapper', () => {
+      const spy = sinon.spy();
+      const originalTrackMountedWrapper = mountTracking.trackMountedWrapper;
+      mountTracking.trackMountedWrapper = spy;
+      shallow(<p>foo</p>);
+      expect(spy).to.have.property('callCount', 1);
+      mountTracking.trackMountedWrapper = originalTrackMountedWrapper;
     });
   });
 
