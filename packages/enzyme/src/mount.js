@@ -1,4 +1,5 @@
 import ReactWrapper from './ReactWrapper';
+import {trackMountedWrapper} from './mountTracking';
 
 /**
  * Mounts and renders a react component into the document and provides a testing wrapper around it.
@@ -7,5 +8,7 @@ import ReactWrapper from './ReactWrapper';
  * @returns {ReactWrapper}
  */
 export default function mount(node, options) {
-  return new ReactWrapper(node, null, options);
+  const wrapper = new ReactWrapper(node, null, options);
+  trackMountedWrapper(wrapper);
+  return wrapper;
 }
