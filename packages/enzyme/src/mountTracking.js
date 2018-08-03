@@ -1,6 +1,6 @@
 import { get } from './configuration';
 
-let mountedWrappers = [];
+const mountedWrappers = new Set();
 
 /**
  * Stores a reference to a testing wrapper for later unmounting
@@ -11,7 +11,7 @@ let mountedWrappers = [];
 export function trackMountedWrapper(wrapper) {
   const { enableMountTracking } = get();
   if (enableMountTracking) {
-    mountedWrappers.push(wrapper);
+    mountedWrappers.add(wrapper);
   }
 }
 
@@ -27,5 +27,5 @@ export function trackMountedWrapper(wrapper) {
  */
 export function unmountAllWrappers() {
   mountedWrappers.forEach(wrapper => wrapper.unmount());
-  mountedWrappers = [];
+  mountedWrappers.clear();
 }
