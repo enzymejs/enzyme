@@ -9,8 +9,8 @@ import {
   displayNameOfNode,
   spyMethod,
   nodeHasType,
-  getAdapter,
 } from 'enzyme/build/Utils';
+import getAdapter from 'enzyme/build/getAdapter';
 import {
   flatten,
   mapNativeEventNames,

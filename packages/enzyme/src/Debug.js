@@ -12,7 +12,7 @@ import {
   propsOfNode,
   childrenOfNode,
 } from './RSTTraversal';
-import { getAdapter } from './Utils';
+import getAdapter from './getAdapter';
 
 const booleanValue = Function.bind.call(Function.call, Boolean.prototype.valueOf);
 

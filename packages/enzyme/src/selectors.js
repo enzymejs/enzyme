@@ -13,7 +13,8 @@ import {
   childrenOfNode,
   hasClassName,
 } from './RSTTraversal';
-import { getAdapter, nodeHasType, propsOfNode } from './Utils';
+import { nodeHasType, propsOfNode } from './Utils';
+import getAdapter from './getAdapter';
 // our CSS selector parser instance
 const parser = createParser();
 

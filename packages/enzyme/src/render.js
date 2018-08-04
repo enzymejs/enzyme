@@ -1,5 +1,5 @@
 import cheerio from 'cheerio';
-import { getAdapter } from './Utils';
+import getAdapter from './getAdapter';
 
 /**
  * Renders a react component into static HTML and provides a cheerio wrapper around it. This is

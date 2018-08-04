@@ -13,8 +13,8 @@ import {
   ITERATOR_SYMBOL,
   withSetStateAllowed,
   sym,
-  getAdapter,
 } from 'enzyme/build/Utils';
+import getAdapter from 'enzyme/build/getAdapter';
 
 import './_helpers/setupAdapters';
 import { createClass, createContext } from './_helpers/react-compat';
