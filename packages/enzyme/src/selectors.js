@@ -287,8 +287,9 @@ function matchAdjacentSiblings(nodes, predicate, root) {
     if (!parent) {
       return matches;
     }
-    const nodeIndex = parent.rendered.indexOf(node);
-    const adjacentSibling = parent.rendered[nodeIndex + 1];
+    const parentChildren = childrenOfNode(parent);
+    const nodeIndex = parentChildren.indexOf(node);
+    const adjacentSibling = parentChildren[nodeIndex + 1];
     // No sibling
     if (!adjacentSibling) {
       return matches;
@@ -313,8 +314,9 @@ function matchGeneralSibling(nodes, predicate, root) {
     if (!parent) {
       return matches;
     }
-    const nodeIndex = parent.rendered.indexOf(node);
-    const youngerSiblings = parent.rendered.slice(nodeIndex + 1);
+    const parentChildren = childrenOfNode(parent);
+    const nodeIndex = parentChildren.indexOf(node);
+    const youngerSiblings = parentChildren.slice(nodeIndex + 1);
     return matches.concat(youngerSiblings.filter(predicate));
   }, nodes);
 }

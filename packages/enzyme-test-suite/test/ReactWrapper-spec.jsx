@@ -1104,6 +1104,63 @@ describeWithDOM('mount', () => {
           expect(elements.filter('i')).to.have.lengthOf(2);
         });
       });
+
+      describeIf(is('>= 16.2'), 'with fragments', () => {
+        const NestedFragmentComponent = () => (
+          <div className="container">
+            <React.Fragment>
+              <span>A span</span>
+              <span>B span</span>
+              <div>A div</div>
+              <React.Fragment>
+                <span>C span</span>
+              </React.Fragment>
+            </React.Fragment>
+            <span>D span</span>
+          </div>
+        );
+
+        it('should find descendant span inside React.Fragment', () => {
+          const wrapper = mount(<NestedFragmentComponent />);
+          expect(wrapper.find('.container span')).to.have.lengthOf(4);
+        });
+
+        it('should not find nonexistent p inside React.Fragment', () => {
+          const wrapper = mount(<NestedFragmentComponent />);
+          expect(wrapper.find('.container p')).to.have.lengthOf(0);
+        });
+
+        it('should find direct child span inside React.Fragment', () => {
+          const wrapper = mount(<NestedFragmentComponent />);
+          expect(wrapper.find('.container > span')).to.have.lengthOf(4);
+        });
+
+        it('should handle adjacent sibling selector inside React.Fragment', () => {
+          const wrapper = mount(<NestedFragmentComponent />);
+          expect(wrapper.find('.container span + div')).to.have.lengthOf(1);
+        });
+
+        it('should handle general sibling selector inside React.Fragment', () => {
+          const wrapper = mount(<NestedFragmentComponent />);
+          expect(wrapper.find('.container div ~ span')).to.have.lengthOf(2);
+        });
+
+        itIf(is('>= 16.4.1'), 'should handle fragments with no content', () => {
+          const EmptyFragmentComponent = () => (
+            <div className="container">
+              <React.Fragment>
+                <React.Fragment />
+              </React.Fragment>
+            </div>
+          );
+
+          const wrapper = mount(<EmptyFragmentComponent />);
+
+          expect(wrapper.find('.container > span')).to.have.lengthOf(0);
+          expect(wrapper.find('.container span')).to.have.lengthOf(0);
+          expect(wrapper.children()).to.have.lengthOf(1);
+        });
+      });
     });
 
   describe('.findWhere(predicate)', () => {
@@ -1173,6 +1230,43 @@ describeWithDOM('mount', () => {
         n.type() !== 'span' && n.props()['data-foo'] === selector
       ));
       expect(foundNotSpan.type()).to.equal('i');
+    });
+
+    describeIf(is('>= 16.2'), 'with fragments', () => {
+      it('finds nodes', () => {
+        class FragmentFoo extends React.Component {
+          render() {
+            return (
+              <div>
+                <React.Fragment>
+                  <span data-foo={this.props.selector} />
+                  <i data-foo={this.props.selector} />
+                  <React.Fragment>
+                    <i data-foo={this.props.selector} />
+                  </React.Fragment>
+                </React.Fragment>
+                <span data-foo={this.props.selector} />
+              </div>
+            );
+          }
+        }
+
+        const selector = 'blah';
+        const wrapper = mount(<FragmentFoo selector={selector} />);
+        const foundSpans = wrapper.findWhere(n => (
+          n.type() === 'span' && n.props()['data-foo'] === selector
+        ));
+        expect(foundSpans).to.have.lengthOf(2);
+        expect(foundSpans.get(0).type).to.equal('span');
+        expect(foundSpans.get(1).type).to.equal('span');
+
+        const foundNotSpans = wrapper.findWhere(n => (
+          n.type() !== 'span' && n.props()['data-foo'] === selector
+        ));
+        expect(foundNotSpans).to.have.lengthOf(2);
+        expect(foundNotSpans.get(0).type).to.equal('i');
+        expect(foundNotSpans.get(1).type).to.equal('i');
+      });
     });
 
     it('finds nodes when conditionally rendered', () => {
