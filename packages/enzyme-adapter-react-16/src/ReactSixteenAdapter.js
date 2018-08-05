@@ -21,6 +21,7 @@ import {
   Portal,
 } from 'react-is';
 import { EnzymeAdapter } from 'enzyme';
+import { typeOfNode } from 'enzyme/build/Utils';
 import {
   displayNameOfNode,
   elementToTree,
@@ -386,6 +387,10 @@ class ReactSixteenAdapter extends EnzymeAdapter {
 
   isValidElementType(object) {
     return isValidElementType(object);
+  }
+
+  isFragment(fragment) {
+    return typeOfNode(fragment) === Fragment;
   }
 
   createElement(...args) {

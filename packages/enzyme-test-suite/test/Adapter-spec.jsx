@@ -17,7 +17,7 @@ import {
   Profiler,
 } from './_helpers/react-compat';
 import { is } from './_helpers/version';
-import { itIf, describeWithDOM } from './_helpers';
+import { itIf, describeWithDOM, describeIf } from './_helpers';
 
 const { adapter } = get();
 
@@ -904,6 +904,16 @@ describe('Adapter', () => {
 
     itIf(is('>= 16.4'), 'supports Profiler', () => {
       expect(getDisplayName(<Profiler />)).to.equal('Profiler');
+    });
+  });
+
+  describeIf(is('>= 16.2'), 'determines if node isFragment', () => {
+    it('correctly identifies Fragment', () => {
+      expect(adapter.isFragment(<Fragment />)).to.equal(true);
+    });
+
+    it('correctly identifies a non-Fragment', () => {
+      expect(adapter.isFragment(<div />)).to.equal(false);
     });
   });
 });
