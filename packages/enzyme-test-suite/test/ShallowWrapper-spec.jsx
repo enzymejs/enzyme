@@ -1462,25 +1462,22 @@ describe('shallow', () => {
     });
 
     it('should throw if an exception occurs during render', () => {
+      let error;
       class Trainwreck extends React.Component {
         render() {
           const { user } = this.props;
-          return (
-            <div>
-              {user.name.givenName}
-            </div>
-          );
+          try {
+            return (
+              <div>
+                {user.name.givenName}
+              </div>
+            );
+          } catch (e) {
+            error = e;
+            throw e;
+          }
         }
       }
-
-      const similarException = ((() => {
-        const user = {};
-        try {
-          return user.name.givenName;
-        } catch (e) {
-          return e;
-        }
-      })());
 
       const validUser = {
         name: {
@@ -1490,13 +1487,8 @@ describe('shallow', () => {
 
       const wrapper = shallow(<Trainwreck user={validUser} />);
 
-      const setInvalidProps = () => {
-        wrapper.setProps({
-          user: {},
-        });
-      };
-
-      expect(setInvalidProps).to.throw(TypeError, similarException.message);
+      expect(() => wrapper.setProps({ user: { name: {} } })).not.to.throw();
+      expect(() => wrapper.setProps({ user: {} })).to.throw(error);
     });
 
     it('should call the callback when setProps has completed', () => {
@@ -1624,11 +1616,19 @@ describe('shallow', () => {
       });
 
       it('should throw if an exception occurs during render', () => {
-        const Trainwreck = ({ user }) => (
-          <div>
-            {user.name.givenName}
-          </div>
-        );
+        let error;
+        const Trainwreck = ({ user }) => {
+          try {
+            return (
+              <div>
+                {user.name.givenName}
+              </div>
+            );
+          } catch (e) {
+            error = e;
+            throw e;
+          }
+        };
 
         const validUser = {
           name: {
@@ -1636,27 +1636,10 @@ describe('shallow', () => {
           },
         };
 
-        const similarException = ((() => {
-          const user = {};
-          try {
-            return user.name.givenName;
-          } catch (e) {
-            return e;
-          }
-        })());
-
         const wrapper = shallow(<Trainwreck user={validUser} />);
 
-        const setInvalidProps = () => {
-          wrapper.setProps({
-            user: {},
-          });
-        };
-
-        expect(setInvalidProps).to.throw(
-          TypeError,
-          similarException.message,
-        );
+        expect(() => wrapper.setProps({ user: { name: {} } })).not.to.throw();
+        expect(() => wrapper.setProps({ user: {} })).to.throw(error);
       });
     });
   });

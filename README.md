@@ -40,7 +40,8 @@ React:
 
 | Enzyme Adapter Package | React semver compatibility |
 | --- | --- |
-| `enzyme-adapter-react-16` | `^16.0.0` |
+| `enzyme-adapter-react-16` | `^16.2.0` |
+| `enzyme-adapter-react-16.1` | `~16.0.0-0 || ~16.1` |
 | `enzyme-adapter-react-15` | `^15.5.0` |
 | `enzyme-adapter-react-15.4` | `15.0.0-0 - 15.4.x` |
 | `enzyme-adapter-react-14` | `^0.14.0` |
