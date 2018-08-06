@@ -35,7 +35,7 @@
     "jsdom": "^6.5.1",
     "mocha-wrap": "^2.1.2",
     "object.assign": "^4.1.0",
-    "prop-types": "^15.6.0",
+    "prop-types": "^15.6.2",
     "semver": "^5.5.0",
     "sinon": "^4.1.6"
   },
