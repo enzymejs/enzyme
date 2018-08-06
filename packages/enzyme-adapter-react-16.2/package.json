@@ -1,0 +1,64 @@
+{
+  "name": "enzyme-adapter-react-16.2",
+  "version": "1.0.0",
+  "description": "JavaScript Testing utilities for React",
+  "homepage": "http://airbnb.io/enzyme/",
+  "main": "build",
+  "scripts": {
+    "clean": "rimraf build",
+    "lint": "eslint --ext js,jsx .",
+    "pretest": "npm run lint",
+    "prebuild": "npm run clean",
+    "build": "babel src --out-dir build",
+    "watch": "npm run build -- -w",
+    "prepublish": "npm run build && safe-publish-latest && (not-in-publish || cp ../../{LICENSE,README}.md ./)"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/airbnb/enzyme.git"
+  },
+  "keywords": [
+    "javascript",
+    "shallow rendering",
+    "shallowRender",
+    "test",
+    "reactjs",
+    "react",
+    "flux",
+    "testing",
+    "test utils",
+    "assertion helpers",
+    "tdd",
+    "mocha"
+  ],
+  "author": "Leland Richardson <leland.richardson@airbnb.com>",
+  "license": "MIT",
+  "dependencies": {
+    "enzyme-adapter-utils": "^1.5.0",
+    "object.assign": "^4.1.0",
+    "object.values": "^1.0.4",
+    "prop-types": "^15.6.2",
+    "react-is": "^16.4.2",
+    "react-reconciler": "^0.7.0",
+    "react-test-renderer": "~16.2.0"
+  },
+  "peerDependencies": {
+    "enzyme": "^3.0.0",
+    "react": "~16.2",
+    "react-dom": "~16.2"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-plugin-transform-replace-object-assign": "^1.0.0",
+    "babel-preset-airbnb": "^2.5.3",
+    "enzyme": "^3.0.0",
+    "eslint": "^4.19.1",
+    "eslint-config-airbnb": "^17.0.0",
+    "eslint-plugin-import": "^2.13.0",
+    "eslint-plugin-jsx-a11y": "^6.1.1",
+    "eslint-plugin-react": "^7.10.0",
+    "in-publish": "^2.0.0",
+    "rimraf": "^2.6.2",
+    "safe-publish-latest": "^1.1.1"
+  }
+}

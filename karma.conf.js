@@ -11,6 +11,7 @@ function getPlugins() {
   const adapter154 = new IgnorePlugin(/enzyme-adapter-react-15\.4$/);
   const adapter15 = new IgnorePlugin(/enzyme-adapter-react-15$/);
   const adapter161 = new IgnorePlugin(/enzyme-adapter-react-16.1$/);
+  const adapter162 = new IgnorePlugin(/enzyme-adapter-react-16.2$/);
   const adapter16 = new IgnorePlugin(/enzyme-adapter-react-16$/);
 
   var plugins = [
@@ -38,7 +39,9 @@ function getPlugins() {
     plugins = plugins.filter(not(adapter154));
   } else if (is('~16.0.0-0 || ~16.1')) {
     plugins = plugins.filter(not(adapter161));
-  } else if (is('^16.2.0')) {
+  } else if (is('~16.2')) {
+    plugins = plugins.filter(not(adapter162));
+  } else if (is('^16.3.0-0')) {
     plugins = plugins.filter(not(adapter16));
   }
 
