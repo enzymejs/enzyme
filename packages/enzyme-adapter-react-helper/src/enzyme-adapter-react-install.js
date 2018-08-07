@@ -41,13 +41,21 @@ try {
 }
 
 console.log(`Installing React@${reactVersion} and related packages...`);
-if (semver.intersects(reactVersion, '^16.3.0-0')) {
+if (semver.intersects(reactVersion, '^16.4.0-0')) {
   try {
     npmRun.execSync('install-peerdeps -S enzyme-adapter-react-16', { stdio: 'inherit' });
   } catch (e) {
     console.error('An installation failed');
     console.log(e);
     process.exit(16);
+  }
+} else if (semver.intersects(reactVersion, '~16.3.0-0')) {
+  try {
+    npmRun.execSync('install-peerdeps -S enzyme-adapter-react-16.3', { stdio: 'inherit' });
+  } catch (e) {
+    console.error('An installation failed');
+    console.log(e);
+    process.exit(162);
   }
 } else if (semver.intersects(reactVersion, '~16.2')) {
   try {
