@@ -30,7 +30,7 @@ if (is('^0.13.0')) {
   ({ renderToString } = require('react-dom/server'));
 }
 
-if (is('^16.0.0-alpha || ^16.3.0-alpha')) {
+if (is('^16.0.0-0 || ^16.3.0-0')) {
   ({ createPortal } = require('react-dom'));
 } else {
   createPortal = null;

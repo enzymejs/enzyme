@@ -1,5 +1,4 @@
 /* eslint no-use-before-define: 0 */
-import functionName from 'function.prototype.name';
 import React from 'react';
 import ReactDOM from 'react-dom';
 // eslint-disable-next-line import/no-unresolved
@@ -11,13 +10,7 @@ import TestUtils from 'react-dom/test-utils';
 import {
   isElement,
   isValidElementType,
-  AsyncMode,
   Fragment,
-  ContextConsumer,
-  ContextProvider,
-  StrictMode,
-  ForwardRef,
-  Profiler,
   Portal,
 } from 'react-is';
 import { EnzymeAdapter } from 'enzyme';
@@ -45,8 +38,6 @@ const HostPortal = 4;
 const HostComponent = 5;
 const HostText = 6;
 const Mode = 11;
-const ContextConsumerType = 12;
-const ContextProviderType = 13;
 
 function nodeAndSiblingsArray(nodeWithSibling) {
   const array = [];
@@ -57,6 +48,11 @@ function nodeAndSiblingsArray(nodeWithSibling) {
   }
   return array;
 }
+
+const displayNamesByType = {
+  [Fragment]: 'Fragment',
+  [Portal]: 'Portal',
+};
 
 function flatten(arr) {
   const result = [];
@@ -130,8 +126,6 @@ function toTree(vnode) {
       return node.memoizedProps;
     case FragmentType: // 10
     case Mode: // 11
-    case ContextProviderType: // 13
-    case ContextConsumerType: // 12
       return childrenToTree(node.child);
     default:
       throw new Error(`Enzyme Internal Error: unknown node with tag ${node.tag}`);
@@ -173,7 +167,7 @@ function nodeToHostNode(_node) {
   return ReactDOM.findDOMNode(node.instance);
 }
 
-class ReactSixteenAdapter extends EnzymeAdapter {
+class ReactSixteenTwoAdapter extends EnzymeAdapter {
   constructor() {
     super();
     const { lifecycles } = this.options;
@@ -356,29 +350,9 @@ class ReactSixteenAdapter extends EnzymeAdapter {
 
   displayNameOfNode(node) {
     if (!node) return null;
+
     const { type, $$typeof } = node;
-
-    switch (type || $$typeof) {
-      case AsyncMode: return 'AsyncMode';
-      case Fragment: return 'Fragment';
-      case StrictMode: return 'StrictMode';
-      case Profiler: return 'Profiler';
-      case Portal: return 'Portal';
-
-      default: {
-        const $$typeofType = type && type.$$typeof;
-
-        switch ($$typeofType) {
-          case ContextConsumer: return 'ContextConsumer';
-          case ContextProvider: return 'ContextProvider';
-          case ForwardRef: {
-            const name = type.render.displayName || functionName(type.render);
-            return name ? `ForwardRef(${name})` : 'ForwardRef';
-          }
-          default: return displayNameOfNode(node);
-        }
-      }
-    }
+    return displayNamesByType[type || $$typeof] || displayNameOfNode(node);
   }
 
   isValidElement(element) {
@@ -398,4 +372,4 @@ class ReactSixteenAdapter extends EnzymeAdapter {
   }
 }
 
-module.exports = ReactSixteenAdapter;
+module.exports = ReactSixteenTwoAdapter;

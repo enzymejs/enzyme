@@ -9,12 +9,12 @@ import {
   ITERATOR_SYMBOL,
   nodeEqual,
   nodeMatches,
-  getAdapter,
   makeOptions,
   sym,
   privateSet,
   cloneElement,
 } from './Utils';
+import getAdapter from './getAdapter';
 import { debugNodes } from './Debug';
 import {
   propsOfNode,

@@ -16,7 +16,11 @@ if (is('^0.13')) {
   Adapter = require('enzyme-adapter-react-15');
 } else if (is('^15') && is('< 15.5')) {
   Adapter = require('enzyme-adapter-react-15.4');
-} else if (is('^16')) {
+} else if (is('~16.0.0-0 || ~16.1')) {
+  Adapter = require('enzyme-adapter-react-16.1');
+} else if (is('~16.2')) {
+  Adapter = require('enzyme-adapter-react-16.2');
+} else if (is('^16.3.0-0')) {
   Adapter = require('enzyme-adapter-react-16');
 }
 

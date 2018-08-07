@@ -7,19 +7,14 @@ import has from 'has';
 import flat from 'array.prototype.flat';
 
 import { get } from './configuration';
-import validateAdapter from './validateAdapter';
 import { childrenOfNode } from './RSTTraversal';
+import realGetAdapter from './getAdapter';
 
 export const ITERATOR_SYMBOL = typeof Symbol === 'function' && Symbol.iterator;
 
 export function getAdapter(options = {}) {
-  if (options.adapter) {
-    validateAdapter(options.adapter);
-    return options.adapter;
-  }
-  const { adapter } = get();
-  validateAdapter(adapter);
-  return adapter;
+  console.warn('getAdapter from Utils is deprecated; please use ./getAdapter instead');
+  return realGetAdapter(options);
 }
 
 export function makeOptions(options) {
@@ -62,7 +57,7 @@ export function typeOfNode(node) {
 export function nodeHasType(node, type) {
   if (!type || !node) return false;
 
-  const adapter = getAdapter();
+  const adapter = realGetAdapter();
   if (adapter.displayNameOfNode) {
     const displayName = adapter.displayNameOfNode(node);
     return displayName === type;

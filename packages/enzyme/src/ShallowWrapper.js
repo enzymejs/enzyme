@@ -12,13 +12,13 @@ import {
   displayNameOfNode,
   isCustomComponentElement,
   ITERATOR_SYMBOL,
-  getAdapter,
   makeOptions,
   sym,
   privateSet,
   cloneElement,
   spyMethod,
 } from './Utils';
+import getAdapter from './getAdapter';
 import { debugNodes } from './Debug';
 import {
   propsOfNode,
