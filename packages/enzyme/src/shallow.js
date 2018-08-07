@@ -1,5 +1,5 @@
 import ShallowWrapper from './ShallowWrapper';
-import { trackMountedWrapper } from './mountTracking';
+import { trackWrapper } from './wrapperSandbox';
 
 /**
  * Shallow renders a react component and provides a testing wrapper around it.
@@ -9,6 +9,6 @@ import { trackMountedWrapper } from './mountTracking';
  */
 export default function shallow(node, options) {
   const wrapper = new ShallowWrapper(node, null, options);
-  trackMountedWrapper(wrapper);
+  trackWrapper(wrapper);
   return wrapper;
 }

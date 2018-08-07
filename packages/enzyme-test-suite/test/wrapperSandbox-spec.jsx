@@ -5,13 +5,13 @@ import { ReactWrapper, configure } from 'enzyme';
 import { get } from 'enzyme/build/configuration';
 
 import {
-  trackMountedWrapper,
+  trackWrapper,
   unmountAllWrappers,
-} from 'enzyme/build/mountTracking';
+} from 'enzyme/build/wrapperSandbox';
 
 const originalConfig = get();
 
-describe('mountTracking', () => {
+describe('wrapperSandbox', () => {
   afterEach(() => {
     configure(originalConfig);
   });
@@ -21,13 +21,13 @@ describe('mountTracking', () => {
     const spy = sinon.spy();
     wrapper.unmount = spy;
 
-    trackMountedWrapper(wrapper);
+    trackWrapper(wrapper);
     unmountAllWrappers();
     // default configuration is not to track wrappers
     expect(spy).to.have.property('callCount', 0);
 
-    configure({ enableMountTracking: true });
-    trackMountedWrapper(wrapper);
+    configure({ enableSandbox: true });
+    trackWrapper(wrapper);
     unmountAllWrappers();
     // default configuration is not to track wrappers
     expect(spy).to.have.property('callCount', 1);
