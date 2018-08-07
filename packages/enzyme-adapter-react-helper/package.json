@@ -41,23 +41,23 @@
     "babel-plugin-add-module-exports": "^0.2.1",
     "babel-plugin-transform-replace-object-assign": "^1.0.0",
     "babel-preset-airbnb": "^2.5.3",
-    "enzyme": "^3.1.0",
+    "enzyme": "^3.0.0",
     "eslint": "^4.19.1",
     "eslint-config-airbnb": "^17.0.0",
     "eslint-plugin-import": "^2.13.0",
     "eslint-plugin-jsx-a11y": "^6.1.1",
     "eslint-plugin-react": "^7.10.0",
     "in-publish": "^2.0.0",
-    "react": "0.13.x || 0.14.x || ^15.0.0-0 || ^16.0.0-0",
+    "react": "0.13.x || 0.14.x || ^15.0.0-0 || ^16.0.0-0 || ^16.3.0-0 || ^16.4.0-0",
     "safe-publish-latest": "^1.1.2"
   },
   "peerDependencies": {
     "enzyme": "^3.0.0",
-    "react": "0.13.x || 0.14.x || ^15.0.0-0 || ^16.0.0-0"
+    "react": "0.13.x || 0.14.x || ^15.0.0-0 || ^16.0.0-0 || ^16.3.0-0 || ^16.4.0-0"
   },
   "dependencies": {
-    "airbnb-js-shims": "^1.6.0",
-    "install-peerdeps": "^1.7.0",
+    "airbnb-js-shims": "^2.1.0",
+    "install-peerdeps": "^1.8.0",
     "npm-run": "^5.0.1",
     "object.assign": "^4.1.0",
     "object.getownpropertydescriptors": "^2.0.3",
