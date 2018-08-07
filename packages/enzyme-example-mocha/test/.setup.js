@@ -10,7 +10,7 @@ function copyProps(src, target) {
   Object.defineProperties(target, props);
 }
 
-global.expect = expect; 
+global.expect = expect;
 global.window = window;
 global.document = window.document;
 global.navigator = {

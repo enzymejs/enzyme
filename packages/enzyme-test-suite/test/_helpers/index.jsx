@@ -18,6 +18,18 @@ export function describeIf(test, a, b) {
   }
 }
 
+describeIf.only = (test, a, b) => {
+  if (typeof test !== 'boolean') {
+    throw new TypeError(`a boolean is required, you passed a ${typeof test}`);
+  }
+
+  if (test) {
+    describe.only(a, b);
+  } else {
+    describe.skip(a, b);
+  }
+};
+
 /**
  * Simple wrapper around mocha it which allows a boolean to be passed in first which
  * determines whether or not the test will be run
@@ -35,6 +47,10 @@ export function itIf(test, a, b) {
 }
 
 itIf.only = (test, a, b) => {
+  if (typeof test !== 'boolean') {
+    throw new TypeError(`a boolean is required, you passed a ${typeof test}`);
+  }
+
   if (test) {
     it.only(a, b);
   } else {
