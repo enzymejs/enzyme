@@ -64,6 +64,6 @@
     "in-publish": "^2.0.0",
     "jsdom": "^6.5.1",
     "rimraf": "^2.6.2",
-    "safe-publish-latest": "^1.1.1"
+    "safe-publish-latest": "^1.1.2"
   }
 }

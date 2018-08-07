@@ -40,7 +40,7 @@
     "babel-cli": "^6.26.0",
     "babel-plugin-add-module-exports": "^0.2.1",
     "babel-plugin-transform-replace-object-assign": "^1.0.0",
-    "babel-preset-airbnb": "^2.5.1",
+    "babel-preset-airbnb": "^2.5.3",
     "enzyme": "^3.1.0",
     "eslint": "^4.19.1",
     "eslint-config-airbnb": "^17.0.0",
@@ -49,7 +49,7 @@
     "eslint-plugin-react": "^7.10.0",
     "in-publish": "^2.0.0",
     "react": "0.13.x || 0.14.x || ^15.0.0-0 || ^16.0.0-0",
-    "safe-publish-latest": "^1.1.1"
+    "safe-publish-latest": "^1.1.2"
   },
   "peerDependencies": {
     "enzyme": "^3.0.0",

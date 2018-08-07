@@ -101,7 +101,7 @@
     "mocha": "^3.5.0",
     "prop-types": "^15.6.2",
     "rimraf": "^2.6.2",
-    "safe-publish-latest": "^1.1.1",
+    "safe-publish-latest": "^1.1.2",
     "webpack": "^1.15.0"
   },
   "dependencies": {}
