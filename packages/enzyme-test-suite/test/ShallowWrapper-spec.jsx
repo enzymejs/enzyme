@@ -1319,7 +1319,7 @@ describe('shallow', () => {
         render() {
           return (
             <div className={this.props.id}>
-              {this.props.id}
+              {this.props.foo}
             </div>
           );
         }
@@ -1328,6 +1328,144 @@ describe('shallow', () => {
       expect(wrapper.find('.foo')).to.have.lengthOf(1);
       wrapper.setProps({ id: 'bar', foo: 'bla' });
       expect(wrapper.find('.bar')).to.have.lengthOf(1);
+    });
+
+    describe.only('merging props', () => {
+      it('merges, not replaces, props when rerendering', () => {
+        class Foo extends React.Component {
+          render() {
+            return (
+              <div className={this.props.id}>
+                {this.props.foo}
+              </div>
+            );
+          }
+        }
+
+        const wrapper = shallow(<Foo id="foo" foo="bar" />);
+
+        expect(wrapper.debug()).to.equal(`
+<div className="foo">
+  bar
+</div>
+        `.trim());
+        expect(wrapper.props()).to.eql({
+          className: 'foo',
+          children: 'bar',
+        });
+        expect(wrapper.instance().props).to.eql({
+          id: 'foo',
+          foo: 'bar',
+        });
+
+        wrapper.setProps({ id: 'bar' });
+
+        expect(wrapper.debug()).to.equal(`
+<div className="bar">
+  bar
+</div>
+        `.trim());
+        expect(wrapper.props()).to.eql({
+          className: 'bar',
+          children: 'bar',
+        });
+        expect(wrapper.instance().props).to.eql({
+          id: 'bar',
+          foo: 'bar',
+        });
+      });
+
+      itIf(is('> 0.13'), 'merges, not replaces, props on SFCs', () => {
+        function Foo({ id, foo }) {
+          return (
+            <div className={id}>
+              {foo}
+            </div>
+          );
+        }
+        const wrapper = shallow(<Foo id="foo" foo="bar" />);
+
+        expect(wrapper.debug()).to.equal(`
+<div className="foo">
+  bar
+</div>
+        `.trim());
+        expect(wrapper.props()).to.eql({
+          className: 'foo',
+          children: 'bar',
+        });
+        if (is('< 16')) {
+          expect(wrapper.instance().props).to.eql({
+            id: 'foo',
+            foo: 'bar',
+          });
+        }
+
+        wrapper.setProps({ id: 'bar' });
+
+        expect(wrapper.debug()).to.equal(`
+<div className="bar">
+  bar
+</div>
+        `.trim());
+        expect(wrapper.props()).to.eql({
+          className: 'bar',
+          children: 'bar',
+        });
+        if (is('< 16')) {
+          expect(wrapper.instance().props).to.eql({
+            id: 'bar',
+            foo: 'bar',
+          });
+        }
+      });
+
+      it('merges, not replaces, props when no rerender is needed', () => {
+        class Foo extends React.Component {
+          shouldComponentUpdate() {
+            return false;
+          }
+
+          render() {
+            return (
+              <div className={this.props.id}>
+                {this.props.foo}
+              </div>
+            );
+          }
+        }
+        const wrapper = shallow(<Foo id="foo" foo="bar" />);
+
+        expect(wrapper.debug()).to.equal(`
+<div className="foo">
+  bar
+</div>
+        `.trim());
+        expect(wrapper.props()).to.eql({
+          className: 'foo',
+          children: 'bar',
+        });
+        expect(wrapper.instance().props).to.eql({
+          id: 'foo',
+          foo: 'bar',
+        });
+
+        wrapper.setProps({ id: 'foo' });
+
+        expect(wrapper.debug()).to.equal(`
+<div className="foo">
+  bar
+</div>
+        `.trim());
+        expect(wrapper.props()).to.eql({
+          className: 'foo',
+          children: 'bar',
+        });
+        expect(wrapper.instance().props).to.eql({
+          id: 'foo',
+          foo: 'bar',
+        });
+      });
     });
 
     it('should call componentWillReceiveProps for new renders', () => {
