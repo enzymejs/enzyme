@@ -85,24 +85,13 @@ describeWithDOM('mount', () => {
     describeIf(is('>= 16.3'), 'uses the isValidElementType from the Adapter to validate the prop type of Component', () => {
       const Foo = () => null;
       const Bar = () => null;
-
-      beforeEach(() => {
-        sinon.spy(console, 'error');
-      });
-
-      afterEach(() => {
-        // eslint-disable-next-line no-console
-        console.error.restore();
-      });
-
       wrap()
+        .withConsoleThrows()
         .withOverride(() => getAdapter(), 'isValidElementType', () => val => val === Foo)
         .it('with isValidElementType defined on the Adapter', () => {
-          mount(<Bar />);
-          // eslint-disable-next-line no-console
-          expect(console.error.getCall(0).args).to.deep.equal([
-            'Warning: Failed prop type: Component must be a valid element type!\n    in WrapperComponent',
-          ]);
+          expect(() => {
+            mount(<Bar />);
+          }).to.throw('Warning: Failed prop type: Component must be a valid element type!\n    in WrapperComponent');
         });
     });
   });
