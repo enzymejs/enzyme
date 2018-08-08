@@ -1,5 +1,15 @@
 # Change Log
 
+## 3.4.1
+
+### Fixes
+
+- @ljharb: `shallow`: `setProps`: merge instead of replace props ([commit](https://github.com/airbnb/enzyme/commit/9b4d0276f57e54be06aca6c3636120b3c4053310))
+
+### Documentation
+
+- @koba04: Fix an adapter table style in README.md and a migration guide ([#1734](https://github.com/airbnb/enzyme/pull/1734))
+
 ## 3.4.0
 
 ### New Stuff
@@ -46,7 +56,7 @@
 - @ljharb: `Utils`: `configuration`: change to named exports. ([commit](https://github.com/airbnb/enzyme/commit/d7f32617e6ea93b739f4e4c3f6228a8e382aeb06))
 - @ljharb: use `array.prototype.flat` ([commit](https://github.com/airbnb/enzyme/commit/e52a02ddac0fab0d1d93fd57d7f073f8bdc850bf))
 
-### Docs
+### Documentation
 
 - @jack-lewin: Clarify dev workflow in CONTRIBUTING.md ([#1207](https://github.com/airbnb/enzyme/pull/1207))
 - @robrichard: Provide migration instructions for `ref(refName)` ([#1470](https://github.com/airbnb/enzyme/pull/1470))
