@@ -139,7 +139,7 @@ function toTree(vnode) {
       return {
         nodeType: 'function',
         type: node.type,
-        props: { ...node.memoizedProps },
+        props: { ...node.pendingProps },
         key: ensureKeyOrUndefined(node.key),
         ref: node.ref,
         instance: null,

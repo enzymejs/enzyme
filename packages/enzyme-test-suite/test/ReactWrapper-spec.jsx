@@ -81,6 +81,30 @@ describeWithDOM('mount', () => {
       mount(<div ref={spy} />);
       expect(spy).to.have.property('callCount', 1);
     });
+
+    describeIf(is('>= 16.3'), 'uses the isValidElementType from the Adapter to validate the prop type of Component', () => {
+      const Foo = () => null;
+      const Bar = () => null;
+
+      beforeEach(() => {
+        sinon.spy(console, 'error');
+      });
+
+      afterEach(() => {
+        // eslint-disable-next-line no-console
+        console.error.restore();
+      });
+
+      wrap()
+        .withOverride(() => getAdapter(), 'isValidElementType', () => val => val === Foo)
+        .it('with isValidElementType defined on the Adapter', () => {
+          mount(<Bar />);
+          // eslint-disable-next-line no-console
+          expect(console.error.getCall(0).args).to.deep.equal([
+            'Warning: Failed prop type: Component must be a valid element type!\n    in WrapperComponent',
+          ]);
+        });
+    });
   });
 
   describe('context', () => {
