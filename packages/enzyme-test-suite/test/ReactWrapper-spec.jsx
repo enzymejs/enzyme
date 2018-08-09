@@ -4905,4 +4905,73 @@ describeWithDOM('mount', () => {
       expect(root.childAt(0).children().debug()).to.equal('<span />\n\n\n<span />');
     });
   });
+
+  describe('lifecycles', () => {
+    it('should call `componentDidUpdate` when component’s `setState` is called', () => {
+      class Foo extends React.Component {
+        constructor(props) {
+          super(props);
+          this.state = {
+            foo: 'init',
+          };
+        }
+
+        componentDidUpdate() {}
+
+        onChange() {
+          // enzyme can't handle the update because `this` is a ReactComponent instance,
+          // not a ShallowWrapper instance.
+          this.setState({ foo: 'onChange update' });
+        }
+
+        render() {
+          return <div>{this.state.foo}</div>;
+        }
+      }
+      const spy = sinon.spy(Foo.prototype, 'componentDidUpdate');
+
+      const wrapper = mount(<Foo />);
+      wrapper.setState({ foo: 'wrapper setState update' });
+      expect(wrapper.state('foo')).to.equal('wrapper setState update');
+      expect(spy).to.have.property('callCount', 1);
+      wrapper.instance().onChange();
+      expect(wrapper.state('foo')).to.equal('onChange update');
+      expect(spy).to.have.property('callCount', 2);
+    });
+
+    it('should call `componentDidUpdate` when component’s `setState` is called through a bound method', () => {
+      class Foo extends React.Component {
+        constructor(props) {
+          super(props);
+          this.state = {
+            foo: 'init',
+          };
+          this.onChange = this.onChange.bind(this);
+        }
+
+        componentDidUpdate() {}
+
+        onChange() {
+          // enzyme can't handle the update because `this` is a ReactComponent instance,
+          // not a ShallowWrapper instance.
+          this.setState({ foo: 'onChange update' });
+        }
+
+        render() {
+          return (
+            <div>
+              {this.state.foo}
+              <button onClick={this.onChange}>click</button>
+            </div>
+          );
+        }
+      }
+      const spy = sinon.spy(Foo.prototype, 'componentDidUpdate');
+
+      const wrapper = mount(<Foo />);
+      wrapper.find('button').prop('onClick')();
+      expect(wrapper.state('foo')).to.equal('onChange update');
+      expect(spy).to.have.property('callCount', 1);
+    });
+  });
 });

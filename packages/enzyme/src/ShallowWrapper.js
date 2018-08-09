@@ -38,6 +38,7 @@ const RENDERER = sym('__renderer__');
 const UNRENDERED = sym('__unrendered__');
 const ROOT = sym('__root__');
 const OPTIONS = sym('__options__');
+const SET_STATE = sym('__setState__');
 /**
  * Finds all nodes in the current wrapper nodes' render trees that match the provided predicate
  * function.
@@ -170,6 +171,13 @@ class ShallowWrapper {
       privateSet(this, RENDERER, renderer);
       this[RENDERER].render(nodes, options.context);
       const { instance } = this[RENDERER].getNode();
+      const adapter = getAdapter(this[OPTIONS]);
+      const lifecycles = getAdapterLifecycles(adapter);
+      // Ensure to call componentDidUpdate when instance.setState is called
+      if (instance && lifecycles.componentDidUpdate.onSetState && !instance[SET_STATE]) {
+        privateSet(instance, SET_STATE, instance.setState);
+        instance.setState = (...args) => this.setState(...args);
+      }
       if (
         !options.disableLifecycleMethods
         && instance
@@ -438,7 +446,11 @@ class ShallowWrapper {
         }
         // We don't pass the setState callback here
         // to guarantee to call the callback after finishing the render
-        instance.setState(state);
+        if (instance[SET_STATE]) {
+          instance[SET_STATE](state);
+        } else {
+          instance.setState(state);
+        }
         if (spy) {
           shouldRender = spy.getLastReturnValue();
           spy.restore();
