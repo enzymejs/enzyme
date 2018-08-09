@@ -47,9 +47,10 @@ The list of adapter npm packages for React semver ranges are as follows:
 
 | enzyme Adapter Package | React semver compatibility |
 | --- | --- |
-| `enzyme-adapter-react-16` | `^16.3.0-0` |
+| `enzyme-adapter-react-16` | `^16.4.0-0` |
+| `enzyme-adapter-react-16.3` | `~16.3.0-0` |
 | `enzyme-adapter-react-16.2` | `~16.2` |
-| `enzyme-adapter-react-16.1` | `~16.0.0-0 || ~16.1` |
+| `enzyme-adapter-react-16.1` | `~16.0.0-0 \|\| ~16.1` |
 | `enzyme-adapter-react-15` | `^15.5.0` |
 | `enzyme-adapter-react-15.4` | `15.0.0-0 - 15.4.x` |
 | `enzyme-adapter-react-14` | `^0.14.0` |
@@ -391,6 +392,11 @@ expect(wrapper.ref('abc')).toBeInstanceOf(Box);
 In our experience, this is most often what people would actually want and expect out of the `.ref(...)`
 method.
 
+To get the wrapper that was returned by enzyme 2:
+```js
+const wrapper = mount(<Bar />);
+const refWrapper = wrapper.findWhere(n => n.instance() === wrapper.ref('abc'));
+```
 
 ## With `mount`, `.instance()` can be called at any level of the tree
 

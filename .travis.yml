@@ -47,6 +47,7 @@ matrix:
       env: KARMA=true REACT=16
 env:
   - REACT=16
+  - REACT=16.3
   - REACT=16.2
   - REACT=16.1
   - REACT=15

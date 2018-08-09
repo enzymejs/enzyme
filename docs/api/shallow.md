@@ -178,7 +178,7 @@ Simulates an event on the current node.
 #### [`.setState(nextState) => ShallowWrapper`](ShallowWrapper/setState.md)
 Manually sets state of the root component.
 
-#### [`.setProps(nextProps) => ShallowWrapper`](ShallowWrapper/setProps.md)
+#### [`.setProps(nextProps[, callback]) => ShallowWrapper`](ShallowWrapper/setProps.md)
 Manually sets props of the root component.
 
 #### [`.setContext(context) => ShallowWrapper`](ShallowWrapper/setContext.md)

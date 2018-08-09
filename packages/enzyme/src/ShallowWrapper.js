@@ -358,7 +358,7 @@ class ShallowWrapper {
             }
           // If it doesn't need to rerender, update only its props.
           } else if (props) {
-            instance.props = props;
+            instance.props = (Object.freeze || Object)({ ...instance.props, ...props });
           }
           this.update();
         });

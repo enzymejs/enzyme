@@ -44,7 +44,7 @@
     "react-dom": "^15.5.0"
   },
   "devDependencies": {
-    "create-react-class": "^15.6.2",
+    "create-react-class": "^15.6.3",
     "eslint": "^4.19.1",
     "eslint-config-airbnb": "^17.0.0",
     "eslint-plugin-import": "^2.13.0",

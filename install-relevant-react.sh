@@ -20,6 +20,10 @@ if [ "$REACT" = "15" ]; then
     npm run react:15
 fi
 
+if [ "$REACT" = "16.3" ]; then
+    npm run react:16.3
+fi
+
 if [ "$REACT" = "16.2" ]; then
     npm run react:16.2
 fi
