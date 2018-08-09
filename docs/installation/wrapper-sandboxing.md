@@ -1,4 +1,4 @@
-# Automatic mount tracking
+# Wrapper sandboxing
 
 If you are wanting to use enzyme in a large-scale application, you may want to automate
 calls to `unmount()` via a lifecycle hook in your test environment, rather than at the
