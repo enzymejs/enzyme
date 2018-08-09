@@ -1330,7 +1330,7 @@ describe('shallow', () => {
       expect(wrapper.find('.bar')).to.have.lengthOf(1);
     });
 
-    describe.only('merging props', () => {
+    describe('merging props', () => {
       it('merges, not replaces, props when rerendering', () => {
         class Foo extends React.Component {
           render() {
