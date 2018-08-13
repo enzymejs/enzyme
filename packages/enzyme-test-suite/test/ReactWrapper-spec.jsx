@@ -1120,32 +1120,32 @@ describeWithDOM('mount', () => {
           </div>
         );
 
-        it('should find descendant span inside React.Fragment', () => {
+        it('finds descendant span inside React.Fragment', () => {
           const wrapper = mount(<NestedFragmentComponent />);
           expect(wrapper.find('.container span')).to.have.lengthOf(4);
         });
 
-        it('should not find nonexistent p inside React.Fragment', () => {
+        it('does not find nonexistent p inside React.Fragment', () => {
           const wrapper = mount(<NestedFragmentComponent />);
           expect(wrapper.find('.container p')).to.have.lengthOf(0);
         });
 
-        it('should find direct child span inside React.Fragment', () => {
+        it('finds direct child span inside React.Fragment', () => {
           const wrapper = mount(<NestedFragmentComponent />);
           expect(wrapper.find('.container > span')).to.have.lengthOf(4);
         });
 
-        it('should handle adjacent sibling selector inside React.Fragment', () => {
+        it('handles adjacent sibling selector inside React.Fragment', () => {
           const wrapper = mount(<NestedFragmentComponent />);
           expect(wrapper.find('.container span + div')).to.have.lengthOf(1);
         });
 
-        it('should handle general sibling selector inside React.Fragment', () => {
+        it('handles general sibling selector inside React.Fragment', () => {
           const wrapper = mount(<NestedFragmentComponent />);
           expect(wrapper.find('.container div ~ span')).to.have.lengthOf(2);
         });
 
-        itIf(is('>= 16.4.1'), 'should handle fragments with no content', () => {
+        itIf(is('>= 16.4.1'), 'handles fragments with no content', () => {
           const EmptyFragmentComponent = () => (
             <div className="container">
               <React.Fragment>

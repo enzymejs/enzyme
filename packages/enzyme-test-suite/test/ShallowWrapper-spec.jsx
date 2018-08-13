@@ -977,12 +977,12 @@ describe('shallow', () => {
           </div>
         );
 
-        it('should find descendant span inside React.Fragment', () => {
+        it('finds descendant span inside React.Fragment', () => {
           const wrapper = shallow(<NestedFragmentComponent />);
           expect(wrapper.find('.container span')).to.have.lengthOf(4);
         });
 
-        it('should not find nonexistent p inside React.Fragment', () => {
+        it('finds nonexistent p inside React.Fragment', () => {
           const wrapper = shallow(<NestedFragmentComponent />);
           expect(wrapper.find('.container p')).to.have.lengthOf(0);
         });
@@ -992,17 +992,17 @@ describe('shallow', () => {
           expect(wrapper.find('.container > span')).to.have.lengthOf(4);
         });
 
-        it('should handle adjacent sibling selector inside React.Fragment', () => {
+        it('handles adjacent sibling selector inside React.Fragment', () => {
           const wrapper = shallow(<NestedFragmentComponent />);
           expect(wrapper.find('.container span + div')).to.have.lengthOf(1);
         });
 
-        it('should handle general sibling selector inside React.Fragment', () => {
+        it('handles general sibling selector inside React.Fragment', () => {
           const wrapper = shallow(<NestedFragmentComponent />);
           expect(wrapper.find('.container div ~ span')).to.have.lengthOf(2);
         });
 
-        it('should handle fragments with no content', () => {
+        it('handles fragments with no content', () => {
           const EmptyFragmentComponent = () => (
             <div className="container">
               <Fragment>
