@@ -2406,6 +2406,86 @@ describe('shallow', () => {
       });
     });
 
+    describe('should not call componentWillReceiveProps after setState is called', () => {
+      it('should not call componentWillReceiveProps upon rerender', () => {
+        class A extends React.Component {
+          constructor(props) {
+            super(props);
+
+            this.state = { a: 0 };
+          }
+
+          componentWillReceiveProps() {
+            this.setState({ a: 1 });
+          }
+
+          render() {
+            return (<div>{this.state.a}</div>);
+          }
+        }
+        const spy = sinon.spy(A.prototype, 'componentWillReceiveProps');
+
+        const wrapper = shallow(<A />, { disableLifecycleMethods: true });
+
+        wrapper.setState({ a: 2 });
+        expect(wrapper.state('a')).to.equal(2);
+
+        expect(spy).to.have.property('callCount', 0);
+        wrapper.setProps({});
+        expect(spy).to.have.property('callCount', 1);
+        expect(wrapper.state('a')).to.equal(1);
+
+        return new Promise((resolve) => {
+          wrapper.setState({ a: 3 }, resolve);
+        }).then(() => {
+          expect(spy).to.have.property('callCount', 1);
+          expect(wrapper.state('a')).to.equal(3);
+        });
+      });
+
+      it('should not call componentWillReceiveProps with multiple keys in props', () => {
+        class B extends React.Component {
+          constructor(props) {
+            super(props);
+            this.state = { a: 0, b: 1 };
+          }
+
+          componentWillReceiveProps() {
+            this.setState({ b: 0, a: 1 });
+          }
+
+          render() {
+            return (
+              <div>
+                {this.state.a + this.state.b}
+              </div>
+            );
+          }
+        }
+        const spy = sinon.spy(B.prototype, 'componentWillReceiveProps');
+
+        const wrapper = shallow(<B />, { disableLifecycleMethods: true });
+
+        wrapper.setState({ a: 2 });
+        expect(wrapper.state('a')).to.equal(2);
+        expect(wrapper.state('b')).to.equal(1);
+
+        expect(spy).to.have.property('callCount', 0);
+        wrapper.setProps({});
+        expect(spy).to.have.property('callCount', 1);
+        expect(wrapper.state('a')).to.equal(1);
+
+        return Promise.all([
+          new Promise((resolve) => { wrapper.setState({ b: 5 }, resolve); }),
+          new Promise((resolve) => { wrapper.setState({ a: 10 }, resolve); }),
+        ]).then(() => {
+          expect(spy).to.have.property('callCount', 1);
+          expect(wrapper.state('b')).to.equal(5);
+          expect(wrapper.state('a')).to.equal(10);
+        });
+      });
+    });
+
     describeIf(is('> 0.13'), 'stateless function components', () => {
       it('should throw when trying to access state', () => {
         const Foo = () => (

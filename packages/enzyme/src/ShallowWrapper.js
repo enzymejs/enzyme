@@ -1,4 +1,5 @@
 import flat from 'array.prototype.flat';
+import isEqual from 'lodash.isequal';
 import cheerio from 'cheerio';
 
 import {
@@ -374,7 +375,7 @@ class ShallowWrapper {
               }
             }
           // If it doesn't need to rerender, update only its props.
-          } else if (props) {
+          } else if (!isEqual(props, instance.props)) {
             instance.props = (Object.freeze || Object)({ ...instance.props, ...props });
           }
           this.update();
