@@ -4,7 +4,7 @@
 * [Guides](/docs/guides.md)
   * [Migration from 2.x to 3.x](/docs/guides/migration-from-2-to-3.md)
   * [Browserify](/docs/guides/browserify.md)
-  * [WebPack](/docs/guides/webpack.md)
+  * [Webpack](/docs/guides/webpack.md)
   * [JSDOM](/docs/guides/jsdom.md)
   * [Jest](/docs/guides/jest.md)
   * [Karma](/docs/guides/karma.md)

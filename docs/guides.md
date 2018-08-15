@@ -1,7 +1,7 @@
 # enzyme Guides
 
 - [*Using enzyme with Browserify*](guides/browserify.md)
-- [*Using enzyme with WebPack*](guides/webpack.md)
+- [*Using enzyme with Webpack*](guides/webpack.md)
 - [*Using enzyme with JSDOM*](guides/jsdom.md)
 - [*Using enzyme with Jest*](guides/jest.md)
 - [*Using enzyme with Karma*](guides/karma.md)

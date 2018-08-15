@@ -1,55 +1,61 @@
 # Using enzyme with Karma
 
-Karma is a popular test runner that can run tests in browser environments. enzyme is compatible with
-Karma, but often requires a little bit of configuration.
+Karma is a popular test runner that can run tests in multiple browser environments. Depending on your Karma setup, you may have a number of options for configuring Enzyme.
 
-This configuration largely depends on which plugins you are using to bundle your JavaScript code.  In
-the case of Browserify or Webpack, see the below documentation in order to get these up and running.
+## Basic Enzyme setup with Karma
 
+### Configure Enzyme
 
-## enzyme + Karma + Webpack
-
-See the [webpack guide](webpack.md).
+Create an Enzyme setup file. This file will configure Enzyme with the appropiate React adapter. It can also be used to initialize any that you'd like available for all tests. To avoid having to import this file and Enzyme, you can re-export all Enzyme exports from this file and just import it.
 
 ```js
-/* karma.conf.js */
-module.exports = function karmaConfig(config) {
-  config.set({
-    // ...
-    webpack: { // kind of a copy of your webpack config
-      devtool: 'inline-source-map', // just do inline source maps instead of the default
-      module: {
-        loaders: [{
-          test: /\.js$/,
-          exclude: /\/node_modules\//,
-          loader: 'babel',
-          query: {
-            presets: ['airbnb'],
-          },
-        }],
-      },
-    },
-    // ...
-  });
-};
+/* test/enzyme.js */
+import Enzyme from 'enzyme';
+import Adapter from 'enzyme-adapter-react-16';
+import jasmineEnzyme from 'jasmine-enzyme';
+
+// Configure Enzyme for the appropriate React adapter
+Enzyme.configure({ adapter: new Adapter() });
+
+// Initialize global helpers
+beforeEach(() => {
+  jasmineEnzyme();
+});
+
+// Re-export all enzyme exports
+export * from 'enzyme';
 ```
 
-## enzyme + Karma + Browserify
+### Import Enzyme from the Enzyme setup file
 
-See the [browserify guide](browserify.md).
+Anywhere you want to use Enzyme, import the Enzyme setup file just as you would Enzyme itself.
 
 ```js
-/* karma.conf.js */
-module.exports = function karmaConfig(config) {
-  config.set({
-    // ...
-    browserify: {
-      debug: true,
-      transform: [
-        ['babelify', { presets: ['airbnb'] }],
-      ],
-    },
-    // ...
-  });
-};
+/* some_test.js */
+// Import anything you would normally import `from 'enzyme'` from the Enzyme setup file
+import { shallow } from './test/enzyme';
+
+// ...
+```
+
+
+## Alternative karma-webpack setup
+
+If you're using Karma and Webpack using [karma-webpack's alternative setup](https://github.com/webpack-contrib/karma-webpack#alternative-usage), you can configure enzyme in your test entry file and import Enzyme directly in individual tests.
+
+```js
+/* test/index_test.js */
+import './enzyme';
+
+const testsContext = require.context('.', true, /_test$/);
+
+testsContext.keys().forEach(testsContext);
+```
+
+```js
+/* some_test.js */
+// If Enzyme is configured in the test entry file, Enzyme can be imported directly
+import { shallow } from 'enzyme';
+
+// ...
 ```

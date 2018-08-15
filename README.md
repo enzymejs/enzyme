@@ -97,7 +97,7 @@ testing your React components, you can consider using:
 
 [Using Enzyme with SystemJS](/docs/guides/systemjs.md)
 
-[Using Enzyme with WebPack](/docs/guides/webpack.md)
+[Using Enzyme with Webpack](/docs/guides/webpack.md)
 
 [Using Enzyme with JSDOM](/docs/guides/jsdom.md)
 
