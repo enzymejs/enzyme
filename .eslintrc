@@ -6,7 +6,6 @@
     "mocha": true
   },
   "rules": {
-    "react/jsx-one-expression-per-line": 0, // TODO: re-enable once fixed
     "id-length": 0,
     "new-cap": [2, { "capIsNewExceptions": ["AND"] }],
     "react/jsx-pascal-case": [2, { "allowAllCaps": true }],
@@ -28,5 +27,31 @@
         "_stringText",
       ],
     }],
-  }
+  },
+  "overrides": [
+    {
+      "files": [
+        "*.md",
+        //"**/*.md",
+      ],
+      "plugins": [
+        "markdown"
+      ],
+      "rules": {
+        "class-methods-use-this": 0,
+        "import/no-unresolved": 0,
+        "import/no-extraneous-dependencies": 0,
+        "import/extensions": 0,
+        "max-len": 0,
+        "no-unused-vars": 0,
+        "no-console": 0,
+        "no-undef": 0,
+        "react/react-in-jsx-scope": 0,
+        "react/jsx-filename-extension": 0,
+        "react/jsx-no-undef": 0,
+        "react/no-multi-comp": 0,
+        "react/jsx-one-expression-per-line": 0,
+      },
+    }
+  ],
 }
