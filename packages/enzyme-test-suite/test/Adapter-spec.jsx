@@ -198,14 +198,11 @@ describe('Adapter', () => {
     });
 
     itIf(is('>= 16'), 'renders react portals', () => {
-      // eslint-disable-next-line global-require, import/no-unresolved
-      const ReactDOM = require('react-dom'); // only available in 0.14+
-
       const document = jsdom.jsdom();
       const options = { mode: 'mount' };
       const renderer = adapter.createRenderer(options);
       const Foo = () => (
-        ReactDOM.createPortal(
+        createPortal(
           <div className="Foo">Hello World!</div>,
           document.body,
         )
