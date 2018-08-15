@@ -21,6 +21,7 @@ import {
   createClass,
   createContext,
   createPortal,
+  createRef,
   Fragment,
 } from './_helpers/react-compat';
 import {
@@ -4505,7 +4506,7 @@ describeWithDOM('mount', () => {
   });
 
   describe('.getElement()', () => {
-    it('returns nodes with refs as well as well', () => {
+    it('returns nodes with refs as well', () => {
       class Foo extends React.Component {
         constructor(props) {
           super(props);
@@ -4531,6 +4532,26 @@ describeWithDOM('mount', () => {
       expect(wrapper.instance().node).to.equal(mockNode);
     });
 
+    itIf(is('>= 16.3'), 'returns nodes with createRefs as well', () => {
+      class Foo extends React.Component {
+        constructor(props) {
+          super(props);
+          this.setRef = createRef();
+        }
+
+        render() {
+          return (
+            <div>
+              <div ref={this.setRef} className="foo" />
+            </div>
+          );
+        }
+      }
+      const wrapper = mount(<Foo />);
+      const element = wrapper.find('.foo').instance();
+      expect(wrapper.instance().setRef).to.have.property('current', element);
+    });
+
     it('does not add a "null" key to elements with a ref and no key', () => {
       class Foo extends React.Component {
         constructor(props) {
@@ -4549,7 +4570,24 @@ describeWithDOM('mount', () => {
         }
       }
       const wrapper = mount(<Foo />);
-      expect(wrapper.getElement().key).to.equal(null);
+      expect(wrapper.getElement()).to.have.property('key', null);
+    });
+
+    itIf(is('>= 16.3'), 'does not add a "null" key to elements with a createRef and no key', () => {
+      class Foo extends React.Component {
+        constructor(props) {
+          super(props);
+          this.setRef = createRef();
+        }
+
+        render() {
+          return (
+            <div ref={this.setRef} className="foo" />
+          );
+        }
+      }
+      const wrapper = mount(<Foo />);
+      expect(wrapper.getElement()).to.have.property('key', null);
     });
   });
 

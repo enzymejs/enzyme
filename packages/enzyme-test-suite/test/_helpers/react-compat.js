@@ -10,6 +10,7 @@ let createClass;
 let renderToString;
 let createPortal;
 let createContext;
+let createRef;
 let forwardRef;
 let Fragment;
 let StrictMode;
@@ -45,12 +46,14 @@ if (is('^16.2.0-0')) {
 if (is('^16.3.0-0')) {
   ({
     createContext,
+    createRef,
     forwardRef,
     StrictMode,
     unstable_AsyncMode: AsyncMode,
   } = require('react'));
 } else {
   createContext = null;
+  createRef = null;
   forwardRef = null;
   StrictMode = null;
   AsyncMode = null;
@@ -69,6 +72,7 @@ export {
   renderToString,
   createPortal,
   createContext,
+  createRef,
   forwardRef,
   Fragment,
   StrictMode,
