@@ -188,6 +188,7 @@ function nodeToHostNode(_node) {
 
 const eventOptions = {
   animation: true,
+  pointerEvents: true, // 16.4+
 };
 
 class ReactSixteenAdapter extends EnzymeAdapter {

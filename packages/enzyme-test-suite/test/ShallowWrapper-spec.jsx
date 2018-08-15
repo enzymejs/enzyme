@@ -2012,6 +2012,36 @@ describe('shallow', () => {
           expect(spy).to.have.property('callCount', 1);
         });
       });
+
+      describeIf(is('>= 16.4'), 'pointer events', () => {
+        it('should convert lowercase events to React camelcase', () => {
+          const spy = sinon.spy();
+          class Foo extends React.Component {
+            render() {
+              return (
+                <a onGotPointerCapture={spy}>foo</a>
+              );
+            }
+          }
+
+          const wrapper = shallow(<Foo />);
+
+          wrapper.simulate('gotpointercapture');
+          expect(spy).to.have.property('callCount', 1);
+        });
+
+        it('should convert lowercase events to React camelcase in stateless components', () => {
+          const spy = sinon.spy();
+          const Foo = () => (
+            <a onGotPointerCapture={spy}>foo</a>
+          );
+
+          const wrapper = shallow(<Foo />);
+
+          wrapper.simulate('gotpointercapture');
+          expect(spy).to.have.property('callCount', 1);
+        });
+      });
     });
 
     itIf(BATCHING, 'should be batched updates', () => {
