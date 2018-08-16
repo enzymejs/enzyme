@@ -421,6 +421,9 @@ class ShallowWrapper {
     if (this.instance() === null || this[RENDERER].getNode().nodeType === 'function') {
       throw new Error('ShallowWrapper::setState() can only be called on class components');
     }
+    if (arguments.length > 1 && typeof callback !== 'function') {
+      throw new TypeError('ReactWrapper::setState() expects a function as its second argument');
+    }
     this.single('setState', () => {
       withSetStateAllowed(() => {
         const adapter = getAdapter(this[OPTIONS]);
@@ -481,7 +484,11 @@ class ShallowWrapper {
         this.update();
         // call the setState callback
         if (callback) {
-          adapter.invokeSetStateCallback(instance, callback);
+          if (adapter.invokeSetStateCallback) {
+            adapter.invokeSetStateCallback(instance, callback);
+          } else {
+            callback.call(instance);
+          }
         }
       });
     });
