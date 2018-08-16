@@ -2142,6 +2142,25 @@ describe('shallow', () => {
       expect(wrapper.find('.bar')).to.have.lengthOf(1);
     });
 
+    it('allows setState inside of componentDidMount', () => {
+      class MySharona extends React.Component {
+        constructor(props) {
+          super(props);
+          this.state = { mounted: false };
+        }
+
+        componentDidMount() {
+          this.setState({ mounted: true });
+        }
+
+        render() {
+          return <div>{this.state.mounted ? 'a' : 'b'}</div>;
+        }
+      }
+      const wrapper = shallow(<MySharona />);
+      expect(wrapper.find('div').text()).to.equal('a');
+    });
+
     it('should call the callback when setState has completed', () => {
       class Foo extends React.Component {
         constructor(props) {
@@ -2160,6 +2179,7 @@ describe('shallow', () => {
       return new Promise((resolve) => {
         wrapper.setState({ id: 'bar' }, function callback(...args) {
           expect(wrapper.state()).to.eql({ id: 'bar' });
+          expect(this).to.equal(wrapper.instance());
           expect(this.state).to.eql({ id: 'bar' });
           expect(wrapper.find('div').prop('className')).to.eql('bar');
           expect(args).to.eql(CALLING_SETSTATE_CALLBACK_WITH_UNDEFINED ? [undefined] : []);
@@ -2194,6 +2214,24 @@ describe('shallow', () => {
           'ShallowWrapper::setState() can only be called on class components',
         );
       });
+    });
+
+    it('should throw error when cb is not a function', () => {
+      class Foo extends React.Component {
+        constructor(props) {
+          super(props);
+          this.state = { id: 'foo' };
+        }
+
+        render() {
+          return (
+            <div className={this.state.id} />
+          );
+        }
+      }
+      const wrapper = shallow(<Foo />);
+      expect(wrapper.state()).to.eql({ id: 'foo' });
+      expect(() => wrapper.setState({ id: 'bar' }, 1)).to.throw(Error);
     });
   });
 

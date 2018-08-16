@@ -42,6 +42,9 @@ import sloppyReturnThis from './_helpers/untranspiledSloppyReturnThis';
 const getElementPropSelector = prop => x => x.props[prop];
 const getWrapperPropSelector = prop => x => x.prop(prop);
 
+// some React versions pass undefined as an argument of setState callback.
+const CALLING_SETSTATE_CALLBACK_WITH_UNDEFINED = is('^15.5');
+
 describeWithDOM('mount', () => {
   describe('top level wrapper', () => {
     it('does what i expect', () => {
@@ -2257,30 +2260,47 @@ describeWithDOM('mount', () => {
       }
       const wrapper = mount(<Foo />);
       expect(wrapper.state()).to.eql({ id: 'foo' });
-      wrapper.setState({ id: 'bar' }, () => {
-        expect(wrapper.state()).to.eql({ id: 'bar' });
+      return new Promise((resolve) => {
+        wrapper.setState({ id: 'bar' }, function callback(...args) {
+          expect(wrapper.state()).to.eql({ id: 'bar' });
+          expect(this).to.equal(wrapper.instance());
+          expect(this.state).to.eql({ id: 'bar' });
+          expect(wrapper.find('div').prop('className')).to.eql('bar');
+          expect(args).to.eql(CALLING_SETSTATE_CALLBACK_WITH_UNDEFINED ? [undefined] : []);
+          resolve();
+        });
+      });
+    });
+
+    describeIf(is('> 0.13'), 'stateless function components', () => {
+      it('should throw when trying to access state', () => {
+        const Foo = () => (
+          <div>abc</div>
+        );
+
+        const wrapper = mount(<Foo />);
+
+        expect(() => wrapper.state()).to.throw(
+          Error,
+          'ReactWrapper::state() can only be called on class components',
+        );
+      });
+
+      it('should throw when trying to set state', () => {
+        const Foo = () => (
+          <div>abc</div>
+        );
+
+        const wrapper = mount(<Foo />);
+
+        expect(() => wrapper.setState({ a: 1 })).to.throw(
+          Error,
+          'ReactWrapper::setState() can only be called on class components',
+        );
       });
     });
 
     it('should throw error when cb is not a function', () => {
-      class Foo extends React.Component {
-        constructor(props) {
-          super(props);
-          this.state = { id: 'foo' };
-        }
-
-        render() {
-          return (
-            <div className={this.state.id} />
-          );
-        }
-      }
-      const wrapper = mount(<Foo />);
-      expect(wrapper.state()).to.eql({ id: 'foo' });
-      expect(() => wrapper.setState({ id: 'bar' }, 1)).to.throw(Error);
-    });
-
-    itIf(is('>=15 || ^16.0.0-alpha'), 'should throw error when cb is not a function', () => {
       class Foo extends React.Component {
         constructor(props) {
           super(props);
