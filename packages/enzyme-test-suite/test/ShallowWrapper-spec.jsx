@@ -2142,7 +2142,7 @@ describe('shallow', () => {
       expect(wrapper.find('.bar')).to.have.lengthOf(1);
     });
 
-    it('allows setState inside of componentDidMount', () => {
+    it.skip('allows setState inside of componentDidMount', () => {
       class MySharona extends React.Component {
         constructor(props) {
           super(props);
