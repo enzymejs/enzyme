@@ -2142,7 +2142,7 @@ describe('shallow', () => {
       expect(wrapper.find('.bar')).to.have.lengthOf(1);
     });
 
-    it.skip('allows setState inside of componentDidMount', () => {
+    it('allows setState inside of componentDidMount', () => {
       class MySharona extends React.Component {
         constructor(props) {
           super(props);
@@ -2232,6 +2232,31 @@ describe('shallow', () => {
       const wrapper = shallow(<Foo />);
       expect(wrapper.state()).to.eql({ id: 'foo' });
       expect(() => wrapper.setState({ id: 'bar' }, 1)).to.throw(Error);
+    });
+
+    it('should preserve the receiver', () => {
+      class Comp extends React.Component {
+        constructor(...args) {
+          super(...args);
+
+          this.state = {
+            key: '',
+          };
+
+          this.instanceFunction = () => this.setState(() => ({ key: 'value' }));
+        }
+
+        componentDidMount() {
+          this.instanceFunction();
+        }
+
+        render() {
+          const { key } = this.state;
+          return key ? null : null;
+        }
+      }
+
+      expect(shallow(<Comp />).debug()).to.equal('');
     });
   });
 

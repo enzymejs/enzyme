@@ -163,21 +163,19 @@ function privateSetNodes(wrapper, nodes) {
 class ShallowWrapper {
   constructor(nodes, root, passedOptions = {}) {
     validateOptions(passedOptions);
+
     const options = makeOptions(passedOptions);
+    const adapter = getAdapter(options);
+    const lifecycles = getAdapterLifecycles(adapter);
+
+    let instance;
     if (!root) {
       privateSet(this, ROOT, this);
       privateSet(this, UNRENDERED, nodes);
-      const renderer = getAdapter(options).createRenderer({ mode: 'shallow', ...options });
+      const renderer = adapter.createRenderer({ mode: 'shallow', ...options });
       privateSet(this, RENDERER, renderer);
       this[RENDERER].render(nodes, options.context);
-      const { instance } = this[RENDERER].getNode();
-      const adapter = getAdapter(this[OPTIONS]);
-      const lifecycles = getAdapterLifecycles(adapter);
-      // Ensure to call componentDidUpdate when instance.setState is called
-      if (instance && lifecycles.componentDidUpdate.onSetState && !instance[SET_STATE]) {
-        privateSet(instance, SET_STATE, instance.setState);
-        instance.setState = (...args) => this.setState(...args);
-      }
+      ({ instance } = this[RENDERER].getNode());
       if (
         !options.disableLifecycleMethods
         && instance
@@ -195,6 +193,15 @@ class ShallowWrapper {
       privateSetNodes(this, nodes);
     }
     privateSet(this, OPTIONS, root ? root[OPTIONS] : options);
+
+    if (!instance) {
+      ({ instance } = this[RENDERER].getNode());
+    }
+    // Ensure to call componentDidUpdate when instance.setState is called
+    if (instance && lifecycles.componentDidUpdate.onSetState && !instance[SET_STATE]) {
+      privateSet(instance, SET_STATE, instance.setState);
+      instance.setState = (...args) => this.setState(...args);
+    }
   }
 
   /**
