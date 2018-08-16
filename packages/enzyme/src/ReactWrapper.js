@@ -313,7 +313,11 @@ class ReactWrapper {
       if (callback) {
         const adapter = getAdapter(this[OPTIONS]);
         const instance = this.instance();
-        adapter.invokeSetStateCallback(instance, callback);
+        if (adapter.invokeSetStateCallback) {
+          adapter.invokeSetStateCallback(instance, callback);
+        } else {
+          callback.call(instance);
+        }
       }
     });
     return this;
