@@ -47,6 +47,7 @@ const HostText = 6;
 const Mode = 11;
 const ContextConsumerType = 12;
 const ContextProviderType = 13;
+const ForwardRefType = 14;
 
 function nodeAndSiblingsArray(nodeWithSibling) {
   const array = [];
@@ -133,6 +134,17 @@ function toTree(vnode) {
     case ContextProviderType: // 13
     case ContextConsumerType: // 12
       return childrenToTree(node.child);
+    case ForwardRefType: {
+      return {
+        nodeType: 'function',
+        type: node.type,
+        props: { ...node.pendingProps },
+        key: ensureKeyOrUndefined(node.key),
+        ref: node.ref,
+        instance: null,
+        rendered: childrenToTree(node.child),
+      };
+    }
     default:
       throw new Error(`Enzyme Internal Error: unknown node with tag ${node.tag}`);
   }
@@ -195,6 +207,7 @@ class ReactSixteenThreeAdapter extends EnzymeAdapter {
     const { attachTo, hydrateIn } = options;
     const domNode = hydrateIn || attachTo || global.document.createElement('div');
     let instance = null;
+    const adapter = this;
     return {
       render(el, context, callback) {
         if (instance === null) {
@@ -205,7 +218,7 @@ class ReactSixteenThreeAdapter extends EnzymeAdapter {
             context,
             ...(ref && { ref }),
           };
-          const ReactWrapperComponent = createMountWrapper(el, options);
+          const ReactWrapperComponent = createMountWrapper(el, { ...options, adapter });
           const wrappedEl = React.createElement(ReactWrapperComponent, wrapperProps);
           instance = hydrateIn
             ? ReactDOM.hydrate(wrappedEl, domNode)

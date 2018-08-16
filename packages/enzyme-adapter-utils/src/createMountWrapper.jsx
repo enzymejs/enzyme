@@ -3,6 +3,35 @@ import PropTypes from 'prop-types';
 
 /* eslint react/forbid-prop-types: 0 */
 
+const stringOrFunction = PropTypes.oneOfType([PropTypes.func, PropTypes.string]);
+const makeValidElementType = (adapter) => {
+  if (!adapter) {
+    return stringOrFunction;
+  }
+
+  function validElementType(props, propName, ...args) {
+    if (!adapter.isValidElementType) {
+      return stringOrFunction(props, propName, ...args);
+    }
+    const propValue = props[propName];
+    if (propValue == null || adapter.isValidElementType(propValue)) {
+      return null;
+    }
+    return new TypeError(`${propName} must be a valid element type!`);
+  }
+  validElementType.isRequired = function validElementTypeRequired(props, propName, ...args) {
+    if (!adapter.isValidElementType) {
+      return stringOrFunction.isRequired(props, propName, ...args);
+    }
+    const propValue = props[propName]; // eslint-disable-line react/destructuring-assignment
+    if (adapter.isValidElementType(propValue)) {
+      return null;
+    }
+    return new TypeError(`${propName} must be a valid element type!`);
+  };
+  return validElementType;
+};
+
 /**
  * This is a utility component to wrap around the nodes we are
  * passing in to `mount()`. Theoretically, you could do everything
@@ -12,6 +41,8 @@ import PropTypes from 'prop-types';
  * pass new props in.
  */
 export default function createMountWrapper(node, options = {}) {
+  const { adapter } = options;
+
   class WrapperComponent extends React.Component {
     constructor(...args) {
       super(...args);
@@ -62,7 +93,7 @@ export default function createMountWrapper(node, options = {}) {
     }
   }
   WrapperComponent.propTypes = {
-    Component: PropTypes.oneOfType([PropTypes.func, PropTypes.string]).isRequired,
+    Component: makeValidElementType(adapter).isRequired,
     props: PropTypes.object.isRequired,
     context: PropTypes.object,
   };
