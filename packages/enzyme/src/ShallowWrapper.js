@@ -170,6 +170,10 @@ class ShallowWrapper {
 
     // mounting a ShallowRender component
     if (!root) {
+      if (!adapter.isValidElement(nodes)) {
+        throw new TypeError('ShallowWrapper can only wrap valid elements');
+      }
+
       privateSet(this, ROOT, this);
       privateSet(this, UNRENDERED, nodes);
       const renderer = adapter.createRenderer({ mode: 'shallow', ...options });

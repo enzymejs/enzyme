@@ -85,8 +85,13 @@ class ReactWrapper {
     const options = makeOptions(passedOptions);
 
     if (!root) {
+      const adapter = getAdapter(options);
+      if (!adapter.isValidElement(nodes)) {
+        throw new TypeError('ReactWrapper can only wrap valid elements');
+      }
+
       privateSet(this, UNRENDERED, nodes);
-      const renderer = getAdapter(options).createRenderer({ mode: 'mount', ...options });
+      const renderer = adapter.createRenderer({ mode: 'mount', ...options });
       privateSet(this, RENDERER, renderer);
       renderer.render(nodes, options.context);
       privateSet(this, ROOT, this);

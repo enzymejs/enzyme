@@ -85,6 +85,48 @@ describeWithDOM('mount', () => {
       expect(spy).to.have.property('callCount', 1);
     });
 
+    describe('wrapping invalid elements', () => {
+      itIf(is('>= 16'), 'should throw when mounting Portals', () => {
+        const portal = createPortal(
+          <div />,
+          { nodeType: 1 },
+        );
+
+        expect(() => mount(portal)).to.throw(
+          Error,
+          'ReactWrapper can only wrap valid elements',
+        );
+      });
+
+      it('should throw when mounting plain text', () => {
+        expect(() => mount('Foo')).to.throw(
+          Error,
+          'ReactWrapper can only wrap valid elements',
+        );
+      });
+
+      it('should throw when mounting multiple elements', () => {
+        expect(() => mount([<div />])).to.throw(
+          TypeError,
+          'ReactWrapper can only wrap valid elements',
+        );
+      });
+    });
+
+    it('should mount built in components', () => {
+      expect(() => mount(<div />)).not.to.throw();
+    });
+
+    it('should mount composite components', () => {
+      class Foo extends React.Component {
+        render() {
+          return <div />;
+        }
+      }
+
+      expect(() => mount(<Foo />)).not.to.throw();
+    });
+
     describeIf(is('>= 16.3'), 'uses the isValidElementType from the Adapter to validate the prop type of Component', () => {
       const Foo = () => null;
       const Bar = () => null;

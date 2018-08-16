@@ -20,6 +20,7 @@ import './_helpers/setupAdapters';
 import {
   createClass,
   createContext,
+  createPortal,
   createRef,
   Fragment,
   forwardRef,
@@ -76,6 +77,48 @@ describe('shallow', () => {
       expect(wrapper.find(Box).children().props().className).to.equal('div');
       expect(wrapper.children().type()).to.equal('div');
       expect(wrapper.children().props().bam).to.equal(undefined);
+    });
+
+    describe('wrapping invalid elements', () => {
+      itIf(is('>= 16'), 'should throw when shallow rendering Portals', () => {
+        const portal = createPortal(
+          <div />,
+          { nodeType: 1 },
+        );
+
+        expect(() => shallow(portal)).to.throw(
+          Error,
+          'ShallowWrapper can only wrap valid elements',
+        );
+      });
+
+      it('should throw when shallow rendering plain text', () => {
+        expect(() => shallow('Foo')).to.throw(
+          Error,
+          'ShallowWrapper can only wrap valid elements',
+        );
+      });
+
+      it('should throw when shallow rendering multiple elements', () => {
+        expect(() => shallow([<div />])).to.throw(
+          TypeError,
+          'ShallowWrapper can only wrap valid elements',
+        );
+      });
+    });
+
+    it('should shallow render built in components', () => {
+      expect(() => shallow(<div />)).not.to.throw();
+    });
+
+    it('should shallow render composite components', () => {
+      class Foo extends React.Component {
+        render() {
+          return <div />;
+        }
+      }
+
+      expect(() => shallow(<Foo />)).not.to.throw();
     });
   });
 
