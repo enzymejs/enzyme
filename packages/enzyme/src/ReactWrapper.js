@@ -298,19 +298,23 @@ class ReactWrapper {
    * @param {Function} cb - callback function
    * @returns {ReactWrapper}
    */
-  setState(state, callback = noop) {
+  setState(state, callback = undefined) {
     if (this[ROOT] !== this) {
       throw new Error('ReactWrapper::setState() can only be called on the root');
     }
     if (this.instance() === null || this[RENDERER].getNode().nodeType === 'function') {
       throw new Error('ReactWrapper::setState() can only be called on class components');
     }
-    if (typeof callback !== 'function') {
+    if (arguments.length > 1 && typeof callback !== 'function') {
       throw new TypeError('ReactWrapper::setState() expects a function as its second argument');
     }
     this.instance().setState(state, () => {
       this.update();
-      callback();
+      if (callback) {
+        const adapter = getAdapter(this[OPTIONS]);
+        const instance = this.instance();
+        adapter.invokeSetStateCallback(instance, callback);
+      }
     });
     return this;
   }
