@@ -111,9 +111,16 @@ function toTree(vnode) {
   switch (node.tag) {
     case HostRoot: // 3
       return childrenToTree(node.child);
-    case HostPortal: { // 4
-      return childrenToTree(node.child);
-    }
+    case HostPortal: // 4
+      return {
+        nodeType: 'portal',
+        type: Portal,
+        props: {},
+        key: ensureKeyOrUndefined(node.key),
+        ref: node.ref,
+        instance: null,
+        rendered: childrenToTree(node.child),
+      };
     case ClassComponent:
       return {
         nodeType: 'class',
