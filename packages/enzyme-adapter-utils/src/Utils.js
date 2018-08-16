@@ -6,6 +6,7 @@ export { createMountWrapper, createRenderWrapper };
 
 export function mapNativeEventNames(event, {
   animation = false, // should be true for React 15+
+  pointerEvents = false, // should be true for React 16.4+
 } = {}) {
   const nativeToReactEventMap = {
     compositionend: 'compositionEnd',
@@ -50,6 +51,18 @@ export function mapNativeEventNames(event, {
       animationiteration: 'animationIteration',
       animationend: 'animationEnd',
     }),
+    ...(pointerEvents && {
+      pointerdown: 'pointerDown',
+      pointermove: 'pointerMove',
+      pointerup: 'pointerUp',
+      pointercancel: 'pointerCancel',
+      gotpointercapture: 'gotPointerCapture',
+      lostpointercapture: 'lostPointerCapture',
+      pointerenter: 'pointerEnter',
+      pointerleave: 'pointerLeave',
+      pointerover: 'pointerOver',
+      pointerout: 'pointerOut',
+    }),
   };
 
   return nativeToReactEventMap[event] || event;
@@ -57,8 +70,8 @@ export function mapNativeEventNames(event, {
 
 // 'click' => 'onClick'
 // 'mouseEnter' => 'onMouseEnter'
-export function propFromEvent(event) {
-  const nativeEvent = mapNativeEventNames(event);
+export function propFromEvent(event, eventOptions = {}) {
+  const nativeEvent = mapNativeEventNames(event, eventOptions);
   return `on${nativeEvent[0].toUpperCase()}${nativeEvent.slice(1)}`;
 }
 
