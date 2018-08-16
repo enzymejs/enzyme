@@ -1,5 +1,11 @@
 # Change Log
 
+## 3.4.2
+
+### Fixes
+- @koba04: `shallow`: call cDU when an instance calls setState ([#1742](https://github.com/airbnb/enzyme/pull/1742))
+- @ReactiveRaven: `selectors`: fix descendant selector ([#1680](https://github.com/airbnb/enzyme/pull/1680))
+
 ## 3.4.1
 
 ### Fixes
