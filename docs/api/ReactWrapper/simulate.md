@@ -46,3 +46,7 @@ expect(wrapper.find('.clicks-0').length).to.equal(1);
 wrapper.find('a').simulate('click');
 expect(wrapper.find('.clicks-1').length).to.equal(1);
 ```
+#### Common Gotchas
+
+- As noted in the function signature above passing a mock event is optional. It is worth noting that `ReactWrapper` will pass a `SyntheticEvent` object to the event handler in your code. Keep in mind that if the code you are testing uses properties that are not included in the `SyntheticEvent`, for instance `event.target.value`, you will need to provide a mock event like so `.simulate("change", { target: { value: "foo" }})` for it to work.
+
