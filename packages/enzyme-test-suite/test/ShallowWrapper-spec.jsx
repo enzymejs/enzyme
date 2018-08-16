@@ -15,6 +15,9 @@ import {
   sym,
 } from 'enzyme/build/Utils';
 import getAdapter from 'enzyme/build/getAdapter';
+import {
+  Portal,
+} from 'react-is';
 
 import './_helpers/setupAdapters';
 import {
@@ -269,6 +272,92 @@ describe('shallow', () => {
       expect(wrapper.type()).to.equal('div');
       expect(wrapper.find('.bar')).to.have.lengthOf(1);
       expect(wrapper.find('.qoo').text()).to.equal('qux');
+    });
+  });
+
+  describeIf(is('>= 16'), 'portals', () => {
+    it('should show portals in shallow debug tree', () => {
+      const Foo = () => (
+        <div className="foo">
+          {createPortal(
+            <div className="in-portal">InPortal</div>,
+            { nodeType: 1 },
+          )}
+        </div>
+      );
+
+      const wrapper = shallow(<Foo />);
+      expect(wrapper.debug()).to.equal(`<div className="foo">
+  <Portal containerInfo={{...}}>
+    <div className="in-portal">
+      InPortal
+    </div>
+  </Portal>
+</div>`);
+    });
+
+    it('should show portal container in shallow debug tree', () => {
+      const Foo = () => (
+        <div className="foo">
+          {createPortal(
+            <div className="in-portal">InPortal</div>,
+            { nodeType: 1 },
+          )}
+        </div>
+      );
+
+      const wrapper = shallow(<Foo />);
+      expect(wrapper.debug({ verbose: true })).to.equal(`<div className="foo">
+  <Portal containerInfo={{ nodeType: 1 }}>
+    <div className="in-portal">
+      InPortal
+    </div>
+  </Portal>
+</div>`);
+    });
+
+    it('should show nested portal children in shallow debug tree', () => {
+      const Bar = () => null;
+
+      const Foo = () => (
+        <div className="foo">
+          {createPortal(
+            <div className="in-portal">
+              <div className="nested-in-portal">
+                <Bar />
+              </div>
+            </div>,
+            { nodeType: 1 },
+          )}
+        </div>
+      );
+
+      const wrapper = shallow(<Foo />);
+      expect(wrapper.debug()).to.equal(`<div className="foo">
+  <Portal containerInfo={{...}}>
+    <div className="in-portal">
+      <div className="nested-in-portal">
+        <Bar />
+      </div>
+    </div>
+  </Portal>
+</div>`);
+    });
+
+    it('should have top level portals in debug tree', () => {
+      const Foo = () => (
+        createPortal(
+          <div className="in-portal">InPortal</div>,
+          { nodeType: 1 },
+        )
+      );
+
+      const wrapper = shallow(<Foo />);
+      expect(wrapper.debug()).to.equal(`<Portal containerInfo={{...}}>
+  <div className="in-portal">
+    InPortal
+  </div>
+</Portal>`);
     });
   });
 
@@ -1074,6 +1163,42 @@ describe('shallow', () => {
           expect(wrapper.children()).to.have.lengthOf(0);
         });
       });
+
+      itIf(is('>= 16'), 'should find portals by name', () => {
+        const Foo = () => (
+          <div>
+            {createPortal(
+              <div className="in-portal">InPortal</div>,
+              { nodeType: 1 },
+            )}
+          </div>
+        );
+
+        const wrapper = shallow(<Foo />);
+
+        expect(wrapper.find('Portal')).to.have.lengthOf(1);
+      });
+
+      itIf(is('>= 16'), 'should find elements through portals', () => {
+        const Foo = () => (
+          <div>
+            {createPortal(
+              <div>
+                <h1>Successful Portal!</h1>
+                <span />
+              </div>,
+              { nodeType: 1 },
+            )}
+          </div>
+        );
+
+
+        const wrapper = shallow(<Foo />);
+
+        expect(wrapper.find('h1')).to.have.lengthOf(1);
+
+        expect(wrapper.find('span')).to.have.lengthOf(1);
+      });
     });
 
   describe('.findWhere(predicate)', () => {
@@ -1367,6 +1492,21 @@ describe('shallow', () => {
       const spy = sinon.spy(stub);
       wrapper.findWhere(spy);
       expect(spy).to.have.property('callCount', 2);
+    });
+
+    itIf(is('>= 16'), 'should find portals by react-is Portal type', () => {
+      const Foo = () => (
+        <div>
+          {createPortal(
+            <div className="in-portal">InPortal</div>,
+            { nodeType: 1 },
+          )}
+        </div>
+      );
+
+      const wrapper = shallow(<Foo />);
+
+      expect(wrapper.findWhere(node => node.type() === Portal)).to.have.lengthOf(1);
     });
   });
 
