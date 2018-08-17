@@ -2142,7 +2142,7 @@ describe('shallow', () => {
       expect(wrapper.find('.bar')).to.have.lengthOf(1);
     });
 
-    it.skip('allows setState inside of componentDidMount', () => {
+    it('allows setState inside of componentDidMount', () => {
       class MySharona extends React.Component {
         constructor(props) {
           super(props);
@@ -2232,6 +2232,31 @@ describe('shallow', () => {
       const wrapper = shallow(<Foo />);
       expect(wrapper.state()).to.eql({ id: 'foo' });
       expect(() => wrapper.setState({ id: 'bar' }, 1)).to.throw(Error);
+    });
+
+    it('should preserve the receiver', () => {
+      class Comp extends React.Component {
+        constructor(...args) {
+          super(...args);
+
+          this.state = {
+            key: '',
+          };
+
+          this.instanceFunction = () => this.setState(() => ({ key: 'value' }));
+        }
+
+        componentDidMount() {
+          this.instanceFunction();
+        }
+
+        render() {
+          const { key } = this.state;
+          return key ? null : null;
+        }
+      }
+
+      expect(shallow(<Comp />).debug()).to.equal('');
     });
   });
 
@@ -4941,6 +4966,33 @@ describe('shallow', () => {
         wrapper.find('button').prop('onClick')();
         expect(wrapper.state('foo')).to.equal('onChange update');
         expect(spy).to.have.property('callCount', 1);
+      });
+
+      it('should call `componentDidUpdate` when component’s `setState` is called', () => {
+        class Foo extends React.Component {
+          constructor(props) {
+            super(props);
+            this.state = {
+              foo: 'init',
+            };
+            this.update = () => this.setState({ foo: 'update' });
+          }
+
+          componentDidMount() {
+            this.update();
+          }
+
+          componentDidUpdate() {}
+
+          render() {
+            return <div>{this.state.foo}</div>;
+          }
+        }
+        const spy = sinon.spy(Foo.prototype, 'componentDidUpdate');
+
+        const wrapper = shallow(<Foo />);
+        expect(spy).to.have.property('callCount', 1);
+        expect(wrapper.state('foo')).to.equal('update');
       });
     });
 

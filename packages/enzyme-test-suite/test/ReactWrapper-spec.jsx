@@ -2317,6 +2317,31 @@ describeWithDOM('mount', () => {
       expect(wrapper.state()).to.eql({ id: 'foo' });
       expect(() => wrapper.setState({ id: 'bar' }, 1)).to.throw(Error);
     });
+
+    it('should preserve the receiver', () => {
+      class Comp extends React.Component {
+        constructor(...args) {
+          super(...args);
+
+          this.state = {
+            key: '',
+          };
+
+          this.instanceFunction = () => this.setState(() => ({ key: 'value' }));
+        }
+
+        componentDidMount() {
+          this.instanceFunction();
+        }
+
+        render() {
+          const { key } = this.state;
+          return key ? null : null;
+        }
+      }
+
+      expect(mount(<Comp />).debug()).to.equal('<Comp />');
+    });
   });
 
   describe('.is(selector)', () => {
@@ -5143,6 +5168,33 @@ describeWithDOM('mount', () => {
       wrapper.find('button').prop('onClick')();
       expect(wrapper.state('foo')).to.equal('onChange update');
       expect(spy).to.have.property('callCount', 1);
+    });
+
+    it('should call `componentDidUpdate` when component’s `setState` is called', () => {
+      class Foo extends React.Component {
+        constructor(props) {
+          super(props);
+          this.state = {
+            foo: 'init',
+          };
+          this.update = () => this.setState({ foo: 'update' });
+        }
+
+        componentDidMount() {
+          this.update();
+        }
+
+        componentDidUpdate() {}
+
+        render() {
+          return <div>{this.state.foo}</div>;
+        }
+      }
+      const spy = sinon.spy(Foo.prototype, 'componentDidUpdate');
+
+      const wrapper = mount(<Foo />);
+      expect(spy).to.have.property('callCount', 1);
+      expect(wrapper.state('foo')).to.equal('update');
     });
   });
 });
