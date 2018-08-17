@@ -168,40 +168,37 @@ class ShallowWrapper {
     const adapter = getAdapter(options);
     const lifecycles = getAdapterLifecycles(adapter);
 
-    let instance;
+    let renderedNode;
     if (!root) {
       privateSet(this, ROOT, this);
       privateSet(this, UNRENDERED, nodes);
       const renderer = adapter.createRenderer({ mode: 'shallow', ...options });
       privateSet(this, RENDERER, renderer);
       this[RENDERER].render(nodes, options.context);
-      ({ instance } = this[RENDERER].getNode());
-      privateSetNodes(this, getRootNode(this[RENDERER].getNode()));
+      renderedNode = this[RENDERER].getNode();
+      privateSetNodes(this, getRootNode(renderedNode));
     } else {
       privateSet(this, ROOT, root);
       privateSet(this, UNRENDERED, null);
       privateSet(this, RENDERER, root[RENDERER]);
       privateSetNodes(this, nodes);
+      renderedNode = this[RENDERER].getNode();
     }
     privateSet(this, OPTIONS, root ? root[OPTIONS] : options);
 
-    if (!instance) {
-      ({ instance } = this[RENDERER].getNode());
-    }
-    // Ensure to call componentDidUpdate when instance.setState is called
-    if (instance && lifecycles.componentDidUpdate.onSetState && !instance[SET_STATE]) {
-      privateSet(instance, SET_STATE, instance.setState);
-      instance.setState = (...args) => this.setState(...args);
-    }
+    const { instance } = renderedNode;
+    if (instance && !options.disableLifecycleMethods) {
+      // Ensure to call componentDidUpdate when instance.setState is called
+      if (lifecycles.componentDidUpdate.onSetState && !instance[SET_STATE]) {
+        privateSet(instance, SET_STATE, instance.setState);
+        instance.setState = (...args) => this.setState(...args);
+      }
 
-    if (
-      !options.disableLifecycleMethods
-      && instance
-      && typeof instance.componentDidMount === 'function'
-    ) {
-      this[RENDERER].batchedUpdates(() => {
-        instance.componentDidMount();
-      });
+      if (typeof instance.componentDidMount === 'function') {
+        this[RENDERER].batchedUpdates(() => {
+          instance.componentDidMount();
+        });
+      }
     }
   }
 
