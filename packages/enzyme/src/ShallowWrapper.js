@@ -176,15 +176,6 @@ class ShallowWrapper {
       privateSet(this, RENDERER, renderer);
       this[RENDERER].render(nodes, options.context);
       ({ instance } = this[RENDERER].getNode());
-      if (
-        !options.disableLifecycleMethods
-        && instance
-        && typeof instance.componentDidMount === 'function'
-      ) {
-        this[RENDERER].batchedUpdates(() => {
-          instance.componentDidMount();
-        });
-      }
       privateSetNodes(this, getRootNode(this[RENDERER].getNode()));
     } else {
       privateSet(this, ROOT, root);
@@ -201,6 +192,16 @@ class ShallowWrapper {
     if (instance && lifecycles.componentDidUpdate.onSetState && !instance[SET_STATE]) {
       privateSet(instance, SET_STATE, instance.setState);
       instance.setState = (...args) => this.setState(...args);
+    }
+
+    if (
+      !options.disableLifecycleMethods
+      && instance
+      && typeof instance.componentDidMount === 'function'
+    ) {
+      this[RENDERER].batchedUpdates(() => {
+        instance.componentDidMount();
+      });
     }
   }
 
