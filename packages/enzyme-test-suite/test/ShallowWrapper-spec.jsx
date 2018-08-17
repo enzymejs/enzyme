@@ -4921,6 +4921,36 @@ describe('shallow', () => {
         expect(spy).to.have.property('callCount', 1);
         expect(wrapper.state('foo')).to.equal('update');
       });
+
+      it('should not call `componentDidMount` twice when a child component is created', () => {
+        class Foo extends React.Component {
+          constructor(props) {
+            super(props);
+            this.state = {
+              foo: 'init',
+            };
+          }
+
+          componentDidMount() {}
+
+          render() {
+            return (
+              <div>
+                <button onClick={() => this.setState({ foo: 'update2' })}>
+                  click
+                </button>
+                {this.state.foo}
+              </div>
+            );
+          }
+        }
+        const spy = sinon.spy(Foo.prototype, 'componentDidMount');
+
+        const wrapper = shallow(<Foo />);
+        expect(spy).to.have.property('callCount', 1);
+        wrapper.find('button').prop('onClick')();
+        expect(spy).to.have.property('callCount', 1);
+      });
     });
 
     describeIf(is('>= 16'), 'support getSnapshotBeforeUpdate', () => {
@@ -4979,6 +5009,36 @@ describe('shallow', () => {
       }
       shallow(<Foo />, { disableLifecycleMethods: true });
       expect(spy).to.have.property('callCount', 0);
+    });
+
+    it('should be able to call `componentDidMount` directly when disableLifecycleMethods is true', () => {
+      class Table extends React.Component {
+        render() {
+          return (<table />);
+        }
+      }
+
+      class MyComponent extends React.Component {
+        constructor(props) {
+          super(props);
+          this.state = {
+            showTable: false,
+          };
+        }
+
+        componentDidMount() {
+          this.setState({ showTable: true });
+        }
+
+        render() {
+          const { showTable } = this.state;
+          return (<div>{showTable ? <Table /> : null}</div>);
+        }
+      }
+      const wrapper = shallow(<MyComponent />, { disableLifecycleMethods: true });
+      expect(wrapper.find(Table).length).to.equal(0);
+      wrapper.instance().componentDidMount();
+      expect(wrapper.find(Table).length).to.equal(1);
     });
 
     it('should call shouldComponentUpdate when disableLifecycleMethods flag is true', () => {

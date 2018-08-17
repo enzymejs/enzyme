@@ -5111,5 +5111,35 @@ describeWithDOM('mount', () => {
       expect(spy).to.have.property('callCount', 1);
       expect(wrapper.state('foo')).to.equal('update');
     });
+
+    it('should not call `componentDidMount` twice when a child component is created', () => {
+      class Foo extends React.Component {
+        constructor(props) {
+          super(props);
+          this.state = {
+            foo: 'init',
+          };
+        }
+
+        componentDidMount() {}
+
+        render() {
+          return (
+            <div>
+              <button onClick={() => this.setState({ foo: 'update2' })}>
+                click
+              </button>
+              {this.state.foo}
+            </div>
+          );
+        }
+      }
+      const spy = sinon.spy(Foo.prototype, 'componentDidMount');
+
+      const wrapper = mount(<Foo />);
+      expect(spy).to.have.property('callCount', 1);
+      wrapper.find('button').prop('onClick')();
+      expect(spy).to.have.property('callCount', 1);
+    });
   });
 });
