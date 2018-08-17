@@ -163,38 +163,43 @@ function privateSetNodes(wrapper, nodes) {
 class ShallowWrapper {
   constructor(nodes, root, passedOptions = {}) {
     validateOptions(passedOptions);
+
     const options = makeOptions(passedOptions);
+    const adapter = getAdapter(options);
+    const lifecycles = getAdapterLifecycles(adapter);
+
+    let renderedNode;
     if (!root) {
       privateSet(this, ROOT, this);
       privateSet(this, UNRENDERED, nodes);
-      const renderer = getAdapter(options).createRenderer({ mode: 'shallow', ...options });
+      const renderer = adapter.createRenderer({ mode: 'shallow', ...options });
       privateSet(this, RENDERER, renderer);
       this[RENDERER].render(nodes, options.context);
-      const { instance } = this[RENDERER].getNode();
-      const adapter = getAdapter(this[OPTIONS]);
-      const lifecycles = getAdapterLifecycles(adapter);
-      // Ensure to call componentDidUpdate when instance.setState is called
-      if (instance && lifecycles.componentDidUpdate.onSetState && !instance[SET_STATE]) {
-        privateSet(instance, SET_STATE, instance.setState);
-        instance.setState = (...args) => this.setState(...args);
-      }
-      if (
-        !options.disableLifecycleMethods
-        && instance
-        && typeof instance.componentDidMount === 'function'
-      ) {
-        this[RENDERER].batchedUpdates(() => {
-          instance.componentDidMount();
-        });
-      }
-      privateSetNodes(this, getRootNode(this[RENDERER].getNode()));
+      renderedNode = this[RENDERER].getNode();
+      privateSetNodes(this, getRootNode(renderedNode));
     } else {
       privateSet(this, ROOT, root);
       privateSet(this, UNRENDERED, null);
       privateSet(this, RENDERER, root[RENDERER]);
       privateSetNodes(this, nodes);
+      renderedNode = this[RENDERER].getNode();
     }
     privateSet(this, OPTIONS, root ? root[OPTIONS] : options);
+
+    const { instance } = renderedNode;
+    if (instance && !options.disableLifecycleMethods) {
+      // Ensure to call componentDidUpdate when instance.setState is called
+      if (lifecycles.componentDidUpdate.onSetState && !instance[SET_STATE]) {
+        privateSet(instance, SET_STATE, instance.setState);
+        instance.setState = (...args) => this.setState(...args);
+      }
+
+      if (typeof instance.componentDidMount === 'function') {
+        this[RENDERER].batchedUpdates(() => {
+          instance.componentDidMount();
+        });
+      }
+    }
   }
 
   /**

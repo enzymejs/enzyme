@@ -2187,6 +2187,34 @@ describeWithDOM('mount', () => {
       });
     });
 
+    describeIf(is('> 0.13'), 'stateless function components', () => {
+      it('should throw when trying to access state', () => {
+        const Foo = () => (
+          <div>abc</div>
+        );
+
+        const wrapper = mount(<Foo />);
+
+        expect(() => wrapper.state()).to.throw(
+          Error,
+          'ReactWrapper::state() can only be called on class components',
+        );
+      });
+
+      it('should throw when trying to set state', () => {
+        const Foo = () => (
+          <div>abc</div>
+        );
+
+        const wrapper = mount(<Foo />);
+
+        expect(() => wrapper.setState({ a: 1 })).to.throw(
+          Error,
+          'ReactWrapper::setState() can only be called on class components',
+        );
+      });
+    });
+
     it('should throw error when cb is not a function', () => {
       class Foo extends React.Component {
         constructor(props) {
@@ -2203,6 +2231,31 @@ describeWithDOM('mount', () => {
       const wrapper = mount(<Foo />);
       expect(wrapper.state()).to.eql({ id: 'foo' });
       expect(() => wrapper.setState({ id: 'bar' }, 1)).to.throw(Error);
+    });
+
+    it('should preserve the receiver', () => {
+      class Comp extends React.Component {
+        constructor(...args) {
+          super(...args);
+
+          this.state = {
+            key: '',
+          };
+
+          this.instanceFunction = () => this.setState(() => ({ key: 'value' }));
+        }
+
+        componentDidMount() {
+          this.instanceFunction();
+        }
+
+        render() {
+          const { key } = this.state;
+          return key ? null : null;
+        }
+      }
+
+      expect(mount(<Comp />).debug()).to.equal('<Comp />');
     });
   });
 
@@ -5030,6 +5083,33 @@ describeWithDOM('mount', () => {
       wrapper.find('button').prop('onClick')();
       expect(wrapper.state('foo')).to.equal('onChange update');
       expect(spy).to.have.property('callCount', 1);
+    });
+
+    it('should call `componentDidUpdate` when component’s `setState` is called', () => {
+      class Foo extends React.Component {
+        constructor(props) {
+          super(props);
+          this.state = {
+            foo: 'init',
+          };
+          this.update = () => this.setState({ foo: 'update' });
+        }
+
+        componentDidMount() {
+          this.update();
+        }
+
+        componentDidUpdate() {}
+
+        render() {
+          return <div>{this.state.foo}</div>;
+        }
+      }
+      const spy = sinon.spy(Foo.prototype, 'componentDidUpdate');
+
+      const wrapper = mount(<Foo />);
+      expect(spy).to.have.property('callCount', 1);
+      expect(wrapper.state('foo')).to.equal('update');
     });
   });
 });
