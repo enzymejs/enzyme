@@ -1,5 +1,10 @@
 # Change Log
 
+## 3.4.4
+
+### Fixes
+- @koba04: `shallow`: fix unexpected call to componentDidMount ([#1768](https://github.com/airbnb/enzyme/pull/1768))
+
 ## 3.4.3
 
 ### Fixes
