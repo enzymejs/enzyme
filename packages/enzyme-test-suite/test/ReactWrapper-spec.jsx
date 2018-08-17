@@ -5169,5 +5169,32 @@ describeWithDOM('mount', () => {
       expect(wrapper.state('foo')).to.equal('onChange update');
       expect(spy).to.have.property('callCount', 1);
     });
+
+    it('should call `componentDidUpdate` when component’s `setState` is called', () => {
+      class Foo extends React.Component {
+        constructor(props) {
+          super(props);
+          this.state = {
+            foo: 'init',
+          };
+          this.update = () => this.setState({ foo: 'update' });
+        }
+
+        componentDidMount() {
+          this.update();
+        }
+
+        componentDidUpdate() {}
+
+        render() {
+          return <div>{this.state.foo}</div>;
+        }
+      }
+      const spy = sinon.spy(Foo.prototype, 'componentDidUpdate');
+
+      const wrapper = mount(<Foo />);
+      expect(spy).to.have.property('callCount', 1);
+      expect(wrapper.state('foo')).to.equal('update');
+    });
   });
 });
