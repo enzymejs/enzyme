@@ -168,37 +168,38 @@ class ShallowWrapper {
     const adapter = getAdapter(options);
     const lifecycles = getAdapterLifecycles(adapter);
 
-    let renderedNode;
+    // mounting a ShallowRender component
     if (!root) {
       privateSet(this, ROOT, this);
       privateSet(this, UNRENDERED, nodes);
       const renderer = adapter.createRenderer({ mode: 'shallow', ...options });
       privateSet(this, RENDERER, renderer);
       this[RENDERER].render(nodes, options.context);
-      renderedNode = this[RENDERER].getNode();
+      const renderedNode = this[RENDERER].getNode();
       privateSetNodes(this, getRootNode(renderedNode));
+      privateSet(this, OPTIONS, options);
+
+      const { instance } = renderedNode;
+      if (instance && !options.disableLifecycleMethods) {
+        // Ensure to call componentDidUpdate when instance.setState is called
+        if (lifecycles.componentDidUpdate.onSetState && !instance[SET_STATE]) {
+          privateSet(instance, SET_STATE, instance.setState);
+          instance.setState = (...args) => this.setState(...args);
+        }
+
+        if (typeof instance.componentDidMount === 'function') {
+          this[RENDERER].batchedUpdates(() => {
+            instance.componentDidMount();
+          });
+        }
+      }
+    // creating a child component through enzyme's ShallowWrapper APIs.
     } else {
       privateSet(this, ROOT, root);
       privateSet(this, UNRENDERED, null);
       privateSet(this, RENDERER, root[RENDERER]);
       privateSetNodes(this, nodes);
-      renderedNode = this[RENDERER].getNode();
-    }
-    privateSet(this, OPTIONS, root ? root[OPTIONS] : options);
-
-    const { instance } = renderedNode;
-    if (instance && !options.disableLifecycleMethods) {
-      // Ensure to call componentDidUpdate when instance.setState is called
-      if (lifecycles.componentDidUpdate.onSetState && !instance[SET_STATE]) {
-        privateSet(instance, SET_STATE, instance.setState);
-        instance.setState = (...args) => this.setState(...args);
-      }
-
-      if (typeof instance.componentDidMount === 'function') {
-        this[RENDERER].batchedUpdates(() => {
-          instance.componentDidMount();
-        });
-      }
+      privateSet(this, OPTIONS, root[OPTIONS]);
     }
   }
 
