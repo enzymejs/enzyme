@@ -1,5 +1,13 @@
 # Change Log
 
+## 3.4.3
+
+### Fixes
+- @ljharb/@koba04: `shallow`: `.setState()`: stub out `setState` on non-root code paths as well ([#1763](https://github.com/airbnb/enzyme/pull/1763))
+- @ljharb: `shallow`/`mount`: restore fallback when adapter lacks `invokeSetStateCallback` ([commit](https://github.com/airbnb/enzyme/commit/093b2edb98d3abfe6b61d800503e04aac08e7496))
+- @ljharb: `mount`: `setState`: invoke callback with the proper receiver ([commit](https://github.com/airbnb/enzyme/commit/ec3beef3ba86c4352fe6e9ab2848b3b4f61ac1da))
+- @ljharb: `mount`: `state` and `setState` should throw an explicit error message when called on an SFC ([commit](https://github.com/airbnb/enzyme/commit/8feee5a89e9091636e9ec0ec3814d287ced20136))
+
 ## 3.4.2
 
 ### Fixes
