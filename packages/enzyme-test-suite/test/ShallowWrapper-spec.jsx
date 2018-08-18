@@ -1165,11 +1165,12 @@ describe('shallow', () => {
       });
 
       itIf(is('>= 16'), 'should find portals by name', () => {
+        const containerDiv = { nodeType: 1 };
         const Foo = () => (
           <div>
             {createPortal(
               <div className="in-portal">InPortal</div>,
-              { nodeType: 1 },
+              containerDiv,
             )}
           </div>
         );
@@ -1180,6 +1181,7 @@ describe('shallow', () => {
       });
 
       itIf(is('>= 16'), 'should find elements through portals', () => {
+        const containerDiv = { nodeType: 1 };
         const Foo = () => (
           <div>
             {createPortal(
@@ -1187,7 +1189,7 @@ describe('shallow', () => {
                 <h1>Successful Portal!</h1>
                 <span />
               </div>,
-              { nodeType: 1 },
+              containerDiv,
             )}
           </div>
         );
@@ -1495,11 +1497,12 @@ describe('shallow', () => {
     });
 
     itIf(is('>= 16'), 'should find portals by react-is Portal type', () => {
+      const containerDiv = { nodeType: 1 };
       const Foo = () => (
         <div>
           {createPortal(
             <div className="in-portal">InPortal</div>,
-            { nodeType: 1 },
+            containerDiv,
           )}
         </div>
       );

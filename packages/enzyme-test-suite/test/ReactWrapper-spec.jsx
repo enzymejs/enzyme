@@ -1096,32 +1096,6 @@ describeWithDOM('mount', () => {
         expect(wrapper).to.have.lengthOf(2);
       });
 
-      itIf(is('>= 16'), 'should find elements through portals', () => {
-        const containerDiv = global.document.createElement('div');
-        class FooPortal extends React.Component {
-          render() {
-            return createPortal(
-              this.props.children,
-              containerDiv,
-            );
-          }
-        }
-
-
-        const wrapper = mount((
-          <FooPortal>
-            <h1>Successful Portal!</h1>
-            <span />
-          </FooPortal>
-        ));
-
-        expect(wrapper.find('h1')).to.have.lengthOf(1);
-
-        expect(wrapper.find('span')).to.have.lengthOf(1);
-
-        expect(containerDiv.querySelectorAll('h1')).to.have.lengthOf(1);
-      });
-
       it('should support object property selectors', () => {
         const wrapper = mount((
           <div>
@@ -1199,23 +1173,6 @@ describeWithDOM('mount', () => {
         expect(wrapper.find('[data-foo="bar baz"]')).to.have.lengthOf(0);
         expect(wrapper.find('[data-foo="foo  bar"]')).to.have.lengthOf(0);
         expect(wrapper.find('[data-foo="bar  baz quz"]')).to.have.lengthOf(0);
-      });
-
-      itIf(is('>= 16'), 'should find elements through portals', () => {
-        const containerDiv = global.document.createElement('div');
-
-        class FooPortal extends React.Component {
-          render() {
-            return createPortal(
-              this.props.children,
-              containerDiv,
-            );
-          }
-        }
-
-        const wrapper = mount(<FooPortal><h1>Successful Portal!</h1></FooPortal>);
-        expect(wrapper.find('h1')).to.have.lengthOf(1);
-        expect(containerDiv.querySelectorAll('h1')).to.have.lengthOf(1);
       });
 
       describeIf(is('> 0.13'), 'stateless function components', () => {
@@ -1361,7 +1318,7 @@ describeWithDOM('mount', () => {
         });
       });
 
-      itIf(is('>= 16'), 'should find mounted portals by name', () => {
+      itIf(is('>= 16'), 'should find portals by name', () => {
         const containerDiv = global.document.createElement('div');
         const Foo = () => (
           <div>
@@ -1373,11 +1330,33 @@ describeWithDOM('mount', () => {
         );
 
         const wrapper = mount(<Foo />);
-        expect(wrapper.find('Portal').debug()).to.equal(`<Portal containerInfo={{...}}>
-  <div className="in-portal">
-    InPortal
-  </div>
-</Portal>`);
+
+        expect(wrapper.find('Portal')).to.have.lengthOf(1);
+      });
+
+      itIf(is('>= 16'), 'should find elements through portals', () => {
+        const containerDiv = global.document.createElement('div');
+        class FooPortal extends React.Component {
+          render() {
+            return createPortal(
+              this.props.children,
+              containerDiv,
+            );
+          }
+        }
+
+        const wrapper = mount((
+          <FooPortal>
+            <h1>Successful Portal!</h1>
+            <span />
+          </FooPortal>
+        ));
+
+        expect(wrapper.find('h1')).to.have.lengthOf(1);
+
+        expect(wrapper.find('span')).to.have.lengthOf(1);
+
+        expect(containerDiv.querySelectorAll('h1')).to.have.lengthOf(1);
       });
     });
 
@@ -1702,7 +1681,7 @@ describeWithDOM('mount', () => {
       expect(spy).to.have.property('callCount', 2);
     });
 
-    itIf(is('>= 16'), 'should find mounted portals by react-is Portal type', () => {
+    itIf(is('>= 16'), 'should find portals by react-is Portal type', () => {
       const containerDiv = global.document.createElement('div');
       const Foo = () => (
         <div>
@@ -1714,12 +1693,8 @@ describeWithDOM('mount', () => {
       );
 
       const wrapper = mount(<Foo />);
-      expect(wrapper.findWhere(node => node.type() === Portal).debug())
-        .to.equal(`<Portal containerInfo={{...}}>
-  <div className="in-portal">
-    InPortal
-  </div>
-</Portal>`);
+
+      expect(wrapper.findWhere(node => node.type() === Portal)).to.have.lengthOf(1);
     });
   });
 
