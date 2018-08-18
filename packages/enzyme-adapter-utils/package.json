@@ -36,8 +36,7 @@
   "dependencies": {
     "function.prototype.name": "^1.1.0",
     "object.assign": "^4.1.0",
-    "prop-types": "^15.6.2",
-    "react-is": "^16.4.2"
+    "prop-types": "^15.6.2"
   },
   "peerDependencies": {
     "react": "0.13.x || 0.14.x || ^15.0.0-0 || ^16.0.0-0"

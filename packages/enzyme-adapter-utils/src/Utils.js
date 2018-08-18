@@ -1,7 +1,4 @@
 import functionName from 'function.prototype.name';
-import {
-  Portal,
-} from 'react-is';
 import createMountWrapper from './createMountWrapper';
 import createRenderWrapper from './createRenderWrapper';
 
@@ -110,10 +107,6 @@ export function displayNameOfNode(node) {
 
   if (!type) return null;
 
-  if (type === Portal) {
-    return 'Portal';
-  }
-
   return type.displayName || (typeof type === 'function' ? functionName(type) : type.name || type);
 }
 
@@ -123,9 +116,6 @@ export function nodeTypeFromType(type) {
   }
   if (type && type.prototype && type.prototype.isReactComponent) {
     return 'class';
-  }
-  if (type && type === Portal) {
-    return 'portal';
   }
   return 'function';
 }
