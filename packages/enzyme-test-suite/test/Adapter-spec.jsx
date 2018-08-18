@@ -3,6 +3,7 @@ import { expect } from 'chai';
 import jsdom from 'jsdom';
 import { get } from 'enzyme/build/configuration';
 import { configure, shallow } from 'enzyme';
+import inspect from 'object-inspect';
 
 import './_helpers/setupAdapters';
 import Adapter from './_helpers/adapter';
@@ -21,7 +22,7 @@ import { itIf, describeWithDOM, describeIf } from './_helpers';
 
 const { adapter } = get();
 
-const prettyFormat = o => JSON.stringify(o, null, 2);
+const prettyFormat = x => inspect(x).replace(/,/g, ',\n');
 
 // Kind of hacky, but we nullify all the instances to test the tree structure
 // with jasmine's deep equality function, and test the instances separate. We
@@ -154,12 +155,14 @@ describe('Adapter', () => {
         nodeType: 'class',
         type: Foo,
         props: {},
+        key: undefined,
         ref: null,
         instance: null,
         rendered: {
           nodeType: 'host',
           type: 'div',
           props: {},
+          key: undefined,
           ref: null,
           instance: null,
           rendered: [
@@ -191,6 +194,7 @@ describe('Adapter', () => {
         nodeType: 'class',
         type: Foo,
         props: {},
+        key: undefined,
         ref: null,
         instance: null,
         rendered: null,
@@ -218,12 +222,14 @@ describe('Adapter', () => {
         nodeType: 'function',
         type: Foo,
         props: {},
+        key: undefined,
         ref: null,
         instance: null,
         rendered: {
           nodeType: 'host',
           type: 'div',
           props: { className: 'Foo' },
+          key: undefined,
           ref: null,
           instance: null,
           rendered: ['Hello World!'],
@@ -247,12 +253,14 @@ describe('Adapter', () => {
         nodeType: 'function',
         type: Qoo,
         props: {},
+        key: undefined,
         ref: null,
         instance: null,
         rendered: {
           nodeType: 'host',
           type: 'span',
           props: { className: 'Qoo' },
+          key: undefined,
           ref: null,
           instance: null,
           rendered: ['Hello World!'],
@@ -282,12 +290,14 @@ describe('Adapter', () => {
         nodeType: 'class',
         type: Qoo,
         props: {},
+        key: undefined,
         ref: null,
         instance: null,
         rendered: {
           nodeType: 'host',
           type: 'span',
           props: { className: 'Qoo' },
+          key: undefined,
           ref: null,
           instance: null,
           rendered: ['Hello World!'],
@@ -317,6 +327,7 @@ describe('Adapter', () => {
         nodeType: 'class',
         type: Foo,
         props: {},
+        key: undefined,
         ref: null,
         instance: null,
         rendered: null,
@@ -376,24 +387,28 @@ describe('Adapter', () => {
         nodeType: 'class',
         type: Bam,
         props: {},
+        key: undefined,
         ref: null,
         instance: null,
         rendered: {
           nodeType: 'class',
           type: Bar,
           props: { special: true },
+          key: undefined,
           ref: null,
           instance: null,
           rendered: {
             nodeType: 'function',
             type: Foo,
             props: { className: 'special' },
+            key: undefined,
             ref: null,
             instance: null,
             rendered: {
               nodeType: 'host',
               type: 'div',
               props: { className: 'Foo special' },
+              key: undefined,
               ref: null,
               instance: null,
               rendered: [
@@ -401,6 +416,7 @@ describe('Adapter', () => {
                   nodeType: 'host',
                   type: 'span',
                   props: { className: 'Foo2' },
+                  key: undefined,
                   ref: null,
                   instance: null,
                   rendered: ['Literal'],
@@ -409,12 +425,14 @@ describe('Adapter', () => {
                   nodeType: 'function',
                   type: Qoo,
                   props: {},
+                  key: undefined,
                   ref: null,
                   instance: null,
                   rendered: {
                     nodeType: 'host',
                     type: 'span',
                     props: { className: 'Qoo' },
+                    key: undefined,
                     ref: null,
                     instance: null,
                     rendered: ['Hello World!'],
@@ -489,24 +507,28 @@ describe('Adapter', () => {
         nodeType: 'class',
         type: Bam,
         props: {},
+        key: undefined,
         ref: null,
         instance: null,
         rendered: {
           nodeType: 'class',
           type: Bar,
           props: { special: true },
+          key: undefined,
           ref: null,
           instance: null,
           rendered: {
             nodeType: 'class',
             type: Foo,
             props: { className: 'special' },
+            key: undefined,
             ref: null,
             instance: null,
             rendered: {
               nodeType: 'host',
               type: 'div',
               props: { className: 'Foo special' },
+              key: undefined,
               ref: null,
               instance: null,
               rendered: [
@@ -514,6 +536,7 @@ describe('Adapter', () => {
                   nodeType: 'host',
                   type: 'span',
                   props: { className: 'Foo2' },
+                  key: undefined,
                   ref: null,
                   instance: null,
                   rendered: ['Literal'],
@@ -522,12 +545,14 @@ describe('Adapter', () => {
                   nodeType: 'class',
                   type: Qoo,
                   props: {},
+                  key: undefined,
                   ref: null,
                   instance: null,
                   rendered: {
                     nodeType: 'host',
                     type: 'span',
                     props: { className: 'Qoo' },
+                    key: undefined,
                     ref: null,
                     instance: null,
                     rendered: ['Hello World!'],
@@ -624,12 +649,14 @@ describe('Adapter', () => {
       nodeType: 'class',
       type: Bam,
       props: {},
+      key: undefined,
       ref: null,
       instance: null,
       rendered: {
         nodeType: 'class',
         type: Bar,
         props: {},
+        key: undefined,
         ref: null,
         instance: null,
         rendered: [
@@ -637,6 +664,7 @@ describe('Adapter', () => {
             nodeType: 'class',
             type: Foo,
             props: {},
+            key: undefined,
             ref: null,
             instance: null,
             rendered: null,
@@ -645,6 +673,7 @@ describe('Adapter', () => {
             nodeType: 'class',
             type: Foo,
             props: {},
+            key: undefined,
             ref: null,
             instance: null,
             rendered: null,
@@ -653,6 +682,7 @@ describe('Adapter', () => {
             nodeType: 'class',
             type: Foo,
             props: {},
+            key: undefined,
             ref: null,
             instance: null,
             rendered: null,
@@ -703,13 +733,15 @@ describe('Adapter', () => {
       nodeType: 'class',
       type: Outer,
       props: {},
+      key: undefined,
       ref: null,
       instance: null,
       rendered: {
         nodeType: 'class',
         type: Inner,
         props: {},
-        // pretty print removes ref because it is a function
+        key: undefined,
+        ref: tree.rendered.ref, // prettyFormat loses the reference to "ref"
         instance: null,
         rendered: null,
       },
@@ -748,6 +780,7 @@ describe('Adapter', () => {
       nodeType: 'class',
       type: Outer,
       props: {},
+      key: undefined,
       ref: null,
       instance: null,
       rendered: {
@@ -794,6 +827,7 @@ describe('Adapter', () => {
       nodeType: 'class',
       type: Outer,
       props: {},
+      key: undefined,
       ref: null,
       instance: null,
       rendered: {
