@@ -23,7 +23,7 @@ export default function elementToTree(el) {
   const { children } = props;
   let rendered = null;
   if (isArrayLike(children)) {
-    rendered = flatten([...children]).map(el => elementToTree(el));
+    rendered = flatten([...children]).map(elementToTree);
   } else if (typeof children !== 'undefined') {
     rendered = elementToTree(children);
   }

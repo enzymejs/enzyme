@@ -181,6 +181,10 @@ export function ensureKeyOrUndefined(key) {
 }
 
 export function elementToTree(el, recurse = elementToTree) {
+  if (typeof recurse !== 'function' && arguments.length === 3) {
+    // special case for backwards compat for `.map(elementToTree)`
+    recurse = elementToTree; // eslint-disable-line no-param-reassign
+  }
   if (el === null || typeof el !== 'object' || !('type' in el)) {
     return el;
   }
