@@ -444,7 +444,7 @@ describeWithDOM('mount', () => {
       const wrapper = mount(<Foo />);
       expect(wrapper.debug()).to.equal(`<Foo>
   <div>
-    <Portal>
+    <Portal containerInfo={{...}}>
       <div className="in-portal">
         InPortal
       </div>
@@ -453,8 +453,9 @@ describeWithDOM('mount', () => {
 </Foo>`);
     });
 
-    it('should show portal container in shallow debug tree', () => {
+    it('should show portal container in debug tree', () => {
       const containerDiv = global.document.createElement('div');
+      containerDiv.setAttribute('data-foo', 'bar');
       const Foo = () => (
         <div className="foo">
           {createPortal(
@@ -467,7 +468,7 @@ describeWithDOM('mount', () => {
       const wrapper = mount(<Foo />);
       expect(wrapper.debug({ verbose: true })).to.equal(`<Foo>
   <div className="foo">
-    <Portal>
+    <Portal containerInfo={<div data-foo="bar">...</div>}>
       <div className="in-portal">
         InPortal
       </div>
@@ -496,7 +497,7 @@ describeWithDOM('mount', () => {
       const wrapper = mount(<Foo />);
       expect(wrapper.debug()).to.equal(`<Foo>
   <div className="foo">
-    <Portal>
+    <Portal containerInfo={{...}}>
       <div className="in-portal">
         <div className="nested-in-portal">
           <Bar />
@@ -516,7 +517,7 @@ describeWithDOM('mount', () => {
 
       const wrapper = mount(<Foo />);
       expect(wrapper.debug()).to.equal(`<Foo>
-  <Portal>
+  <Portal containerInfo={{...}}>
     <div className="in-portal">
       InPortal
     </div>
@@ -1372,7 +1373,7 @@ describeWithDOM('mount', () => {
         );
 
         const wrapper = mount(<Foo />);
-        expect(wrapper.find('Portal').debug()).to.equal(`<Portal>
+        expect(wrapper.find('Portal').debug()).to.equal(`<Portal containerInfo={{...}}>
   <div className="in-portal">
     InPortal
   </div>
@@ -1714,7 +1715,7 @@ describeWithDOM('mount', () => {
 
       const wrapper = mount(<Foo />);
       expect(wrapper.findWhere(node => node.type() === Portal).debug())
-        .to.equal(`<Portal>
+        .to.equal(`<Portal containerInfo={{...}}>
   <div className="in-portal">
     InPortal
   </div>

@@ -231,7 +231,9 @@ describe('Adapter', () => {
         rendered: {
           nodeType: 'portal',
           type: Portal,
-          props: {},
+          props: {
+            containerInfo: document.body,
+          },
           key: undefined,
           ref: null,
           instance: null,
