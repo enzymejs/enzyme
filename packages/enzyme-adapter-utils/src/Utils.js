@@ -180,7 +180,11 @@ export function ensureKeyOrUndefined(key) {
   return key || (key === '' ? '' : undefined);
 }
 
-export function elementToTree(el) {
+export function elementToTree(el, recurse = elementToTree) {
+  if (typeof recurse !== 'function' && arguments.length === 3) {
+    // special case for backwards compat for `.map(elementToTree)`
+    recurse = elementToTree; // eslint-disable-line no-param-reassign
+  }
   if (el === null || typeof el !== 'object' || !('type' in el)) {
     return el;
   }
@@ -193,9 +197,9 @@ export function elementToTree(el) {
   const { children } = props;
   let rendered = null;
   if (isArrayLike(children)) {
-    rendered = flatten(children).map(elementToTree);
+    rendered = flatten(children).map(x => recurse(x));
   } else if (typeof children !== 'undefined') {
-    rendered = elementToTree(children);
+    rendered = recurse(children);
   }
   return {
     nodeType: nodeTypeFromType(type),

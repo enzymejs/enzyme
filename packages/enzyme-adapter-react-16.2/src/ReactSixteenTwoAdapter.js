@@ -9,6 +9,7 @@ import ShallowRenderer from 'react-test-renderer/shallow';
 import TestUtils from 'react-dom/test-utils';
 import {
   isElement,
+  isPortal,
   isValidElementType,
   Fragment,
   Portal,
@@ -17,8 +18,8 @@ import { EnzymeAdapter } from 'enzyme';
 import { typeOfNode } from 'enzyme/build/Utils';
 import {
   displayNameOfNode,
-  elementToTree,
-  nodeTypeFromType,
+  elementToTree as utilElementToTree,
+  nodeTypeFromType as utilNodeTypeFromType,
   mapNativeEventNames,
   propFromEvent,
   assertDomAvailable,
@@ -71,6 +72,33 @@ function flatten(arr) {
     }
   }
   return result;
+}
+
+function nodeTypeFromType(type) {
+  if (type === Portal) {
+    return 'portal';
+  }
+
+  return utilNodeTypeFromType(type);
+}
+
+function elementToTree(el) {
+  if (!isPortal(el)) {
+    return utilElementToTree(el, elementToTree);
+  }
+
+  const { children, containerInfo } = el;
+  const props = { children, containerInfo };
+
+  return {
+    nodeType: 'portal',
+    type: Portal,
+    props,
+    key: ensureKeyOrUndefined(el.key),
+    ref: el.ref,
+    instance: null,
+    rendered: elementToTree(el.children),
+  };
 }
 
 function toTree(vnode) {
@@ -282,7 +310,7 @@ class ReactSixteenTwoAdapter extends EnzymeAdapter {
           ref: cachedNode.ref,
           instance: renderer._instance,
           rendered: Array.isArray(output)
-            ? flatten(output).map(elementToTree)
+            ? flatten(output).map(el => elementToTree(el))
             : elementToTree(output),
         };
       },
