@@ -100,7 +100,7 @@ function elementToTree(el) {
     type: Portal,
     props,
     key: ensureKeyOrUndefined(el.key),
-    ref: el.ref,
+    ref: el.ref || null,
     instance: null,
     rendered: elementToTree(el.children),
   };
@@ -118,8 +118,11 @@ function toTree(vnode) {
     case HostRoot: // 3
       return childrenToTree(node.child);
     case HostPortal: { // 4
-      const { stateNode: { containerInfo } } = node;
-      const props = { containerInfo };
+      const {
+        stateNode: { containerInfo },
+        memoizedProps: children,
+      } = node;
+      const props = { containerInfo, children };
       return {
         nodeType: 'portal',
         type: Portal,

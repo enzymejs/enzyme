@@ -208,9 +208,10 @@ describe('Adapter', () => {
       const document = jsdom.jsdom();
       const options = { mode: 'mount' };
       const renderer = adapter.createRenderer(options);
+      const innerDiv = <div className="Foo">Hello World!</div>;
       const Foo = () => (
         createPortal(
-          <div className="Foo">Hello World!</div>,
+          innerDiv,
           document.body,
         )
       );
@@ -218,6 +219,9 @@ describe('Adapter', () => {
       renderer.render(<Foo />);
 
       const node = renderer.getNode();
+
+      const { rendered: { props: { children } } } = node;
+      expect(children).to.equal(innerDiv);
 
       cleanNode(node);
 
@@ -245,6 +249,56 @@ describe('Adapter', () => {
             ref: null,
             instance: null,
             rendered: ['Hello World!'],
+          },
+        },
+      }));
+    });
+
+    itIf(is('>= 16'), 'shallow renders react portals', () => {
+      const options = { mode: 'shallow' };
+      const renderer = adapter.createRenderer(options);
+      const innerDiv = <div className="Foo">Hello World!</div>;
+      const containerDiv = { nodeType: 1 };
+      const Foo = () => (
+        createPortal(
+          innerDiv,
+          containerDiv,
+        )
+      );
+
+      renderer.render(<Foo />);
+
+      const node = renderer.getNode();
+
+      const { rendered: { props: { children } } } = node;
+      expect(children).to.equal(innerDiv);
+
+      cleanNode(node);
+
+      expect(prettyFormat(node)).to.equal(prettyFormat({
+        nodeType: 'function',
+        type: Foo,
+        props: {},
+        key: undefined,
+        ref: null,
+        instance: null,
+        rendered: {
+          nodeType: 'portal',
+          type: Portal,
+          props: {
+            containerInfo: containerDiv,
+          },
+          key: undefined,
+          ref: null,
+          instance: null,
+          rendered: {
+            nodeType: 'host',
+            type: 'div',
+            props: { className: 'Foo' },
+            key: undefined,
+            ref: null,
+            instance: null,
+            rendered: 'Hello World!',
           },
         },
       }));
