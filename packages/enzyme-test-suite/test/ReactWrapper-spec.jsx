@@ -15,6 +15,9 @@ import {
   sym,
 } from 'enzyme/build/Utils';
 import getAdapter from 'enzyme/build/getAdapter';
+import {
+  Portal,
+} from 'react-is';
 
 import './_helpers/setupAdapters';
 import {
@@ -423,6 +426,103 @@ describeWithDOM('mount', () => {
       expect(children.at(0).props().test).to.equal('123');
       expect(wrapper.find(TestItem)).to.have.lengthOf(3);
       expect(wrapper.find(TestItem).first().props().test).to.equal('123');
+    });
+  });
+
+  describeIf(is('>= 16'), 'portals', () => {
+    it('should show portals in mount debug tree', () => {
+      const containerDiv = global.document.createElement('div');
+      const Foo = () => (
+        <div>
+          {createPortal(
+            <div className="in-portal">InPortal</div>,
+            containerDiv,
+          )}
+        </div>
+      );
+
+      const wrapper = mount(<Foo />);
+      expect(wrapper.debug()).to.equal(`<Foo>
+  <div>
+    <Portal containerInfo={{...}}>
+      <div className="in-portal">
+        InPortal
+      </div>
+    </Portal>
+  </div>
+</Foo>`);
+    });
+
+    it('should show portal container in debug tree', () => {
+      const containerDiv = global.document.createElement('div');
+      containerDiv.setAttribute('data-foo', 'bar');
+      const Foo = () => (
+        <div className="foo">
+          {createPortal(
+            <div className="in-portal">InPortal</div>,
+            containerDiv,
+          )}
+        </div>
+      );
+
+      const wrapper = mount(<Foo />);
+      expect(wrapper.debug({ verbose: true })).to.equal(`<Foo>
+  <div className="foo">
+    <Portal containerInfo={<div data-foo="bar">...</div>}>
+      <div className="in-portal">
+        InPortal
+      </div>
+    </Portal>
+  </div>
+</Foo>`);
+    });
+
+    it('should show nested portal children in debug tree', () => {
+      const Bar = () => null;
+
+      const containerDiv = global.document.createElement('div');
+      const Foo = () => (
+        <div className="foo">
+          {createPortal(
+            <div className="in-portal">
+              <div className="nested-in-portal">
+                <Bar />
+              </div>
+            </div>,
+            containerDiv,
+          )}
+        </div>
+      );
+
+      const wrapper = mount(<Foo />);
+      expect(wrapper.debug()).to.equal(`<Foo>
+  <div className="foo">
+    <Portal containerInfo={{...}}>
+      <div className="in-portal">
+        <div className="nested-in-portal">
+          <Bar />
+        </div>
+      </div>
+    </Portal>
+  </div>
+</Foo>`);
+    });
+
+    it('should have top level portals in debug tree', () => {
+      const containerDiv = global.document.createElement('div');
+      const Foo = () => createPortal(
+        <div className="in-portal">InPortal</div>,
+        containerDiv,
+      );
+
+      const wrapper = mount(<Foo />);
+      expect(wrapper.debug()).to.equal(`<Foo>
+  <Portal containerInfo={{...}}>
+    <div className="in-portal">
+      InPortal
+    </div>
+  </Portal>
+</Foo>`);
     });
   });
 
@@ -1260,6 +1360,25 @@ describeWithDOM('mount', () => {
           expect(wrapper.children()).to.have.lengthOf(1);
         });
       });
+
+      itIf(is('>= 16'), 'should find mounted portals by name', () => {
+        const containerDiv = global.document.createElement('div');
+        const Foo = () => (
+          <div>
+            {createPortal(
+              <div className="in-portal">InPortal</div>,
+              containerDiv,
+            )}
+          </div>
+        );
+
+        const wrapper = mount(<Foo />);
+        expect(wrapper.find('Portal').debug()).to.equal(`<Portal containerInfo={{...}}>
+  <div className="in-portal">
+    InPortal
+  </div>
+</Portal>`);
+      });
     });
 
   describe('.findWhere(predicate)', () => {
@@ -1581,6 +1700,26 @@ describeWithDOM('mount', () => {
       const spy = sinon.spy(stub);
       wrapper.findWhere(spy);
       expect(spy).to.have.property('callCount', 2);
+    });
+
+    itIf(is('>= 16'), 'should find mounted portals by react-is Portal type', () => {
+      const containerDiv = global.document.createElement('div');
+      const Foo = () => (
+        <div>
+          {createPortal(
+            <div className="in-portal">InPortal</div>,
+            containerDiv,
+          )}
+        </div>
+      );
+
+      const wrapper = mount(<Foo />);
+      expect(wrapper.findWhere(node => node.type() === Portal).debug())
+        .to.equal(`<Portal containerInfo={{...}}>
+  <div className="in-portal">
+    InPortal
+  </div>
+</Portal>`);
     });
   });
 

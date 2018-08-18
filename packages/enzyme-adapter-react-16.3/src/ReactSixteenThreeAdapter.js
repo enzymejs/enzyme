@@ -118,7 +118,17 @@ function toTree(vnode) {
     case HostRoot: // 3
       return childrenToTree(node.child);
     case HostPortal: { // 4
-      return childrenToTree(node.child);
+      const { stateNode: { containerInfo } } = node;
+      const props = { containerInfo };
+      return {
+        nodeType: 'portal',
+        type: Portal,
+        props,
+        key: ensureKeyOrUndefined(node.key),
+        ref: node.ref,
+        instance: null,
+        rendered: childrenToTree(node.child),
+      };
     }
     case ClassComponent:
       return {

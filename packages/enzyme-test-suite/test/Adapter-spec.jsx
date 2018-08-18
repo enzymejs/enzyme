@@ -4,6 +4,9 @@ import jsdom from 'jsdom';
 import { get } from 'enzyme/build/configuration';
 import { configure, shallow } from 'enzyme';
 import inspect from 'object-inspect';
+import {
+  Portal,
+} from 'react-is';
 
 import './_helpers/setupAdapters';
 import Adapter from './_helpers/adapter';
@@ -226,13 +229,23 @@ describe('Adapter', () => {
         ref: null,
         instance: null,
         rendered: {
-          nodeType: 'host',
-          type: 'div',
-          props: { className: 'Foo' },
+          nodeType: 'portal',
+          type: Portal,
+          props: {
+            containerInfo: document.body,
+          },
           key: undefined,
           ref: null,
           instance: null,
-          rendered: ['Hello World!'],
+          rendered: {
+            nodeType: 'host',
+            type: 'div',
+            props: { className: 'Foo' },
+            key: undefined,
+            ref: null,
+            instance: null,
+            rendered: ['Hello World!'],
+          },
         },
       }));
     });
