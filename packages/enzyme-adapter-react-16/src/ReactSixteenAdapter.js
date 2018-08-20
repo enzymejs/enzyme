@@ -36,7 +36,7 @@ import {
   propsWithKeysAndRef,
   ensureKeyOrUndefined,
 } from 'enzyme-adapter-utils';
-import { findCurrentFiberUsingSlowPath } from 'react-reconciler/reflection';
+import findCurrentFiberUsingSlowPath from './findCurrentFiberUsingSlowPath';
 
 const HostRoot = 3;
 const ClassComponent = 2;
