@@ -40,11 +40,11 @@ class Foo extends React.Component {
 ```
 ```jsx
 const wrapper = mount(<Foo />);
-expect(wrapper.find('.foo')).to.have.length(1);
-expect(wrapper.find('.bar')).to.have.length(0);
+expect(wrapper.find('.foo')).to.have.lengthOf(1);
+expect(wrapper.find('.bar')).to.have.lengthOf(0);
 wrapper.setState({ name: 'bar' });
-expect(wrapper.find('.foo')).to.have.length(0);
-expect(wrapper.find('.bar')).to.have.length(1);
+expect(wrapper.find('.foo')).to.have.lengthOf(0);
+expect(wrapper.find('.bar')).to.have.lengthOf(1);
 ```
 
 

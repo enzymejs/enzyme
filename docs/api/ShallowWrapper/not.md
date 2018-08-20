@@ -22,7 +22,7 @@ This method is effectively the negation or inverse of [`filter`](filter.md).
 
 ```jsx
 const wrapper = shallow(<MyComponent />);
-expect(wrapper.find('.foo').not('.bar')).to.have.length(1);
+expect(wrapper.find('.foo').not('.bar')).to.have.lengthOf(1);
 ```
 
 #### Related Methods

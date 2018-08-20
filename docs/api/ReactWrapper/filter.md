@@ -19,7 +19,7 @@ Returns a new wrapper with only the nodes of the current wrapper that match the 
 
 ```jsx
 const wrapper = mount(<MyComponent />);
-expect(wrapper.find('.foo').filter('.bar')).to.have.length(1);
+expect(wrapper.find('.foo').filter('.bar')).to.have.lengthOf(1);
 ```
 
 #### Related Methods

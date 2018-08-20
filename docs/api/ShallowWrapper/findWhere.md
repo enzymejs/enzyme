@@ -21,7 +21,7 @@ nodes.
 ```jsx
 const wrapper = shallow(<MyComponent />);
 const complexComponents = wrapper.findWhere(n => n.type() !== 'string');
-expect(complexComponents).to.have.length(8);
+expect(complexComponents).to.have.lengthOf(8);
 ```
 
 

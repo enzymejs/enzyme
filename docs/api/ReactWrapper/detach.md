@@ -26,14 +26,14 @@ const wrapper = mount(<Bar />, { attachTo: document.body });
 const hydratedWrapper = mount(<Bar />, { hydrateIn: document.body });
 
 // we can see that the component is rendered into the document
-expect(wrapper.find('.in-bar')).to.have.length(1);
-expect(document.body.childNodes).to.have.length(1);
+expect(wrapper.find('.in-bar')).to.have.lengthOf(1);
+expect(document.body.childNodes).to.have.lengthOf(1);
 
 // detach it to clean up after yourself
 wrapper.detach();
 
 // now we can see that
-expect(document.body.childNodes).to.have.length(0);
+expect(document.body.childNodes).to.have.lengthOf(0);
 ```
 
 Similarly, if you want to create some one-off elements for your test to mount into:
@@ -43,8 +43,8 @@ const div = global.document.createElement('div');
 global.document.body.appendChild(div);
 
 // div is empty. body has the div attached.
-expect(document.body.childNodes).to.have.length(1);
-expect(div.childNodes).to.have.length(0);
+expect(document.body.childNodes).to.have.lengthOf(1);
+expect(div.childNodes).to.have.lengthOf(0);
 
 // mount a component passing div into the `attachTo` option
 const wrapper = mount(<Foo />, { attachTo: div });
@@ -52,20 +52,20 @@ const wrapper = mount(<Foo />, { attachTo: div });
 const hydratedWrapper = mount(<Foo />, { hydrateIn: div });
 
 // we can see now the component is rendered into the document
-expect(wrapper.find('.in-foo')).to.have.length(1);
-expect(document.body.childNodes).to.have.length(1);
-expect(div.childNodes).to.have.length(1);
+expect(wrapper.find('.in-foo')).to.have.lengthOf(1);
+expect(document.body.childNodes).to.have.lengthOf(1);
+expect(div.childNodes).to.have.lengthOf(1);
 
 // call detach to clean up
 wrapper.detach();
 
 // div is now empty, but still attached to the document
-expect(document.body.childNodes).to.have.length(1);
-expect(div.childNodes).to.have.length(0);
+expect(document.body.childNodes).to.have.lengthOf(1);
+expect(div.childNodes).to.have.lengthOf(0);
 
 // remove div if you want
 global.document.body.removeChild(div);
 
-expect(document.body.childNodes).to.have.length(0);
-expect(div.childNodes).to.have.length(0);
+expect(document.body.childNodes).to.have.lengthOf(0);
+expect(div.childNodes).to.have.lengthOf(0);
 ```

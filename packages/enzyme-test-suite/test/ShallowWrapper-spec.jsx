@@ -204,7 +204,7 @@ describe('shallow', () => {
 
       const wrapper = shallow(<SomeComponent />);
 
-      expect(wrapper.find('.child2')).to.have.length(1);
+      expect(wrapper.find('.child2')).to.have.lengthOf(1);
     });
 
     describeIf(is('> 0.13'), 'stateless function components', () => {
@@ -3302,8 +3302,8 @@ describe('shallow', () => {
         },
       });
       const wrapper = shallow(<Foo />);
-      expect(wrapper.find('.bar')).to.have.length(1);
-      expect(wrapper.find('.bar').parent()).to.have.length(0);
+      expect(wrapper.find('.bar')).to.have.lengthOf(1);
+      expect(wrapper.find('.bar').parent()).to.have.lengthOf(0);
     });
   });
 

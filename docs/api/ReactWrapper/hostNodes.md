@@ -14,5 +14,5 @@ Returns a new wrapper with only host nodes.
 
 ```jsx
 const wrapper = mount(<div><MyComponent className="foo" /><div className="foo" /></div>);
-expect(wrapper.find('.foo').hostNodes()).to.have.length(1);
+expect(wrapper.find('.foo').hostNodes()).to.have.lengthOf(1);
 ```

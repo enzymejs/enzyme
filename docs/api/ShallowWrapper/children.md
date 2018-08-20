@@ -19,7 +19,7 @@ selector can be provided and it will filter the children by this selector
 
 ```jsx
 const wrapper = shallow(<ToDoList items={items} />);
-expect(wrapper.find('ul').children()).to.have.length(items.length);
+expect(wrapper.find('ul').children()).to.have.lengthOf(items.length);
 ```
 
 #### Related Methods

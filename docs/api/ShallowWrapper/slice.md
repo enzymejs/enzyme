@@ -26,7 +26,7 @@ const wrapper = shallow((
     <div className="foo baz" />
   </div>
 ));
-expect(wrapper.find('.foo').slice(1)).to.have.length(2);
+expect(wrapper.find('.foo').slice(1)).to.have.lengthOf(2);
 expect(wrapper.find('.foo').slice(1).at(0).hasClass('bar')).to.equal(true);
 expect(wrapper.find('.foo').slice(1).at(1).hasClass('baz')).to.equal(true);
 ```
@@ -39,6 +39,6 @@ const wrapper = shallow((
     <div className="foo baz" />
   </div>
 ));
-expect(wrapper.find('.foo').slice(1, 2)).to.have.length(1);
+expect(wrapper.find('.foo').slice(1, 2)).to.have.lengthOf(1);
 expect(wrapper.find('.foo').slice(1, 2).at(0).hasClass('bar')).to.equal(true);
 ```

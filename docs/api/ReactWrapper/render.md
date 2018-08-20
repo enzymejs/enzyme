@@ -31,5 +31,5 @@ function Bar() {
 
 ```jsx
 const wrapper = mount(<Bar />);
-expect(wrapper.find(Foo).render().find('.in-foo')).to.have.length(1);
+expect(wrapper.find(Foo).render().find('.in-foo')).to.have.lengthOf(1);
 ```

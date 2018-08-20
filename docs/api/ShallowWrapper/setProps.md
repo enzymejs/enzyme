@@ -39,11 +39,11 @@ Foo.propTypes = {
 ```
 ```jsx
 const wrapper = shallow(<Foo name="foo" />);
-expect(wrapper.find('.foo')).to.have.length(1);
-expect(wrapper.find('.bar')).to.have.length(0);
+expect(wrapper.find('.foo')).to.have.lengthOf(1);
+expect(wrapper.find('.bar')).to.have.lengthOf(0);
 wrapper.setProps({ name: 'bar' });
-expect(wrapper.find('.foo')).to.have.length(0);
-expect(wrapper.find('.bar')).to.have.length(1);
+expect(wrapper.find('.foo')).to.have.lengthOf(0);
+expect(wrapper.find('.bar')).to.have.lengthOf(1);
 ```
 
 ```jsx

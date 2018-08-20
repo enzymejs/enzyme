@@ -45,7 +45,7 @@ function Foo() {
 
 ```jsx
 const wrapper = shallow(<Foo />);
-expect(wrapper.find('.in-bar')).to.have.length(0);
-expect(wrapper.find(Bar)).to.have.length(1);
-expect(wrapper.find(Bar).shallow().find('.in-bar')).to.have.length(1);
+expect(wrapper.find('.in-bar')).to.have.lengthOf(0);
+expect(wrapper.find(Bar)).to.have.lengthOf(1);
+expect(wrapper.find(Bar).shallow().find('.in-bar')).to.have.lengthOf(1);
 ```

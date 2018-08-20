@@ -13,12 +13,12 @@ import Foo from './Foo';
 describe('<MyComponent />', () => {
   it('should render three <Foo /> components', () => {
     const wrapper = shallow(<MyComponent />);
-    expect(wrapper.find(Foo)).to.have.length(3);
+    expect(wrapper.find(Foo)).to.have.lengthOf(3);
   });
 
   it('should render an `.icon-star`', () => {
     const wrapper = shallow(<MyComponent />);
-    expect(wrapper.find('.icon-star')).to.have.length(1);
+    expect(wrapper.find('.icon-star')).to.have.lengthOf(1);
   });
 
   it('should render children when passed in', () => {

@@ -50,12 +50,12 @@ describeWithDOM('render', () => {
       };
       const context = { name: 'foo' };
       const wrapper = render(<ComplexComponent />, { context, childContextTypes });
-      expect(wrapper).to.have.length(1);
+      expect(wrapper).to.have.lengthOf(1);
 
       expect(wrapper.is('div')).to.equal(true);
 
       const children = wrapper.children();
-      expect(children).to.have.length(1);
+      expect(children).to.have.lengthOf(1);
       expect(children.is('span')).to.equal(true);
 
       expect(children.first().text()).to.equal('foo');

@@ -22,7 +22,7 @@ Note: can only be called on a wrapper of a single node.
 
 ```jsx
 const wrapper = shallow(<ToDoList />);
-expect(wrapper.find('ul').parents()).to.have.length(2);
+expect(wrapper.find('ul').parents()).to.have.lengthOf(2);
 ```
 
 #### Related Methods
