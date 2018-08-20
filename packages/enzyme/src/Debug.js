@@ -1,6 +1,4 @@
-import without from 'lodash/without';
-import escape from 'lodash/escape';
-import compact from 'lodash/compact';
+import escape from 'lodash.escape';
 import functionName from 'function.prototype.name';
 import isString from 'is-string';
 import isNumber from 'is-number-object';
@@ -59,7 +57,7 @@ function propString(prop, options) {
 
 function propsString(node, options) {
   const props = propsOfNode(node);
-  const keys = without(Object.keys(props), 'children');
+  const keys = Object.keys(props).filter(x => x !== 'children');
   return keys.map(key => `${key}=${propString(props[key], options)}`).join(' ');
 }
 
@@ -77,7 +75,9 @@ export function debugNode(node, indentLength = 2, options = {}) {
   }
   if (!node) return '';
 
-  const childrenStrs = compact(childrenOfNode(node).map(n => debugNode(n, indentLength, options)));
+  const childrenStrs = childrenOfNode(node)
+    .map(n => debugNode(n, indentLength, options))
+    .filter(Boolean);
   const type = typeName(node);
 
   const props = options.ignoreProps ? '' : propsString(node, options);

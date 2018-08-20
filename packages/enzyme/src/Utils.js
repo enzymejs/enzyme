@@ -1,5 +1,5 @@
 /* eslint no-use-before-define: 0 */
-import isEqual from 'lodash/isEqual';
+import isEqual from 'lodash.isequal';
 import is from 'object-is';
 import entries from 'object.entries';
 import functionName from 'function.prototype.name';

@@ -1,8 +1,6 @@
 import { createParser } from 'rst-selector-parser';
 import values from 'object.values';
-import isEmpty from 'lodash/isEmpty';
 import flat from 'array.prototype.flat';
-import unique from 'lodash/uniq';
 import is from 'object-is';
 import has from 'has';
 import {
@@ -41,6 +39,10 @@ const HYPHENATED_ATTRIBUTE_OPERATOR = '|=';
 const PREFIX_ATTRIBUTE_OPERATOR = '^=';
 const SUFFIX_ATTRIBUTE_OPERATOR = '$=';
 const SUBSTRING_ATTRIBUTE_OPERATOR = '*=';
+
+function unique(arr) {
+  return [...new Set(arr)];
+}
 
 /**
  * Calls reduce on a array of nodes with the passed
@@ -260,7 +262,7 @@ export function buildPredicate(selector) {
   }
   // If the selector is an non-empty object, treat the keys/values as props
   if (typeof selector === 'object') {
-    if (!Array.isArray(selector) && selector !== null && !isEmpty(selector)) {
+    if (!Array.isArray(selector) && selector !== null && Object.keys(selector).length > 0) {
       const hasUndefinedValues = values(selector).some(value => typeof value === 'undefined');
       if (hasUndefinedValues) {
         throw new TypeError('Enzyme::Props can’t have `undefined` values. Try using ‘findWhere()’ instead.');

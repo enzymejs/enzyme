@@ -1,5 +1,4 @@
 import flat from 'array.prototype.flat';
-import compact from 'lodash/compact';
 import cheerio from 'cheerio';
 
 import {
@@ -61,7 +60,7 @@ function findWhereUnwrapped(wrapper, predicate, filter = treeFilter) {
  * @returns {ShallowWrapper}
  */
 function filterWhereUnwrapped(wrapper, predicate) {
-  return wrapper.wrap(compact(wrapper.getNodesInternal().filter(predicate)));
+  return wrapper.wrap(wrapper.getNodesInternal().filter(predicate).filter(Boolean));
 }
 
 /**
@@ -1129,8 +1128,7 @@ class ShallowWrapper {
   flatMap(fn) {
     const nodes = this.getNodesInternal().map((n, i) => fn.call(this, this.wrap(n), i));
     const flattened = flat(nodes, 1);
-    const compacted = compact(flattened);
-    return this.wrap(compacted);
+    return this.wrap(flattened.filter(Boolean));
   }
 
   /**
