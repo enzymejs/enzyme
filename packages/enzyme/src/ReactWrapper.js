@@ -25,8 +25,6 @@ import {
 
 import { buildPredicate, reduceTreesBySelector } from './selectors';
 
-const noop = () => {};
-
 const NODE = sym('__node__');
 const NODES = sym('__nodes__');
 const RENDERER = sym('__renderer__');
@@ -273,18 +271,20 @@ class ReactWrapper {
    * @param {Function} cb - callback function
    * @returns {ReactWrapper}
    */
-  setProps(props, callback = noop) {
+  setProps(props, callback = undefined) {
     if (this[ROOT] !== this) {
       throw new Error('ReactWrapper::setProps() can only be called on the root');
     }
-    if (typeof callback !== 'function') {
+    if (arguments.length > 1 && typeof callback !== 'function') {
       throw new TypeError('ReactWrapper::setProps() expects a function as its second argument');
     }
     const adapter = getAdapter(this[OPTIONS]);
     this[UNRENDERED] = cloneElement(adapter, this[UNRENDERED], props);
     this[RENDERER].render(this[UNRENDERED], null, () => {
       this.update();
-      callback();
+      if (callback) {
+        callback();
+      }
     });
     return this;
   }

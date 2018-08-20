@@ -1699,6 +1699,22 @@ describeWithDOM('mount', () => {
   });
 
   describe('.setProps(newProps[, callback])', () => {
+    it('throws on a non-function callback', () => {
+      class Foo extends React.Component {
+        render() {
+          return null;
+        }
+      }
+      const wrapper = mount(<Foo />);
+
+      expect(() => wrapper.setProps({}, undefined)).to.throw();
+      expect(() => wrapper.setProps({}, null)).to.throw();
+      expect(() => wrapper.setProps({}, false)).to.throw();
+      expect(() => wrapper.setProps({}, true)).to.throw();
+      expect(() => wrapper.setProps({}, [])).to.throw();
+      expect(() => wrapper.setProps({}, {})).to.throw();
+    });
+
     it('should set props for a component multiple times', () => {
       class Foo extends React.Component {
         render() {
@@ -2361,6 +2377,22 @@ describeWithDOM('mount', () => {
   });
 
   describe('.setState(newState[, callback])', () => {
+    it('throws on a non-function callback', () => {
+      class Foo extends React.Component {
+        render() {
+          return null;
+        }
+      }
+      const wrapper = mount(<Foo />);
+
+      expect(() => wrapper.setState({}, undefined)).to.throw();
+      expect(() => wrapper.setState({}, null)).to.throw();
+      expect(() => wrapper.setState({}, false)).to.throw();
+      expect(() => wrapper.setState({}, true)).to.throw();
+      expect(() => wrapper.setState({}, [])).to.throw();
+      expect(() => wrapper.setState({}, {})).to.throw();
+    });
+
     it('should set the state of the root node', () => {
       class Foo extends React.Component {
         constructor(props) {
@@ -2456,11 +2488,15 @@ describeWithDOM('mount', () => {
       });
     });
 
-    it('should throw error when cb is not a function', () => {
+    it('throws an error when cb is not a function', () => {
       class Foo extends React.Component {
         constructor(props) {
           super(props);
           this.state = { id: 'foo' };
+        }
+
+        setBadState() {
+          this.setState({}, 1);
         }
 
         render() {
@@ -2472,6 +2508,29 @@ describeWithDOM('mount', () => {
       const wrapper = mount(<Foo />);
       expect(wrapper.state()).to.eql({ id: 'foo' });
       expect(() => wrapper.setState({ id: 'bar' }, 1)).to.throw(Error);
+      expect(() => wrapper.instance().setBadState()).to.throw(Error);
+    });
+
+    it('does not throw with a null/undefined callback', () => {
+      class Foo extends React.Component {
+        constructor() {
+          super();
+
+          this.state = {};
+        }
+
+        setStateWithNullishCallback() {
+          this.setState({}, null);
+          this.setState({}, undefined);
+        }
+
+        render() {
+          return null;
+        }
+      }
+
+      const wrapper = mount(<Foo />);
+      expect(() => wrapper.instance().setStateWithNullishCallback()).not.to.throw();
     });
 
     it('should preserve the receiver', () => {

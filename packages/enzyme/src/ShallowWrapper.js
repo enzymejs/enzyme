@@ -29,8 +29,6 @@ import {
 } from './RSTTraversal';
 import { buildPredicate, reduceTreesBySelector } from './selectors';
 
-const noop = () => {};
-
 const NODE = sym('__node__');
 const NODES = sym('__nodes__');
 const RENDERER = sym('__renderer__');
@@ -187,7 +185,9 @@ class ShallowWrapper {
         // Ensure to call componentDidUpdate when instance.setState is called
         if (lifecycles.componentDidUpdate.onSetState && !instance[SET_STATE]) {
           privateSet(instance, SET_STATE, instance.setState);
-          instance.setState = (...args) => this.setState(...args);
+          instance.setState = (updater, callback = undefined) => this.setState(
+            ...(callback == null ? [updater] : [updater, callback]),
+          );
         }
 
         if (typeof instance.componentDidMount === 'function') {
@@ -398,15 +398,17 @@ class ShallowWrapper {
    * @param {Function} cb - callback function
    * @returns {ShallowWrapper}
    */
-  setProps(props, callback = noop) {
+  setProps(props, callback = undefined) {
     if (this[ROOT] !== this) {
       throw new Error('ShallowWrapper::setProps() can only be called on the root');
     }
-    if (typeof callback !== 'function') {
-      throw new TypeError('ShallowWrapper::setProps() expects a function as its second argument');
+    if (arguments.length > 1 && typeof callback !== 'function') {
+      throw new TypeError('ReactWrapper::setProps() expects a function as its second argument');
     }
     this.rerender(props);
-    callback();
+    if (callback) {
+      callback();
+    }
     return this;
   }
 
