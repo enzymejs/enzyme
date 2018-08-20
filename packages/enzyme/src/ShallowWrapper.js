@@ -398,11 +398,11 @@ class ShallowWrapper {
    * @param {Function} cb - callback function
    * @returns {ShallowWrapper}
    */
-  setProps(props, callback = noop) {
+  setProps(props, callback) {
     if (this[ROOT] !== this) {
       throw new Error('ShallowWrapper::setProps() can only be called on the root');
     }
-    if (typeof callback !== 'function') {
+    if (callback && typeof callback !== 'function') {
       throw new TypeError('ShallowWrapper::setProps() expects a function as its second argument');
     }
     this.rerender(props);
@@ -423,14 +423,14 @@ class ShallowWrapper {
    * @param {Function} cb - callback function
    * @returns {ShallowWrapper}
    */
-  setState(state, callback = undefined) {
+  setState(state, callback) {
     if (this[ROOT] !== this) {
       throw new Error('ShallowWrapper::setState() can only be called on the root');
     }
     if (this.instance() === null || this[RENDERER].getNode().nodeType === 'function') {
       throw new Error('ShallowWrapper::setState() can only be called on class components');
     }
-    if (arguments.length > 1 && typeof callback !== 'function') {
+    if (callback && typeof callback !== 'function') {
       throw new TypeError('ReactWrapper::setState() expects a function as its second argument');
     }
     this.single('setState', () => {
