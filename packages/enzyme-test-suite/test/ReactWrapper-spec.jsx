@@ -4224,6 +4224,892 @@ describeWithDOM('mount', () => {
     });
   });
 
+  describe('lifecycle methods', () => {
+    context('mounting phase', () => {
+      it('should call componentWillMount and componentDidMount', () => {
+        const spy = sinon.spy();
+        class Foo extends React.Component {
+          componentWillMount() {
+            spy('componentWillMount');
+          }
+
+          componentDidMount() {
+            spy('componentDidMount');
+          }
+
+          render() {
+            spy('render');
+            return <div>foo</div>;
+          }
+        }
+        mount(<Foo />);
+        expect(spy.args).to.deep.equal([
+          ['componentWillMount'],
+          ['render'],
+          ['componentDidMount'],
+        ]);
+      });
+
+      it('should be batching updates', () => {
+        const spy = sinon.spy();
+        class Foo extends React.Component {
+          constructor(props) {
+            super(props);
+            this.state = {
+              count: 0,
+            };
+          }
+
+          componentWillMount() {
+            this.setState({ count: this.state.count + 1 });
+            this.setState({ count: this.state.count + 1 });
+          }
+
+          componentDidMount() {
+            this.setState({ count: this.state.count + 1 });
+            this.setState({ count: this.state.count + 1 });
+          }
+
+          render() {
+            spy();
+            return <div>{this.state.count}</div>;
+          }
+        }
+        const result = mount(<Foo />);
+        expect(result.state('count')).to.equal(2);
+        expect(spy).to.have.property('callCount', 2);
+      });
+    });
+
+    context('updating props', () => {
+      it('should call shouldComponentUpdate, componentWillUpdate, and componentDidUpdate', () => {
+        const spy = sinon.spy();
+
+        class Foo extends React.Component {
+          constructor(...args) {
+            super(...args);
+            this.state = {
+              foo: 'state',
+            };
+          }
+
+          componentWillReceiveProps(nextProps, nextContext) {
+            spy('componentWillReceiveProps', this.props, nextProps, nextContext);
+          }
+
+          shouldComponentUpdate(nextProps, nextState, nextContext) {
+            spy('shouldComponentUpdate', this.props, nextProps, this.state, nextState, nextContext);
+            return true;
+          }
+
+          componentWillUpdate(nextProps, nextState, nextContext) {
+            spy('componentWillUpdate', this.props, nextProps, this.state, nextState, nextContext);
+          }
+
+          componentDidUpdate(prevProps, prevState, prevContext) {
+            spy('componentDidUpdate', prevProps, this.props, prevState, this.state, prevContext);
+          }
+
+          render() {
+            spy('render');
+            return <div>{this.state.foo}</div>;
+          }
+        }
+        Foo.contextTypes = {
+          foo: PropTypes.string,
+        };
+
+        const wrapper = mount(
+          <Foo foo="bar" />,
+          {
+            context: { foo: 'context' },
+          },
+        );
+        wrapper.setProps({ foo: 'baz' });
+        wrapper.setProps({ foo: 'bax' });
+        expect(spy.args).to.deep.equal([
+          [
+            'render',
+          ],
+          [
+            'componentWillReceiveProps',
+            { foo: 'bar' }, { foo: 'baz' },
+            { foo: 'context' }, // this will be fixed
+          ],
+          [
+            'shouldComponentUpdate',
+            { foo: 'bar' }, { foo: 'baz' },
+            { foo: 'state' }, { foo: 'state' },
+            { foo: 'context' },
+          ],
+          [
+            'componentWillUpdate',
+            { foo: 'bar' }, { foo: 'baz' },
+            { foo: 'state' }, { foo: 'state' },
+            { foo: 'context' },
+          ],
+          [
+            'render',
+          ],
+          [
+            'componentDidUpdate',
+            { foo: 'bar' }, { foo: 'baz' },
+            { foo: 'state' }, { foo: 'state' },
+            is('>= 16') ? undefined : { foo: 'context' },
+          ],
+          [
+            'componentWillReceiveProps',
+            { foo: 'baz' }, { foo: 'bax' },
+            { foo: 'context' },
+          ],
+          [
+            'shouldComponentUpdate',
+            { foo: 'baz' }, { foo: 'bax' },
+            { foo: 'state' }, { foo: 'state' },
+            { foo: 'context' },
+          ],
+          [
+            'componentWillUpdate',
+            { foo: 'baz' }, { foo: 'bax' },
+            { foo: 'state' }, { foo: 'state' },
+            { foo: 'context' },
+          ],
+          [
+            'render',
+          ],
+          [
+            'componentDidUpdate',
+            { foo: 'baz' }, { foo: 'bax' },
+            { foo: 'state' }, { foo: 'state' },
+            is('>= 16') ? undefined : { foo: 'context' },
+          ],
+        ]);
+      });
+
+      it('should componentWillReceiveProps, shouldComponentUpdate, componentWillUpdate and componentDidUpdate with merged props', () => {
+        const spy = sinon.spy();
+
+        class Foo extends React.Component {
+          componentWillReceiveProps(nextProps) {
+            spy('componentWillReceiveProps', this.props, nextProps);
+          }
+
+          shouldComponentUpdate(nextProps) {
+            spy('shouldComponentUpdate', this.props, nextProps);
+            return true;
+          }
+
+          componentWillUpdate(nextProps) {
+            spy('componentWillUpdate', this.props, nextProps);
+          }
+
+          componentDidUpdate(prevProps) {
+            spy('componentDidUpdate', prevProps, this.props);
+          }
+
+          render() {
+            return (
+              <div />
+            );
+          }
+        }
+
+        const wrapper = mount(<Foo a="a" b="b" />);
+
+        wrapper.setProps({ b: 'c', d: 'e' });
+
+        expect(spy.args).to.deep.equal([
+          [
+            'componentWillReceiveProps',
+            { a: 'a', b: 'b' },
+            { a: 'a', b: 'c', d: 'e' },
+          ],
+          [
+            'shouldComponentUpdate',
+            { a: 'a', b: 'b' },
+            { a: 'a', b: 'c', d: 'e' },
+          ],
+          [
+            'componentWillUpdate',
+            { a: 'a', b: 'b' },
+            { a: 'a', b: 'c', d: 'e' },
+          ],
+          [
+            'componentDidUpdate',
+            { a: 'a', b: 'b' },
+            { a: 'a', b: 'c', d: 'e' },
+          ],
+        ]);
+      });
+
+      it('should cancel rendering when Component returns false in shouldComponentUpdate', () => {
+        const spy = sinon.spy();
+
+        class Foo extends React.Component {
+          componentWillReceiveProps() {
+            spy('componentWillReceiveProps');
+          }
+
+          shouldComponentUpdate() {
+            spy('shouldComponentUpdate');
+            return false;
+          }
+
+          componentWillUpdate() {
+            spy('componentWillUpdate');
+          }
+
+          componentDidUpdate() {
+            spy('componentDidUpdate');
+          }
+
+          render() {
+            spy('render');
+            return <div>foo</div>;
+          }
+        }
+
+        const wrapper = mount(<Foo foo="bar" />);
+        expect(wrapper.instance().props.foo).to.equal('bar');
+        wrapper.setProps({ foo: 'baz' });
+        expect(wrapper.instance().props.foo).to.equal('baz');
+        wrapper.setProps({ foo: 'bax' });
+        expect(wrapper.instance().props.foo).to.equal('bax');
+        expect(spy.args).to.deep.equal([
+          ['render'],
+          ['componentWillReceiveProps'],
+          ['shouldComponentUpdate'],
+          ['componentWillReceiveProps'],
+          ['shouldComponentUpdate'],
+        ]);
+      });
+
+      it('should not provoke another renders to call setState in componentWillReceiveProps', () => {
+        const spy = sinon.spy();
+        class Foo extends React.Component {
+          constructor(props) {
+            super(props);
+            this.state = {
+              count: 0,
+            };
+          }
+
+          componentWillReceiveProps() {
+            this.setState({ count: this.state.count + 1 });
+            this.setState({ count: this.state.count + 1 });
+          }
+
+          render() {
+            spy();
+            return <div>{this.props.foo}</div>;
+          }
+        }
+        const result = mount(<Foo />);
+        expect(spy).to.have.property('callCount', 1);
+        result.setProps({ name: 'bar' });
+        expect(spy).to.have.property('callCount', 2);
+        expect(result.state('count')).to.equal(1);
+      });
+
+      it('should provoke an another render to call setState twice in componentWillUpdate', () => {
+        const spy = sinon.spy();
+        class Foo extends React.Component {
+          constructor(props) {
+            super(props);
+            this.updated = false;
+            this.state = {
+              count: 0,
+            };
+          }
+
+          componentWillUpdate() {
+            if (!this.updated) {
+              this.updated = true;
+              this.setState({ count: this.state.count + 1 });
+              this.setState({ count: this.state.count + 1 });
+            }
+          }
+
+          render() {
+            spy();
+            return <div>{this.props.foo}</div>;
+          }
+        }
+        const result = mount(<Foo />);
+        expect(spy).to.have.property('callCount', 1);
+        result.setProps({ name: 'bar' });
+        expect(spy).to.have.property('callCount', 3);
+        expect(result.state('count')).to.equal(1);
+      });
+
+      it('should provoke an another render to call setState twice in componentDidUpdate', () => {
+        const spy = sinon.spy();
+        class Foo extends React.Component {
+          constructor(props) {
+            super(props);
+            this.updated = false;
+            this.state = {
+              count: 0,
+            };
+          }
+
+          componentDidUpdate() {
+            if (!this.updated) {
+              this.updated = true;
+              /* eslint-disable react/no-did-update-set-state */
+              this.setState({ count: this.state.count + 1 });
+              this.setState({ count: this.state.count + 1 });
+              /* eslint-enable react/no-did-update-set-state */
+            }
+          }
+
+          render() {
+            spy();
+            return <div>{this.props.foo}</div>;
+          }
+        }
+        const result = mount(<Foo />);
+        expect(spy).to.have.property('callCount', 1);
+        result.setProps({ name: 'bar' });
+        expect(spy).to.have.property('callCount', 3);
+        expect(result.state('count')).to.equal(1);
+      });
+    });
+
+    context('updating state', () => {
+      it('should call shouldComponentUpdate, componentWillUpdate and componentDidUpdate', () => {
+        const spy = sinon.spy();
+
+        class Foo extends React.Component {
+          constructor(...args) {
+            super(...args);
+            this.state = {
+              foo: 'bar',
+            };
+          }
+
+          shouldComponentUpdate(nextProps, nextState, nextContext) {
+            spy('shouldComponentUpdate', this.props, nextProps, this.state, nextState, nextContext);
+            return true;
+          }
+
+          componentWillUpdate(nextProps, nextState, nextContext) {
+            spy('componentWillUpdate', this.props, nextProps, this.state, nextState, nextContext);
+          }
+
+          componentDidUpdate(prevProps, prevState, prevContext) {
+            spy('componentDidUpdate', prevProps, this.props, prevState, this.state, prevContext);
+          }
+
+          render() {
+            spy('render');
+            return <div>{this.state.foo}</div>;
+          }
+        }
+        Foo.contextTypes = {
+          foo: PropTypes.string,
+        };
+
+        const wrapper = mount(
+          <Foo foo="props" />,
+          {
+            context: { foo: 'context' },
+          },
+        );
+        wrapper.setState({ foo: 'baz' });
+        const expected = [
+          [
+            'render',
+          ],
+          [
+            'shouldComponentUpdate',
+            { foo: 'props' }, { foo: 'props' },
+            { foo: 'bar' }, { foo: 'baz' },
+            { foo: 'context' },
+          ],
+          [
+            'componentWillUpdate',
+            { foo: 'props' }, { foo: 'props' },
+            { foo: 'bar' }, { foo: 'baz' },
+            { foo: 'context' },
+          ],
+          [
+            'render',
+          ],
+          [
+            'componentDidUpdate',
+            { foo: 'props' }, { foo: 'props' },
+            { foo: 'bar' }, { foo: 'baz' },
+            is('>= 16') ? undefined : { foo: 'context' },
+          ],
+        ];
+        expect(spy.args).to.deep.equal(expected);
+      });
+
+      it('should cancel rendering when Component returns false in shouldComponentUpdate', () => {
+        const spy = sinon.spy();
+        class Foo extends React.Component {
+          constructor(props) {
+            super(props);
+            this.state = {
+              foo: 'bar',
+            };
+          }
+
+          shouldComponentUpdate() {
+            spy('shouldComponentUpdate');
+            return false;
+          }
+
+          componentWillUpdate() {
+            spy('componentWillUpdate');
+          }
+
+          componentDidUpdate() {
+            spy('componentDidUpdate');
+          }
+
+          render() {
+            spy('render');
+            return <div>{this.state.foo}</div>;
+          }
+        }
+        const wrapper = mount(<Foo />);
+        expect(wrapper.instance().state.foo).to.equal('bar');
+        wrapper.setState({ foo: 'baz' });
+        expect(wrapper.instance().state.foo).to.equal('baz');
+        expect(spy.args).to.deep.equal([['render'], ['shouldComponentUpdate']]);
+      });
+
+      it('should provoke an another render to call setState twice in componentWillUpdate', () => {
+        const spy = sinon.spy();
+        class Foo extends React.Component {
+          constructor(props) {
+            super(props);
+            this.updated = false;
+            this.state = {
+              name: 'foo',
+              count: 0,
+            };
+          }
+
+          componentWillUpdate() {
+            if (!this.updated) {
+              this.updated = true;
+              this.setState({ count: this.state.count + 1 });
+              this.setState({ count: this.state.count + 1 });
+            }
+          }
+
+          render() {
+            spy();
+            return <div>{this.state.name}</div>;
+          }
+        }
+        const result = mount(<Foo />);
+        expect(spy).to.have.property('callCount', 1);
+        result.setState({ name: 'bar' });
+        expect(spy).to.have.property('callCount', 3);
+        expect(result.state('count')).to.equal(1);
+      });
+
+      it('should provoke an another render to call setState twice in componentDidUpdate', () => {
+        const spy = sinon.spy();
+        class Foo extends React.Component {
+          constructor(props) {
+            super(props);
+            this.updated = false;
+            this.state = {
+              name: 'foo',
+              count: 0,
+            };
+          }
+
+          componentDidUpdate() {
+            if (!this.updated) {
+              this.updated = true;
+              /* eslint-disable react/no-did-update-set-state */
+              this.setState({ count: this.state.count + 1 });
+              this.setState({ count: this.state.count + 1 });
+              /* eslint-enable react/no-did-update-set-state */
+            }
+          }
+
+          render() {
+            spy();
+            return <div>{this.state.name}</div>;
+          }
+        }
+        const result = mount(<Foo />);
+        expect(spy).to.have.property('callCount', 1);
+        result.setState({ name: 'bar' });
+        expect(spy).to.have.property('callCount', 3);
+        expect(result.state('count')).to.equal(1);
+      });
+    });
+
+    context('updating context', () => {
+      it('should call shouldComponentUpdate, componentWillUpdate and componentDidUpdate', () => {
+        const spy = sinon.spy();
+        class Foo extends React.Component {
+          constructor(...args) {
+            super(...args);
+            this.state = {
+              foo: 'state',
+            };
+          }
+
+          shouldComponentUpdate(nextProps, nextState, nextContext) {
+            spy('shouldComponentUpdate', this.props, nextProps, this.state, nextState, nextContext);
+            return true;
+          }
+
+          componentWillUpdate(nextProps, nextState, nextContext) {
+            spy('componentWillUpdate', this.props, nextProps, this.state, nextState, nextContext);
+          }
+
+          componentDidUpdate(prevProps, prevState, prevContext) {
+            spy('componentDidUpdate', prevProps, this.props, prevState, this.state, prevContext);
+          }
+
+          render() {
+            spy('render');
+            return <div>{this.state.foo}</div>;
+          }
+        }
+        Foo.contextTypes = {
+          foo: PropTypes.string,
+        };
+        const wrapper = mount(
+          <Foo foo="props" />,
+          {
+            context: { foo: 'bar' },
+          },
+        );
+        expect(wrapper.instance().context.foo).to.equal('bar');
+        wrapper.setContext({ foo: 'baz' });
+        expect(wrapper.instance().context.foo).to.equal('baz');
+        expect(spy.args).to.deep.equal([
+          [
+            'render',
+          ],
+          [
+            'shouldComponentUpdate',
+            { foo: 'props' }, { foo: 'props' },
+            { foo: 'state' }, { foo: 'state' },
+            { foo: 'baz' },
+          ],
+          [
+            'componentWillUpdate',
+            { foo: 'props' }, { foo: 'props' },
+            { foo: 'state' }, { foo: 'state' },
+            { foo: 'baz' },
+          ],
+          [
+            'render',
+          ],
+          [
+            'componentDidUpdate',
+            { foo: 'props' }, { foo: 'props' },
+            { foo: 'state' }, { foo: 'state' },
+            is('>= 16') ? undefined : { foo: 'bar' },
+          ],
+        ]);
+      });
+
+      it('should cancel rendering when Component returns false in shouldComponentUpdate', () => {
+        const spy = sinon.spy();
+        class Foo extends React.Component {
+          shouldComponentUpdate() {
+            spy('shouldComponentUpdate');
+            return false;
+          }
+
+          componentWillUpdate() {
+            spy('componentWillUpdate');
+          }
+
+          componentDidUpdate() {
+            spy('componentDidUpdate');
+          }
+
+          render() {
+            spy('render');
+            return <div>foo</div>;
+          }
+        }
+        Foo.contextTypes = {
+          foo: PropTypes.string,
+        };
+        const wrapper = mount(
+          <Foo />,
+          {
+            context: { foo: 'bar' },
+          },
+        );
+        wrapper.setContext({ foo: 'baz' });
+        expect(spy.args).to.deep.equal([['render'], ['shouldComponentUpdate']]);
+      });
+
+      it('should provoke an another render to call setState twice in componentWillUpdate', () => {
+        const spy = sinon.spy();
+        class Foo extends React.Component {
+          constructor(props) {
+            super(props);
+            this.updated = false;
+            this.state = {
+              count: 0,
+            };
+          }
+
+          componentWillUpdate() {
+            if (!this.updated) {
+              this.updated = true;
+              this.setState({ count: this.state.count + 1 });
+              this.setState({ count: this.state.count + 1 });
+            }
+          }
+
+          render() {
+            spy();
+            return <div>{this.state.name}</div>;
+          }
+        }
+        const result = mount(
+          <Foo />,
+          {
+            context: { foo: 'bar' },
+          },
+        );
+        expect(spy).to.have.property('callCount', 1);
+        result.setContext({ foo: 'baz' });
+        expect(spy).to.have.property('callCount', 3);
+        expect(result.state('count')).to.equal(1);
+      });
+
+      it('should provoke an another render to call setState twice in componentDidUpdate', () => {
+        const spy = sinon.spy();
+        class Foo extends React.Component {
+          constructor(props) {
+            super(props);
+            this.updated = false;
+            this.state = {
+              count: 0,
+            };
+          }
+
+          componentDidUpdate() {
+            if (!this.updated) {
+              this.updated = true;
+              /* eslint-disable react/no-did-update-set-state */
+              this.setState({ count: this.state.count + 1 });
+              this.setState({ count: this.state.count + 1 });
+              /* eslint-enable react/no-did-update-set-state */
+            }
+          }
+
+          render() {
+            spy();
+            return <div>{this.state.name}</div>;
+          }
+        }
+        const result = mount(
+          <Foo />,
+          {
+            context: { foo: 'bar' },
+          },
+        );
+        expect(spy).to.have.property('callCount', 1);
+        result.setContext({ foo: 'baz' });
+        expect(spy).to.have.property('callCount', 3);
+        expect(result.state('count')).to.equal(1);
+      });
+    });
+
+    context('unmounting phase', () => {
+      it('should call componentWillUnmount', () => {
+        const spy = sinon.spy();
+        class Foo extends React.Component {
+          componentWillUnmount() {
+            spy();
+          }
+
+          render() {
+            return <div>foo</div>;
+          }
+        }
+        const wrapper = mount(<Foo />);
+        wrapper.unmount();
+        expect(spy).to.have.property('callCount', 1);
+      });
+    });
+
+    context('component instance', () => {
+      it('should call `componentDidUpdate` when component’s `setState` is called', () => {
+        class Foo extends React.Component {
+          constructor(props) {
+            super(props);
+            this.state = {
+              foo: 'init',
+            };
+          }
+
+          componentDidUpdate() {}
+
+          onChange() {
+            this.setState({ foo: 'onChange update' });
+          }
+
+          render() {
+            return <div>{this.state.foo}</div>;
+          }
+        }
+        const spy = sinon.spy(Foo.prototype, 'componentDidUpdate');
+
+        const wrapper = mount(<Foo />);
+        wrapper.setState({ foo: 'wrapper setState update' });
+        expect(wrapper.state('foo')).to.equal('wrapper setState update');
+        expect(spy).to.have.property('callCount', 1);
+        wrapper.instance().onChange();
+        expect(wrapper.state('foo')).to.equal('onChange update');
+        expect(spy).to.have.property('callCount', 2);
+      });
+
+      it('should call `componentDidUpdate` when component’s `setState` is called through a bound method', () => {
+        class Foo extends React.Component {
+          constructor(props) {
+            super(props);
+            this.state = {
+              foo: 'init',
+            };
+            this.onChange = this.onChange.bind(this);
+          }
+
+          componentDidUpdate() {}
+
+          onChange() {
+            this.setState({ foo: 'onChange update' });
+          }
+
+          render() {
+            return (
+              <div>
+                {this.state.foo}
+                <button onClick={this.onChange}>click</button>
+              </div>
+            );
+          }
+        }
+        const spy = sinon.spy(Foo.prototype, 'componentDidUpdate');
+
+        const wrapper = mount(<Foo />);
+        wrapper.find('button').prop('onClick')();
+        expect(wrapper.state('foo')).to.equal('onChange update');
+        expect(spy).to.have.property('callCount', 1);
+      });
+
+      it('should call `componentDidUpdate` when component’s `setState` is called', () => {
+        class Foo extends React.Component {
+          constructor(props) {
+            super(props);
+            this.state = {
+              foo: 'init',
+            };
+            this.update = () => this.setState({ foo: 'update' });
+          }
+
+          componentDidMount() {
+            this.update();
+          }
+
+          componentDidUpdate() {}
+
+          render() {
+            return <div>{this.state.foo}</div>;
+          }
+        }
+        const spy = sinon.spy(Foo.prototype, 'componentDidUpdate');
+
+        const wrapper = mount(<Foo />);
+        expect(spy).to.have.property('callCount', 1);
+        expect(wrapper.state('foo')).to.equal('update');
+      });
+
+      it('should not call `componentDidMount` twice when a child component is created', () => {
+        class Foo extends React.Component {
+          constructor(props) {
+            super(props);
+            this.state = {
+              foo: 'init',
+            };
+          }
+
+          componentDidMount() {}
+
+          render() {
+            return (
+              <div>
+                <button onClick={() => this.setState({ foo: 'update2' })}>
+                  click
+                </button>
+                {this.state.foo}
+              </div>
+            );
+          }
+        }
+        const spy = sinon.spy(Foo.prototype, 'componentDidMount');
+
+        const wrapper = mount(<Foo />);
+        expect(spy).to.have.property('callCount', 1);
+        wrapper.find('button').prop('onClick')();
+        expect(spy).to.have.property('callCount', 1);
+      });
+    });
+
+    describeIf(is('>= 16'), 'support getSnapshotBeforeUpdate', () => {
+      it('should call getSnapshotBeforeUpdate and pass snapshot to componentDidUpdate', () => {
+        const spy = sinon.spy();
+        class Foo extends React.Component {
+          constructor(props) {
+            super(props);
+            this.state = {
+              foo: 'bar',
+            };
+          }
+
+          componentDidUpdate(prevProps, prevState, snapshot) {
+            spy('componentDidUpdate', prevProps, this.props, prevState, this.state, snapshot);
+          }
+
+          getSnapshotBeforeUpdate(prevProps, prevState) {
+            spy('getSnapshotBeforeUpdate', prevProps, this.props, prevState, this.state);
+            return { snapshot: 'ok' };
+          }
+
+          render() {
+            spy('render');
+            return <div>foo</div>;
+          }
+        }
+        const wrapper = mount(<Foo name="foo" />);
+        spy.reset();
+        wrapper.setProps({ name: 'bar' });
+        expect(spy.args).to.deep.equal([
+          ['render'],
+          ['getSnapshotBeforeUpdate', { name: 'foo' }, { name: 'bar' }, { foo: 'bar' }, { foo: 'bar' }],
+          ['componentDidUpdate', { name: 'foo' }, { name: 'bar' }, { foo: 'bar' }, { foo: 'bar' }, { snapshot: 'ok' }],
+        ]);
+        spy.reset();
+        wrapper.setState({ foo: 'baz' });
+        expect(spy.args).to.deep.equal([
+          ['render'],
+          ['getSnapshotBeforeUpdate', { name: 'bar' }, { name: 'bar' }, { foo: 'bar' }, { foo: 'baz' }],
+          ['componentDidUpdate', { name: 'bar' }, { name: 'bar' }, { foo: 'bar' }, { foo: 'baz' }, { snapshot: 'ok' }],
+        ]);
+      });
+    });
+  });
+
   describe('attachTo option', () => {
     it('should attach and stuff', () => {
       class Foo extends React.Component {
@@ -4359,7 +5245,7 @@ describeWithDOM('mount', () => {
   });
 
   describe('.tap()', () => {
-    it('should call the passed function with current ShallowWrapper and returns itself', () => {
+    it('should call the passed function with current ReactWrapper and returns itself', () => {
       const spy = sinon.spy();
       const wrapper = mount((
         <ul>
@@ -5434,8 +6320,6 @@ describeWithDOM('mount', () => {
         componentDidUpdate() {}
 
         onChange() {
-          // enzyme can't handle the update because `this` is a ReactComponent instance,
-          // not a ShallowWrapper instance.
           this.setState({ foo: 'onChange update' });
         }
 

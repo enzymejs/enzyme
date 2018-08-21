@@ -4339,98 +4339,88 @@ describe('shallow', () => {
     });
   });
 
-  describe('disableLifecycleMethods', () => {
-    describe('validation', () => {
-      it('throws for a non-boolean value', () => {
-        ['value', 42, null].forEach((value) => {
-          expect(() => shallow(<div />, {
-            disableLifecycleMethods: value,
-          })).to.throw(/true or false/);
+  describe('lifecycle methods', () => {
+    describe('disableLifecycleMethods option', () => {
+      describe('validation', () => {
+        it('throws for a non-boolean value', () => {
+          ['value', 42, null].forEach((value) => {
+            expect(() => shallow(<div />, {
+              disableLifecycleMethods: value,
+            })).to.throw(/true or false/);
+          });
+        });
+
+        it('does not throw for a boolean value or undefined', () => {
+          [true, false, undefined].forEach((value) => {
+            expect(() => shallow(<div />, {
+              disableLifecycleMethods: value,
+            })).not.to.throw();
+          });
+        });
+
+        it('does not throw when no lifecycle flags are provided in options', () => {
+          expect(() => shallow(<div />, {})).not.to.throw();
+        });
+
+        it('throws when used with lifecycleExperimental in invalid combinations', () => {
+          [true, false].forEach((value) => {
+            expect(() => shallow(<div />, {
+              lifecycleExperimental: value,
+              disableLifecycleMethods: value,
+            })).to.throw(/same value/);
+          });
         });
       });
 
-      it('does not throw for a boolean value or undefined', () => {
-        [true, false, undefined].forEach((value) => {
-          expect(() => shallow(<div />, {
-            disableLifecycleMethods: value,
-          })).not.to.throw();
-        });
-      });
+      describe('when disabled', () => {
+        let wrapper;
+        const spy = sinon.spy();
+        class Foo extends React.Component {
+          componentWillMount() { spy('componentWillMount'); }
 
-      it('does not throw when no lifecycle flags are provided in options', () => {
-        expect(() => shallow(<div />, {})).not.to.throw();
-      });
+          componentDidMount() { spy('componentDidMount'); }
 
-      it('throws when used with lifecycleExperimental in invalid combinations', () => {
-        [true, false].forEach((value) => {
-          expect(() => shallow(<div />, {
-            lifecycleExperimental: value,
-            disableLifecycleMethods: value,
-          })).to.throw(/same value/);
-        });
-      });
-    });
+          componentWillReceiveProps() { spy('componentWillReceiveProps'); }
 
-    describe('when set to true', () => {
-      let wrapper;
-      const spy = sinon.spy();
-      class Foo extends React.Component {
-        componentWillMount() { spy('componentWillMount'); }
+          shouldComponentUpdate() {
+            spy('shouldComponentUpdate');
+            return true;
+          }
 
-        componentDidMount() { spy('componentDidMount'); }
+          componentWillUpdate() { spy('componentWillUpdate'); }
 
-        componentWillReceiveProps() { spy('componentWillReceiveProps'); }
+          componentDidUpdate() { spy('componentDidUpdate'); }
 
-        shouldComponentUpdate() {
-          spy('shouldComponentUpdate');
-          return true;
+          componentWillUnmount() { spy('componentWillUnmount'); }
+
+          render() {
+            spy('render');
+            return <div>foo</div>;
+          }
         }
 
-        componentWillUpdate() { spy('componentWillUpdate'); }
+        const options = {
+          disableLifecycleMethods: true,
+          context: {
+            foo: 'foo',
+          },
+        };
 
-        componentDidUpdate() { spy('componentDidUpdate'); }
+        beforeEach(() => {
+          wrapper = shallow(<Foo />, options);
+          spy.reset();
+        });
 
-        componentWillUnmount() { spy('componentWillUnmount'); }
+        it('does not call componentDidMount when mounting', () => {
+          wrapper = shallow(<Foo />, options);
+          expect(spy.args).to.deep.equal([
+            ['componentWillMount'],
+            ['render'],
+          ]);
+        });
 
-        render() {
-          spy('render');
-          return <div>foo</div>;
-        }
-      }
-
-      const options = {
-        disableLifecycleMethods: true,
-        context: {
-          foo: 'foo',
-        },
-      };
-
-      beforeEach(() => {
-        wrapper = shallow(<Foo />, options);
-        spy.reset();
-      });
-
-      it('does not call componentDidMount when mounting', () => {
-        wrapper = shallow(<Foo />, options);
-        expect(spy.args).to.deep.equal([
-          ['componentWillMount'],
-          ['render'],
-        ]);
-      });
-
-      it('calls expected methods when receiving new props', () => {
-        wrapper.setProps({ foo: 'foo' });
-        expect(spy.args).to.deep.equal([
-          ['componentWillReceiveProps'],
-          ['shouldComponentUpdate'],
-          ['componentWillUpdate'],
-          ['render'],
-        ]);
-      });
-
-      describeIf(is('0.13 || 15 || > 16'), 'setContext', () => {
-        it('calls expected methods when receiving new context', () => {
-          wrapper.setContext({ foo: 'foo' });
+        it('calls expected methods when receiving new props', () => {
+          wrapper.setProps({ foo: 'foo' });
           expect(spy.args).to.deep.equal([
             ['componentWillReceiveProps'],
             ['shouldComponentUpdate'],
@@ -4438,74 +4428,166 @@ describe('shallow', () => {
             ['render'],
           ]);
         });
-      });
 
-      describeIf(is('16'), 'setContext', () => {
-        it('calls expected methods when receiving new context', () => {
-          wrapper.setContext({ foo: 'foo' });
+        describeIf(is('0.13 || 15 || > 16'), 'setContext', () => {
+          it('calls expected methods when receiving new context', () => {
+            wrapper.setContext({ foo: 'foo' });
+            expect(spy.args).to.deep.equal([
+              ['componentWillReceiveProps'],
+              ['shouldComponentUpdate'],
+              ['componentWillUpdate'],
+              ['render'],
+            ]);
+          });
+        });
+
+        describeIf(is('16'), 'setContext', () => {
+          it('calls expected methods when receiving new context', () => {
+            wrapper.setContext({ foo: 'foo' });
+            expect(spy.args).to.deep.equal([
+              ['shouldComponentUpdate'],
+              ['componentWillUpdate'],
+              ['render'],
+            ]);
+          });
+        });
+
+        describeIf(is('0.14'), 'setContext', () => {
+          it('calls expected methods when receiving new context', () => {
+            wrapper.setContext({ foo: 'foo' });
+            expect(spy.args).to.deep.equal([
+              ['shouldComponentUpdate'],
+              ['componentWillUpdate'],
+              ['render'],
+            ]);
+          });
+        });
+
+        itIf(is('< 16'), 'calls expected methods for setState', () => {
+          wrapper.setState({ bar: 'bar' });
+          expect(spy.args).to.deep.equal([
+            ['shouldComponentUpdate'],
+            ['componentWillUpdate'],
+            ['render'],
+            ['componentDidUpdate'],
+          ]);
+        });
+
+        // componentDidUpdate is not called in react 16
+        itIf(is('>= 16'), 'calls expected methods for setState', () => {
+          wrapper.setState({ bar: 'bar' });
           expect(spy.args).to.deep.equal([
             ['shouldComponentUpdate'],
             ['componentWillUpdate'],
             ['render'],
           ]);
         });
-      });
 
-      describeIf(is('0.14'), 'setContext', () => {
-        it('calls expected methods when receiving new context', () => {
-          wrapper.setContext({ foo: 'foo' });
+        it('calls expected methods when unmounting', () => {
+          wrapper.unmount();
           expect(spy.args).to.deep.equal([
-            ['shouldComponentUpdate'],
-            ['componentWillUpdate'],
-            ['render'],
+            ['componentWillUnmount'],
           ]);
         });
       });
 
-      itIf(is('< 16'), 'calls expected methods for setState', () => {
-        wrapper.setState({ bar: 'bar' });
-        expect(spy.args).to.deep.equal([
-          ['shouldComponentUpdate'],
-          ['componentWillUpdate'],
-          ['render'],
-          ['componentDidUpdate'],
-        ]);
+      it('should not call when disableLifecycleMethods flag is true', () => {
+        const spy = sinon.spy();
+        class Foo extends React.Component {
+          componentDidMount() {
+            spy();
+          }
+
+          render() {
+            return <div>foo</div>;
+          }
+        }
+        shallow(<Foo />, { disableLifecycleMethods: true });
+        expect(spy).to.have.property('callCount', 0);
       });
 
-      // componentDidUpdate is not called in react 16
-      itIf(is('>= 16'), 'calls expected methods for setState', () => {
-        wrapper.setState({ bar: 'bar' });
-        expect(spy.args).to.deep.equal([
-          ['shouldComponentUpdate'],
-          ['componentWillUpdate'],
-          ['render'],
-        ]);
+      it('should be able to call `componentDidMount` directly when disableLifecycleMethods is true', () => {
+        class Table extends React.Component {
+          render() {
+            return (<table />);
+          }
+        }
+
+        class MyComponent extends React.Component {
+          constructor(props) {
+            super(props);
+            this.state = {
+              showTable: false,
+            };
+          }
+
+          componentDidMount() {
+            this.setState({ showTable: true });
+          }
+
+          render() {
+            const { showTable } = this.state;
+            return (<div>{showTable ? <Table /> : null}</div>);
+          }
+        }
+        const wrapper = shallow(<MyComponent />, { disableLifecycleMethods: true });
+        expect(wrapper.find(Table).length).to.equal(0);
+        wrapper.instance().componentDidMount();
+        expect(wrapper.find(Table).length).to.equal(1);
       });
 
-      it('calls expected methods when unmounting', () => {
-        wrapper.unmount();
-        expect(spy.args).to.deep.equal([
-          ['componentWillUnmount'],
-        ]);
+      it('should call shouldComponentUpdate when disableLifecycleMethods flag is true', () => {
+        const spy = sinon.spy();
+        class Foo extends React.Component {
+          constructor(props) {
+            super(props);
+            this.state = {
+              foo: 'bar',
+            };
+          }
+
+          shouldComponentUpdate() {
+            spy();
+            return false;
+          }
+
+          render() {
+            return <div>{this.state.foo}</div>;
+          }
+        }
+        const wrapper = shallow(
+          <Foo foo="foo" />,
+          {
+            context: { foo: 'foo' },
+            disableLifecycleMethods: true,
+          },
+        );
+        expect(spy).to.have.property('callCount', 0);
+        wrapper.setProps({ foo: 'bar' });
+        expect(spy).to.have.property('callCount', 1);
+        wrapper.setState({ foo: 'bar' });
+        expect(spy).to.have.property('callCount', 2);
+        wrapper.setContext({ foo: 'bar' });
+        expect(spy).to.have.property('callCount', 3);
       });
     });
-  });
 
-  describe('lifecycleExperimental', () => {
-    describe('validation', () => {
-      it('throws for a non-boolean value', () => {
-        ['value', 42, null].forEach((value) => {
-          expect(() => shallow(<div />, {
-            lifecycleExperimental: value,
-          })).to.throw(/true or false/);
+    describe('lifecycleExperimental option', () => {
+      describe('validation', () => {
+        it('throws for a non-boolean value', () => {
+          ['value', 42, null].forEach((value) => {
+            expect(() => shallow(<div />, {
+              lifecycleExperimental: value,
+            })).to.throw(/true or false/);
+          });
         });
-      });
 
-      it('does not throw for a boolean value or when not provided', () => {
-        [true, false, undefined].forEach((value) => {
-          expect(() => shallow(<div />, {
-            lifecycleExperimental: value,
-          })).not.to.throw();
+        it('does not throw for a boolean value or when not provided', () => {
+          [true, false, undefined].forEach((value) => {
+            expect(() => shallow(<div />, {
+              lifecycleExperimental: value,
+            })).not.to.throw();
+          });
         });
       });
     });
@@ -4560,14 +4642,14 @@ describe('shallow', () => {
             return <div>{this.state.count}</div>;
           }
         }
-        const result = shallow(<Foo />, { lifecycleExperimental: true });
+        const result = shallow(<Foo />);
         expect(result.state('count')).to.equal(2);
         expect(spy).to.have.property('callCount', 2);
       });
     });
 
     context('updating props', () => {
-      it('should call shouldComponentUpdate, componentWillUpdate and componentDidUpdate', () => {
+      it('should call shouldComponentUpdate, componentWillUpdate, and componentDidUpdate', () => {
         const spy = sinon.spy();
 
         class Foo extends React.Component {
@@ -5396,86 +5478,6 @@ describe('shallow', () => {
           ['componentDidUpdate', { name: 'bar' }, { name: 'bar' }, { foo: 'bar' }, { foo: 'baz' }, { snapshot: 'ok' }],
         ]);
       });
-    });
-
-    it('should not call when disableLifecycleMethods flag is true', () => {
-      const spy = sinon.spy();
-      class Foo extends React.Component {
-        componentDidMount() {
-          spy();
-        }
-
-        render() {
-          return <div>foo</div>;
-        }
-      }
-      shallow(<Foo />, { disableLifecycleMethods: true });
-      expect(spy).to.have.property('callCount', 0);
-    });
-
-    it('should be able to call `componentDidMount` directly when disableLifecycleMethods is true', () => {
-      class Table extends React.Component {
-        render() {
-          return (<table />);
-        }
-      }
-
-      class MyComponent extends React.Component {
-        constructor(props) {
-          super(props);
-          this.state = {
-            showTable: false,
-          };
-        }
-
-        componentDidMount() {
-          this.setState({ showTable: true });
-        }
-
-        render() {
-          const { showTable } = this.state;
-          return (<div>{showTable ? <Table /> : null}</div>);
-        }
-      }
-      const wrapper = shallow(<MyComponent />, { disableLifecycleMethods: true });
-      expect(wrapper.find(Table).length).to.equal(0);
-      wrapper.instance().componentDidMount();
-      expect(wrapper.find(Table).length).to.equal(1);
-    });
-
-    it('should call shouldComponentUpdate when disableLifecycleMethods flag is true', () => {
-      const spy = sinon.spy();
-      class Foo extends React.Component {
-        constructor(props) {
-          super(props);
-          this.state = {
-            foo: 'bar',
-          };
-        }
-
-        shouldComponentUpdate() {
-          spy();
-          return false;
-        }
-
-        render() {
-          return <div>{this.state.foo}</div>;
-        }
-      }
-      const wrapper = shallow(
-        <Foo foo="foo" />,
-        {
-          context: { foo: 'foo' },
-          disableLifecycleMethods: true,
-        },
-      );
-      expect(spy).to.have.property('callCount', 0);
-      wrapper.setProps({ foo: 'bar' });
-      expect(spy).to.have.property('callCount', 1);
-      wrapper.setState({ foo: 'bar' });
-      expect(spy).to.have.property('callCount', 2);
-      wrapper.setContext({ foo: 'bar' });
-      expect(spy).to.have.property('callCount', 3);
     });
   });
 
