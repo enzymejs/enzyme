@@ -4302,6 +4302,8 @@ describe('shallow', () => {
 
       const wrapper = shallow(<Bar />);
 
+      expect(wrapper.render().find('.in-foo')).to.have.lengthOf(1);
+
       const rendered = wrapper.render();
       expect(rendered.is('.in-bar')).to.equal(true);
       expect(rendered).to.have.lengthOf(1);
@@ -4325,6 +4327,8 @@ describe('shallow', () => {
         );
 
         const wrapper = shallow(<Bar />);
+
+        expect(wrapper.render().find('.in-foo')).to.have.lengthOf(1);
         expect(wrapper.render().is('.in-bar')).to.equal(true);
 
         const renderedFoo = wrapper.find(Foo).render();

@@ -4168,12 +4168,13 @@ describeWithDOM('mount', () => {
   });
 
   describe('.render()', () => {
-    it('should return a cheerio wrapper around the current node', () => {
+    it('returns a cheerio wrapper around the current node', () => {
       class Foo extends React.Component {
         render() {
           return (<div className="in-foo" />);
         }
       }
+
       class Bar extends React.Component {
         render() {
           return (
@@ -4183,20 +4184,42 @@ describeWithDOM('mount', () => {
           );
         }
       }
+
       const wrapper = mount(<Bar />);
+
       expect(wrapper.render().find('.in-foo')).to.have.lengthOf(1);
+
+      const rendered = wrapper.render();
+      expect(rendered.is('.in-bar')).to.equal(true);
+      expect(rendered).to.have.lengthOf(1);
+
+      const renderedFoo = wrapper.find(Foo).render();
+      expect(renderedFoo.is('.in-foo')).to.equal(true);
+      expect(renderedFoo.is('.in-bar')).to.equal(false);
+      expect(renderedFoo.find('.in-bar')).to.have.lengthOf(0);
     });
 
     describeIf(is('> 0.13'), 'stateless function components', () => {
-      it('should return a cheerio wrapper around the current node', () => {
-        const Foo = () => <div className="in-foo" />;
+      it('returns a cheerio wrapper around the current node', () => {
+        const Foo = () => (
+          <div className="in-foo" />
+        );
+
         const Bar = () => (
           <div className="in-bar">
             <Foo />
           </div>
         );
+
         const wrapper = mount(<Bar />);
+
         expect(wrapper.render().find('.in-foo')).to.have.lengthOf(1);
+        expect(wrapper.render().is('.in-bar')).to.equal(true);
+
+        const renderedFoo = wrapper.find(Foo).render();
+        expect(renderedFoo.is('.in-foo')).to.equal(true);
+        expect(renderedFoo.is('.in-bar')).to.equal(false);
+        expect(renderedFoo.find('.in-bar')).to.have.lengthOf(0);
       });
     });
   });
