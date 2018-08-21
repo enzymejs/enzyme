@@ -3893,6 +3893,55 @@ describeWithDOM('mount', () => {
       const formUp = input.parents('form');
       expect(formUp).to.have.lengthOf(1);
     });
+
+    it('works when called sequentially on two sibling nodes', () => {
+      class Test extends React.Component {
+        render() {
+          return (
+            <div>
+              <div className="a">
+                <div>A child</div>
+              </div>
+              <div className="b">
+                <div>B child</div>
+              </div>
+            </div>
+          );
+        }
+      }
+
+      const wrapper = mount(<Test />);
+
+      const aChild = wrapper.find({ children: 'A child' });
+      expect(aChild.debug()).to.equal(`<div>
+  A child
+</div>`);
+      expect(aChild).to.have.lengthOf(1);
+
+      const bChild = wrapper.find({ children: 'B child' });
+      expect(bChild.debug()).to.equal(`<div>
+  B child
+</div>`);
+      expect(bChild).to.have.lengthOf(1);
+
+      /*
+      const bChildParents = bChild.parents('.b');
+      expect(bChildParents.debug()).to.equal(`<div className="b">
+  <div>
+    B child
+  </div>
+</div>`);
+      expect(bChildParents).to.have.lengthOf(1);
+      */
+
+      const aChildParents = aChild.parents('.a');
+      expect(aChildParents.debug()).to.equal(`<div className="a">
+  <div>
+    A child
+  </div>
+</div>`);
+      expect(aChildParents).to.have.lengthOf(1);
+    });
   });
 
   describe('.parent()', () => {

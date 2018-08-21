@@ -106,7 +106,7 @@ export function pathToNode(node, root) {
 }
 
 export function parentsOfNode(node, root) {
-  return pathToNode(node, root).reverse();
+  return (pathToNode(node, root) || []).reverse();
 }
 
 export function nodeHasId(node, id) {
