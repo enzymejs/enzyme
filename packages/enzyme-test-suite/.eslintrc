@@ -4,6 +4,10 @@
   "env": {
     "mocha": true,
   },
+  "plugins": ["mocha"],
+  "settings": {
+    "mocha/additionalTestFunctions": ["itIf", "describeIf"],
+  },
   "rules": {
     "no-param-reassign": 0,
     "padded-blocks": 0,
@@ -30,5 +34,25 @@
     "react/destructuring-assignment": 1,
     "react/no-access-state-in-setstate": 1,
     "react/button-has-type": 1,
+
+    "mocha/no-exclusive-tests": 2,
+    "mocha/no-global-tests": 2,
+    "mocha/no-nested-tests": 2,
+    "mocha/no-pending-tests": 2,
+    "mocha/no-sibling-hooks": 2,
+    "mocha/no-skipped-tests": 1,
+    "mocha/no-top-level-hooks": 2,
+    "mocha/valid-suite-description": [2, "^(?!should )"],
+    "mocha/valid-test-description": [2, "^(?!should )"],
   },
+  "overrides": [
+    {
+      "files": [
+        "test/_helpers/*",
+      ],
+      "rules": {
+        "mocha/no-exclusive-tests": 0,
+      },
+    }
+  ],
 }

@@ -3,7 +3,6 @@
   "root": true,
   "env": {
     "node": true,
-    "mocha": true
   },
   "rules": {
     "id-length": 0,
@@ -52,6 +51,6 @@
         "react/no-multi-comp": 0,
         "react/jsx-one-expression-per-line": 0,
       },
-    }
+    },
   ],
 }
