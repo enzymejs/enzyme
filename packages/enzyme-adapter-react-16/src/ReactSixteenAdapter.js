@@ -245,6 +245,9 @@ class ReactSixteenAdapter extends EnzymeAdapter {
           onSetState: true,
         },
         getSnapshotBeforeUpdate: true,
+        setState: {
+          skipsComponentDidUpdateOnNullish: true,
+        },
       },
     };
   }

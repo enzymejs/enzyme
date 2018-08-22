@@ -129,6 +129,9 @@ function getAdapterLifecycles({ options }) {
 
   return {
     ...lifecycles,
+    setState: {
+      ...lifecycles.setState,
+    },
     ...(componentDidUpdate && { componentDidUpdate }),
   };
 }
@@ -452,9 +455,10 @@ class ShallowWrapper {
           ? state.call(instance, prevState, prevProps)
           : state;
 
-        // returning null or undefined prevents the update
+        // returning null or undefined prevents the update in React 16+
         // https://github.com/facebook/react/pull/12756
-        const maybeHasUpdate = statePayload != null;
+        const maybeHasUpdate = !lifecycles.setState.skipsComponentDidUpdateOnNullish
+          || statePayload != null;
 
         // When shouldComponentUpdate returns false we shouldn't call componentDidUpdate.
         // so we spy shouldComponentUpdate to get the result.
