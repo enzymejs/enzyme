@@ -2406,6 +2406,68 @@ describe('shallow', () => {
       });
     });
 
+    it('prevents the update if nextState is null or undefined', () => {
+      class Foo extends React.Component {
+        constructor(props) {
+          super(props);
+          this.state = { id: 'foo' };
+        }
+
+        componentDidUpdate() {}
+
+        render() {
+          return (
+            <div className={this.state.id} />
+          );
+        }
+      }
+
+      const wrapper = shallow(<Foo />);
+      const spy = sinon.spy(wrapper.instance(), 'componentDidUpdate');
+      const callback = sinon.spy();
+      wrapper.setState(() => ({ id: 'bar' }), callback);
+      expect(spy).to.have.property('callCount', 1);
+      expect(callback).to.have.property('callCount', 1);
+
+      wrapper.setState(() => null, callback);
+      expect(spy).to.have.property('callCount', is('>= 16') ? 1 : 2);
+      expect(callback).to.have.property('callCount', 2);
+
+      wrapper.setState(() => undefined, callback);
+      expect(spy).to.have.property('callCount', is('>= 16') ? 1 : 3);
+      expect(callback).to.have.property('callCount', 3);
+    });
+
+    itIf(is('>= 16'), 'prevents an infinite loop if nextState is null or undefined from setState in CDU', () => {
+      class Foo extends React.Component {
+        constructor(props) {
+          super(props);
+          this.state = { id: 'foo' };
+        }
+
+        componentDidUpdate() {}
+
+        render() {
+          return (
+            <div className={this.state.id} />
+          );
+        }
+      }
+
+      let payload;
+      const stub = sinon.stub(Foo.prototype, 'componentDidUpdate')
+        .callsFake(function componentDidUpdate() { this.setState(() => payload); });
+
+      const wrapper = shallow(<Foo />);
+
+      wrapper.setState(() => ({ id: 'bar' }));
+      expect(stub).to.have.property('callCount', 1);
+
+      payload = null;
+      wrapper.setState(() => ({ id: 'bar' }));
+      expect(stub).to.have.property('callCount', 2);
+    });
+
     describe('should not call componentWillReceiveProps after setState is called', () => {
       it('should not call componentWillReceiveProps upon rerender', () => {
         class A extends React.Component {

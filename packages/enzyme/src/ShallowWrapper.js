@@ -436,6 +436,7 @@ class ShallowWrapper {
     if (arguments.length > 1 && typeof callback !== 'function') {
       throw new TypeError('ReactWrapper::setState() expects a function as its second argument');
     }
+
     this.single('setState', () => {
       withSetStateAllowed(() => {
         const adapter = getAdapter(this[OPTIONS]);
@@ -446,6 +447,15 @@ class ShallowWrapper {
         const prevProps = instance.props;
         const prevState = instance.state;
         const prevContext = instance.context;
+
+        const statePayload = typeof state === 'function'
+          ? state.call(instance, prevState, prevProps)
+          : state;
+
+        // returning null or undefined prevents the update
+        // https://github.com/facebook/react/pull/12756
+        const maybeHasUpdate = statePayload != null;
+
         // When shouldComponentUpdate returns false we shouldn't call componentDidUpdate.
         // so we spy shouldComponentUpdate to get the result.
         let spy;
@@ -462,16 +472,17 @@ class ShallowWrapper {
         // We don't pass the setState callback here
         // to guarantee to call the callback after finishing the render
         if (instance[SET_STATE]) {
-          instance[SET_STATE](state);
+          instance[SET_STATE](statePayload);
         } else {
-          instance.setState(state);
+          instance.setState(statePayload);
         }
         if (spy) {
           shouldRender = spy.getLastReturnValue();
           spy.restore();
         }
         if (
-          shouldRender
+          maybeHasUpdate
+          && shouldRender
           && !this[OPTIONS].disableLifecycleMethods
           && lifecycles.componentDidUpdate
           && lifecycles.componentDidUpdate.onSetState
