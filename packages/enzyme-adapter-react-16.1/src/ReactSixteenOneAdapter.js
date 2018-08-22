@@ -220,7 +220,6 @@ class ReactSixteenOneAdapter extends EnzymeAdapter {
         componentDidUpdate: {
           onSetState: true,
         },
-        getSnapshotBeforeUpdate: true,
       },
     };
   }

@@ -5066,7 +5066,7 @@ describeWithDOM('mount', () => {
       });
     });
 
-    describeIf(is('>= 16'), 'support getSnapshotBeforeUpdate', () => {
+    describeIf(is('>= 16.3'), 'support getSnapshotBeforeUpdate', () => {
       it('should call getSnapshotBeforeUpdate and pass snapshot to componentDidUpdate', () => {
         const spy = sinon.spy();
         class Foo extends React.Component {
