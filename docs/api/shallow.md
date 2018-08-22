@@ -11,17 +11,17 @@ import sinon from 'sinon';
 import Foo from './Foo';
 
 describe('<MyComponent />', () => {
-  it('should render three <Foo /> components', () => {
+  it('renders three <Foo /> components', () => {
     const wrapper = shallow(<MyComponent />);
     expect(wrapper.find(Foo)).to.have.lengthOf(3);
   });
 
-  it('should render an `.icon-star`', () => {
+  it('renders an `.icon-star`', () => {
     const wrapper = shallow(<MyComponent />);
     expect(wrapper.find('.icon-star')).to.have.lengthOf(1);
   });
 
-  it('should render children when passed in', () => {
+  it('renders children when passed in', () => {
     const wrapper = shallow((
       <MyComponent>
         <div className="unique" />

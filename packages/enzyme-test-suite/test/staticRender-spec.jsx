@@ -64,7 +64,7 @@ describeWithDOM('render', () => {
       expect(String(children)).to.equal('<span>foo</span>');
     });
 
-    it('should not throw if context is passed in but contextTypes is missing', () => {
+    it('does not throw if context is passed in but contextTypes is missing', () => {
       const SimpleComponent = createClass({
         render() {
           return <div>{this.context.name}</div>;

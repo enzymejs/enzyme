@@ -81,7 +81,7 @@ describe('debug', () => {
     });
 
   describe('spaces(n)', () => {
-    it('should return n spaces', () => {
+    it('returnsn spaces', () => {
       expect(spaces(4)).to.equal('    ');
       expect(spaces(2)).to.equal('  ');
       expect(spaces(0)).to.equal('');
@@ -89,23 +89,23 @@ describe('debug', () => {
   });
 
   describe('indent(depth, string)', () => {
-    it('should indent a single-line string by (n) spaces', () => {
+    it('indents a single-line string by (n) spaces', () => {
       expect(indent(4, 'hello')).to.equal('    hello');
       expect(indent(2, 'hello')).to.equal('  hello');
       expect(indent(0, 'hello')).to.equal('hello');
     });
 
-    it('should intent a multiline string by (n) spaces', () => {
+    it('intents a multiline string by (n) spaces', () => {
       expect(indent(2, 'foo\nbar')).to.equal('  foo\n  bar');
     });
   });
 
   describe('debugNode(node)', () => {
-    it('should render a node with no props or children as single single xml tag', () => {
+    it('renders a node with no props or children as single single xml tag', () => {
       expect(debugElement(<div />)).to.equal('<div />');
     });
 
-    it('should render props inline inline', () => {
+    it('renders props inline inline', () => {
       expect(debugElement((
         <div id="foo" className="bar" />
       ))).to.equal((
@@ -113,7 +113,7 @@ describe('debug', () => {
       ));
     });
 
-    it('should render children on newline and indented', () => {
+    it('renders children on newline and indented', () => {
       expect(debugElement((
         <div>
           <span />
@@ -125,7 +125,7 @@ describe('debug', () => {
       ));
     });
 
-    it('should render mixed children', () => {
+    it('renders mixed children', () => {
       expect(debugElement((
         <div>hello{'world'}</div>
       ))).to.equal((
@@ -136,7 +136,7 @@ describe('debug', () => {
       ));
     });
 
-    it('should render props on root and children', () => {
+    it('renders props on root and children', () => {
       expect(debugElement((
         <div id="foo">
           <span id="bar" />
@@ -148,7 +148,7 @@ describe('debug', () => {
       ));
     });
 
-    it('should render text on new line and indented', () => {
+    it('renders text on new line and indented', () => {
       expect(debugElement((
         <span>some text</span>
       ))).to.equal((
@@ -158,7 +158,7 @@ describe('debug', () => {
       ));
     });
 
-    it('should render composite components as tags w/ displayName', () => {
+    it('renders composite components as tags w/ displayName', () => {
       class Foo extends React.Component {
         render() { return <div />; }
       }
@@ -175,7 +175,7 @@ describe('debug', () => {
       ));
     });
 
-    it('should render composite components as tags w/ name', () => {
+    it('renders composite components as tags w/ name', () => {
       class Foo extends React.Component {
         render() { return <div />; }
       }
@@ -191,7 +191,7 @@ describe('debug', () => {
       ));
     });
 
-    itIf(is('> 0.13'), 'should render stateless components as tags w/ name', () => {
+    itIf(is('> 0.13'), 'renders stateless components as tags w/ name', () => {
       const Foo = () => <div />;
 
       expect(debugElement((
@@ -205,7 +205,7 @@ describe('debug', () => {
       ));
     });
 
-    it('should render mapped children properly', () => {
+    it('renders mapped children properly', () => {
       expect(debugElement((
         <div>
           <i>not in array</i>
@@ -223,7 +223,7 @@ describe('debug', () => {
       ));
     });
 
-    it('should render number children properly', () => {
+    it('renders number children properly', () => {
       expect(debugElement((
         <div>
           {-1}
@@ -249,7 +249,7 @@ describe('debug', () => {
       ));
     });
 
-    it('should not render falsy children ', () => {
+    it('does not render falsy children ', () => {
       expect(debugElement((
         <div id="foo">
           {false}
@@ -260,7 +260,7 @@ describe('debug', () => {
       ))).to.equal('<div id="foo" />');
     });
 
-    it('should render boxed primitives as the primitive', () => {
+    it('renders boxed primitives as the primitive', () => {
       expect(debugElement((
         <div a={Object('foo')} b={Object(3)} c={Object(true)} />
       ))).to.equal('<div a="foo" b={3} c={true} />');

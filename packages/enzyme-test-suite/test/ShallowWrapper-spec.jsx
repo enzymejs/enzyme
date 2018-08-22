@@ -83,7 +83,7 @@ describe('shallow', () => {
     });
 
     describe('wrapping invalid elements', () => {
-      itIf(is('>= 16'), 'should throw when shallow rendering Portals', () => {
+      itIf(is('>= 16'), 'throws when shallow rendering Portals', () => {
         const portal = createPortal(
           <div />,
           { nodeType: 1 },
@@ -95,14 +95,14 @@ describe('shallow', () => {
         );
       });
 
-      it('should throw when shallow rendering plain text', () => {
+      it('throws when shallow rendering plain text', () => {
         expect(() => shallow('Foo')).to.throw(
           Error,
           'ShallowWrapper can only wrap valid elements',
         );
       });
 
-      it('should throw when shallow rendering multiple elements', () => {
+      it('throws when shallow rendering multiple elements', () => {
         expect(() => shallow([<div />])).to.throw(
           TypeError,
           'ShallowWrapper can only wrap valid elements',
@@ -110,11 +110,11 @@ describe('shallow', () => {
       });
     });
 
-    it('should shallow render built in components', () => {
+    it('shallow renders built in components', () => {
       expect(() => shallow(<div />)).not.to.throw();
     });
 
-    it('should shallow render composite components', () => {
+    it('shallow renders composite components', () => {
       class Foo extends React.Component {
         render() {
           return <div />;
@@ -141,7 +141,7 @@ describe('shallow', () => {
       expect(wrapper.text()).to.equal('foo');
     });
 
-    it('should not throw if context is passed in but contextTypes is missing', () => {
+    it('does not throw if context is passed in but contextTypes is missing', () => {
       const SimpleComponent = createClass({
         render() {
           return <div>{this.context.name}</div>;
@@ -169,7 +169,7 @@ describe('shallow', () => {
       expect(wrapper.context('name')).to.equal(context.name);
     });
 
-    itIf(is('>= 16.3'), 'should find elements through Context elements', () => {
+    itIf(is('>= 16.3'), 'finds elements through Context elements', () => {
       const { Provider, Consumer } = createContext('');
 
       class Consumes extends React.Component {
@@ -194,7 +194,7 @@ describe('shallow', () => {
       expect(shallow(<Provides />).find(Consumes)).to.have.lengthOf(1);
     });
 
-    itIf(is('>= 16.3'), 'should find elements through forwarded refs elements', () => {
+    itIf(is('>= 16.3'), 'finds elements through forwarded refs elements', () => {
       const SomeComponent = forwardRef((props, ref) => (
         <div ref={ref}>
           <span className="child1" />
@@ -219,7 +219,7 @@ describe('shallow', () => {
         expect(wrapper.text()).to.equal('foo');
       });
 
-      it('should not throw if context is passed in but contextTypes is missing', () => {
+      it('does not throw if context is passed in but contextTypes is missing', () => {
         const SimpleComponent = (props, context) => (
           <div>{context.name}</div>
         );
@@ -276,7 +276,7 @@ describe('shallow', () => {
   });
 
   describeIf(is('>= 16'), 'portals', () => {
-    it('should show portals in shallow debug tree', () => {
+    it('shows portals in shallow debug tree', () => {
       const Foo = () => (
         <div className="foo">
           {createPortal(
@@ -296,7 +296,7 @@ describe('shallow', () => {
 </div>`);
     });
 
-    it('should show portal container in shallow debug tree', () => {
+    it('shows portal container in shallow debug tree', () => {
       const Foo = () => (
         <div className="foo">
           {createPortal(
@@ -316,7 +316,7 @@ describe('shallow', () => {
 </div>`);
     });
 
-    it('should show nested portal children in shallow debug tree', () => {
+    it('shows nested portal children in shallow debug tree', () => {
       const Bar = () => null;
 
       const Foo = () => (
@@ -344,7 +344,7 @@ describe('shallow', () => {
 </div>`);
     });
 
-    it('should have top level portals in debug tree', () => {
+    it('has top level portals in debug tree', () => {
       const Foo = () => (
         createPortal(
           <div className="in-portal">InPortal</div>,
@@ -362,7 +362,7 @@ describe('shallow', () => {
   });
 
   describe('.contains(node)', () => {
-    it('should allow matches on the root node', () => {
+    it('allows matches on the root node', () => {
       const a = <div className="foo" />;
       const b = <div className="foo" />;
       const c = <div className="bar" />;
@@ -370,7 +370,7 @@ describe('shallow', () => {
       expect(shallow(a).contains(c)).to.equal(false);
     });
 
-    it('should allow matches on a nested node', () => {
+    it('allows matches on a nested node', () => {
       const wrapper = shallow((
         <div>
           <div className="foo" />
@@ -380,7 +380,7 @@ describe('shallow', () => {
       expect(wrapper.contains(b)).to.equal(true);
     });
 
-    it('should match composite components', () => {
+    it('matches composite components', () => {
       class Foo extends React.Component {
         render() { return <div />; }
       }
@@ -393,14 +393,14 @@ describe('shallow', () => {
       expect(wrapper.contains(b)).to.equal(true);
     });
 
-    it('should work with strings', () => {
+    it('works with strings', () => {
       const wrapper = shallow(<div>foo</div>);
 
       expect(wrapper.contains('foo')).to.equal(true);
       expect(wrapper.contains('bar')).to.equal(false);
     });
 
-    it('should work with numbers', () => {
+    it('works with numbers', () => {
       const wrapper = shallow(<div>{1}</div>);
 
       expect(wrapper.contains(1)).to.equal(true);
@@ -408,7 +408,7 @@ describe('shallow', () => {
       expect(wrapper.contains('1')).to.equal(false);
     });
 
-    it('should work with nested strings & numbers', () => {
+    it('works with nested strings & numbers', () => {
       const wrapper = shallow((
         <div>
           <div>
@@ -425,7 +425,7 @@ describe('shallow', () => {
       expect(wrapper.contains(<div>{5}</div>)).to.equal(true);
     });
 
-    it('should do something with arrays of nodes', () => {
+    it('does something with arrays of nodes', () => {
       const wrapper = shallow((
         <div>
           <span>Hello</span>
@@ -452,7 +452,7 @@ describe('shallow', () => {
       expect(wrapper.contains(passes2)).to.equal(true);
     });
 
-    it('should throw on invalid argument', () => {
+    it('throws on invalid argument', () => {
       const wrapper = shallow(<div />);
 
       expect(() => wrapper.contains({})).to.throw(
@@ -466,7 +466,7 @@ describe('shallow', () => {
     });
 
     describeIf(is('> 0.13'), 'stateless function components', () => {
-      it('should match composite components', () => {
+      it('matches composite components', () => {
         function Foo() {
           return <div />;
         }
@@ -480,7 +480,7 @@ describe('shallow', () => {
         expect(wrapper.contains(b)).to.equal(true);
       });
 
-      it('should match composite components if rendered by function', () => {
+      it('matches composite components if rendered by function', () => {
         function Foo() {
           return <div />;
         }
@@ -497,7 +497,7 @@ describe('shallow', () => {
   });
 
   describe('.equals(node)', () => {
-    it('should allow matches on the root node', () => {
+    it('allows matches on the root node', () => {
       const a = <div className="foo" />;
       const b = <div className="foo" />;
       const c = <div className="bar" />;
@@ -505,7 +505,7 @@ describe('shallow', () => {
       expect(shallow(a).equals(c)).to.equal(false);
     });
 
-    it('should NOT allow matches on a nested node', () => {
+    it('does NOT allow matches on a nested node', () => {
       const wrapper = shallow((
         <div>
           <div className="foo" />
@@ -515,7 +515,7 @@ describe('shallow', () => {
       expect(wrapper.equals(b)).to.equal(false);
     });
 
-    it('should match composite components', () => {
+    it('matches composite components', () => {
       class Foo extends React.Component {
         render() { return <div />; }
       }
@@ -528,7 +528,7 @@ describe('shallow', () => {
       expect(wrapper.equals(b)).to.equal(true);
     });
 
-    it('should not expand `node` content', () => {
+    it('does not expand `node` content', () => {
       class Bar extends React.Component {
         render() { return <div />; }
       }
@@ -542,7 +542,7 @@ describe('shallow', () => {
     });
 
     describeIf(is('> 0.13'), 'stateless function components (SFCs)', () => {
-      it('should match composite SFCs', () => {
+      it('matches composite SFCs', () => {
         const Foo = () => (
           <div />
         );
@@ -556,7 +556,7 @@ describe('shallow', () => {
         expect(wrapper.equals(b)).to.equal(true);
       });
 
-      it('should not expand `node` content', () => {
+      it('does not expand `node` content', () => {
         const Bar = () => (
           <div />
         );
@@ -601,7 +601,7 @@ describe('shallow', () => {
   });
 
   describe('.hostNodes()', () => {
-    it('should strip out any non-hostNode', () => {
+    it('strips out any non-hostNode', () => {
       class Foo extends React.Component {
         render() {
           return <div {...this.props} />;
@@ -628,13 +628,13 @@ describe('shallow', () => {
   wrap()
     .withOverride(() => getAdapter(), 'isValidElementType', () => undefined)
     .describe('.find(selector)', () => {
-      it('should be able to match the root DOM element', () => {
+      it('matches the root DOM element', () => {
         const wrapper = shallow(<div id="ttt" className="ttt">hello</div>);
         expect(wrapper.find('#ttt')).to.have.lengthOf(1);
         expect(wrapper.find('.ttt')).to.have.lengthOf(1);
       });
 
-      it('should find an element based on a class name', () => {
+      it('finds an element based on a class name', () => {
         const wrapper = shallow((
           <div>
             <input className="foo" />
@@ -643,7 +643,7 @@ describe('shallow', () => {
         expect(wrapper.find('.foo').type()).to.equal('input');
       });
 
-      it('should find an element that has dot in attribute', () => {
+      it('finds an element that has dot in attribute', () => {
         const wrapper = shallow((
           <div>
             <div data-baz="foo.bar" />
@@ -654,7 +654,7 @@ describe('shallow', () => {
         expect(elements).to.have.lengthOf(1);
       });
 
-      it('should find an element that with class and attribute', () => {
+      it('finds an element that with class and attribute', () => {
         const wrapper = shallow((
           <div>
             <div data-baz="bar" className="classBar" />
@@ -665,7 +665,7 @@ describe('shallow', () => {
         expect(elements).to.have.lengthOf(1);
       });
 
-      it('should find an element that with multiple classes and one attribute', () => {
+      it('finds an element that with multiple classes and one attribute', () => {
         const wrapper = shallow((
           <div>
             <div data-baz="bar" className="classBar classFoo" />
@@ -676,7 +676,7 @@ describe('shallow', () => {
         expect(elements).to.have.lengthOf(1);
       });
 
-      it('should find an element that with class and class with hyphen', () => {
+      it('finds an element that with class and class with hyphen', () => {
         const wrapper = shallow((
           <div>
             <div data-baz="bar" className="classBar class-Foo" />
@@ -687,7 +687,7 @@ describe('shallow', () => {
         expect(elements).to.have.lengthOf(1);
       });
 
-      it('should find an element based on a tag name and class name', () => {
+      it('finds an element based on a tag name and class name', () => {
         const wrapper = shallow((
           <div>
             <input className="foo" />
@@ -696,7 +696,7 @@ describe('shallow', () => {
         expect(wrapper.find('input.foo')).to.have.lengthOf(1);
       });
 
-      it('should find an element based on a tag name and id', () => {
+      it('finds an element based on a tag name and id', () => {
         const wrapper = shallow((
           <div>
             <input id="foo" />
@@ -705,7 +705,7 @@ describe('shallow', () => {
         expect(wrapper.find('input#foo')).to.have.lengthOf(1);
       });
 
-      it('should find an element based on a tag name, id, and class name', () => {
+      it('finds an element based on a tag name, id, and class name', () => {
         const wrapper = shallow((
           <div>
             <input id="foo" className="bar" />
@@ -714,7 +714,7 @@ describe('shallow', () => {
         expect(wrapper.find('input#foo.bar')).to.have.lengthOf(1);
       });
 
-      it('should find an element based on a tag name', () => {
+      it('finds an element based on a tag name', () => {
         const wrapper = shallow((
           <div>
             <input className="foo" />
@@ -729,7 +729,7 @@ describe('shallow', () => {
         expect(wrapper.find('select').props().className).to.equal('reality');
       });
 
-      it('should find a component based on a constructor', () => {
+      it('finds a component based on a constructor', () => {
         class Foo extends React.Component {
           render() { return <div />; }
         }
@@ -759,7 +759,7 @@ describe('shallow', () => {
           );
         });
 
-      it('should find a component based on a component display name', () => {
+      it('finds a component based on a component display name', () => {
         class Foo extends React.Component {
           render() { return <div />; }
         }
@@ -771,7 +771,7 @@ describe('shallow', () => {
         expect(wrapper.find('Foo').type()).to.equal(Foo);
       });
 
-      it('should find multiple elements based on a class name', () => {
+      it('finds multiple elements based on a class name', () => {
         const wrapper = shallow((
           <div>
             <input className="foo" />
@@ -781,7 +781,7 @@ describe('shallow', () => {
         expect(wrapper.find('.foo')).to.have.lengthOf(2);
       });
 
-      it('should find multiple elements based on a tag name', () => {
+      it('finds multiple elements based on a tag name', () => {
         const wrapper = shallow((
           <div>
             <input className="foo" />
@@ -793,7 +793,7 @@ describe('shallow', () => {
         expect(wrapper.find('button')).to.have.lengthOf(1);
       });
 
-      it('should work on non-single nodes', () => {
+      it('works on non-single nodes', () => {
         const wrapper = shallow((
           <div className="a">
             <div className="b">
@@ -813,7 +813,7 @@ describe('shallow', () => {
         expect(wrapper.find('.b').find('.c')).to.have.lengthOf(6);
       });
 
-      it('should find component based on a react prop', () => {
+      it('finds component based on a react prop', () => {
         const wrapper = shallow((
           <div>
             <span title="foo" />
@@ -843,7 +843,7 @@ describe('shallow', () => {
         expect(wrapper.find('.row + .row')).to.have.lengthOf(1);
       });
 
-      it('should throw for non-numeric attribute values without quotes', () => {
+      it('throws for non-numeric attribute values without quotes', () => {
         const wrapper = shallow((
           <div>
             <input type="text" />
@@ -865,7 +865,7 @@ describe('shallow', () => {
         );
       });
 
-      it('should error sensibly if any of the search props are undefined', () => {
+      it('errors sensibly if any of the search props are undefined', () => {
         const wrapper = shallow((
           <div>
             <input type={undefined} />
@@ -878,7 +878,7 @@ describe('shallow', () => {
         );
       });
 
-      it('should compound tag and prop selector', () => {
+      it('compounds tag and prop selector', () => {
         const wrapper = shallow((
           <div>
             <span preserveAspectRatio="xMaxYMax" />
@@ -889,7 +889,7 @@ describe('shallow', () => {
         expect(wrapper.find('span[preserveAspectRatio]')).to.have.lengthOf(1);
       });
 
-      it('should support data prop selectors', () => {
+      it('supports data prop selectors', () => {
         const wrapper = shallow((
           <div>
             <span data-foo="bar" />
@@ -900,7 +900,7 @@ describe('shallow', () => {
         expect(wrapper.find('[data-foo]')).to.have.lengthOf(1);
       });
 
-      it('should find components with multiple matching react props', () => {
+      it('finds components with multiple matching react props', () => {
         function noop() {}
         const wrapper = shallow((
           <div>
@@ -913,7 +913,7 @@ describe('shallow', () => {
         expect(wrapper.find('[htmlFor][preserveAspectRatio]')).to.have.lengthOf(1);
       });
 
-      it('should support boolean and numeric values for matching props', () => {
+      it('supports boolean and numeric values for matching props', () => {
         const wrapper = shallow((
           <div>
             <span value={1} />
@@ -927,7 +927,7 @@ describe('shallow', () => {
         expect(wrapper.find('a[value=true]')).to.have.lengthOf(0);
       });
 
-      it('should not find key or ref via property selector', () => {
+      it('does not find key or ref via property selector', () => {
         const arrayOfComponents = [<div key="1" />, <div key="2" />];
 
         const wrapper = shallow((
@@ -943,7 +943,7 @@ describe('shallow', () => {
         expect(wrapper.find('[key]')).to.have.lengthOf(0);
       });
 
-      it('should find multiple elements based on a constructor', () => {
+      it('finds multiple elements based on a constructor', () => {
         const wrapper = shallow((
           <div>
             <input className="foo" />
@@ -955,7 +955,7 @@ describe('shallow', () => {
         expect(wrapper.find('button')).to.have.lengthOf(1);
       });
 
-      it('should support object property selectors', () => {
+      it('supports object property selectors', () => {
         const wrapper = shallow((
           <div>
             <input data-test="ref" className="foo" type="text" />
@@ -976,7 +976,7 @@ describe('shallow', () => {
         expect(wrapper.find({ prop: true })).to.have.lengthOf(1);
       });
 
-      it('should support complex and nested object property selectors', () => {
+      it('supports complex and nested object property selectors', () => {
         const testFunction = () => ({});
         const wrapper = shallow((
           <div>
@@ -999,7 +999,7 @@ describe('shallow', () => {
         })).to.have.lengthOf(1);
       });
 
-      it('should throw when given empty object, null, or an array', () => {
+      it('throws when given empty object, null, or an array', () => {
         const wrapper = shallow((
           <div>
             <input className="foo" type="text" />
@@ -1019,7 +1019,7 @@ describe('shallow', () => {
         );
       });
 
-      it('Should query attributes with spaces in their values', () => {
+      it('queries attributes with spaces in their values', () => {
         const wrapper = shallow((
           <div>
             <h1 data-foo="foo bar">Hello</h1>
@@ -1035,7 +1035,7 @@ describe('shallow', () => {
       });
 
       describeIf(is('> 0.13'), 'stateless function components', () => {
-        it('should find a component based on a constructor', () => {
+        it('finds a component based on a constructor', () => {
           const Foo = () => (
             <div />
           );
@@ -1047,7 +1047,7 @@ describe('shallow', () => {
           expect(wrapper.find(Foo).type()).to.equal(Foo);
         });
 
-        it('should find a component based on a display name', () => {
+        it('finds a component based on a display name', () => {
           const Foo = () => (
             <div />
           );
@@ -1133,7 +1133,7 @@ describe('shallow', () => {
           expect(wrapper.find('.container p')).to.have.lengthOf(0);
         });
 
-        it('should find direct child span inside React.Fragment', () => {
+        it('finds direct child span inside React.Fragment', () => {
           const wrapper = shallow(<NestedFragmentComponent />);
           expect(wrapper.find('.container > span')).to.have.lengthOf(4);
         });
@@ -1164,7 +1164,7 @@ describe('shallow', () => {
         });
       });
 
-      itIf(is('>= 16'), 'should find portals by name', () => {
+      itIf(is('>= 16'), 'finds portals by name', () => {
         const containerDiv = { nodeType: 1 };
         const Foo = () => (
           <div>
@@ -1180,7 +1180,7 @@ describe('shallow', () => {
         expect(wrapper.find('Portal')).to.have.lengthOf(1);
       });
 
-      itIf(is('>= 16'), 'should find elements through portals', () => {
+      itIf(is('>= 16'), 'finds elements through portals', () => {
         const containerDiv = { nodeType: 1 };
         const Foo = () => (
           <div>
@@ -1204,7 +1204,7 @@ describe('shallow', () => {
     });
 
   describe('.findWhere(predicate)', () => {
-    it('should return all elements for a truthy test', () => {
+    it('returns all elements for a truthy test', () => {
       const wrapper = shallow((
         <div>
           <input className="foo" />
@@ -1214,7 +1214,7 @@ describe('shallow', () => {
       expect(wrapper.findWhere(() => true)).to.have.lengthOf(3);
     });
 
-    it('should return no elements for a falsy test', () => {
+    it('returns no elements for a falsy test', () => {
       const wrapper = shallow((
         <div>
           <input className="foo" />
@@ -1224,7 +1224,7 @@ describe('shallow', () => {
       expect(wrapper.findWhere(() => false)).to.have.lengthOf(0);
     });
 
-    it('should call the predicate with the wrapped node as the first argument', () => {
+    it('calls the predicate with the wrapped node as the first argument', () => {
       const wrapper = shallow((
         <div>
           <div className="foo bar" />
@@ -1334,7 +1334,7 @@ describe('shallow', () => {
       expect(foundNotSpan).to.have.lengthOf(0);
     });
 
-    it('should return props object when props() is called', () => {
+    it('returns props object when props() is called', () => {
       class Foo extends React.Component {
         render() {
           return (
@@ -1349,7 +1349,7 @@ describe('shallow', () => {
       expect(wrapper.props()).to.deep.equal({ 'data-foo': content, children: 'Test Component' });
     });
 
-    it('should return shallow rendered string when debug() is called', () => {
+    it('returns shallow rendered string when debug() is called', () => {
       class Foo extends React.Component {
         render() {
           return (
@@ -1416,7 +1416,7 @@ describe('shallow', () => {
         expect(foundNotSpan).to.have.lengthOf(0);
       });
 
-      it('should return props object when props() is called', () => {
+      it('returns props object when props() is called', () => {
         const SFC = function SFC({ data }) {
           return (
             <div data-foo={data}>Test SFC</div>
@@ -1429,7 +1429,7 @@ describe('shallow', () => {
         expect(wrapper.props()).to.deep.equal({ 'data-foo': content, children: 'Test SFC' });
       });
 
-      it('should return shallow rendered string when debug() is called', () => {
+      it('returns shallow rendered string when debug() is called', () => {
         const SFC = function SFC({ data }) {
           return (
             <div data-foo={data}>Test SFC</div>
@@ -1481,7 +1481,7 @@ describe('shallow', () => {
       expect(textContents).to.eql(expected);
     });
 
-    it('should not pass in null or false nodes', () => {
+    it('does not pass in null or false nodes', () => {
       const wrapper = shallow((
         <div>
           <div className="foo bar" />
@@ -1496,7 +1496,7 @@ describe('shallow', () => {
       expect(spy).to.have.property('callCount', 2);
     });
 
-    itIf(is('>= 16'), 'should find portals by react-is Portal type', () => {
+    itIf(is('>= 16'), 'finds portals by react-is Portal type', () => {
       const containerDiv = { nodeType: 1 };
       const Foo = () => (
         <div>
@@ -1530,7 +1530,7 @@ describe('shallow', () => {
       expect(() => wrapper.setProps({}, {})).to.throw();
     });
 
-    it('should set props for a component multiple times', () => {
+    it('sets props for a component multiple times', () => {
       class Foo extends React.Component {
         render() {
           return (
@@ -1684,7 +1684,7 @@ describe('shallow', () => {
       });
     });
 
-    it('should call componentWillReceiveProps for new renders', () => {
+    it('calls componentWillReceiveProps for new renders', () => {
       const stateValue = {};
 
       class Foo extends React.Component {
@@ -1732,7 +1732,7 @@ describe('shallow', () => {
       }
     });
 
-    it('should merge newProps with oldProps', () => {
+    it('merges newProps with oldProps', () => {
       class Foo extends React.Component {
         render() {
           return (
@@ -1758,7 +1758,7 @@ describe('shallow', () => {
       expect(wrapper.props().d).to.equal('e');
     });
 
-    it('should pass in old context', () => {
+    it('passes in old context', () => {
       class Foo extends React.Component {
         render() {
           return (
@@ -1777,7 +1777,7 @@ describe('shallow', () => {
       expect(wrapper.first('div').text()).to.equal('yolo');
     });
 
-    it('should use defaultProps if new props includes undefined values', () => {
+    it('uses defaultProps if new props includes undefined values', () => {
       const initialState = { a: 42 };
       const context = { b: 7 };
       class Foo extends React.Component {
@@ -1815,7 +1815,7 @@ describe('shallow', () => {
       ]);
     });
 
-    it('should throw if an exception occurs during render', () => {
+    it('throws if an exception occurs during render', () => {
       let error;
       class Trainwreck extends React.Component {
         render() {
@@ -1845,7 +1845,7 @@ describe('shallow', () => {
       expect(() => wrapper.setProps({ user: {} })).to.throw(error);
     });
 
-    it('should call the callback when setProps has completed', () => {
+    it('calls the callback when setProps has completed', () => {
       class Foo extends React.Component {
         render() {
           const { id } = this.props;
@@ -1867,7 +1867,7 @@ describe('shallow', () => {
       expect(wrapper.find('.foo')).to.have.lengthOf(0);
     });
 
-    it('should call componentWillReceiveProps, shouldComponentUpdate, componentWillUpdate, and componentDidUpdate with merged newProps', () => {
+    it('calls componentWillReceiveProps, shouldComponentUpdate, componentWillUpdate, and componentDidUpdate with merged newProps', () => {
       const spy = sinon.spy();
 
       class Foo extends React.Component {
@@ -1924,7 +1924,7 @@ describe('shallow', () => {
     });
 
     describeIf(is('> 0.13'), 'stateless function components', () => {
-      it('should set props for a component multiple times', () => {
+      it('sets props for a component multiple times', () => {
         const Foo = props => (
           <div className={props.id}>
             {props.id}
@@ -1937,7 +1937,7 @@ describe('shallow', () => {
         expect(wrapper.find('.bar')).to.have.lengthOf(1);
       });
 
-      it('should merge newProps with oldProps', () => {
+      it('merges newProps with oldProps', () => {
         const Foo = props => (
           <Bar {...props} />
         );
@@ -1955,7 +1955,7 @@ describe('shallow', () => {
         expect(wrapper.props().d).to.equal('e');
       });
 
-      it('should pass in old context', () => {
+      it('passes in old context', () => {
         const Foo = (props, context) => (
           <div>{context.x}</div>
         );
@@ -1969,7 +1969,7 @@ describe('shallow', () => {
         expect(wrapper.first('div').text()).to.equal('yolo');
       });
 
-      it('should throw if an exception occurs during render', () => {
+      it('throws if an exception occurs during render', () => {
         let error;
         const Trainwreck = ({ user }) => {
           try {
@@ -2008,7 +2008,7 @@ describe('shallow', () => {
       },
     });
 
-    it('should set context for a component multiple times', () => {
+    it('sets context for a component multiple times', () => {
       const context = { name: 'foo' };
       const wrapper = shallow(<SimpleComponent />, { context });
       expect(wrapper.text()).to.equal('foo');
@@ -2018,7 +2018,7 @@ describe('shallow', () => {
       expect(wrapper.text()).to.equal('baz');
     });
 
-    it('should throw if it is called when shallow didn’t include context', () => {
+    it('throws if it is called when shallow didn’t include context', () => {
       const wrapper = shallow(<SimpleComponent />);
       expect(() => wrapper.setContext({ name: 'bar' })).to.throw(
         Error,
@@ -2032,7 +2032,7 @@ describe('shallow', () => {
       );
       SFC.contextTypes = { name: PropTypes.string };
 
-      it('should set context for a component multiple times', () => {
+      it('sets context for a component multiple times', () => {
         const context = { name: 'foo' };
         const wrapper = shallow(<SFC />, { context });
         expect(wrapper.text()).to.equal('foo');
@@ -2042,7 +2042,7 @@ describe('shallow', () => {
         expect(wrapper.text()).to.equal('baz');
       });
 
-      it('should throw if it is called when shallow didn’t include context', () => {
+      it('throws if it is called when shallow didn’t include context', () => {
         const wrapper = shallow(<SFC />);
         expect(() => wrapper.setContext({ name: 'bar' })).to.throw(
           Error,
@@ -2053,7 +2053,7 @@ describe('shallow', () => {
   });
 
   describe('.simulate(eventName, data)', () => {
-    it('should simulate events', () => {
+    it('simulates events', () => {
       class Foo extends React.Component {
         constructor(props) {
           super(props);
@@ -2085,7 +2085,7 @@ describe('shallow', () => {
     });
 
 
-    it('should pass in event data', () => {
+    it('passes in event data', () => {
       const spy = sinon.spy();
       class Foo extends React.Component {
         render() {
@@ -2105,7 +2105,7 @@ describe('shallow', () => {
     });
 
     describeIf(is('> 0.13'), 'stateless function components', () => {
-      it('should simulate events', () => {
+      it('simulates events', () => {
         const spy = sinon.spy();
         const Foo = props => (
           <a onClick={props.onClick}>foo</a>
@@ -2118,7 +2118,7 @@ describe('shallow', () => {
         expect(spy).to.have.property('callCount', 1);
       });
 
-      it('should pass in event data', () => {
+      it('passes in event data', () => {
         const spy = sinon.spy();
         const Foo = () => (
           <a onClick={spy}>foo</a>
@@ -2135,7 +2135,7 @@ describe('shallow', () => {
     });
 
     describe('Normalizing JS event names', () => {
-      it('should convert lowercase events to React camelcase', () => {
+      it('converts lowercase events to React camelcase', () => {
         const spy = sinon.spy();
         const clickSpy = sinon.spy();
         class Foo extends React.Component {
@@ -2156,7 +2156,7 @@ describe('shallow', () => {
       });
 
       describeIf(is('> 0.13'), 'normalizing mouseenter', () => {
-        it('should convert lowercase events to React camelcase', () => {
+        it('converts lowercase events to React camelcase', () => {
           const spy = sinon.spy();
           class Foo extends React.Component {
             render() {
@@ -2172,7 +2172,7 @@ describe('shallow', () => {
           expect(spy).to.have.property('callCount', 1);
         });
 
-        it('should convert lowercase events to React camelcase in SFCs', () => {
+        it('converts lowercase events to React camelcase in SFCs', () => {
           const spy = sinon.spy();
           const Foo = () => (
             <a onMouseEnter={spy}>foo</a>
@@ -2186,7 +2186,7 @@ describe('shallow', () => {
       });
 
       describeIf(is('>= 15'), 'animation events', () => {
-        it('should convert lowercase events to React camelcase', () => {
+        it('converts lowercase events to React camelcase', () => {
           const spy = sinon.spy();
           class Foo extends React.Component {
             render() {
@@ -2202,7 +2202,7 @@ describe('shallow', () => {
           expect(spy).to.have.property('callCount', 1);
         });
 
-        it('should convert lowercase events to React camelcase in stateless components', () => {
+        it('converts lowercase events to React camelcase in stateless components', () => {
           const spy = sinon.spy();
           const Foo = () => (
             <a onAnimationIteration={spy}>foo</a>
@@ -2216,7 +2216,7 @@ describe('shallow', () => {
       });
 
       describeIf(is('>= 16.4'), 'pointer events', () => {
-        it('should convert lowercase events to React camelcase', () => {
+        it('converts lowercase events to React camelcase', () => {
           const spy = sinon.spy();
           class Foo extends React.Component {
             render() {
@@ -2232,7 +2232,7 @@ describe('shallow', () => {
           expect(spy).to.have.property('callCount', 1);
         });
 
-        it('should convert lowercase events to React camelcase in stateless components', () => {
+        it('converts lowercase events to React camelcase in stateless components', () => {
           const spy = sinon.spy();
           const Foo = () => (
             <a onGotPointerCapture={spy}>foo</a>
@@ -2246,7 +2246,7 @@ describe('shallow', () => {
       });
     });
 
-    itIf(BATCHING, 'should be batched updates', () => {
+    itIf(BATCHING, 'has batched updates', () => {
       let renderCount = 0;
       class Foo extends React.Component {
         constructor(props) {
@@ -2341,7 +2341,7 @@ describe('shallow', () => {
       expect(() => wrapper.setState({}, {})).to.throw();
     });
 
-    it('should set the state of the root node', () => {
+    it('sets the state of the root node', () => {
       class Foo extends React.Component {
         constructor(props) {
           super(props);
@@ -2379,7 +2379,7 @@ describe('shallow', () => {
       expect(wrapper.find('div').text()).to.equal('a');
     });
 
-    it('should call the callback when setState has completed', () => {
+    it('calls the callback when setState has completed', () => {
       class Foo extends React.Component {
         constructor(props) {
           super(props);
@@ -2468,8 +2468,8 @@ describe('shallow', () => {
       expect(stub).to.have.property('callCount', 2);
     });
 
-    describe('should not call componentWillReceiveProps after setState is called', () => {
-      it('should not call componentWillReceiveProps upon rerender', () => {
+    describe('does not call componentWillReceiveProps after setState is called', () => {
+      it('does not call componentWillReceiveProps upon rerender', () => {
         class A extends React.Component {
           constructor(props) {
             super(props);
@@ -2505,7 +2505,7 @@ describe('shallow', () => {
         });
       });
 
-      it('should not call componentWillReceiveProps with multiple keys in props', () => {
+      it('does not call componentWillReceiveProps with multiple keys in props', () => {
         class B extends React.Component {
           constructor(props) {
             super(props);
@@ -2549,7 +2549,7 @@ describe('shallow', () => {
     });
 
     describeIf(is('> 0.13'), 'stateless function components', () => {
-      it('should throw when trying to access state', () => {
+      it('throws when trying to access state', () => {
         const Foo = () => (
           <div>abc</div>
         );
@@ -2562,7 +2562,7 @@ describe('shallow', () => {
         );
       });
 
-      it('should throw when trying to set state', () => {
+      it('throws when trying to set state', () => {
         const Foo = () => (
           <div>abc</div>
         );
@@ -2621,7 +2621,7 @@ describe('shallow', () => {
       expect(() => wrapper.instance().setStateWithNullishCallback()).not.to.throw();
     });
 
-    it('should preserve the receiver', () => {
+    it('preserves the receiver', () => {
       class Comp extends React.Component {
         constructor(...args) {
           super(...args);
@@ -2648,24 +2648,24 @@ describe('shallow', () => {
   });
 
   describe('.is(selector)', () => {
-    it('should return true when selector matches current element', () => {
+    it('returns true when selector matches current element', () => {
       const wrapper = shallow(<div className="foo bar baz" />);
       expect(wrapper.is('.foo')).to.equal(true);
     });
 
-    it('should allow for compound selectors', () => {
+    it('allows for compound selectors', () => {
       const wrapper = shallow(<div className="foo bar baz" />);
       expect(wrapper.is('.foo.bar')).to.equal(true);
     });
 
-    it('should ignore insignificant whitespace', () => {
+    it('ignores insignificant whitespace', () => {
       const className = `foo
       `;
       const wrapper = shallow(<div className={className} />);
       expect(wrapper.is('.foo')).to.equal(true);
     });
 
-    it('should handle all significant whitespace', () => {
+    it('handles all significant whitespace', () => {
       const className = `foo
 
       bar
@@ -2674,7 +2674,7 @@ describe('shallow', () => {
       expect(wrapper.is('.foo.bar.baz')).to.equal(true);
     });
 
-    it('should return false when selector does not match', () => {
+    it('returns false when selector does not match', () => {
       const wrapper = shallow(<div className="bar baz" />);
       expect(wrapper.is('.foo')).to.equal(false);
     });
@@ -2703,7 +2703,7 @@ describe('shallow', () => {
       expect(wrapper.isEmptyRender()).to.equal(data.expectResponse);
     });
 
-    it('should not return true for HTML elements', () => {
+    it('does not return true for HTML elements', () => {
       const wrapper = shallow(<div className="bar baz" />);
       expect(wrapper.isEmptyRender()).to.equal(false);
     });
@@ -2738,7 +2738,7 @@ describe('shallow', () => {
   });
 
   describe('.filter(selector)', () => {
-    it('should return a new wrapper of just the nodes that matched the selector', () => {
+    it('returns a new wrapper of just the nodes that matched the selector', () => {
       const wrapper = shallow((
         <div>
           <div className="foo bar baz" />
@@ -2758,7 +2758,7 @@ describe('shallow', () => {
       expect(wrapper.find('.foo').filter('.baz.bar')).to.have.lengthOf(2);
     });
 
-    it('should only look in the current wrappers nodes, not their children', () => {
+    it('only looks in the current wrappers nodes, not their children', () => {
       const wrapper = shallow((
         <div>
           <div className="foo">
@@ -2773,7 +2773,7 @@ describe('shallow', () => {
   });
 
   describe('.filterWhere(predicate)', () => {
-    it('should filter only the nodes of the wrapper', () => {
+    it('filters only the nodes of the wrapper', () => {
       const wrapper = shallow((
         <div>
           <div className="foo bar" />
@@ -2792,7 +2792,7 @@ describe('shallow', () => {
       expect(baz.hasClass('baz')).to.equal(true);
     });
 
-    it('should call the predicate with the wrapped node as the first argument', () => {
+    it('calls the predicate with the wrapped node as the first argument', () => {
       const wrapper = shallow((
         <div>
           <div className="foo bar" />
@@ -2822,14 +2822,14 @@ describe('shallow', () => {
       expect(expected).to.equal(actual);
     };
 
-    it('should handle simple text nodes', () => {
+    it('handles simple text nodes', () => {
       const wrapper = shallow((
         <div>some text</div>
       ));
       expect(wrapper.text()).to.equal('some text');
     });
 
-    it('should handle nodes with mapped children', () => {
+    it('handles nodes with mapped children', () => {
       class Foo extends React.Component {
         render() {
           return (
@@ -2851,7 +2851,7 @@ describe('shallow', () => {
       ));
     });
 
-    it('should render composite components dumbly', () => {
+    it('renders composite components dumbly', () => {
       class Foo extends React.Component {
         render() { return <div />; }
       }
@@ -2864,11 +2864,11 @@ describe('shallow', () => {
       expect(wrapper.text()).to.equal('<Foo />test');
     });
 
-    it('should handle html entities', () => {
+    it('handles html entities', () => {
       matchesRender(<div>&gt;</div>);
     });
 
-    it('should handle spaces with same behavior as ReactWrapper.text()', () => {
+    it('handles spaces with same behavior as ReactWrapper.text()', () => {
       const Space = (
         <div>
           <div> test  </div>
@@ -2913,7 +2913,7 @@ describe('shallow', () => {
     });
 
     describeIf(is('> 0.13'), 'stateless function components', () => {
-      it('should handle nodes with mapped children', () => {
+      it('handles nodes with mapped children', () => {
         const Foo = props => (
           <div>
             {props.items.map(x => x)}
@@ -2931,7 +2931,7 @@ describe('shallow', () => {
         ));
       });
 
-      it('should render composite components dumbly', () => {
+      it('renders composite components dumbly', () => {
         const Foo = () => (
           <div />
         );
@@ -2946,7 +2946,7 @@ describe('shallow', () => {
       });
     });
 
-    it('should render falsy numbers', () => {
+    it('renders falsy numbers', () => {
       [0, -0, '0', NaN].forEach((x) => {
         const wrapper = shallow(<div>{x}</div>);
         expect(wrapper.text()).to.equal(String(x));
@@ -2967,7 +2967,7 @@ describe('shallow', () => {
   });
 
   describe('.props()', () => {
-    it('should return the props object', () => {
+    it('returns the props object', () => {
       const fn = () => ({});
       const wrapper = shallow((
         <div id="fooId" className="bax" onClick={fn}>
@@ -2982,7 +2982,7 @@ describe('shallow', () => {
 
     });
 
-    it('should be allowed to be used on an inner node', () => {
+    it('is allowed to be used on an inner node', () => {
       const fn = () => ({});
       const wrapper = shallow((
         <div className="bax">
@@ -2995,7 +2995,7 @@ describe('shallow', () => {
       expect(wrapper.find('.foo').props().id).to.equal('fooId');
     });
 
-    it('should return props of root rendered node', () => {
+    it('returns props of root rendered node', () => {
       class Foo extends React.Component {
         render() {
           return (
@@ -3010,7 +3010,7 @@ describe('shallow', () => {
     });
 
     describeIf(is('> 0.13'), 'stateless function components', () => {
-      it('should return props of root rendered node', () => {
+      it('returns props of root rendered node', () => {
         const Foo = ({ bar, foo }) => (
           <div className={bar} id={foo} />
         );
@@ -3066,7 +3066,7 @@ describe('shallow', () => {
   });
 
   describe('.prop(name)', () => {
-    it('should return the props of key `name`', () => {
+    it('returns the props of key `name`', () => {
       const fn = () => ({});
       const wrapper = shallow((
         <div id="fooId" className="bax" onClick={fn}>
@@ -3081,7 +3081,7 @@ describe('shallow', () => {
 
     });
 
-    it('should be allowed to be used on an inner node', () => {
+    it('is allowed to be used on an inner node', () => {
       const fn = () => ({});
       const wrapper = shallow((
         <div className="bax">
@@ -3094,7 +3094,7 @@ describe('shallow', () => {
       expect(wrapper.find('.foo').prop('id')).to.equal('fooId');
     });
 
-    it('should return props of root rendered node', () => {
+    it('returns props of root rendered node', () => {
       class Foo extends React.Component {
         render() {
           return (
@@ -3112,7 +3112,7 @@ describe('shallow', () => {
     });
 
     describeIf(is('> 0.13'), 'stateless function components', () => {
-      it('should return props of root rendered node', () => {
+      it('returns props of root rendered node', () => {
         const Foo = ({ bar, foo }) => (
           <div className={bar} id={foo} />
         );
@@ -3128,7 +3128,7 @@ describe('shallow', () => {
   });
 
   describe('.state(name)', () => {
-    it('should return the state object', () => {
+    it('returns the state object', () => {
       class Foo extends React.Component {
         constructor(props) {
           super(props);
@@ -3141,7 +3141,7 @@ describe('shallow', () => {
       expect(wrapper.state()).to.eql({ foo: 'foo' });
     });
 
-    it('should return the current state after state transitions', () => {
+    it('returns the current state after state transitions', () => {
       class Foo extends React.Component {
         constructor(props) {
           super(props);
@@ -3155,7 +3155,7 @@ describe('shallow', () => {
       expect(wrapper.state()).to.eql({ foo: 'bar' });
     });
 
-    it('should allow a state property name be passed in as an argument', () => {
+    it('allows a state property name be passed in as an argument', () => {
       class Foo extends React.Component {
         constructor(props) {
           super(props);
@@ -3170,12 +3170,12 @@ describe('shallow', () => {
   });
 
   describe('.children([selector])', () => {
-    it('should return empty wrapper for node with no children', () => {
+    it('returns empty wrapper for node with no children', () => {
       const wrapper = shallow(<div />);
       expect(wrapper.children()).to.have.lengthOf(0);
     });
 
-    it('should skip the falsy children', () => {
+    it('skips the falsy children', () => {
       const wrapper = shallow((
         <div>
           <div>
@@ -3200,7 +3200,7 @@ describe('shallow', () => {
       expect(wrapper.childAt(2).children()).to.have.lengthOf(1);
     });
 
-    it('should return the children nodes of the root', () => {
+    it('returns the children nodes of the root', () => {
       const wrapper = shallow((
         <div>
           <div className="foo" />
@@ -3214,7 +3214,7 @@ describe('shallow', () => {
       expect(wrapper.children().at(2).hasClass('baz')).to.equal(true);
     });
 
-    it('should not return any of the children of children', () => {
+    it('does not return any of the children of children', () => {
       const wrapper = shallow((
         <div>
           <div className="foo">
@@ -3228,7 +3228,7 @@ describe('shallow', () => {
       expect(wrapper.children().at(1).hasClass('baz')).to.equal(true);
     });
 
-    it('should handle mixed children with and without arrays', () => {
+    it('handles mixed children with and without arrays', () => {
       class Foo extends React.Component {
         render() {
           return (
@@ -3253,7 +3253,7 @@ describe('shallow', () => {
       expect(wrapper.children().at(2).hasClass('baz')).to.equal(true);
     });
 
-    it('should optionally allow a selector to filter by', () => {
+    it('optionally allows a selector to filter by', () => {
       const wrapper = shallow((
         <div>
           <div className="foo" />
@@ -3268,7 +3268,7 @@ describe('shallow', () => {
     });
 
     describeIf(is('> 0.13'), 'stateless function components', () => {
-      it('should handle mixed children with and without arrays', () => {
+      it('handles mixed children with and without arrays', () => {
         const Foo = props => (
           <div>
             <span className="foo" />
@@ -3311,7 +3311,7 @@ describe('shallow', () => {
   });
 
   describe('.childAt(index)', () => {
-    it('should get a wrapped node at the specified index', () => {
+    it('gets a wrapped node at the specified index', () => {
       const wrapper = shallow((
         <div>
           <div className="bar" />
@@ -3325,7 +3325,7 @@ describe('shallow', () => {
   });
 
   describe('.parents([selector])', () => {
-    it('should return an array of current node’s ancestors', () => {
+    it('returns an array of current node’s ancestors', () => {
       const wrapper = shallow((
         <div className="bax">
           <div className="foo">
@@ -3347,7 +3347,7 @@ describe('shallow', () => {
       expect(parents.at(2).hasClass('bax')).to.equal(true);
     });
 
-    it('should work for non-leaf nodes as well', () => {
+    it('works for non-leaf nodes as well', () => {
       const wrapper = shallow((
         <div className="bax">
           <div className="foo">
@@ -3365,7 +3365,7 @@ describe('shallow', () => {
       expect(parents.at(1).hasClass('bax')).to.equal(true);
     });
 
-    it('should optionally allow a selector', () => {
+    it('optionally allows a selector', () => {
       const wrapper = shallow((
         <div className="bax foo">
           <div className="foo">
@@ -3385,7 +3385,7 @@ describe('shallow', () => {
   });
 
   describe('.parent()', () => {
-    it('should return only the immediate parent of the node', () => {
+    it('returns only the immediate parent of the node', () => {
       const wrapper = shallow((
         <div className="bax">
           <div className="foo">
@@ -3398,7 +3398,7 @@ describe('shallow', () => {
       expect(wrapper.find('.baz').parent().hasClass('bar')).to.equal(true);
     });
 
-    it('should work when the sibling node has children', () => {
+    it('works when the sibling node has children', () => {
       const wrapper = shallow((
         <div className="bax">
           <div className="foo">
@@ -3415,7 +3415,7 @@ describe('shallow', () => {
       expect(wrapper.find('.baz').parent().hasClass('bar')).to.equal(true);
     });
 
-    it('should work for multiple nodes', () => {
+    it('works for multiple nodes', () => {
       const wrapper = shallow((
         <div>
           <div className="foo">
@@ -3437,7 +3437,7 @@ describe('shallow', () => {
       expect(parents.at(2).hasClass('bax')).to.equal(true);
     });
 
-    it('should work with component', () => {
+    it('works with component', () => {
       const Foo = createClass({
         render() {
           return <div className="bar" />;
@@ -3450,7 +3450,7 @@ describe('shallow', () => {
   });
 
   describe('.closest(selector)', () => {
-    it('should return the closest ancestor for a given selector', () => {
+    it('returns the closest ancestor for a given selector', () => {
       const wrapper = shallow((
         <div className="foo">
           <div className="foo baz">
@@ -3466,7 +3466,7 @@ describe('shallow', () => {
       expect(closestFoo.hasClass('baz')).to.equal(true);
     });
 
-    it('should only ever return a wrapper of a single node', () => {
+    it('only ever returns a wrapper of a single node', () => {
       const wrapper = shallow((
         <div className="bax">
           <div className="foo">
@@ -3480,7 +3480,7 @@ describe('shallow', () => {
       expect(wrapper.find('.baz').parent().hasClass('bar')).to.equal(true);
     });
 
-    it('should return itself if matching', () => {
+    it('returns itself if matching', () => {
       const wrapper = shallow((
         <div className="bax">
           <div className="foo">
@@ -3494,7 +3494,7 @@ describe('shallow', () => {
       expect(wrapper.find('.bux').closest('.baz').hasClass('bux')).to.equal(true);
     });
 
-    it('should not find a nonexistent match', () => {
+    it('does not find a nonexistent match', () => {
       const wrapper = shallow((
         <div className="foo">
           <div className="bar" />
@@ -3511,7 +3511,7 @@ describe('shallow', () => {
   });
 
   describe('.hasClass(className)', () => {
-    it('should return whether or not node has a certain class', () => {
+    it('returns whether or not node has a certain class', () => {
       const wrapper = shallow((
         <div className="foo bar baz some-long-string FoOo" />
       ));
@@ -3536,7 +3536,7 @@ describe('shallow', () => {
   });
 
   describe('.forEach(fn)', () => {
-    it('should call a function for each node in the wrapper', () => {
+    it('calls a function for each node in the wrapper', () => {
       const wrapper = shallow((
         <div>
           <div className="foo bax" />
@@ -3562,7 +3562,7 @@ describe('shallow', () => {
   });
 
   describe('.map(fn)', () => {
-    it('should call a function with a wrapper for each node in the wrapper', () => {
+    it('calls a function with a wrapper for each node in the wrapper', () => {
       const wrapper = shallow((
         <div>
           <div className="foo bax" />
@@ -3586,7 +3586,7 @@ describe('shallow', () => {
       expect(spy.args[2][1]).to.equal(2);
     });
 
-    it('should return an array with the mapped values', () => {
+    it('returns an array with the mapped values', () => {
       const wrapper = shallow((
         <div>
           <div className="foo bax" />
@@ -3609,7 +3609,7 @@ describe('shallow', () => {
       expect(ShallowWrapper.prototype.reduce).to.have.lengthOf(1);
     });
 
-    it('should call a function with a wrapper for each node in the wrapper', () => {
+    it('calls a function with a wrapper for each node in the wrapper', () => {
       const wrapper = shallow((
         <div>
           <div className="foo bax" />
@@ -3630,7 +3630,7 @@ describe('shallow', () => {
       expect(spy.args[2][1].hasClass('baz')).to.equal(true);
     });
 
-    it('should accumulate a value', () => {
+    it('accumulates a value', () => {
       const wrapper = shallow((
         <div>
           <div id="bax" className="foo qoo" />
@@ -3679,7 +3679,7 @@ describe('shallow', () => {
       expect(ShallowWrapper.prototype.reduceRight).to.have.lengthOf(1);
     });
 
-    it('should call a function with a wrapper for each node in the wrapper in reverse', () => {
+    it('calls a function with a wrapper for each node in the wrapper in reverse', () => {
       const wrapper = shallow((
         <div>
           <div className="foo bax" />
@@ -3700,7 +3700,7 @@ describe('shallow', () => {
       expect(spy.args[2][1].hasClass('bax')).to.equal(true);
     });
 
-    it('should accumulate a value', () => {
+    it('accumulates a value', () => {
       const wrapper = shallow((
         <div>
           <div id="bax" className="foo qoo" />
@@ -3745,7 +3745,7 @@ describe('shallow', () => {
   });
 
   describe('.slice([begin[, end]])', () => {
-    it('should return an identical wrapper if no params are set', () => {
+    it('returns an identical wrapper if no params are set', () => {
       const wrapper = shallow((
         <div>
           <div className="foo bax" />
@@ -3759,7 +3759,7 @@ describe('shallow', () => {
       expect(wrapper.find('.foo').slice().at(2).hasClass('baz')).to.equal(true);
     });
 
-    it('should return a new wrapper if begin is set', () => {
+    it('returns a new wrapper if begin is set', () => {
       const wrapper = shallow((
         <div>
           <div className="foo bax" />
@@ -3772,7 +3772,7 @@ describe('shallow', () => {
       expect(wrapper.find('.foo').slice(1).at(1).hasClass('baz')).to.equal(true);
     });
 
-    it('should return a new wrapper if begin and end are set', () => {
+    it('returns a new wrapper if begin and end are set', () => {
       const wrapper = shallow((
         <div>
           <div className="foo bax" />
@@ -3784,7 +3784,7 @@ describe('shallow', () => {
       expect(wrapper.find('.foo').slice(1, 2).at(0).hasClass('bar')).to.equal(true);
     });
 
-    it('should return a new wrapper if begin and end are set (negative)', () => {
+    it('returns a new wrapper if begin and end are set (negative)', () => {
       const wrapper = shallow((
         <div>
           <div className="foo bax" />
@@ -3798,7 +3798,7 @@ describe('shallow', () => {
   });
 
   describe('.some(selector)', () => {
-    it('should return if a node matches a selector', () => {
+    it('returns if a node matches a selector', () => {
       const wrapper = shallow((
         <div>
           <div className="foo qoo" />
@@ -3811,7 +3811,7 @@ describe('shallow', () => {
       expect(wrapper.find('.foo').some('.bar')).to.equal(false);
     });
 
-    it('should throw if called on root', () => {
+    it('throws if called on root', () => {
       const wrapper = shallow((
         <div>
           <div className="foo" />
@@ -3825,7 +3825,7 @@ describe('shallow', () => {
   });
 
   describe('.someWhere(predicate)', () => {
-    it('should return if a node matches a predicate', () => {
+    it('returns if a node matches a predicate', () => {
       const wrapper = shallow((
         <div>
           <div className="foo qoo" />
@@ -3840,7 +3840,7 @@ describe('shallow', () => {
   });
 
   describe('.every(selector)', () => {
-    it('should return if every node matches a selector', () => {
+    it('returns if every node matches a selector', () => {
       const wrapper = shallow((
         <div>
           <div className="foo qoo" />
@@ -3855,7 +3855,7 @@ describe('shallow', () => {
   });
 
   describe('.everyWhere(predicate)', () => {
-    it('should return if every node matches a predicate', () => {
+    it('returns if every node matches a predicate', () => {
       const wrapper = shallow((
         <div>
           <div className="foo qoo" />
@@ -3870,7 +3870,7 @@ describe('shallow', () => {
   });
 
   describe('.flatMap(fn)', () => {
-    it('should return a wrapper with the mapped and flattened nodes', () => {
+    it('returns a wrapper with the mapped and flattened nodes', () => {
       const wrapper = shallow((
         <div>
           <div className="foo">
@@ -3901,7 +3901,7 @@ describe('shallow', () => {
   });
 
   describe('.shallow()', () => {
-    it('should return a shallow rendered instance of the current node', () => {
+    it('returns a shallow rendered instance of the current node', () => {
       class Bar extends React.Component {
         render() {
           return (
@@ -3952,7 +3952,7 @@ describe('shallow', () => {
         expect(wrapper.find(Bar).shallow({ context }).text()).to.equal('foo');
       });
 
-      it('should not throw if context is passed in but contextTypes is missing', () => {
+      it('does not throw if context is passed in but contextTypes is missing', () => {
         class Bar extends React.Component {
           render() {
             return <div>{this.context.name}</div>;
@@ -4001,7 +4001,7 @@ describe('shallow', () => {
     });
 
     describeIf(is('> 0.13'), 'stateless function components', () => {
-      it('should return a shallow rendered instance of the current node', () => {
+      it('returns a shallow rendered instance of the current node', () => {
         const Bar = () => (
           <div>
             <div className="in-bar" />
@@ -4036,7 +4036,7 @@ describe('shallow', () => {
           expect(wrapper.find(Bar).shallow({ context }).text()).to.equal('foo');
         });
 
-        it('should not throw if context is passed in but contextTypes is missing', () => {
+        it('does not throw if context is passed in but contextTypes is missing', () => {
           const Bar = (props, context) => (
             <div>{context.name}</div>
           );
@@ -4097,7 +4097,7 @@ describe('shallow', () => {
   });
 
   describe('.first()', () => {
-    it('should return the first node in the current set', () => {
+    it('returns the first node in the current set', () => {
       const wrapper = shallow((
         <div>
           <div className="bar baz" />
@@ -4111,7 +4111,7 @@ describe('shallow', () => {
   });
 
   describe('.last()', () => {
-    it('should return the last node in the current set', () => {
+    it('returns the last node in the current set', () => {
       const wrapper = shallow((
         <div>
           <div className="bar" />
@@ -4141,7 +4141,7 @@ describe('shallow', () => {
       warningStub.restore();
     });
 
-    it('should display a deprecation warning', () => {
+    it('displays a deprecation warning', () => {
       fooNode.isEmpty();
       expect(warningStub.calledWith('Enzyme::Deprecated method isEmpty() called, use exists() instead.')).to.equal(true);
     });
@@ -4153,7 +4153,7 @@ describe('shallow', () => {
       expect(existsSpy.called).to.equal(true);
     });
 
-    it('should return true if wrapper is empty', () => {
+    it('returns true if wrapper is empty', () => {
       expect(fooNode.isEmpty()).to.equal(false);
       expect(missingNode.isEmpty()).to.equal(true);
     });
@@ -4165,7 +4165,7 @@ describe('shallow', () => {
     });
 
     describe('without argument', () => {
-      it('should return true if node exists in wrapper', () => {
+      it('returns true if node exists in wrapper', () => {
         const wrapper = shallow((
           <div className="foo" />
         ));
@@ -4174,7 +4174,7 @@ describe('shallow', () => {
       });
     });
     describe('with argument', () => {
-      it('should return .find(arg).exists() instead', () => {
+      it('returns .find(arg).exists() instead', () => {
         const wrapper = shallow(<div />);
         const fakeFindExistsReturnVal = Symbol('fake .find(arg).exists() return value');
         const fakeSelector = '.someClass';
@@ -4256,13 +4256,13 @@ describe('shallow', () => {
   });
 
   describe('.debug()', () => {
-    it('should pass through to the debugNodes function', () => {
+    it('passes through to the debugNodes function', () => {
       expect(shallow(<div />).debug()).to.equal('<div />');
     });
   });
 
   describe('.html()', () => {
-    it('should return html of straight DOM elements', () => {
+    it('returns html of straight DOM elements', () => {
       const wrapper = shallow((
         <div className="test">
           <span>Hello World!</span>
@@ -4273,7 +4273,7 @@ describe('shallow', () => {
       ));
     });
 
-    it('should render out nested composite components', () => {
+    it('renders out nested composite components', () => {
       class Foo extends React.Component {
         render() {
           return (<div className="in-foo" />);
@@ -4298,7 +4298,7 @@ describe('shallow', () => {
     });
 
     describeIf(is('> 0.13'), 'stateless function components', () => {
-      it('should render out nested composite components', () => {
+      it('renders out nested composite components', () => {
         const Foo = () => (
           <div className="in-foo" />
         );
@@ -4320,7 +4320,7 @@ describe('shallow', () => {
   });
 
   describe('.unmount()', () => {
-    it('should call componentWillUnmount()', () => {
+    it('calls componentWillUnmount()', () => {
       const spy = sinon.spy();
 
       class Foo extends React.Component {
@@ -4553,7 +4553,7 @@ describe('shallow', () => {
         });
       });
 
-      it('should not call when disableLifecycleMethods flag is true', () => {
+      it('does not call when disableLifecycleMethods flag is true', () => {
         const spy = sinon.spy();
         class Foo extends React.Component {
           componentDidMount() {
@@ -4568,7 +4568,7 @@ describe('shallow', () => {
         expect(spy).to.have.property('callCount', 0);
       });
 
-      it('should be able to call `componentDidMount` directly when disableLifecycleMethods is true', () => {
+      it('calls `componentDidMount` directly when disableLifecycleMethods is true', () => {
         class Table extends React.Component {
           render() {
             return (<table />);
@@ -4598,7 +4598,7 @@ describe('shallow', () => {
         expect(wrapper.find(Table).length).to.equal(1);
       });
 
-      it('should call shouldComponentUpdate when disableLifecycleMethods flag is true', () => {
+      it('calls shouldComponentUpdate when disableLifecycleMethods flag is true', () => {
         const spy = sinon.spy();
         class Foo extends React.Component {
           constructor(props) {
@@ -4655,7 +4655,7 @@ describe('shallow', () => {
     });
 
     context('mounting phase', () => {
-      it('should call componentWillMount and componentDidMount', () => {
+      it('calls componentWillMount and componentDidMount', () => {
         const spy = sinon.spy();
         class Foo extends React.Component {
           componentWillMount() {
@@ -4679,7 +4679,7 @@ describe('shallow', () => {
         ]);
       });
 
-      itIf(BATCHING, 'should be batching updates', () => {
+      itIf(BATCHING, 'is batching updates', () => {
         const spy = sinon.spy();
         class Foo extends React.Component {
           constructor(props) {
@@ -4711,7 +4711,7 @@ describe('shallow', () => {
     });
 
     context('updating props', () => {
-      it('should call shouldComponentUpdate, componentWillUpdate, and componentDidUpdate', () => {
+      it('calls shouldComponentUpdate, componentWillUpdate, and componentDidUpdate', () => {
         const spy = sinon.spy();
 
         class Foo extends React.Component {
@@ -4815,7 +4815,7 @@ describe('shallow', () => {
         ]);
       });
 
-      it('should componentWillReceiveProps, shouldComponentUpdate, componentWillUpdate and componentDidUpdate with merged props', () => {
+      it('calls componentWillReceiveProps, shouldComponentUpdate, componentWillUpdate and componentDidUpdate with merged props', () => {
         const spy = sinon.spy();
 
         class Foo extends React.Component {
@@ -4871,7 +4871,7 @@ describe('shallow', () => {
         ]);
       });
 
-      it('should cancel rendering when Component returns false in shouldComponentUpdate', () => {
+      it('cancels rendering when Component returns false in shouldComponentUpdate', () => {
         const spy = sinon.spy();
 
         class Foo extends React.Component {
@@ -4913,7 +4913,7 @@ describe('shallow', () => {
         ]);
       });
 
-      itIf(BATCHING, 'should not provoke another renders to call setState in componentWillReceiveProps', () => {
+      itIf(BATCHING, 'does not provoke another renders to call setState in componentWillReceiveProps', () => {
         const spy = sinon.spy();
         class Foo extends React.Component {
           constructor(props) {
@@ -4940,7 +4940,7 @@ describe('shallow', () => {
         expect(result.state('count')).to.equal(1);
       });
 
-      itIf(BATCHING, 'should provoke an another render to call setState twice in componentWillUpdate', () => {
+      itIf(BATCHING, 'provokes an another render to call setState twice in componentWillUpdate', () => {
         const spy = sinon.spy();
         class Foo extends React.Component {
           constructor(props) {
@@ -4971,7 +4971,7 @@ describe('shallow', () => {
         expect(result.state('count')).to.equal(1);
       });
 
-      itIf(BATCHING, 'should provoke an another render to call setState twice in componentDidUpdate', () => {
+      itIf(BATCHING, 'provokes an another render to call setState twice in componentDidUpdate', () => {
         const spy = sinon.spy();
         class Foo extends React.Component {
           constructor(props) {
@@ -5006,7 +5006,7 @@ describe('shallow', () => {
     });
 
     context('updating state', () => {
-      it('should call shouldComponentUpdate, componentWillUpdate and componentDidUpdate', () => {
+      it('calls shouldComponentUpdate, componentWillUpdate and componentDidUpdate', () => {
         const spy = sinon.spy();
 
         class Foo extends React.Component {
@@ -5075,7 +5075,7 @@ describe('shallow', () => {
         expect(spy.args).to.deep.equal(expected);
       });
 
-      it('should cancel rendering when Component returns false in shouldComponentUpdate', () => {
+      it('cancels rendering when Component returns false in shouldComponentUpdate', () => {
         const spy = sinon.spy();
         class Foo extends React.Component {
           constructor(props) {
@@ -5110,7 +5110,7 @@ describe('shallow', () => {
         expect(spy.args).to.deep.equal([['render'], ['shouldComponentUpdate']]);
       });
 
-      itIf(BATCHING, 'should provoke an another render to call setState twice in componentWillUpdate', () => {
+      itIf(BATCHING, 'provokes an another render to call setState twice in componentWillUpdate', () => {
         const spy = sinon.spy();
         class Foo extends React.Component {
           constructor(props) {
@@ -5142,7 +5142,7 @@ describe('shallow', () => {
         expect(result.state('count')).to.equal(1);
       });
 
-      itIf(BATCHING, 'should provoke an another render to call setState twice in componentDidUpdate', () => {
+      itIf(BATCHING, 'provokes an another render to call setState twice in componentDidUpdate', () => {
         const spy = sinon.spy();
         class Foo extends React.Component {
           constructor(props) {
@@ -5178,7 +5178,7 @@ describe('shallow', () => {
     });
 
     context('updating context', () => {
-      it('should call shouldComponentUpdate, componentWillUpdate and componentDidUpdate', () => {
+      it('calls shouldComponentUpdate, componentWillUpdate and componentDidUpdate', () => {
         const spy = sinon.spy();
         class Foo extends React.Component {
           constructor(...args) {
@@ -5246,7 +5246,7 @@ describe('shallow', () => {
         ]);
       });
 
-      it('should cancel rendering when Component returns false in shouldComponentUpdate', () => {
+      it('cancels rendering when Component returns false in shouldComponentUpdate', () => {
         const spy = sinon.spy();
         class Foo extends React.Component {
           shouldComponentUpdate() {
@@ -5280,7 +5280,7 @@ describe('shallow', () => {
         expect(spy.args).to.deep.equal([['render'], ['shouldComponentUpdate']]);
       });
 
-      itIf(BATCHING, 'should provoke an another render to call setState twice in componentWillUpdate', () => {
+      itIf(BATCHING, 'provokes an another render to call setState twice in componentWillUpdate', () => {
         const spy = sinon.spy();
         class Foo extends React.Component {
           constructor(props) {
@@ -5316,7 +5316,7 @@ describe('shallow', () => {
         expect(result.state('count')).to.equal(1);
       });
 
-      itIf(BATCHING, 'should provoke an another render to call setState twice in componentDidUpdate', () => {
+      itIf(BATCHING, 'provokes an another render to call setState twice in componentDidUpdate', () => {
         const spy = sinon.spy();
         class Foo extends React.Component {
           constructor(props) {
@@ -5356,7 +5356,7 @@ describe('shallow', () => {
     });
 
     context('unmounting phase', () => {
-      it('should call componentWillUnmount', () => {
+      it('calls componentWillUnmount', () => {
         const spy = sinon.spy();
         class Foo extends React.Component {
           componentWillUnmount() {
@@ -5374,7 +5374,7 @@ describe('shallow', () => {
     });
 
     context('component instance', () => {
-      it('should call `componentDidUpdate` when component’s `setState` is called', () => {
+      it('calls `componentDidUpdate` when component’s `setState` is called', () => {
         class Foo extends React.Component {
           constructor(props) {
             super(props);
@@ -5406,7 +5406,7 @@ describe('shallow', () => {
         expect(spy).to.have.property('callCount', 2);
       });
 
-      it('should call `componentDidUpdate` when component’s `setState` is called through a bound method', () => {
+      it('calls `componentDidUpdate` when component’s `setState` is called through a bound method', () => {
         class Foo extends React.Component {
           constructor(props) {
             super(props);
@@ -5441,7 +5441,7 @@ describe('shallow', () => {
         expect(spy).to.have.property('callCount', 1);
       });
 
-      it('should call `componentDidUpdate` when component’s `setState` is called', () => {
+      it('calls `componentDidUpdate` when component’s `setState` is called', () => {
         class Foo extends React.Component {
           constructor(props) {
             super(props);
@@ -5468,7 +5468,7 @@ describe('shallow', () => {
         expect(wrapper.state('foo')).to.equal('update');
       });
 
-      it('should not call `componentDidMount` twice when a child component is created', () => {
+      it('does not call `componentDidMount` twice when a child component is created', () => {
         class Foo extends React.Component {
           constructor(props) {
             super(props);
@@ -5500,7 +5500,7 @@ describe('shallow', () => {
     });
 
     describeIf(is('>= 16.3'), 'support getSnapshotBeforeUpdate', () => {
-      it('should call getSnapshotBeforeUpdate and pass snapshot to componentDidUpdate', () => {
+      it('calls getSnapshotBeforeUpdate and pass snapshot to componentDidUpdate', () => {
         const spy = sinon.spy();
         class Foo extends React.Component {
           constructor(props) {
@@ -5582,7 +5582,7 @@ describe('shallow', () => {
   });
 
   describe('.tap()', () => {
-    it('should call the passed function with current ShallowWrapper and returns itself', () => {
+    it('calls the passed function with current ShallowWrapper and returns itself', () => {
       const spy = sinon.spy();
       const wrapper = shallow((
         <ul>
@@ -5598,7 +5598,7 @@ describe('shallow', () => {
   });
 
   describe('.key()', () => {
-    it('should return the key of the node', () => {
+    it('returns the key of the node', () => {
       const wrapper = shallow((
         <ul>
           {['foo', 'bar', ''].map(s => <li key={s}>{s}</li>)}
@@ -5609,7 +5609,7 @@ describe('shallow', () => {
       expect(wrapper.at(2).key()).to.equal('');
     });
 
-    it('should return null when no key is specified', () => {
+    it('returns null when no key is specified', () => {
       const wrapper = shallow((
         <ul>
           <li>foo</li>
@@ -5620,7 +5620,7 @@ describe('shallow', () => {
   });
 
   describe('.matchesElement(node)', () => {
-    it('should match on a root node that looks like the rendered one', () => {
+    it('matches on a root node that looks like the rendered one', () => {
       const spy = sinon.spy();
       const wrapper = shallow((
         <div>
@@ -5646,7 +5646,7 @@ describe('shallow', () => {
       expect(spy).to.have.property('callCount', 0);
     });
 
-    it('should not match on a root node that doesn\'t looks like the rendered one', () => {
+    it('does not match on a root node that doesn\'t looks like the rendered one', () => {
       const spy = sinon.spy();
       const spy2 = sinon.spy();
       const wrapper = shallow((
@@ -5676,7 +5676,7 @@ describe('shallow', () => {
   });
 
   describe('.containsMatchingElement(node)', () => {
-    it('should match a root node that looks like the rendered one', () => {
+    it('matches a root node that looks like the rendered one', () => {
       const spy1 = sinon.spy();
       const spy2 = sinon.spy();
       const wrapper = shallow((
@@ -5725,7 +5725,7 @@ describe('shallow', () => {
       expect(spy2).to.have.property('callCount', 0);
     });
 
-    it('should match on a single node that looks like a rendered one', () => {
+    it('matches on a single node that looks like a rendered one', () => {
       const spy1 = sinon.spy();
       const spy2 = sinon.spy();
       const wrapper = shallow((
@@ -5756,7 +5756,7 @@ describe('shallow', () => {
       expect(spy2).to.have.property('callCount', 0);
     });
 
-    it('should not match on a single node that doesn\'t looks like a rendered one', () => {
+    it('does not match on a single node that doesn\'t looks like a rendered one', () => {
       const spy1 = sinon.spy();
       const spy2 = sinon.spy();
       const wrapper = shallow((
@@ -5773,7 +5773,7 @@ describe('shallow', () => {
       ))).to.equal(false);
     });
 
-    it('should not differentiate between absence, null, or undefined', () => {
+    it('does not differentiate between absence, null, or undefined', () => {
       const wrapper = shallow((
         <div>
           <div className="a" id={null} />
@@ -5799,7 +5799,7 @@ describe('shallow', () => {
   });
 
   describe('.containsAllMatchingElements(nodes)', () => {
-    it('should throw TypeError if non-array passed in', () => {
+    it('throws TypeError if non-array passed in', () => {
       const wrapper = shallow((
         <div>
           Hello
@@ -5813,7 +5813,7 @@ describe('shallow', () => {
       ))).to.throw(TypeError, 'nodes should be an Array');
     });
 
-    it('should match on array of nodes that each look like rendered nodes, with nested elements', () => {
+    it('matches on array of nodes that each look like rendered nodes, with nested elements', () => {
       const wrapper = shallow((
         <div>
           <div>
@@ -5831,7 +5831,7 @@ describe('shallow', () => {
       ])).to.equal(true);
     });
 
-    it('should match on an array of nodes that all looks like one of rendered nodes', () => {
+    it('matches on an array of nodes that all looks like one of rendered nodes', () => {
       const spy1 = sinon.spy();
       const spy2 = sinon.spy();
       const wrapper = shallow((
@@ -5876,7 +5876,7 @@ describe('shallow', () => {
       expect(spy2).to.have.property('callCount', 0);
     });
 
-    it('should not match on nodes that doesn\'t all looks like one of rendered nodes', () => {
+    it('does not match on nodes that doesn\'t all looks like one of rendered nodes', () => {
       const spy1 = sinon.spy();
       const spy2 = sinon.spy();
       const wrapper = shallow((
@@ -5896,7 +5896,7 @@ describe('shallow', () => {
   });
 
   describe('.containsAnyMatchingElements(nodes)', () => {
-    it('should match on an array with at least one node that looks like a rendered nodes', () => {
+    it('matches on an array with at least one node that looks like a rendered nodes', () => {
       const spy1 = sinon.spy();
       const spy2 = sinon.spy();
       const wrapper = shallow((
@@ -5940,7 +5940,7 @@ describe('shallow', () => {
       expect(spy1).to.have.property('callCount', 0);
       expect(spy2).to.have.property('callCount', 0);
     });
-    it('should not match on an array with no nodes that looks like a rendered nodes', () => {
+    it('does not match on an array with no nodes that looks like a rendered nodes', () => {
       const spy1 = sinon.spy();
       const spy2 = sinon.spy();
       const wrapper = shallow((
@@ -5962,7 +5962,7 @@ describe('shallow', () => {
     .withOverride(() => getAdapter(), 'displayNameOfNode', () => undefined)
     .describe('.name()', () => {
       describe('node with displayName', () => {
-        it('should return the displayName of the node', () => {
+        it('returns the displayName of the node', () => {
           class Foo extends React.Component {
             render() { return <div />; }
           }
@@ -5978,7 +5978,7 @@ describe('shallow', () => {
         });
 
         describeIf(is('> 0.13'), 'stateless function components', () => {
-          it('should return the name of the node', () => {
+          it('returns the name of the node', () => {
             function SFC() {
               return <div />;
             }
@@ -5992,7 +5992,7 @@ describe('shallow', () => {
         });
 
         describe('createClass', () => {
-          it('should return the name of the node', () => {
+          it('returns the name of the node', () => {
             const Foo = createClass({
               displayName: 'CustomWrapper',
               render() {
@@ -6033,7 +6033,7 @@ describe('shallow', () => {
       });
 
       describe('node without displayName', () => {
-        it('should return the name of the node', () => {
+        it('returns the name of the node', () => {
           class Foo extends React.Component {
             render() { return <div />; }
           }
@@ -6047,7 +6047,7 @@ describe('shallow', () => {
         });
 
         describeIf(is('> 0.13'), 'stateless function components', () => {
-          it('should return the name of the node', () => {
+          it('returns the name of the node', () => {
             function SFC() {
               return <div />;
             }
@@ -6060,7 +6060,7 @@ describe('shallow', () => {
       });
 
       describe('DOM node', () => {
-        it('should return the name of the node', () => {
+        it('returns the name of the node', () => {
           const wrapper = shallow(<div />);
           expect(wrapper.name()).to.equal('div');
         });
@@ -6142,7 +6142,7 @@ describe('shallow', () => {
       expect(underwater.is(RendersDOM)).to.equal(true);
     });
 
-    it('should merge and pass options through', () => {
+    it('merges and pass options through', () => {
       const wrapper = shallow(<ContextWrapsRendersDOM />, { context: { foo: 'hello' } });
       expect(wrapper.context()).to.deep.equal({ foo: 'hello' });
 
@@ -6155,7 +6155,7 @@ describe('shallow', () => {
   });
 
   describeIf(!!ITERATOR_SYMBOL, '@@iterator', () => {
-    it('should be iterable', () => {
+    it('is iterable', () => {
       class Foo extends React.Component {
         render() {
           return (
@@ -6202,7 +6202,7 @@ describe('shallow', () => {
   });
 
   describe('.instance()', () => {
-    it('should return the component instance', () => {
+    it('returns the component instance', () => {
       class Foo extends React.Component {
         render() { return <div />; }
       }
@@ -6212,7 +6212,7 @@ describe('shallow', () => {
       expect(wrapper.instance().render).to.equal(Foo.prototype.render);
     });
 
-    it('should throw if called on something other than the root node', () => {
+    it('throws if called on something other than the root node', () => {
       class Foo extends React.Component {
         render() { return <div><a /></div>; }
       }
@@ -6314,7 +6314,7 @@ describe('shallow', () => {
   });
 
   describe('.getElements()', () => {
-    it('should return the wrapped elements', () => {
+    it('returns the wrapped elements', () => {
       const one = <span />;
       const two = <span />;
 
@@ -6373,7 +6373,7 @@ describe('shallow', () => {
       }
     }
 
-    it('should have updated output after an asynchronous setState', () => {
+    it('has updated output after an asynchronous setState', () => {
       const wrapper = shallow(<Test />);
       wrapper.find('.async-btn').simulate('click');
       return new Promise((resolve) => {
@@ -6386,7 +6386,7 @@ describe('shallow', () => {
       });
     });
 
-    it('should have updated output after child prop callback invokes setState', () => {
+    it('has updated output after child prop callback invokes setState', () => {
       const wrapper = shallow(<Test />);
       wrapper.find(Child).props().callback();
       wrapper.update();
@@ -6426,7 +6426,7 @@ describe('shallow', () => {
       }
     }
 
-    it('should be able to get the latest state value', () => {
+    it('can get the latest state value', () => {
       class App extends React.Component {
         constructor(props) {
           super(props);
@@ -6468,7 +6468,7 @@ describe('shallow', () => {
       }
     }
 
-    it('should be able to get the latest state value', () => {
+    it('can get the latest state value', () => {
       let App;
       const promise = new Promise((resolve) => {
         App = class extends React.Component {

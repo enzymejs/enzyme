@@ -24,21 +24,21 @@ import { is } from './_helpers/version';
 
 describe('Utils', () => {
   describe('nodeEqual', () => {
-    it('should match empty elements of same tag', () => {
+    it('matches empty elements of same tag', () => {
       expect(nodeEqual(
         <div />,
         <div />,
       )).to.equal(true);
     });
 
-    it('should not match empty elements of different type', () => {
+    it('does not match empty elements of different type', () => {
       expect(nodeEqual(
         <div />,
         <nav />,
       )).to.equal(false);
     });
 
-    it('should match basic prop types', () => {
+    it('matches basic prop types', () => {
       expect(nodeEqual(
         <div className="foo" />,
         <div className="foo" />,
@@ -55,14 +55,14 @@ describe('Utils', () => {
       )).to.equal(false);
     });
 
-    it('should skip undefined props', () => {
+    it('skips undefined props', () => {
       expect(nodeEqual(
         <div id="foo" className={undefined} />,
         <div id="foo" />,
       )).to.equal(true);
     });
 
-    it('should check children as well', () => {
+    it('checks children as well', () => {
       expect(nodeEqual(
         <div>
           <div />
@@ -98,7 +98,7 @@ describe('Utils', () => {
       )).to.equal(false);
     });
 
-    it('should test deepEquality with object props', () => {
+    it('tests deepEquality with object props', () => {
       expect(nodeEqual(
         <div foo={{ a: 1, b: 2 }} />,
         <div foo={{ a: 1, b: 2 }} />,
@@ -112,14 +112,14 @@ describe('Utils', () => {
     });
 
     describe('children props', () => {
-      it('should match equal nodes', () => {
+      it('matches equal nodes', () => {
         expect(nodeEqual(
           <div>child</div>,
           <div>child</div>,
         )).to.equal(true);
       });
 
-      it('should not match not equal nodes', () => {
+      it('does not match not equal nodes', () => {
         expect(nodeEqual(
           <div>child</div>,
           <div />,
@@ -131,35 +131,35 @@ describe('Utils', () => {
         )).to.equal(false);
       });
 
-      it('should match children before and after interpolation', () => {
+      it('matches children before and after interpolation', () => {
         expect(nodeEqual(
           <div>{2}{' children'}{<span />} abc {'hey'}</div>,
           <div>2 children<span /> abc hey</div>,
         )).to.equal(true);
       });
 
-      it('should skip null children', () => {
+      it('skips null children', () => {
         expect(nodeEqual(
           <div>{null}</div>,
           <div />,
         )).to.equal(true);
       });
 
-      it('should skip undefined children', () => {
+      it('skips undefined children', () => {
         expect(nodeEqual(
           <div>{undefined}</div>,
           <div />,
         )).to.equal(true);
       });
 
-      it('should skip empty children', () => {
+      it('skips empty children', () => {
         expect(nodeEqual(
           <div>{[]}</div>,
           <div />,
         )).to.equal(true);
       });
 
-      it('should skip array of null children', () => {
+      it('skips array of null children', () => {
         expect(nodeEqual(
           <div>{[null, null, null]}</div>,
           <div />,
@@ -168,14 +168,14 @@ describe('Utils', () => {
     });
 
     describe('basic props and children mixed', () => {
-      it('should match equal nodes', () => {
+      it('matches equal nodes', () => {
         expect(nodeEqual(
           <div className="foo">child</div>,
           <div className="foo">child</div>,
         )).to.equal(true);
       });
 
-      it('should not match when basic props are not equal', () => {
+      it('does not match when basic props are not equal', () => {
         expect(nodeEqual(
           <div className="foo">child</div>,
           <div className="bar">child</div>,
@@ -187,7 +187,7 @@ describe('Utils', () => {
         )).to.equal(false);
       });
 
-      it('should not match when children are not equal', () => {
+      it('does not match when children are not equal', () => {
         expect(nodeEqual(
           <div className="foo">child</div>,
           <div className="foo">other child</div>,
@@ -199,7 +199,7 @@ describe('Utils', () => {
         )).to.equal(false);
       });
 
-      it('should match nodes when children are different but falsy', () => {
+      it('matches nodes when children are different but falsy', () => {
         expect(nodeEqual(
           <div className="foo">{null}</div>,
           <div className="foo" />,
@@ -229,7 +229,7 @@ describe('Utils', () => {
       return nodesMatchTwoWays(aProps, bProps, LeftTag, RightTag, false);
     }
 
-    it('should match empty elements of same tag, not distinguishing null/undefined/absent', () => {
+    it('matches empty elements of same tag, not distinguishing null/undefined/absent', () => {
       nodesMatchTwoWays({}, {});
       nodesMatchTwoWays({}, { id: null });
       nodesMatchTwoWays({}, { id: undefined });
@@ -243,7 +243,7 @@ describe('Utils', () => {
       nodesMatchTwoWays({ id: undefined }, { id: undefined });
     });
 
-    it('should not match empty elements of different type, not distinguishing null/undefined/absent', () => {
+    it('does not match empty elements of different type, not distinguishing null/undefined/absent', () => {
       nodesDoNotMatchTwoWays({}, {}, 'div', 'nav');
       nodesDoNotMatchTwoWays({}, { id: null }, 'div', 'nav');
       nodesDoNotMatchTwoWays({}, { id: undefined }, 'div', 'nav');
@@ -257,13 +257,13 @@ describe('Utils', () => {
       nodesDoNotMatchTwoWays({ id: undefined }, { id: undefined }, 'div', 'nav');
     });
 
-    it('should match basic prop types', () => {
+    it('matches basic prop types', () => {
       nodesMatchTwoWays({ className: 'foo' }, { className: 'foo' });
       nodesMatchTwoWays({ id: 'foo', className: 'bar' }, { id: 'foo', className: 'bar' });
       nodesDoNotMatchTwoWays({ id: 'foo', className: 'bar' }, { id: 'foo', className: 'baz' });
     });
 
-    it('should check children as well, not distinguishing null/undefined/absent', () => {
+    it('checks children as well, not distinguishing null/undefined/absent', () => {
       expect(nodeMatches(
         <div>
           <div />
@@ -322,7 +322,7 @@ describe('Utils', () => {
       )).to.equal(false);
     });
 
-    it('should test deepEquality with object props', () => {
+    it('tests deepEquality with object props', () => {
       expect(nodeMatches(
         <div foo={{ a: 1, b: 2 }} />,
         <div foo={{ a: 1, b: 2 }} />,
@@ -336,14 +336,14 @@ describe('Utils', () => {
     });
 
     describe('children props', () => {
-      it('should match equal nodes', () => {
+      it('matches equal nodes', () => {
         expect(nodeMatches(
           <div>child</div>,
           <div>child</div>,
         )).to.equal(true);
       });
 
-      it('should not match not equal nodes', () => {
+      it('does not match not equal nodes', () => {
         expect(nodeMatches(
           <div>child</div>,
           <div />,
@@ -355,28 +355,28 @@ describe('Utils', () => {
         )).to.equal(false);
       });
 
-      it('should skip null children', () => {
+      it('skips null children', () => {
         expect(nodeMatches(
           <div>{null}</div>,
           <div />,
         )).to.equal(true);
       });
 
-      it('should skip undefined children', () => {
+      it('skips undefined children', () => {
         expect(nodeMatches(
           <div>{undefined}</div>,
           <div />,
         )).to.equal(true);
       });
 
-      it('should skip empty children', () => {
+      it('skips empty children', () => {
         expect(nodeMatches(
           <div>{[]}</div>,
           <div />,
         )).to.equal(true);
       });
 
-      it('should skip array of null children', () => {
+      it('skips array of null children', () => {
         expect(nodeMatches(
           <div>{[null, null, null]}</div>,
           <div />,
@@ -385,14 +385,14 @@ describe('Utils', () => {
     });
 
     describe('basic props and children mixed', () => {
-      it('should match equal nodes', () => {
+      it('matches equal nodes', () => {
         expect(nodeMatches(
           <div className="foo">child</div>,
           <div className="foo">child</div>,
         )).to.equal(true);
       });
 
-      it('should not match when basic props are not equal', () => {
+      it('does not match when basic props are not equal', () => {
         expect(nodeMatches(
           <div className="foo">child</div>,
           <div className="bar">child</div>,
@@ -404,7 +404,7 @@ describe('Utils', () => {
         )).to.equal(false);
       });
 
-      it('should not match when children are not equal', () => {
+      it('does not match when children are not equal', () => {
         expect(nodeMatches(
           <div className="foo">child</div>,
           <div className="foo">other child</div>,
@@ -416,7 +416,7 @@ describe('Utils', () => {
         )).to.equal(false);
       });
 
-      it('should match nodes when children are different but falsy', () => {
+      it('matches nodes when children are different but falsy', () => {
         expect(nodeMatches(
           <div className="foo">{null}</div>,
           <div className="foo" />,
@@ -441,7 +441,7 @@ describe('Utils', () => {
   });
 
   describe('propFromEvent', () => {
-    it('should work', () => {
+    it('works', () => {
       expect(propFromEvent('click')).to.equal('onClick');
       expect(propFromEvent('mouseEnter')).to.equal('onMouseEnter');
     });
@@ -507,7 +507,7 @@ describe('Utils', () => {
 
   describe('displayNameOfNode', () => {
     describe('given a node with displayName', () => {
-      it('should return the displayName', () => {
+      it('returns the displayName', () => {
         class Foo extends React.Component {
           render() { return <div />; }
         }
@@ -518,7 +518,7 @@ describe('Utils', () => {
       });
 
       describeIf(is('> 0.13'), 'stateless function components', () => {
-        it('should return the displayName', () => {
+        it('returns the displayName', () => {
           const Foo = () => <div />;
           Foo.displayName = 'CustomWrapper';
 
@@ -528,7 +528,7 @@ describe('Utils', () => {
     });
 
     describe('given a node without displayName', () => {
-      it('should return the name', () => {
+      it('returns the name', () => {
         class Foo extends React.Component {
           render() { return <div />; }
         }
@@ -536,7 +536,7 @@ describe('Utils', () => {
         expect(displayNameOfNode(<Foo />)).to.equal('Foo');
       });
 
-      it('should return the name even if it is falsy', () => {
+      it('returns the name even if it is falsy', () => {
         const makeFoo = () => () => <div />;
 
         const Foo = makeFoo();
@@ -545,7 +545,7 @@ describe('Utils', () => {
       });
 
       describeIf(is('> 0.13'), 'stateless function components', () => {
-        it('should return the name', () => {
+        it('returns the name', () => {
           const Foo = () => <div />;
 
           expect(displayNameOfNode(<Foo />)).to.equal('Foo');
@@ -554,7 +554,7 @@ describe('Utils', () => {
     });
 
     describe('given a DOM node', () => {
-      it('should return the type', () => {
+      it('returns the type', () => {
         expect(displayNameOfNode(<div />)).to.equal('div');
       });
     });
@@ -568,13 +568,13 @@ describe('Utils', () => {
       expect(nodesAreEqual).to.equal(true);
     }
 
-    it('should join string and numerical children as a string', () => {
+    it('joins string and numerical children as a string', () => {
       const children = [3, 'textual', 'children'];
       const simplified = ['3textualchildren'];
       expectEqualArrays(childrenToSimplifiedArray(children), simplified);
     });
 
-    it('should handle non-textual nodes', () => {
+    it('handles non-textual nodes', () => {
       const children = ['with', 1, <div />, 'other node'];
       const simplified = ['with1', <div />, 'other node'];
       expectEqualArrays(childrenToSimplifiedArray(children), simplified);
@@ -582,7 +582,7 @@ describe('Utils', () => {
   });
 
   describe('flatten', () => {
-    it('should recursively flatten a nested iterable structure', () => {
+    it('recursively flattens a nested iterable structure', () => {
       const nested = [1, [2, [3, [4]], 5], 6, [7, [8, 9]], 10];
       const flat = flatten(nested);
       expect(flat).to.deep.equal([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
@@ -590,7 +590,7 @@ describe('Utils', () => {
   });
 
   describe('spyMethod', () => {
-    it('should be able to spy last return value and restore it', () => {
+    it('can spy last return value and restore it', () => {
       class Counter {
         constructor() {
           this.count = 1;
@@ -624,7 +624,7 @@ describe('Utils', () => {
       });
     });
 
-    it('should be able to restore the property descriptor', () => {
+    it('restores the property descriptor', () => {
       const obj = {};
       const descriptor = {
         configurable: true,

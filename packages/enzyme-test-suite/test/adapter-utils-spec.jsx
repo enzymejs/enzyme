@@ -30,7 +30,7 @@ describe('enzyme-adapter-utils', () => {
 
   describe('displayNameOfNode', () => {
     describe('given a node with displayName', () => {
-      it('should return the displayName', () => {
+      it('returns the displayName', () => {
         class Foo extends React.Component {
           render() { return <div />; }
         }
@@ -41,7 +41,7 @@ describe('enzyme-adapter-utils', () => {
       });
 
       describeIf(is('> 0.13'), 'stateless function components', () => {
-        it('should return the displayName', () => {
+        it('returns the displayName', () => {
           const Foo = () => <div />;
           Foo.displayName = 'CustomWrapper';
 
@@ -51,7 +51,7 @@ describe('enzyme-adapter-utils', () => {
     });
 
     describe('given a node without displayName', () => {
-      it('should return the name', () => {
+      it('returns the name', () => {
         class Foo extends React.Component {
           render() { return <div />; }
         }
@@ -59,7 +59,7 @@ describe('enzyme-adapter-utils', () => {
         expect(displayNameOfNode(<Foo />)).to.equal('Foo');
       });
 
-      it('should return the name even if it is falsy', () => {
+      it('returns the name even if it is falsy', () => {
         const makeFoo = () => () => <div />;
 
         const Foo = makeFoo();
@@ -68,7 +68,7 @@ describe('enzyme-adapter-utils', () => {
       });
 
       describeIf(is('> 0.13'), 'stateless function components', () => {
-        it('should return the name', () => {
+        it('returns the name', () => {
           const Foo = () => <div />;
 
           expect(displayNameOfNode(<Foo />)).to.equal('Foo');
@@ -77,7 +77,7 @@ describe('enzyme-adapter-utils', () => {
     });
 
     describe('given a DOM node', () => {
-      it('should return the type', () => {
+      it('returns the type', () => {
         expect(displayNameOfNode(<div />)).to.equal('div');
       });
     });

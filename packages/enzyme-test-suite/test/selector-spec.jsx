@@ -449,7 +449,7 @@ describe('selectors', () => {
         expect(wrapper.find('Wrapped(Twice(Bar))')).to.have.lengthOf(1);
       });
 
-      it('should parse booleans', () => {
+      it('parses booleans', () => {
         expectAttributeMatch(<div hidden />, '[hidden=true]', true);
         expectAttributeMatch(<div hidden />, '[hidden=false]', false);
         expectAttributeMatch(<div hidden />, '[hidden="true"]', false);
@@ -458,7 +458,7 @@ describe('selectors', () => {
         expectAttributeMatch(<div hidden={false} />, '[hidden="false"]', false);
       });
 
-      it('should parse numeric literals', () => {
+      it('parses numeric literals', () => {
         expectAttributeMatch(<div data-foo={2.3} />, '[data-foo=2.3]', true);
         expectAttributeMatch(<div data-foo={2} />, '[data-foo=2]', true);
         expectAttributeMatch(<div data-foo={2} />, '[data-foo="2abc"]', false);
@@ -472,7 +472,7 @@ describe('selectors', () => {
         expectAttributeMatch(<div data-foo={-Infinity} />, '[data-foo=Infinity]', false);
       });
 
-      it('should parse zeroes properly', () => {
+      it('parses zeroes properly', () => {
         expectAttributeMatch(<div data-foo={0} />, '[data-foo=0]', true);
         expectAttributeMatch(<div data-foo={0} />, '[data-foo=+0]', true);
         expectAttributeMatch(<div data-foo={-0} />, '[data-foo=-0]', true);
@@ -482,27 +482,27 @@ describe('selectors', () => {
         expectAttributeMatch(<div data-foo={2} />, '[data-foo=-0]', false);
       });
 
-      it('should work with empty strings', () => {
+      it('works with empty strings', () => {
         expectAttributeMatch(<div className="" />, '[className=""]', true);
         expectAttributeMatch(<div className={''} />, '[className=""]', true);
         expectAttributeMatch(<div className={'bar'} />, '[className=""]', false);
       });
 
-      it('should work with NaN', () => {
+      it('works with NaN', () => {
         expectAttributeMatch(<div data-foo={NaN} />, '[data-foo=NaN]', true);
         expectAttributeMatch(<div data-foo={0} />, '[data-foo=NaN]', false);
       });
 
-      it('should work with null', () => {
+      it('works with null', () => {
         expectAttributeMatch(<div data-foo={null} />, '[data-foo=null]', true);
         expectAttributeMatch(<div data-foo={0} />, '[data-foo=null]', false);
       });
 
-      it('should work with false', () => {
+      it('works with false', () => {
         expectAttributeMatch(<div data-foo={false} />, '[data-foo=false]', true);
         expectAttributeMatch(<div data-foo={0} />, '[data-foo=false]', false);
       });
-      it('should work with ±Infinity', () => {
+      it('works with ±Infinity', () => {
         expectAttributeMatch(<div data-foo={Infinity} />, '[data-foo=Infinity]', true);
         expectAttributeMatch(<div data-foo={Infinity} />, '[data-foo=+Infinity]', true);
         expectAttributeMatch(<div data-foo={Infinity} />, '[data-foo=-Infinity]', false);

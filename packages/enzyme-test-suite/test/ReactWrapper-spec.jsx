@@ -82,14 +82,14 @@ describeWithDOM('mount', () => {
       expect(wrapper.children().props().bam).to.equal(true);
     });
 
-    it('should call ref', () => {
+    it('calls ref', () => {
       const spy = sinon.spy();
       mount(<div ref={spy} />);
       expect(spy).to.have.property('callCount', 1);
     });
 
     describe('wrapping invalid elements', () => {
-      itIf(is('>= 16'), 'should throw when mounting Portals', () => {
+      itIf(is('>= 16'), 'throws when mounting Portals', () => {
         const portal = createPortal(
           <div />,
           { nodeType: 1 },
@@ -101,14 +101,14 @@ describeWithDOM('mount', () => {
         );
       });
 
-      it('should throw when mounting plain text', () => {
+      it('throws when mounting plain text', () => {
         expect(() => mount('Foo')).to.throw(
           Error,
           'ReactWrapper can only wrap valid elements',
         );
       });
 
-      it('should throw when mounting multiple elements', () => {
+      it('throws when mounting multiple elements', () => {
         expect(() => mount([<div />])).to.throw(
           TypeError,
           'ReactWrapper can only wrap valid elements',
@@ -116,11 +116,11 @@ describeWithDOM('mount', () => {
       });
     });
 
-    it('should mount built in components', () => {
+    it('mounts built in components', () => {
       expect(() => mount(<div />)).not.to.throw();
     });
 
-    it('should mount composite components', () => {
+    it('mounts composite components', () => {
       class Foo extends React.Component {
         render() {
           return <div />;
@@ -226,7 +226,7 @@ describeWithDOM('mount', () => {
       });
     });
 
-    it('should not throw if context is passed in but contextTypes is missing', () => {
+    it('does not throw if context is passed in but contextTypes is missing', () => {
       const SimpleComponent = createClass({
         render() {
           const { name } = this.context;
@@ -256,7 +256,7 @@ describeWithDOM('mount', () => {
       expect(wrapper.context('name')).to.equal(context.name);
     });
 
-    itIf(is('>= 16.3'), 'should find elements through Context elements', () => {
+    itIf(is('>= 16.3'), 'finds elements through Context elements', () => {
       const { Provider, Consumer } = createContext('');
 
       class Foo extends React.Component {
@@ -273,7 +273,7 @@ describeWithDOM('mount', () => {
     });
 
     describeIf(is('>= 16.3'), 'forwarded ref Components', () => {
-      wrap().withConsoleThrows().it('should mount without complaint', () => {
+      wrap().withConsoleThrows().it('mounts without complaint', () => {
         const SomeComponent = forwardRef((props, ref) => (
           <div {...props} ref={ref} />
         ));
@@ -281,7 +281,7 @@ describeWithDOM('mount', () => {
         expect(() => mount(<SomeComponent />)).not.to.throw();
       });
 
-      it('should find elements through forwardedRef elements', () => {
+      it('finds elements through forwardedRef elements', () => {
         const testRef = () => {};
         const SomeComponent = forwardRef((props, ref) => (
           <div ref={ref}>
@@ -295,7 +295,7 @@ describeWithDOM('mount', () => {
         expect(wrapper.find('.child2')).to.have.lengthOf(1);
       });
 
-      it('should find forwardRef element', () => {
+      it('finds forwardRef element', () => {
         const SomeComponent = forwardRef((props, ref) => (
           <div ref={ref}>
             <span className="child1" />
@@ -342,7 +342,7 @@ describeWithDOM('mount', () => {
         expect(wrapper.find(SimpleComponent)).to.have.lengthOf(1);
       });
 
-      it('should not throw if context is passed in but contextTypes is missing', () => {
+      it('does not throw if context is passed in but contextTypes is missing', () => {
         const SimpleComponent = (props, context) => (
           <div>{context.name}</div>
         );
@@ -430,7 +430,7 @@ describeWithDOM('mount', () => {
   });
 
   describeIf(is('>= 16'), 'portals', () => {
-    it('should show portals in mount debug tree', () => {
+    it('shows portals in mount debug tree', () => {
       const containerDiv = global.document.createElement('div');
       const Foo = () => (
         <div>
@@ -453,7 +453,7 @@ describeWithDOM('mount', () => {
 </Foo>`);
     });
 
-    it('should show portal container in debug tree', () => {
+    it('shows portal container in debug tree', () => {
       const containerDiv = global.document.createElement('div');
       containerDiv.setAttribute('data-foo', 'bar');
       const Foo = () => (
@@ -477,7 +477,7 @@ describeWithDOM('mount', () => {
 </Foo>`);
     });
 
-    it('should show nested portal children in debug tree', () => {
+    it('shows nested portal children in debug tree', () => {
       const Bar = () => null;
 
       const containerDiv = global.document.createElement('div');
@@ -508,7 +508,7 @@ describeWithDOM('mount', () => {
 </Foo>`);
     });
 
-    it('should have top level portals in debug tree', () => {
+    it('has top level portals in debug tree', () => {
       const containerDiv = global.document.createElement('div');
       const Foo = () => createPortal(
         <div className="in-portal">InPortal</div>,
@@ -527,7 +527,7 @@ describeWithDOM('mount', () => {
   });
 
   describe('.contains(node)', () => {
-    it('should allow matches on the root node', () => {
+    it('allows matches on the root node', () => {
       const a = <div className="foo" />;
       const b = <div className="foo" />;
       const c = <div className="bar" />;
@@ -535,7 +535,7 @@ describeWithDOM('mount', () => {
       expect(mount(a).contains(c)).to.equal(false);
     });
 
-    it('should allow matches on a nested node', () => {
+    it('allows matches on a nested node', () => {
       const wrapper = mount((
         <div>
           <div className="foo" />
@@ -545,7 +545,7 @@ describeWithDOM('mount', () => {
       expect(wrapper.contains(b)).to.equal(true);
     });
 
-    it('should match composite components', () => {
+    it('matches composite components', () => {
       class Foo extends React.Component {
         render() { return <div />; }
       }
@@ -558,7 +558,7 @@ describeWithDOM('mount', () => {
       expect(wrapper.contains(b)).to.equal(true);
     });
 
-    it('should do something with arrays of nodes', () => {
+    it('does something with arrays of nodes', () => {
       const wrapper = mount((
         <div>
           <span>Hello</span>
@@ -586,7 +586,7 @@ describeWithDOM('mount', () => {
     });
 
     describeIf(is('> 0.13'), 'stateless function components (SFCs)', () => {
-      it('should match composite components', () => {
+      it('matches composite components', () => {
         function Foo() {
           return <div />;
         }
@@ -599,7 +599,7 @@ describeWithDOM('mount', () => {
         expect(wrapper.contains(b)).to.equal(true);
       });
 
-      it('should match composite components if rendered by function', () => {
+      it('matches composite components if rendered by function', () => {
         function Foo() {
           return <div />;
         }
@@ -616,7 +616,7 @@ describeWithDOM('mount', () => {
   });
 
   describe('.equals(node)', () => {
-    it('should allow matches on the root node', () => {
+    it('allows matches on the root node', () => {
       const a = <div className="foo" />;
       const b = <div className="foo" />;
       const c = <div className="bar" />;
@@ -624,7 +624,7 @@ describeWithDOM('mount', () => {
       expect(mount(a).equals(c)).to.equal(false);
     });
 
-    it('should NOT allow matches on a nested node', () => {
+    it('does NOT allow matches on a nested node', () => {
       const wrapper = mount((
         <div>
           <div className="foo" />
@@ -634,7 +634,7 @@ describeWithDOM('mount', () => {
       expect(wrapper.equals(b)).to.equal(false);
     });
 
-    it('should match composite components', () => {
+    it('matches composite components', () => {
       class Foo extends React.Component {
         render() { return <div />; }
       }
@@ -647,7 +647,7 @@ describeWithDOM('mount', () => {
       expect(wrapper.equals(b)).to.equal(true);
     });
 
-    it.skip('should not expand `node` content', () => {
+    it.skip('does not expand `node` content', () => {
       class Bar extends React.Component {
         render() { return <div />; }
       }
@@ -661,7 +661,7 @@ describeWithDOM('mount', () => {
     });
 
     describeIf(is('> 0.13'), 'stateless function components (SFCs)', () => {
-      it('should match composite SFCs', () => {
+      it('matches composite SFCs', () => {
         const Foo = () => (
           <div />
         );
@@ -675,7 +675,7 @@ describeWithDOM('mount', () => {
         expect(wrapper.equals(b)).to.equal(true);
       });
 
-      it.skip('should not expand `node` content', () => {
+      it.skip('does not expand `node` content', () => {
         const Bar = () => (
           <div />
         );
@@ -720,7 +720,7 @@ describeWithDOM('mount', () => {
   });
 
   describe('.hostNodes()', () => {
-    it('should strip out any non-hostNode', () => {
+    it('strips out any non-hostNode', () => {
       class Foo extends React.Component {
         render() {
           return <div {...this.props} />;
@@ -748,7 +748,7 @@ describeWithDOM('mount', () => {
   wrap()
     .withOverride(() => getAdapter(), 'isValidElementType', () => undefined)
     .describe('.find(selector)', () => {
-      it('should find an element based on a class name', () => {
+      it('finds an element based on a class name', () => {
         const wrapper = mount((
           <div>
             <input className="foo" />
@@ -757,7 +757,7 @@ describeWithDOM('mount', () => {
         expect(wrapper.find('.foo').type()).to.equal('input');
       });
 
-      it('should find an SVG element based on a class name', () => {
+      it('finds an SVG element based on a class name', () => {
         const wrapper = mount((
           <div>
             <svg className="foo" />
@@ -766,7 +766,7 @@ describeWithDOM('mount', () => {
         expect(wrapper.find('.foo').type()).to.equal('svg');
       });
 
-      it('should find an element based on a tag name', () => {
+      it('finds an element based on a tag name', () => {
         const wrapper = mount((
           <div>
             <input className="foo" />
@@ -775,7 +775,7 @@ describeWithDOM('mount', () => {
         expect(wrapper.find('input').props().className).to.equal('foo');
       });
 
-      it('should find an element based on a tag name and class name', () => {
+      it('finds an element based on a tag name and class name', () => {
         const wrapper = mount((
           <div>
             <input className="foo" />
@@ -785,7 +785,7 @@ describeWithDOM('mount', () => {
         expect(wrapper.find('input.foo')).to.have.lengthOf(1);
       });
 
-      it('should work on non-single nodes', () => {
+      it('works on non-single nodes', () => {
         const wrapper = mount((
           <div className="a">
             <div className="b">
@@ -806,7 +806,7 @@ describeWithDOM('mount', () => {
       });
 
 
-      it('should find an element based on a tag name and id', () => {
+      it('finds an element based on a tag name and id', () => {
         const wrapper = mount((
           <div>
             <input id="foo" />
@@ -815,7 +815,7 @@ describeWithDOM('mount', () => {
         expect(wrapper.find('input#foo')).to.have.lengthOf(1);
       });
 
-      it('should find an element based on a tag name, id, and class name', () => {
+      it('finds an element based on a tag name, id, and class name', () => {
         const wrapper = mount((
           <div>
             <input id="foo" className="bar" />
@@ -824,7 +824,7 @@ describeWithDOM('mount', () => {
         expect(wrapper.find('input#foo.bar')).to.have.lengthOf(1);
       });
 
-      it('should find a component based on a constructor', () => {
+      it('finds a component based on a constructor', () => {
         class Foo extends React.Component {
           render() { return <div />; }
         }
@@ -854,7 +854,7 @@ describeWithDOM('mount', () => {
           );
         });
 
-      it('should find a component based on a component displayName', () => {
+      it('finds a component based on a component displayName', () => {
         class Foo extends React.Component {
           render() { return <div />; }
         }
@@ -867,7 +867,7 @@ describeWithDOM('mount', () => {
       });
 
       describeIf(is('> 0.13'), 'stateless function components (SFCs)', () => {
-        it('should find a stateless component based on a component displayName', () => {
+        it('finds a stateless component based on a component displayName', () => {
           const Foo = () => <div />;
           const wrapper = mount((
             <div>
@@ -877,7 +877,7 @@ describeWithDOM('mount', () => {
           expect(wrapper.find('Foo').type()).to.equal(Foo);
         });
 
-        it('should find a stateless component based on a component displayName if rendered by function', () => {
+        it('finds a stateless component based on a component displayName if rendered by function', () => {
           const Foo = () => <div />;
           const renderStatelessComponent = () => <Foo className="foo" />;
           const wrapper = mount((
@@ -889,7 +889,7 @@ describeWithDOM('mount', () => {
         });
       });
 
-      it('should find component based on a react prop', () => {
+      it('finds component based on a react prop', () => {
         const wrapper = mount((
           <div>
             <span htmlFor="foo" />
@@ -901,7 +901,7 @@ describeWithDOM('mount', () => {
         expect(wrapper.find('[htmlFor]')).to.have.lengthOf(2);
       });
 
-      it('should error sensibly if any of the search props are undefined', () => {
+      it('errors sensibly if any of the search props are undefined', () => {
         const wrapper = mount((
           <div>
             <input type={undefined} />
@@ -914,7 +914,7 @@ describeWithDOM('mount', () => {
         );
       });
 
-      it('should compound tag and prop selector', () => {
+      it('compounds tag and prop selector', () => {
         const wrapper = mount((
           <div>
             <span htmlFor="foo" />
@@ -944,7 +944,7 @@ describeWithDOM('mount', () => {
         expect(wrapper.find('.row + .row')).to.have.lengthOf(1);
       });
 
-      it('should throw for non-numeric attribute values without quotes', () => {
+      it('throws for non-numeric attribute values without quotes', () => {
         const wrapper = mount((
           <div>
             <input type="text" />
@@ -966,7 +966,7 @@ describeWithDOM('mount', () => {
         );
       });
 
-      it('should support data prop selectors', () => {
+      it('supports data prop selectors', () => {
         const wrapper = mount((
           <div>
             <span data-foo="bar" />
@@ -989,7 +989,7 @@ describeWithDOM('mount', () => {
         expect(wrapper.find('[data-foo_bar="bar4"]')).to.have.lengthOf(1);
       });
 
-      it('should find components with multiple matching props', () => {
+      it('finds components with multiple matching props', () => {
         const onChange = () => ({});
         const wrapper = mount((
           <div>
@@ -1001,7 +1001,7 @@ describeWithDOM('mount', () => {
         expect(wrapper.find('span[htmlFor="foo"][preserveAspectRatio="xMaxYMax"]')).to.have.lengthOf(1);
       });
 
-      it('should not find property when undefined', () => {
+      it('does not find property when undefined', () => {
         const wrapper = mount((
           <div>
             <span data-foo={undefined} />
@@ -1011,7 +1011,7 @@ describeWithDOM('mount', () => {
         expect(wrapper.find('[data-foo]')).to.have.lengthOf(0);
       });
 
-      it('should support boolean and numeric values for matching props', () => {
+      it('supports boolean and numeric values for matching props', () => {
         const wrapper = mount((
           <div>
             <span value={1} />
@@ -1029,7 +1029,7 @@ describeWithDOM('mount', () => {
         expect(wrapper.find('a[value=true]')).to.have.lengthOf(0);
       });
 
-      it('should not find key or ref via property selector', () => {
+      it('does not find key or ref via property selector', () => {
         class Foo extends React.Component {
           render() {
             const arrayOfComponents = [<div key="1" />, <div key="2" />];
@@ -1051,7 +1051,7 @@ describeWithDOM('mount', () => {
         expect(wrapper.find('[key]')).to.have.lengthOf(0);
       });
 
-      it('should find multiple elements based on a class name', () => {
+      it('finds multiple elements based on a class name', () => {
         const wrapper = mount((
           <div>
             <input className="foo" />
@@ -1061,7 +1061,7 @@ describeWithDOM('mount', () => {
         expect(wrapper.find('.foo')).to.have.lengthOf(2);
       });
 
-      it('should find multiple elements based on a tag name', () => {
+      it('finds multiple elements based on a tag name', () => {
         const wrapper = mount((
           <div>
             <input className="foo" />
@@ -1073,7 +1073,7 @@ describeWithDOM('mount', () => {
         expect(wrapper.find('button')).to.have.lengthOf(1);
       });
 
-      it('should find multiple elements based on a constructor', () => {
+      it('finds multiple elements based on a constructor', () => {
         const wrapper = mount((
           <div>
             <input className="foo" />
@@ -1085,7 +1085,7 @@ describeWithDOM('mount', () => {
         expect(wrapper.find('button')).to.have.lengthOf(1);
       });
 
-      itIf(is('>= 16.2'), 'should support fragments', () => {
+      itIf(is('>= 16.2'), 'supports fragments', () => {
         const wrapper = mount((
           <Fragment>
             <p>hello</p>
@@ -1096,7 +1096,7 @@ describeWithDOM('mount', () => {
         expect(wrapper).to.have.lengthOf(2);
       });
 
-      it('should support object property selectors', () => {
+      it('supports object property selectors', () => {
         const wrapper = mount((
           <div>
             <input data-test="ref" className="foo" type="text" />
@@ -1117,7 +1117,7 @@ describeWithDOM('mount', () => {
         expect(wrapper.find({ 'data-prop': true })).to.have.lengthOf(1);
       });
 
-      it('should support complex and nested object property selectors', () => {
+      it('supports complex and nested object property selectors', () => {
         const testFunction = () => ({});
         const wrapper = mount((
           <div>
@@ -1140,7 +1140,7 @@ describeWithDOM('mount', () => {
         })).to.have.lengthOf(1);
       });
 
-      it('should throw when given empty object, null, or an array', () => {
+      it('throws when given empty object, null, or an array', () => {
         const wrapper = mount((
           <div>
             <input className="foo" type="text" />
@@ -1160,7 +1160,7 @@ describeWithDOM('mount', () => {
         );
       });
 
-      it('Should query attributes with spaces in their values', () => {
+      it('querys attributes with spaces in their values', () => {
         const wrapper = mount((
           <div>
             <h1 data-foo="foo bar">Hello</h1>
@@ -1176,7 +1176,7 @@ describeWithDOM('mount', () => {
       });
 
       describeIf(is('> 0.13'), 'stateless function components', () => {
-        it('should find a component based on a constructor', () => {
+        it('finds a component based on a constructor', () => {
           const Foo = () => <div />;
           const wrapper = mount((
             <div>
@@ -1186,7 +1186,7 @@ describeWithDOM('mount', () => {
           expect(wrapper.find(Foo).type()).to.equal(Foo);
         });
 
-        it('should find a component based on a component displayName', () => {
+        it('finds a component based on a component displayName', () => {
           const Foo = () => <div />;
           const wrapper = mount((
             <div>
@@ -1196,7 +1196,7 @@ describeWithDOM('mount', () => {
           expect(wrapper.find('Foo').type()).to.equal(Foo);
         });
 
-        it('should not find key via property selector', () => {
+        it('does not find key via property selector', () => {
           const Foo = () => {
             const arrayOfComponents = [<div key="1" />, <div key="2" />];
             return (
@@ -1318,7 +1318,7 @@ describeWithDOM('mount', () => {
         });
       });
 
-      itIf(is('>= 16'), 'should find portals by name', () => {
+      itIf(is('>= 16'), 'finds portals by name', () => {
         const containerDiv = global.document.createElement('div');
         const Foo = () => (
           <div>
@@ -1334,7 +1334,7 @@ describeWithDOM('mount', () => {
         expect(wrapper.find('Portal')).to.have.lengthOf(1);
       });
 
-      itIf(is('>= 16'), 'should find elements through portals', () => {
+      itIf(is('>= 16'), 'finds elements through portals', () => {
         const containerDiv = global.document.createElement('div');
         class FooPortal extends React.Component {
           render() {
@@ -1361,7 +1361,7 @@ describeWithDOM('mount', () => {
     });
 
   describe('.findWhere(predicate)', () => {
-    it('should return all elements for a truthy test', () => {
+    it('returns all elements for a truthy test', () => {
       const wrapper = mount((
         <div>
           <input className="foo" />
@@ -1371,7 +1371,7 @@ describeWithDOM('mount', () => {
       expect(wrapper.findWhere(() => true)).to.have.lengthOf(3);
     });
 
-    it('should return no elements for a falsy test', () => {
+    it('returns no elements for a falsy test', () => {
       const wrapper = mount((
         <div>
           <input className="foo" />
@@ -1381,7 +1381,7 @@ describeWithDOM('mount', () => {
       expect(wrapper.findWhere(() => false)).to.have.lengthOf(0);
     });
 
-    it('should call the predicate with the wrapped node as the first argument', () => {
+    it('calls the predicate with the wrapped node as the first argument', () => {
       const wrapper = mount((
         <div>
           <div className="foo bar" />
@@ -1491,7 +1491,7 @@ describeWithDOM('mount', () => {
       expect(foundNotSpan).to.have.lengthOf(0);
     });
 
-    it('should return props object when props() is called', () => {
+    it('returns props object when props() is called', () => {
       class Foo extends React.Component {
         render() {
           return (
@@ -1507,7 +1507,7 @@ describeWithDOM('mount', () => {
       expect(wrapper.childAt(0).props()).to.deep.equal({ 'data-foo': content, children: 'Test Component' });
     });
 
-    it('should return shallow rendered string when debug() is called', () => {
+    it('returns shallow rendered string when debug() is called', () => {
       class Foo extends React.Component {
         render() {
           return (
@@ -1574,7 +1574,7 @@ describeWithDOM('mount', () => {
         expect(foundNotSpan).to.have.lengthOf(0);
       });
 
-      it('should return props object when props() is called', () => {
+      it('returns props object when props() is called', () => {
         const SFC = function SFC({ data }) {
           return (
             <div data-foo={data}>Test SFC</div>
@@ -1587,7 +1587,7 @@ describeWithDOM('mount', () => {
         expect(wrapper.childAt(0).props()).to.deep.equal({ 'data-foo': content, children: 'Test SFC' });
       });
 
-      it('should return shallow rendered string when debug() is called', () => {
+      it('returns shallow rendered string when debug() is called', () => {
         const SFC = function SFC({ data }) {
           return (
             <div data-foo={data}>Test SFC</div>
@@ -1666,7 +1666,7 @@ describeWithDOM('mount', () => {
       expect(textContents).to.eql(expected);
     });
 
-    it('should not pass in null or false nodes', () => {
+    it('does not pass in null or false nodes', () => {
       const wrapper = mount((
         <div>
           <div className="foo bar" />
@@ -1681,7 +1681,7 @@ describeWithDOM('mount', () => {
       expect(spy).to.have.property('callCount', 2);
     });
 
-    itIf(is('>= 16'), 'should find portals by react-is Portal type', () => {
+    itIf(is('>= 16'), 'finds portals by react-is Portal type', () => {
       const containerDiv = global.document.createElement('div');
       const Foo = () => (
         <div>
@@ -1715,7 +1715,7 @@ describeWithDOM('mount', () => {
       expect(() => wrapper.setProps({}, {})).to.throw();
     });
 
-    it('should set props for a component multiple times', () => {
+    it('sets props for a component multiple times', () => {
       class Foo extends React.Component {
         render() {
           return (
@@ -1731,7 +1731,7 @@ describeWithDOM('mount', () => {
       expect(wrapper.find('.bar')).to.have.lengthOf(1);
     });
 
-    it('should call componentWillReceiveProps for new renders', () => {
+    it('calls componentWillReceiveProps for new renders', () => {
       const stateValue = {};
 
       class Foo extends React.Component {
@@ -1779,7 +1779,7 @@ describeWithDOM('mount', () => {
       }
     });
 
-    it('should merge newProps with oldProps', () => {
+    it('merges newProps with oldProps', () => {
       class Foo extends React.Component {
         render() {
           return (
@@ -1803,7 +1803,7 @@ describeWithDOM('mount', () => {
       expect(wrapper.props().d).to.equal('e');
     });
 
-    it('should use defaultProps if new props includes undefined values', () => {
+    it('uses defaultProps if new props includes undefined values', () => {
       const initialState = { a: 42 };
       const context = { b: 7 };
       class Foo extends React.Component {
@@ -1841,7 +1841,7 @@ describeWithDOM('mount', () => {
       ]);
     });
 
-    it('should throw if an exception occurs during render', () => {
+    it('throws if an exception occurs during render', () => {
       let error;
       class Trainwreck extends React.Component {
         render() {
@@ -1871,7 +1871,7 @@ describeWithDOM('mount', () => {
       expect(() => wrapper.setProps({ user: {} })).to.throw(error);
     });
 
-    itIf(!REACT16, 'should call the callback when setProps has completed', () => {
+    itIf(!REACT16, 'calls the callback when setProps has completed', () => {
       class Foo extends React.Component {
         render() {
           return (
@@ -1892,7 +1892,7 @@ describeWithDOM('mount', () => {
       });
     });
 
-    it('should call componentWillReceiveProps, shouldComponentUpdate, componentWillUpdate, and componentDidUpdate with merged newProps', () => {
+    it('calls componentWillReceiveProps, shouldComponentUpdate, componentWillUpdate, and componentDidUpdate with merged newProps', () => {
       const spy = sinon.spy();
 
       class Foo extends React.Component {
@@ -1949,7 +1949,7 @@ describeWithDOM('mount', () => {
     });
 
     describeIf(is('> 0.13'), 'stateless function components', () => {
-      it('should set props for a component multiple times', () => {
+      it('sets props for a component multiple times', () => {
         const Foo = props => (
           <div className={props.id}>
             {props.id}
@@ -1962,7 +1962,7 @@ describeWithDOM('mount', () => {
         expect(wrapper.find('.bar')).to.have.lengthOf(1);
       });
 
-      it('should merge newProps with oldProps', () => {
+      it('merges newProps with oldProps', () => {
         const Foo = props => (
           <Bar {...props} />
         );
@@ -1980,7 +1980,7 @@ describeWithDOM('mount', () => {
         expect(wrapper.props().d).to.equal('e');
       });
 
-      it('should pass in old context', () => {
+      it('passes in old context', () => {
         const Foo = (props, context) => (
           <div>{context.x}</div>
         );
@@ -1994,7 +1994,7 @@ describeWithDOM('mount', () => {
         expect(wrapper.first('div').text()).to.equal('yolo');
       });
 
-      it('should throw if an exception occurs during render', () => {
+      it('throws if an exception occurs during render', () => {
         let error;
         const Trainwreck = ({ user }) => {
           try {
@@ -2024,7 +2024,7 @@ describeWithDOM('mount', () => {
   });
 
   describe('.setContext(newContext)', () => {
-    it('should set context for a component multiple times', () => {
+    it('sets context for a component multiple times', () => {
       const SimpleComponent = createClass({
         contextTypes: {
           name: PropTypes.string,
@@ -2043,7 +2043,7 @@ describeWithDOM('mount', () => {
       expect(wrapper.text()).to.equal('baz');
     });
 
-    it('should throw if it is called when shallow didn’t include context', () => {
+    it('throws if it is called when shallow didn’t include context', () => {
       const SimpleComponent = createClass({
         contextTypes: {
           name: PropTypes.string,
@@ -2061,7 +2061,7 @@ describeWithDOM('mount', () => {
     });
 
     describeIf(is('> 0.13'), 'stateless function components', () => {
-      it('should set context for a component multiple times', () => {
+      it('sets context for a component multiple times', () => {
         const SimpleComponent = (props, context) => (
           <div>{context.name}</div>
         );
@@ -2076,7 +2076,7 @@ describeWithDOM('mount', () => {
         expect(wrapper.text()).to.equal('baz');
       });
 
-      it('should throw if it is called when shallow didn’t include context', () => {
+      it('throws if it is called when shallow didn’t include context', () => {
         const SimpleComponent = (props, context) => (
           <div>{context.name}</div>
         );
@@ -2092,7 +2092,7 @@ describeWithDOM('mount', () => {
   });
 
   describe('.mount()', () => {
-    it('should call componentWillUnmount()', () => {
+    it('calls componentWillUnmount()', () => {
       const willMount = sinon.spy();
       const didMount = sinon.spy();
       const willUnmount = sinon.spy();
@@ -2129,7 +2129,7 @@ describeWithDOM('mount', () => {
   });
 
   describe('.simulate(eventName, data)', () => {
-    it('should simulate events', () => {
+    it('simulates events', () => {
       class Foo extends React.Component {
         constructor(props) {
           super(props);
@@ -2161,7 +2161,7 @@ describeWithDOM('mount', () => {
       expect(wrapper.find('.clicks-1')).to.have.lengthOf(1);
     });
 
-    it('should pass in event data', () => {
+    it('passes in event data', () => {
       const spy = sinon.spy();
       class Foo extends React.Component {
         render() {
@@ -2178,14 +2178,14 @@ describeWithDOM('mount', () => {
       expect(spy.args[0][0]).to.have.property('someSpecialData', 'foo');
     });
 
-    it('should throw a descriptive error for invalid events', () => {
+    it('throws a descriptive error for invalid events', () => {
       const wrapper = mount(<div>foo</div>);
       expect(wrapper.simulate.bind(wrapper, 'invalidEvent'))
         .to.throw(TypeError, "ReactWrapper::simulate() event 'invalidEvent' does not exist");
     });
 
     describeIf(is('> 0.13'), 'stateless function component', () => {
-      it('should pass in event data', () => {
+      it('passes in event data', () => {
         const spy = sinon.spy();
         const Foo = () => (
           <a onClick={spy}>foo</a>
@@ -2200,7 +2200,7 @@ describeWithDOM('mount', () => {
     });
 
     describe('Normalizing JS event names', () => {
-      it('should convert lowercase events to React camelcase', () => {
+      it('converts lowercase events to React camelcase', () => {
         const spy = sinon.spy();
         const clickSpy = sinon.spy();
         class Foo extends React.Component {
@@ -2220,7 +2220,7 @@ describeWithDOM('mount', () => {
       });
 
       describeIf(is('> 0.13'), 'normalizing mouseenter', () => {
-        it('should convert lowercase events to React camelcase', () => {
+        it('converts lowercase events to React camelcase', () => {
           const spy = sinon.spy();
           class Foo extends React.Component {
             render() {
@@ -2238,7 +2238,7 @@ describeWithDOM('mount', () => {
       });
 
       describeIf(is('>= 15'), 'animation events', () => {
-        it('should convert lowercase events to React camelcase', () => {
+        it('converts lowercase events to React camelcase', () => {
           const spy = sinon.spy();
           class Foo extends React.Component {
             render() {
@@ -2254,7 +2254,7 @@ describeWithDOM('mount', () => {
           expect(spy).to.have.property('callCount', 1);
         });
 
-        it('should convert lowercase events to React camelcase in stateless components', () => {
+        it('converts lowercase events to React camelcase in stateless components', () => {
           const spy = sinon.spy();
           const Foo = () => (
             <a onAnimationIteration={spy}>foo</a>
@@ -2268,7 +2268,7 @@ describeWithDOM('mount', () => {
       });
 
       describeIf(is('>= 16.4'), 'pointer events', () => {
-        it('should convert lowercase events to React camelcase', () => {
+        it('converts lowercase events to React camelcase', () => {
           const spy = sinon.spy();
           class Foo extends React.Component {
             render() {
@@ -2284,7 +2284,7 @@ describeWithDOM('mount', () => {
           expect(spy).to.have.property('callCount', 1);
         });
 
-        it('should convert lowercase events to React camelcase in stateless components', () => {
+        it('converts lowercase events to React camelcase in stateless components', () => {
           const spy = sinon.spy();
           const Foo = () => (
             <a onGotPointerCapture={spy}>foo</a>
@@ -2298,7 +2298,7 @@ describeWithDOM('mount', () => {
       });
     });
 
-    it('should be batched updates', () => {
+    it('has batched updates', () => {
       let renderCount = 0;
       class Foo extends React.Component {
         constructor(props) {
@@ -2393,7 +2393,7 @@ describeWithDOM('mount', () => {
       expect(() => wrapper.setState({}, {})).to.throw();
     });
 
-    it('should set the state of the root node', () => {
+    it('sets the state of the root node', () => {
       class Foo extends React.Component {
         constructor(props) {
           super(props);
@@ -2433,7 +2433,7 @@ describeWithDOM('mount', () => {
       expect(wrapper.find('div').text()).to.equal('a');
     });
 
-    it('should call the callback when setState has completed', () => {
+    it('calls the callback when setState has completed', () => {
       class Foo extends React.Component {
         constructor(props) {
           super(props);
@@ -2522,8 +2522,8 @@ describeWithDOM('mount', () => {
       expect(stub).to.have.property('callCount', 2);
     });
 
-    describe('should not call componentWillReceiveProps after setState is called', () => {
-      it('should not call componentWillReceiveProps upon rerender', () => {
+    describe('does not call componentWillReceiveProps after setState is called', () => {
+      it('does not call componentWillReceiveProps upon rerender', () => {
         class A extends React.Component {
           constructor(props) {
             super(props);
@@ -2559,7 +2559,7 @@ describeWithDOM('mount', () => {
         });
       });
 
-      it('should not call componentWillReceiveProps with multiple keys in props', () => {
+      it('does not call componentWillReceiveProps with multiple keys in props', () => {
         class B extends React.Component {
           constructor(props) {
             super(props);
@@ -2604,7 +2604,7 @@ describeWithDOM('mount', () => {
 
 
     describeIf(is('> 0.13'), 'stateless function components', () => {
-      it('should throw when trying to access state', () => {
+      it('throws when trying to access state', () => {
         const Foo = () => (
           <div>abc</div>
         );
@@ -2617,7 +2617,7 @@ describeWithDOM('mount', () => {
         );
       });
 
-      it('should throw when trying to set state', () => {
+      it('throws when trying to set state', () => {
         const Foo = () => (
           <div>abc</div>
         );
@@ -2676,7 +2676,7 @@ describeWithDOM('mount', () => {
       expect(() => wrapper.instance().setStateWithNullishCallback()).not.to.throw();
     });
 
-    it('should preserve the receiver', () => {
+    it('preserves the receiver', () => {
       class Comp extends React.Component {
         constructor(...args) {
           super(...args);
@@ -2703,17 +2703,17 @@ describeWithDOM('mount', () => {
   });
 
   describe('.is(selector)', () => {
-    it('should return true when selector matches current element', () => {
+    it('returns true when selector matches current element', () => {
       const wrapper = mount(<div className="foo bar baz" />);
       expect(wrapper.is('.foo')).to.equal(true);
     });
 
-    it('should allow for compound selectors', () => {
+    it('allows for compound selectors', () => {
       const wrapper = mount(<div className="foo bar baz" />);
       expect(wrapper.is('.foo.bar')).to.equal(true);
     });
 
-    it('should ignore insignificant whitespace', () => {
+    it('ignores insignificant whitespace', () => {
       const className = `
       foo
       `;
@@ -2721,7 +2721,7 @@ describeWithDOM('mount', () => {
       expect(wrapper.is('.foo')).to.equal(true);
     });
 
-    it('should handle all significant whitespace', () => {
+    it('handles all significant whitespace', () => {
       const className = `foo
 
       bar
@@ -2730,7 +2730,7 @@ describeWithDOM('mount', () => {
       expect(wrapper.is('.foo.bar.baz')).to.equal(true);
     });
 
-    it('should return false when selector does not match', () => {
+    it('returns false when selector does not match', () => {
       const wrapper = mount(<div className="bar baz" />);
       expect(wrapper.is('.foo')).to.equal(false);
     });
@@ -2759,7 +2759,7 @@ describeWithDOM('mount', () => {
       expect(wrapper.isEmptyRender()).to.equal(data.expectResponse);
     });
 
-    it('should not return true for HTML elements', () => {
+    it('does not return true for HTML elements', () => {
       const wrapper = mount(<div className="bar baz" />);
       expect(wrapper.isEmptyRender()).to.equal(false);
     });
@@ -2794,7 +2794,7 @@ describeWithDOM('mount', () => {
   });
 
   describe('.filter(selector)', () => {
-    it('should return a new wrapper of just the nodes that matched the selector', () => {
+    it('returns a new wrapper of just the nodes that matched the selector', () => {
       const wrapper = mount((
         <div>
           <div className="foo bar baz" />
@@ -2814,7 +2814,7 @@ describeWithDOM('mount', () => {
       expect(wrapper.find('.foo').filter('.baz.bar')).to.have.lengthOf(2);
     });
 
-    it('should only look in the current wrappers nodes, not their children', () => {
+    it('only looks in the current wrapper’s nodes, not their children', () => {
       const wrapper = mount((
         <div>
           <div className="foo">
@@ -2829,7 +2829,7 @@ describeWithDOM('mount', () => {
   });
 
   describe('.filterWhere(predicate)', () => {
-    it('should filter only the nodes of the wrapper', () => {
+    it('filters only the nodes of the wrapper', () => {
       const wrapper = mount((
         <div>
           <div className="foo bar" />
@@ -2848,7 +2848,7 @@ describeWithDOM('mount', () => {
       expect(baz.hasClass('baz')).to.equal(true);
     });
 
-    it('should call the predicate with the wrapper as the first argument', () => {
+    it('calls the predicate with the wrapper as the first argument', () => {
       const wrapper = mount((
         <div>
           <div className="foo bar" />
@@ -2878,14 +2878,14 @@ describeWithDOM('mount', () => {
       expect(expected).to.equal(actual);
     };
 
-    it('should handle simple text nodes', () => {
+    it('handles simple text nodes', () => {
       const wrapper = mount((
         <div>some text</div>
       ));
       expect(wrapper.text()).to.equal('some text');
     });
 
-    it('should handle nodes with mapped children', () => {
+    it('handles nodes with mapped children', () => {
       class Foo extends React.Component {
         render() {
           return (
@@ -2907,7 +2907,7 @@ describeWithDOM('mount', () => {
       ));
     });
 
-    it('should render composite components smartly', () => {
+    it('renders composite components smartly', () => {
       class Foo extends React.Component {
         render() { return <div>foo</div>; }
       }
@@ -2920,12 +2920,12 @@ describeWithDOM('mount', () => {
       expect(wrapper.text()).to.equal('footest');
     });
 
-    it('should handle html entities', () => {
+    it('handles html entities', () => {
       matchesRender(<div>&gt;</div>);
     });
 
     describeIf(is('> 0.13'), 'stateless function components', () => {
-      it('should handle nodes with mapped children', () => {
+      it('handles nodes with mapped children', () => {
         const Foo = props => (
           <div>{props.items.map(x => x)}</div>
         );
@@ -2941,7 +2941,7 @@ describeWithDOM('mount', () => {
         ));
       });
 
-      it('should render composite components smartly', () => {
+      it('renders composite components smartly', () => {
         const Foo = () => (
           <div>foo</div>
         );
@@ -2974,7 +2974,7 @@ describeWithDOM('mount', () => {
       ]);
     });
 
-    it('should render falsy numbers', () => {
+    it('renders falsy numbers', () => {
       [0, -0, '0', NaN].forEach((x) => {
         const wrapper = mount(<div>{x}</div>);
         expect(wrapper.text()).to.equal(String(x));
@@ -2983,7 +2983,7 @@ describeWithDOM('mount', () => {
   });
 
   describe('.props()', () => {
-    it('should return the props object', () => {
+    it('returns the props object', () => {
       const fn = () => ({});
       const wrapper = mount((
         <div id="fooId" className="bax" onClick={fn}>
@@ -2997,7 +2997,7 @@ describeWithDOM('mount', () => {
       expect(wrapper.props().id).to.equal('fooId');
     });
 
-    it('should be allowed to be used on an inner node', () => {
+    it('is allowed to be used on an inner node', () => {
       const fn = () => ({});
       const wrapper = mount((
         <div className="bax">
@@ -3081,7 +3081,7 @@ describeWithDOM('mount', () => {
   });
 
   describe('.prop(name)', () => {
-    it('should return the props of key `name`', () => {
+    it('returns the props of key `name`', () => {
       const fn = () => ({});
       const wrapper = mount((
         <div id="fooId" className="bax" onClick={fn}>
@@ -3095,7 +3095,7 @@ describeWithDOM('mount', () => {
       expect(wrapper.prop('id')).to.equal('fooId');
     });
 
-    it('should be allowed to be used on an inner node', () => {
+    it('is allowed to be used on an inner node', () => {
       const fn = () => ({});
       const wrapper = mount((
         <div className="bax">
@@ -3108,7 +3108,7 @@ describeWithDOM('mount', () => {
       expect(wrapper.find('.foo').prop('id')).to.equal('fooId');
     });
 
-    it('should return props of root rendered node', () => {
+    it('returns props of root rendered node', () => {
       class Foo extends React.Component {
         render() {
           return (
@@ -3126,7 +3126,7 @@ describeWithDOM('mount', () => {
     });
 
     describeIf(is('> 0.13'), 'stateless function components', () => {
-      it('should return props of root rendered node', () => {
+      it('returns props of root rendered node', () => {
         const Foo = ({ bar, foo }) => (
           <div className={bar} id={foo} />
         );
@@ -3142,7 +3142,7 @@ describeWithDOM('mount', () => {
   });
 
   describe('.state(name)', () => {
-    it('should return the state object', () => {
+    it('returns the state object', () => {
       class Foo extends React.Component {
         constructor(props) {
           super(props);
@@ -3155,7 +3155,7 @@ describeWithDOM('mount', () => {
       expect(wrapper.state()).to.eql({ foo: 'foo' });
     });
 
-    it('should return the current state after state transitions', () => {
+    it('returns the current state after state transitions', () => {
       class Foo extends React.Component {
         constructor(props) {
           super(props);
@@ -3169,7 +3169,7 @@ describeWithDOM('mount', () => {
       expect(wrapper.state()).to.eql({ foo: 'bar' });
     });
 
-    it('should allow a state property name be passed in as an argument', () => {
+    it('allows a state property name be passed in as an argument', () => {
       class Foo extends React.Component {
         constructor(props) {
           super(props);
@@ -3184,12 +3184,12 @@ describeWithDOM('mount', () => {
   });
 
   describe('.children([selector])', () => {
-    it('should return empty wrapper for node with no children', () => {
+    it('returns empty wrapper for node with no children', () => {
       const wrapper = mount(<div />);
       expect(wrapper.children()).to.have.lengthOf(0);
     });
 
-    it('should return the children nodes of the root', () => {
+    it('returns the children nodes of the root', () => {
       const wrapper = mount((
         <div>
           <div className="foo" />
@@ -3203,7 +3203,7 @@ describeWithDOM('mount', () => {
       expect(wrapper.children().at(2).hasClass('baz')).to.equal(true);
     });
 
-    it('should not return any of the children of children', () => {
+    it('does not return any of the children of children', () => {
       const wrapper = mount((
         <div>
           <div className="foo">
@@ -3217,7 +3217,7 @@ describeWithDOM('mount', () => {
       expect(wrapper.children().at(1).hasClass('baz')).to.equal(true);
     });
 
-    it('should handle mixed children with and without arrays', () => {
+    it('handles mixed children with and without arrays', () => {
       class Foo extends React.Component {
         render() {
           return (
@@ -3242,7 +3242,7 @@ describeWithDOM('mount', () => {
       expect(wrapper.children().children().at(2).hasClass('baz')).to.equal(true);
     });
 
-    it('should optionally allow a selector to filter by', () => {
+    it('optionally allows a selector to filter by', () => {
       const wrapper = mount((
         <div>
           <div className="foo" />
@@ -3256,14 +3256,14 @@ describeWithDOM('mount', () => {
       expect(children.at(1).hasClass('baz')).to.equal(true);
     });
 
-    it('should not attempt to get an instance for text nodes', () => {
+    it('does not attempt to get an instance for text nodes', () => {
       const wrapper = mount(<div>B<span />C</div>);
       const children = wrapper.children();
       expect(children).to.have.lengthOf(1);
     });
 
     describeIf(is('> 0.13'), 'stateless function components', () => {
-      it('should handle mixed children with and without arrays', () => {
+      it('handles mixed children with and without arrays', () => {
         const Foo = props => (
           <div>
             <span className="foo" />
@@ -3306,7 +3306,7 @@ describeWithDOM('mount', () => {
   });
 
   describe('.childAt(index)', () => {
-    it('should get a wrapped node at the specified index', () => {
+    it('gets a wrapped node at the specified index', () => {
       const wrapper = mount((
         <div>
           <div className="bar" />
@@ -3320,7 +3320,7 @@ describeWithDOM('mount', () => {
   });
 
   describe('.parents([selector])', () => {
-    it('should return an array of current node’s ancestors', () => {
+    it('returns an array of current node’s ancestors', () => {
       const wrapper = mount((
         <div className="bax">
           <div className="foo">
@@ -3342,7 +3342,7 @@ describeWithDOM('mount', () => {
       expect(parents.at(2).hasClass('bax')).to.equal(true);
     });
 
-    it('should work for non-leaf nodes as well', () => {
+    it('works for non-leaf nodes as well', () => {
       const wrapper = mount((
         <div className="bax">
           <div className="foo">
@@ -3360,7 +3360,7 @@ describeWithDOM('mount', () => {
       expect(parents.at(1).hasClass('bax')).to.equal(true);
     });
 
-    it('should optionally allow a selector', () => {
+    it('optionally allows a selector', () => {
       const wrapper = mount((
         <div className="bax foo">
           <div className="foo">
@@ -3378,7 +3378,7 @@ describeWithDOM('mount', () => {
       expect(parents.at(1).hasClass('bax')).to.equal(true);
     });
 
-    it('should work with components in the tree', () => {
+    it('works with components in the tree', () => {
       const Foo = createClass({
         render() {
           return <div className="bar" />;
@@ -3401,7 +3401,7 @@ describeWithDOM('mount', () => {
   });
 
   describe('.parent()', () => {
-    it('should return only the immediate parent of the node', () => {
+    it('returns only the immediate parent of the node', () => {
       const wrapper = mount((
         <div className="bax">
           <div className="foo">
@@ -3415,7 +3415,7 @@ describeWithDOM('mount', () => {
       expect(wrapper.find('.baz').parent().hasClass('bar')).to.equal(true);
     });
 
-    it('should work for multiple nodes', () => {
+    it('works for multiple nodes', () => {
       const wrapper = mount((
         <div>
           <div className="foo">
@@ -3439,7 +3439,7 @@ describeWithDOM('mount', () => {
   });
 
   describe('.closest(selector)', () => {
-    it('should return the closest ancestor for a given selector', () => {
+    it('returns the closest ancestor for a given selector', () => {
       const wrapper = mount((
         <div className="foo">
           <div className="foo baz">
@@ -3455,7 +3455,7 @@ describeWithDOM('mount', () => {
       expect(closestFoo).to.have.lengthOf(1);
     });
 
-    it('should only ever return a wrapper of a single node', () => {
+    it('only ever returns a wrapper of a single node', () => {
       const wrapper = mount((
         <div className="bax">
           <div className="foo">
@@ -3469,7 +3469,7 @@ describeWithDOM('mount', () => {
       expect(wrapper.find('.baz').parent().hasClass('bar')).to.equal(true);
     });
 
-    it('should return itself if matching', () => {
+    it('returns itself if matching', () => {
       const wrapper = mount((
         <div className="bax">
           <div className="foo">
@@ -3483,7 +3483,7 @@ describeWithDOM('mount', () => {
       expect(wrapper.find('.bux').closest('.baz').hasClass('bux')).to.equal(true);
     });
 
-    it('should not find a nonexistent match', () => {
+    it('does not find a nonexistent match', () => {
       const wrapper = mount((
         <div className="foo">
           <div className="bar" />
@@ -3501,7 +3501,7 @@ describeWithDOM('mount', () => {
 
   describe('.hasClass(className)', () => {
     context('When using a DOM component', () => {
-      it('should return whether or not node has a certain class', () => {
+      it('returns whether or not node has a certain class', () => {
         const wrapper = mount(<div className="foo bar baz some-long-string FoOo" />);
 
         expect(wrapper.hasClass('foo')).to.equal(true);
@@ -3514,7 +3514,7 @@ describeWithDOM('mount', () => {
     });
 
     describeIf(is('> 0.13'), 'with stateless function components (SFCs)', () => {
-      it('should return whether or not node has a certain class', () => {
+      it('returns whether or not node has a certain class', () => {
         const Foo = () => <div className="foo bar baz some-long-string FoOo" />;
         const wrapper = mount(<Foo />);
 
@@ -3535,7 +3535,7 @@ describeWithDOM('mount', () => {
     });
 
     context('When using a Composite class component', () => {
-      it('should return whether or not node has a certain class', () => {
+      it('returns whether or not node has a certain class', () => {
         class Foo extends React.Component {
           render() {
             return (<div className="foo bar baz some-long-string FoOo" />);
@@ -3560,7 +3560,7 @@ describeWithDOM('mount', () => {
     });
 
     context('When using nested composite components', () => {
-      it('should return whether or not node has a certain class', () => {
+      it('returns whether or not node has a certain class', () => {
         class Foo extends React.Component {
           render() {
             return (<div className="foo bar baz some-long-string FoOo" />);
@@ -3592,7 +3592,7 @@ describeWithDOM('mount', () => {
     });
 
     context('When using a Composite component that renders null', () => {
-      it('should return whether or not node has a certain class', () => {
+      it('returns whether or not node has a certain class', () => {
         class Foo extends React.Component {
           render() {
             return null;
@@ -3616,7 +3616,7 @@ describeWithDOM('mount', () => {
   });
 
   describe('.forEach(fn)', () => {
-    it('should call a function for each node in the wrapper', () => {
+    it('calls a function for each node in the wrapper', () => {
       const wrapper = mount((
         <div>
           <div className="foo bax" />
@@ -3642,7 +3642,7 @@ describeWithDOM('mount', () => {
   });
 
   describe('.map(fn)', () => {
-    it('should call a function with a wrapper for each node in the wrapper', () => {
+    it('calls a function with a wrapper for each node in the wrapper', () => {
       const wrapper = mount((
         <div>
           <div className="foo bax" />
@@ -3666,7 +3666,7 @@ describeWithDOM('mount', () => {
       expect(spy.args[2][1]).to.equal(2);
     });
 
-    it('should return an array with the mapped values', () => {
+    it('returns an array with the mapped values', () => {
       const wrapper = mount((
         <div>
           <div className="foo bax" />
@@ -3689,7 +3689,7 @@ describeWithDOM('mount', () => {
       expect(ReactWrapper.prototype.reduce).to.have.lengthOf(1);
     });
 
-    it('should call a function with a wrapper for each node in the wrapper', () => {
+    it('calls a function with a wrapper for each node in the wrapper', () => {
       const wrapper = mount((
         <div>
           <div className="foo bax" />
@@ -3710,7 +3710,7 @@ describeWithDOM('mount', () => {
       expect(spy.args[2][1].hasClass('baz')).to.equal(true);
     });
 
-    it('should accumulate a value', () => {
+    it('accumulates a value', () => {
       const wrapper = mount((
         <div>
           <div id="bax" className="foo qoo" />
@@ -3756,7 +3756,7 @@ describeWithDOM('mount', () => {
       expect(ReactWrapper.prototype.reduceRight).to.have.lengthOf(1);
     });
 
-    it('should call a function with a wrapper for each node in the wrapper in reverse', () => {
+    it('calls a function with a wrapper for each node in the wrapper in reverse', () => {
       const wrapper = mount((
         <div>
           <div className="foo bax" />
@@ -3777,7 +3777,7 @@ describeWithDOM('mount', () => {
       expect(spy.args[2][1].hasClass('bax')).to.equal(true);
     });
 
-    it('should accumulate a value', () => {
+    it('accumulates a value', () => {
       const wrapper = mount((
         <div>
           <div id="bax" className="foo qoo" />
@@ -3820,7 +3820,7 @@ describeWithDOM('mount', () => {
   });
 
   describe('.slice([begin[, end]])', () => {
-    it('should return an identical wrapper if no params are set', () => {
+    it('returns an identical wrapper if no params are set', () => {
       const wrapper = mount((
         <div>
           <div className="foo bax" />
@@ -3834,7 +3834,7 @@ describeWithDOM('mount', () => {
       expect(wrapper.find('.foo').slice().at(2).hasClass('baz')).to.equal(true);
     });
 
-    it('should return a new wrapper if begin is set', () => {
+    it('returns a new wrapper if begin is set', () => {
       const wrapper = mount((
         <div>
           <div className="foo bax" />
@@ -3847,7 +3847,7 @@ describeWithDOM('mount', () => {
       expect(wrapper.find('.foo').slice(1).at(1).hasClass('baz')).to.equal(true);
     });
 
-    it('should return a new wrapper if begin and end are set', () => {
+    it('returns a new wrapper if begin and end are set', () => {
       const wrapper = mount((
         <div>
           <div className="foo bax" />
@@ -3859,7 +3859,7 @@ describeWithDOM('mount', () => {
       expect(wrapper.find('.foo').slice(1, 2).at(0).hasClass('bar')).to.equal(true);
     });
 
-    it('should return a new wrapper if begin and end are set (negative)', () => {
+    it('returns a new wrapper if begin and end are set (negative)', () => {
       const wrapper = mount((
         <div>
           <div className="foo bax" />
@@ -3873,7 +3873,7 @@ describeWithDOM('mount', () => {
   });
 
   describe('.some(selector)', () => {
-    it('should return if a node matches a selector', () => {
+    it('returns if a node matches a selector', () => {
       const wrapper = mount((
         <div>
           <div className="foo qoo" />
@@ -3886,7 +3886,7 @@ describeWithDOM('mount', () => {
       expect(wrapper.find('.foo').some('.bar')).to.equal(false);
     });
 
-    it('should throw if called on root', () => {
+    it('throws if called on root', () => {
       const wrapper = mount((
         <div>
           <div className="foo" />
@@ -3900,7 +3900,7 @@ describeWithDOM('mount', () => {
   });
 
   describe('.someWhere(predicate)', () => {
-    it('should return if a node matches a predicate', () => {
+    it('returns if a node matches a predicate', () => {
       const wrapper = mount((
         <div>
           <div className="foo qoo" />
@@ -3915,7 +3915,7 @@ describeWithDOM('mount', () => {
   });
 
   describe('.every(selector)', () => {
-    it('should return if every node matches a selector', () => {
+    it('returns if every node matches a selector', () => {
       const wrapper = mount((
         <div>
           <div className="foo qoo" />
@@ -3930,7 +3930,7 @@ describeWithDOM('mount', () => {
   });
 
   describe('.everyWhere(predicate)', () => {
-    it('should return if every node matches a predicate', () => {
+    it('returns if every node matches a predicate', () => {
       const wrapper = mount((
         <div>
           <div className="foo qoo" />
@@ -3945,7 +3945,7 @@ describeWithDOM('mount', () => {
   });
 
   describe('.flatMap(fn)', () => {
-    it('should return a wrapper with the mapped and flattened nodes', () => {
+    it('returns a wrapper with the mapped and flattened nodes', () => {
       const wrapper = mount((
         <div>
           <div className="foo">
@@ -3976,7 +3976,7 @@ describeWithDOM('mount', () => {
   });
 
   describe('.first()', () => {
-    it('should return the first node in the current set', () => {
+    it('returns the first node in the current set', () => {
       const wrapper = mount((
         <div>
           <div className="bar baz" />
@@ -3990,7 +3990,7 @@ describeWithDOM('mount', () => {
   });
 
   describe('.last()', () => {
-    it('should return the last node in the current set', () => {
+    it('returns the last node in the current set', () => {
       const wrapper = mount((
         <div>
           <div className="bar" />
@@ -4018,7 +4018,7 @@ describeWithDOM('mount', () => {
       warningStub.restore();
     });
 
-    it('should display a deprecation warning', () => {
+    it('displays a deprecation warning', () => {
       fooNode.isEmpty();
       expect(warningStub.calledWith('Enzyme::Deprecated method isEmpty() called, use exists() instead.')).to.equal(true);
     });
@@ -4030,7 +4030,7 @@ describeWithDOM('mount', () => {
       expect(existsSpy).to.have.property('called', true);
     });
 
-    it('should return true if wrapper is empty', () => {
+    it('returns true if wrapper is empty', () => {
       expect(fooNode.isEmpty()).to.equal(false);
       expect(missingNode.isEmpty()).to.equal(true);
     });
@@ -4042,14 +4042,14 @@ describeWithDOM('mount', () => {
     });
 
     describe('without arguments', () => {
-      it('should return true if node exists in wrapper', () => {
+      it('returns true if node exists in wrapper', () => {
         const wrapper = mount(<div className="foo" />);
         expect(wrapper.find('.bar').exists()).to.equal(false);
         expect(wrapper.find('.foo').exists()).to.equal(true);
       });
     });
     describe('with argument', () => {
-      it('should return .find(arg).exists() instead', () => {
+      it('returns .find(arg).exists() instead', () => {
         const wrapper = mount(<div />);
         const fakeFindExistsReturnVal = Symbol('fake .find(arg).exists() return value');
         const fakeSelector = '.someClass';
@@ -4159,7 +4159,7 @@ describeWithDOM('mount', () => {
   });
 
   describe('.html()', () => {
-    it('should return html of straight DOM elements', () => {
+    it('returns html of straight DOM elements', () => {
       const wrapper = mount((
         <div className="test">
           <span>Hello World!</span>
@@ -4168,7 +4168,7 @@ describeWithDOM('mount', () => {
       expect(wrapper.html()).to.equal('<div class="test"><span>Hello World!</span></div>');
     });
 
-    it('should render out nested composite components', () => {
+    it('renders out nested composite components', () => {
       class Foo extends React.Component {
         render() {
           return (<div className="in-foo" />);
@@ -4189,7 +4189,7 @@ describeWithDOM('mount', () => {
     });
 
     describeIf(is('> 0.13'), 'stateless function components', () => {
-      it('should render out nested composite components', () => {
+      it('renders out nested composite components', () => {
         const Foo = () => <div className="in-foo" />;
         const Bar = () => (
           <div className="in-bar">
@@ -4205,7 +4205,7 @@ describeWithDOM('mount', () => {
   });
 
   describe('.unmount()', () => {
-    it('should call componentWillUnmount()', () => {
+    it('calls componentWillUnmount()', () => {
       const spy = sinon.spy();
 
       class Foo extends React.Component {
@@ -4288,7 +4288,7 @@ describeWithDOM('mount', () => {
 
   describe('lifecycle methods', () => {
     context('mounting phase', () => {
-      it('should call componentWillMount and componentDidMount', () => {
+      it('calls componentWillMount and componentDidMount', () => {
         const spy = sinon.spy();
         class Foo extends React.Component {
           componentWillMount() {
@@ -4312,7 +4312,7 @@ describeWithDOM('mount', () => {
         ]);
       });
 
-      it('should be batching updates', () => {
+      it('is batching updates', () => {
         const spy = sinon.spy();
         class Foo extends React.Component {
           constructor(props) {
@@ -4344,7 +4344,7 @@ describeWithDOM('mount', () => {
     });
 
     context('updating props', () => {
-      it('should call shouldComponentUpdate, componentWillUpdate, and componentDidUpdate', () => {
+      it('calls shouldComponentUpdate, componentWillUpdate, and componentDidUpdate', () => {
         const spy = sinon.spy();
 
         class Foo extends React.Component {
@@ -4448,7 +4448,7 @@ describeWithDOM('mount', () => {
         ]);
       });
 
-      it('should componentWillReceiveProps, shouldComponentUpdate, componentWillUpdate and componentDidUpdate with merged props', () => {
+      it('calls componentWillReceiveProps, shouldComponentUpdate, componentWillUpdate and componentDidUpdate with merged props', () => {
         const spy = sinon.spy();
 
         class Foo extends React.Component {
@@ -4504,7 +4504,7 @@ describeWithDOM('mount', () => {
         ]);
       });
 
-      it('should cancel rendering when Component returns false in shouldComponentUpdate', () => {
+      it('cancels rendering when Component returns false in shouldComponentUpdate', () => {
         const spy = sinon.spy();
 
         class Foo extends React.Component {
@@ -4546,7 +4546,7 @@ describeWithDOM('mount', () => {
         ]);
       });
 
-      it('should not provoke another renders to call setState in componentWillReceiveProps', () => {
+      it('does not provoke another renders to call setState in componentWillReceiveProps', () => {
         const spy = sinon.spy();
         class Foo extends React.Component {
           constructor(props) {
@@ -4573,7 +4573,7 @@ describeWithDOM('mount', () => {
         expect(result.state('count')).to.equal(1);
       });
 
-      it('should provoke an another render to call setState twice in componentWillUpdate', () => {
+      it('provokes an another render to call setState twice in componentWillUpdate', () => {
         const spy = sinon.spy();
         class Foo extends React.Component {
           constructor(props) {
@@ -4604,7 +4604,7 @@ describeWithDOM('mount', () => {
         expect(result.state('count')).to.equal(1);
       });
 
-      it('should provoke an another render to call setState twice in componentDidUpdate', () => {
+      it('provokes an another render to call setState twice in componentDidUpdate', () => {
         const spy = sinon.spy();
         class Foo extends React.Component {
           constructor(props) {
@@ -4639,7 +4639,7 @@ describeWithDOM('mount', () => {
     });
 
     context('updating state', () => {
-      it('should call shouldComponentUpdate, componentWillUpdate and componentDidUpdate', () => {
+      it('calls shouldComponentUpdate, componentWillUpdate and componentDidUpdate', () => {
         const spy = sinon.spy();
 
         class Foo extends React.Component {
@@ -4708,7 +4708,7 @@ describeWithDOM('mount', () => {
         expect(spy.args).to.deep.equal(expected);
       });
 
-      it('should cancel rendering when Component returns false in shouldComponentUpdate', () => {
+      it('cancels rendering when Component returns false in shouldComponentUpdate', () => {
         const spy = sinon.spy();
         class Foo extends React.Component {
           constructor(props) {
@@ -4743,7 +4743,7 @@ describeWithDOM('mount', () => {
         expect(spy.args).to.deep.equal([['render'], ['shouldComponentUpdate']]);
       });
 
-      it('should provoke an another render to call setState twice in componentWillUpdate', () => {
+      it('provokes an another render to call setState twice in componentWillUpdate', () => {
         const spy = sinon.spy();
         class Foo extends React.Component {
           constructor(props) {
@@ -4775,7 +4775,7 @@ describeWithDOM('mount', () => {
         expect(result.state('count')).to.equal(1);
       });
 
-      it('should provoke an another render to call setState twice in componentDidUpdate', () => {
+      it('provokes an another render to call setState twice in componentDidUpdate', () => {
         const spy = sinon.spy();
         class Foo extends React.Component {
           constructor(props) {
@@ -4811,7 +4811,7 @@ describeWithDOM('mount', () => {
     });
 
     context('updating context', () => {
-      it('should call shouldComponentUpdate, componentWillUpdate and componentDidUpdate', () => {
+      it('calls shouldComponentUpdate, componentWillUpdate and componentDidUpdate', () => {
         const spy = sinon.spy();
         class Foo extends React.Component {
           constructor(...args) {
@@ -4879,7 +4879,7 @@ describeWithDOM('mount', () => {
         ]);
       });
 
-      it('should cancel rendering when Component returns false in shouldComponentUpdate', () => {
+      it('cancels rendering when Component returns false in shouldComponentUpdate', () => {
         const spy = sinon.spy();
         class Foo extends React.Component {
           shouldComponentUpdate() {
@@ -4913,7 +4913,7 @@ describeWithDOM('mount', () => {
         expect(spy.args).to.deep.equal([['render'], ['shouldComponentUpdate']]);
       });
 
-      it('should provoke an another render to call setState twice in componentWillUpdate', () => {
+      it('provokes an another render to call setState twice in componentWillUpdate', () => {
         const spy = sinon.spy();
         class Foo extends React.Component {
           constructor(props) {
@@ -4949,7 +4949,7 @@ describeWithDOM('mount', () => {
         expect(result.state('count')).to.equal(1);
       });
 
-      it('should provoke an another render to call setState twice in componentDidUpdate', () => {
+      it('provokes an another render to call setState twice in componentDidUpdate', () => {
         const spy = sinon.spy();
         class Foo extends React.Component {
           constructor(props) {
@@ -4989,7 +4989,7 @@ describeWithDOM('mount', () => {
     });
 
     context('unmounting phase', () => {
-      it('should call componentWillUnmount', () => {
+      it('calls componentWillUnmount', () => {
         const spy = sinon.spy();
         class Foo extends React.Component {
           componentWillUnmount() {
@@ -5007,7 +5007,7 @@ describeWithDOM('mount', () => {
     });
 
     context('component instance', () => {
-      it('should call `componentDidUpdate` when component’s `setState` is called', () => {
+      it('calls `componentDidUpdate` when component’s `setState` is called', () => {
         class Foo extends React.Component {
           constructor(props) {
             super(props);
@@ -5037,7 +5037,7 @@ describeWithDOM('mount', () => {
         expect(spy).to.have.property('callCount', 2);
       });
 
-      it('should call `componentDidUpdate` when component’s `setState` is called through a bound method', () => {
+      it('calls `componentDidUpdate` when component’s `setState` is called through a bound method', () => {
         class Foo extends React.Component {
           constructor(props) {
             super(props);
@@ -5070,7 +5070,7 @@ describeWithDOM('mount', () => {
         expect(spy).to.have.property('callCount', 1);
       });
 
-      it('should call `componentDidUpdate` when component’s `setState` is called', () => {
+      it('calls `componentDidUpdate` when component’s `setState` is called', () => {
         class Foo extends React.Component {
           constructor(props) {
             super(props);
@@ -5097,7 +5097,7 @@ describeWithDOM('mount', () => {
         expect(wrapper.state('foo')).to.equal('update');
       });
 
-      it('should not call `componentDidMount` twice when a child component is created', () => {
+      it('does not call `componentDidMount` twice when a child component is created', () => {
         class Foo extends React.Component {
           constructor(props) {
             super(props);
@@ -5129,7 +5129,7 @@ describeWithDOM('mount', () => {
     });
 
     describeIf(is('>= 16.3'), 'support getSnapshotBeforeUpdate', () => {
-      it('should call getSnapshotBeforeUpdate and pass snapshot to componentDidUpdate', () => {
+      it('calls getSnapshotBeforeUpdate and pass snapshot to componentDidUpdate', () => {
         const spy = sinon.spy();
         class Foo extends React.Component {
           constructor(props) {
@@ -5173,7 +5173,7 @@ describeWithDOM('mount', () => {
   });
 
   describe('attachTo option', () => {
-    it('should attach and stuff', () => {
+    it('attaches and stuff', () => {
       class Foo extends React.Component {
         render() {
           return (<div className="in-foo" />);
@@ -5204,7 +5204,7 @@ describeWithDOM('mount', () => {
       expect(div.childNodes).to.have.lengthOf(0);
     });
 
-    it('should allow for multiple attaches/detaches on same node', () => {
+    it('allows for multiple attaches/detaches on same node', () => {
       class Foo extends React.Component {
         render() {
           return (<div className="in-foo" />);
@@ -5307,7 +5307,7 @@ describeWithDOM('mount', () => {
   });
 
   describe('.tap()', () => {
-    it('should call the passed function with current ReactWrapper and returns itself', () => {
+    it('calls the passed function with current ReactWrapper and returns itself', () => {
       const spy = sinon.spy();
       const wrapper = mount((
         <ul>
@@ -5323,7 +5323,7 @@ describeWithDOM('mount', () => {
   });
 
   describe('.key()', () => {
-    it('should return the key of the node', () => {
+    it('returns the key of the node', () => {
       const wrapper = mount((
         <ul>
           {['foo', 'bar', ''].map(s => <li key={s}>{s}</li>)}
@@ -5334,7 +5334,7 @@ describeWithDOM('mount', () => {
       expect(wrapper.at(2).key()).to.equal('');
     });
 
-    it('should return null when no key is specified', () => {
+    it('returns null when no key is specified', () => {
       const wrapper = mount((
         <ul>
           <li>foo</li>
@@ -5345,7 +5345,7 @@ describeWithDOM('mount', () => {
   });
 
   describe('.matchesElement(node)', () => {
-    it('should match on a root node that looks like the rendered one', () => {
+    it('matches on a root node that looks like the rendered one', () => {
       const spy = sinon.spy();
       const wrapper = mount((
         <div>
@@ -5370,7 +5370,8 @@ describeWithDOM('mount', () => {
       ))).to.equal(true);
       expect(spy).to.have.property('callCount', 0);
     });
-    it('should not match on a root node that doesn\'t looks like the rendered one', () => {
+
+    it('does not match on a root node that doesn\'t looks like the rendered one', () => {
       const spy = sinon.spy();
       const spy2 = sinon.spy();
       const wrapper = mount((
@@ -5399,7 +5400,7 @@ describeWithDOM('mount', () => {
     });
 
     describeIf(is('> 0.13'), 'stateless function components', () => {
-      it('should attach and stuff', () => {
+      it('attaches and stuff', () => {
         const Foo = () => <div className="in-foo" />;
 
         const div = global.document.createElement('div');
@@ -5426,7 +5427,7 @@ describeWithDOM('mount', () => {
         expect(div.childNodes).to.have.lengthOf(0);
       });
 
-      it('should allow for multiple attaches/detaches on same node', () => {
+      it('allows for multiple attaches/detaches on same node', () => {
         const Foo = () => <div className="in-foo" />;
         const Bar = () => <div className="in-bar" />;
 
@@ -5479,7 +5480,7 @@ describeWithDOM('mount', () => {
   });
 
   describe('.containsMatchingElement(node)', () => {
-    it('should match a root node that looks like the rendered one', () => {
+    it('matches a root node that looks like the rendered one', () => {
       const spy1 = sinon.spy();
       const spy2 = sinon.spy();
       const wrapper = mount((
@@ -5528,7 +5529,7 @@ describeWithDOM('mount', () => {
       expect(spy2).to.have.property('callCount', 0);
     });
 
-    it('should match on a single node that looks like a rendered one', () => {
+    it('matches on a single node that looks like a rendered one', () => {
       const spy1 = sinon.spy();
       const spy2 = sinon.spy();
       const wrapper = mount((
@@ -5555,7 +5556,7 @@ describeWithDOM('mount', () => {
       expect(spy2).to.have.property('callCount', 0);
     });
 
-    it('should not match on a single node that doesn\'t looks like a rendered one', () => {
+    it('does not match on a single node that doesn\'t looks like a rendered one', () => {
       const spy1 = sinon.spy();
       const spy2 = sinon.spy();
       const wrapper = mount((
@@ -5570,7 +5571,7 @@ describeWithDOM('mount', () => {
       ))).to.equal(false);
     });
 
-    it('should not differentiate between absence, null, or undefined', () => {
+    it('does not differentiate between absence, null, or undefined', () => {
       const wrapper = mount((
         <div>
           <div className="a" id={null} />
@@ -5596,7 +5597,7 @@ describeWithDOM('mount', () => {
   });
 
   describe('.containsAllMatchingElements(nodes)', () => {
-    it('should throw TypeError if non-array passed in', () => {
+    it('throws TypeError if non-array passed in', () => {
       const wrapper = mount((
         <div>
           Hello
@@ -5610,7 +5611,7 @@ describeWithDOM('mount', () => {
       ))).to.throw(TypeError, 'nodes should be an Array');
     });
 
-    it('should match on array of nodes that each look like rendered nodes, with nested elements', () => {
+    it('matches on array of nodes that each look like rendered nodes, with nested elements', () => {
       const wrapper = mount((
         <div>
           <div>
@@ -5628,7 +5629,7 @@ describeWithDOM('mount', () => {
       ])).to.equal(true);
     });
 
-    it('should match on an array of nodes that all looks like one of rendered nodes', () => {
+    it('matches on an array of nodes that all looks like one of rendered nodes', () => {
       const spy1 = sinon.spy();
       const spy2 = sinon.spy();
       const wrapper = mount((
@@ -5672,7 +5673,7 @@ describeWithDOM('mount', () => {
       expect(spy1).to.have.property('callCount', 0);
       expect(spy2).to.have.property('callCount', 0);
     });
-    it('should not match on nodes that doesn\'t all looks like one of rendered nodes', () => {
+    it('does not match on nodes that doesn\'t all looks like one of rendered nodes', () => {
       const spy1 = sinon.spy();
       const spy2 = sinon.spy();
       const wrapper = mount((
@@ -5692,7 +5693,7 @@ describeWithDOM('mount', () => {
   });
 
   describe('.containsAnyMatchingElements(nodes)', () => {
-    it('should match on an array with at least one node that looks like a rendered nodes', () => {
+    it('matches on an array with at least one node that looks like a rendered nodes', () => {
       const spy1 = sinon.spy();
       const spy2 = sinon.spy();
       const wrapper = mount((
@@ -5736,7 +5737,7 @@ describeWithDOM('mount', () => {
       expect(spy1).to.have.property('callCount', 0);
       expect(spy2).to.have.property('callCount', 0);
     });
-    it('should not match on an array with no nodes that looks like a rendered nodes', () => {
+    it('does not match on an array with no nodes that looks like a rendered nodes', () => {
       const spy1 = sinon.spy();
       const spy2 = sinon.spy();
       const wrapper = mount((
@@ -5758,7 +5759,7 @@ describeWithDOM('mount', () => {
     .withOverride(() => getAdapter(), 'displayNameOfNode', () => undefined)
     .describe('.name()', () => {
       describe('node with displayName', () => {
-        it('should return the displayName of the node', () => {
+        it('returns the displayName of the node', () => {
           class Foo extends React.Component {
             render() { return <div />; }
           }
@@ -5770,7 +5771,7 @@ describeWithDOM('mount', () => {
         });
 
         describeIf(is('> 0.13'), 'stateless function components', () => {
-          it('should return the name of the node', () => {
+          it('returns the name of the node', () => {
             function SFC() {
               return <div />;
             }
@@ -5783,7 +5784,7 @@ describeWithDOM('mount', () => {
         });
 
         describe('createClass', () => {
-          it('should return the name of the node', () => {
+          it('returns the name of the node', () => {
             const Foo = createClass({
               displayName: 'CustomWrapper',
               render() {
@@ -5819,7 +5820,7 @@ describeWithDOM('mount', () => {
       });
 
       describe('node without displayName', () => {
-        it('should return the name of the node', () => {
+        it('returns the name of the node', () => {
           class Foo extends React.Component {
             render() { return <div />; }
           }
@@ -5829,7 +5830,7 @@ describeWithDOM('mount', () => {
         });
 
         describeIf(is('> 0.13'), 'stateless function components', () => {
-          it('should return the name of the node', () => {
+          it('returns the name of the node', () => {
             function SFC() {
               return <div />;
             }
@@ -5841,7 +5842,7 @@ describeWithDOM('mount', () => {
       });
 
       describe('DOM node', () => {
-        it('should return the name of the node', () => {
+        it('returns the name of the node', () => {
           const wrapper = mount(<div />);
           expect(wrapper.name()).to.equal('div');
         });
@@ -5861,7 +5862,7 @@ describeWithDOM('mount', () => {
     });
 
   describeIf(!!ITERATOR_SYMBOL, '@@iterator', () => {
-    it('should be iterable', () => {
+    it('is iterable', () => {
       class Foo extends React.Component {
         render() {
           return (
@@ -5919,12 +5920,12 @@ describeWithDOM('mount', () => {
       }
     }
 
-    it('should return the wrapped component instance', () => {
+    it('returns the wrapped component instance', () => {
       const wrapper = mount(<Test />);
       expect(wrapper.instance()).to.be.an.instanceof(Test);
     });
 
-    it('should throw when wrapping multiple elements', () => {
+    it('throws when wrapping multiple elements', () => {
       const wrapper = mount(<Test />).find('span');
       expect(() => wrapper.instance()).to.throw(Error);
     });
@@ -6017,7 +6018,7 @@ describeWithDOM('mount', () => {
   });
 
   describe('.getElements()', () => {
-    it('should return the wrapped elements', () => {
+    it('returns the wrapped elements', () => {
       class Test extends React.Component {
         render() {
           return (
@@ -6073,7 +6074,7 @@ describeWithDOM('mount', () => {
       }
     }
 
-    it('should have updated output after an asynchronous setState', () => {
+    it('has updated output after an asynchronous setState', () => {
       const wrapper = mount(<Test />);
       wrapper.find('.async-btn').simulate('click');
       return new Promise((resolve) => {
@@ -6086,7 +6087,7 @@ describeWithDOM('mount', () => {
       });
     });
 
-    it('should have updated output after child prop callback invokes setState', () => {
+    it('has updated output after child prop callback invokes setState', () => {
       const wrapper = mount(<Test />);
       wrapper.find(Child).props().callback();
       wrapper.update();
@@ -6108,17 +6109,17 @@ describeWithDOM('mount', () => {
       }
     }
 
-    it('should return the outermost DOMComponent of the root wrapper', () => {
+    it('returns the outermost DOMComponent of the root wrapper', () => {
       const wrapper = mount(<Test />);
       expect(wrapper.getDOMNode()).to.have.property('className', 'outer');
     });
 
-    it('should return the outermost DOMComponent of the inner div wrapper', () => {
+    it('returns the outermost DOMComponent of the inner div wrapper', () => {
       const wrapper = mount(<Test />);
       expect(wrapper.find('.inner').getDOMNode()).to.have.property('className', 'inner');
     });
 
-    it('should throw when wrapping multiple elements', () => {
+    it('throws when wrapping multiple elements', () => {
       const wrapper = mount(<Test />).find('span');
       expect(() => wrapper.getDOMNode()).to.throw(
         Error,
@@ -6136,17 +6137,17 @@ describeWithDOM('mount', () => {
         </div>
       );
 
-      it('should return the outermost DOMComponent of the root wrapper', () => {
+      it('returns the outermost DOMComponent of the root wrapper', () => {
         const wrapper = mount(<SFC />);
         expect(wrapper.getDOMNode()).to.have.property('className', 'outer');
       });
 
-      it('should return the outermost DOMComponent of the inner div wrapper', () => {
+      it('returns the outermost DOMComponent of the inner div wrapper', () => {
         const wrapper = mount(<SFC />);
         expect(wrapper.find('.inner').getDOMNode()).to.have.property('className', 'inner');
       });
 
-      it('should throw when wrapping multiple elements', () => {
+      it('throws when wrapping multiple elements', () => {
         const wrapper = mount(<SFC />).find('span');
         expect(() => wrapper.getDOMNode()).to.throw(
           Error,
@@ -6188,7 +6189,7 @@ describeWithDOM('mount', () => {
       }
     }
 
-    it('should be able to get the latest state value', () => {
+    it('is able to get the latest state value', () => {
       class App extends React.Component {
         constructor(props) {
           super(props);
@@ -6230,7 +6231,7 @@ describeWithDOM('mount', () => {
       }
     }
 
-    it('should be able to get the latest state value', () => {
+    it('is able to get the latest state value', () => {
       let App;
       const promise = new Promise((resolve) => {
         App = class extends React.Component {
@@ -6370,7 +6371,7 @@ describeWithDOM('mount', () => {
   });
 
   describe('lifecycles', () => {
-    it('should call `componentDidUpdate` when component’s `setState` is called', () => {
+    it('calls `componentDidUpdate` when component’s `setState` is called', () => {
       class Foo extends React.Component {
         constructor(props) {
           super(props);
@@ -6400,7 +6401,7 @@ describeWithDOM('mount', () => {
       expect(spy).to.have.property('callCount', 2);
     });
 
-    it('should call `componentDidUpdate` when component’s `setState` is called through a bound method', () => {
+    it('calls `componentDidUpdate` when component’s `setState` is called through a bound method', () => {
       class Foo extends React.Component {
         constructor(props) {
           super(props);
@@ -6435,7 +6436,7 @@ describeWithDOM('mount', () => {
       expect(spy).to.have.property('callCount', 1);
     });
 
-    it('should call `componentDidUpdate` when component’s `setState` is called', () => {
+    it('calls `componentDidUpdate` when component’s `setState` is called', () => {
       class Foo extends React.Component {
         constructor(props) {
           super(props);
@@ -6462,7 +6463,7 @@ describeWithDOM('mount', () => {
       expect(wrapper.state('foo')).to.equal('update');
     });
 
-    it('should not call `componentDidMount` twice when a child component is created', () => {
+    it('does not call `componentDidMount` twice when a child component is created', () => {
       class Foo extends React.Component {
         constructor(props) {
           super(props);

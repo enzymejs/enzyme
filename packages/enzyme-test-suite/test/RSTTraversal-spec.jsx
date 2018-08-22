@@ -18,13 +18,13 @@ const $ = elementToTree;
 
 describe('RSTTraversal', () => {
   describe('hasClassName', () => {
-    it('should work for standalone classNames', () => {
+    it('works for standalone classNames', () => {
       const node = $(<div className="foo" />);
       expect(hasClassName(node, 'foo')).to.equal(true);
       expect(hasClassName(node, 'bar')).to.equal(false);
     });
 
-    it('should work for multiple classNames', () => {
+    it('works for multiple classNames', () => {
       const node = $(<div className="foo bar baz" />);
       expect(hasClassName(node, 'foo')).to.equal(true);
       expect(hasClassName(node, 'bar')).to.equal(true);
@@ -32,12 +32,12 @@ describe('RSTTraversal', () => {
       expect(hasClassName(node, 'bax')).to.equal(false);
     });
 
-    it('should also allow hyphens', () => {
+    it('also allows hyphens', () => {
       const node = $(<div className="foo-bar" />);
       expect(hasClassName(node, 'foo-bar')).to.equal(true);
     });
 
-    it('should work if className has a function in toString property', () => {
+    it('works if className has a function in toString property', () => {
       function classes() {}
       classes.toString = () => 'foo-bar';
       const node = $(<div className={classes} />);
@@ -46,14 +46,14 @@ describe('RSTTraversal', () => {
   });
 
   describe('treeForEach', () => {
-    it('should be called once for a leaf node', () => {
+    it('is called once for a leaf node', () => {
       const spy = sinon.spy();
       const node = $(<div />);
       treeForEach(node, spy);
       expect(spy).to.have.property('callCount', 1);
     });
 
-    it('should handle a single child', () => {
+    it('handles a single child', () => {
       const spy = sinon.spy();
       const node = $((
         <div>
@@ -64,7 +64,7 @@ describe('RSTTraversal', () => {
       expect(spy).to.have.property('callCount', 2);
     });
 
-    it('should handle several children', () => {
+    it('handles several children', () => {
       const spy = sinon.spy();
       const node = $((
         <div>
@@ -76,7 +76,7 @@ describe('RSTTraversal', () => {
       expect(spy).to.have.property('callCount', 3);
     });
 
-    it('should handle multiple hierarchies', () => {
+    it('handles multiple hierarchies', () => {
       const spy = sinon.spy();
       const node = $((
         <div>
@@ -90,7 +90,7 @@ describe('RSTTraversal', () => {
       expect(spy).to.have.property('callCount', 4);
     });
 
-    it('should handle array children', () => {
+    it('handles array children', () => {
       const spy = sinon.spy();
       const twoDivArray = [
         <div key="a" />,
@@ -109,7 +109,7 @@ describe('RSTTraversal', () => {
       expect(nodes).to.deep.equal([node, divA, divB]);
     });
 
-    it('should handle array siblings', () => {
+    it('handles array siblings', () => {
       const spy = sinon.spy();
       const array1 = [
         <div key="a" />,
@@ -135,7 +135,7 @@ describe('RSTTraversal', () => {
       expect(nodes).to.deep.equal([node, divA, divB, divC, divD]);
     });
 
-    it('should handle Map children', () => {
+    it('handles Map children', () => {
       const spy = sinon.spy();
       const twoDivMap = new Map([
         [<div key="a" />],
@@ -154,7 +154,7 @@ describe('RSTTraversal', () => {
       expect(nodes).to.deep.equal([node, divA, divB]);
     });
 
-    it('should handle Map siblings', () => {
+    it('handles Map siblings', () => {
       const spy = sinon.spy();
       const map1 = new Map([
         [<div key="a" />],
@@ -180,7 +180,7 @@ describe('RSTTraversal', () => {
       expect(nodes).to.deep.equal([node, divA, divB, divC, divD]);
     });
 
-    it('should handle Set children', () => {
+    it('handles Set children', () => {
       const spy = sinon.spy();
       const twoDivSet = new Set([
         <div key="a" />,
@@ -199,7 +199,7 @@ describe('RSTTraversal', () => {
       expect(nodes).to.deep.equal([node, divA, divB]);
     });
 
-    it('should handle Set siblings', () => {
+    it('handles Set siblings', () => {
       const spy = sinon.spy();
       const set1 = new Set([
         <div key="a" />,
@@ -250,7 +250,7 @@ describe('RSTTraversal', () => {
         };
       };
 
-      it('should handle iterable with Symbol.iterator property children', () => {
+      it('handles iterable with Symbol.iterator property children', () => {
         const spy = sinon.spy();
 
         const iterableChildren = { [Symbol.iterator]: () => makeDivIterator(0, 2) };
@@ -269,7 +269,7 @@ describe('RSTTraversal', () => {
         expect(nodes).to.deep.equal([node, divA, divB]);
       });
 
-      it('should handle iterable with Symbol.iterator property siblings', () => {
+      it('handles iterable with Symbol.iterator property siblings', () => {
         const spy = sinon.spy();
 
         const iterableChildren1 = { [Symbol.iterator]: () => makeDivIterator(0, 2) };
@@ -292,7 +292,7 @@ describe('RSTTraversal', () => {
         expect(nodes).to.deep.equal([node, divA, divB, divC, divD]);
       });
 
-      it('should handle iterable with @@iterator property children', () => {
+      it('handles iterable with @@iterator property children', () => {
         const spy = sinon.spy();
 
         const legacyIterableChildren = { '@@iterator': () => makeDivIterator(0, 2) };
@@ -311,7 +311,7 @@ describe('RSTTraversal', () => {
         expect(nodes).to.deep.equal([node, divA, divB]);
       });
 
-      it('should handle iterable with @@iterator property siblings', () => {
+      it('handles iterable with @@iterator property siblings', () => {
         const spy = sinon.spy();
 
         const legacyIterableChildren1 = { '@@iterator': () => makeDivIterator(0, 2) };
@@ -335,7 +335,7 @@ describe('RSTTraversal', () => {
       });
     });
 
-    it('should not get trapped from empty strings', () => {
+    it('does not get trapped from empty strings', () => {
       const spy = sinon.spy();
       const node = $((
         <div>
@@ -346,7 +346,7 @@ describe('RSTTraversal', () => {
       expect(spy).to.have.property('callCount', 3);
     });
 
-    it('should pass in the node', () => {
+    it('passes in the node', () => {
       const spy = sinon.spy();
       const node = $((
         <div>
@@ -377,15 +377,15 @@ describe('RSTTraversal', () => {
       </div>
     ));
 
-    it('should return an empty array for falsy test', () => {
+    it('returnsan empty array for falsy test', () => {
       expect(treeFilter(tree, () => false).length).to.equal(0);
     });
 
-    it('should return the full array for truthy test', () => {
+    it('returnsthe full array for truthy test', () => {
       expect(treeFilter(tree, () => true).length).to.equal(5);
     });
 
-    it('should filter for truthiness', () => {
+    it('filters for truthiness', () => {
       expect(treeFilter(tree, node => node.type === 'nav').length).to.equal(1);
       expect(treeFilter(tree, node => node.type === 'button').length).to.equal(2);
     });
@@ -393,13 +393,13 @@ describe('RSTTraversal', () => {
   });
 
   describe('pathToNode', () => {
-    it('should return null if no queue length', () => {
+    it('returnsnull if no queue length', () => {
       const result = pathToNode({}, []);
 
       expect(result).to.equal(null);
     });
 
-    it('should return trees from the root node', () => {
+    it('returnstrees from the root node', () => {
       const node = <label htmlFor="foo" />;
       const tree = $((
         <div>
@@ -418,7 +418,7 @@ describe('RSTTraversal', () => {
       expect(result[1]).to.have.property('type', 'nav');
     });
 
-    it('should return trees from the root node except the sibling node', () => {
+    it('returnstrees from the root node except the sibling node', () => {
       const node = <label htmlFor="foo" />;
       const tree = $((
         <div>
@@ -440,12 +440,12 @@ describe('RSTTraversal', () => {
   });
 
   describe('getTextFromNode', () => {
-    it('should return empty string for nodes which do not exist', () => {
+    it('returnsempty string for nodes which do not exist', () => {
       const result = getTextFromNode(null);
       expect(result).to.equal('');
     });
 
-    it('should return displayName for functions that provides one', () => {
+    it('returnsdisplayName for functions that provides one', () => {
       class Subject extends React.Component {
         render() {
           return (
@@ -459,7 +459,7 @@ describe('RSTTraversal', () => {
       expect(result).to.equal('<CustomSubject />');
     });
 
-    it('should return function name if displayName is not provided', () => {
+    it('returnsfunction name if displayName is not provided', () => {
       class Subject extends React.Component {
         render() {
           return (
@@ -474,7 +474,7 @@ describe('RSTTraversal', () => {
 
     describeIf(is('> 0.13'), 'stateless function components', () => {
 
-      it('should return displayName for functions that provides one', () => {
+      it('returnsdisplayName for functions that provides one', () => {
         const Subject = () => <div />;
         Subject.displayName = 'CustomSubject';
 
@@ -483,7 +483,7 @@ describe('RSTTraversal', () => {
         expect(result).to.equal('<CustomSubject />');
       });
 
-      it('should return function name if displayName is not provided', () => {
+      it('returnsfunction name if displayName is not provided', () => {
         const Subject = () => <div />;
 
         const node = $(<Subject />);
