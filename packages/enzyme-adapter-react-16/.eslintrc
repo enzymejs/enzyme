@@ -1,4 +1,6 @@
 {
+  "extends": "airbnb",
+  "root": true,
   "rules": {
     "import/no-extraneous-dependencies": 0,
     "import/no-unresolved": 0,
@@ -8,5 +10,10 @@
     "react/no-multi-comp": 0,
     "no-underscore-dangle": 0,
     "class-methods-use-this": 0
-  }
+  },
+  "settings": {
+    "react": {
+      "version": "16.4.0",
+    },
+  },
 }

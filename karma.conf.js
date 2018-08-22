@@ -1,5 +1,7 @@
 /* eslint-disable no-var,prefer-arrow-callback,vars-on-top, import/no-extraneous-dependencies */
 
+'use strict';
+
 require('babel-register');
 
 var IgnorePlugin = require('webpack').IgnorePlugin;

@@ -1,15 +1,17 @@
+'use strict';
+
 const path = require('path');
 const fs = require('fs');
-const child_process = require('child_process');
+const spawn = require('child_process').spawn;
 const rimraf = require('rimraf');
 
 const promisify = fn => new Promise((res, rej) => {
   const done = (err, val) => (err ? rej(err) : res(val));
   fn(done);
 });
-const getJSON = fpath => getFile(fpath).then(json => JSON.parse(json));
 const getFile = fpath => promisify(cb => fs.readFile(fpath, 'utf8', cb));
-const getFiles = fpath => promisify(cb => fs.readdir(fpath, cb));
+// const getFiles = fpath => promisify(cb => fs.readdir(fpath, cb));
+const getJSON = fpath => getFile(fpath).then(json => JSON.parse(json));
 const writeFile = (fpath, src) => promisify(cb => fs.writeFile(fpath, src, cb));
 const writeJSON = (fpath, json, pretty = false) => writeFile(
   fpath,
@@ -17,9 +19,9 @@ const writeJSON = (fpath, json, pretty = false) => writeFile(
     ? JSON.stringify(json, null, 2)
     : JSON.stringify(json)
 );
-const primraf = path => promisify(cb => rimraf(path, cb));
-const run = (cmd, ...args) => promisify(cb => {
-  const child = child_process.spawn(cmd, args, { stdio: 'inherit' });
+const primraf = fpath => promisify(cb => rimraf(fpath, cb));
+const run = (cmd, ...args) => promisify((cb) => {
+  const child = spawn(cmd, args, { stdio: 'inherit' });
   child.on('exit', cb);
 });
 
@@ -37,10 +39,10 @@ const version = process.argv[2];
 // 5. call lerna bootstrap to link all the packages
 // 6. install all of the package's peer deps at the top level
 
-var root = process.cwd();
-var adapterName = `enzyme-adapter-react-${version}`;
-var adapterPackageJsonPath = path.join(root, 'packages', adapterName, 'package.json');
-var testPackageJsonPath = path.join(root, 'packages', 'enzyme-test-suite', 'package.json');
+const root = process.cwd();
+const adapterName = `enzyme-adapter-react-${version}`;
+const adapterPackageJsonPath = path.join(root, 'packages', adapterName, 'package.json');
+const testPackageJsonPath = path.join(root, 'packages', 'enzyme-test-suite', 'package.json');
 
 if (!fs.statSync(adapterPackageJsonPath)) {
   throw new Error('Adapter not found: "' + adapterName + '"');
@@ -76,6 +78,7 @@ Promise.resolve()
       .filter(key => !key.startsWith('enzyme'))
       .map(key => `${key}@${peerDeps[key]}`);
 
+    // eslint-disable-next-line no-param-reassign
     testJson.dependencies[adapterName] = adapterJson.version;
 
     return Promise.all([
@@ -88,9 +91,10 @@ Promise.resolve()
   })
   .then(() => run('lerna', 'bootstrap'))
   .then(() => getJSON(testPackageJsonPath))
-  .then(testJson => {
+  .then((testJson) => {
     // now that we've lerna bootstrapped, we can remove the adapter from the
     // package.json so there is no diff
+    // eslint-disable-next-line no-param-reassign
     delete testJson.dependencies[adapterName];
     return writeJSON(testPackageJsonPath, testJson, true);
   })

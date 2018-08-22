@@ -6,32 +6,38 @@
   },
   "rules": {
     "id-length": 0,
-    "new-cap": [2, { "capIsNewExceptions": ["AND"] }],
-    "react/jsx-pascal-case": [2, { "allowAllCaps": true }],
     "react/no-find-dom-node": 1,
     "import/first": 0,
-    "no-underscore-dangle": [2, {
-      "allowAfterThis": true,
-      "allow": [
-        "_context",
-        "_currentElement",
-        "_instance",
-        "_reactInternalComponent",
-        "_reactInternalInstance",
-        "_renderedChildren",
-        "_renderedComponent",
-        "_renderedNodeType",
-        "_state",
-        "_store",
-        "_stringText",
-      ],
-    }],
   },
   "overrides": [
+    { // things that run in older envs, without babel
+      "files": [
+        "env.js",
+        "karma.conf.js",
+      ],
+      "rules": {
+        "import/no-extraneous-dependencies": [2, {
+          "devDependencies": true,
+        }],
+        "comma-dangle": [2, {
+          arrays: "always-multiline",
+          objects: "always-multiline",
+          imports: "always-multiline",
+          exports: "always-multiline",
+          functions: "ignore",
+        }],
+        "strict": [2, "safe"],
+        "prefer-destructuring": 0,
+        "prefer-template": 0,
+      },
+      "parserOptions": {
+        sourceType: "script",
+      },
+    },
     {
       "files": [
         "*.md",
-        //"**/*.md",
+        "**/*.md",
       ],
       "plugins": [
         "markdown"
