@@ -16,6 +16,7 @@ let Fragment;
 let StrictMode;
 let AsyncMode;
 let Profiler;
+let PureComponent;
 
 if (is('>=15.5 || ^16.0.0-alpha || ^16.3.0-alpha')) {
   // eslint-disable-next-line import/no-extraneous-dependencies
@@ -35,6 +36,12 @@ if (is('^16.0.0-0 || ^16.3.0-0')) {
   ({ createPortal } = require('react-dom'));
 } else {
   createPortal = null;
+}
+
+if (is('>=15.3')) {
+  ({ PureComponent } = require('react'));
+} else {
+  PureComponent = null;
 }
 
 if (is('^16.2.0-0')) {
@@ -78,4 +85,5 @@ export {
   StrictMode,
   AsyncMode,
   Profiler,
+  PureComponent,
 };

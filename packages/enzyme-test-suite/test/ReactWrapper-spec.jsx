@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { expect } from 'chai';
 import sinon from 'sinon';
 import wrap from 'mocha-wrap';
+import isEqual from 'lodash.isequal';
 import {
   mount,
   render,
@@ -27,6 +28,7 @@ import {
   createRef,
   Fragment,
   forwardRef,
+  PureComponent,
 } from './_helpers/react-compat';
 import {
   describeWithDOM,
@@ -5125,6 +5127,78 @@ describeWithDOM('mount', () => {
         expect(spy).to.have.property('callCount', 1);
         wrapper.find('button').prop('onClick')();
         expect(spy).to.have.property('callCount', 1);
+      });
+    });
+
+    describeIf(is('>= 15.3'), 'PureComponent', () => {
+      it('does not update when state and props did not change', () => {
+        class Foo extends PureComponent {
+          constructor(props) {
+            super(props);
+            this.state = {
+              foo: 'init',
+            };
+          }
+
+          componentDidUpdate() {}
+
+          render() {
+            return (
+              <div>
+                {this.state.foo}
+              </div>
+            );
+          }
+        }
+        const spy = sinon.spy(Foo.prototype, 'componentDidUpdate');
+        const wrapper = mount(<Foo id={1} />);
+        wrapper.setState({ foo: 'update' });
+        expect(spy).to.have.property('callCount', 1);
+        wrapper.setState({ foo: 'update' });
+        expect(spy).to.have.property('callCount', 1);
+
+        wrapper.setProps({ id: 2 });
+        expect(spy).to.have.property('callCount', 2);
+        wrapper.setProps({ id: 2 });
+        expect(spy).to.have.property('callCount', 2);
+      });
+    });
+
+    describe('Own PureComponent implementation', () => {
+      it('does not update when state and props did not change', () => {
+        class Foo extends React.Component {
+          constructor(props) {
+            super(props);
+            this.state = {
+              foo: 'init',
+            };
+          }
+
+          shouldComponentUpdate(nextProps, nextState) {
+            return !isEqual(this.props, nextProps) || !isEqual(this.state, nextState);
+          }
+
+          componentDidUpdate() {}
+
+          render() {
+            return (
+              <div>
+                {this.state.foo}
+              </div>
+            );
+          }
+        }
+        const spy = sinon.spy(Foo.prototype, 'componentDidUpdate');
+        const wrapper = mount(<Foo id={1} />);
+        wrapper.setState({ foo: 'update' });
+        expect(spy).to.have.property('callCount', 1);
+        wrapper.setState({ foo: 'update' });
+        expect(spy).to.have.property('callCount', 1);
+
+        wrapper.setProps({ id: 2 });
+        expect(spy).to.have.property('callCount', 2);
+        wrapper.setProps({ id: 2 });
+        expect(spy).to.have.property('callCount', 2);
       });
     });
 

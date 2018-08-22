@@ -158,6 +158,14 @@ function privateSetNodes(wrapper, nodes) {
   privateSet(wrapper, 'length', wrapper[NODES].length);
 }
 
+function pureComponentShouldComponentUpdate(prevProps, props, prevState, state) {
+  return !isEqual(prevProps, props) || !isEqual(prevState, state);
+}
+
+function isPureComponent(instance) {
+  return instance && instance.isPureReactComponent;
+}
+
 /**
  * @class ShallowWrapper
  */
@@ -342,6 +350,13 @@ class ShallowWrapper {
             && typeof instance.shouldComponentUpdate === 'function'
           ) {
             spy = spyMethod(instance, 'shouldComponentUpdate');
+          } else if (isPureComponent(instance)) {
+            shouldRender = pureComponentShouldComponentUpdate(
+              prevProps,
+              props,
+              state,
+              instance.state,
+            );
           }
           if (props) this[UNRENDERED] = cloneElement(adapter, this[UNRENDERED], props);
           this[RENDERER].render(this[UNRENDERED], nextContext);
@@ -472,6 +487,13 @@ class ShallowWrapper {
           && typeof instance.shouldComponentUpdate === 'function'
         ) {
           spy = spyMethod(instance, 'shouldComponentUpdate');
+        } else if (isPureComponent(instance)) {
+          shouldRender = pureComponentShouldComponentUpdate(
+            prevProps,
+            instance.props,
+            prevState,
+            statePayload,
+          );
         }
         // We don't pass the setState callback here
         // to guarantee to call the callback after finishing the render
