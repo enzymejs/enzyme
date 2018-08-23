@@ -4289,6 +4289,228 @@ describeWithDOM('mount', () => {
   });
 
   describe('lifecycle methods', () => {
+    describeIf(is('>= 16.3'), 'getDerivedStateFromProps', () => {
+      let spy;
+
+      beforeEach(() => {
+        spy = sinon.spy();
+      });
+
+      class Spy extends React.Component {
+        constructor(...args) {
+          super(...args);
+          this.state = { state: true }; // eslint-disable-line react/no-unused-state
+          spy('constructor');
+        }
+
+        shouldComponentUpdate(nextProps, nextState, nextContext) {
+          spy('shouldComponentUpdate', {
+            prevProps: this.props,
+            nextProps,
+            prevState: this.state,
+            nextState,
+            prevContext: this.context,
+            nextContext,
+          });
+          return true;
+        }
+
+        componentWillUpdate(nextProps, nextState, nextContext) {
+          spy('componentWillUpdate', {
+            prevProps: this.props,
+            nextProps,
+            prevState: this.state,
+            nextState,
+            prevContext: this.context,
+            nextContext,
+          });
+        }
+
+        componentDidUpdate(prevProps, prevState, prevContext) {
+          spy('componentDidUpdate', {
+            prevProps,
+            nextProps: this.props,
+            prevState,
+            nextState: this.state,
+            prevContext,
+            nextContext: this.context,
+          });
+        }
+
+        render() {
+          spy('render');
+          return null;
+        }
+      }
+
+      class CWRP extends Spy {
+        componentWillReceiveProps(nextProps, nextContext) {
+          spy('componentWillReceiveProps', {
+            prevProps: this.props,
+            nextProps,
+            prevState: this.state,
+            nextState: this.state,
+            prevContext: this.context,
+            nextContext,
+          });
+        }
+      }
+
+      class U_CWRP extends Spy {
+        UNSAFE_componentWillReceiveProps(nextProps) { // eslint-disable-line camelcase
+          spy('UNSAFE_componentWillReceiveProps', {
+            prevProps: this.props,
+            nextProps,
+            prevState: this.state,
+            nextState: this.state,
+            prevContext: this.context,
+            nextContext: undefined,
+          });
+        }
+      }
+
+      class GDSFP extends Spy {
+        static getDerivedStateFromProps(props, state) {
+          spy('getDerivedStateFromProps', { props, state });
+          return {};
+        }
+      }
+
+      it('calls cWRP when expected', () => {
+        const prevProps = { a: 1 };
+        const wrapper = mount(<CWRP {...prevProps} />);
+        expect(spy.args).to.deep.equal([
+          ['constructor'],
+          ['render'],
+        ]);
+        spy.reset();
+
+        const foo = {};
+        const props = { foo };
+        const {
+          context: prevContext,
+          context: nextContext,
+          state: prevState,
+          state: nextState,
+        } = wrapper.instance();
+
+        wrapper.setProps(props);
+        const nextProps = { ...prevProps, ...props };
+
+        const data = {
+          prevProps,
+          nextProps,
+          prevState,
+          nextState,
+          prevContext,
+          nextContext,
+        };
+        expect(spy.args).to.deep.equal([
+          ['componentWillReceiveProps', data],
+          ['shouldComponentUpdate', data],
+          ['componentWillUpdate', data],
+          ['render'],
+          ['componentDidUpdate', {
+            ...data,
+            prevContext: is('>= 16') ? undefined : prevContext,
+          }],
+        ]);
+      });
+
+      it('calls UNSAFE_cWRP when expected', () => {
+        const prevProps = { a: 1 };
+        // eslint-disable-next-line react/jsx-pascal-case
+        const wrapper = mount(<U_CWRP {...prevProps} />);
+        expect(spy.args).to.deep.equal([
+          ['constructor'],
+          ['render'],
+        ]);
+        spy.reset();
+
+        const foo = {};
+        const props = { foo };
+        const {
+          context: prevContext,
+          context: nextContext,
+          state: prevState,
+          state: nextState,
+        } = wrapper.instance();
+
+        wrapper.setProps(props);
+        const nextProps = { ...prevProps, ...props };
+
+        const data = {
+          prevProps,
+          nextProps,
+          prevState,
+          nextState,
+          prevContext,
+          nextContext,
+        };
+        expect(spy.args).to.deep.equal([
+          ['UNSAFE_componentWillReceiveProps', {
+            ...data,
+            nextContext: is('>= 16') ? undefined : nextContext,
+          }],
+          ['shouldComponentUpdate', data],
+          ['componentWillUpdate', data],
+          ['render'],
+          ['componentDidUpdate', {
+            ...data,
+            prevContext: is('>= 16') ? undefined : prevContext,
+          }],
+        ]);
+      });
+
+      it('calls GDSFP when expected', () => {
+        const prevProps = { a: 1 };
+        const state = { state: true };
+        const wrapper = mount(<GDSFP {...prevProps} />);
+        expect(spy.args).to.deep.equal([
+          ['constructor'],
+          ['getDerivedStateFromProps', {
+            props: prevProps,
+            state,
+          }],
+          ['render'],
+        ]);
+        spy.reset();
+
+        const foo = {};
+        const props = { foo };
+        const {
+          context: prevContext,
+          context: nextContext,
+          state: prevState,
+          state: nextState,
+        } = wrapper.instance();
+
+        wrapper.setProps(props);
+        const nextProps = { ...prevProps, ...props };
+
+        const data = {
+          prevProps,
+          nextProps,
+          prevState,
+          nextState,
+          prevContext,
+          nextContext,
+        };
+        expect(spy.args).to.deep.equal([
+          ['getDerivedStateFromProps', {
+            props: nextProps,
+            state: nextState,
+          }],
+          ['shouldComponentUpdate', data],
+          ['render'],
+          ['componentDidUpdate', {
+            ...data,
+            prevContext: is('>= 16') ? undefined : prevContext,
+          }],
+        ]);
+      });
+    });
+
     context('mounting phase', () => {
       it('calls componentWillMount and componentDidMount', () => {
         const spy = sinon.spy();
