@@ -1,4 +1,4 @@
-# Using Jest with enzyme
+# Using enzyme with Jest
 
 ## Configure with Jest
 
