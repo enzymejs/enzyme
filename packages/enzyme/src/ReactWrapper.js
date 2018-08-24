@@ -306,7 +306,7 @@ class ReactWrapper {
     if (this[ROOT] !== this) {
       throw new Error('ReactWrapper::setState() can only be called on the root');
     }
-    if (this.instance() === null || this[RENDERER].getNode().nodeType === 'function') {
+    if (this.instance() === null || this[RENDERER].getNode().nodeType !== 'class') {
       throw new Error('ReactWrapper::setState() can only be called on class components');
     }
     if (arguments.length > 1 && typeof callback !== 'function') {
@@ -637,7 +637,7 @@ class ReactWrapper {
     if (this[ROOT] !== this) {
       throw new Error('ReactWrapper::state() can only be called on the root');
     }
-    if (this.instance() === null || this[RENDERER].getNode().nodeType === 'function') {
+    if (this.instance() === null || this[RENDERER].getNode().nodeType !== 'class') {
       throw new Error('ReactWrapper::state() can only be called on class components');
     }
     const _state = this.single('state', () => this.instance().state);

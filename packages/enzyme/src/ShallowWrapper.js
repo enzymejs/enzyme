@@ -448,7 +448,7 @@ class ShallowWrapper {
     if (this[ROOT] !== this) {
       throw new Error('ShallowWrapper::setState() can only be called on the root');
     }
-    if (this.instance() === null || this[RENDERER].getNode().nodeType === 'function') {
+    if (this.instance() === null || this[RENDERER].getNode().nodeType !== 'class') {
       throw new Error('ShallowWrapper::setState() can only be called on class components');
     }
     if (arguments.length > 1 && typeof callback !== 'function') {
@@ -864,7 +864,7 @@ class ShallowWrapper {
     if (this[ROOT] !== this) {
       throw new Error('ShallowWrapper::state() can only be called on the root');
     }
-    if (this.instance() === null || this[RENDERER].getNode().nodeType === 'function') {
+    if (this.instance() === null || this[RENDERER].getNode().nodeType !== 'class') {
       throw new Error('ShallowWrapper::state() can only be called on class components');
     }
     const _state = this.single('state', () => this.instance().state);
