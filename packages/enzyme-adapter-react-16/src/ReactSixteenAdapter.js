@@ -37,18 +37,10 @@ import {
   ensureKeyOrUndefined,
 } from 'enzyme-adapter-utils';
 import findCurrentFiberUsingSlowPath from './findCurrentFiberUsingSlowPath';
+import detectFiberTags from './detectFiberTags';
 
-const HostRoot = 3;
-const ClassComponent = 2;
-const FragmentType = 10;
-const FunctionalComponent = 1;
-const HostPortal = 4;
-const HostComponent = 5;
-const HostText = 6;
-const Mode = 11;
-const ContextConsumerType = 12;
-const ContextProviderType = 13;
-const ForwardRefType = 14;
+// Lazily populated if DOM is available.
+let FiberTags = null;
 
 function nodeAndSiblingsArray(nodeWithSibling) {
   const array = [];
@@ -115,9 +107,9 @@ function toTree(vnode) {
   // somewhere else. Should talk to sebastian about this perhaps
   const node = findCurrentFiberUsingSlowPath(vnode);
   switch (node.tag) {
-    case HostRoot: // 3
+    case FiberTags.HostRoot:
       return childrenToTree(node.child);
-    case HostPortal: { // 4
+    case FiberTags.HostPortal: {
       const {
         stateNode: { containerInfo },
         memoizedProps: children,
@@ -133,7 +125,7 @@ function toTree(vnode) {
         rendered: childrenToTree(node.child),
       };
     }
-    case ClassComponent:
+    case FiberTags.ClassComponent:
       return {
         nodeType: 'class',
         type: node.type,
@@ -143,7 +135,7 @@ function toTree(vnode) {
         instance: node.stateNode,
         rendered: childrenToTree(node.child),
       };
-    case FunctionalComponent: // 1
+    case FiberTags.FunctionalComponent:
       return {
         nodeType: 'function',
         type: node.type,
@@ -154,7 +146,7 @@ function toTree(vnode) {
         rendered: childrenToTree(node.child),
       };
 
-    case HostComponent: { // 5
+    case FiberTags.HostComponent: {
       let renderedNodes = flatten(nodeAndSiblingsArray(node.child).map(toTree));
       if (renderedNodes.length === 0) {
         renderedNodes = [node.memoizedProps.children];
@@ -169,14 +161,14 @@ function toTree(vnode) {
         rendered: renderedNodes,
       };
     }
-    case HostText: // 6
+    case FiberTags.HostText:
       return node.memoizedProps;
-    case FragmentType: // 10
-    case Mode: // 11
-    case ContextProviderType: // 13
-    case ContextConsumerType: // 12
+    case FiberTags.Fragment:
+    case FiberTags.Mode:
+    case FiberTags.ContextProvider:
+    case FiberTags.ContextConsumer:
       return childrenToTree(node.child);
-    case ForwardRefType: {
+    case FiberTags.ForwardRef: {
       return {
         nodeType: 'function',
         type: node.type,
@@ -255,6 +247,10 @@ class ReactSixteenAdapter extends EnzymeAdapter {
 
   createMountRenderer(options) {
     assertDomAvailable('mount');
+    if (FiberTags === null) {
+      // Requires DOM.
+      FiberTags = detectFiberTags();
+    }
     const { attachTo, hydrateIn } = options;
     const domNode = hydrateIn || attachTo || global.document.createElement('div');
     let instance = null;
