@@ -1,5 +1,26 @@
 # Change Log
 
+## 3.5.0
+
+### New Stuff
+- Add forwardRef support ([#1592](https://github.com/airbnb/enzyme/pull/1592), @jquense)
+- Add Portal support ([#1760](https://github.com/airbnb/enzyme/pull/1760), [#1761](https://github.com/airbnb/enzyme/pull/1760), [#1772](https://github.com/airbnb/enzyme/pull/1772), [#1774](https://github.com/airbnb/enzyme/pull/1774), @jgzuke)
+- Add pointer events support ([#1753](https://github.com/airbnb/enzyme/pull/1753), @ljharb)
+
+### Fixes
+- preemptively fix compat with React v16.4.3 ([#1790](https://github.com/airbnb/enzyme/pull/1790), [#1778](https://github.com/airbnb/enzyme/pull/1778), @gaearon, @aweary)
+- `shallow`: prevent rerenders with PureComponents ([#1786](https://github.com/airbnb/enzyme/pull/1786), @koba04)
+- `shallow`: skip updates when nextState is `null` or `undefined` ([#1785](https://github.com/airbnb/enzyme/pull/1785), @koba04)
+- `shallow`: `setState` after `setProps` calls `componentWillReceiveProps` ([#1779](https://github.com/airbnb/enzyme/pull/1779), @peanutenthusiast)
+- `mount`/`shallow`: be stricter on the wrapper’s setState/setProps callback ([commit](https://github.com/airbnb/enzyme/commit/ff11d2219da575d09ca8edfa19df42b8f78b506f))
+- `shallow`/`mount`: improve error message when wrapping invalid elements ([#1759](https://github.com/airbnb/enzyme/pull/1759), @jgzuke)
+
+### Refactors
+- remove most uses of lodash ([commit](https://github.com/airbnb/enzyme/commit/89b39b6f1c59aa771f4452a27b159f7aa2616e84))
+
+### Meta Stuff
+- ensure a license and readme is present in all packages when published
+
 ## 3.4.4
 
 ### Fixes
