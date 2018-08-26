@@ -51,7 +51,7 @@ that includes a `context` specified in the options argument.
 
 #### Related Methods
 
-- [`.setState(state) => Self`](setState.md)
-- [`.setProps(props) => Self`](setProps.md)
+- [`.setState(state[, callback]) => Self`](setState.md)
+- [`.setProps(props[, callback]) => Self`](setProps.md)
 
 

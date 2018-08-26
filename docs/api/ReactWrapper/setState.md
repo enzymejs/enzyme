@@ -54,7 +54,7 @@ expect(wrapper.find('.bar')).to.have.lengthOf(1);
 
 #### Related Methods
 
-- [`.setProps(props) => Self`](setProps.md)
+- [`.setProps(props[, callback]) => Self`](setProps.md)
 - [`.setContext(context) => Self`](setContext.md)
 
 
