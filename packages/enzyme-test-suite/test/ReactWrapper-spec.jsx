@@ -2641,6 +2641,86 @@ describeWithDOM('mount', () => {
     });
   });
 
+  describe('.simulateError(error)', () => {
+    class Div extends React.Component {
+      render() {
+        return <div>{this.props.children}</div>;
+      }
+    }
+
+    class Spans extends React.Component {
+      render() {
+        return <div><span /><span /></div>;
+      }
+    }
+
+    class Nested extends React.Component {
+      render() {
+        return <Div><Spans /></Div>;
+      }
+    }
+
+    it('throws on host elements', () => {
+      const wrapper = mount(<Div />).find('div');
+      expect(wrapper.is('div')).to.equal(true);
+      expect(() => wrapper.simulateError()).to.throw();
+    });
+
+    it('throws on "not one" node', () => {
+      const wrapper = mount(<Spans />);
+
+      const spans = wrapper.find('span');
+      expect(spans).to.have.lengthOf(2);
+      expect(() => spans.simulateError()).to.throw();
+
+      const navs = wrapper.find('nav');
+      expect(navs).to.have.lengthOf(0);
+      expect(() => navs.simulateError()).to.throw();
+    });
+
+    it('throws when the renderer lacks `simulateError`', () => {
+      const wrapper = mount(<Nested />);
+      delete wrapper[sym('__renderer__')].simulateError;
+      expect(() => wrapper.simulateError()).to.throw();
+      try {
+        wrapper.simulateError();
+      } catch (e) {
+        expect(e).not.to.equal(undefined);
+      }
+    });
+
+    it('calls through to renderer’s `simulateError`', () => {
+      const wrapper = mount(<Nested />).find(Div);
+      const stub = sinon.stub().callsFake((_, __, e) => { throw e; });
+      wrapper[sym('__renderer__')].simulateError = stub;
+      const error = new Error('hi');
+      expect(() => wrapper.simulateError(error)).to.throw(error);
+      expect(stub).to.have.property('callCount', 1);
+
+      const [args] = stub.args;
+      expect(args).to.have.lengthOf(3);
+      const [hierarchy, rootNode, actualError] = args;
+      expect(actualError).to.equal(error);
+      expect(rootNode).to.eql(wrapper[sym('__root__')].getNodeInternal());
+      expect(hierarchy).to.have.lengthOf(2);
+      const [divNode, spanNode] = hierarchy;
+      expect(divNode).to.contain.keys({
+        type: Div,
+        nodeType: 'class',
+        rendered: {
+          type: Spans,
+          nodeType: 'class',
+          rendered: null,
+        },
+      });
+      expect(spanNode).to.contain.keys({
+        type: Spans,
+        nodeType: 'class',
+        rendered: null,
+      });
+    });
+  });
+
   describe('.setState(newState[, callback])', () => {
     it('throws on a non-function callback', () => {
       class Foo extends React.Component {
@@ -4927,6 +5007,118 @@ describeWithDOM('mount', () => {
             prevContext: is('>= 16') ? undefined : prevContext,
           }],
         ]);
+      });
+    });
+
+    describeIf(is('>= 16'), 'componentDidCatch', () => {
+      describe('errors inside an error boundary', () => {
+        const errorToThrow = new EvalError('threw an error!');
+        // in React 16.0 - 16.2, and some older nodes, the actual error thrown isn't reported.
+        const reactError = new Error('An error was thrown inside one of your components, but React doesn\'t know what it was. This is likely due to browser flakiness. React does its best to preserve the "Pause on exceptions" behavior of the DevTools, which requires some DEV-mode only tricks. It\'s possible that these don\'t work in your browser. Try triggering the error in production mode, or switching to a modern browser. If you suspect that this is actually an issue with React, please file an issue.');
+        const properErrorMessage = error => error instanceof Error && (
+          error.message === errorToThrow.message
+          || error.message === reactError.message
+        );
+
+        const hasFragments = is('>= 16.2');
+        const MaybeFragment = hasFragments ? Fragment : 'main';
+
+        function Thrower({ throws }) {
+          if (throws) {
+            throw errorToThrow;
+          }
+          return null;
+        }
+
+        class ErrorBoundary extends React.Component {
+          constructor(...args) {
+            super(...args);
+            this.state = { throws: false };
+          }
+
+          componentDidCatch(error, info) {
+            const { spy } = this.props;
+            spy(error, info);
+            this.setState({ throws: false });
+          }
+
+          render() {
+            const { throws } = this.state;
+            return (
+              <div>
+                <MaybeFragment>
+                  <span>
+                    <Thrower throws={throws} />
+                  </span>
+                </MaybeFragment>
+              </div>
+            );
+          }
+        }
+
+        describe('Thrower', () => {
+          it('does not throw when `throws` is `false`', () => {
+            expect(() => mount(<Thrower throws={false} />)).not.to.throw();
+          });
+
+          it('throws when `throws` is `true`', () => {
+            expect(() => mount(<Thrower throws />)).to.throw();
+            try {
+              mount(<Thrower throws />);
+              expect(true).to.equal(false, 'this line should not be reached');
+            } catch (e) {
+              expect(e).to.satisfy(properErrorMessage);
+            }
+          });
+        });
+
+        it('catches a simulated error', () => {
+          const spy = sinon.spy();
+          const wrapper = mount(<ErrorBoundary spy={spy} />);
+
+          expect(spy).to.have.property('callCount', 0);
+
+          expect(() => wrapper.find(Thrower).simulateError(errorToThrow)).not.to.throw();
+
+          expect(spy).to.have.property('callCount', 1);
+
+          expect(spy.args).to.be.an('array').and.have.lengthOf(1);
+          const [[actualError, info]] = spy.args;
+          expect(actualError).to.equal(errorToThrow);
+          expect(info).to.deep.equal({
+            componentStack: `
+    in Thrower (created by ErrorBoundary)
+    in span (created by ErrorBoundary)${hasFragments ? '' : `
+    in main (created by ErrorBoundary)`}
+    in div (created by ErrorBoundary)
+    in ErrorBoundary (created by WrapperComponent)
+    in WrapperComponent`,
+          });
+        });
+
+        it('catches errors during render', () => {
+          const spy = sinon.spy();
+          const wrapper = mount(<ErrorBoundary spy={spy} />);
+
+          expect(spy).to.have.property('callCount', 0);
+
+          wrapper.setState({ throws: true });
+
+          expect(spy).to.have.property('callCount', 1);
+
+          expect(spy.args).to.be.an('array').and.have.lengthOf(1);
+          const [[actualError, info]] = spy.args;
+          expect(actualError).to.satisfy(properErrorMessage);
+          expect(info).to.deep.equal({
+            componentStack: `
+    in Thrower (created by ErrorBoundary)
+    in span (created by ErrorBoundary)${hasFragments ? '' : `
+    in main (created by ErrorBoundary)`}
+    in div (created by ErrorBoundary)
+    in ErrorBoundary (created by WrapperComponent)
+    in WrapperComponent`,
+          });
+        });
       });
     });
 

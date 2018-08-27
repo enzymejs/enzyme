@@ -57,6 +57,10 @@ function filterWhereUnwrapped(wrapper, predicate) {
   return wrapper.wrap(wrapper.getNodesInternal().filter(predicate).filter(Boolean));
 }
 
+function nodeParents(wrapper, node) {
+  return parentsOfNode(node, wrapper[ROOT].getNodeInternal());
+}
+
 function privateSetNodes(wrapper, nodes) {
   if (!nodes) {
     privateSet(wrapper, NODE, null);
@@ -615,6 +619,35 @@ class ReactWrapper {
   }
 
   /**
+   * Used to simulate throwing a rendering error. Pass an error to throw.
+   *
+   * @param {String} error
+   * @returns {ReactWrapper}
+   */
+  simulateError(error) {
+    if (this[ROOT] === this) {
+      throw new Error('ReactWrapper::simulateError() may not be called on the root');
+    }
+
+    return this.single('simulateError', (thisNode) => {
+      if (thisNode.nodeType === 'host') {
+        throw new Error('ReactWrapper::simulateError() can only be called on custom components');
+      }
+
+      const renderer = this[RENDERER];
+      if (typeof renderer.simulateError !== 'function') {
+        throw new TypeError('your adapter does not support `simulateError`. Try upgrading it!');
+      }
+
+      const rootNode = this[ROOT].getNodeInternal();
+      const nodeHierarchy = [thisNode].concat(nodeParents(this, thisNode));
+      renderer.simulateError(nodeHierarchy, rootNode, error);
+
+      return this;
+    });
+  }
+
+  /**
    * Returns the props hash for the root node of the wrapper.
    *
    * NOTE: can only be called on a wrapper of a single node.
@@ -703,7 +736,7 @@ class ReactWrapper {
    * @returns {ReactWrapper}
    */
   parents(selector) {
-    const allParents = this.wrap(this.single('parents', n => parentsOfNode(n, this[ROOT].getNodeInternal())));
+    const allParents = this.wrap(this.single('parents', n => nodeParents(this, n)));
     return selector ? allParents.filter(selector) : allParents;
   }
 

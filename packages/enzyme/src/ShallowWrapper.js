@@ -147,6 +147,10 @@ function getRootNodeInternal(wrapper) {
   return wrapper[ROOT][NODE];
 }
 
+function nodeParents(wrapper, node) {
+  return parentsOfNode(node, getRootNodeInternal(wrapper));
+}
+
 function privateSetNodes(wrapper, nodes) {
   if (!Array.isArray(nodes)) {
     privateSet(wrapper, NODE, nodes);
@@ -851,6 +855,33 @@ class ShallowWrapper {
   }
 
   /**
+   * Used to simulate throwing a rendering error. Pass an error to throw.
+   *
+   * @param {String} error
+   * @returns {ShallowWrapper}
+   */
+  simulateError(error) {
+    // in shallow, the "root" is the "rendered" thing.
+
+    return this.single('simulateError', (thisNode) => {
+      if (thisNode.nodeType === 'host') {
+        throw new TypeError('ShallowWrapper::simulateError() can only be called on custom components');
+      }
+
+      const renderer = this[RENDERER];
+      if (typeof renderer.simulateError !== 'function') {
+        throw new TypeError('your adapter does not support `simulateError`. Try upgrading it!');
+      }
+
+      const rootNode = getRootNodeInternal(this);
+      const nodeHierarchy = [thisNode].concat(nodeParents(this, thisNode));
+      renderer.simulateError(nodeHierarchy, rootNode, error);
+
+      return this;
+    });
+  }
+
+  /**
    * Returns the props hash for the current node of the wrapper.
    *
    * NOTE: can only be called on a wrapper of a single node.
@@ -941,7 +972,7 @@ class ShallowWrapper {
    * @returns {ShallowWrapper}
    */
   parents(selector) {
-    const allParents = this.wrap(this.single('parents', n => parentsOfNode(n, getRootNodeInternal(this))));
+    const allParents = this.wrap(this.single('parents', n => nodeParents(this, n)));
     return selector ? allParents.filter(selector) : allParents;
   }
 

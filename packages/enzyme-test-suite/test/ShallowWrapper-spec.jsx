@@ -2336,6 +2336,87 @@ describe('shallow', () => {
     });
   });
 
+  describe('.simulateError(error)', () => {
+    class Div extends React.Component {
+      render() {
+        return <div>{this.props.children}</div>;
+      }
+    }
+
+    class Spans extends React.Component {
+      render() {
+        return <div><span /><span /></div>;
+      }
+    }
+
+    class Nested extends React.Component {
+      render() {
+        return <Div><Spans /></Div>;
+      }
+    }
+
+    it('throws on host elements', () => {
+      const wrapper = shallow(<Div />);
+      expect(wrapper.is('div')).to.equal(true);
+      expect(() => wrapper.simulateError()).to.throw();
+    });
+
+    it('throws on "not one" node', () => {
+      const wrapper = shallow(<Spans />);
+
+      const spans = wrapper.find('span');
+      expect(spans).to.have.lengthOf(2);
+      expect(() => spans.simulateError()).to.throw();
+
+      const navs = wrapper.find('nav');
+      expect(navs).to.have.lengthOf(0);
+      expect(() => navs.simulateError()).to.throw();
+    });
+
+    it('throws when the renderer lacks `simulateError`', () => {
+      const wrapper = shallow(<Nested />);
+      delete wrapper[sym('__renderer__')].simulateError;
+      expect(() => wrapper.simulateError()).to.throw();
+      try {
+        wrapper.simulateError();
+      } catch (e) {
+        expect(e).not.to.equal(undefined);
+      }
+    });
+
+    it('calls through to renderer’s `simulateError`', () => {
+      const wrapper = shallow(<Nested />);
+      const stub = sinon.stub().callsFake((_, __, e) => { throw e; });
+      wrapper[sym('__renderer__')].simulateError = stub;
+      const error = new Error('hi');
+      expect(() => wrapper.simulateError(error)).to.throw(error);
+      expect(stub).to.have.property('callCount', 1);
+
+      const [args] = stub.args;
+      expect(args).to.have.lengthOf(3);
+      const [hierarchy, rootNode, actualError] = args;
+      expect(actualError).to.equal(error);
+      expect(rootNode).to.eql(wrapper[sym('__root__')].getNodeInternal());
+      expect(hierarchy).to.have.lengthOf(1);
+      const [node] = hierarchy;
+      expect(node).to.contain.keys({
+        type: Div,
+        nodeType: 'class',
+        rendered: {
+          type: Spans,
+          nodeType: 'class',
+          rendered: null,
+        },
+      });
+    });
+
+    it('returns the wrapper', () => {
+      const wrapper = shallow(<Nested />);
+      wrapper[sym('__renderer__')].simulateError = sinon.stub();
+      expect(wrapper.simulateError()).to.equal(wrapper);
+    });
+  });
+
   describe('.setState(newState[, callback])', () => {
     it('throws on a non-function callback', () => {
       class Foo extends React.Component {
@@ -4966,6 +5047,101 @@ describe('shallow', () => {
             prevContext: is('>= 16') ? undefined : prevContext,
           }],
         ]);
+      });
+    });
+
+    describeIf(is('>= 16'), 'componentDidCatch', () => {
+      describe('errors inside an error boundary', () => {
+        const errorToThrow = new EvalError('threw an error!');
+
+        const hasFragments = is('>= 16.2');
+        const MaybeFragment = hasFragments ? Fragment : 'main';
+
+        function Thrower({ throws }) {
+          if (throws) {
+            throw errorToThrow;
+          }
+          return null;
+        }
+
+        class ErrorBoundary extends React.Component {
+          constructor(...args) {
+            super(...args);
+            this.state = { throws: false };
+          }
+
+          componentDidCatch(error, info) {
+            const { spy } = this.props;
+            spy(error, info);
+            this.setState({ throws: false });
+          }
+
+          render() {
+            const { throws } = this.state;
+            return (
+              <div>
+                <MaybeFragment>
+                  <span>
+                    <Thrower throws={throws} />
+                  </span>
+                </MaybeFragment>
+              </div>
+            );
+          }
+        }
+
+        describe('Thrower', () => {
+          it('does not throw when `throws` is `false`', () => {
+            expect(() => shallow(<Thrower throws={false} />)).not.to.throw();
+          });
+
+          it('throws when `throws` is `true`', () => {
+            expect(() => shallow(<Thrower throws />)).to.throw(errorToThrow);
+          });
+        });
+
+        it('catches a simulated error', () => {
+          const spy = sinon.spy();
+          const wrapper = shallow(<ErrorBoundary spy={spy} />);
+
+          expect(spy).to.have.property('callCount', 0);
+
+          expect(() => wrapper.find(Thrower).simulateError(errorToThrow)).not.to.throw();
+
+          expect(spy).to.have.property('callCount', 1);
+
+          expect(spy.args).to.be.an('array').and.have.lengthOf(1);
+          const [[actualError, info]] = spy.args;
+          expect(() => { throw actualError; }).to.throw(errorToThrow);
+          expect(info).to.deep.equal({
+            componentStack: `
+    in Thrower (created by ErrorBoundary)
+    in span (created by ErrorBoundary)${hasFragments ? '' : `
+    in main (created by ErrorBoundary)`}
+    in div (created by ErrorBoundary)
+    in ErrorBoundary (created by WrapperComponent)
+    in WrapperComponent`,
+          });
+        });
+
+        it('does not catch errors during shallow render', () => {
+          const spy = sinon.spy();
+          const wrapper = shallow(<ErrorBoundary spy={spy} />);
+
+          expect(spy).to.have.property('callCount', 0);
+
+          wrapper.setState({ throws: true });
+
+          expect(spy).to.have.property('callCount', 0);
+
+          const thrower = wrapper.find(Thrower);
+          expect(thrower).to.have.lengthOf(1);
+          expect(thrower.props()).to.have.property('throws', true);
+
+          expect(() => thrower.dive()).to.throw(errorToThrow);
+
+          expect(spy).to.have.property('callCount', 0);
+        });
       });
     });
 
