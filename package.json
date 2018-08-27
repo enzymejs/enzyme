@@ -90,6 +90,7 @@
     "gitbook-plugin-github": "^2.0.0",
     "in-publish": "^2.0.0",
     "istanbul": "^1.0.0-alpha.2",
+    "istanbul-api": "~1.2",
     "json-loader": "^0.5.7",
     "karma": "^1.3.0",
     "karma-chrome-launcher": "^1.0.1",
