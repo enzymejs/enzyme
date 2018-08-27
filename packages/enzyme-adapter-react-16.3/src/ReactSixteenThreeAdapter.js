@@ -417,27 +417,30 @@ class ReactSixteenThreeAdapter extends EnzymeAdapter {
   displayNameOfNode(node) {
     if (!node) return null;
     const { type, $$typeof } = node;
+    
+    const nodeType = type || $$typeof;
 
-    switch (type || $$typeof) {
-      case AsyncMode: return 'AsyncMode';
-      case Fragment: return 'Fragment';
-      case StrictMode: return 'StrictMode';
-      case Profiler: return 'Profiler';
-      case Portal: return 'Portal';
-
-      default: {
-        const $$typeofType = type && type.$$typeof;
-
-        switch ($$typeofType) {
-          case ContextConsumer: return 'ContextConsumer';
-          case ContextProvider: return 'ContextProvider';
-          case ForwardRef: {
-            const name = type.render.displayName || functionName(type.render);
-            return name ? `ForwardRef(${name})` : 'ForwardRef';
-          }
-          default: return displayNameOfNode(node);
-        }
+    // newer node types may be undefined, so only test if the nodeType exists
+    if (nodeType) {
+      switch (nodeType) {
+        case AsyncMode: return 'AsyncMode';
+        case Fragment: return 'Fragment';
+        case StrictMode: return 'StrictMode';
+        case Profiler: return 'Profiler';
+        case Portal: return 'Portal';
       }
+    }
+
+    const $$typeofType = type && type.$$typeof;
+
+    switch ($$typeofType) {
+      case ContextConsumer: return 'ContextConsumer';
+      case ContextProvider: return 'ContextProvider';
+      case ForwardRef: {
+        const name = type.render.displayName || functionName(type.render);
+        return name ? `ForwardRef(${name})` : 'ForwardRef';
+      }
+      default: return displayNameOfNode(node);
     }
   }
 
