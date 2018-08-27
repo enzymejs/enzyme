@@ -233,3 +233,49 @@ export function propsWithKeysAndRef(node) {
   }
   return node.props;
 }
+
+function getComponentStack(
+  hierarchy,
+  getNodeType = nodeTypeFromType,
+  getDisplayName = displayNameOfNode,
+) {
+  const tuples = hierarchy.map(x => [
+    getNodeType(x.type),
+    getDisplayName(x),
+  ]).concat([[
+    'class',
+    'WrapperComponent',
+  ]]);
+
+  return tuples.map(([, name], i, arr) => {
+    const [, closestComponent] = arr.slice(i + 1).find(([nodeType]) => nodeType !== 'host') || [];
+    return `\n    in ${name}${closestComponent ? ` (created by ${closestComponent})` : ''}`;
+  }).join('');
+}
+
+export function simulateError(
+  error,
+  catchingInstance,
+  rootNode,
+  hierarchy,
+  getNodeType = nodeTypeFromType,
+  getDisplayName = displayNameOfNode,
+) {
+  const nodeType = getNodeType(rootNode.type);
+  if (nodeType !== 'class') {
+    throw new TypeError('simulateError() can only be called on class components with an instance');
+  }
+
+  const { componentDidCatch } = catchingInstance || {};
+  if (!componentDidCatch) {
+    throw error;
+  }
+
+  const componentStack = getComponentStack(
+    hierarchy,
+    getNodeType,
+    getDisplayName,
+  );
+
+  componentDidCatch.call(catchingInstance, error, { componentStack });
+}
