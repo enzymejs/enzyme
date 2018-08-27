@@ -12,7 +12,7 @@ export function childrenOfNode(node) {
   if (!node) return [];
 
   const adapter = getAdapter();
-  const adapterHasIsFragment = adapter && adapter.isFragment && (typeof adapter.isFragment === 'function');
+  const adapterHasIsFragment = adapter.isFragment && typeof adapter.isFragment === 'function';
 
   const renderedArray = Array.isArray(node.rendered) ? flat(node.rendered, 1) : [node.rendered];
 
