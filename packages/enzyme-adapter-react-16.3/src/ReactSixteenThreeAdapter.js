@@ -417,26 +417,26 @@ class ReactSixteenThreeAdapter extends EnzymeAdapter {
   displayNameOfNode(node) {
     if (!node) return null;
     const { type, $$typeof } = node;
-    
+
     const nodeType = type || $$typeof;
 
     // newer node types may be undefined, so only test if the nodeType exists
     if (nodeType) {
       switch (nodeType) {
-        case AsyncMode: return 'AsyncMode';
-        case Fragment: return 'Fragment';
-        case StrictMode: return 'StrictMode';
-        case Profiler: return 'Profiler';
-        case Portal: return 'Portal';
+        case AsyncMode || NaN: return 'AsyncMode';
+        case Fragment || NaN: return 'Fragment';
+        case StrictMode || NaN: return 'StrictMode';
+        case Profiler || NaN: return 'Profiler';
+        case Portal || NaN: return 'Portal';
       }
     }
 
     const $$typeofType = type && type.$$typeof;
 
     switch ($$typeofType) {
-      case ContextConsumer: return 'ContextConsumer';
-      case ContextProvider: return 'ContextProvider';
-      case ForwardRef: {
+      case ContextConsumer || NaN: return 'ContextConsumer';
+      case ContextProvider || NaN: return 'ContextProvider';
+      case ForwardRef || NaN: {
         const name = type.render.displayName || functionName(type.render);
         return name ? `ForwardRef(${name})` : 'ForwardRef';
       }
