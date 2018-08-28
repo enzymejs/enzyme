@@ -18,7 +18,6 @@ import {
   ContextProvider,
   StrictMode,
   ForwardRef,
-  Profiler,
   Portal,
 } from 'react-is';
 import { EnzymeAdapter } from 'enzyme';
@@ -426,8 +425,8 @@ class ReactSixteenThreeAdapter extends EnzymeAdapter {
         case AsyncMode || NaN: return 'AsyncMode';
         case Fragment || NaN: return 'Fragment';
         case StrictMode || NaN: return 'StrictMode';
-        case Profiler || NaN: return 'Profiler';
         case Portal || NaN: return 'Portal';
+        default:
       }
     }
 
