@@ -5,6 +5,7 @@ import isNumber from 'is-number-object';
 import isCallable from 'is-callable';
 import isBoolean from 'is-boolean-object';
 import inspect from 'object-inspect';
+import has from 'has';
 
 import {
   propsOfNode,
@@ -67,6 +68,16 @@ function indentChildren(childrenStrs, indentLength) {
     : '';
 }
 
+function isRSTNodeLike(node) {
+  return has(node, 'nodeType')
+    && typeof node.nodeType === 'string'
+    && has(node, 'type')
+    && has(node, 'key')
+    && has(node, 'ref')
+    && has(node, 'instance')
+    && has(node, 'rendered');
+}
+
 export function debugNode(node, indentLength = 2, options = {}) {
   if (typeof node === 'string' || typeof node === 'number') return escape(node);
   if (typeof node === 'function') {
@@ -74,6 +85,11 @@ export function debugNode(node, indentLength = 2, options = {}) {
     return `[function${name ? ` ${name}` : ''}]`;
   }
   if (!node) return '';
+
+  const adapter = getAdapter();
+  if (!adapter.isValidElement(node) && !isRSTNodeLike(node)) {
+    return `{${inspect(node)}}`;
+  }
 
   const childrenStrs = childrenOfNode(node)
     .map(n => debugNode(n, indentLength, options))

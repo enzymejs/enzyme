@@ -813,7 +813,7 @@ describe('debug', () => {
     it('handles function children', () => {
       class Abomination extends React.Component {
         render() {
-          /* eslint no-unused-vars: 0, func-names: 0 */
+          /* eslint no-unused-vars: 0, func-names: 0, react/no-children-prop: 0 */
           return (
             <div>
               {function Foo() { /* hi */ }}
@@ -821,6 +821,8 @@ describe('debug', () => {
               {arrow => arrow('function')}
               {[1, 2, NaN]}
               {function (anonymous) {}}
+              {{ a: 'b' }}
+              <span children={{ c: 'd' }} />
             </div>
           );
         }
@@ -836,6 +838,10 @@ describe('debug', () => {
   2
   NaN
   [function]
+  {{ a: 'b' }}
+  <span>
+    {{ c: 'd' }}
+  </span>
 </div>`
       ));
     });
