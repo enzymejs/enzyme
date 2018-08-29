@@ -417,26 +417,30 @@ class ReactSixteenAdapter extends EnzymeAdapter {
     if (!node) return null;
     const { type, $$typeof } = node;
 
-    switch (type || $$typeof) {
-      case AsyncMode: return 'AsyncMode';
-      case Fragment: return 'Fragment';
-      case StrictMode: return 'StrictMode';
-      case Profiler: return 'Profiler';
-      case Portal: return 'Portal';
+    const nodeType = type || $$typeof;
 
-      default: {
-        const $$typeofType = type && type.$$typeof;
-
-        switch ($$typeofType) {
-          case ContextConsumer: return 'ContextConsumer';
-          case ContextProvider: return 'ContextProvider';
-          case ForwardRef: {
-            const name = type.render.displayName || functionName(type.render);
-            return name ? `ForwardRef(${name})` : 'ForwardRef';
-          }
-          default: return displayNameOfNode(node);
-        }
+    // newer node types may be undefined, so only test if the nodeType exists
+    if (nodeType) {
+      switch (nodeType) {
+        case AsyncMode || NaN: return 'AsyncMode';
+        case Fragment || NaN: return 'Fragment';
+        case StrictMode || NaN: return 'StrictMode';
+        case Profiler || NaN: return 'Profiler';
+        case Portal || NaN: return 'Portal';
+        default:
       }
+    }
+
+    const $$typeofType = type && type.$$typeof;
+
+    switch ($$typeofType) {
+      case ContextConsumer || NaN: return 'ContextConsumer';
+      case ContextProvider || NaN: return 'ContextProvider';
+      case ForwardRef || NaN: {
+        const name = type.render.displayName || functionName(type.render);
+        return name ? `ForwardRef(${name})` : 'ForwardRef';
+      }
+      default: return displayNameOfNode(node);
     }
   }
 
