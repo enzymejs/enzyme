@@ -2926,35 +2926,28 @@ describeWithDOM('mount', () => {
       matchesRender(<div>&gt;</div>);
     });
 
-    describeIf(is('> 0.13'), 'stateless function components', () => {
-      it('handles nodes with mapped children', () => {
-        const Foo = props => (
-          <div>{props.items.map(x => x)}</div>
-        );
-        matchesRender(<Foo items={['abc', 'def', 'hij']} />);
-        matchesRender((
-          <Foo
-            items={[
-              <i key={1}>abc</i>,
-              <i key={2}>def</i>,
-              <i key={3}>hij</i>,
-            ]}
-          />
-        ));
-      });
+    it('handles spaces the same between shallow and mount', () => {
+      const Space = (
+        <div>
+          <div> test  </div>
+          <div>Hello
 
-      it('renders composite components smartly', () => {
-        const Foo = () => (
-          <div>foo</div>
-        );
-        const wrapper = mount((
-          <div>
-            <Foo />
-            <div>test</div>
+
+            World
           </div>
-        ));
-        expect(wrapper.text()).to.equal('footest');
-      });
+          <div>Hello World</div>
+          <div>Hello
+            World
+          </div>
+          <div>Hello     World</div>
+          <div>&nbsp;</div>
+          <div>&nbsp;&nbsp;</div>
+        </div>
+      );
+
+      const wrapper = mount(Space);
+
+      expect(wrapper.text()).to.equal(' test  Hello WorldHello WorldHello WorldHello     World   ');
     });
 
     it('handles non-breaking spaces correctly', () => {
@@ -2976,10 +2969,60 @@ describeWithDOM('mount', () => {
       ]);
     });
 
+    describeIf(is('> 0.13'), 'stateless function components', () => {
+      it('handles nodes with mapped children', () => {
+        const Foo = props => (
+          <div>
+            {props.items.map(x => x)}
+          </div>
+        );
+        matchesRender(<Foo items={['abc', 'def', 'hij']} />);
+        matchesRender((
+          <Foo
+            items={[
+              <i key={1}>abc</i>,
+              <i key={2}>def</i>,
+              <i key={3}>hij</i>,
+            ]}
+          />
+        ));
+      });
+
+      it('renders composite components smartly', () => {
+        const Foo = () => (
+          <div>foo</div>
+        );
+
+        const wrapper = mount((
+          <div>
+            <Foo />
+            <div>test</div>
+          </div>
+        ));
+        expect(wrapper.text()).to.equal('footest');
+      });
+    });
+
     it('renders falsy numbers', () => {
       [0, -0, '0', NaN].forEach((x) => {
         const wrapper = mount(<div>{x}</div>);
         expect(wrapper.text()).to.equal(String(x));
+      });
+    });
+
+    describe('text content with curly braces', () => {
+      it('handles literal strings', () => {
+        const wrapper = mount(<div><div>{'{}'}</div></div>);
+        expect(wrapper.text()).to.equal('{}');
+      });
+
+      it('handles innerHTML', () => {
+        const wrapper = mount((
+          <div>
+            <div dangerouslySetInnerHTML={{ __html: '{ some text }' }} />
+          </div>
+        ));
+        expect(wrapper.text()).to.equal('{ some text }');
       });
     });
   });

@@ -2870,7 +2870,7 @@ describe('shallow', () => {
       matchesRender(<div>&gt;</div>);
     });
 
-    it('handles spaces with same behavior as ReactWrapper.text()', () => {
+    it('handles spaces the same between shallow and mount', () => {
       const Space = (
         <div>
           <div> test  </div>
@@ -2890,9 +2890,8 @@ describe('shallow', () => {
       );
 
       const wrapper = shallow(Space);
-      const mounted = mount(Space);
 
-      expect(wrapper.text()).to.equal(mounted.text());
+      expect(wrapper.text()).to.equal(' test  Hello WorldHello WorldHello WorldHello     World   ');
     });
 
     it('handles non-breaking spaces correctly', () => {
@@ -2935,7 +2934,7 @@ describe('shallow', () => {
 
       it('renders composite components dumbly', () => {
         const Foo = () => (
-          <div />
+          <div>foo</div>
         );
 
         const wrapper = shallow((
@@ -2962,8 +2961,12 @@ describe('shallow', () => {
       });
 
       it.skip('handles innerHTML', () => {
-        const wrapper = shallow(<div><div dangerouslySetInnerHTML={{ __html: '{}' }} /></div>);
-        expect(wrapper.text()).to.equal('{}');
+        const wrapper = shallow((
+          <div>
+            <div dangerouslySetInnerHTML={{ __html: '{ some text }' }} />
+          </div>
+        ));
+        expect(wrapper.text()).to.equal('{ some text }');
       });
     });
   });
