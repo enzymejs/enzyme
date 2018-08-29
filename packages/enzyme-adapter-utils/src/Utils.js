@@ -201,8 +201,19 @@ export function elementToTree(el, recurse = elementToTree) {
   } else if (typeof children !== 'undefined') {
     rendered = recurse(children);
   }
+
+  const nodeType = nodeTypeFromType(type);
+
+  if (nodeType === 'host' && props.dangerouslySetInnerHTML) {
+    if (props.children != null) {
+      const error = new Error('Can only set one of `children` or `props.dangerouslySetInnerHTML`.');
+      error.name = 'Invariant Violation';
+      throw error;
+    }
+  }
+
   return {
-    nodeType: nodeTypeFromType(type),
+    nodeType,
     type,
     props,
     key: ensureKeyOrUndefined(key),

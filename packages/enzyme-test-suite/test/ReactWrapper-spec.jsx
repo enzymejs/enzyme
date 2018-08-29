@@ -91,6 +91,13 @@ describeWithDOM('mount', () => {
     });
 
     describe('wrapping invalid elements', () => {
+      it('throws with combined dangerouslySetInnerHTML and children on host nodes', () => {
+        /* eslint react/no-danger-with-children: 0 */
+        expect(() => mount((
+          <div dangerouslySetInnerHTML={{ __html: '{}' }}>child</div>
+        ))).to.throw(Error, 'Can only set one of `children` or `props.dangerouslySetInnerHTML`.');
+      });
+
       itIf(is('>= 16'), 'throws when mounting Portals', () => {
         const portal = createPortal(
           <div />,
