@@ -5952,7 +5952,7 @@ describe('shallow', () => {
       expect(spy).to.have.property('callCount', 0);
     });
 
-    it('does not match on a root node that doesn\'t looks like the rendered one', () => {
+    it('does not match on a root node that doesn’t looks like the rendered one', () => {
       const spy = sinon.spy();
       const spy2 = sinon.spy();
       const wrapper = shallow((
@@ -5978,6 +5978,16 @@ describe('shallow', () => {
       ))).to.equal(false);
       expect(spy).to.have.property('callCount', 0);
       expect(spy2).to.have.property('callCount', 0);
+    });
+
+    it('matches a simple node', () => {
+      class Test extends React.Component {
+        render() {
+          return <h1>test</h1>;
+        }
+      }
+      const wrapper = shallow(<Test />);
+      expect(wrapper.matchesElement(<h1>test</h1>)).to.equal(true);
     });
   });
 
