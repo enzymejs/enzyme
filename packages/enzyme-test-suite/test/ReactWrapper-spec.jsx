@@ -5610,6 +5610,85 @@ describeWithDOM('mount', () => {
 
       expect(document.body.childNodes).to.have.lengthOf(0);
     });
+
+    describeIf(is('> 0.13'), 'stateless function components', () => {
+      it('attaches and stuff', () => {
+        const Foo = () => <div className="in-foo" />;
+
+        const div = global.document.createElement('div');
+        const initialBodyChildren = document.body.childNodes.length;
+        global.document.body.appendChild(div);
+
+        expect(document.body.childNodes).to.have.lengthOf(initialBodyChildren + 1);
+        expect(div.childNodes).to.have.lengthOf(0);
+
+        const wrapper = mount(<Foo />, { attachTo: div });
+
+        expect(wrapper.find('.in-foo')).to.have.lengthOf(1);
+        expect(document.body.childNodes).to.have.lengthOf(initialBodyChildren + 1);
+        expect(div.childNodes).to.have.lengthOf(1);
+
+        wrapper.detach();
+
+        expect(document.body.childNodes).to.have.lengthOf(initialBodyChildren + 1);
+        expect(div.childNodes).to.have.lengthOf(0);
+
+        global.document.body.removeChild(div);
+
+        expect(document.body.childNodes).to.have.lengthOf(initialBodyChildren);
+        expect(div.childNodes).to.have.lengthOf(0);
+      });
+
+      it('allows for multiple attaches/detaches on same node', () => {
+        const Foo = () => <div className="in-foo" />;
+        const Bar = () => <div className="in-bar" />;
+
+        let wrapper;
+        const div = global.document.createElement('div');
+        const initialBodyChildren = document.body.childNodes.length;
+        global.document.body.appendChild(div);
+
+        expect(document.body.childNodes).to.have.lengthOf(initialBodyChildren + 1);
+        expect(div.childNodes).to.have.lengthOf(0);
+
+        wrapper = mount(<Foo />, { attachTo: div });
+
+        expect(wrapper.find('.in-foo')).to.have.lengthOf(1);
+        expect(document.body.childNodes).to.have.lengthOf(initialBodyChildren + 1);
+        expect(div.childNodes).to.have.lengthOf(1);
+
+        wrapper.detach();
+
+        wrapper = mount(<Bar />, { attachTo: div });
+
+        expect(wrapper.find('.in-bar')).to.have.lengthOf(1);
+        expect(document.body.childNodes).to.have.lengthOf(initialBodyChildren + 1);
+        expect(div.childNodes).to.have.lengthOf(1);
+
+        wrapper.detach();
+
+        expect(document.body.childNodes).to.have.lengthOf(initialBodyChildren + 1);
+        expect(div.childNodes).to.have.lengthOf(0);
+
+        global.document.body.removeChild(div);
+
+        expect(document.body.childNodes).to.have.lengthOf(initialBodyChildren + 0);
+        expect(div.childNodes).to.have.lengthOf(0);
+      });
+
+      it('will attach to the body successfully', () => {
+        const Bar = () => <div className="in-bar" />;
+
+        const wrapper = mount(<Bar />, { attachTo: document.body });
+
+        expect(wrapper.find('.in-bar')).to.have.lengthOf(1);
+        expect(document.body.childNodes).to.have.lengthOf(1);
+
+        wrapper.detach();
+
+        expect(document.body.childNodes).to.have.lengthOf(0);
+      });
+    });
   });
 
   it('works with class components that return null', () => {
@@ -5743,85 +5822,6 @@ describeWithDOM('mount', () => {
       ))).to.equal(false);
       expect(spy).to.have.property('callCount', 0);
       expect(spy2).to.have.property('callCount', 0);
-    });
-
-    describeIf(is('> 0.13'), 'stateless function components', () => {
-      it('attaches and stuff', () => {
-        const Foo = () => <div className="in-foo" />;
-
-        const div = global.document.createElement('div');
-        const initialBodyChildren = document.body.childNodes.length;
-        global.document.body.appendChild(div);
-
-        expect(document.body.childNodes).to.have.lengthOf(initialBodyChildren + 1);
-        expect(div.childNodes).to.have.lengthOf(0);
-
-        const wrapper = mount(<Foo />, { attachTo: div });
-
-        expect(wrapper.find('.in-foo')).to.have.lengthOf(1);
-        expect(document.body.childNodes).to.have.lengthOf(initialBodyChildren + 1);
-        expect(div.childNodes).to.have.lengthOf(1);
-
-        wrapper.detach();
-
-        expect(document.body.childNodes).to.have.lengthOf(initialBodyChildren + 1);
-        expect(div.childNodes).to.have.lengthOf(0);
-
-        global.document.body.removeChild(div);
-
-        expect(document.body.childNodes).to.have.lengthOf(initialBodyChildren);
-        expect(div.childNodes).to.have.lengthOf(0);
-      });
-
-      it('allows for multiple attaches/detaches on same node', () => {
-        const Foo = () => <div className="in-foo" />;
-        const Bar = () => <div className="in-bar" />;
-
-        let wrapper;
-        const div = global.document.createElement('div');
-        const initialBodyChildren = document.body.childNodes.length;
-        global.document.body.appendChild(div);
-
-        expect(document.body.childNodes).to.have.lengthOf(initialBodyChildren + 1);
-        expect(div.childNodes).to.have.lengthOf(0);
-
-        wrapper = mount(<Foo />, { attachTo: div });
-
-        expect(wrapper.find('.in-foo')).to.have.lengthOf(1);
-        expect(document.body.childNodes).to.have.lengthOf(initialBodyChildren + 1);
-        expect(div.childNodes).to.have.lengthOf(1);
-
-        wrapper.detach();
-
-        wrapper = mount(<Bar />, { attachTo: div });
-
-        expect(wrapper.find('.in-bar')).to.have.lengthOf(1);
-        expect(document.body.childNodes).to.have.lengthOf(initialBodyChildren + 1);
-        expect(div.childNodes).to.have.lengthOf(1);
-
-        wrapper.detach();
-
-        expect(document.body.childNodes).to.have.lengthOf(initialBodyChildren + 1);
-        expect(div.childNodes).to.have.lengthOf(0);
-
-        global.document.body.removeChild(div);
-
-        expect(document.body.childNodes).to.have.lengthOf(initialBodyChildren + 0);
-        expect(div.childNodes).to.have.lengthOf(0);
-      });
-
-      it('will attach to the body successfully', () => {
-        const Bar = () => <div className="in-bar" />;
-
-        const wrapper = mount(<Bar />, { attachTo: document.body });
-
-        expect(wrapper.find('.in-bar')).to.have.lengthOf(1);
-        expect(document.body.childNodes).to.have.lengthOf(1);
-
-        wrapper.detach();
-
-        expect(document.body.childNodes).to.have.lengthOf(0);
-      });
     });
   });
 
