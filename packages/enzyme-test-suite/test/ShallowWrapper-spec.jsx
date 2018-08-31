@@ -6040,12 +6040,8 @@ describe('shallow', () => {
           <div onClick={spy2} style={{ fontSize: 13, color: 'blue' }}>Goodbye World</div>
         </div>
       ));
-      expect(wrapper.containsMatchingElement((
-        <div>Hello World</div>
-      ))).to.equal(true);
-      expect(wrapper.containsMatchingElement((
-        <div>Goodbye World</div>
-      ))).to.equal(true);
+      expect(wrapper.containsMatchingElement(<div>Hello World</div>)).to.equal(true);
+      expect(wrapper.containsMatchingElement(<div>Goodbye World</div>)).to.equal(true);
       expect(wrapper.containsMatchingElement((
         <div onClick={spy1} style={{ fontSize: 12, color: 'red' }}>Hello World</div>
       ))).to.equal(true);
@@ -6071,9 +6067,7 @@ describe('shallow', () => {
           <div onClick={spy2} style={{ fontSize: 13, color: 'blue' }}>Goodbye World</div>
         </div>
       ));
-      expect(wrapper.containsMatchingElement((
-        <div>Bonjour le monde</div>
-      ))).to.equal(false);
+      expect(wrapper.containsMatchingElement(<div>Bonjour le monde</div>)).to.equal(false);
       expect(wrapper.containsMatchingElement((
         <div onClick={spy2}>Au revoir le monde</div>
       ))).to.equal(false);
@@ -6101,6 +6095,28 @@ describe('shallow', () => {
       expect(wrapper.containsMatchingElement(<div className="c" />)).to.equal(true);
       expect(wrapper.containsMatchingElement(<div className="c" id={null} />)).to.equal(true);
       expect(wrapper.containsMatchingElement(<div className="c" id={undefined} />)).to.equal(true);
+    });
+
+    it('works with leading and trailing spaces', () => {
+      const wrapper = shallow((
+        <li>
+          <a> All Operations </a>
+        </li>
+      ));
+
+      expect(wrapper.containsMatchingElement(<a> All Operations </a>)).to.equal(true);
+    });
+
+    it('works with leading and trailing newlines', () => {
+      const wrapper = shallow((
+        <li>
+          <a>
+            All Operations
+          </a>
+        </li>
+      ));
+
+      expect(wrapper.containsMatchingElement(<a> All Operations </a>)).to.equal(true);
     });
   });
 

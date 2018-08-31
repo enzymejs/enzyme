@@ -5940,6 +5940,28 @@ describeWithDOM('mount', () => {
       expect(wrapper.containsMatchingElement(<div className="c" id={null} />)).to.equal(true);
       expect(wrapper.containsMatchingElement(<div className="c" id={undefined} />)).to.equal(true);
     });
+
+    it('works with leading and trailing spaces', () => {
+      const wrapper = mount((
+        <li>
+          <a> All Operations </a>
+        </li>
+      ));
+
+      expect(wrapper.containsMatchingElement(<a> All Operations </a>)).to.equal(true);
+    });
+
+    it('works with leading and trailing newlines', () => {
+      const wrapper = mount((
+        <li>
+          <a>
+            All Operations
+          </a>
+        </li>
+      ));
+
+      expect(wrapper.containsMatchingElement(<a> All Operations </a>)).to.equal(true);
+    });
   });
 
   describe('.containsAllMatchingElements(nodes)', () => {

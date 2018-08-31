@@ -51,7 +51,8 @@
     "object.entries": "^1.0.4",
     "object.values": "^1.0.4",
     "raf": "^3.4.0",
-    "rst-selector-parser": "^2.2.3"
+    "rst-selector-parser": "^2.2.3",
+    "string.prototype.trim": "^1.1.2"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",

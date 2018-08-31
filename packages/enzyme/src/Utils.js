@@ -5,6 +5,7 @@ import entries from 'object.entries';
 import functionName from 'function.prototype.name';
 import has from 'has';
 import flat from 'array.prototype.flat';
+import trim from 'string.prototype.trim';
 
 import { get } from './configuration';
 import { childrenOfNode } from './RSTTraversal';
@@ -134,8 +135,8 @@ function internalNodeCompare(a, b, lenComp, isLoose) {
   const childCompare = isLoose ? childrenMatch : childrenEqual;
   if (leftHasChildren || rightHasChildren) {
     if (!childCompare(
-      childrenToSimplifiedArray(left.children),
-      childrenToSimplifiedArray(right.children),
+      childrenToSimplifiedArray(left.children, isLoose),
+      childrenToSimplifiedArray(right.children, isLoose),
       lenComp,
     )) {
       return false;
@@ -184,7 +185,7 @@ function childrenToArray(children) {
   return result;
 }
 
-export function childrenToSimplifiedArray(nodeChildren) {
+export function childrenToSimplifiedArray(nodeChildren, isLoose = false) {
   const childrenArray = childrenToArray(nodeChildren);
   const simplifiedArray = [];
 
@@ -200,6 +201,10 @@ export function childrenToSimplifiedArray(nodeChildren) {
       simplifiedArray.push(previousChild);
       simplifiedArray.push(child);
     }
+  }
+
+  if (isLoose) {
+    return simplifiedArray.map(x => (typeof x === 'string' ? trim(x) : x));
   }
 
   return simplifiedArray;
