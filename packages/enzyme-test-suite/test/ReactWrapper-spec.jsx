@@ -3500,6 +3500,35 @@ describeWithDOM('mount', () => {
       expect(bar).to.have.lengthOf(1);
       expect(bar.parents('.root')).to.have.lengthOf(1);
     });
+
+    it('finds parents up a tree through a custom component boundary', () => {
+      class CustomForm extends React.Component {
+        render() {
+          const { children } = this.props;
+          return (
+            <form>
+              {children}
+            </form>
+          );
+        }
+      }
+
+      const wrapper = mount((
+        <div>
+          <CustomForm>
+            <input />
+          </CustomForm>
+        </div>
+      ));
+
+      const formDown = wrapper.find('form');
+      expect(formDown).to.have.lengthOf(1);
+
+      const input = wrapper.find('input');
+      expect(input).to.have.lengthOf(1);
+      const formUp = input.parents('form');
+      expect(formUp).to.have.lengthOf(1);
+    });
   });
 
   describe('.parent()', () => {
