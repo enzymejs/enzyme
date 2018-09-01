@@ -227,6 +227,11 @@ class ShallowWrapper {
     return this[ROOT];
   }
 
+  /**
+   * Returns the wrapped component.
+   *
+   * @return {ReactComponent}
+   */
   getNodeInternal() {
     if (this.length !== 1) {
       throw new Error('ShallowWrapper::getNode() can only be called when wrapping one node');
@@ -235,6 +240,18 @@ class ShallowWrapper {
       this.update();
     }
     return this[NODE];
+  }
+
+  /**
+   * Returns the the wrapped components.
+   *
+   * @return {Array<ReactComponent>}
+   */
+  getNodesInternal() {
+    if (this[ROOT] === this && this.length === 1) {
+      this.update();
+    }
+    return this[NODES];
   }
 
   /**
@@ -261,13 +278,6 @@ class ShallowWrapper {
   // eslint-disable-next-line class-methods-use-this
   getNode() {
     throw new Error('ShallowWrapper::getNode() is no longer supported. Use ShallowWrapper::getElement() instead');
-  }
-
-  getNodesInternal() {
-    if (this[ROOT] === this && this.length === 1) {
-      this.update();
-    }
-    return this[NODES];
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -311,6 +321,16 @@ class ShallowWrapper {
       throw new Error('ShallowWrapper::update() can only be called when wrapping one node');
     }
     privateSetNodes(this, getRootNode(this[RENDERER].getNode()));
+    return this;
+  }
+
+  /**
+   * A method that unmounts the component. This can be used to simulate a component going through
+   * and unmount/mount lifecycle.
+   * @returns {ShallowWrapper}
+   */
+  unmount() {
+    this[RENDERER].unmount();
     return this;
   }
 
@@ -666,7 +686,7 @@ class ShallowWrapper {
   }
 
   /**
-   * Whether or not a given react element exists in the shallow render tree.
+   * Whether or not a given react element exists in the render tree.
    *
    * Example:
    * ```
@@ -682,7 +702,7 @@ class ShallowWrapper {
   }
 
   /**
-   * Whether or not a given react element matches the shallow render tree.
+   * Whether or not a given react element matches the render tree.
    * Match is based on the expected element and not on wrapper root node.
    * It will determine if the wrapper root node "looks like" the expected
    * element by checking if all props of the expected element are present
@@ -812,16 +832,6 @@ class ShallowWrapper {
    */
   render() {
     return this.type() === null ? cheerio() : cheerio.load('')(this.html());
-  }
-
-  /**
-   * A method that unmounts the component. This can be used to simulate a component going through
-   * and unmount/mount lifecycle.
-   * @returns {ShallowWrapper}
-   */
-  unmount() {
-    this[RENDERER].unmount();
-    return this;
   }
 
   /**

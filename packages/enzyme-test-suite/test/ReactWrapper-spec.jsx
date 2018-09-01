@@ -629,8 +629,131 @@ describeWithDOM('mount', () => {
       const a = <div className="foo" />;
       const b = <div className="foo" />;
       const c = <div className="bar" />;
+
       expect(mount(a).equals(b)).to.equal(true);
       expect(mount(a).equals(c)).to.equal(false);
+    });
+
+    it('does NOT allow matches on a nested node', () => {
+      const wrapper = mount((
+        <div>
+          <div className="foo" />
+        </div>
+      ));
+      const b = <div className="foo" />;
+      expect(wrapper.equals(b)).to.equal(false);
+    });
+
+    it('matches composite components', () => {
+      class Foo extends React.Component {
+        render() { return <div />; }
+      }
+      const wrapper = mount((
+        <div>
+          <Foo />
+        </div>
+      ));
+      const b = <div><Foo /></div>;
+      expect(wrapper.equals(b)).to.equal(true);
+    });
+
+    it('does not expand `node` content', () => {
+      class Bar extends React.Component {
+        render() { return <div />; }
+      }
+
+      class Foo extends React.Component {
+        render() { return <Bar />; }
+      }
+
+      const wrapper = mount(<Foo />).children();
+      expect(wrapper.equals(<Bar />)).to.equal(true);
+      expect(wrapper.equals(<Foo />)).to.equal(false);
+    });
+
+    describeIf(is('> 0.13'), 'stateless function components (SFCs)', () => {
+      it('matches composite SFCs', () => {
+        const Foo = () => (
+          <div />
+        );
+
+        const wrapper = mount((
+          <div>
+            <Foo />
+          </div>
+        ));
+        const b = <div><Foo /></div>;
+        expect(wrapper.equals(b)).to.equal(true);
+      });
+
+      it('does not expand `node` content', () => {
+        const Bar = () => (
+          <div />
+        );
+
+        const Foo = () => (
+          <Bar />
+        );
+
+        const wrapper = mount(<Foo />).children();
+        expect(wrapper.equals(<Bar />)).to.equal(true);
+        expect(wrapper.equals(<Foo />)).to.equal(false);
+      });
+    });
+
+    it('flattens arrays of children to compare', () => {
+      class TwoChildren extends React.Component {
+        render() {
+          return (
+            <div className="parent-component-class">
+              <div key="a" className="asd" />
+              <div key="b" className="fgh" />
+            </div>
+          );
+        }
+      }
+
+      class TwoChildrenOneArrayed extends React.Component {
+        render() {
+          return (
+            <div className="parent-component-class">
+              <div key="a" className="asd" />
+              {[<div key="b" className="fgh" />]}
+            </div>
+          );
+        }
+      }
+      const twoChildren = mount(<TwoChildren />).children();
+      const twoChildrenOneArrayed = mount(<TwoChildrenOneArrayed />).children();
+
+      expect(twoChildren.equals(twoChildrenOneArrayed.getElement())).to.equal(true);
+      expect(twoChildrenOneArrayed.equals(twoChildren.getElement())).to.equal(true);
+    });
+  });
+
+  describe('.hostNodes()', () => {
+    it('strips out any non-hostNode', () => {
+      class Foo extends React.Component {
+        render() {
+          return <div {...this.props} />;
+        }
+      }
+      const wrapper = mount((
+        <div>
+          <Foo className="foo" />
+          <span className="foo" />
+        </div>
+      ));
+
+      const foos = wrapper.find('.foo');
+      expect(foos).to.have.lengthOf(3);
+
+      const hostNodes = foos.hostNodes();
+      expect(hostNodes).to.have.lengthOf(2);
+      expect(hostNodes.filter('.foo')).to.have.lengthOf(2);
+
+      expect(hostNodes.filter('div')).to.have.lengthOf(1);
+      expect(hostNodes.filter('span')).to.have.lengthOf(1);
     });
 
     it('does NOT allow matches on a nested node', () => {
@@ -725,32 +848,6 @@ describeWithDOM('mount', () => {
 
       expect(twoChildren.equals(twoChildrenOneArrayed.getElement())).to.equal(true);
       expect(twoChildrenOneArrayed.equals(twoChildren.getElement())).to.equal(true);
-    });
-  });
-
-  describe('.hostNodes()', () => {
-    it('strips out any non-hostNode', () => {
-      class Foo extends React.Component {
-        render() {
-          return <div {...this.props} />;
-        }
-      }
-      const wrapper = mount((
-        <div>
-          <Foo className="foo" />
-          <span className="foo" />
-        </div>
-      ));
-
-      const foos = wrapper.find('.foo');
-      expect(foos).to.have.lengthOf(3);
-
-      const hostNodes = foos.hostNodes();
-      expect(hostNodes).to.have.lengthOf(2);
-      expect(hostNodes.filter('.foo')).to.have.lengthOf(2);
-
-      expect(hostNodes.filter('div')).to.have.lengthOf(1);
-      expect(hostNodes.filter('span')).to.have.lengthOf(1);
     });
   });
 
@@ -1729,7 +1826,7 @@ describeWithDOM('mount', () => {
         render() {
           return (
             <div className={this.props.id}>
-              {this.props.id}
+              {this.props.foo}
             </div>
           );
         }
@@ -1738,6 +1835,144 @@ describeWithDOM('mount', () => {
       expect(wrapper.find('.foo')).to.have.lengthOf(1);
       wrapper.setProps({ id: 'bar', foo: 'bla' });
       expect(wrapper.find('.bar')).to.have.lengthOf(1);
+    });
+
+    describe('merging props', () => {
+      it('merges, not replaces, props when rerendering', () => {
+        class Foo extends React.Component {
+          render() {
+            return (
+              <div className={this.props.id}>
+                {this.props.foo}
+              </div>
+            );
+          }
+        }
+
+        const wrapper = mount(<Foo id="foo" foo="bar" />);
+
+        expect(wrapper.children().debug()).to.equal(`
+<div className="foo">
+  bar
+</div>
+        `.trim());
+        expect(wrapper.children().props()).to.eql({
+          className: 'foo',
+          children: 'bar',
+        });
+        expect(wrapper.instance().props).to.eql({
+          id: 'foo',
+          foo: 'bar',
+        });
+
+        wrapper.setProps({ id: 'bar' });
+
+        expect(wrapper.children().debug()).to.equal(`
+<div className="bar">
+  bar
+</div>
+        `.trim());
+        expect(wrapper.children().props()).to.eql({
+          className: 'bar',
+          children: 'bar',
+        });
+        expect(wrapper.instance().props).to.eql({
+          id: 'bar',
+          foo: 'bar',
+        });
+      });
+
+      itIf(is('> 0.13'), 'merges, not replaces, props on SFCs', () => {
+        function Foo({ id, foo }) {
+          return (
+            <div className={id}>
+              {foo}
+            </div>
+          );
+        }
+        const wrapper = mount(<Foo id="foo" foo="bar" />);
+
+        expect(wrapper.children().debug()).to.equal(`
+<div className="foo">
+  bar
+</div>
+        `.trim());
+        expect(wrapper.children().props()).to.eql({
+          className: 'foo',
+          children: 'bar',
+        });
+        if (is('< 16')) {
+          expect(wrapper.instance().props).to.eql({
+            id: 'foo',
+            foo: 'bar',
+          });
+        }
+
+        wrapper.setProps({ id: 'bar' });
+
+        expect(wrapper.children().debug()).to.equal(`
+<div className="bar">
+  bar
+</div>
+        `.trim());
+        expect(wrapper.children().props()).to.eql({
+          className: 'bar',
+          children: 'bar',
+        });
+        if (is('< 16')) {
+          expect(wrapper.instance().props).to.eql({
+            id: 'bar',
+            foo: 'bar',
+          });
+        }
+      });
+
+      it('merges, not replaces, props when no rerender is needed', () => {
+        class Foo extends React.Component {
+          shouldComponentUpdate() {
+            return false;
+          }
+
+          render() {
+            return (
+              <div className={this.props.id}>
+                {this.props.foo}
+              </div>
+            );
+          }
+        }
+        const wrapper = mount(<Foo id="foo" foo="bar" />);
+
+        expect(wrapper.children().debug()).to.equal(`
+<div className="foo">
+  bar
+</div>
+        `.trim());
+        expect(wrapper.children().props()).to.eql({
+          className: 'foo',
+          children: 'bar',
+        });
+        expect(wrapper.instance().props).to.eql({
+          id: 'foo',
+          foo: 'bar',
+        });
+
+        wrapper.setProps({ id: 'foo' });
+
+        expect(wrapper.children().debug()).to.equal(`
+<div className="foo">
+  bar
+</div>
+        `.trim());
+        expect(wrapper.children().props()).to.eql({
+          className: 'foo',
+          children: 'bar',
+        });
+        expect(wrapper.instance().props).to.eql({
+          id: 'foo',
+          foo: 'bar',
+        });
+      });
     });
 
     it('calls componentWillReceiveProps for new renders', () => {
@@ -1798,7 +2033,9 @@ describeWithDOM('mount', () => {
       }
       class Bar extends React.Component {
         render() {
-          return <div />;
+          return (
+            <div />
+          );
         }
       }
 
@@ -1810,6 +2047,25 @@ describeWithDOM('mount', () => {
       expect(wrapper.props().a).to.equal('a');
       expect(wrapper.props().b).to.equal('c');
       expect(wrapper.props().d).to.equal('e');
+    });
+
+    it('passes in old context', () => {
+      class Foo extends React.Component {
+        render() {
+          return (
+            <div>{this.context.x}</div>
+          );
+        }
+      }
+
+      Foo.contextTypes = { x: PropTypes.string };
+
+      const context = { x: 'yolo' };
+      const wrapper = mount(<Foo x={5} />, { context });
+      expect(wrapper.first('div').text()).to.equal('yolo');
+
+      wrapper.setProps({ x: 5 }); // Just force a re-render
+      expect(wrapper.first('div').text()).to.equal('yolo');
     });
 
     it('uses defaultProps if new props includes undefined values', () => {
@@ -4286,6 +4542,12 @@ describeWithDOM('mount', () => {
         expect(wrapper.ref('secondRef').getAttribute('data-amount')).to.equal('4');
         expect(wrapper.ref('secondRef').textContent).to.equal('Second');
       }
+    });
+  });
+
+  describe('.debug()', () => {
+    it('passes through to the debugNodes function', () => {
+      expect(mount(<div />).debug()).to.equal('<div />');
     });
   });
 

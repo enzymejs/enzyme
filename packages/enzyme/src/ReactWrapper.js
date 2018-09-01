@@ -348,30 +348,6 @@ class ReactWrapper {
   }
 
   /**
-   * Whether or not a given react element matches the current render tree.
-   * It will determine if the wrapper root node "looks like" the expected
-   * element by checking if all props of the expected element are present
-   * on the wrapper root node and equals to each other.
-   *
-   * Example:
-   * ```
-   * // MyComponent outputs <div class="foo">Hello</div>
-   * const wrapper = mount(<MyComponent />);
-   * expect(wrapper.matchesElement(<div>Hello</div>)).to.equal(true);
-   * ```
-   *
-   * @param {ReactElement} node
-   * @returns {Boolean}
-   */
-  matchesElement(node) {
-    return this.single('matchesElement', () => {
-      const adapter = getAdapter(this[OPTIONS]);
-      const rstNode = adapter.elementToNode(node);
-      return nodeMatches(rstNode, this.getNodeInternal(), (a, b) => a <= b);
-    });
-  }
-
-  /**
    * Whether or not a given react element exists in the mount render tree.
    *
    * Example:
@@ -468,7 +444,7 @@ class ReactWrapper {
   }
 
   /**
-   * Whether or not a given react element exists in the current render tree.
+   * Whether or not a given react element exists in the render tree.
    *
    * Example:
    * ```
@@ -481,6 +457,31 @@ class ReactWrapper {
    */
   equals(node) {
     return this.single('equals', () => nodeEqual(this.getNodeInternal(), node));
+  }
+
+  /**
+   * Whether or not a given react element matches the render tree.
+   * Match is based on the expected element and not on wrapper root node.
+   * It will determine if the wrapper root node "looks like" the expected
+   * element by checking if all props of the expected element are present
+   * on the wrapper root node and equals to each other.
+   *
+   * Example:
+   * ```
+   * // MyComponent outputs <div class="foo">Hello</div>
+   * const wrapper = mount(<MyComponent />);
+   * expect(wrapper.matchesElement(<div>Hello</div>)).to.equal(true);
+   * ```
+   *
+   * @param {ReactElement} node
+   * @returns {Boolean}
+   */
+  matchesElement(node) {
+    return this.single('matchesElement', () => {
+      const adapter = getAdapter(this[OPTIONS]);
+      const rstNode = adapter.elementToNode(node);
+      return nodeMatches(rstNode, this.getNodeInternal(), (a, b) => a <= b);
+    });
   }
 
   /**
@@ -1088,7 +1089,6 @@ class ReactWrapper {
     return this.filterWhere(n => typeof n.type() === 'string');
   }
 }
-
 
 if (ITERATOR_SYMBOL) {
   Object.defineProperty(ReactWrapper.prototype, ITERATOR_SYMBOL, {

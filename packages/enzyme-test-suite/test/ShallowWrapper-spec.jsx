@@ -510,6 +510,7 @@ describe('shallow', () => {
       const a = <div className="foo" />;
       const b = <div className="foo" />;
       const c = <div className="bar" />;
+
       expect(shallow(a).equals(b)).to.equal(true);
       expect(shallow(a).equals(c)).to.equal(false);
     });
@@ -546,8 +547,9 @@ describe('shallow', () => {
         render() { return <Bar />; }
       }
 
-      expect(shallow(<Foo />).equals(<Bar />)).to.equal(true);
-      expect(shallow(<Foo />).equals(<Foo />)).to.equal(false);
+      const wrapper = shallow(<Foo />);
+      expect(wrapper.equals(<Bar />)).to.equal(true);
+      expect(wrapper.equals(<Foo />)).to.equal(false);
     });
 
     describeIf(is('> 0.13'), 'stateless function components (SFCs)', () => {
@@ -574,8 +576,9 @@ describe('shallow', () => {
           <Bar />
         );
 
-        expect(shallow(<Foo />).equals(<Bar />)).to.equal(true);
-        expect(shallow(<Foo />).equals(<Foo />)).to.equal(false);
+        const wrapper = shallow(<Foo />);
+        expect(wrapper.equals(<Bar />)).to.equal(true);
+        expect(wrapper.equals(<Foo />)).to.equal(false);
       });
     });
 
@@ -1522,7 +1525,7 @@ describe('shallow', () => {
     });
   });
 
-  describe('.setProps(newProps)', () => {
+  describe('.setProps(newProps[, callback)', () => {
     it('throws on a non-function callback', () => {
       class Foo extends React.Component {
         render() {
@@ -6983,6 +6986,130 @@ describe('shallow', () => {
       const root = wrapper.root();
       expect(root.is('div')).to.equal(true);
       expect(root.children().debug()).to.equal('<span />\n\n\n<span />');
+    });
+  });
+
+  describe('lifecycles', () => {
+    it('calls `componentDidUpdate` when component’s `setState` is called', () => {
+      class Foo extends React.Component {
+        constructor(props) {
+          super(props);
+          this.state = {
+            foo: 'init',
+          };
+        }
+
+        componentDidUpdate() {}
+
+        onChange() {
+          this.setState({ foo: 'onChange update' });
+        }
+
+        render() {
+          return <div>{this.state.foo}</div>;
+        }
+      }
+      const spy = sinon.spy(Foo.prototype, 'componentDidUpdate');
+
+      const wrapper = shallow(<Foo />);
+      wrapper.setState({ foo: 'wrapper setState update' });
+      expect(wrapper.state('foo')).to.equal('wrapper setState update');
+      expect(spy).to.have.property('callCount', 1);
+      wrapper.instance().onChange();
+      expect(wrapper.state('foo')).to.equal('onChange update');
+      expect(spy).to.have.property('callCount', 2);
+    });
+
+    it('calls `componentDidUpdate` when component’s `setState` is called through a bound method', () => {
+      class Foo extends React.Component {
+        constructor(props) {
+          super(props);
+          this.state = {
+            foo: 'init',
+          };
+          this.onChange = this.onChange.bind(this);
+        }
+
+        componentDidUpdate() {}
+
+        onChange() {
+          // enzyme can't handle the update because `this` is a ReactComponent instance,
+          // not a ShallowWrapper instance.
+          this.setState({ foo: 'onChange update' });
+        }
+
+        render() {
+          return (
+            <div>
+              {this.state.foo}
+              <button onClick={this.onChange}>click</button>
+            </div>
+          );
+        }
+      }
+      const spy = sinon.spy(Foo.prototype, 'componentDidUpdate');
+
+      const wrapper = shallow(<Foo />);
+      wrapper.find('button').prop('onClick')();
+      expect(wrapper.state('foo')).to.equal('onChange update');
+      expect(spy).to.have.property('callCount', 1);
+    });
+
+    it('calls `componentDidUpdate` when component’s `setState` is called', () => {
+      class Foo extends React.Component {
+        constructor(props) {
+          super(props);
+          this.state = {
+            foo: 'init',
+          };
+          this.update = () => this.setState({ foo: 'update' });
+        }
+
+        componentDidMount() {
+          this.update();
+        }
+
+        componentDidUpdate() {}
+
+        render() {
+          return <div>{this.state.foo}</div>;
+        }
+      }
+      const spy = sinon.spy(Foo.prototype, 'componentDidUpdate');
+
+      const wrapper = shallow(<Foo />);
+      expect(spy).to.have.property('callCount', 1);
+      expect(wrapper.state('foo')).to.equal('update');
+    });
+
+    it('does not call `componentDidMount` twice when a child component is created', () => {
+      class Foo extends React.Component {
+        constructor(props) {
+          super(props);
+          this.state = {
+            foo: 'init',
+          };
+        }
+
+        componentDidMount() {}
+
+        render() {
+          return (
+            <div>
+              <button onClick={() => this.setState({ foo: 'update2' })}>
+                click
+              </button>
+              {this.state.foo}
+            </div>
+          );
+        }
+      }
+      const spy = sinon.spy(Foo.prototype, 'componentDidMount');
+
+      const wrapper = shallow(<Foo />);
+      expect(spy).to.have.property('callCount', 1);
+      wrapper.find('button').prop('onClick')();
+      expect(spy).to.have.property('callCount', 1);
     });
   });
 });
