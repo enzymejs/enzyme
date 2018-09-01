@@ -3355,6 +3355,56 @@ describeWithDOM('mount', () => {
       const textNodes = children.map(x => x.text());
       expect(textNodes).to.eql(['Foo Bar Foo Bar Foo']);
     });
+
+    it('renders children separated by spaces', () => {
+      class JustificationRow extends React.Component {
+        render() {
+          const { children } = this.props;
+          const wrappedChildren = React.Children.map(
+            children,
+            child => child && <span>{child}</span>,
+          );
+
+          const justifiedChildren = [];
+          React.Children.forEach(wrappedChildren, (child) => {
+            if (child) {
+              justifiedChildren.push(child, ' ');
+            }
+          });
+          justifiedChildren.pop();
+
+          return <div>{justifiedChildren}</div>;
+        }
+      }
+
+      const wrapper = mount((
+        <JustificationRow>
+          <div>foo</div>
+          <div>bar</div>
+          <div>baz</div>
+        </JustificationRow>
+      )).children();
+
+      expect(wrapper.children().map(x => x.debug())).to.eql([
+        `<span>
+  <div>
+    foo
+  </div>
+</span>`,
+        // ' ', // TODO: fixme: difference between shallow and mount
+        `<span>
+  <div>
+    bar
+  </div>
+</span>`,
+        // ' ', // TODO: fixme: difference between shallow and mount
+        `<span>
+  <div>
+    baz
+  </div>
+</span>`,
+      ]);
+    });
   });
 
   describe('.childAt(index)', () => {
