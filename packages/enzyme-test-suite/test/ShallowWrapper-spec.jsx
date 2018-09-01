@@ -2976,6 +2976,23 @@ describe('shallow', () => {
         expect(wrapper.text()).to.equal('{ some text }');
       });
     });
+
+    it('supports Fragments', () => {
+      class Foobar extends React.Component {
+        render() {
+          return (
+            <Fragment>
+              <div>Foo</div>
+              <div>Bar</div>
+            </Fragment>
+          );
+        }
+      }
+
+      const wrapper = shallow(<Foobar />);
+      expect(wrapper.text()).to.include('Foo');
+      expect(wrapper.text()).to.include('Bar');
+    });
   });
 
   describe('.props()', () => {
