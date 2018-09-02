@@ -3182,6 +3182,34 @@ describe('shallow', () => {
       const wrapper = shallow(<Foo />);
       expect(wrapper.state('foo')).to.equal('foo');
     });
+
+    it('throws on host nodes', () => {
+      const wrapper = shallow(<div><span /></div>);
+
+      expect(() => wrapper.state()).to.throw(Error, 'ShallowWrapper::state() can only be called on class components');
+    });
+
+    itIf(is('>= 16'), 'throws on Portals', () => {
+      const containerDiv = { nodeType: 1 };
+      const portal = createPortal(
+        <div />,
+        containerDiv,
+      );
+
+      const wrapper = shallow(<div>{portal}</div>);
+      expect(() => wrapper.state()).to.throw(Error, 'ShallowWrapper::state() can only be called on class components');
+    });
+
+    describeIf(is('> 0.13'), 'stateless function components', () => {
+      it('throws on SFCs', () => {
+        function Foo() {
+          return <div />;
+        }
+
+        const wrapper = shallow(<Foo />);
+        expect(() => wrapper.state()).to.throw(Error, 'ShallowWrapper::state() can only be called on class components');
+      });
+    });
   });
 
   describe('.children([selector])', () => {
