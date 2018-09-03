@@ -14,6 +14,7 @@
       "files": [
         "env.js",
         "karma.conf.js",
+        "since.js",
       ],
       "rules": {
         "import/no-extraneous-dependencies": [2, {

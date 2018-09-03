@@ -44,7 +44,8 @@
     "docs:watch": "npm run docs:prepare && gitbook serve",
     "docs:publish": "npm run docs:clean && npm run docs:build && cd _book && git init && git commit --allow-empty -m 'update book' && git fetch git@github.com:airbnb/enzyme.git gh-pages && git checkout -b gh-pages && git add . && git commit -am 'update book' && git push git@github.com:airbnb/enzyme.git gh-pages --force",
     "pretravis": "npm run build",
-    "travis": "babel-node \"$(which istanbul)\" cover --report html _mocha -- packages/enzyme-test-suite/test --recursive"
+    "travis": "babel-node \"$(which istanbul)\" cover --report html _mocha -- packages/enzyme-test-suite/test --recursive",
+    "since": "node since"
   },
   "repository": {
     "type": "git",
@@ -88,6 +89,7 @@
     "gitbook-plugin-collapsible-menu": "^1.0.3",
     "gitbook-plugin-edit-link": "^2.0.2",
     "gitbook-plugin-github": "^2.0.0",
+    "glob-gitignore": "^1.0.9",
     "in-publish": "^2.0.0",
     "istanbul": "^1.0.0-alpha.2",
     "istanbul-api": "~1.2",

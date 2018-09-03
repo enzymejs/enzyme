@@ -34,3 +34,6 @@ node_modules
 
 #/build # commented out intentionally, since this is the meat of the package.
 _book
+
+# custom "lerna since" replacement
+since.js
