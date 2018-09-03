@@ -1,5 +1,18 @@
 # Change Log
 
+## 3.5.1
+
+### Fixes
+- `shallow`/`mount`: `containsMatchingElement`: trim whitespace ([commit](https://github.com/airbnb/enzyme/commit/171e952), [#636](https://github.com/airbnb/enzyme/issues/636))
+- `debug`: inspect objects instead of showing them as `<Component />` ([commit](https://github.com/airbnb/enzyme/commit/a7b6e78))
+
+### Documentation
+- `mount`: `ref`: Update docs to be consistent with v3 ([#1242](https://github.com/airbnb/enzyme/pull/1242))
+
+### Refactors
+- `shallow`/`mount`: make tests and method ordering more consistent ([commit](https://github.com/airbnb/enzyme/commit/d0fccaf))
+- RSTTraversal: remove unnecessary `adapter` truthiness check ([commit](https://github.com/airbnb/enzyme/commit/394a327))
+
 ## 3.5.0
 
 ### New Stuff
