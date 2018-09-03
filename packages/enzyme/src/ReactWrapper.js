@@ -223,13 +223,14 @@ class ReactWrapper {
    * Forces a re-render. Useful to run before checking the render output if something external
    * may be updating the state of the component somewhere.
    *
-   * NOTE: can only be called on a wrapper instance that is also the root instance.
+   * NOTE: no matter what instance this is called on, it will always update the root.
    *
    * @returns {ReactWrapper}
    */
   update() {
-    if (this[ROOT] !== this) {
-      throw new Error('ReactWrapper::update() can only be called on the root');
+    const root = this[ROOT];
+    if (this !== root) {
+      return root.update();
     }
     privateSetNodes(this, this[RENDERER].getNode());
     return this;
@@ -313,9 +314,6 @@ class ReactWrapper {
    * @returns {ReactWrapper}
    */
   setState(state, callback = undefined) {
-    if (this[ROOT] !== this) {
-      throw new Error('ReactWrapper::setState() can only be called on the root');
-    }
     if (this.instance() === null || this[RENDERER].getNode().nodeType !== 'class') {
       throw new Error('ReactWrapper::setState() can only be called on class components');
     }
@@ -675,9 +673,6 @@ class ReactWrapper {
    * @returns {*}
    */
   state(name) {
-    if (this[ROOT] !== this) {
-      throw new Error('ReactWrapper::state() can only be called on the root');
-    }
     if (this.instance() === null || this[RENDERER].getNode().nodeType !== 'class') {
       throw new Error('ReactWrapper::state() can only be called on class components');
     }
