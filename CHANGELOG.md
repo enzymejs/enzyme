@@ -1,5 +1,10 @@
 # Change Log
 
+## 3.6.0
+
+### New Stuff
+ - `shallow`/`mount`: add `simulateError` ([#1797](https://github.com/airbnb/enzyme/pull/1797))
+
 ## 3.5.1
 
 ### Fixes
