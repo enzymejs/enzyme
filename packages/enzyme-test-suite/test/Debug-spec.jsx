@@ -1,3 +1,4 @@
+import './_helpers/setup';
 import { expect } from 'chai';
 import React from 'react';
 import wrap from 'mocha-wrap';
