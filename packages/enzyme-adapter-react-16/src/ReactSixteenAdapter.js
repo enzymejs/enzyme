@@ -222,7 +222,8 @@ function nodeToHostNode(_node) {
 
 const eventOptions = {
   animation: true,
-  pointerEvents: !!React.unstable_Profiler, // proxy for 16.4+
+  pointerEvents: !!TestUtils.Simulate.touchStart, // 16.4+
+  auxClick: !!TestUtils.Simulate.auxClick, // 16.5+
 };
 
 class ReactSixteenAdapter extends EnzymeAdapter {

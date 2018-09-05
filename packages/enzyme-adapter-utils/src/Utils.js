@@ -7,6 +7,7 @@ export { createMountWrapper, createRenderWrapper };
 export function mapNativeEventNames(event, {
   animation = false, // should be true for React 15+
   pointerEvents = false, // should be true for React 16.4+
+  auxClick = false, // should be true for React 16.5+
 } = {}) {
   const nativeToReactEventMap = {
     compositionend: 'compositionEnd',
@@ -62,6 +63,9 @@ export function mapNativeEventNames(event, {
       pointerleave: 'pointerLeave',
       pointerover: 'pointerOver',
       pointerout: 'pointerOut',
+    }),
+    ...(auxClick && {
+      auxclick: 'auxClick',
     }),
   };
 

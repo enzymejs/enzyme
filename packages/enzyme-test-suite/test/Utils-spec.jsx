@@ -443,23 +443,23 @@ describe('Utils', () => {
   describe('propFromEvent', () => {
     it('works', () => {
       expect(propFromEvent('click')).to.equal('onClick');
-      expect(propFromEvent('mouseEnter')).to.equal('onMouseEnter');
+      expect(propFromEvent('mouseenter')).to.equal('onMouseEnter');
     });
 
     describe('conditionally supported events', () => {
-      it('ignores unsupported events', () => {
-        const result = propFromEvent('animationIteration');
-        expect(result).to.equal('onAnimationIteration');
-      });
-
       it('transforms animation events when supported', () => {
-        const result = propFromEvent('animationIteration', { animation: true });
-        expect(result).to.equal('onAnimationIteration');
+        expect(propFromEvent('animationiteration', { animation: false })).to.equal('onAnimationiteration');
+        expect(propFromEvent('animationiteration', { animation: true })).to.equal('onAnimationIteration');
       });
 
       it('transforms pointer events when supported', () => {
-        const result = propFromEvent('pointerOver', { pointerEvents: true });
-        expect(result).to.equal('onPointerOver');
+        expect(propFromEvent('pointerover', { pointerEvents: false })).to.equal('onPointerover');
+        expect(propFromEvent('pointerover', { pointerEvents: true })).to.equal('onPointerOver');
+      });
+
+      it('transforms aux click events when supported', () => {
+        expect(propFromEvent('auxclick', { auxClick: false })).to.equal('onAuxclick');
+        expect(propFromEvent('auxclick', { auxClick: true })).to.equal('onAuxClick');
       });
     });
   });
