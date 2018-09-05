@@ -27,6 +27,7 @@ Organizations
  - [Genoa Telepsychiatry](https://genoatelepsychiatry.com)
  - [IBM X-Force Exchange](https://exchange.xforce.ibmcloud.com)
  - [Zendesk](https://zendesk.com/)
+ - [idealo](https://www.idealo.de/)
 
 Projects
 ----------
