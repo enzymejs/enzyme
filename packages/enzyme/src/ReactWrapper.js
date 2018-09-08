@@ -643,6 +643,7 @@ class ReactWrapper {
       const nodeHierarchy = [thisNode].concat(nodeParents(this, thisNode));
       renderer.simulateError(nodeHierarchy, rootNode, error);
 
+      this[ROOT].update();
       return this;
     });
   }
