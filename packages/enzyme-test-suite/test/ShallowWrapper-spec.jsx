@@ -5067,13 +5067,19 @@ describe('shallow', () => {
         class ErrorBoundary extends React.Component {
           constructor(...args) {
             super(...args);
-            this.state = { throws: false };
+            this.state = {
+              throws: false,
+              didThrow: false,
+            };
           }
 
           componentDidCatch(error, info) {
             const { spy } = this.props;
             spy(error, info);
-            this.setState({ throws: false });
+            this.setState({
+              throws: false,
+              didThrow: true,
+            });
           }
 
           render() {
@@ -5083,6 +5089,9 @@ describe('shallow', () => {
                 <MaybeFragment>
                   <span>
                     <Thrower throws={throws} />
+                    <div>
+                      {this.state.didThrow ? 'HasThrown' : 'HasNotThrown'}
+                    </div>
                   </span>
                 </MaybeFragment>
               </div>
@@ -5124,6 +5133,18 @@ describe('shallow', () => {
           });
         });
 
+        it('rerenders on a simulated error', () => {
+          const wrapper = shallow(<ErrorBoundary spy={sinon.stub()} />);
+
+          expect(wrapper.find({ children: 'HasThrown' })).to.have.lengthOf(0);
+          expect(wrapper.find({ children: 'HasNotThrown' })).to.have.lengthOf(1);
+
+          expect(() => wrapper.find(Thrower).simulateError(errorToThrow)).not.to.throw();
+
+          expect(wrapper.find({ children: 'HasThrown' })).to.have.lengthOf(1);
+          expect(wrapper.find({ children: 'HasNotThrown' })).to.have.lengthOf(0);
+        });
+
         it('does not catch errors during shallow render', () => {
           const spy = sinon.spy();
           const wrapper = shallow(<ErrorBoundary spy={spy} />);
@@ -5141,6 +5162,9 @@ describe('shallow', () => {
           expect(() => thrower.dive()).to.throw(errorToThrow);
 
           expect(spy).to.have.property('callCount', 0);
+
+          expect(wrapper.find({ children: 'HasThrown' })).to.have.lengthOf(0);
+          expect(wrapper.find({ children: 'HasNotThrown' })).to.have.lengthOf(1);
         });
       });
     });
