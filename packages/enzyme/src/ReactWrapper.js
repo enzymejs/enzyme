@@ -31,6 +31,7 @@ const RENDERER = sym('__renderer__');
 const UNRENDERED = sym('__unrendered__');
 const ROOT = sym('__root__');
 const OPTIONS = sym('__options__');
+const ROOT_NODES = sym('__rootNodes__');
 
 /**
  * Finds all nodes in the current wrapper nodes' render trees that match the provided predicate
@@ -57,8 +58,18 @@ function filterWhereUnwrapped(wrapper, predicate) {
   return wrapper.wrap(wrapper.getNodesInternal().filter(predicate).filter(Boolean));
 }
 
+function getRootNodeInternal(wrapper) {
+  if (wrapper[ROOT].length !== 1) {
+    throw new Error('getRootNodeInternal(wrapper) can only be called when wrapper wraps one node');
+  }
+  if (wrapper[ROOT] !== wrapper) {
+    return wrapper[ROOT_NODES][0];
+  }
+  return wrapper[ROOT][NODE];
+}
+
 function nodeParents(wrapper, node) {
-  return parentsOfNode(node, wrapper[ROOT].getNodeInternal());
+  return parentsOfNode(node, getRootNodeInternal(wrapper));
 }
 
 function privateSetNodes(wrapper, nodes) {
@@ -102,6 +113,7 @@ class ReactWrapper {
       privateSet(this, RENDERER, root[RENDERER]);
       privateSet(this, ROOT, root);
       privateSetNodes(this, nodes);
+      privateSet(this, ROOT_NODES, root[NODES]);
     }
     privateSet(this, OPTIONS, root ? root[OPTIONS] : options);
   }
