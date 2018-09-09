@@ -46,11 +46,13 @@ matrix:
     - node_js: "6"
       env: KARMA=true REACT=16
 env:
-  - REACT=16
+  - REACT=16.5
+  - REACT=16.4
   - REACT=16.3
   - REACT=16.2
   - REACT=16.1
-  - REACT=15
+  - REACT=16.0
+  - REACT=15.5
   - REACT=15.4
   - REACT=0.14
   - REACT=0.13

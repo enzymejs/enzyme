@@ -40,7 +40,19 @@ const version = process.argv[2];
 // 6. install all of the package's peer deps at the top level
 
 const root = process.cwd();
-const adapterName = `enzyme-adapter-react-${version}`;
+
+const adapterVersions = {
+  '15.0': 15.4,
+  15.1: 15.4,
+  15.2: 15.4,
+  15.3: 15.4,
+  15.5: 15,
+  '16.0': 16.1,
+  16.4: 16,
+  16.5: 16,
+};
+const adapterVersion = adapterVersions[version] || version;
+const adapterName = `enzyme-adapter-react-${adapterVersion}`;
 const adapterPackageJsonPath = path.join(root, 'packages', adapterName, 'package.json');
 const testPackageJsonPath = path.join(root, 'packages', 'enzyme-test-suite', 'package.json');
 
