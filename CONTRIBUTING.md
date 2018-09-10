@@ -18,30 +18,37 @@ git clone https://github.com/airbnb/enzyme.git
 cd enzyme
 
 # install dependencies (use react:13 if you want to use React 0.13)
-npm install && npm run react:14
+npm install && npm run react 14
 ```
 
 
-### Switching between React 15, React 0.14 and React 0.13
+### Switching between React 16, React 15, React 0.14 and React 0.13
 
 ```bash
 # switch to React 0.13
-npm run react:13
+npm run react 13
 ```
 
 ```bash
 # switch to React 0.14
-npm run react:14
+npm run react 14
 ```
 
 ```bash
 # switch to React 15
-npm run react:15
+npm run react 15
 ```
 
 ```bash
 # switch to React 16
-npm run react:16
+npm run react 16
+```
+
+Specific versions can also be specified
+
+```bash
+# switch to React 16.5
+npm run react 16.5
 ```
 
 ### Running Tests
