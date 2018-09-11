@@ -461,6 +461,9 @@ class ReactSixteenThreeAdapter extends EnzymeAdapter {
       case ContextConsumer || NaN: return 'ContextConsumer';
       case ContextProvider || NaN: return 'ContextProvider';
       case ForwardRef || NaN: {
+        if (type.displayName) {
+          return type.displayName;
+        }
         const name = type.render.displayName || functionName(type.render);
         return name ? `ForwardRef(${name})` : 'ForwardRef';
       }

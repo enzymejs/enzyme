@@ -849,7 +849,9 @@ describe('debug', () => {
 
   describeIf(is('>= 16.3'), 'forwarded ref Components', () => {
     let Parent;
+    let ParentOfNamed;
     let SomeComponent;
+    let NamedComponent;
     beforeEach(() => {
       SomeComponent = forwardRef((props, ref) => (
         <div ref={ref}>
@@ -857,6 +859,10 @@ describe('debug', () => {
         </div>
       ));
       Parent = () => <span><SomeComponent foo="hello" /></span>;
+
+      NamedComponent = forwardRef((props, ref) => (<div />));
+      NamedComponent.displayName = 'a named forward ref!';
+      ParentOfNamed = () => <NamedComponent />;
     });
 
     it('works with a `mount` wrapper', () => {
@@ -883,6 +889,24 @@ describe('debug', () => {
     <span className="child1" />
   </div>
 </ForwardRef>`
+      ));
+    });
+
+    it('works with a displayName with shallow', () => {
+      const wrapper = shallow(<ParentOfNamed />);
+      expect(wrapper.debug()).to.equal((
+        `<${NamedComponent.displayName} />`
+      ));
+    });
+
+    it('works with a displayName with mount', () => {
+      const wrapper = mount(<ParentOfNamed />);
+      expect(wrapper.debug()).to.equal((
+        `<ParentOfNamed>
+  <${NamedComponent.displayName}>
+    <div />
+  </${NamedComponent.displayName}>
+</ParentOfNamed>`
       ));
     });
   });
