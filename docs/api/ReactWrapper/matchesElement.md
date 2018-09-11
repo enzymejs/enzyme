@@ -19,7 +19,7 @@ render tree.
 
 #### Example
 
-
+<!-- eslint-disable react/button-has-type -->
 ```jsx
 class MyComponent extends React.Component {
   constructor(props) {
@@ -39,8 +39,8 @@ class MyComponent extends React.Component {
 }
 
 const wrapper = mount(<MyComponent />);
-expect(wrapper.matchesElement(<div>Hello</div>)).to.equal(true);
-expect(wrapper.matchesElement(<div className="foo bar">Hello</div>)).to.equal(true);
+expect(wrapper.children().matchesElement(<button>Hello</button>)).to.equal(true);
+expect(wrapper.children().matchesElement(<button className="foo bar">Hello</button>)).to.equal(true);
 ```
 
 
