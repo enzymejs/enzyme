@@ -651,7 +651,7 @@ class ReactWrapper {
         throw new TypeError('your adapter does not support `simulateError`. Try upgrading it!');
       }
 
-      const rootNode = this[ROOT].getNodeInternal();
+      const rootNode = getRootNodeInternal(this);
       const nodeHierarchy = [thisNode].concat(nodeParents(this, thisNode));
       renderer.simulateError(nodeHierarchy, rootNode, error);
 
