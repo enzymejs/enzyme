@@ -41,6 +41,7 @@
     * [first()](/docs/api/ShallowWrapper/first.md)
     * [forEach(fn)](/docs/api/ShallowWrapper/forEach.md)
     * [get(index)](/docs/api/ShallowWrapper/get.md)
+    * [getDOMNode()](/docs/api/ReactWrapper/getDOMNode.md)
     * [hasClass(className)](/docs/api/ShallowWrapper/hasClass.md)
     * [hostNodes()](/docs/api/ShallowWrapper/hostNodes.md)
     * [html()](/docs/api/ShallowWrapper/html.md)
