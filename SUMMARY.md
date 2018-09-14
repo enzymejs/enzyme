@@ -97,6 +97,7 @@
     * [first()](/docs/api/ReactWrapper/first.md)
     * [forEach(fn)](/docs/api/ReactWrapper/forEach.md)
     * [get(index)](/docs/api/ReactWrapper/get.md)
+    * [getDOMNode()](/docs/api/ReactWrapper/getDOMNode.md)
     * [hasClass(className)](/docs/api/ReactWrapper/hasClass.md)
     * [hostNodes()](/docs/api/ReactWrapper/hostNodes.md)
     * [html()](/docs/api/ReactWrapper/html.md)
