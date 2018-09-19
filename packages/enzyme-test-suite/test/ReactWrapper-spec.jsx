@@ -5033,13 +5033,19 @@ describeWithDOM('mount', () => {
         class ErrorBoundary extends React.Component {
           constructor(...args) {
             super(...args);
-            this.state = { throws: false };
+            this.state = {
+              throws: false,
+              didThrow: false,
+            };
           }
 
           componentDidCatch(error, info) {
             const { spy } = this.props;
             spy(error, info);
-            this.setState({ throws: false });
+            this.setState({
+              throws: false,
+              didThrow: true,
+            });
           }
 
           render() {
@@ -5049,6 +5055,9 @@ describeWithDOM('mount', () => {
                 <MaybeFragment>
                   <span>
                     <Thrower throws={throws} />
+                    <div>
+                      {this.state.didThrow ? 'HasThrown' : 'HasNotThrown'}
+                    </div>
                   </span>
                 </MaybeFragment>
               </div>
@@ -5094,6 +5103,18 @@ describeWithDOM('mount', () => {
     in ErrorBoundary (created by WrapperComponent)
     in WrapperComponent`,
           });
+        });
+
+        it('rerenders on a simulated error', () => {
+          const wrapper = mount(<ErrorBoundary spy={sinon.stub()} />);
+
+          expect(wrapper.find({ children: 'HasThrown' })).to.have.lengthOf(0);
+          expect(wrapper.find({ children: 'HasNotThrown' })).to.have.lengthOf(1);
+
+          expect(() => wrapper.find(Thrower).simulateError(errorToThrow)).not.to.throw();
+
+          expect(wrapper.find({ children: 'HasThrown' })).to.have.lengthOf(1);
+          expect(wrapper.find({ children: 'HasNotThrown' })).to.have.lengthOf(0);
         });
 
         it('catches errors during render', () => {
