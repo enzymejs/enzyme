@@ -6923,6 +6923,33 @@ describe('shallow', () => {
       expect(underwater.is(RendersDOM)).to.equal(true);
     });
 
+    describeIf(is('>=16.3.0'), 'forwardRef Elements', () => {
+      const ForwardRefWrapsRendersDOM = forwardRef && forwardRef(() => <WrapsRendersDOM />);
+      const NestedForwarRefsWrapsRendersDom = forwardRef
+        && forwardRef(() => <ForwardRefWrapsRendersDOM />);
+
+      if (forwardRef) {
+        NestedForwarRefsWrapsRendersDom.contextTypes = { foo: PropTypes.string };
+        ForwardRefWrapsRendersDOM.contextTypes = { foo: PropTypes.string };
+      }
+
+      it('dives + shallow-renders a forwardRef component', () => {
+        const wrapper = shallow(<ForwardRefWrapsRendersDOM />);
+        expect(wrapper.is(WrapsRendersDOM)).to.equal(true);
+
+        const underwater = wrapper.dive();
+        expect(underwater.is(RendersDOM)).to.equal(true);
+      });
+
+      it('dives + shallow-renders a with nested forwardRefs component', () => {
+        const wrapper = shallow(<NestedForwarRefsWrapsRendersDom />);
+        expect(wrapper.is(ForwardRefWrapsRendersDOM)).to.equal(true);
+
+        const underwater = wrapper.dive();
+        expect(underwater.is(WrapsRendersDOM)).to.equal(true);
+      });
+    });
+
     it('merges and pass options through', () => {
       const wrapper = shallow(<ContextWrapsRendersDOM />, { context: { foo: 'hello' } });
       expect(wrapper.context()).to.deep.equal({ foo: 'hello' });
