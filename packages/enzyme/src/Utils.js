@@ -42,6 +42,9 @@ export function makeOptions(options) {
 }
 
 export function isCustomComponentElement(inst, adapter) {
+  if (adapter.isCustomComponentElement) {
+    return !!adapter.isCustomComponentElement(inst);
+  }
   return !!inst && adapter.isValidElement(inst) && typeof inst.type === 'function';
 }
 

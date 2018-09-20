@@ -9,6 +9,7 @@ import {
   displayNameOfNode,
   spyMethod,
   nodeHasType,
+  isCustomComponentElement,
 } from 'enzyme/build/Utils';
 import getAdapter from 'enzyme/build/getAdapter';
 import {
@@ -637,6 +638,151 @@ describe('Utils', () => {
       spy.restore();
       expect(Object.getOwnPropertyDescriptor(obj, 'method')).to.deep.equal(descriptor);
     });
+  });
+
+  describe('isCustomComponentElement()', () => {
+    const adapter = getAdapter();
+
+    wrap()
+      .withOverride(() => adapter, 'isCustomComponentElement', () => undefined)
+      .describe('with an adapter lacking `.isCustomComponentElement`', () => {
+        describe('given a valid CustomComponentElement', () => {
+          it('returns true', () => {
+            class Foo extends React.Component {
+              render() { return <div />; }
+            }
+            expect(isCustomComponentElement(<Foo />, adapter)).to.equal(true);
+          });
+
+          describeIf(is('> 0.13'), 'stateless function elements', () => {
+            it('returns true', () => {
+              const Foo = () => <div />;
+
+              expect(isCustomComponentElement(<Foo />, adapter)).to.equal(true);
+            });
+          });
+
+          describeIf(is('>=16.3.0'), 'forwardRef Elements', () => {
+            it('returns false', () => {
+              const Foo = React.forwardRef(() => <div />);
+              expect(isCustomComponentElement(<Foo />, adapter)).to.equal(false);
+            });
+          });
+        });
+
+        describe('given an invalid CustomComponentElement', () => {
+          it('returns false for HTML elements', () => {
+            expect(isCustomComponentElement(<div />, adapter)).to.equal(false);
+          });
+
+          it('returns false for non-Components', () => {
+            [
+              class Foo {},
+              {},
+              () => {},
+              'div',
+              'Foo',
+              null,
+            ].forEach((nonComponent) => {
+              expect(isCustomComponentElement(nonComponent, adapter)).to.equal(false);
+            });
+          });
+        });
+      });
+
+    wrap()
+      .withOverride(() => adapter, 'isCustomComponentElement', () => () => false)
+      .describe('with an adapter that has `.isCustomComponentElement` that always returns false', () => {
+        describe('given a valid CustomComponentElement', () => {
+          it('returns false', () => {
+            class Foo extends React.Component {
+              render() { return <div />; }
+            }
+            expect(isCustomComponentElement(<Foo />, adapter)).to.equal(false);
+          });
+
+          describeIf(is('> 0.13'), 'stateless function elements', () => {
+            it('returns false', () => {
+              const Foo = () => <div />;
+
+              expect(isCustomComponentElement(<Foo />, adapter)).to.equal(false);
+            });
+          });
+
+          describeIf(is('>=16.3.0'), 'forwardRef Elements', () => {
+            it('returns false', () => {
+              const Foo = React.forwardRef(() => <div />);
+              expect(isCustomComponentElement(<Foo />, adapter)).to.equal(false);
+            });
+          });
+        });
+
+        describe('given an invalid CustomComponentElement', () => {
+          it('returns false for HTML elements', () => {
+            expect(isCustomComponentElement(<div />, adapter)).to.equal(false);
+          });
+
+          it('returns false for non-Components', () => {
+            [
+              class Foo {},
+              {},
+              () => {},
+              'div',
+              'Foo',
+              null,
+            ].forEach((nonComponent) => {
+              expect(isCustomComponentElement(nonComponent, adapter)).to.equal(false);
+            });
+          });
+        });
+      });
+
+    wrap()
+      .withOverride(() => adapter, 'isCustomComponentElement', () => () => true)
+      .describe('with an adapter that has `.isCustomComponentElement` that always returns true', () => {
+        describe('given a valid CustomComponentElement', () => {
+          it('returns true', () => {
+            class Foo extends React.Component {
+              render() { return <div />; }
+            }
+            expect(isCustomComponentElement(<Foo />, adapter)).to.equal(true);
+          });
+
+          describeIf(is('> 0.13'), 'stateless function elements', () => {
+            it('returns true', () => {
+              const Foo = () => <div />;
+
+              expect(isCustomComponentElement(<Foo />, adapter)).to.equal(true);
+            });
+          });
+
+          describeIf(is('>=16.3.0'), 'forwardRef Elements', () => {
+            it('returns true', () => {
+              const Foo = React.forwardRef(() => <div />);
+              expect(isCustomComponentElement(<Foo />, adapter)).to.equal(true);
+            });
+          });
+        });
+
+        describe('given an invalid CustomComponentElement', () => {
+          it('returns true for HTML elements', () => {
+            expect(isCustomComponentElement(<div />, adapter)).to.equal(true);
+          });
+
+          it('returns true for non-Components', () => {
+            [
+              class Foo {},
+              {},
+              () => {},
+              'div',
+              'Foo',
+              null,
+            ].forEach((nonComponent) => {
+              expect(isCustomComponentElement(nonComponent, adapter)).to.equal(true);
+            });
+          });
+        });
+      });
   });
 
   wrap()
