@@ -3924,7 +3924,6 @@ describeWithDOM('mount', () => {
 </div>`);
       expect(bChild).to.have.lengthOf(1);
 
-      /*
       const bChildParents = bChild.parents('.b');
       expect(bChildParents.debug()).to.equal(`<div className="b">
   <div>
@@ -3932,7 +3931,6 @@ describeWithDOM('mount', () => {
   </div>
 </div>`);
       expect(bChildParents).to.have.lengthOf(1);
-      */
 
       const aChildParents = aChild.parents('.a');
       expect(aChildParents.debug()).to.equal(`<div className="a">
