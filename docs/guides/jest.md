@@ -2,7 +2,7 @@
 
 ## Configure with Jest
 
-To run the setup file to configure Enzyme and the Adapter with Jest direct `setupTestFrameworkScriptFile` in your config file (check [Jest's documentation](http://jestjs.io/docs/en/configuration) for the possible locations of that config file) to literally the string `<rootDir>` and the path to your setup file.
+To run the setup file to configure Enzyme and the Adapter (as shown in the [Installation docs](http://airbnb.io/enzyme/docs/installation/)) with Jest, set `setupTestFrameworkScriptFile` in your config file (check [Jest's documentation](http://jestjs.io/docs/en/configuration) for the possible locations of that config file) to literally the string `<rootDir>` and the path to your setup file.
 
 ```json
 {
