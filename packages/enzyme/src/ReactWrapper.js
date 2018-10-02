@@ -154,10 +154,7 @@ class ReactWrapper {
    * @return {ReactElement}
    */
   getElement() {
-    if (this.length !== 1) {
-      throw new Error('ReactWrapper::getElement() can only be called when wrapping one node');
-    }
-    return getAdapter(this[OPTIONS]).nodeToElement(this[NODE]);
+    return this.single('getElement', () => getAdapter(this[OPTIONS]).nodeToElement(this[NODE]));
   }
 
   /**
@@ -219,10 +216,7 @@ class ReactWrapper {
    * @returns {ReactComponent|DOMComponent}
    */
   instance() {
-    if (this.length !== 1) {
-      throw new Error('ReactWrapper::instance() can only be called on single nodes');
-    }
-    return this[NODE].instance;
+    return this.single('instance', () => this[NODE].instance);
   }
 
   /**

@@ -273,10 +273,7 @@ class ShallowWrapper {
    * @return {ReactElement}
    */
   getElement() {
-    if (this.length !== 1) {
-      throw new Error('ShallowWrapper::getElement() can only be called when wrapping one node');
-    }
-    return getAdapter(this[OPTIONS]).nodeToElement(this.getNodeInternal());
+    return this.single('getElement', n => getAdapter(this[OPTIONS]).nodeToElement(n));
   }
 
   /**
