@@ -916,6 +916,9 @@ class ShallowWrapper {
     }
     const _state = this.single('state', () => this.instance().state);
     if (typeof name !== 'undefined') {
+      if (_state == null) {
+        throw new TypeError(`ShallowWrapper::state("${name}") requires that \`state\` not be \`null\` or \`undefined\``);
+      }
       return _state[name];
     }
     return _state;

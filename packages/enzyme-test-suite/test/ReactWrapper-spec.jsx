@@ -161,6 +161,7 @@ describeWithDOM('mount', () => {
   </div>
 </Foo>
       `.trim());
+      expect(() => wrapper.state('key')).to.throw('ReactWrapper::state("key") requires that `state` not be `null` or `undefined`');
     });
 
     describeIf(is('>= 16.3'), 'uses the isValidElementType from the Adapter to validate the prop type of Component', () => {

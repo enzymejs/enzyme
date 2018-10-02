@@ -153,6 +153,7 @@ describe('shallow', () => {
   null
 </div>
       `.trim());
+      expect(() => wrapper.state('key')).to.throw('ShallowWrapper::state("key") requires that `state` not be `null` or `undefined`');
     });
   });
 
