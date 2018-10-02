@@ -132,6 +132,28 @@ describe('shallow', () => {
 
       expect(() => shallow(<Foo />)).not.to.throw();
     });
+
+    it('starts out with undefined state', () => {
+      class Foo extends React.Component {
+        render() {
+          return (
+            <div>
+              {typeof this.state}
+              {JSON.stringify(this.state)}
+            </div>
+          );
+        }
+      }
+
+      const wrapper = shallow(<Foo />);
+      expect(wrapper.state()).to.equal(null);
+      expect(wrapper.debug()).to.equal(`
+<div>
+  object
+  null
+</div>
+      `.trim());
+    });
   });
 
   describe('context', () => {

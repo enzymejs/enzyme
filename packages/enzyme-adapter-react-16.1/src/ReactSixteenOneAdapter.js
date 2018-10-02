@@ -210,6 +210,22 @@ function nodeToHostNode(_node) {
 
 const eventOptions = { animation: true };
 
+function getEmptyStateValue() {
+  // this handles a bug in React 16.0 - 16.2
+  // see https://github.com/facebook/react/commit/39be83565c65f9c522150e52375167568a2a1459
+  // also see https://github.com/facebook/react/pull/11965
+
+  // eslint-disable-next-line react/prefer-stateless-function
+  class EmptyState extends React.Component {
+    render() {
+      return null;
+    }
+  }
+  const testRenderer = new ShallowRenderer();
+  testRenderer.render(React.createElement(EmptyState));
+  return testRenderer._instance.state;
+}
+
 class ReactSixteenOneAdapter extends EnzymeAdapter {
   constructor() {
     super();
@@ -318,6 +334,30 @@ class ReactSixteenOneAdapter extends EnzymeAdapter {
               Component,
             );
             return withSetStateAllowed(() => renderer.render({ ...el, type: wrappedEl }, context));
+          }
+          if (isStateful) {
+            // fix react bug; see implementation of `getEmptyStateValue`
+            const emptyStateValue = getEmptyStateValue();
+            if (emptyStateValue) {
+              Object.defineProperty(Component.prototype, 'state', {
+                configurable: true,
+                enumerable: true,
+                get() {
+                  return null;
+                },
+                set(value) {
+                  if (value !== emptyStateValue) {
+                    Object.defineProperty(this, 'state', {
+                      configurable: true,
+                      enumerable: true,
+                      value,
+                      writable: true,
+                    });
+                  }
+                  return true;
+                },
+              });
+            }
           }
           return withSetStateAllowed(() => renderer.render(el, context));
         }

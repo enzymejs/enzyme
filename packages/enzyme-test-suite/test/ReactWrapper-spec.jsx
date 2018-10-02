@@ -139,6 +139,30 @@ describeWithDOM('mount', () => {
       expect(() => mount(<Foo />)).not.to.throw();
     });
 
+    it('starts out with undefined state', () => {
+      class Foo extends React.Component {
+        render() {
+          return (
+            <div>
+              {typeof this.state}
+              {JSON.stringify(this.state)}
+            </div>
+          );
+        }
+      }
+
+      const wrapper = mount(<Foo />);
+      expect(wrapper.state()).to.equal(null);
+      expect(wrapper.debug()).to.equal(`
+<Foo>
+  <div>
+    object
+    null
+  </div>
+</Foo>
+      `.trim());
+    });
+
     describeIf(is('>= 16.3'), 'uses the isValidElementType from the Adapter to validate the prop type of Component', () => {
       const Foo = () => null;
       const Bar = () => null;
