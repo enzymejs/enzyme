@@ -35,11 +35,11 @@
   "license": "MIT",
   "dependencies": {
     "enzyme-adapter-react-helper": "^1.3.0",
-    "enzyme-adapter-utils": "^1.6.0",
+    "enzyme-adapter-utils": "^1.8.0",
     "object.assign": "^4.1.0",
     "object.values": "^1.0.4",
     "prop-types": "^15.6.2",
-    "react-is": "^16.4.2"
+    "react-is": "^16.5.2"
   },
   "peerDependencies": {
     "enzyme": "^3.0.0",
@@ -50,9 +50,9 @@
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-plugin-transform-replace-object-assign": "^1.0.0",
-    "babel-preset-airbnb": "^2.5.3",
+    "babel-preset-airbnb": "^2.6.0",
     "enzyme": "^3.0.0",
-    "eslint": "^5.4.0",
+    "eslint": "^5.6.1",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-jsx-a11y": "^6.1.1",
