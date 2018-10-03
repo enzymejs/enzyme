@@ -9,7 +9,7 @@ const packagesDir = path.join(__dirname, 'packages');
 
 const packages = (process.argv.length > 2 ? [process.argv[2]] : glob.sync('*', { cwd: packagesDir }))
   .map(name => JSON.parse(fs.readFileSync(path.join(packagesDir, name, 'package.json'))))
-  .filter(x => !x.private);
+  .filter(x => !x.private && x.name !== 'enzyme-example-mocha');
 
 packages.forEach((pkg) => {
   const tag = `${pkg.name}@${pkg.version}`;
