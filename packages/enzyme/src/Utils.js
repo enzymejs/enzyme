@@ -18,24 +18,32 @@ export function getAdapter(options = {}) {
   return realGetAdapter(options);
 }
 
-export function makeOptions(options) {
-  const { attachTo, hydrateIn } = options;
-
+function validateMountOptions(attachTo, hydrateIn) {
   if (attachTo && hydrateIn && attachTo !== hydrateIn) {
     throw new TypeError('If both the `attachTo` and `hydrateIn` options are provided, they must be === (for backwards compatibility)');
   }
+}
+
+export function makeOptions(options) {
+  const { attachTo: configAttachTo, hydrateIn: configHydrateIn, ...config } = get();
+  validateMountOptions(configAttachTo, configHydrateIn);
+
+  const { attachTo, hydrateIn } = options;
+  validateMountOptions(attachTo, hydrateIn);
 
   // neither present: both undefined
   // only attachTo present: attachTo set, hydrateIn undefined
   // only hydrateIn present: both set to hydrateIn
   // both present (and ===, per above): both set to hydrateIn
+  const finalAttachTo = hydrateIn || configHydrateIn || configAttachTo || attachTo || undefined;
+  const finalHydrateIn = hydrateIn || configHydrateIn || undefined;
   const mountTargets = {
-    attachTo: hydrateIn || attachTo || undefined,
-    hydrateIn: hydrateIn || undefined,
+    ...(finalAttachTo && { attachTo: finalAttachTo }),
+    ...(finalHydrateIn && { hydrateIn: finalHydrateIn }),
   };
 
   return {
-    ...get(),
+    ...config,
     ...options,
     ...mountTargets,
   };

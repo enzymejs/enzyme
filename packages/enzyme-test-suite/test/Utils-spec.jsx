@@ -10,6 +10,7 @@ import {
   spyMethod,
   nodeHasType,
   isCustomComponentElement,
+  makeOptions,
 } from 'enzyme/build/Utils';
 import getAdapter from 'enzyme/build/getAdapter';
 import {
@@ -17,6 +18,7 @@ import {
   mapNativeEventNames,
   propFromEvent,
 } from 'enzyme-adapter-utils';
+import { get, reset, merge as configure } from 'enzyme/build/configuration';
 
 import './_helpers/setupAdapters';
 
@@ -587,6 +589,107 @@ describe('Utils', () => {
       const nested = [1, [2, [3, [4]], 5], 6, [7, [8, 9]], 10];
       const flat = flatten(nested);
       expect(flat).to.deep.equal([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+    });
+  });
+
+  describe('makeOptions', () => {
+    let originalConfig;
+    const adapter = getAdapter();
+    const initialConfig = {
+      adapter,
+      foo: 'bar',
+    };
+    const node = {};
+    const otherNode = {};
+
+    beforeEach(() => {
+      originalConfig = get();
+      reset(initialConfig);
+    });
+
+    afterEach(() => {
+      reset(originalConfig);
+    });
+
+    it('throws when passed attachTo and hydrateIn do not agree', () => {
+      expect(() => makeOptions({ attachTo: node, hydrateIn: otherNode })).to.throw(
+        TypeError,
+        'If both the `attachTo` and `hydrateIn` options are provided, they must be === (for backwards compatibility)',
+      );
+    });
+
+    it('throws when config attachTo and hydrateIn do not agree', () => {
+      configure({ attachTo: node, hydrateIn: otherNode });
+      expect(() => makeOptions({})).to.throw(
+        TypeError,
+        'If both the `attachTo` and `hydrateIn` options are provided, they must be === (for backwards compatibility)',
+      );
+    });
+
+    it('returns an object that includes the config', () => {
+      expect(makeOptions({ bar: 'baz' })).to.eql({
+        ...initialConfig,
+        bar: 'baz',
+      });
+    });
+
+    it('sets attachTo and hydrateIn to hydrateIn, when attachTo is missing', () => {
+      expect(makeOptions({ hydrateIn: node })).to.eql({
+        ...initialConfig,
+        hydrateIn: node,
+        attachTo: node,
+      });
+    });
+
+    it('sets attachTo and hydrateIn to hydrateIn, when attachTo === hydrateIn', () => {
+      expect(makeOptions({ hydrateIn: node, attachTo: node })).to.eql({
+        ...initialConfig,
+        hydrateIn: node,
+        attachTo: node,
+      });
+    });
+
+    it('only sets attachTo, when hydrateIn is missing', () => {
+      expect(makeOptions({ attachTo: node })).to.eql({
+        ...initialConfig,
+        attachTo: node,
+      });
+    });
+
+    describe('when DOM node options are set in the config', () => {
+      it('inherits attachTo', () => {
+        reset({ ...initialConfig, attachTo: node });
+        expect(makeOptions({})).to.eql({
+          ...initialConfig,
+          attachTo: node,
+        });
+      });
+
+      it('inherits hydrateIn', () => {
+        reset({ ...initialConfig, hydrateIn: node });
+        expect(makeOptions({})).to.eql({
+          ...initialConfig,
+          attachTo: node,
+          hydrateIn: node,
+        });
+      });
+
+      it('allows overriding of attachTo', () => {
+        reset({ ...initialConfig, attachTo: node });
+        expect(makeOptions({ attachTo: otherNode })).to.eql({
+          ...initialConfig,
+          attachTo: otherNode,
+        });
+      });
+
+      it('allows overriding of hydrateIn', () => {
+        reset({ ...initialConfig, hydrateIn: node });
+        expect(makeOptions({ hydrateIn: otherNode })).to.eql({
+          ...initialConfig,
+          attachTo: otherNode,
+          hydrateIn: otherNode,
+        });
+      });
     });
   });
 
