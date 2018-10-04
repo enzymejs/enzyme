@@ -1,6 +1,6 @@
 import validateAdapter from './validateAdapter';
 
-const configuration = {};
+let configuration = {};
 
 export function get() {
   return { ...configuration };
@@ -11,4 +11,9 @@ export function merge(extra) {
     validateAdapter(extra.adapter);
   }
   Object.assign(configuration, extra);
+}
+
+export function reset(replacementConfig = {}) {
+  configuration = {};
+  merge(replacementConfig);
 }
