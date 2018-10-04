@@ -22,6 +22,7 @@ import {
   createClass,
   createContext,
   createPortal,
+  createRef,
   forwardRef,
   Fragment,
   lazy,
@@ -603,6 +604,29 @@ describeWithDOM('mount', () => {
 
         expect(results).to.have.lengthOf(1);
         expect(results.props()).to.eql({ foo: 'hello' });
+      });
+
+      it('actually passes the ref', () => {
+        class A extends React.PureComponent {
+          render() {
+            return <div>FOO</div>;
+          }
+        }
+
+        class B extends React.PureComponent {
+          render() {
+            const { forwardedRef } = this.props;
+            return <A ref={forwardedRef} />;
+          }
+        }
+
+        const BForwarded = forwardRef((props, ref) => (
+          <B {...props} forwardedRef={ref} />
+        ));
+
+        const ref = createRef();
+        mount(<BForwarded ref={ref} />);
+        expect(ref.current).to.be.an.instanceOf(A);
       });
     });
 
