@@ -1,9 +1,26 @@
 # Change Log
 
+## 3.7.0
+
+### New Stuff
+ - `mount`: `.state()`/`.setState()`: allow calling on children ([#1802](https://github.com/airbnb/enzyme/pull/1802), @ljharb)
+ - `configuration`: add `reset` ([commit](https://github.com/airbnb/enzyme/commit/d91d95b8da8900c8f4b7090d2256422a82398ca9))
+
+### Fixes
+ - `makeOptions`: ensure that config-level `attachTo`/`hydrateIn` are inherited into wrapper options ([#1836](https://github.com/airbnb/enzyme/issues/1836), @ljharb)
+ - `shallow`/`Utils`: call into adapter’s `isCustomComponentElement` if present ([#1832](https://github.com/airbnb/enzyme/pull/1832), @SinHouse)
+ - `shallow`/`mount`: throw an explicit error when state is null/undefined ([commit](https://github.com/airbnb/enzyme/commit/9ea33d7667a93885d6f1d6e12b0c2661d6d47cd1))
+ - freeze `ROOT_NODES` for child wrappers ([#1811](https://github.com/airbnb/enzyme/pull/1811), @jgzuke)
+ - `shallow`: `.parents`: ensure that one `.find` call does not affect another ([#1781](https://github.com/airbnb/enzyme/pull/1781), @ljharb)
+ - `mount`: update after `simulateError` ([#1812](https://github.com/airbnb/enzyme/pull/1812), @jgzuke)
+
+### Refactors
+ - `mount`/`shallow`: `getElement`: use `this.single` ([commit](https://github.com/airbnb/enzyme/commit/6b63db3b002a419076c82d34554916400ef392fa))
+
 ## 3.6.0
 
 ### New Stuff
- - `shallow`/`mount`: add `simulateError` ([#1797](https://github.com/airbnb/enzyme/pull/1797))
+ - `shallow`/`mount`: add `simulateError` ([#1797](https://github.com/airbnb/enzyme/pull/1797), @ljharb)
 
 ## 3.5.1
 
@@ -12,7 +29,7 @@
 - `debug`: inspect objects instead of showing them as `<Component />` ([commit](https://github.com/airbnb/enzyme/commit/a7b6e78))
 
 ### Documentation
-- `mount`: `ref`: Update docs to be consistent with v3 ([#1242](https://github.com/airbnb/enzyme/pull/1242))
+- `mount`: `ref`: Update docs to be consistent with v3 ([#1242](https://github.com/airbnb/enzyme/pull/1242), @adam-golab)
 
 ### Refactors
 - `shallow`/`mount`: make tests and method ordering more consistent ([commit](https://github.com/airbnb/enzyme/commit/d0fccaf))
