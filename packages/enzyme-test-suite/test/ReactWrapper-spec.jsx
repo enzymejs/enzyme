@@ -7287,6 +7287,12 @@ describeWithDOM('mount', () => {
         );
       });
     });
+
+    it('lets you read the value of an input', () => {
+      const wrapper = mount(<div><input value="0" /></div>);
+      const inputNode = wrapper.find('input').getDOMNode();
+      expect(inputNode.value).to.equal('0');
+    });
   });
 
   describe('#single()', () => {
