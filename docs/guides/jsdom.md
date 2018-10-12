@@ -36,6 +36,12 @@ global.document = window.document;
 global.navigator = {
   userAgent: 'node.js',
 };
+global.requestAnimationFrame = function (callback) {
+  return setTimeout(callback, 0);
+};
+global.cancelAnimationFrame = function (id) {
+  clearTimeout(id);
+};
 copyProps(window, global);
 ```
 
