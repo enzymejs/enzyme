@@ -222,8 +222,8 @@ Returns whether or not all of the nodes in the wrapper match the provided select
 #### [`.everyWhere(predicate) => Boolean`](ReactWrapper/everyWhere.md)
 Returns whether or not all of the nodes in the wrapper pass the provided predicate function.
 
-#### [`.ref(refName) => ReactWrapper`](ReactWrapper/ref.md)
-Returns a wrapper of the node that matches the provided reference name.
+#### [`.ref(refName) => ReactComponent | HTMLElement`](ReactWrapper/ref.md)
+Returns the node that matches the provided reference name.
 
 #### [`.detach() => void`](ReactWrapper/detach.md)
 Unmount the component from the DOM node it's attached to.
