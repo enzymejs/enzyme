@@ -6,4 +6,13 @@
   ignore: [
     "packages/enzyme-test-suite/test/_helpers/untranspiled*",
   ],
+  "env": {
+    "test": {
+      "plugins": [
+        ["transform-replace-object-assign", { "moduleSpecifier": "object.assign" }],
+        "istanbul",
+      ],
+      "sourceMaps": "inline",
+    },
+  },
 }
