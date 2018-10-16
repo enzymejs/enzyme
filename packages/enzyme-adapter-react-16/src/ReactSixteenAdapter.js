@@ -38,6 +38,7 @@ import {
   propsWithKeysAndRef,
   ensureKeyOrUndefined,
   simulateError,
+  wrap,
 } from 'enzyme-adapter-utils';
 import findCurrentFiberUsingSlowPath from './findCurrentFiberUsingSlowPath';
 import detectFiberTags from './detectFiberTags';
@@ -466,6 +467,10 @@ class ReactSixteenAdapter extends EnzymeAdapter {
       default:
         throw new Error(`Enzyme Internal Error: Unrecognized mode: ${options.mode}`);
     }
+  }
+
+  wrap(element) {
+    return wrap(element);
   }
 
   // converts an RSTNode to the corresponding JSX Pragma Element. This will be needed

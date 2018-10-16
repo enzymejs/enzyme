@@ -14,6 +14,7 @@ import {
   createMountWrapper,
   propsWithKeysAndRef,
   ensureKeyOrUndefined,
+  wrap,
 } from 'enzyme-adapter-utils';
 import mapNativeEventNames from './ReactThirteenMapNativeEventNames';
 import elementToTree from './ReactThirteenElementToTree';
@@ -240,6 +241,10 @@ class ReactThirteenAdapter extends EnzymeAdapter {
       default:
         throw new Error(`Enzyme Internal Error: Unrecognized mode: ${options.mode}`);
     }
+  }
+
+  wrap(element) {
+    return wrap(element);
   }
 
   // converts an RSTNode to the corresponding JSX Pragma Element. This will be needed
