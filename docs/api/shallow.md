@@ -130,6 +130,9 @@ Shallow renders the current node and returns a shallow wrapper around it.
 #### [`.render() => CheerioWrapper`](ShallowWrapper/render.md)
 Returns a CheerioWrapper of the current node's subtree.
 
+#### [`.renderProp(key) => ShallowWrapper`](ShallowWrapper/renderProp.md)
+Returns a wrapper of the node rendered by the provided render prop.
+
 #### [`.unmount() => ShallowWrapper`](ShallowWrapper/unmount.md)
 A method that un-mounts the component.
 

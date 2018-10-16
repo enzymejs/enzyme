@@ -4743,6 +4743,68 @@ describe('shallow', () => {
     });
   });
 
+  describe('.renderProp()', () => {
+    it('returns a wrapper around the node returned from the render prop', () => {
+      class Foo extends React.Component {
+        render() {
+          return <div className="in-foo" />;
+        }
+      }
+      class Bar extends React.Component {
+        render() {
+          const { render: r } = this.props;
+          return <div className="in-bar">{r()}</div>;
+        }
+      }
+
+      const wrapperA = shallow(<div><Bar render={() => <div><Foo /></div>} /></div>);
+      const renderPropWrapperA = wrapperA.find(Bar).renderProp('render');
+      expect(renderPropWrapperA.find(Foo)).to.have.lengthOf(1);
+
+      const wrapperB = shallow(<div><Bar render={() => <Foo />} /></div>);
+      const renderPropWrapperB = wrapperB.find(Bar).renderProp('render');
+      expect(renderPropWrapperB.find(Foo)).to.have.lengthOf(1);
+
+      const stub = sinon.stub().returns(<div />);
+      const wrapperC = shallow(<div><Bar render={stub} /></div>);
+      stub.resetHistory();
+      wrapperC.find(Bar).renderProp('render', 'one', 'two');
+      expect(stub.args).to.deep.equal([['one', 'two']]);
+    });
+
+    it('throws on host elements', () => {
+      class Div extends React.Component {
+        render() {
+          const { children } = this.props;
+          return <div>{children}</div>;
+        }
+      }
+
+      const wrapper = shallow(<Div />);
+      expect(wrapper.is('div')).to.equal(true);
+      expect(() => wrapper.renderProp('foo')).to.throw();
+    });
+
+    wrap()
+      .withOverride(() => getAdapter(), 'wrap', () => undefined)
+      .it('throws with a react adapter that lacks a `.wrap`', () => {
+        class Foo extends React.Component {
+          render() {
+            return <div className="in-foo" />;
+          }
+        }
+        class Bar extends React.Component {
+          render() {
+            const { render: r } = this.props;
+            return <div className="in-bar">{r()}</div>;
+          }
+        }
+
+        const wrapper = shallow(<div><Bar render={() => <div><Foo /></div>} /></div>);
+        expect(() => wrapper.find(Bar).renderProp('render')).to.throw(RangeError);
+      });
+  });
+
   describe('lifecycle methods', () => {
     describe('disableLifecycleMethods option', () => {
       describe('validation', () => {
