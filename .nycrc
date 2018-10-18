@@ -5,6 +5,7 @@
 	"reporter": ["text-summary", "text", "html", "json"],
 	"extension": [".jsx", ".js"],
 	"sourceMap": false,
+	"excludeAfterRemap": false,
 	"instrument": false,
 	"lines": 100,
 	"statements": 100,
