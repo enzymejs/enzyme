@@ -17,9 +17,7 @@ before_script:
 script:
   - 'if [ -n "${LINT-}" ]; then npm run lint; fi'
   - 'if [ -n "${KARMA-}" ]; then npm run test:karma -- --single-run; fi'
-  - 'if [ -n "${REACT-}" ]; then npm run travis && bash <(curl -s https://codecov.io/bash); fi'
-after_script:
-  - 'if [ "${TRAVIS_NODE_VERSION}" = "4" ] || [ "${TRAVIS_NODE_VERSION}" = "0.12" ]; then cat ./coverage/lcov.info | ./node_modules/.bin/coveralls ; fi'
+  - 'if [ -n "${REACT-}" ]; then npm run travis && bash <(curl -s https://codecov.io/bash) -f coverage/*.json; fi'
 sudo: false
 matrix:
   fast_finish: true
