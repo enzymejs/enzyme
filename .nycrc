@@ -5,7 +5,7 @@
 	"reporter": ["text-summary", "text", "html", "json"],
 	"extension": [".jsx", ".js"],
 	"sourceMap": false,
-	"excludeAfterRemap": false,
+	"excludeAfterRemap": true,
 	"instrument": false,
 	"lines": 100,
 	"statements": 100,
@@ -20,6 +20,7 @@
 		"packages/enzyme/withDom.js",
 		"packages/enzyme-test-suite",
 		"packages/enzyme-example-mocha",
+		"packages/*/build",
 		"since.js",
 		"test"
 	],
