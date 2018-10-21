@@ -9,32 +9,180 @@ a host device.
 This can be difficult when you want your test suite to run with typical Continuous Integration servers
 such as Travis.
 
-A pure JS mock of React Native exists and can solve this problem in the majority of use cases.
+To use enzyme to test React Native, you currently need to configure an adapter, and load an emulated DOM.
 
-To install it, run:
+## Configuring an Adapter
 
-```bash
-npm i --save-dev react-native-mock
+While a React Native adapter is [in discussion](https://github.com/airbnb/enzyme/issues/1436),
+a standard adapter may be used, such as 'enzyme-adapter-react-16':
+
+```jsx
+import Adapter from 'enzyme-adapter-react-16';
+
+Enzyme.configure({ adapter: new Adapter() });
 ```
 
-Requiring or importing the `/mock` entry file of this project will input the mock `react-native`
-export into the require cache, so that your application uses the mock instead.
+## Loading an emulated DOM with JSDOM
 
-If you are using a test runner such as mocha, this means that you can use the `--require` flag
-before you run your test suite, and enzyme should "just work":
+To use enzyme's `mount` until a React Native adapter exists, an emulated DOM must be loaded.
 
+While some have had success with [react-native-mock-renderer](https://github.com/Root-App/react-native-mock-render),
+the recommended approach is to use [https://github.com/tmpvar/jsdom](JSDOM),
+as documented for enzyme at the [JSDOM](https://airbnb.io/enzyme/docs/guides/jsdom.html) documentation page.
 
-### Mocha CLI
+JSDOM will allow all of the `enzyme` behavior you would expect. While Jest snapshot testing can be used with
+this approach as well, it isn't encouraged and is only supported through `wrapper.debug()`.
 
-```bash
-mocha --require react-native-mock/mock --recursive path/to/test/dir
+## Using enzyme's find when lacking className props
+
+It is worth noting that React Native allows for a [testID](https://facebook.github.io/react-native/docs/view#testid)
+prop, that can be used a selector similar to `className` in standard React:
+
+<!-- eslint no-unused-expressions: 0, semi: 0 -->
+```jsx
+    <View key={key} style={styles.todo} testID="todo-item">
+      <Text testID="todo-title" style={styles.title}>{todo.title}</Text>
+    </View>
 ```
 
-### In Code
+```jsx
+expect(wrapper.findWhere(node => node.prop('testID') === 'todo-item')).toExist();
+```
 
-```js
-/* file-that-runs-before-all-of-my-tests.js */
+## Example configuration for Jest
 
-// This will mutate `react-native`'s require cache with `react-native-mock`'s.
-require('react-native-mock/mock'); // <-- side-effects!!!
+To perform the necessary configuration in your testing framework, it is recommended to use a setup script,
+such as with Jest's `setupTestFrameworkScriptFile` setting.
+
+Create or update a `jest.config.js` file at the root of your project to include the `setupTestFrameworkScriptFile` setting:
+
+```jsx
+// jest.config.js
+
+module.exports = {
+  // Load setup-tests.js before test execution
+  setupTestFrameworkScriptFile: '<rootDir>setup-tests.js',
+
+  // ...
+};
+```
+
+Then create or update the file specified in `setupTestFrameworkScriptFile`, in this case `setup-tests.js` in the project root:
+
+```jsx
+// setup-tests.js
+
+import 'react-native';
+import 'jest-enzyme';
+import Adapter from 'enzyme-adapter-react-16';
+import Enzyme from 'enzyme';
+
+/**
+ * Set up DOM in node.js environment for Enzyme to mount to
+ */
+const { JSDOM } = require('jsdom');
+
+const jsdom = new JSDOM('<!doctype html><html><body></body></html>');
+const { window } = jsdom;
+
+function copyProps(src, target) {
+  Object.defineProperties(target, {
+    ...Object.getOwnPropertyDescriptors(src),
+    ...Object.getOwnPropertyDescriptors(target),
+  });
+}
+
+global.window = window;
+global.document = window.document;
+global.navigator = {
+  userAgent: 'node.js',
+};
+copyProps(window, global);
+
+/**
+ * Set up Enzyme to mount to DOM, simulate events,
+ * and inspect the DOM in tests.
+ */
+Enzyme.configure({ adapter: new Adapter() });
+
+/**
+ * Ignore some expected warnings
+ * see: https://jestjs.io/docs/en/tutorial-react.html#snapshot-testing-with-mocks-enzyme-and-react-16
+ * see https://github.com/Root-App/react-native-mock-render/issues/6
+ */
+const originalConsoleError = console.error;
+console.error = (message) => {
+  if (message.startsWith('Warning:')) {
+    return;
+  }
+
+  originalConsoleError(message);
+};
+```
+
+You should then be able to start writing tests!
+
+Note that you may want to perform some additional mocking around native components,
+or if you want to perform snapshot testing against React Native components. Notice
+how you may need to mock React Navigation's `KeyGenerator` in this case, to avoid
+random React keys that will cause snapshots to always fail.
+
+```jsx
+import React from 'react';
+import renderer from 'react-test-renderer';
+import { mount, ReactWrapper } from 'enzyme';
+import { Provider } from 'mobx-react';
+import { Text } from 'native-base';
+
+import { TodoItem } from './todo-item';
+import { TodoList } from './todo-list';
+import { todoStore } from '../../stores/todo-store';
+
+// https://github.com/react-navigation/react-navigation/issues/2269
+// React Navigation generates random React keys, which makes
+// snapshot testing fail. Mock the randomness to keep from failing.
+jest.mock('react-navigation/src/routers/KeyGenerator', () => ({
+  generateKey: jest.fn(() => 123),
+}));
+
+describe('todo-list', () => {
+  describe('enzyme tests', () => {
+    it('can add a Todo with Enzyme', () => {
+      const wrapper = mount(
+        <Provider keyLength={0} todoStore={todoStore}>
+          <TodoList />
+        </Provider>,
+      );
+
+      const newTodoText = 'I need to do something...';
+      const newTodoTextInput = wrapper.find('Input').first();
+      const addTodoButton = wrapper
+        .find('Button')
+        .findWhere(w => w.text() === 'Add Todo')
+        .first();
+
+      newTodoTextInput.props().onChangeText(newTodoText);
+
+      // Enzyme usually allows wrapper.simulate() alternatively, but this doesn't support 'press' events.
+      addTodoButton.props().onPress();
+
+      // Make sure to call update if external events (e.g. Mobx state changes)
+      // result in updating the component props.
+      wrapper.update();
+
+      // You can either check for a testID prop, similar to className in React:
+      expect(
+        wrapper.findWhere(node => node.prop('testID') === 'todo-item'),
+      ).toExist();
+
+      // Or even just find a component itself, if you broke the JSX out into its own component:
+      expect(wrapper.find(TodoItem)).toExist();
+
+      // You can even do snapshot testing,
+      // if you pull in enzyme-to-json and configure
+      // it in snapshotSerializers in package.json
+      expect(wrapper.find(TodoList)).toMatchSnapshot();
+    });
+  });
+});
 ```
