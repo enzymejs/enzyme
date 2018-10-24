@@ -15,6 +15,7 @@ let forwardRef;
 let Fragment;
 let StrictMode;
 let AsyncMode;
+let ConcurrentMode;
 let Profiler;
 let PureComponent;
 
@@ -74,6 +75,14 @@ if (is('^16.4.0-0')) {
   Profiler = null;
 }
 
+if (is('^16.6.0-0')) {
+  ({
+    unstable_ConcurrentMode: ConcurrentMode,
+  } = require('react'));
+} else {
+  ConcurrentMode = null;
+}
+
 export {
   createClass,
   renderToString,
@@ -84,6 +93,7 @@ export {
   Fragment,
   StrictMode,
   AsyncMode,
+  ConcurrentMode,
   Profiler,
   PureComponent,
 };

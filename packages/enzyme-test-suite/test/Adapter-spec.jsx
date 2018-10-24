@@ -18,6 +18,7 @@ import {
   Fragment,
   StrictMode,
   AsyncMode,
+  ConcurrentMode,
   Profiler,
 } from './_helpers/react-compat';
 import { is } from './_helpers/version';
@@ -996,12 +997,16 @@ describe('Adapter', () => {
       expect(getDisplayName(<StrictMode />)).to.equal('StrictMode');
     });
 
-    itIf(is('>= 16.3'), 'supports AsyncMode', () => {
+    itIf(is('>= 16.3') && is('< 16.6'), 'supports AsyncMode', () => {
       expect(getDisplayName(<AsyncMode />)).to.equal('AsyncMode');
     });
 
     itIf(is('>= 16.4'), 'supports Profiler', () => {
       expect(getDisplayName(<Profiler />)).to.equal('Profiler');
+    });
+
+    itIf(is('>= 16.6'), 'supports ConcurrentMode', () => {
+      expect(getDisplayName(<ConcurrentMode />)).to.equal('ConcurrentMode');
     });
   });
 
