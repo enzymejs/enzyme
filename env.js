@@ -50,6 +50,7 @@ const adapterVersions = {
   '16.0': 16.1,
   16.4: 16,
   16.5: 16,
+  16.6: 16,
 };
 const adapterVersion = process.env.ADAPTER || adapterVersions[version] || version;
 const adapterName = `enzyme-adapter-react-${adapterVersion}`;

@@ -85,6 +85,7 @@ matrix:
     - node_js: "8"
       env: REACT=16.4
 env:
+  - REACT=16.6
   - REACT=16.5
   - REACT=16.4
   - REACT=16.3
