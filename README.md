@@ -140,7 +140,7 @@ describe('<MyComponent />', () => {
         <div className="unique" />
       </MyComponent>
     ));
-    expect(wrapper.contains(<div className="unique" />)).to.equal(true);
+    expect(wrapper.contains(<div className="unique" />)).toEqual(true);
   });
 
   it('simulates click events', () => {
@@ -169,9 +169,9 @@ import Foo from './Foo';
 describe('<Foo />', () => {
   it('allows us to set props', () => {
     const wrapper = mount(<Foo bar="baz" />);
-    expect(wrapper.props().bar).to.equal('baz');
+    expect(wrapper.props().bar).toEqual('baz');
     wrapper.setProps({ bar: 'foo' });
-    expect(wrapper.props().bar).to.equal('foo');
+    expect(wrapper.props().bar).toEqual('foo');
   });
 
   it('simulates click events', () => {
