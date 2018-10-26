@@ -13,7 +13,7 @@ follows:
 - class syntax (`.foo`, `.foo-bar`, etc.)
 - element syntax (`input`, `div`, `span`, etc.)
 - id syntax (`#foo`, `#foo-bar`, etc.)
-- attribute syntax (`[href="foo"]`, `[type="text"]`, etc.)
+- attribute syntax (`[href="foo"]`, `[type="text"]`, and the other attribute selectors listed [here](https://developer.mozilla.org/en-US/docs/Learn/CSS/Introduction_to_CSS/Attribute_selectors).)
 
 Further, enzyme supports combining any of those supported syntaxes together to uniquely identify a
 single node. For instance:
