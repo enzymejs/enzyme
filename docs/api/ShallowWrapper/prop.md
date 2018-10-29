@@ -57,11 +57,11 @@ const wrapper = shallow(<MyComponent includedProp="Success!" excludedProp="I'm n
 expect(wrapper.prop('includedProp')).to.equal('Success!');
 
 const validInput = 1;
-wrapper.find('ValidNumberInputComponent').prop('onChangeHandler')(validInput);
+wrapper.find('ValidateNumberInputComponent').prop('onChangeHandler')(validInput);
 expect(wrapper.state('number')).to.equal(number);
 
 const invalidInput = 'invalid input';
-wrapper.find('ValidNumberInputComponent').prop('onChangeHandler')(invalidInput);
+wrapper.find('ValidateNumberInputComponent').prop('onChangeHandler')(invalidInput);
 expect(wrapper.state('number')).to.equal(0);
 
 // Warning: .prop(key) only returns values for props that exist in the root node.
