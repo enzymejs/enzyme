@@ -14,6 +14,7 @@ import {
   isForwardRef,
   isValidElementType,
   AsyncMode,
+  ConcurrentMode,
   Fragment,
   ContextConsumer,
   ContextProvider,
@@ -40,6 +41,10 @@ import {
 } from 'enzyme-adapter-utils';
 import findCurrentFiberUsingSlowPath from './findCurrentFiberUsingSlowPath';
 import detectFiberTags from './detectFiberTags';
+
+const is164 = !!TestUtils.Simulate.touchStart; // 16.4+
+const is165 = !!TestUtils.Simulate.auxClick; // 16.5+
+const is166 = is165 && !React.unstable_AsyncMode; // 16.6+
 
 // Lazily populated if DOM is available.
 let FiberTags = null;
@@ -223,8 +228,8 @@ function nodeToHostNode(_node) {
 
 const eventOptions = {
   animation: true,
-  pointerEvents: !!TestUtils.Simulate.touchStart, // 16.4+
-  auxClick: !!TestUtils.Simulate.auxClick, // 16.5+
+  pointerEvents: is164,
+  auxClick: is165,
 };
 
 function getEmptyStateValue() {
@@ -489,7 +494,7 @@ class ReactSixteenAdapter extends EnzymeAdapter {
     // newer node types may be undefined, so only test if the nodeType exists
     if (nodeType) {
       switch (nodeType) {
-        case AsyncMode || NaN: return 'AsyncMode';
+        case (is166 ? ConcurrentMode : AsyncMode) || NaN: return is166 ? 'ConcurrentMode' : 'AsyncMode';
         case Fragment || NaN: return 'Fragment';
         case StrictMode || NaN: return 'StrictMode';
         case Profiler || NaN: return 'Profiler';

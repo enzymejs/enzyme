@@ -15,8 +15,12 @@ let forwardRef;
 let Fragment;
 let StrictMode;
 let AsyncMode;
+let ConcurrentMode;
 let Profiler;
 let PureComponent;
+let Suspense;
+let lazy;
+let memo;
 
 if (is('>=15.5 || ^16.0.0-alpha || ^16.3.0-alpha')) {
   // eslint-disable-next-line import/no-extraneous-dependencies
@@ -74,6 +78,20 @@ if (is('^16.4.0-0')) {
   Profiler = null;
 }
 
+if (is('^16.6.0-0')) {
+  ({
+    unstable_ConcurrentMode: ConcurrentMode,
+    Suspense,
+    lazy,
+    memo,
+  } = require('react'));
+} else {
+  ConcurrentMode = null;
+  Suspense = null;
+  lazy = null;
+  memo = null;
+}
+
 export {
   createClass,
   renderToString,
@@ -84,6 +102,10 @@ export {
   Fragment,
   StrictMode,
   AsyncMode,
+  ConcurrentMode,
   Profiler,
   PureComponent,
+  Suspense,
+  lazy,
+  memo,
 };
