@@ -51,7 +51,7 @@ const adapterVersions = {
   16.4: 16,
   16.5: 16,
 };
-const adapterVersion = adapterVersions[version] || version;
+const adapterVersion = process.env.ADAPTER || adapterVersions[version] || version;
 const adapterName = `enzyme-adapter-react-${adapterVersion}`;
 const adapterPackageJsonPath = path.join(root, 'packages', adapterName, 'package.json');
 const testPackageJsonPath = path.join(root, 'packages', 'enzyme-test-suite', 'package.json');
