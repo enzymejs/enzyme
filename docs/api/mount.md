@@ -120,6 +120,9 @@ Get a wrapper with the first ancestor of the current node to match the provided 
 #### [`.render() => CheerioWrapper`](ReactWrapper/render.md)
 Returns a CheerioWrapper of the current node's subtree.
 
+#### [`.renderProp(key) => ReactWrapper`](ReactWrapper/renderProp.md)
+Returns a wrapper of the node rendered by the provided render prop.
+
 #### [`.text() => String`](ReactWrapper/text.md)
 Returns a string representation of the text nodes in the current render tree.
 

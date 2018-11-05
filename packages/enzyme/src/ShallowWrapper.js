@@ -1,6 +1,7 @@
 import flat from 'array.prototype.flat';
 import isEqual from 'lodash.isequal';
 import cheerio from 'cheerio';
+import has from 'has';
 
 import {
   nodeEqual,
@@ -1031,6 +1032,40 @@ class ShallowWrapper {
    */
   prop(propName) {
     return this.props()[propName];
+  }
+
+  /**
+   * Returns a wrapper of the node rendered by the provided render prop.
+   *
+   * @param {String} propName
+   * @returns {ShallowWrapper}
+   */
+  renderProp(propName, ...args) {
+    const adapter = getAdapter(this[OPTIONS]);
+    if (typeof adapter.wrap !== 'function') {
+      throw new RangeError('your adapter does not support `wrap`. Try upgrading it!');
+    }
+
+    return this.single('renderProp', (n) => {
+      if (n.nodeType === 'host') {
+        throw new TypeError('ShallowWrapper::renderProp() can only be called on custom components');
+      }
+      if (typeof propName !== 'string') {
+        throw new TypeError('`propName` must be a string');
+      }
+      const props = this.props();
+      if (!has(props, propName)) {
+        throw new Error(`no prop called “${propName}“ found`);
+      }
+      const propValue = props[propName];
+      if (typeof propValue !== 'function') {
+        throw new TypeError(`expected prop “${propName}“ to contain a function, but it holds “${typeof prop}“`);
+      }
+
+      const element = propValue(...args);
+      const wrapped = adapter.wrap(element);
+      return this.wrap(wrapped, null, this[OPTIONS]);
+    });
   }
 
   /**

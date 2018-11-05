@@ -1,8 +1,9 @@
 import functionName from 'function.prototype.name';
 import createMountWrapper from './createMountWrapper';
 import createRenderWrapper from './createRenderWrapper';
+import wrap from './wrapWithSimpleWrapper';
 
-export { createMountWrapper, createRenderWrapper };
+export { createMountWrapper, createRenderWrapper, wrap };
 
 export function mapNativeEventNames(event, {
   animation = false, // should be true for React 15+

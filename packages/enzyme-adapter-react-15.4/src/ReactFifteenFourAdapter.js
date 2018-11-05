@@ -18,6 +18,7 @@ import {
   createMountWrapper,
   propsWithKeysAndRef,
   ensureKeyOrUndefined,
+  wrap,
 } from 'enzyme-adapter-utils';
 import ifReact from 'enzyme-adapter-react-helper/build/ifReact';
 
@@ -247,6 +248,10 @@ class ReactFifteenFourAdapter extends EnzymeAdapter {
       default:
         throw new Error(`Enzyme Internal Error: Unrecognized mode: ${options.mode}`);
     }
+  }
+
+  wrap(element) {
+    return wrap(element);
   }
 
   // converts an RSTNode to the corresponding JSX Pragma Element. This will be needed

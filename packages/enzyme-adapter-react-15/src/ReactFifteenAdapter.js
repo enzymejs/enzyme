@@ -20,6 +20,7 @@ import {
   createMountWrapper,
   propsWithKeysAndRef,
   ensureKeyOrUndefined,
+  wrap,
 } from 'enzyme-adapter-utils';
 
 function compositeTypeToNodeType(type) {
@@ -247,6 +248,10 @@ class ReactFifteenAdapter extends EnzymeAdapter {
       default:
         throw new Error(`Enzyme Internal Error: Unrecognized mode: ${options.mode}`);
     }
+  }
+
+  wrap(element) {
+    return wrap(element);
   }
 
   // converts an RSTNode to the corresponding JSX Pragma Element. This will be needed
