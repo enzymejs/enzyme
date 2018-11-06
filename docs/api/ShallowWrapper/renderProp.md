@@ -79,7 +79,7 @@ expect(wrapper.equals(<h1>The mouse position is 0, 0</h1>)).to.equal(true);
 ```jsx
 const wrapper = shallow(<App />)
   .find(Mouse)
-  .renderProp('render', [10, 20]);
+  .renderProp('render', 10, 20);
 
 expect(wrapper.equals(<h1>The mouse position is 10, 20</h1>)).to.equal(true);
 ```
