@@ -24,6 +24,5 @@ const Wrapper = (intersects('>= 0.14', React.version)
 )();
 
 export default function wrap(element) {
-  console.log(React.version, Wrapper);
   return <Wrapper>{element}</Wrapper>;
 }
