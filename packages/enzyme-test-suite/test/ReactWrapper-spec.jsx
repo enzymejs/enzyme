@@ -4974,17 +4974,17 @@ describeWithDOM('mount', () => {
       }
 
       const wrapperA = mount(<div><Bar render={() => <div><Foo /></div>} /></div>);
-      const renderPropWrapperA = wrapperA.find(Bar).renderProp('render');
+      const renderPropWrapperA = wrapperA.find(Bar).renderProp('render')();
       expect(renderPropWrapperA.find(Foo)).to.have.lengthOf(1);
 
       const wrapperB = mount(<div><Bar render={() => <Foo />} /></div>);
-      const renderPropWrapperB = wrapperB.find(Bar).renderProp('render');
+      const renderPropWrapperB = wrapperB.find(Bar).renderProp('render')();
       expect(renderPropWrapperB.find(Foo)).to.have.lengthOf(1);
 
       const stub = sinon.stub().returns(<div />);
       const wrapperC = mount(<div><Bar render={stub} /></div>);
       stub.resetHistory();
-      wrapperC.find(Bar).renderProp('render', 'one', 'two');
+      wrapperC.find(Bar).renderProp('render')('one', 'two');
       expect(stub.args).to.deep.equal([['one', 'two']]);
     });
 

@@ -1,7 +1,6 @@
-# `.renderProp(propName, ...args) => ShallowWrapper`
+# `.renderProp(propName)(...args) => ShallowWrapper`
 
-Calls the current wrapper's property with name `propName` and the `args` provided.
-Returns the result in a new wrapper.
+Returns a function that, when called with arguments `args`, will return a new wrapper based on the render prop in the original wrapper's prop `propName`.
 
 NOTE: can only be called on wrapper of a single non-DOM component element node.
 
@@ -69,7 +68,7 @@ const App = () => (
 ```jsx
 const wrapper = shallow(<App />)
   .find(Mouse)
-  .renderProp('render');
+  .renderProp('render')();
 
 expect(wrapper.equals(<h1>The mouse position is 0, 0</h1>)).to.equal(true);
 ```
@@ -79,7 +78,7 @@ expect(wrapper.equals(<h1>The mouse position is 0, 0</h1>)).to.equal(true);
 ```jsx
 const wrapper = shallow(<App />)
   .find(Mouse)
-  .renderProp('render', 10, 20);
+  .renderProp('render')(10, 20);
 
 expect(wrapper.equals(<h1>The mouse position is 10, 20</h1>)).to.equal(true);
 ```

@@ -1038,9 +1038,9 @@ class ShallowWrapper {
    * Returns a wrapper of the node rendered by the provided render prop.
    *
    * @param {String} propName
-   * @returns {ShallowWrapper}
+   * @returns {Function}
    */
-  renderProp(propName, ...args) {
+  renderProp(propName) {
     const adapter = getAdapter(this[OPTIONS]);
     if (typeof adapter.wrap !== 'function') {
       throw new RangeError('your adapter does not support `wrap`. Try upgrading it!');
@@ -1062,9 +1062,11 @@ class ShallowWrapper {
         throw new TypeError(`expected prop “${propName}“ to contain a function, but it holds “${typeof prop}“`);
       }
 
-      const element = propValue(...args);
-      const wrapped = adapter.wrap(element);
-      return this.wrap(wrapped, null, this[OPTIONS]);
+      return (...args) => {
+        const element = propValue(...args);
+        const wrapped = adapter.wrap(element);
+        return this.wrap(wrapped, null, this[OPTIONS]);
+      };
     });
   }
 
