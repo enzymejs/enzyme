@@ -39,7 +39,7 @@
     "object.assign": "^4.1.0",
     "object.values": "^1.0.4",
     "prop-types": "^15.6.2",
-    "react-is": "^16.6.0",
+    "react-is": "^16.6.1",
     "react-test-renderer": "^16.0.0-0"
   },
   "peerDependencies": {
