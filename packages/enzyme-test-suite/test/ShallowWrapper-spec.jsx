@@ -1234,6 +1234,45 @@ describe('shallow', () => {
 
       expect(wrapper.find('span')).to.have.lengthOf(1);
     });
+
+    describeIf(is('>= 16.3'), 'forwardRef', () => {
+      it('finds forwardRefs', () => {
+        const Component = forwardRef(() => <div />);
+        class Foo extends React.Component {
+          render() {
+            return (
+              <div>
+                <Component />
+                <Component />
+              </div>
+            );
+          }
+        }
+
+        const wrapper = shallow(<Foo />);
+        expect(wrapper.find(Component)).to.have.lengthOf(2);
+        expect(wrapper.find('ForwardRef')).to.have.lengthOf(2);
+      });
+
+      it('finds forwardRef by custom display name', () => {
+        const Component = forwardRef(() => <div />);
+        Component.displayName = 'CustomForwardRef';
+        class Foo extends React.Component {
+          render() {
+            return (
+              <div>
+                <Component />
+                <Component />
+              </div>
+            );
+          }
+        }
+
+        const wrapper = shallow(<Foo />);
+        expect(wrapper.find(Component)).to.have.lengthOf(2);
+        expect(wrapper.find(Component.displayName)).to.have.lengthOf(2);
+      });
+    });
   });
 
   describe('.findWhere(predicate)', () => {
