@@ -8,6 +8,7 @@
     "id-length": 0,
     "react/no-find-dom-node": 1,
     "import/first": 0,
+    "max-len": 0,
   },
   "overrides": [
     { // things that run in older envs, without babel

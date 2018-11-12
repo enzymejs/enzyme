@@ -529,7 +529,7 @@ class ReactSixteenAdapter extends EnzymeAdapter {
   }
 
   isValidElementType(object) {
-    return isValidElementType(object);
+    return !!object && isValidElementType(object);
   }
 
   isFragment(fragment) {
