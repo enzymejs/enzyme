@@ -7339,6 +7339,11 @@ describeWithDOM('mount', () => {
         );
       }
     }
+    class TestZero extends React.Component {
+      render() {
+        return <div />;
+      }
+    }
 
     it('returns the outermost DOMComponent of the root wrapper', () => {
       const wrapper = mount(<Test />);
@@ -7354,7 +7359,23 @@ describeWithDOM('mount', () => {
       const wrapper = mount(<Test />).find('span');
       expect(() => wrapper.getDOMNode()).to.throw(
         Error,
-        'Method “getDOMNode” is only meant to be run on a single node. 2 found instead.',
+        'Method “getDOMNode” is meant to be run on 1 node. 2 found instead.',
+      );
+    });
+
+    it('throws when wrapping zero elements', () => {
+      const wrapper = mount(<TestZero />).find('span');
+      expect(() => wrapper.getDOMNode()).to.throw(
+        Error,
+        'Method “getDOMNode” is meant to be run on 1 node. 0 found instead.',
+      );
+    });
+
+    it('throws when wrapping zero elements', () => {
+      const wrapper = mount(<TestZero />).find('span');
+      expect(() => wrapper.getDOMNode()).to.throw(
+        Error,
+        'Method “getDOMNode” is meant to be run on 1 node. 0 found instead.',
       );
     });
 
@@ -7382,7 +7403,7 @@ describeWithDOM('mount', () => {
         const wrapper = mount(<SFC />).find('span');
         expect(() => wrapper.getDOMNode()).to.throw(
           Error,
-          'Method “getDOMNode” is only meant to be run on a single node. 2 found instead.',
+          'Method “getDOMNode” is meant to be run on 1 node. 2 found instead.',
         );
       });
     });
@@ -7400,7 +7421,7 @@ describeWithDOM('mount', () => {
       expect(wrapper).to.have.lengthOf(2);
       expect(() => wrapper.single('name!')).to.throw(
         Error,
-        'Method “name!” is only meant to be run on a single node. 2 found instead.',
+        'Method “name!” is meant to be run on 1 node. 2 found instead.',
       );
     });
 

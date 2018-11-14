@@ -1095,7 +1095,7 @@ class ReactWrapper {
     const fnName = typeof name === 'string' ? name : 'unknown';
     const callback = typeof fn === 'function' ? fn : name;
     if (this.length !== 1) {
-      throw new Error(`Method “${fnName}” is only meant to be run on a single node. ${this.length} found instead.`);
+      throw new Error(`Method “${fnName}” is meant to be run on 1 node. ${this.length} found instead.`);
     }
     return callback.call(this, this.getNodeInternal());
   }

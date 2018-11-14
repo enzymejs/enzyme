@@ -6968,6 +6968,11 @@ describe('shallow', () => {
         );
       }
     }
+    class RendersZero extends React.Component {
+      render() {
+        return <div />;
+      }
+    }
     class WrapsRendersDOM extends React.Component {
       render() {
         return <RendersDOM />;
@@ -7010,7 +7015,23 @@ describe('shallow', () => {
       const wrapper = shallow(<RendersMultiple />).find('div').children();
       expect(() => { wrapper.dive(); }).to.throw(
         Error,
-        'Method “dive” is only meant to be run on a single node. 2 found instead.',
+        'Method “dive” is meant to be run on 1 node. 2 found instead.',
+      );
+    });
+
+    it('throws on zero children found', () => {
+      const wrapper = shallow(<RendersZero />).find('div').children();
+      expect(() => { wrapper.dive(); }).to.throw(
+        Error,
+        'Method “dive” is meant to be run on 1 node. 0 found instead.',
+      );
+    });
+
+    it('throws on zero children found', () => {
+      const wrapper = shallow(<RendersZero />).find('div').children();
+      expect(() => { wrapper.dive(); }).to.throw(
+        Error,
+        'Method “dive” is meant to be run on 1 node. 0 found instead.',
       );
     });
 
@@ -7306,7 +7327,25 @@ describe('shallow', () => {
       expect(wrapper).to.have.lengthOf(2);
       expect(() => wrapper.single('name!')).to.throw(
         Error,
-        'Method “name!” is only meant to be run on a single node. 2 found instead.',
+        'Method “name!” is meant to be run on 1 node. 2 found instead.',
+      );
+    });
+
+    it('throws if run on zero nodes', () => {
+      const wrapper = shallow(<div />).children();
+      expect(wrapper).to.have.lengthOf(0);
+      expect(() => wrapper.single('name!')).to.throw(
+        Error,
+        'Method “name!” is meant to be run on 1 node. 0 found instead.',
+      );
+    });
+
+    it('throws if run on zero nodes', () => {
+      const wrapper = shallow(<div />).children();
+      expect(wrapper).to.have.lengthOf(0);
+      expect(() => wrapper.single('name!')).to.throw(
+        Error,
+        'Method “name!” is meant to be run on 1 node. 0 found instead.',
       );
     });
 
