@@ -58,4 +58,5 @@ test('mount', (t) => {
 
 ## Example Projects
 
+- [enzyme-example-tape](https://github.com/TaeKimJR/enzyme-example-tape)
 - [enzyme-example-ava](https://github.com/mikenikles/enzyme-example-ava)
