@@ -161,8 +161,14 @@ package independently. Just choose whichever
 
 
 ### Building Docs
+Enzyme uses [GitBook](https://www.gitbook.com/?t=2) and will require you to install it locally.
+To install GitBook locally, execute the following command:
+```bash
+npm install gitbook-cli -g
+```
 
-Building the docs locally is extremely simple. First execute the following command:
+After you have GitBook installed, building the docs locally is extremely simple. First execute
+the following command:
 
 ```bash
 npm run docs:watch
@@ -172,6 +178,13 @@ After this, you can open up your browser to the specified port (usually http://l
 
 The browser will automatically refresh when there are changes to any of the source files.
 
+If you run into an error that resembles
+`Error loading version 3.2.2: Error: Cannot find module 'extend'`, try executing the following command (stolen from
+[here](https://github.com/GitbookIO/gitbook/issues/1818)):
+
+```bash
+cd ~/.gitbook/versions/3.2.2 && npm i
+```
 
 
 ## Pull Request Guidelines
