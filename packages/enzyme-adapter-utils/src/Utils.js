@@ -204,7 +204,12 @@ export function elementToTree(el, recurse = elementToTree) {
   if (isArrayLike(children)) {
     rendered = flatten(children).map(x => recurse(x));
   } else if (typeof children !== 'undefined') {
-    rendered = recurse(children);
+    if (typeof children === 'function' && nodeTypeFromType(type) === 'function') {
+      // Handling children-as-a-prop component
+      rendered = recurse(type({ children }));
+    } else {
+      rendered = recurse(children);
+    }
   }
 
   const nodeType = nodeTypeFromType(type);
