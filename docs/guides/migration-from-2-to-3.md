@@ -178,7 +178,7 @@ console.log(wrapper.find('.bar').length); // 2
 
 Since `<Foo/>` has the className `bar` it is returned as the _hostNode_. As expected the `<div>` with the className `bar` is also returned
 
-To avoid this you can explicity query for the DOM node: `wrapper.find('div.bar')`. Alternatively if you would like to only find host nodes use [hostNodes()](http://airbnb.io/enzyme/docs/api/ShallowWrapper/hostNodes.md#hostnodes--shallowwrapper)
+To avoid this you can explicity query for the DOM node: `wrapper.find('div.bar')`. Alternatively if you would like to only find host nodes use [hostNodes()](https://airbnb.io/enzyme/docs/api/ShallowWrapper/hostNodes.html)
 
 ## For `mount`, updates are sometimes required when they weren't before
 
