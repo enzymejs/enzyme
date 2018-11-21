@@ -1,6 +1,6 @@
 # `.html() => String`
 
-Returns a string of the rendered HTML markup of the current render tree.
+Returns a string of the rendered HTML markup of the entire current render tree (not just the shallow-rendered part). It uses [static rendering](../render.md) internally. To see only the shallow-rendered part use [`.debug()`](debug.md).
 
 Note: can only be called on a wrapper of a single node.
 
@@ -8,7 +8,6 @@ Note: can only be called on a wrapper of a single node.
 #### Returns
 
 `String`: The resulting HTML string
-
 
 
 #### Examples
