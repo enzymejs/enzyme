@@ -29,6 +29,7 @@ import {
   createRef,
   Fragment,
   forwardRef,
+  memo,
   PureComponent,
 } from './_helpers/react-compat';
 import {
@@ -60,6 +61,7 @@ describeWithDOM('mount', () => {
           return <div className="box">{children}</div>;
         }
       }
+
       class Foo extends React.Component {
         render() {
           return (
@@ -468,6 +470,84 @@ describeWithDOM('mount', () => {
       expect(children.at(0).props().test).to.equal('123');
       expect(wrapper.find(TestItem)).to.have.lengthOf(3);
       expect(wrapper.find(TestItem).first().props().test).to.equal('123');
+    });
+
+    describeIf(is('>= 16.6'), 'React.memo', () => {
+      it('works with an SFC', () => {
+        const InnerComp = () => <div><span>Hello</span></div>;
+        const InnerFoo = ({ foo }) => (
+          <div>
+            <InnerComp />
+            <div className="bar">bar</div>
+            <div className="qoo">{foo}</div>
+          </div>
+        );
+        const Foo = memo(InnerFoo);
+
+        const wrapper = mount(<Foo foo="qux" />);
+        expect(wrapper.debug()).to.equal(`<InnerFoo foo="qux">
+  <InnerComp>
+    <div>
+      <span>
+        Hello
+      </span>
+    </div>
+  </InnerComp>
+  <div className="bar">
+    bar
+  </div>
+  <div className="qoo">
+    qux
+  </div>
+</InnerFoo>`);
+        expect(wrapper.find('InnerComp')).to.have.lengthOf(1);
+        expect(wrapper.find('.bar')).to.have.lengthOf(1);
+        expect(wrapper.find('.qoo').text()).to.equal('qux');
+      });
+
+      it('works with a class component', () => {
+        class InnerComp extends React.Component {
+          render() {
+            return <div><span>Hello</span></div>;
+          }
+        }
+
+        class Foo extends React.Component {
+          render() {
+            const { foo } = this.props;
+            return (
+              <div>
+                <InnerComp />
+                <div className="bar">bar</div>
+                <div className="qoo">{foo}</div>
+              </div>
+            );
+          }
+        }
+        const FooMemo = memo(Foo);
+
+        const wrapper = mount(<FooMemo foo="qux" />);
+        expect(wrapper.debug()).to.equal(`<Foo foo="qux">
+  <div>
+    <InnerComp>
+      <div>
+        <span>
+          Hello
+        </span>
+      </div>
+    </InnerComp>
+    <div className="bar">
+      bar
+    </div>
+    <div className="qoo">
+      qux
+    </div>
+  </div>
+</Foo>`);
+        expect(wrapper.find('InnerComp')).to.have.lengthOf(1);
+        expect(wrapper.find('.bar')).to.have.lengthOf(1);
+        expect(wrapper.find('.qoo').text()).to.equal('qux');
+      });
     });
   });
 

@@ -29,6 +29,7 @@ import {
   createRef,
   Fragment,
   forwardRef,
+  memo,
   PureComponent,
 } from './_helpers/react-compat';
 import {
@@ -1554,6 +1555,70 @@ describe('shallow', () => {
           expect(rendered.is(Tag)).to.equal(true);
           expect(wrapper.filter(Tag)).to.have.lengthOf(1);
         });
+      });
+    });
+
+    describeIf(is('>= 16.6'), 'React.memo', () => {
+      it('works with an SFC', () => {
+        const InnerComp = () => <div><span>Hello</span></div>;
+        const InnerFoo = ({ foo }) => (
+          <div>
+            <InnerComp />
+            <div className="bar">bar</div>
+            <div className="qoo">{foo}</div>
+          </div>
+        );
+        const Foo = memo(InnerFoo);
+
+        const wrapper = shallow(<Foo foo="qux" />);
+        expect(wrapper.debug()).to.equal(`<div>
+  <InnerComp />
+  <div className="bar">
+    bar
+  </div>
+  <div className="qoo">
+    qux
+  </div>
+</div>`);
+        expect(wrapper.find('InnerComp')).to.have.lengthOf(1);
+        expect(wrapper.find('.bar')).to.have.lengthOf(1);
+        expect(wrapper.find('.qoo').text()).to.equal('qux');
+      });
+
+      it('works with a class component', () => {
+        class InnerComp extends React.Component {
+          render() {
+            return <div><span>Hello</span></div>;
+          }
+        }
+
+        class Foo extends React.Component {
+          render() {
+            const { foo } = this.props;
+            return (
+              <div>
+                <InnerComp />
+                <div className="bar">bar</div>
+                <div className="qoo">{foo}</div>
+              </div>
+            );
+          }
+        }
+        const FooMemo = memo(Foo);
+
+        const wrapper = shallow(<FooMemo foo="qux" />);
+        expect(wrapper.debug()).to.equal(`<div>
+  <InnerComp />
+  <div className="bar">
+    bar
+  </div>
+  <div className="qoo">
+    qux
+  </div>
+</div>`);
+        expect(wrapper.find('InnerComp')).to.have.lengthOf(1);
+        expect(wrapper.find('.bar')).to.have.lengthOf(1);
+        expect(wrapper.find('.qoo').text()).to.equal('qux');
       });
     });
   });

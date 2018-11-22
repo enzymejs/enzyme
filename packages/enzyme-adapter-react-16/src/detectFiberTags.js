@@ -18,6 +18,7 @@ module.exports = function detectFiberTags() {
   const supportsMode = typeof React.StrictMode !== 'undefined';
   const supportsContext = typeof React.createContext !== 'undefined';
   const supportsForwardRef = typeof React.forwardRef !== 'undefined';
+  const supportsMemo = typeof React.memo !== 'undefined';
 
   function Fn() {
     return null;
@@ -44,6 +45,12 @@ module.exports = function detectFiberTags() {
     ClassComponent: getFiber(React.createElement(Cls)).tag,
     Fragment: getFiber([['nested']]).tag,
     FunctionalComponent: getFiber(React.createElement(Fn)).tag,
+    MemoSFC: supportsMemo
+      ? getFiber(React.createElement(React.memo(Fn))).tag
+      : -1,
+    MemoClass: supportsMemo
+      ? getFiber(React.createElement(React.memo(Cls))).tag
+      : -1,
     HostPortal: getFiber(ReactDOM.createPortal(null, global.document.createElement('div'))).tag,
     HostComponent: getFiber(React.createElement('span')).tag,
     HostText: getFiber('text').tag,

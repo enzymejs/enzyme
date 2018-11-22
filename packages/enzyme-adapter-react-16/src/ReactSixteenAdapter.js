@@ -22,6 +22,8 @@ import {
   ForwardRef,
   Profiler,
   Portal,
+  isMemo,
+  Memo,
 } from 'react-is';
 import { EnzymeAdapter } from 'enzyme';
 import { typeOfNode } from 'enzyme/build/Utils';
@@ -155,7 +157,26 @@ function toTree(vnode) {
         instance: null,
         rendered: childrenToTree(node.child),
       };
-
+    case FiberTags.MemoClass:
+      return {
+        nodeType: 'class',
+        type: node.elementType.type,
+        props: { ...node.memoizedProps },
+        key: ensureKeyOrUndefined(node.key),
+        ref: node.ref,
+        instance: node.stateNode,
+        rendered: childrenToTree(node.child.child),
+      };
+    case FiberTags.MemoSFC:
+      return {
+        nodeType: 'function',
+        type: node.elementType.type,
+        props: { ...node.memoizedProps },
+        key: ensureKeyOrUndefined(node.key),
+        ref: node.ref,
+        instance: null,
+        rendered: childrenToTree(node.child.child),
+      };
     case FiberTags.HostComponent: {
       let renderedNodes = flatten(nodeAndSiblingsArray(node.child).map(toTree));
       if (renderedNodes.length === 0) {
@@ -371,6 +392,16 @@ class ReactSixteenAdapter extends EnzymeAdapter {
           );
 
           const context = getMaskedContext(Component.contextTypes, unmaskedContext);
+
+          if (!isStateful && isMemo(el.type)) {
+            const InnerComp = el.type.type;
+            const wrappedEl = Object.assign(
+              (...args) => InnerComp(...args), // eslint-disable-line new-cap
+              InnerComp,
+            );
+            return withSetStateAllowed(() => renderer.render({ ...el, type: wrappedEl }, context));
+          }
+
           if (!isStateful && typeof Component === 'function') {
             const wrappedEl = Object.assign(
               (...args) => Component(...args), // eslint-disable-line new-cap
@@ -540,6 +571,7 @@ class ReactSixteenAdapter extends EnzymeAdapter {
     switch ($$typeofType) {
       case ContextConsumer || NaN: return 'ContextConsumer';
       case ContextProvider || NaN: return 'ContextProvider';
+      case Memo || NaN: return displayNameOfNode(type.type);
       case ForwardRef || NaN: {
         if (type.displayName) {
           return type.displayName;
