@@ -6287,6 +6287,46 @@ describeWithDOM('mount', () => {
         wrapper.setProps({ id: 2 });
         expect(spy).to.have.property('callCount', 2);
       });
+
+      class Test extends PureComponent {
+        constructor(...args) {
+          super(...args);
+
+          this.state = { a: { b: { c: 1 } } };
+        }
+
+        componentDidUpdate() {
+          const { onUpdate } = this.props;
+          onUpdate();
+        }
+
+        setDeepEqualState() {
+          this.setState({ a: { b: { c: 1 } } });
+        }
+
+        setDeepDifferentState() {
+          this.setState({ a: { b: { c: 2 } } });
+        }
+
+        render() {
+          const { a: { b: { c } } } = this.state;
+          return <div>{c}</div>;
+        }
+      }
+
+      it('rerenders on setState when new state is !==, but deeply equal to existing state', () => {
+        const updateSpy = sinon.spy();
+        const wrapper = mount(<Test onUpdate={updateSpy} />);
+        wrapper.instance().setDeepEqualState();
+        expect(updateSpy).to.have.property('callCount', 1);
+      });
+
+      it('rerenders when setState is called with an object that doesnt have deep equality', () => {
+        const updateSpy = sinon.spy();
+        const wrapper = mount(<Test onUpdate={updateSpy} />);
+        wrapper.instance().setDeepDifferentState();
+        expect(updateSpy).to.have.property('callCount', 1);
+      });
     });
 
     describe('Own PureComponent implementation', () => {

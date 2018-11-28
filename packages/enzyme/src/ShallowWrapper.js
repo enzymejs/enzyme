@@ -1,5 +1,4 @@
 import flat from 'array.prototype.flat';
-import isEqual from 'lodash.isequal';
 import cheerio from 'cheerio';
 import has from 'has';
 
@@ -18,6 +17,7 @@ import {
   privateSet,
   cloneElement,
   spyMethod,
+  shallowEqual,
 } from './Utils';
 import getAdapter from './getAdapter';
 import { debugNodes } from './Debug';
@@ -172,7 +172,7 @@ function privateSetNodes(wrapper, nodes) {
 }
 
 function pureComponentShouldComponentUpdate(prevProps, props, prevState, state) {
-  return !isEqual(prevProps, props) || !isEqual(prevState, state);
+  return !shallowEqual(prevProps, props) || !shallowEqual(prevState, state);
 }
 
 function isPureComponent(instance) {
@@ -424,7 +424,7 @@ class ShallowWrapper {
               }
             }
           // If it doesn't need to rerender, update only its props.
-          } else if (!isEqual(props, instance.props)) {
+          } else if (!shallowEqual(props, instance.props)) {
             instance.props = (Object.freeze || Object)({ ...instance.props, ...props });
           }
           this.update();
