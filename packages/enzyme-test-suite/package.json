@@ -47,10 +47,10 @@
   },
   "devDependencies": {
     "create-react-class": "^15.6.3",
-    "eslint": "^5.4.0",
+    "eslint": "^5.9.0",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-plugin-import": "^2.14.0",
-    "eslint-plugin-jsx-a11y": "^6.1.1",
+    "eslint-plugin-jsx-a11y": "^6.1.2",
     "eslint-plugin-mocha": "^5.2.0",
     "eslint-plugin-react": "^7.11.1",
     "react-is": "^16.6.0"
