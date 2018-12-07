@@ -39,7 +39,8 @@
     "object-inspect": "^1.6.0",
     "prop-types": "^15.6.2",
     "semver": "^5.5.0",
-    "sinon": "^4.1.6"
+    "sinon": "^4.1.6",
+    "bluebird": "^3.5.3"
   },
   "peerDependencies": {
     "react": "^15.5.0",

@@ -19,6 +19,7 @@ import getAdapter from 'enzyme/build/getAdapter';
 import {
   Portal,
 } from 'react-is';
+import Promise from 'bluebird';
 
 import './_helpers/setupAdapters';
 import {
@@ -3647,38 +3648,43 @@ describeWithDOM('mount', () => {
       });
     });
 
-    //@TODO
     describe('props in async handler', () => {
-        class TestComponent extends React.Component {
-          constructor(props) {
-            super(props);
-            this.state = { counter: 1 };
-          }
-        
-          handleClick() {
-          };
-        
-          render() {
-            return (
-              <div id={"parentDiv"} onClick={this.handleClick}>
-                <TestSubComponent id={"childDiv"} counter={this.state.counter} />
-              </div>
-            );
-          }
+      class TestComponent extends React.Component {
+        constructor(props) {
+          super(props);
+          this.state = { counter: 1 };
+          this.handleClick = this.handleClick.bind(this);
         }
-        
-        class TestSubComponent extends React.Component {
-          render() {
-            return <div>{this.props.counter}</div>;
-          }
-        }
-      it('child component props should update after call to setState in async handler', () => {
 
+        async handleClick() {
+          await Promise.delay(100);
+          return new Promise((resolve) => {
+            this.setState({ counter: 2 }, () => {
+              resolve();
+            });
+          });
+        }
+
+        render() {
+          return (
+            <div id={'parentDiv'} onClick={this.handleClick}>
+              <TestSubComponent id={'childDiv'} counter={this.state.counter} />
+            </div>
+          );
+        }
+      }
+
+      class TestSubComponent extends React.Component {
+        render() {
+          return <div>{this.props.counter}</div>;
+        }
+      }
+      it('child component props should update after call to setState in async handler', async () => {
         const component = mount(<TestComponent />);
-        component.find("#parentDiv").props().onClick();
-        expect(component.find(TestSubComponent).props()).to.equal({ id: "childDiv", counter: 2 });
-      })
-    })
+        await component.find('#parentDiv').props().onClick();
+        expect(component.find(TestSubComponent).props()).to.eql({ id: 'childDiv', counter: 2 });
+      });
+    });
   });
 
   describe('.state(name)', () => {
