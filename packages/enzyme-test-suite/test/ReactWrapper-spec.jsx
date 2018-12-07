@@ -3646,6 +3646,39 @@ describeWithDOM('mount', () => {
         expect(wrapper.prop('bar')).to.equal('bye');
       });
     });
+
+    //@TODO
+    describe('props in async handler', () => {
+        class TestComponent extends React.Component {
+          constructor(props) {
+            super(props);
+            this.state = { counter: 1 };
+          }
+        
+          handleClick() {
+          };
+        
+          render() {
+            return (
+              <div id={"parentDiv"} onClick={this.handleClick}>
+                <TestSubComponent id={"childDiv"} counter={this.state.counter} />
+              </div>
+            );
+          }
+        }
+        
+        class TestSubComponent extends React.Component {
+          render() {
+            return <div>{this.props.counter}</div>;
+          }
+        }
+      it('child component props should update after call to setState in async handler', () => {
+
+        const component = mount(<TestComponent />);
+        component.find("#parentDiv").props().onClick();
+        expect(component.find(TestSubComponent).props()).to.equal({ id: "childDiv", counter: 2 });
+      })
+    })
   });
 
   describe('.state(name)', () => {
