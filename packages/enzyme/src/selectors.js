@@ -3,6 +3,7 @@ import values from 'object.values';
 import flat from 'array.prototype.flat';
 import is from 'object-is';
 import has from 'has';
+import elementsByConstructor from 'html-element-map/byConstructor';
 import {
   treeFilter,
   nodeHasId,
@@ -362,10 +363,22 @@ function matchDescendant(nodes, predicate) {
  * the selector. The selector can be a simple selector, which
  * is handled by `buildPredicate`, or a complex CSS selector which
  * reduceTreeBySelector parses and reduces the tree based on the combinators.
- * @param {Function|Object|String} selector
+ *
+ * @param {EnzymeSelector} selector
  * @param {RSTNode} root
  */
 export function reduceTreeBySelector(selector, root) {
+  if (typeof selector !== 'string') {
+    const elements = elementsByConstructor(selector);
+    if (elements.length > 0) {
+      return flat(elements.map(x => reduceTreeBySelector(x.tag, root)));
+
+      // when https://github.com/aweary/rst-selector-parser/issues/15 is resolved
+      // const htmlTagNames = elements.map(x => x.tag).join(', ');
+      // return reduceTreeBySelector(htmlTagNames, root);
+    }
+  }
+
   if (typeof selector === 'function' || typeof selector === 'object') {
     return treeFilter(root, buildPredicate(selector));
   }

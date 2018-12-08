@@ -5,6 +5,7 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 import wrap from 'mocha-wrap';
 import isEqual from 'lodash.isequal';
+import getData from 'html-element-map/getData';
 import {
   mount,
   render,
@@ -1524,6 +1525,29 @@ describeWithDOM('mount', () => {
         const wrapper = mount(<Foo />);
         expect(wrapper.find(Component)).to.have.lengthOf(2);
         expect(wrapper.find(Component.displayName)).to.have.lengthOf(2);
+      });
+    });
+
+    describeWithDOM('find DOM elements by constructor', () => {
+      const { elements, all } = getData();
+
+      elements.filter(({ constructor: C }) => C && C !== all).forEach(({
+        tag: Tag,
+        constructorName: name,
+      }) => {
+        class Foo extends React.Component {
+          render() {
+            return <Tag />;
+          }
+        }
+
+        it(`${Tag}: finds by constructor “${name}”`, () => {
+          const wrapper = mount(<Foo />);
+
+          expect(wrapper.childAt(0).type()).to.equal(Tag);
+          expect(wrapper.childAt(0).is(Tag)).to.equal(true);
+          expect(wrapper.find(Tag)).to.have.lengthOf(1);
+        });
       });
     });
   });
