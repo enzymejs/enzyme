@@ -98,6 +98,7 @@ const myComponents = wrapper.find('My Component');
 
 NOTE: This will *only* work if the selector (and thus the component’s `displayName`) is a string
 starting with a capital letter. Strings starting with lower case letters will assume it is a CSS
+Selecting a HOC-wrapped component, or a component with a custom `displayName`, even with lowercase letters (for example, `withHOC(MyComponent)`) will work as well.
 selector using the tag syntax.
 
 
