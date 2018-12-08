@@ -2,6 +2,7 @@ import React from 'react';
 import { expect } from 'chai';
 
 import {
+  delay,
   describeIf,
   itIf,
 } from '../../_helpers';
@@ -119,6 +120,51 @@ export default function describeProps({
         expect(wrapper.props()).to.be.an('object').that.has.all.keys({
           'data-is-global': false,
           'data-is-undefined': true,
+        });
+      });
+    });
+
+    describe('props in async handler', () => {
+      class TestComponent extends React.Component {
+        constructor(props) {
+          super(props);
+          this.state = { counter: 1 };
+          this.handleClick = this.handleClick.bind(this);
+        }
+
+        handleClick() {
+          return delay(100).then(() => new Promise((resolve) => {
+            this.setState({ counter: 2 }, () => {
+              resolve();
+            });
+          }));
+        }
+
+        render() {
+          const { counter } = this.state;
+          return (
+            <div id="parentDiv" onClick={this.handleClick}>
+              <TestSubComponent id="childDiv" counter={counter} />
+            </div>
+          );
+        }
+      }
+
+      class TestSubComponent extends React.Component {
+        render() {
+          const { counter } = this.props;
+          return <div>{counter}</div>;
+        }
+      }
+
+      it('child component props should update after call to setState in async handler', () => {
+        const wrapper = Wrap(<TestComponent />);
+        expect(wrapper.find(TestSubComponent).props()).to.eql({ id: 'childDiv', counter: 1 });
+        const promise = wrapper.find('#parentDiv').props().onClick();
+        expect(wrapper.find(TestSubComponent).props()).to.eql({ id: 'childDiv', counter: 1 });
+        return promise.then(() => {
+          wrapper.update();
+          expect(wrapper.find(TestSubComponent).props()).to.eql({ id: 'childDiv', counter: 2 });
         });
       });
     });
