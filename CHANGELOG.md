@@ -1,5 +1,27 @@
 # Change Log
 
+## 3.8.0
+
+### New Stuff
+ - `shallow`/`mount`: add `renderProp` (#1863, #1891)
+
+### Fixes
+ - `shallow`/`mount`: improve error message for "single node" assertion (#1904)
+ - `shallow`: shallow compare, not deep compare, state and props to determine rerendering (#1915)
+
+### Docs
+ - `shallow`: `dive`: add a note about throwing an error (#1905)
+ - `selectors: update re `displayName` (#1932)
+ - `shallow`: `get`: fixed wrong `props()` usage (#1921)
+ - `shallow`: `html`: shallow renders full tree (#1912)
+ - Updated broken link for “.hostNodes()” in migration guide from enzyme 2 to 3 (#1909)
+ - Add tape example project link (#1898)
+ - `prop`: fix typo (#1883)
+ - Document full support for attribute selectors (#1881)
+ - Documentation update for testing React Native with jsdom (#1873)
+ - Update JSDOM docs to include {request|cancel}AnimationFrame polyfills (#1867)
+ - `mount`: `ref`: use correct type (#1865)
+
 ## 3.7.0
 
 ### New Stuff
