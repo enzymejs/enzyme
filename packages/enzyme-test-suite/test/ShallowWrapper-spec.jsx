@@ -4553,6 +4553,15 @@ describe('shallow', () => {
       });
     });
     describe('with argument', () => {
+      it('throws on invalid EnzymeSelector', () => {
+        const wrapper = shallow(<div />);
+
+        expect(() => wrapper.exists(null)).to.throw(TypeError);
+        expect(() => wrapper.exists(undefined)).to.throw(TypeError);
+        expect(() => wrapper.exists(45)).to.throw(TypeError);
+        expect(() => wrapper.exists({})).to.throw(TypeError);
+      });
+
       it('returns .find(arg).exists() instead', () => {
         const wrapper = shallow(<div />);
         const fakeFindExistsReturnVal = Symbol('fake .find(arg).exists() return value');

@@ -496,7 +496,7 @@ class ReactWrapper {
   /**
    * Finds every node in the render tree of the current wrapper that matches the provided selector.
    *
-   * @param {String|Function} selector
+   * @param {String|Function|Object} selector
    * @returns {ReactWrapper}
    */
   find(selector) {
@@ -1073,14 +1073,11 @@ class ReactWrapper {
    * Returns true if the current wrapper has nodes. False otherwise.
    * If called with a selector it returns `.find(selector).exists()` instead.
    *
-   * @param {String|Function} selector (optional)
+   * @param {String|Function|Object} selector (optional)
    * @returns {boolean}
    */
   exists(selector = null) {
-    if (arguments.length > 0 && typeof selector !== 'string') {
-      throw new TypeError('`selector` argument must be a string, if present.');
-    }
-    return typeof selector === 'string' ? this.find(selector).exists() : this.length > 0;
+    return arguments.length > 0 ? this.find(selector).exists() : this.length > 0;
   }
 
   /**
