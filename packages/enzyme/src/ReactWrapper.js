@@ -496,7 +496,7 @@ class ReactWrapper {
   /**
    * Finds every node in the render tree of the current wrapper that matches the provided selector.
    *
-   * @param {String|Function|Object} selector
+   * @param {EnzymeSelector} selector
    * @returns {ReactWrapper}
    */
   find(selector) {
@@ -508,7 +508,7 @@ class ReactWrapper {
    *
    * NOTE: can only be called on a wrapper of a single node.
    *
-   * @param {String|Function} selector
+   * @param {EnzymeSelector} selector
    * @returns {boolean}
    */
   is(selector) {
@@ -540,7 +540,7 @@ class ReactWrapper {
    * Returns a new wrapper instance with only the nodes of the current wrapper instance that match
    * the provided selector.
    *
-   * @param {String|Function} selector
+   * @param {EnzymeSelector} selector
    * @returns {ReactWrapper}
    */
   filter(selector) {
@@ -552,7 +552,7 @@ class ReactWrapper {
    * Returns a new wrapper instance with only the nodes of the current wrapper that did not match
    * the provided selector. Essentially the inverse of `filter`.
    *
-   * @param {String|Function} selector
+   * @param {EnzymeSelector} selector
    * @returns {ReactWrapper}
    */
   not(selector) {
@@ -714,7 +714,7 @@ class ReactWrapper {
   /**
    * Returns a new wrapper with all of the children of the current wrapper.
    *
-   * @param {String|Function} [selector]
+   * @param {EnzymeSelector} [selector]
    * @returns {ReactWrapper}
    */
   children(selector) {
@@ -738,7 +738,7 @@ class ReactWrapper {
    *
    * NOTE: can only be called on a wrapper of a single node.
    *
-   * @param {String|Function} [selector]
+   * @param {EnzymeSelector} [selector]
    * @returns {ReactWrapper}
    */
   parents(selector) {
@@ -759,7 +759,7 @@ class ReactWrapper {
 
   /**
    *
-   * @param {String|Function} selector
+   * @param {EnzymeSelector} selector
    * @returns {ReactWrapper}
    */
   closest(selector) {
@@ -949,7 +949,7 @@ class ReactWrapper {
   /**
    * Returns whether or not any of the nodes in the wrapper match the provided selector.
    *
-   * @param {Function|String} selector
+   * @param {EnzymeSelector} selector
    * @returns {Boolean}
    */
   some(selector) {
@@ -973,7 +973,7 @@ class ReactWrapper {
   /**
    * Returns whether or not all of the nodes in the wrapper match the provided selector.
    *
-   * @param {Function|String} selector
+   * @param {EnzymeSelector} selector
    * @returns {Boolean}
    */
   every(selector) {
@@ -1073,7 +1073,7 @@ class ReactWrapper {
    * Returns true if the current wrapper has nodes. False otherwise.
    * If called with a selector it returns `.find(selector).exists()` instead.
    *
-   * @param {String|Function|Object} selector (optional)
+   * @param {EnzymeSelector} selector (optional)
    * @returns {boolean}
    */
   exists(selector = null) {

@@ -239,7 +239,7 @@ function isComplexSelector(tokens) {
  * Takes a component constructor, object, or string representing
  * a simple selector and returns a predicate function that can
  * be applied to a single node.
- * @param {Function|Object|String} selector
+ * @param {EnzymeSelector} selector
  */
 export function buildPredicate(selector) {
   // If the selector is a string, parse it as a simple CSS selector
