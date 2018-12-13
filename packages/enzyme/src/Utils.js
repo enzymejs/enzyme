@@ -357,38 +357,16 @@ export function isEmptyValue(renderedValue) {
 }
 
 export function renderedDive(nodes) {
-  let isEmptyRender = true;
-
-  function dive(renderedNodes) {
-    const isList = Array.isArray(renderedNodes) && renderedNodes.length > 0;
-    if (isList) {
-      renderedNodes.some((n) => {
-        if (n) {
-          if (has(n, 'rendered')) {
-            dive(n.rendered);
-          } else if (!isEmptyValue(n.rendered)) {
-            isEmptyRender = false;
-          }
-        } else if (!isEmptyValue(n)) {
-          isEmptyRender = false;
-        }
-
-        return !isEmptyRender;
-      });
-    } else if (!isEmptyValue(renderedNodes)) {
-      if (has(renderedNodes, 'rendered')) {
-        dive(renderedNodes.rendered);
-      } else if (has(renderedNodes, 'rendered') && !isEmptyValue(renderedNodes.rendered)) {
-        isEmptyRender = false;
-      } else if (!has(renderedNodes, 'rendered') && !isEmptyValue(renderedNodes)) {
-        isEmptyRender = false;
-      } else {
-        dive(renderedNodes.rendered);
-      }
-    }
-
-    return isEmptyRender;
+  if (isEmptyValue(nodes)) {
+    return true;
   }
 
-  return dive(nodes);
+  return [].concat(nodes).every((n) => {
+    if (n) {
+      const { rendered } = n;
+      return isEmptyValue(rendered) || renderedDive(rendered);
+    }
+
+    return isEmptyValue(n);
+  });
 }
