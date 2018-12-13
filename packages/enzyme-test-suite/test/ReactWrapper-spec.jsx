@@ -3223,6 +3223,109 @@ describeWithDOM('mount', () => {
       expect(wrapper.isEmptyRender()).to.equal(data.expectResponse);
     });
 
+    describe('nested nodes', () => {
+      class RenderChildren extends React.Component {
+        render() {
+          return this.props.children;
+        }
+      }
+
+      class RenderNull extends React.Component {
+        render() {
+          return null;
+        }
+      }
+
+      it('returns true for nested elements that return null', () => {
+        const wrapper = mount((
+          <RenderChildren>
+            <RenderNull />
+          </RenderChildren>
+        ));
+
+        expect(wrapper.isEmptyRender()).to.equal(true);
+      });
+
+      it('returns false for multiple nested elements that all return null', () => {
+        const wrapper = mount((
+          <RenderChildren>
+            <div />
+          </RenderChildren>
+        ));
+
+        expect(wrapper.isEmptyRender()).to.equal(false);
+      });
+
+      it('returns false for multiple nested elements where one fringe returns a non null value', () => {
+        const wrapper = mount((
+          <RenderChildren>
+            <div>Hello</div>
+          </RenderChildren>
+        ));
+
+        expect(wrapper.isEmptyRender()).to.equal(false);
+      });
+
+      itIf(is('>= 16'), 'returns false for multiple nested elements that all return null', () => {
+        const wrapper = mount((
+          <RenderChildren>
+            <RenderNull />
+            <RenderChildren>
+              <RenderNull />
+              <div />
+            </RenderChildren>
+          </RenderChildren>
+        ));
+
+        expect(wrapper.isEmptyRender()).to.equal(false);
+      });
+
+      itIf(is('>= 16'), 'returns false for multiple nested elements where one fringe returns a non null value', () => {
+        const wrapper = mount((
+          <RenderChildren>
+            <RenderNull />
+            <RenderChildren>
+              <RenderNull />
+              <RenderNull />
+            </RenderChildren>
+            <RenderChildren>
+              <RenderNull />
+              <RenderChildren>
+                <RenderNull />
+                <RenderNull />
+                <RenderNull />
+                <div>Hello</div>
+              </RenderChildren>
+            </RenderChildren>
+          </RenderChildren>
+        ));
+
+        expect(wrapper.isEmptyRender()).to.equal(false);
+      });
+
+      itIf(is('>= 16'), 'returns true for multiple nested elements where all values are null', () => {
+        const wrapper = mount((
+          <RenderChildren>
+            <RenderNull />
+            <RenderChildren>
+              <RenderNull />
+              <RenderNull />
+            </RenderChildren>
+            <RenderChildren>
+              <RenderNull />
+              <RenderChildren>
+                <RenderNull />
+                <RenderNull />
+                <RenderNull />
+              </RenderChildren>
+            </RenderChildren>
+          </RenderChildren>
+        ));
+
+        expect(wrapper.isEmptyRender()).to.equal(true);
+      });
+    });
+
     it('does not return true for HTML elements', () => {
       const wrapper = mount(<div className="bar baz" />);
       expect(wrapper.isEmptyRender()).to.equal(false);

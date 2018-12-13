@@ -13,6 +13,7 @@ import {
   sym,
   privateSet,
   cloneElement,
+  renderedDive,
 } from './Utils';
 import getAdapter from './getAdapter';
 import { debugNodes } from './Debug';
@@ -522,7 +523,9 @@ class ReactWrapper {
    * @returns {boolean}
    */
   isEmptyRender() {
-    return this.single('isEmptyRender', n => n.rendered === null);
+    const nodes = this.getNodeInternal();
+
+    return renderedDive(nodes);
   }
 
   /**

@@ -11,6 +11,8 @@ import {
   nodeHasType,
   isCustomComponentElement,
   makeOptions,
+  isEmptyValue,
+  renderedDive,
 } from 'enzyme/build/Utils';
 import getAdapter from 'enzyme/build/getAdapter';
 import {
@@ -690,6 +692,50 @@ describe('Utils', () => {
           hydrateIn: otherNode,
         });
       });
+    });
+  });
+
+  describe('isEmptyValue', () => {
+    it('returns true with `false` or `null`', () => {
+      const validValues = [false, null];
+
+      validValues.forEach((value) => {
+        expect([value, isEmptyValue(value)]).to.eql([value, true]);
+      });
+    });
+
+    it('returns false when it recieves any other value than "false" or null', () => {
+      const values = [undefined, true, 'test', []];
+
+      values.forEach((value) => {
+        expect([value, isEmptyValue(value)]).to.eql([value, false]);
+      });
+    });
+  });
+
+  describe('renderedDive', () => {
+    const emptyNodetestData = [
+      [{ rendered: null }, { rendered: false }],
+      { rendered: { rendered: false } },
+      false,
+      null,
+      { rendered: false },
+      { rendered: null },
+    ];
+    const nonEmptyNodeData = [
+      [{ rendered: null }, { rendered: <div /> }],
+      [{ rendered: null }, { rendered: { rendered: 'hello test' } }],
+      [{ rendered: null }, { rendered: { rendered: [{ rendered: null }, { rendered: <span /> }] } }],
+      { rendered: '' },
+      { rendered: { rendered: [{ rendered: null }, { rendered: <span /> }] } },
+    ];
+
+    it('returns true when renderedDive receives nodes that render validEmpty values', () => {
+      emptyNodetestData.forEach(node => expect(renderedDive(node)).to.equal(true));
+    });
+
+    it('returns false when renderedDive receives nodes that render non-valid empty values', () => {
+      nonEmptyNodeData.forEach(node => expect(renderedDive(node)).to.equal(false));
     });
   });
 

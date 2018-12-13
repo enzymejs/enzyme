@@ -351,3 +351,22 @@ export function shallowEqual(objA, objB) {
 
   return true;
 }
+
+export function isEmptyValue(renderedValue) {
+  return renderedValue === null || renderedValue === false;
+}
+
+export function renderedDive(nodes) {
+  if (isEmptyValue(nodes)) {
+    return true;
+  }
+
+  return [].concat(nodes).every((n) => {
+    if (n) {
+      const { rendered } = n;
+      return isEmptyValue(rendered) || renderedDive(rendered);
+    }
+
+    return isEmptyValue(n);
+  });
+}

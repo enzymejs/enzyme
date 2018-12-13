@@ -18,6 +18,7 @@ import {
   cloneElement,
   spyMethod,
   shallowEqual,
+  isEmptyValue,
 } from './Utils';
 import getAdapter from './getAdapter';
 import { debugNodes } from './Debug';
@@ -766,7 +767,9 @@ class ShallowWrapper {
    * @returns {boolean}
    */
   isEmptyRender() {
-    return this.type() === null;
+    const nodes = this.getNodesInternal();
+
+    return nodes.every(n => isEmptyValue(n));
   }
 
   /**
