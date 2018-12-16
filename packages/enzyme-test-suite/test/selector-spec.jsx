@@ -32,6 +32,116 @@ describe('selectors', () => {
       };
     });
     describeMethod(name, () => {
+      it('universal selector *', () => {
+        const wrapper = renderMethod((
+          <div>
+            <div className="top-div">
+              <span>inside top div</span>
+            </div>
+
+            <div className="bottom-div" />
+            <span />
+          </div>
+        ));
+
+        expect(wrapper.find('*')).to.have.lengthOf(5);
+      });
+
+      it('* + *', () => {
+        const wrapper = renderMethod((
+          <div>
+            <div className="top-div">
+              <span>inside top div</span>
+            </div>
+            <div className="bottom-div" />
+            <span />
+          </div>
+        ));
+
+        expect(wrapper.find('* + *')).to.have.lengthOf(2);
+      });
+
+      it('.top-div ~ *', () => {
+        const wrapper = renderMethod((
+          <div>
+            <div className="top-div">
+              <span>inside top div</span>
+            </div>
+            <div className="bottom-div" />
+            <span />
+          </div>
+        ));
+
+        expect(wrapper.find('.top-div ~ *')).to.have.lengthOf(2);
+      });
+
+      it('* > span', () => {
+        const wrapper = renderMethod((
+          <div>
+            <div className="top-div">
+              <span>inside top div</span>
+            </div>
+            <div className="bottom-div" />
+            <span />
+          </div>
+        ));
+
+        expect(wrapper.find('* > span')).to.have.lengthOf(2);
+      });
+
+      it('* .top-div *', () => {
+        const wrapper = renderMethod((
+          <div>
+            <div className="top-div">
+              <span>inside top div</span>
+            </div>
+            <div className="bottom-div" />
+            <span id="bottom-span" />
+          </div>
+        ));
+
+        expect(wrapper.find('* .top-div *')).to.have.lengthOf(1);
+      });
+
+      it('#wrap-div > *', () => {
+        const wrapper = renderMethod((
+          <div id="wrap-div">
+            <div className="top-div">
+              <span>inside top div</span>
+            </div>
+            <div className="bottom-div" />
+            <span id="bottom-span" />
+          </div>
+        ));
+
+        expect(wrapper.find('#wrap-div > *')).to.have.lengthOf(3);
+      });
+
+      it('universal selector should also find component node', () => {
+        class ExampleComponent extends React.Component {
+          render() {
+            return <span>Hello world</span>;
+          }
+        }
+        const wrapper = renderMethod((
+          <div id="wrap-div">
+            <div className="top-div">
+              <ExampleComponent />
+            </div>
+            <div className="bottom-div" />
+            <ExampleComponent />
+          </div>
+        ));
+
+        expect(wrapper.find('* > ExampleComponent')).to.have.lengthOf(2);
+        if (name === 'shallow') {
+          // cannot render span inside ExampleComponent when shallow rendering
+          expect(wrapper.find('*')).to.have.lengthOf(5);
+        } else {
+          expect(wrapper.find('*')).to.have.lengthOf(7);
+        }
+      });
+
       it('simple descendent', () => {
         const wrapper = renderMethod((
           <div>

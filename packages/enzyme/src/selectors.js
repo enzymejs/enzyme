@@ -28,6 +28,7 @@ const SELECTOR = 'selector';
 const TYPE_SELECTOR = 'typeSelector';
 const CLASS_SELECTOR = 'classSelector';
 const ID_SELECTOR = 'idSelector';
+const UNIVERSAL_SELECTOR = 'universalSelector';
 const ATTRIBUTE_PRESENCE = 'attributePresenceSelector';
 const ATTRIBUTE_VALUE = 'attributeValueSelector';
 // @TODO we dont support these, throw if they are used
@@ -184,6 +185,12 @@ function nodeMatchesToken(node, token, root) {
     return false;
   }
   switch (token.type) {
+    /**
+     * Match every node
+     * @example '*' matches every node
+     */
+    case UNIVERSAL_SELECTOR:
+      return true;
     /**
      * Match against the className prop
      * @example '.active' matches <div className='active' />

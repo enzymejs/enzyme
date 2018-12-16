@@ -12,6 +12,7 @@ follows:
 - element tag name syntax (`input`, `div`, `span`, etc.)
 - id syntax (`#foo`, `#foo-bar`, etc.)
 - attribute syntax (`[href="foo"]`, `[type="text"]`, and the other attribute selectors listed [here](https://developer.mozilla.org/en-US/docs/Learn/CSS/Introduction_to_CSS/Attribute_selectors).)
+- universal syntax (`*`)
 
 The attribute syntax also works by value, rather than by string. Strings, numbers, and boolean property values are supported. Example:
 
