@@ -15,7 +15,6 @@ NOTE: can only be called on a wrapper instance that is also the root instance.
 `ReactComponent | HTMLElement`: The node that matches the provided reference name. This can be a react component instance, or an HTML element instance.
 
 
-
 #### Examples
 
 <!-- eslint react/no-string-refs: 1 -->

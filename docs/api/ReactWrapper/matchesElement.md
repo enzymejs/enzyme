@@ -1,20 +1,22 @@
-# `.matchesElement(node) => Boolean`
+# `.matchesElement(patternNode) => Boolean`
 
-Returns whether or not a given react element matches the current render tree.
-It will determine if the the wrapper root node __looks like__ the expected element by checking if all the props supplied in the expected element are present on the wrapper root node and equal to each other. Props present on the wrapper root node but not supplied in the expected element will be ignored.
+Returns whether or not a given react element `patternNode` matches the wrapper's render tree. It must be a single-node wrapper, and only the root node is checked.
+
+The `patternNode` acts like a wildcard. For it to match a node in the wrapper:
+* tag names must match
+* contents must match:  In text nodes, leading and trailing spaces are ignored, but not space in the middle. Child elements must match according to these rules, recursively.
+* `patternNode` props (attributes) must appear in the wrapper's nodes, but not the other way around. Their values must match if they do appear.
+* `patternNode` style CSS properties must appear in the wrapper's node's style, but not the other way around. Their values must match if they do appear.
 
 
 #### Arguments
 
-1. `node` (`ReactElement`): The node whose presence you are detecting in the current instance's
-render tree.
-
+1. `patternNode` (`ReactElement`): The node whose presence you are detecting in the wrapper's single node.
 
 
 #### Returns
 
 `Boolean`: whether or not the current wrapper match the one passed in.
-
 
 
 #### Example
@@ -28,7 +30,7 @@ class MyComponent extends React.Component {
   }
 
   handleClick() {
-    /* ... */
+    // ...
   }
 
   render() {
@@ -39,8 +41,8 @@ class MyComponent extends React.Component {
 }
 
 const wrapper = mount(<MyComponent />);
-expect(wrapper.children().matchesElement(<button>Hello</button>)).to.equal(true);
-expect(wrapper.children().matchesElement(<button className="foo bar">Hello</button>)).to.equal(true);
+expect(wrapper.matchesElement(<button>Hello</button>)).to.equal(true);
+expect(wrapper.matchesElement(<button className="foo bar">Hello</button>)).to.equal(true);
 ```
 
 
@@ -50,3 +52,8 @@ expect(wrapper.children().matchesElement(<button className="foo bar">Hello</butt
 when you are calling it you are calling it with a ReactElement or a JSX expression.
 - Keep in mind that this method determines matching based on the matching of the node's children as
 well.
+
+
+#### Related Methods
+
+- [`.containsMatchingElement() => ReactWrapper`](containsMatchingElement.md) - searches all nodes in the wrapper, and searches their entire depth

@@ -1,8 +1,6 @@
 # `.key() => String`
 
-Returns the key value for the node of the current wrapper.
-
-NOTE: can only be called on a wrapper of a single node.
+Returns the key value for the node of the current wrapper. It must be a single-node wrapper.
 
 #### Example
 

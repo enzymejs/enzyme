@@ -1,8 +1,7 @@
 # `.shallow([options]) => ShallowWrapper`
 
-Shallow renders the current node and returns a shallow wrapper around it.
-
-NOTE: can only be called on wrapper of a single node.
+Shallow renders the root node and returns a shallow wrapper around it.
+It must be a single-node wrapper.
 
 
 #### Arguments
@@ -14,11 +13,9 @@ is not called on the component, and `componentDidUpdate` is not called after
 [`setProps`](ShallowWrapper/setProps.md) and [`setContext`](ShallowWrapper/setContext.md). Default to `false`.
 
 
-
 #### Returns
 
-`ShallowWrapper`: A new wrapper that wraps the current node after it's been shallow rendered.
-
+`ShallowWrapper`: A new wrapper that wraps the node after it's been shallow rendered.
 
 
 #### Examples

@@ -1,14 +1,12 @@
 # `.render() => CheerioWrapper`
 
-Returns a CheerioWrapper around the rendered HTML of the current node's subtree.
-
-Note: can only be called on a wrapper of a single node.
+Returns a CheerioWrapper around the rendered HTML of the single node's subtree.
+It must be a single-node wrapper.
 
 
 #### Returns
 
-`String`: The resulting HTML string
-
+`CheerioWrapper`: The resulting Cheerio object
 
 
 #### Examples

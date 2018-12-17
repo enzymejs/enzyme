@@ -1,6 +1,6 @@
 # `.is(selector) => Boolean`
 
-Returns whether or not the current node matches a provided selector.
+Returns whether or not the single wrapped node matches the provided selector. It must be a single-node wrapper.
 
 
 #### Arguments
@@ -8,11 +8,9 @@ Returns whether or not the current node matches a provided selector.
 1. `selector` ([`EnzymeSelector`](../selector.md)): The selector to match.
 
 
-
 #### Returns
 
-`Boolean`: whether or not the current node matches a provided selector.
-
+`Boolean`: whether or not the wrapped node matches the provided selector.
 
 
 #### Example
@@ -22,4 +20,3 @@ Returns whether or not the current node matches a provided selector.
 const wrapper = mount(<div className="some-class other-class" />);
 expect(wrapper.is('.some-class')).to.equal(true);
 ```
-

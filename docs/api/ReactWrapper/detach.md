@@ -9,7 +9,7 @@ The method is intentionally not "fluent" (in that it doesn't return `this`) beca
 not be doing anything with this wrapper after this method is called.
 
 Using `attachTo`/`hydrateIn` is not generally recommended unless it is absolutely necessary to test
-something.  It is your responsibility to clean up after yourself at the end of the test if you do
+something. It is your responsibility to clean up after yourself at the end of the test if you do
 decide to use it, though.
 
 

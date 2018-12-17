@@ -3,10 +3,11 @@
 A method that re-mounts the component, if it is not currently mounted. This can be used to simulate a component going through
 an unmount/mount lifecycle.
 
+No equivalent for ShallowWrappers.
+
 #### Returns
 
 `ReactWrapper`: Returns itself.
-
 
 
 #### Example

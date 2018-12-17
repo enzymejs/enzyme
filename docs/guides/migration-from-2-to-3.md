@@ -401,7 +401,7 @@ const refWrapper = wrapper.findWhere(n => n.instance() === wrapper.ref('abc'));
 ## With `mount`, `.instance()` can be called at any level of the tree
 
 enzyme now allows for you to grab the `instance()` of a wrapper at any level of the render tree,
-not just at the root.  This means that you can `.find(...)` a specific component, then grab its
+not just at the root. This means that you can `.find(...)` a specific component, then grab its
 instance and call `.setState(...)` or any other methods on the instance that you'd like.
 
 

@@ -6,8 +6,8 @@ Enzyme
 [![npm Version](https://img.shields.io/npm/v/enzyme.svg)](https://www.npmjs.com/package/enzyme) [![License](https://img.shields.io/npm/l/enzyme.svg)](https://www.npmjs.com/package/enzyme) [![Build Status](https://travis-ci.org/airbnb/enzyme.svg)](https://travis-ci.org/airbnb/enzyme) [![Coverage Status](https://coveralls.io/repos/airbnb/enzyme/badge.svg?branch=master&service=github)](https://coveralls.io/github/airbnb/enzyme?branch=master)
 
 
-Enzyme is a JavaScript Testing utility for React that makes it easier to assert, manipulate,
-and traverse your React Components' output.
+Enzyme is a JavaScript Testing utility for React that makes it easier to test your React Components' output.
+You can also manipulate, traverse, and in some ways simulate runtime given the output.
 
 Enzyme's API is meant to be intuitive and flexible by mimicking jQuery's API for DOM manipulation
 and traversal.

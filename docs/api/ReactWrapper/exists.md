@@ -1,6 +1,6 @@
 # `.exists([selector]) => Boolean`
 
-Returns whether or not the current node exists. Or, if a selector is passed in, whether that selector has any matching results.
+Returns whether or not any nodes exist in the wrapper. Or, if a selector is passed in, whether that selector has any matches in the wrapper.
 
 
 
@@ -12,7 +12,7 @@ Returns whether or not the current node exists. Or, if a selector is passed in, 
 
 #### Returns
 
-`Boolean`: whether or not the current node exists, or the selector had any results.
+`Boolean`: whether or not any nodes are on the list, or the selector had any matches.
 
 
 

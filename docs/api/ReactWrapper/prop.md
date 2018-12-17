@@ -1,14 +1,10 @@
 # `.prop(key) => Any`
 
-Returns the prop value for the node of the current wrapper with the provided key.
-
-NOTE: can only be called on a wrapper of a single node.
+Returns the prop value for the root node of the wrapper with the provided key. It must be a single-node wrapper.
 
 #### Arguments
 
-1. `key` (`String`): The prop name such that this will return value will be the `this.props[key]`
-of the component instance.
-
+1. `key` (`String`): The prop name, that is, `this.props[key]` or `props[key]` for the root node of the wrapper.
 
 
 #### Example

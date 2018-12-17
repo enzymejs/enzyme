@@ -16,11 +16,9 @@ NOTE: can only be called on a wrapper instance that is also the root instance.
 2. `callback` (`Function` [optional]): If provided, the callback function will be executed once setProps has completed
 
 
-
 #### Returns
 
 `ShallowWrapper`: Returns itself.
-
 
 
 #### Example
@@ -63,5 +61,3 @@ expect(spy).to.have.property('callCount', 1);
 
 - [`.setState(state) => Self`](setState.md)
 - [`.setContext(context) => Self`](setContext.md)
-
-

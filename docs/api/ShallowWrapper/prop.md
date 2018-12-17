@@ -1,7 +1,6 @@
 # `.prop(key) => Any`
 
-Returns the prop value for the root node of the wrapper with the provided key.
-`.prop(key)` can only be called on a wrapper of a single node.
+Returns the prop value for the root node of the wrapper with the provided key. It must be a single-node wrapper.
 
 NOTE: When called on a shallow wrapper, `.prop(key)` will return values for
 props on the root node that the component *renders*, not the component itself.
@@ -10,9 +9,7 @@ See [`.instance() => ReactComponent`](instance.md)
 
 #### Arguments
 
-1. `key` (`String`): The prop name such that this will return value will be the `this.props[key]`
-of the root node of the component.
-
+1. `key` (`String`): The prop name, that is, `this.props[key]` or `props[key]` for the root node of the wrapper.
 
 
 #### Example

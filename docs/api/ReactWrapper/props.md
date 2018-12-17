@@ -1,10 +1,8 @@
 # `.props() => Object`
 
-Returns the props hash for the root node of the wrapper.
+Returns the props object for the root node of the wrapper. It must be a single-node wrapper.
 
-NOTE: can only be called on a wrapper of a single node.
-
-To return the props for the entire React component, use `wrapper.instance().props`. This is valid for stateful or stateless components in React `15.*`. But, `wrapper.instance()` will return `null` for stateless React component in React `16.*`, so `wrapper.instance().props` will cause an error in this case. See [`.instance() => ReactComponent`](instance.md)
+This method is a reliable way of accessing the props of a node; `wrapper.instance().props` will work as well, but in React 16+, stateless functional components do not have an instance. See [`.instance() => ReactComponent`](instance.md)
 
 
 #### Example
@@ -38,7 +36,6 @@ console.log(wrapper.instance().props); // React 15.x - working as expected
 console.log(wrapper.instance().props);
 // React 16.* - Uncaught TypeError: Cannot read property 'props' of null
 ```
-
 
 #### Related Methods
 

@@ -1,6 +1,6 @@
 # `.hasClass(className) => Boolean`
 
-Returns whether or not the current node has a `className` prop including the passed in class name.
+Returns whether or not the wrapped node has a `className` prop including the passed in class name. It must be a single-node wrapper.
 
 
 #### Arguments
@@ -8,11 +8,9 @@ Returns whether or not the current node has a `className` prop including the pas
 1. `className` (`String`): A single class name.
 
 
-
 #### Returns
 
-`Boolean`: whether or not the current node has the class or not.
-
+`Boolean`: whether or not the wrapped node has the class.
 
 
 #### Example

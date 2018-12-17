@@ -1,15 +1,14 @@
-# `.type() => String|Function|null`
+# `.type() => String | Function | null`
 
-Returns the type of the current node of this wrapper. If it's a composite component, this will be
-the component constructor. If it's a native DOM node, it will be a string of the tag name. If it's `null`, it will be `null`.
-
-Note: can only be called on a wrapper of a single node.
+Returns the type of the only node of this wrapper.
+If it's a React component, this will be the component constructor.
+If it's a native DOM node, it will be a string with the tag name.
+If it's `null`, it will be `null`. It must be a single-node wrapper.
 
 
 #### Returns
 
-`String|Function|null`: The type of the current node
-
+`String | Function | null`: The type of the node
 
 
 #### Examples

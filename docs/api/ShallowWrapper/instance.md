@@ -1,21 +1,17 @@
 # `.instance() => ReactComponent`
 
-Gets the instance of the component being rendered as the root node passed into `shallow()`.
+Returns the single-node wrapper's node's underlying class instance; `this` in its methods.
 
-NOTE: can only be called on a wrapper instance that is also the root instance. With React `16.x`, `instance()` returns `null` for stateless React component/stateless functional components. See example:
+NOTE: can only be called on a wrapper instance that is also the root instance. With React `16` and above, `instance()` returns `null` for stateless functional components.
 
-#### Returns (React 16.x)
 
-- `ReactComponent`: The stateful React component instance.
-- `null`: If stateless React component was wrapped.
+#### Returns
 
-#### Returns (React 15.x)
+`ReactComponent|DOMComponent`: The retrieved instance.
 
-- `ReactComponent`: The component instance.
 
 #### Example
 
-#### Preconditions
 <!-- eslint react/prop-types: 0, react/prefer-stateless-function: 0 -->
 ```jsx
 function Stateless() {
@@ -28,13 +24,14 @@ class Stateful extends React.Component {
   }
 }
 ```
+
 #### React 16.x
 ```jsx
 test('shallow wrapper instance should be null', () => {
   const wrapper = shallow(<Stateless />);
   const instance = wrapper.instance();
 
-  expect(instance).not.to.be.instanceOf(Stateless);
+  expect(instance).to.equal(null);
 });
 
 test('shallow wrapper instance should not be null', () => {
@@ -44,6 +41,7 @@ test('shallow wrapper instance should not be null', () => {
   expect(instance).to.be.instanceOf(Stateful);
 });
 ```
+
 #### React 15.x
 ```jsx
 test('shallow wrapper instance should not be null', () => {
@@ -60,4 +58,3 @@ test('shallow wrapper instance should not be null', () => {
   expect(instance).to.be.instanceOf(Stateful);
 });
 ```
-

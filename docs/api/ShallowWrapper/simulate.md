@@ -1,20 +1,17 @@
 # `.simulate(event[, ...args]) => Self`
 
-Simulate events
+Simulate events on the root node in the wrapper. It must be a single-node wrapper.
 
 
 #### Arguments
 
 1. `event` (`String`): The event name to be simulated
-2. `...args` (`Any` [optional]): A mock event object that will get passed through to the event
-handlers.
-
+2. `...args` (`Any` [optional]): A mock event object that will get passed through to the event handlers.
 
 
 #### Returns
 
 `ShallowWrapper`: Returns itself.
-
 
 
 #### Example

@@ -6,8 +6,8 @@ NOTE: can only be called on wrapper of a single non-DOM component element node.
 
 #### Arguments
 
-1.  `propName` (`String`):
-1.  `...args` (`Array<Any>`):
+1. `propName` (`String`):
+1. `...args` (`Array<Any>`):
 
 This essentially calls `wrapper.prop(propName)(...args)`.
 

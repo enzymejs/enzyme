@@ -1,13 +1,12 @@
 # `.isEmpty() => Boolean`
 **Deprecated**: Use [.exists()](exists.md) instead.
 
-Returns whether or not the current node is empty.
+Returns whether or not the wrapper is empty.
 
 
 #### Returns
 
-`Boolean`: whether or not the current node is empty.
-
+`Boolean`: whether or not the wrapper is empty.
 
 
 #### Example

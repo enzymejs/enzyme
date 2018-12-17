@@ -1,14 +1,16 @@
-# `.containsMatchingElement(node) => Boolean`
+# `.containsMatchingElement(patternNode) => Boolean`
 
-Returns whether or not a given react element matches one element in the render tree.
-It will determine if an element in the wrapper matches the expected element by checking if all props of the expected element are present on the wrapper's element and equals to each other.
+Returns whether or not a `patternNode` react element matches any element in the render tree.
+* the matches can happen anywhere in the wrapper's contents
+* the wrapper can contain more than one node; all are searched
+
+Otherwise, the match follows the same rules as `matchesElement`.
 
 
 #### Arguments
 
-1. `node` (`ReactElement`): The node whose presence you are detecting in the current instance's
+1. `patternNode` (`ReactElement`): The node whose presence you are detecting in the current instance's
 render tree.
-
 
 
 #### Returns
@@ -42,3 +44,9 @@ expect(wrapper.containsMatchingElement(<div data-foo="foo" data-bar="bar" />)).t
 when you are calling it you are calling it with a ReactElement or a JSX expression.
 - Keep in mind that this method determines equality based on the equality of the node's children as
 well.
+
+
+#### Related Methods
+
+- [`.containsAllMatchingElements() => ReactWrapper`](containsAllMatchingElements.md) - must match all nodes in patternNodes
+- [`.containsAnyMatchingElements() => ReactWrapper`](containsAnyMatchingElements.md) - must match at least one in patternNodes

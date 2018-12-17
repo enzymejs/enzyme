@@ -1,21 +1,18 @@
-# `.containsAnyMatchingElements(nodes) => Boolean`
+# `.containsAnyMatchingElements(patternNodes) => Boolean`
 
-Returns whether or not one of the given react elements is matching on element in the render tree.
-It will determine if an element in the wrapper __looks like__ one of the expected element by checking if all props of the expected element are present on the wrappers element and equals to each other.
+Returns whether or not at least one of the given react elements in `patternNodes` matches an element in the wrapper's render tree. One or more elements of `patternNodes` must be matched one or more times. Matching follows the rules for `containsMatchingElement`.
 
 
 #### Arguments
 
-1. `nodes` (`Array<ReactElement>`): The array of nodes whose presence you are detecting in the current instance's
+1. `patternNodes` (`Array<ReactElement>`): The array of nodes whose presence you are detecting in the current instance's
 render tree.
-
 
 
 #### Returns
 
 `Boolean`: whether or not the current wrapper has a node anywhere in its render tree that looks
 like one of the array passed in.
-
 
 
 #### Example
@@ -44,3 +41,10 @@ expect(wrapper.containsAnyMatchingElements([
 when you are calling it you are calling it with an array ReactElement or a JSX expression.
 - Keep in mind that this method determines equality based on the equality of the node's children as
 well.
+
+
+#### Related Methods
+
+- [`.matchesElement() => ReactWrapper`](matchesElement.md) - rules for matching each node
+- [`.containsMatchingElement() => ReactWrapper`](containsMatchingElement.md) - rules for matching whole wrapper
+- [`.containsAllMatchingElements() => ReactWrapper`](containsAllMatchingElements.md) - must match all nodes in patternNodes

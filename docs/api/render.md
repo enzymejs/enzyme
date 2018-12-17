@@ -1,7 +1,6 @@
 # Static Rendering API
 
-enzyme's `render` function is used to render react components to static HTML and analyze the
-resulting HTML structure.
+Use enzyme's `render` function to generate HTML from your React tree, and analyze the resulting HTML structure.
 
 `render` returns a wrapper very similar to the other renderers in enzyme, [`mount`](mount.md) and
 [`shallow`](shallow.md); however, `render` uses a third party HTML parsing and traversal library

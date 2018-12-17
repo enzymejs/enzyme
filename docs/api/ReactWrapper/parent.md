@@ -8,7 +8,6 @@ Returns a wrapper with the direct parent of the node in the current wrapper.
 `ReactWrapper`: A new wrapper that wraps the resulting nodes.
 
 
-
 #### Examples
 
 ```jsx

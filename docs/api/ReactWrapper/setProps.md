@@ -21,7 +21,6 @@ NOTE: can only be called on a wrapper instance that is also the root instance.
 `ReactWrapper`: Returns itself.
 
 
-
 #### Example
 
 ```jsx
@@ -58,13 +57,7 @@ expect(spy).to.have.property('callCount', 1);
 ```
 
 
-#### Common Gotchas
-
-
-
 #### Related Methods
 
 - [`.setState(state) => Self`](setState.md)
 - [`.setContext(context) => Self`](setContext.md)
-
-
