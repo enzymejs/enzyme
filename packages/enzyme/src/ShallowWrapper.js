@@ -489,6 +489,7 @@ class ShallowWrapper {
               if (
                 lifecycles.componentDidUpdate
                 && typeof instance.componentDidUpdate === 'function'
+                && (!state || shallowEqual(state, this.instance().state))
               ) {
                 instance.componentDidUpdate(prevProps, state, snapshot);
               }
@@ -498,7 +499,7 @@ class ShallowWrapper {
             ) {
               if (lifecycles.componentDidUpdate.prevContext) {
                 instance.componentDidUpdate(prevProps, state, prevContext);
-              } else {
+              } else if (!state || shallowEqual(this.instance().state, state)) {
                 instance.componentDidUpdate(prevProps, state);
               }
             }
@@ -617,6 +618,7 @@ class ShallowWrapper {
             statePayload,
           );
         }
+
         // We don't pass the setState callback here
         // to guarantee to call the callback after finishing the render
         if (instance[SET_STATE]) {

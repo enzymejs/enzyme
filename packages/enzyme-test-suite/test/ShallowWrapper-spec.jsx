@@ -2370,6 +2370,46 @@ describe('shallow', () => {
       ]);
     });
 
+    describe('setProps should not call componentDidUpdate twice', () => {
+      it('first test case', () => {
+        class Dummy extends React.Component {
+          constructor(...args) {
+            super(...args);
+
+            this.state = {
+              someState: '',
+            };
+          }
+
+          componentWillReceiveProps({ myProp: someState }) {
+            this.setState({ someState });
+          }
+
+          componentDidUpdate() {}
+
+          render() {
+            const { myProp } = this.props;
+            const { someState } = this.state;
+            return (
+              <div>
+                myProp: {myProp}
+                someState: {someState}
+              </div>
+            );
+          }
+        }
+
+        const spy = sinon.spy(Dummy.prototype, 'componentDidUpdate');
+        const wrapper = shallow(<Dummy />);
+        expect(spy).to.have.property('callCount', 0);
+        return new Promise((resolve) => {
+          wrapper.setProps({ myProp: 'Prop Value' }, resolve);
+        }).then(() => {
+          expect(spy).to.have.property('callCount', 1);
+        });
+      });
+    });
+
     describeIf(is('> 0.13'), 'stateless function components', () => {
       it('sets props for a component multiple times', () => {
         const Foo = props => (
