@@ -90,7 +90,7 @@ Promise.resolve()
     const peerDeps = adapterJson.peerDependencies;
     const installs = Object.keys(peerDeps)
       .filter(key => !key.startsWith('enzyme'))
-      .map(key => `${key}@${peerDeps[key]}`);
+      .map(key => `${key}@${key.startsWith('react') ? version : peerDeps[key]}`);
 
     // eslint-disable-next-line no-param-reassign
     testJson.dependencies[adapterName] = adapterJson.version;
