@@ -8,7 +8,10 @@ const { is } = require('./version');
 
 let Adapter = null;
 
-if (is('^0.13')) {
+if (process.env.ADAPTER) {
+  // eslint-disable-next-line import/no-dynamic-require
+  Adapter = require(`enzyme-adapter-react-${process.env.ADAPTER}`);
+} else if (is('^0.13')) {
   Adapter = require('enzyme-adapter-react-13');
 } else if (is('^0.14')) {
   Adapter = require('enzyme-adapter-react-14');

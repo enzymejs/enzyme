@@ -53,6 +53,7 @@ const adapterVersions = {
   16.6: 16,
   16.7: 16,
 };
+const reactVersion = version < 15 ? '0.' + version : version;
 const adapterVersion = process.env.ADAPTER || adapterVersions[version] || version;
 const adapterName = `enzyme-adapter-react-${adapterVersion}`;
 const adapterPackageJsonPath = path.join(root, 'packages', adapterName, 'package.json');
@@ -90,7 +91,7 @@ Promise.resolve()
     const peerDeps = adapterJson.peerDependencies;
     const installs = Object.keys(peerDeps)
       .filter(key => !key.startsWith('enzyme'))
-      .map(key => `${key}@${key.startsWith('react') ? version : peerDeps[key]}`);
+      .map(key => `${key}@${key.startsWith('react') ? reactVersion : peerDeps[key]}`);
 
     // eslint-disable-next-line no-param-reassign
     testJson.dependencies[adapterName] = adapterJson.version;
@@ -103,7 +104,7 @@ Promise.resolve()
       writeJSON(testPackageJsonPath, testJson, true),
     ]);
   })
-  .then(() => run('lerna', 'bootstrap'))
+  .then(() => run('lerna', 'bootstrap', '--hoist=\'react*\''))
   .then(() => getJSON(testPackageJsonPath))
   .then((testJson) => {
     // now that we've lerna bootstrapped, we can remove the adapter from the
