@@ -10,6 +10,7 @@ import trim from 'string.prototype.trim';
 import { get } from './configuration';
 import { childrenOfNode } from './RSTTraversal';
 import realGetAdapter from './getAdapter';
+import validateAdapter from './validateAdapter';
 
 export const ITERATOR_SYMBOL = typeof Symbol === 'function' && Symbol.iterator;
 
@@ -47,6 +48,14 @@ export function makeOptions(options) {
     ...options,
     ...mountTargets,
   };
+}
+
+export function isCustomComponent(component, adapter) {
+  validateAdapter(adapter);
+  if (adapter.isCustomComponent) {
+    return !!adapter.isCustomComponent(component);
+  }
+  return typeof component === 'function';
 }
 
 export function isCustomComponentElement(inst, adapter) {
