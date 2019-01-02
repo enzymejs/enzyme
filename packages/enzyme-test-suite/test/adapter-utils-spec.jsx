@@ -1,10 +1,17 @@
 import React from 'react';
 import { expect } from 'chai';
+import sinon from 'sinon-sandbox';
 import {
   displayNameOfNode,
   ensureKeyOrUndefined,
   getMaskedContext,
   getComponentStack,
+  findElement,
+  elementToTree,
+  RootFinder,
+  getNodeFromRootFinder,
+  wrapWithWrappingComponent,
+  getWrappingComponentMountRenderer,
 } from 'enzyme-adapter-utils';
 
 import './_helpers/setupAdapters';
@@ -137,6 +144,7 @@ describe('enzyme-adapter-utils', () => {
       <span />,
       <B />,
       <C />,
+      <RootFinder />,
     ];
 
     it('outputs a formatted stack of react components', () => {
@@ -185,6 +193,189 @@ describe('enzyme-adapter-utils', () => {
     in Bee (created by WrapperComponent)
     in Sea (created by WrapperComponent)
     in WrapperComponent`);
+    });
+  });
+
+  describe('findElement', () => {
+    class Target extends React.Component { render() { return null; } }
+    class Other extends React.Component { render() { return null; } }
+    class Unfound extends React.Component { render() { return null; } }
+
+    const other = elementToTree(<Other><div /></Other>);
+    const target = elementToTree(<Target><div><Other /></div></Target>);
+    const tree = elementToTree(
+      <div>
+        <span>
+          {other}
+        </span>
+        <div>
+          {target}
+        </div>
+      </div>,
+    );
+
+    it('finds an element in the render tree using a predicate', () => {
+      expect(findElement(tree, node => node.type === Target)).to.eql(target);
+    });
+
+    it('returns undefined if the element cannot be found', () => {
+      expect(findElement(tree, node => node.type === Unfound)).to.equal(undefined);
+    });
+
+    it('returns undefined if some non-element is passed', () => {
+      expect(findElement({}, node => node.type === Target)).to.equal(undefined);
+    });
+  });
+
+  describe('getNodeFromRootFinder', () => {
+    const isCustomComponent = component => typeof component === 'function';
+    class Target extends React.Component { render() { return null; } }
+    class WrappingComponent extends React.Component { render() { return null; } }
+
+    const target = <Target><div /></Target>;
+
+    it('returns the RootFinder‘s children', () => {
+      const tree = elementToTree(
+        <WrappingComponent>
+          <span>
+            <RootFinder>{target}</RootFinder>
+          </span>
+        </WrappingComponent>,
+      );
+      expect(getNodeFromRootFinder(
+        isCustomComponent,
+        tree,
+        { wrappingComponent: WrappingComponent },
+      )).to.eql(elementToTree(target));
+    });
+
+    it('throws an error if wrappingComponent is passed but RootFinder is not found', () => {
+      const treeMissing = elementToTree((
+        <WrappingComponent>
+          <span>
+            {target}
+          </span>
+        </WrappingComponent>
+      ));
+      expect(() => getNodeFromRootFinder(
+        isCustomComponent,
+        treeMissing,
+        { wrappingComponent: WrappingComponent },
+      )).to.throw(
+        '`wrappingComponent` must render its children!',
+      );
+    });
+
+    it('returns the node if there is no wrapping component and rootFinder can‘t be found', () => {
+      const treeMissing = elementToTree((
+        <WrappingComponent>
+          <span>
+            {target}
+          </span>
+        </WrappingComponent>
+      ));
+      expect(getNodeFromRootFinder(
+        isCustomComponent,
+        treeMissing,
+        {},
+      )).to.eql(treeMissing.rendered);
+    });
+  });
+
+  describe('wrapWithWrappingComponent', () => {
+    class Target extends React.Component { render() { return null; } }
+    class WrappingComponent extends React.Component { render() { return null; } }
+
+    it('wraps the node in the wrappingComponent and RootFinder', () => {
+      const node = <Target foo="bar" />;
+      const expected = (
+        <WrappingComponent hello="world">
+          <RootFinder>{node}</RootFinder>
+        </WrappingComponent>
+      );
+
+      expect(wrapWithWrappingComponent(React.createElement, node, {
+        wrappingComponent: WrappingComponent,
+        wrappingComponentProps: { hello: 'world' },
+      })).to.eql(expected);
+    });
+
+    it('handles no wrappingComponentProps', () => {
+      const node = <Target foo="bar" />;
+      const expected = (
+        <WrappingComponent>
+          <RootFinder>{node}</RootFinder>
+        </WrappingComponent>
+      );
+
+      expect(wrapWithWrappingComponent(React.createElement, node, {
+        wrappingComponent: WrappingComponent,
+      })).to.eql(expected);
+    });
+
+    it('handles no wrappingComponent', () => {
+      const node = <Target foo="bar" />;
+
+      expect(wrapWithWrappingComponent(React.createElement, node, {})).to.eql(node);
+    });
+  });
+
+  describe('getWrappingComponentMountRenderer', () => {
+    let instance;
+    let renderer;
+    const tree = {
+      nodeType: 'host',
+      type: 'div',
+      props: { children: <span /> },
+      key: undefined,
+      ref: undefined,
+      instance: global.document.createElement('div'),
+      rendered: {
+        nodeType: 'host',
+        type: 'span',
+        props: {},
+        key: undefined,
+        ref: undefined,
+        instance: global.document.createElement('span'),
+      },
+    };
+
+    beforeEach(() => {
+      instance = {
+        setWrappingComponentProps: sinon.spy(),
+      };
+      renderer = getWrappingComponentMountRenderer({
+        getMountWrapperInstance: () => instance,
+        toTree: () => tree,
+      });
+    });
+
+    describe('getNode', () => {
+      it('can get the node', () => {
+        expect(renderer.getNode()).to.eql(tree.rendered);
+      });
+
+      it('returns null if there is no instance', () => {
+        instance = undefined;
+        expect(renderer.getNode()).to.equal(null);
+      });
+    });
+
+    describe('render', () => {
+      it('sets the wrapping component props on the instance', () => {
+        const callback = sinon.spy();
+        const props = { foo: 'bar', children: <span /> };
+        expect(instance.setWrappingComponentProps).to.have.property('callCount', 0);
+        renderer.render(<div {...props} />, null, callback);
+        expect(instance.setWrappingComponentProps).to.have.property('callCount', 1);
+        const [args] = instance.setWrappingComponentProps.args;
+        expect(args).to.eql([props, callback]);
+      });
+
+      it('throws an error if there is no instance', () => {
+        instance = undefined;
+        expect(() => renderer.render(<div />, null, () => {})).to.throw('The wrapping component may not be updated if the root is unmounted.');
+      });
     });
   });
 });

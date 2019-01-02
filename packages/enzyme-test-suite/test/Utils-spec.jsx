@@ -470,7 +470,7 @@ describe('Utils', () => {
   });
 
   describe('mapNativeEventNames', () => {
-    describe('given an event that isn\'t a mapped', () => {
+    describe('given an event that isn‘t a mapped', () => {
       it('returns the original event', () => {
         const result = mapNativeEventNames('click');
         expect(result).to.equal('click');

@@ -82,7 +82,7 @@ export default function describeContainsMatchingElement({
       expect(spy2).to.have.property('callCount', 0);
     });
 
-    it('does not match on a single node that doesn\'t looks like a rendered one', () => {
+    it('does not match on a single node that doesn‘t looks like a rendered one', () => {
       const spy1 = sinon.spy();
       const spy2 = sinon.spy();
       const wrapper = Wrap((

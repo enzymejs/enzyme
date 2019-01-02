@@ -3,8 +3,14 @@ import fromEntries from 'object.fromentries';
 import createMountWrapper from './createMountWrapper';
 import createRenderWrapper from './createRenderWrapper';
 import wrap from './wrapWithSimpleWrapper';
+import RootFinder from './RootFinder';
 
-export { createMountWrapper, createRenderWrapper, wrap };
+export {
+  createMountWrapper,
+  createRenderWrapper,
+  wrap,
+  RootFinder,
+};
 
 export function mapNativeEventNames(event, {
   animation = false, // should be true for React 15+
@@ -229,6 +235,29 @@ export function elementToTree(el, recurse = elementToTree) {
   };
 }
 
+function mapFind(arraylike, mapper, finder) {
+  let found;
+  const isFound = Array.prototype.find.call(arraylike, (item) => {
+    found = mapper(item);
+    return finder(found);
+  });
+  return isFound ? found : undefined;
+}
+
+export function findElement(el, predicate) {
+  if (el === null || typeof el !== 'object' || !('type' in el)) {
+    return undefined;
+  }
+  if (predicate(el)) {
+    return el;
+  }
+  const { rendered } = el;
+  if (isArrayLike(rendered)) {
+    return mapFind(rendered, x => findElement(x, predicate), x => typeof x !== 'undefined');
+  }
+  return findElement(rendered, predicate);
+}
+
 export function propsWithKeysAndRef(node) {
   if (node.ref !== null || node.key !== null) {
     return {
@@ -245,7 +274,7 @@ export function getComponentStack(
   getNodeType = nodeTypeFromType,
   getDisplayName = displayNameOfNode,
 ) {
-  const tuples = hierarchy.map(x => [
+  const tuples = hierarchy.filter(node => node.type !== RootFinder).map(x => [
     getNodeType(x.type),
     getDisplayName(x),
   ]).concat([[
@@ -294,4 +323,43 @@ export function getMaskedContext(contextTypes, unmaskedContext) {
     return {};
   }
   return fromEntries(Object.keys(contextTypes).map(key => [key, unmaskedContext[key]]));
+}
+
+export function getNodeFromRootFinder(isCustomComponent, tree, options) {
+  if (!isCustomComponent(options.wrappingComponent)) {
+    return tree.rendered;
+  }
+  const rootFinder = findElement(tree, node => node.type === RootFinder);
+  if (!rootFinder) {
+    throw new Error('`wrappingComponent` must render its children!');
+  }
+  return rootFinder.rendered;
+}
+
+export function wrapWithWrappingComponent(createElement, node, options) {
+  const { wrappingComponent, wrappingComponentProps } = options;
+  if (!wrappingComponent) {
+    return node;
+  }
+  return createElement(
+    wrappingComponent,
+    wrappingComponentProps,
+    createElement(RootFinder, null, node),
+  );
+}
+
+export function getWrappingComponentMountRenderer({ toTree, getMountWrapperInstance }) {
+  return {
+    getNode() {
+      const instance = getMountWrapperInstance();
+      return instance ? toTree(instance).rendered : null;
+    },
+    render(el, context, callback) {
+      const instance = getMountWrapperInstance();
+      if (!instance) {
+        throw new Error('The wrapping component may not be updated if the root is unmounted.');
+      }
+      return instance.setWrappingComponentProps(el.props, callback);
+    },
+  };
 }
