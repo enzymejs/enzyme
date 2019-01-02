@@ -252,6 +252,10 @@ class ReactFourteenAdapter extends EnzymeAdapter {
     return isValidElementType(object);
   }
 
+  isCustomComponent(component) {
+    return typeof component === 'function';
+  }
+
   createElement(...args) {
     return React.createElement(...args);
   }

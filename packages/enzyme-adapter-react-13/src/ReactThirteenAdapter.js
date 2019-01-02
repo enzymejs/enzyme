@@ -277,6 +277,10 @@ class ReactThirteenAdapter extends EnzymeAdapter {
     return typeof object === 'string' || typeof object === 'function';
   }
 
+  isCustomComponent(component) {
+    return typeof component === 'function';
+  }
+
   createElement(...args) {
     return React.createElement(...args);
   }

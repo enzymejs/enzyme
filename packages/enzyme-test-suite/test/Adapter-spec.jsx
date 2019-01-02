@@ -1127,4 +1127,29 @@ Warning: Failed Adapter-spec type: Invalid Adapter-spec \`foo\` of type \`string
         `.trim());
       });
   });
+
+  describe('isCustomComponent', () => {
+    function FunctionComponent() {
+      return null;
+    }
+    class ClassComponent extends React.Component {
+      render() {
+        return null;
+      }
+    }
+
+    it('returns true for functional/class components', () => {
+      expect(adapter.isCustomComponent(FunctionComponent)).to.equal(true);
+      expect(adapter.isCustomComponent(ClassComponent)).to.equal(true);
+    });
+
+    it('returns false for everything else', () => {
+      expect(adapter.isCustomComponent({})).to.equal(false);
+      expect(adapter.isCustomComponent(true)).to.equal(false);
+    });
+
+    itIf(is('>=16.3'), 'returns true for forward refs', () => {
+      expect(adapter.isCustomComponent(React.forwardRef(() => null))).to.equal(true);
+    });
+  });
 });

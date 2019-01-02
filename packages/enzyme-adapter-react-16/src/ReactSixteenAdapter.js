@@ -645,11 +645,15 @@ class ReactSixteenAdapter extends EnzymeAdapter {
     return typeOfNode(fragment) === Fragment;
   }
 
+  isCustomComponent(type) {
+    return typeof type === 'function' || isForwardRef({ type });
+  }
+
   isCustomComponentElement(inst) {
     if (!inst || !this.isValidElement(inst)) {
       return false;
     }
-    return typeof inst.type === 'function' || isForwardRef(inst);
+    return this.isCustomComponent(inst.type);
   }
 
   createElement(...args) {

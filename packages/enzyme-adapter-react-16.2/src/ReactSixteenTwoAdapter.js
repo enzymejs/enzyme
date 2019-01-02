@@ -507,6 +507,10 @@ class ReactSixteenTwoAdapter extends EnzymeAdapter {
     return isValidElementType(object);
   }
 
+  isCustomComponent(component) {
+    return typeof component === 'function';
+  }
+
   isFragment(fragment) {
     return typeOfNode(fragment) === Fragment;
   }
