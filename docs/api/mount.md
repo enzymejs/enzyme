@@ -49,6 +49,8 @@ describe('<Foo />', () => {
 - `options.context`: (`Object` [optional]): Context to be passed into the component
 - `options.attachTo`: (`DOMElement` [optional]): DOM Element to attach the component to.
 - `options.childContextTypes`: (`Object` [optional]): Merged contextTypes for all children of the wrapper.
+- `options.wrappingComponent`: (`ComponentType` [optional]): A component that will render as a parent of the `node`. It can be used to provide context to the `node`, among other things. See the [`getWrappingComponent()` docs](ReactWrapper/getWrappingComponent.md) for an example. **Note**: `wrappingComponent` _must_ render its children.
+- `options.wrappingComponentProps`: (`Object` [optional]): Initial props to pass to the `wrappingComponent` if it is specified.
 
 #### Returns
 
@@ -176,6 +178,9 @@ Manually sets context of the root component.
 
 #### [`.instance() => ReactComponent|DOMComponent`](ReactWrapper/instance.md)
 Returns the wrapper's underlying instance.
+
+#### [`.getWrappingComponent() => ReactWrapper`](ReactWrapper/getWrappingComponent.md)
+Returns a wrapper representing the `wrappingComponent`, if one was passed.
 
 #### [`.unmount() => ReactWrapper`](ReactWrapper/unmount.md)
 A method that un-mounts the component.

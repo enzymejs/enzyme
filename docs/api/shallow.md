@@ -50,6 +50,8 @@ describe('<MyComponent />', () => {
   - `options.disableLifecycleMethods`: (`Boolean` [optional]): If set to true, `componentDidMount`
 is not called on the component, and `componentDidUpdate` is not called after
 [`setProps`](ShallowWrapper/setProps.md) and [`setContext`](ShallowWrapper/setContext.md). Default to `false`.
+- `options.wrappingComponent`: (`ComponentType` [optional]): A component that will render as a parent of the `node`. It can be used to provide context to the `node`, among other things. See the [`getWrappingComponent()` docs](ShallowWrapper/getWrappingComponent.md) for an example. **Note**: `wrappingComponent` _must_ render its children.
+- `options.wrappingComponentProps`: (`Object` [optional]): Initial props to pass to the `wrappingComponent` if it is specified.
 
 #### Returns
 
@@ -186,6 +188,9 @@ Manually sets props of the root component.
 
 #### [`.setContext(context) => ShallowWrapper`](ShallowWrapper/setContext.md)
 Manually sets context of the root component.
+
+#### [`.getWrappingComponent() => ShallowWrapper`](ShallowWrapper/getWrappingComponent.md)
+Returns a wrapper representing the `wrappingComponent`, if one was passed.
 
 #### [`.instance() => ReactComponent`](ShallowWrapper/instance.md)
 Returns the instance of the root component.

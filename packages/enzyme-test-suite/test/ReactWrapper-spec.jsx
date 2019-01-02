@@ -180,6 +180,135 @@ describeWithDOM('mount', () => {
       expect(() => wrapper.state('key')).to.throw('ReactWrapper::state("key") requires that `state` not be `null` or `undefined`');
     });
 
+    describeIf(is('>= 0.14'), 'wrappingComponent', () => {
+      const realCreateMountRenderer = getAdapter().createMountRenderer;
+
+      class More extends React.Component {
+        render() {
+          return null;
+        }
+      }
+
+      class TestProvider extends React.Component {
+        getChildContext() {
+          const { value, renderMore } = this.props;
+
+          return {
+            testContext: value || 'Hello world!',
+            renderMore: renderMore || false,
+          };
+        }
+
+        render() {
+          const { children } = this.props;
+
+          return children;
+        }
+      }
+      TestProvider.childContextTypes = {
+        testContext: PropTypes.string,
+        renderMore: PropTypes.bool,
+      };
+
+      class MyWrappingComponent extends React.Component {
+        render() {
+          const { children, contextValue, renderMore } = this.props;
+
+          return (
+            <div>
+              <TestProvider value={contextValue} renderMore={renderMore}>{children}</TestProvider>
+            </div>
+          );
+        }
+      }
+
+      class MyComponent extends React.Component {
+        render() {
+          const { testContext, renderMore } = this.context;
+
+          return (
+            <div>
+              <div>Context says: {testContext}</div>
+              {renderMore && <More />}
+            </div>
+          );
+        }
+      }
+      MyComponent.contextTypes = TestProvider.childContextTypes;
+
+      it('mounts the passed node as the root as per usual', () => {
+        const wrapper = mount(<MyComponent />, {
+          wrappingComponent: MyWrappingComponent,
+        });
+        expect(wrapper.type()).to.equal(MyComponent);
+        expect(wrapper.parent().exists()).to.equal(false);
+        expect(() => wrapper.setProps({ foo: 'bar' })).not.to.throw();
+      });
+
+      it('renders the root in the wrapping component', () => {
+        const wrapper = mount(<MyComponent />, {
+          wrappingComponent: MyWrappingComponent,
+        });
+        // Context will only be set properly if the root node is rendered as a descendent of the wrapping component.
+        expect(wrapper.text()).to.equal('Context says: Hello world!');
+      });
+
+      it('supports mounting the wrapping component with initial props', () => {
+        const wrapper = mount(<MyComponent />, {
+          wrappingComponent: MyWrappingComponent,
+          wrappingComponentProps: { contextValue: 'I can be set!' },
+        });
+        expect(wrapper.text()).to.equal('Context says: I can be set!');
+      });
+
+      it('throws an error if the wrappingComponent does not render its children', () => {
+        class BadWrapper extends React.Component {
+          render() {
+            return <div />;
+          }
+        }
+        expect(() => mount(<MyComponent />, {
+          wrappingComponent: BadWrapper,
+        })).to.throw('`wrappingComponent` must render its children!');
+      });
+
+      wrap()
+        .withOverrides(() => getAdapter(), () => ({
+          RootFinder: undefined,
+          createMountRenderer: (...args) => {
+            const renderer = realCreateMountRenderer(...args);
+            delete renderer.getWrappingComponentRenderer;
+            renderer.getNode = () => null;
+            return renderer;
+          },
+          isCustomComponent: undefined,
+        }))
+        .describe('with an old adapter', () => {
+          it('renders fine when wrappingComponent is not passed', () => {
+            const wrapper = mount(<MyComponent />);
+            expect(wrapper.debug()).to.equal('');
+          });
+
+          it('throws an error if wrappingComponent is passed', () => {
+            expect(() => mount(<MyComponent />, {
+              wrappingComponent: MyWrappingComponent,
+            })).to.throw('your adapter does not support `wrappingComponent`. Try upgrading it!');
+          });
+        });
+    });
+
+    itIf(is('<=0.13'), 'throws an error if wrappingComponent is passed', () => {
+      class WrappingComponent extends React.Component {
+        render() {
+          const { children } = this.props;
+          return children;
+        }
+      }
+      expect(() => mount(<div />, {
+        wrappingComponent: WrappingComponent,
+      })).to.throw('your adapter does not support `wrappingComponent`. Try upgrading it!');
+    });
+
     describeIf(is('>= 16.3'), 'uses the isValidElementType from the Adapter to validate the prop type of Component', () => {
       const Foo = () => null;
       const Bar = () => null;
@@ -711,6 +840,7 @@ describeWithDOM('mount', () => {
     'getElements',
     'getNode',
     'getNodes',
+    'getWrappingComponent',
     'hasClass',
     'hostNodes',
     'html',

@@ -10,6 +10,7 @@ import {
   typeOfNode,
   isReactElementAlike,
   displayNameOfNode,
+  isCustomComponent,
   isCustomComponentElement,
   ITERATOR_SYMBOL,
   makeOptions,
@@ -41,6 +42,9 @@ const OPTIONS = sym('__options__');
 const SET_STATE = sym('__setState__');
 const ROOT_NODES = sym('__rootNodes__');
 const CHILD_CONTEXT = sym('__childContext__');
+const WRAPPING_COMPONENT = sym('__wrappingComponent__');
+const PRIMARY_WRAPPER = sym('__primaryWrapper__');
+const ROOT_FINDER = sym('__rootFinder__');
 
 /**
  * Finds all nodes in the current wrapper nodes' render trees that match the provided predicate
@@ -274,13 +278,97 @@ function mockSCUIfgDSFPReturnNonNull(node, state) {
 }
 
 /**
+ * Recursively dive()s every custom component in a wrapper until
+ * the target component is found.
+ *
+ * @param {ShallowWrapper} wrapper A ShallowWrapper to search
+ * @param {ComponentType} target A react custom component that, when found, will end recursion
+ * @param {Adapter} adapter An Enzyme adapter
+ * @returns {ShallowWrapper|undefined} A ShallowWrapper for the target, or
+ *  undefined if it can't be found
+ */
+function deepRender(wrapper, target, adapter) {
+  const node = wrapper[NODE];
+  const element = node && adapter.nodeToElement(node);
+  if (wrapper.type() === target) {
+    return wrapper.dive();
+  }
+  if (element && isCustomComponentElement(element, adapter)) {
+    return deepRender(wrapper.dive(), target, adapter);
+  }
+  const children = wrapper.children();
+  for (let i = 0; i < children.length; i += 1) {
+    const found = deepRender(children.at(i), target, adapter);
+    if (typeof found !== 'undefined') {
+      return found;
+    }
+  }
+  return undefined;
+}
+
+/**
+ * Deep-renders the `wrappingComponent` and returns the context that should
+ * be accessible to the primary wrapper.
+ *
+ * @param {WrappingComponentWrapper} wrapper The `WrappingComponentWrapper` for a
+ *  `wrappingComponent`
+ * @param {Adapter} adapter An Enzyme adapter
+ * @returns {object} The context collected
+ */
+function getContextFromWrappingComponent(wrapper, adapter) {
+  const rootFinder = deepRender(wrapper, wrapper[ROOT_FINDER], adapter);
+  if (!rootFinder) {
+    throw new Error('`wrappingComponent` must render its children!');
+  }
+  return rootFinder[OPTIONS].context;
+}
+
+/**
+ * Makes options specifically for `ShallowWrapper`. Most of the logic here is around rendering
+ * a `wrappingComponent` (if one was provided) and adding the child context of that component
+ * to `options.context`.
+ *
+ * @param {ReactElement} nodes the nodes passed to `ShallowWrapper`
+ * @param {ShallowWrapper} root this `ShallowWrapper`'s parent. If this is passed, options are
+ *  not transformed.
+ * @param {*} passedOptions the options passed to `ShallowWrapper`.
+ * @param {*} wrapper the `ShallowWrapper` itself
+ * @returns {Object} the decorated and transformed options
+ */
+function makeShallowOptions(nodes, root, passedOptions, wrapper) {
+  const options = makeOptions(passedOptions);
+  const adapter = getAdapter(passedOptions);
+  if (root || !isCustomComponent(options.wrappingComponent, adapter)) {
+    return options;
+  }
+  if (typeof adapter.wrapWithWrappingComponent !== 'function') {
+    throw new TypeError('your adapter does not support `wrappingComponent`. Try upgrading it!');
+  }
+  const { node: wrappedNode, RootFinder } = adapter.wrapWithWrappingComponent(nodes, options);
+  // eslint-disable-next-line no-use-before-define
+  const wrappingComponent = new WrappingComponentWrapper(wrappedNode, wrapper, RootFinder);
+  const wrappingComponentContext = getContextFromWrappingComponent(
+    wrappingComponent, adapter,
+  );
+  privateSet(wrapper, WRAPPING_COMPONENT, wrappingComponent);
+  return {
+    ...options,
+    context: {
+      ...options.context,
+      ...wrappingComponentContext,
+    },
+  };
+}
+
+
+/**
  * @class ShallowWrapper
  */
 class ShallowWrapper {
   constructor(nodes, root, passedOptions = {}) {
     validateOptions(passedOptions);
 
-    const options = makeOptions(passedOptions);
+    const options = makeShallowOptions(nodes, root, passedOptions, this);
     const adapter = getAdapter(options);
     const lifecycles = getAdapterLifecycles(adapter);
 
@@ -415,6 +503,23 @@ class ShallowWrapper {
   }
 
   /**
+   * If a `wrappingComponent` was passed in `options`, this methods returns a `ShallowWrapper`
+   * around the rendered `wrappingComponent`. This `ShallowWrapper` can be used to update the
+   * `wrappingComponent`'s props, state, etc.
+   *
+   * @returns ShallowWrapper
+   */
+  getWrappingComponent() {
+    if (this[ROOT] !== this) {
+      throw new Error('ShallowWrapper::getWrappingComponent() can only be called on the root');
+    }
+    if (!this[OPTIONS].wrappingComponent) {
+      throw new Error('ShallowWrapper::getWrappingComponent() can only be called on a wrapper that was originally passed a `wrappingComponent` option');
+    }
+    return this[WRAPPING_COMPONENT];
+  }
+
+  /**
    * Forces a re-render. Useful to run before checking the render output if something external
    * may be updating the state of the component somewhere.
    *
@@ -440,6 +545,9 @@ class ShallowWrapper {
    */
   unmount() {
     this[RENDERER].unmount();
+    if (this[ROOT][WRAPPING_COMPONENT]) {
+      this[ROOT][WRAPPING_COMPONENT].unmount();
+    }
     return this;
   }
 
@@ -1570,6 +1678,60 @@ class ShallowWrapper {
    */
   hostNodes() {
     return this.filterWhere(n => typeof n.type() === 'string');
+  }
+}
+
+/**
+ * Updates the context of the primary wrapper when the
+ * `wrappingComponent` re-renders.
+ */
+function updatePrimaryRootContext(wrappingComponent) {
+  const context = getContextFromWrappingComponent(
+    wrappingComponent,
+    getAdapter(wrappingComponent[OPTIONS]),
+  );
+  wrappingComponent[PRIMARY_WRAPPER].setContext({
+    ...wrappingComponent[PRIMARY_WRAPPER][OPTIONS].context,
+    ...context,
+  });
+}
+
+/**
+ * A *special* "root" wrapper that represents the component passed as `wrappingComponent`.
+ * It is linked to the primary root such that updates to it will update the primary.
+ *
+ * @class WrappingComponentWrapper
+ */
+class WrappingComponentWrapper extends ShallowWrapper {
+  constructor(nodes, root, RootFinder) {
+    super(nodes);
+    privateSet(this, PRIMARY_WRAPPER, root);
+    privateSet(this, ROOT_FINDER, RootFinder);
+  }
+
+  /**
+   * Like rerender() on ShallowWrapper, except it also does a "full render" of
+   * itself and updates the primary ShallowWrapper's context.
+   */
+  rerender(...args) {
+    const result = super.rerender(...args);
+    updatePrimaryRootContext(this);
+    return result;
+  }
+
+  /**
+   * Like setState() on ShallowWrapper, except it also does a "full render" of
+   * itself and updates the primary ShallowWrapper's context.
+   */
+  setState(...args) {
+    const result = super.setState(...args);
+    updatePrimaryRootContext(this);
+    return result;
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  getWrappingComponent() {
+    throw new Error('ShallowWrapper::getWrappingComponent() can only be called on the root');
   }
 }
 
