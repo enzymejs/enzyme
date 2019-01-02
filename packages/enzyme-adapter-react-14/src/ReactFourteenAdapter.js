@@ -19,6 +19,10 @@ import {
   propsWithKeysAndRef,
   ensureKeyOrUndefined,
   wrap,
+  RootFinder,
+  getNodeFromRootFinder,
+  wrapWithWrappingComponent,
+  getWrappingComponentMountRenderer,
 } from 'enzyme-adapter-utils';
 
 function typeToNodeType(type) {
@@ -103,6 +107,7 @@ class ReactFourteenAdapter extends EnzymeAdapter {
           const { type, props, ref } = el;
           const wrapperProps = {
             Component: type,
+            wrappingComponentProps: options.wrappingComponentProps,
             props,
             context,
             ...(ref && { ref }),
@@ -122,7 +127,14 @@ class ReactFourteenAdapter extends EnzymeAdapter {
         instance = null;
       },
       getNode() {
-        return instance ? instanceToTree(instance._reactInternalInstance).rendered : null;
+        if (!instance) {
+          return null;
+        }
+        return getNodeFromRootFinder(
+          adapter.isCustomComponent,
+          instanceToTree(instance._reactInternalInstance),
+          options,
+        );
       },
       simulateEvent(node, event, mock) {
         const mappedEvent = mapNativeEventNames(event);
@@ -135,6 +147,15 @@ class ReactFourteenAdapter extends EnzymeAdapter {
       },
       batchedUpdates(fn) {
         return ReactDOM.unstable_batchedUpdates(fn);
+      },
+      getWrappingComponentRenderer() {
+        return {
+          ...this,
+          ...getWrappingComponentMountRenderer({
+            toTree: inst => instanceToTree(inst._reactInternalInstance),
+            getMountWrapperInstance: () => instance,
+          }),
+        };
       },
     };
   }
@@ -258,6 +279,13 @@ class ReactFourteenAdapter extends EnzymeAdapter {
 
   createElement(...args) {
     return React.createElement(...args);
+  }
+
+  wrapWithWrappingComponent(node, options) {
+    return {
+      RootFinder,
+      node: wrapWithWrappingComponent(React.createElement, node, options),
+    };
   }
 }
 

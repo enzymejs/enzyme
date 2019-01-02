@@ -9,6 +9,7 @@ import {
 } from 'react-is';
 import PropTypes from 'prop-types';
 import wrap from 'mocha-wrap';
+import { wrapWithWrappingComponent, RootFinder } from 'enzyme-adapter-utils';
 
 import './_helpers/setupAdapters';
 import Adapter from './_helpers/adapter';
@@ -981,6 +982,23 @@ describe('Adapter', () => {
     });
   });
 
+  itIf(is('>0.13'), 'supports wrapping elements in a WrappingComponent', () => {
+    class WrappingComponent extends React.Component {
+      render() {
+        return null;
+      }
+    }
+    const node = <div />;
+    const options = {
+      mode: 'shallow',
+      wrappingComponent: WrappingComponent,
+      wrappingComponentProps: { foo: 'bar' },
+    };
+    const { RootFinder: ReturnedRootFinder, node: wrappedNode } = adapter.wrapWithWrappingComponent(node, options);
+    expect(ReturnedRootFinder).to.equal(RootFinder);
+    expect(wrappedNode).to.eql(wrapWithWrappingComponent(React.createElement, node, options));
+  });
+
   describe('provides node displayNames', () => {
     const getDisplayName = el => adapter.displayNameOfNode(adapter.elementToNode(el));
 
@@ -1146,6 +1164,8 @@ Warning: Failed Adapter-spec type: Invalid Adapter-spec \`foo\` of type \`string
     it('returns false for everything else', () => {
       expect(adapter.isCustomComponent({})).to.equal(false);
       expect(adapter.isCustomComponent(true)).to.equal(false);
+      expect(adapter.isCustomComponent(null)).to.equal(false);
+      expect(adapter.isCustomComponent(undefined)).to.equal(false);
     });
 
     itIf(is('>=16.3'), 'returns true for forward refs', () => {
