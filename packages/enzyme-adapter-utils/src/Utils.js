@@ -261,16 +261,11 @@ function getComponentStack(
 export function simulateError(
   error,
   catchingInstance,
-  rootNode,
+  rootNode, // TODO: remove `rootNode` next semver-major
   hierarchy,
   getNodeType = nodeTypeFromType,
   getDisplayName = displayNameOfNode,
 ) {
-  const nodeType = getNodeType(rootNode.type);
-  if (nodeType !== 'class') {
-    throw new TypeError('simulateError() can only be called on class components with an instance');
-  }
-
   const { componentDidCatch } = catchingInstance || {};
   if (!componentDidCatch) {
     throw error;

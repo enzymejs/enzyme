@@ -3163,6 +3163,23 @@ describeWithDOM('mount', () => {
           });
         });
       });
+
+      itIf(is('> 0.13'), 'sets the state of a class child with a root SFC', () => {
+        function SFC(props) {
+          return <Parent {...props} />;
+        }
+
+        const wrapper = mount(<SFC />);
+
+        expect(wrapper.text().trim()).to.eql('1 - a');
+
+        return new Promise((resolve) => {
+          wrapper.find(Child).setState({ state: 'b' }, () => {
+            expect(wrapper.text().trim()).to.eql('1 - b');
+            resolve();
+          });
+        });
+      });
     });
   });
 
@@ -5447,6 +5464,10 @@ describeWithDOM('mount', () => {
           }
         }
 
+        function ErrorSFC(props) {
+          return <ErrorBoundary {...props} />;
+        }
+
         describe('Thrower', () => {
           it('does not throw when `throws` is `false`', () => {
             expect(() => mount(<Thrower throws={false} />)).not.to.throw();
@@ -5499,6 +5520,18 @@ describeWithDOM('mount', () => {
           expect(wrapper.find({ children: 'HasNotThrown' })).to.have.lengthOf(0);
         });
 
+        it('rerenders on a simulated error with an SFC root', () => {
+          const wrapper = mount(<ErrorSFC spy={sinon.stub()} />);
+
+          expect(wrapper.find({ children: 'HasThrown' })).to.have.lengthOf(0);
+          expect(wrapper.find({ children: 'HasNotThrown' })).to.have.lengthOf(1);
+
+          expect(() => wrapper.find(Thrower).simulateError(errorToThrow)).not.to.throw();
+
+          expect(wrapper.find({ children: 'HasThrown' })).to.have.lengthOf(1);
+          expect(wrapper.find({ children: 'HasNotThrown' })).to.have.lengthOf(0);
+        });
+
         it('catches errors during render', () => {
           const spy = sinon.spy();
           const wrapper = mount(<ErrorBoundary spy={spy} />);
@@ -5519,6 +5552,31 @@ describeWithDOM('mount', () => {
     in main (created by ErrorBoundary)`}
     in div (created by ErrorBoundary)
     in ErrorBoundary (created by WrapperComponent)
+    in WrapperComponent`,
+          });
+        });
+
+        it('works when the root is an SFC', () => {
+          const spy = sinon.spy();
+          const wrapper = mount(<ErrorSFC spy={spy} />);
+
+          expect(spy).to.have.property('callCount', 0);
+
+          wrapper.find(ErrorBoundary).setState({ throws: true });
+
+          expect(spy).to.have.property('callCount', 1);
+
+          expect(spy.args).to.be.an('array').and.have.lengthOf(1);
+          const [[actualError, info]] = spy.args;
+          expect(actualError).to.satisfy(properErrorMessage);
+          expect(info).to.deep.equal({
+            componentStack: `
+    in Thrower (created by ErrorBoundary)
+    in span (created by ErrorBoundary)${hasFragments ? '' : `
+    in main (created by ErrorBoundary)`}
+    in div (created by ErrorBoundary)
+    in ErrorBoundary (created by ErrorSFC)
+    in ErrorSFC (created by WrapperComponent)
     in WrapperComponent`,
           });
         });
@@ -7717,7 +7775,7 @@ describeWithDOM('mount', () => {
         const mappedChildren = [];
         React.Children.forEach(children, (child, i) => {
           const clonedChild = React.cloneElement(child, {
-            key: i,
+            key: i, // eslint-disable-line react/no-array-index-key
             onClick() {
               return child.props.name;
             },

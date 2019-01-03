@@ -316,7 +316,7 @@ class ReactWrapper {
    * @returns {ReactWrapper}
    */
   setState(state, callback = undefined) {
-    if (this.instance() === null || this[RENDERER].getNode().nodeType !== 'class') {
+    if (this.instance() === null || this.getNodeInternal().nodeType !== 'class') {
       throw new Error('ReactWrapper::setState() can only be called on class components');
     }
     if (arguments.length > 1 && typeof callback !== 'function') {

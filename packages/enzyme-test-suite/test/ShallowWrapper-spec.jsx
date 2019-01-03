@@ -7639,7 +7639,7 @@ describe('shallow', () => {
         const mappedChildren = [];
         React.Children.forEach(children, (child, i) => {
           const clonedChild = React.cloneElement(child, {
-            key: i,
+            key: i, // eslint-disable-line react/no-array-index-key
             onClick() {
               return child.props.name;
             },
