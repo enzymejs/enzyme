@@ -30,7 +30,7 @@ class Stateful extends React.Component {
 ```
 #### React 16.x
 ```jsx
-test('shallow wrapper instance should not be null', () => {
+test('shallow wrapper instance should be null', () => {
   const wrapper = shallow(<Stateless />);
   const instance = wrapper.instance();
 
