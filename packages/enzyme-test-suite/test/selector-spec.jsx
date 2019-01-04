@@ -6,7 +6,7 @@ import {
 } from 'enzyme';
 
 import './_helpers/setupAdapters';
-import { describeWithDOM } from './_helpers';
+import { describeWithDOM, describeIf } from './_helpers';
 
 const tests = [
   {
@@ -281,6 +281,72 @@ describe('selectors', () => {
           </div>
         ));
         expect(wrapper.find('span:last-child').text()).to.equal('last');
+      });
+
+      describeIf(name === 'mount', ':focus pseudo selector', () => {
+        it('works in mount with directly focused DOM node', () => {
+          const wrapper = renderMethod((
+            <input type="text" />
+          ));
+          const inputNode = wrapper.find('input');
+
+          expect(inputNode.is(':focus')).to.equal(false);
+
+          const inputDOMNode = wrapper.getDOMNode();
+          inputDOMNode.focus();
+
+          expect(inputNode.is(':focus')).to.equal(true);
+        });
+
+        it('works on component in mount', () => {
+          class ClassComponent extends React.Component {
+            render() {
+              return (
+                <input type="text" />
+              );
+            }
+          }
+
+          const wrapper = renderMethod((
+            <ClassComponent />
+          ));
+
+          expect(wrapper.find('ClassComponent:focus')).to.have.lengthOf(0);
+
+          const inputDOMNode = wrapper.getDOMNode();
+          inputDOMNode.focus();
+
+          expect(wrapper.find('ClassComponent:focus')).to.have.lengthOf(1);
+        });
+
+        it('works on nested component in mount', () => {
+          class InnerComponent extends React.Component {
+            render() {
+              return (
+                <input type="text" />
+              );
+            }
+          }
+          class WrapComponent extends React.Component {
+            render() {
+              return <InnerComponent />;
+            }
+          }
+          const wrapper = renderMethod((
+            <WrapComponent />
+          ));
+
+          expect(wrapper.find('InnerComponent:focus')).to.have.lengthOf(0);
+          expect(wrapper.find('WrapComponent:focus')).to.have.lengthOf(0);
+          expect(wrapper.find('input:focus')).to.have.lengthOf(0);
+
+          const inputDOMNode = wrapper.getDOMNode();
+          inputDOMNode.focus();
+
+          expect(wrapper.find('InnerComponent:focus')).to.have.lengthOf(1);
+          expect(wrapper.find('WrapComponent:focus')).to.have.lengthOf(1);
+          expect(wrapper.find('input:focus')).to.have.lengthOf(1);
+        });
       });
 
       it('throws for complex selectors in simple selector methods', () => {

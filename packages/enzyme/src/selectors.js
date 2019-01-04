@@ -160,6 +160,14 @@ function matchPseudoSelector(node, token, root) {
     const { rendered } = findParentNode(root, node);
     return rendered[rendered.length - 1] === node;
   }
+  if (name === 'focus') {
+    if (typeof document === 'undefined') {
+      throw new Error('Enzyme::Selector does not support the ":focus" pseudo-element without a global `document`.');
+    }
+    const adapter = getAdapter();
+    /* eslint-env browser */
+    return document.activeElement && adapter.nodeToHostNode(node) === document.activeElement;
+  }
 
   throw new TypeError(`Enzyme::Selector does not support the "${token.name}" pseudo-element or pseudo-class selectors.`);
 }
