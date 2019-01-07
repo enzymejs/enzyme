@@ -240,7 +240,7 @@ export function propsWithKeysAndRef(node) {
   return node.props;
 }
 
-function getComponentStack(
+export function getComponentStack(
   hierarchy,
   getNodeType = nodeTypeFromType,
   getDisplayName = displayNameOfNode,

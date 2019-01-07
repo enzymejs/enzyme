@@ -4,6 +4,7 @@ import {
   displayNameOfNode,
   ensureKeyOrUndefined,
   getMaskedContext,
+  getComponentStack,
 } from 'enzyme-adapter-utils';
 
 import './_helpers/setupAdapters';
@@ -113,6 +114,77 @@ describe('enzyme-adapter-utils', () => {
         a: unmaskedContext.a,
         c: unmaskedContext.c,
       });
+    });
+  });
+
+  describe('getComponentStack', () => {
+    function A() {
+      return <B />;
+    }
+    class B extends React.Component {
+      render() {
+        return <C />;
+      }
+    }
+    class C extends React.Component {
+      render() {
+        return null;
+      }
+    }
+    const hierarchy = [
+      <A />,
+      <div />,
+      <span />,
+      <B />,
+      <C />,
+    ];
+
+    it('outputs a formatted stack of react components', () => {
+      expect(getComponentStack(hierarchy)).to.equal(`
+    in A (created by B)
+    in div (created by B)
+    in span (created by B)
+    in B (created by C)
+    in C (created by WrapperComponent)
+    in WrapperComponent`);
+    });
+
+    it('handles an empty hierarchy', () => {
+      expect(getComponentStack([])).to.equal(`
+    in WrapperComponent`);
+    });
+
+    it('allows getNodeType and getDisplayName to be overridden', () => {
+      function getNodeType(type) {
+        // Not considering C a component
+        if (type === A || type === B) {
+          return 'class';
+        }
+
+        return 'host';
+      }
+      function getDisplayName(node) {
+        if (node.type === A) {
+          return 'Eyy';
+        }
+        if (node.type === B) {
+          return 'Bee';
+        }
+        if (node.type === C) {
+          return 'Sea';
+        }
+        return node.type;
+      }
+
+      // Nothing is created by Sea/C because it is not considered a component
+      // by getNodeType.
+      expect(getComponentStack(hierarchy, getNodeType, getDisplayName)).to.equal(`
+    in Eyy (created by Bee)
+    in div (created by Bee)
+    in span (created by Bee)
+    in Bee (created by WrapperComponent)
+    in Sea (created by WrapperComponent)
+    in WrapperComponent`);
     });
   });
 });
