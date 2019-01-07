@@ -7,6 +7,7 @@ import ReactDOMServer from 'react-dom/server';
 import ShallowRenderer from 'react-test-renderer/shallow';
 // eslint-disable-next-line import/no-unresolved
 import TestUtils from 'react-dom/test-utils';
+import checkPropTypes from 'prop-types/checkPropTypes';
 import {
   isElement,
   isPortal,
@@ -31,6 +32,7 @@ import {
   simulateError,
   wrap,
   getMaskedContext,
+  getComponentStack,
 } from 'enzyme-adapter-utils';
 import { findCurrentFiberUsingSlowPath } from 'react-reconciler/reflection';
 
@@ -416,6 +418,15 @@ class ReactSixteenTwoAdapter extends EnzymeAdapter {
       batchedUpdates(fn) {
         return fn();
         // return ReactDOM.unstable_batchedUpdates(fn);
+      },
+      checkPropTypes(typeSpecs, values, location, hierarchy) {
+        return checkPropTypes(
+          typeSpecs,
+          values,
+          location,
+          displayNameOfNode(cachedNode),
+          () => getComponentStack(hierarchy.concat([cachedNode])),
+        );
       },
     };
   }

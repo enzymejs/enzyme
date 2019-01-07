@@ -7,6 +7,8 @@ import inspect from 'object-inspect';
 import {
   Portal,
 } from 'react-is';
+import PropTypes from 'prop-types';
+import wrap from 'mocha-wrap';
 
 import './_helpers/setupAdapters';
 import Adapter from './_helpers/adapter';
@@ -1032,5 +1034,62 @@ describe('Adapter', () => {
       const wrapped = adapter.wrap(element);
       expect(wrapped.props).to.contain.keys({ children: element });
     });
+  });
+
+  describeIf(is('>= 16'), 'checkPropTypes', () => {
+    let renderer;
+
+    class Root extends React.Component {
+      render() {
+        return <A />;
+      }
+    }
+    function A() {
+      return <B />;
+    }
+    class B extends React.Component {
+      render() {
+        return <C />;
+      }
+    }
+    class C extends React.Component {
+      render() {
+        return null;
+      }
+    }
+    const typeSpecs = {
+      foo: PropTypes.number,
+    };
+    const values = {
+      foo: 'foo',
+    };
+    const location = 'Adapter-spec';
+    const hierarchy = [
+      <A />,
+      <div />,
+      <span />,
+      <B />,
+      <C />,
+    ];
+
+    beforeEach(() => {
+      renderer = adapter.createRenderer({ mode: 'shallow' });
+      renderer.render(<Root />, {});
+    });
+
+    wrap()
+      .withConsoleThrows()
+      .it('checks prop types', () => {
+        expect(() => renderer.checkPropTypes(typeSpecs, values, location, hierarchy)).to.throw(`
+Warning: Failed Adapter-spec type: Invalid Adapter-spec \`foo\` of type \`string\` supplied to \`Root\`, expected \`number\`.
+    in A (created by B)
+    in div (created by B)
+    in span (created by B)
+    in B (created by C)
+    in C (created by Root)
+    in Root (created by WrapperComponent)
+    in WrapperComponent
+        `.trim());
+      });
   });
 });
