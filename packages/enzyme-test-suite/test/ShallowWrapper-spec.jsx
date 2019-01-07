@@ -290,6 +290,256 @@ describe('shallow', () => {
         );
       });
     });
+
+    describe('getChildContext()', () => {
+      class FooProvider extends React.Component {
+        getChildContext() {
+          const { value } = this.props;
+          return { foo: value };
+        }
+
+        render() {
+          const { children } = this.props;
+          return children;
+        }
+      }
+      FooProvider.childContextTypes = {
+        foo: PropTypes.string,
+      };
+
+      class BarProvider extends React.Component {
+        constructor(...args) {
+          super(...args);
+
+          this.state = { value: 'love' };
+        }
+
+        getChildContext() {
+          const { value } = this.state;
+          return { bar: value };
+        }
+
+        render() {
+          const { children } = this.props;
+          return children;
+        }
+      }
+      BarProvider.childContextTypes = {
+        bar: PropTypes.string,
+      };
+
+      class FooBarBazConsumer extends React.Component {
+        render() {
+          return <div />;
+        }
+      }
+      FooBarBazConsumer.contextTypes = {
+        foo: PropTypes.string,
+        bar: PropTypes.string,
+        baz: PropTypes.string,
+      };
+
+      class TestComponent extends React.Component {
+        render() {
+          return (
+            <FooProvider value="i">
+              <BarProvider>
+                <FooBarBazConsumer />
+              </BarProvider>
+            </FooProvider>
+          );
+        }
+      }
+
+      let fooProviderSpy;
+      let barProviderSpy;
+      beforeEach(() => {
+        fooProviderSpy = sinon.spy(FooProvider.prototype, 'getChildContext');
+        barProviderSpy = sinon.spy(BarProvider.prototype, 'getChildContext');
+      });
+      afterEach(() => {
+        fooProviderSpy.restore();
+        barProviderSpy.restore();
+      });
+
+      describeIf(is('<= 0.13'), 'owner-based context', () => {
+        it('is not implemented', () => {
+          const wrapper = shallow(<TestComponent />, { context: { baz: 'enzyme' } });
+
+          const fooProvider = wrapper.find(FooProvider).dive();
+          const barProvider = fooProvider.find(BarProvider).dive();
+          const consumer = barProvider.find(FooBarBazConsumer).dive();
+
+          const expectedContext = { baz: 'enzyme', foo: undefined, bar: undefined };
+          expect(consumer.context()).to.eql(expectedContext);
+        });
+      });
+
+      describeIf(is('>= 0.14'), 'parent-based context', () => {
+        const adapter = getAdapter();
+        const {
+          createShallowRenderer: realCreateShallowRenderer,
+          options: realAdapterOptions,
+        } = adapter;
+
+        wrap()
+          .withOverride(() => adapter, 'options', () => {
+            const {
+              legacyContextMode, // omit legacyContextMode
+              lifecycles: {
+                getChildContext, // omit getChildContext
+                ...lifecycles
+              },
+              ...options
+            } = realAdapterOptions;
+
+            return {
+              ...options,
+              lifecycles,
+            };
+          })
+          .describe('with older adapters', () => {
+            it('still supports the context option', () => {
+              const wrapper = shallow(<TestComponent />, { context: { baz: 'enzyme' } });
+
+              const fooProvider = wrapper.find(FooProvider).dive();
+              const barProvider = fooProvider.find(BarProvider).dive();
+              const consumer = barProvider.find(FooBarBazConsumer).dive();
+
+              const expectedContext = { baz: 'enzyme', foo: undefined, bar: undefined };
+              expect(consumer.context()).to.eql(expectedContext);
+            });
+          });
+
+        it('is called on mount', () => {
+          const wrapper = shallow(<TestComponent />, { context: { baz: 'enzyme' } });
+
+          const fooProvider = wrapper.find(FooProvider).dive();
+          const barProvider = fooProvider.find(BarProvider).dive();
+          const consumer = barProvider.find(FooBarBazConsumer).dive();
+
+          const expectedContext = { foo: 'i', bar: 'love', baz: 'enzyme' };
+          expect(consumer.context()).to.eql(expectedContext);
+
+          expect(fooProviderSpy).to.have.property('callCount', 1);
+        });
+
+        it('is called when the component re-renders', () => {
+          const wrapper = shallow(<TestComponent />, { context: { baz: 'enzyme' } });
+          const fooProvider = wrapper.find(FooProvider).dive();
+          fooProvider.setProps({ value: 'we' });
+
+          const barProvider = fooProvider.find(BarProvider).dive();
+          barProvider.setState({ value: 'like' });
+
+          const consumer = barProvider.find(FooBarBazConsumer).dive();
+
+          expect(fooProviderSpy).to.have.property('callCount', 2);
+          expect(barProviderSpy).to.have.property('callCount', 2);
+
+          const expectedContext = { foo: 'we', bar: 'like', baz: 'enzyme' };
+          expect(consumer.context()).to.eql(expectedContext);
+        });
+
+        it('does nothing if disableLifecycleMethods is true', () => {
+          const wrapper = shallow(<TestComponent />, {
+            context: { baz: 'enzyme' },
+            disableLifecycleMethods: true,
+          });
+          const fooProvider = wrapper.find(FooProvider).dive();
+
+          const consumer = () => {
+            const barProvider = fooProvider.find(BarProvider).dive();
+            return barProvider.find(FooBarBazConsumer).dive();
+          };
+
+          const expectedContext = { baz: 'enzyme', foo: undefined, bar: undefined };
+          expect(consumer().context()).to.eql(expectedContext);
+
+          fooProvider.setProps({ value: 'we' });
+          expect(consumer().context()).to.eql(expectedContext);
+        });
+
+        it('throws like react if a child context is returned and there is no propType', () => {
+          class FaultyFooProvider extends React.Component {
+            getChildContext() {
+              const { value } = this.props;
+              return { foo: value };
+            }
+
+            render() {
+              const { children } = this.props;
+              return children;
+            }
+          }
+          FaultyFooProvider.childContextTypes = {};
+
+          expect(() => shallow((
+            <FaultyFooProvider value="foo">
+              <div />
+            </FaultyFooProvider>
+          ))).to.throw('FaultyFooProvider.getChildContext(): key "foo" is not defined in childContextTypes');
+        });
+
+        it('allows overridding context with the context option', () => {
+          const wrapper = shallow(<TestComponent />);
+
+          const fooProvider = wrapper.find(FooProvider).dive();
+          const barProvider = fooProvider.find(BarProvider).dive();
+          const consumer = barProvider.find(FooBarBazConsumer).dive({ context: { foo: 'you' } });
+
+          const expectedContext = { foo: 'you', bar: undefined, baz: undefined };
+          expect(consumer.context()).to.eql(expectedContext);
+        });
+
+        wrap()
+          .withConsoleThrows()
+          .it('warns if childContextTypes is not defined', () => {
+            class FaultyFooProvider extends React.Component {
+              getChildContext() {
+                const { value } = this.props;
+                return {
+                  foo: value,
+                };
+              }
+
+              render() {
+                return null;
+              }
+            }
+            expect(() => shallow((
+              <FaultyFooProvider />
+            ))).to.throw('FaultyFooProvider.getChildContext(): childContextTypes must be defined in order to use getChildContext().');
+          });
+
+        wrap()
+          .withConsoleThrows()
+          .it('checks prop types', () => {
+            try {
+              shallow(<FooProvider value={1612}><div /></FooProvider>);
+              throw new EvalError('shallow() did not throw!');
+            } catch (error) {
+              expect(error.message).to.contain('`foo` of type `number` supplied to `FooProvider`, expected `string`');
+              expect(error.message).to.match(/context/i);
+            }
+          });
+
+        wrap()
+          .withOverride(() => getAdapter(), 'createShallowRenderer', () => (...args) => {
+            const renderer = realCreateShallowRenderer(...args);
+            delete renderer.checkPropTypes;
+            return renderer;
+          })
+          .it('if the adapter can‘t check propTypes, it works, but does not check prop types', () => {
+            expect(() => {
+              const wrapper = shallow(<TestComponent />, { context: { baz: 'enzyme' } });
+              const fooProvider = wrapper.find(FooProvider).dive();
+              const barProvider = fooProvider.find(BarProvider).dive();
+              return barProvider.find(FooBarBazConsumer).dive();
+            }).not.to.throw();
+          });
+      });
+    });
   });
 
   describeIf(is('> 0.13'), 'stateless function components (SFCs)', () => {

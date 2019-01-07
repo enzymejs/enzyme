@@ -40,6 +40,7 @@ const ROOT = sym('__root__');
 const OPTIONS = sym('__options__');
 const SET_STATE = sym('__setState__');
 const ROOT_NODES = sym('__rootNodes__');
+const CHILD_CONTEXT = sym('__childContext__');
 
 /**
  * Finds all nodes in the current wrapper nodes' render trees that match the provided predicate
@@ -136,6 +137,10 @@ function getAdapterLifecycles({ options }) {
     setState: {
       ...lifecycles.setState,
     },
+    getChildContext: {
+      calledByRenderer: true,
+      ...lifecycles.getChildContext,
+    },
     ...(componentDidUpdate && { componentDidUpdate }),
   };
 }
@@ -180,6 +185,65 @@ function isPureComponent(instance) {
   return instance && instance.isPureReactComponent;
 }
 
+function getChildContext(node, hierarchy, renderer) {
+  const { instance, type: Component } = node;
+  const componentName = displayNameOfNode(node);
+  // Warn like react if childContextTypes is not defined:
+  // https://github.com/facebook/react/blob/1454a8be03794f5e0b23a7e7696cbbbdcf8b0f5d/packages/react-dom/src/server/ReactPartialRenderer.js#L639-L646
+  if (typeof Component.childContextTypes !== 'object') {
+    // eslint-disable-next-line no-console
+    console.warn(
+      `${componentName}.getChildContext(): childContextTypes must be defined in order to use getChildContext().`,
+    );
+    return {};
+  }
+  // Check childContextTypes like react:
+  // https://github.com/facebook/react/blob/1454a8be03794f5e0b23a7e7696cbbbdcf8b0f5d/packages/react-dom/src/server/ReactPartialRenderer.js#L630-L637
+  const childContext = instance.getChildContext();
+  Object.keys(childContext).forEach((key) => {
+    if (!(key in Component.childContextTypes)) {
+      throw new Error(
+        `${componentName}.getChildContext(): key "${key}" is not defined in childContextTypes.`,
+      );
+    }
+  });
+  if (typeof renderer.checkPropTypes === 'function') {
+    renderer.checkPropTypes(Component.childContextTypes, childContext, 'child context', hierarchy);
+  }
+  return childContext;
+}
+
+function spyOnGetChildContextInitialRender(nodes, adapter) {
+  if (
+    !isCustomComponentElement(nodes, adapter)
+    || !nodes.type.prototype
+    || typeof nodes.type.prototype.getChildContext !== 'function'
+  ) {
+    return null;
+  }
+
+  return spyMethod(nodes.type.prototype, 'getChildContext');
+}
+
+function privateSetChildContext(adapter, wrapper, instance, renderedNode, getChildContextSpy) {
+  const renderer = wrapper[RENDERER];
+  // We only support parent-based context.
+  if (adapter.options.legacyContextMode !== 'parent') { return; }
+  if (getChildContextSpy) {
+    privateSet(wrapper, CHILD_CONTEXT, getChildContextSpy.getLastReturnValue());
+    getChildContextSpy.restore();
+  } else if (typeof instance.getChildContext === 'function') {
+    // If there's no spy but getChildContext is a function, that means our renderer
+    // is not going to call it for us, so we need to call it ourselves.
+    const nodeHierarchy = [wrapper[NODE]].concat(nodeParents(wrapper, wrapper[NODE]));
+    const childContext = getChildContext(renderedNode, nodeHierarchy, renderer);
+    privateSet(wrapper, CHILD_CONTEXT, childContext);
+  } else {
+    privateSet(wrapper, CHILD_CONTEXT, null);
+  }
+}
+
+
 /**
  * @class ShallowWrapper
  */
@@ -197,6 +261,9 @@ class ShallowWrapper {
         throw new TypeError('ShallowWrapper can only wrap valid elements');
       }
 
+      const getChildContextSpy = lifecycles.getChildContext.calledByRenderer
+        ? spyOnGetChildContextInitialRender(nodes, adapter)
+        : null;
       privateSet(this, ROOT, this);
       privateSet(this, UNRENDERED, nodes);
       const renderer = adapter.createRenderer({ mode: 'shallow', ...options });
@@ -221,6 +288,7 @@ class ShallowWrapper {
             instance.componentDidMount();
           });
         }
+        privateSetChildContext(adapter, this, instance, renderedNode, getChildContextSpy);
       }
     // creating a child component through enzyme's ShallowWrapper APIs.
     } else {
@@ -363,7 +431,8 @@ class ShallowWrapper {
         // NOTE(lmr): In react 16, instances will be null for SFCs, but
         // rerendering with props/context is still a valid thing to do. In
         // this case, state will be undefined, but props/context will exist.
-        const instance = this.instance() || {};
+        const node = this[RENDERER].getNode();
+        const instance = node.instance || {};
         const { state } = instance;
         const prevProps = instance.props || this[UNRENDERED].props;
         const prevContext = instance.context || this[OPTIONS].context;
@@ -374,15 +443,25 @@ class ShallowWrapper {
         this[RENDERER].batchedUpdates(() => {
           // When shouldComponentUpdate returns false we shouldn't call componentDidUpdate.
           // so we spy shouldComponentUpdate to get the result.
+          const lifecycles = getAdapterLifecycles(adapter);
           let shouldRender = true;
-          let spy;
+          let shouldComponentUpdateSpy;
+          let getChildContextSpy;
           if (
             !this[OPTIONS].disableLifecycleMethods
             && instance
-            && typeof instance.shouldComponentUpdate === 'function'
           ) {
-            spy = spyMethod(instance, 'shouldComponentUpdate');
-          } else if (isPureComponent(instance)) {
+            if (typeof instance.shouldComponentUpdate === 'function') {
+              shouldComponentUpdateSpy = spyMethod(instance, 'shouldComponentUpdate');
+            }
+            if (
+              lifecycles.getChildContext.calledByRenderer
+              && typeof instance.getChildContext === 'function'
+            ) {
+              getChildContextSpy = spyMethod(instance, 'getChildContext');
+            }
+          }
+          if (!shouldComponentUpdateSpy && isPureComponent(instance)) {
             shouldRender = pureComponentShouldComponentUpdate(
               prevProps,
               props,
@@ -392,17 +471,16 @@ class ShallowWrapper {
           }
           if (props) this[UNRENDERED] = cloneElement(adapter, this[UNRENDERED], props);
           this[RENDERER].render(this[UNRENDERED], nextContext);
-          if (spy) {
-            shouldRender = spy.getLastReturnValue();
-            spy.restore();
+          if (shouldComponentUpdateSpy) {
+            shouldRender = shouldComponentUpdateSpy.getLastReturnValue();
+            shouldComponentUpdateSpy.restore();
           }
           if (
             shouldRender
             && !this[OPTIONS].disableLifecycleMethods
             && instance
           ) {
-            const lifecycles = getAdapterLifecycles(adapter);
-
+            privateSetChildContext(adapter, this, instance, node, getChildContextSpy);
             if (lifecycles.getSnapshotBeforeUpdate) {
               let snapshot;
               if (typeof instance.getSnapshotBeforeUpdate === 'function') {
@@ -493,7 +571,8 @@ class ShallowWrapper {
 
         const lifecycles = getAdapterLifecycles(adapter);
 
-        const instance = this.instance();
+        const node = this[RENDERER].getNode();
+        const { instance } = node;
         const prevProps = instance.props;
         const prevState = instance.state;
         const prevContext = instance.context;
@@ -509,17 +588,28 @@ class ShallowWrapper {
 
         // When shouldComponentUpdate returns false we shouldn't call componentDidUpdate.
         // so we spy shouldComponentUpdate to get the result.
-        let spy;
+        let shouldComponentUpdateSpy;
+        let getChildContextSpy;
         let shouldRender = true;
         if (
           !this[OPTIONS].disableLifecycleMethods
-          && lifecycles.componentDidUpdate
-          && lifecycles.componentDidUpdate.onSetState
           && instance
-          && typeof instance.shouldComponentUpdate === 'function'
         ) {
-          spy = spyMethod(instance, 'shouldComponentUpdate');
-        } else if (isPureComponent(instance)) {
+          if (
+            lifecycles.componentDidUpdate
+            && lifecycles.componentDidUpdate.onSetState
+            && typeof instance.shouldComponentUpdate === 'function'
+          ) {
+            shouldComponentUpdateSpy = spyMethod(instance, 'shouldComponentUpdate');
+          }
+          if (
+            lifecycles.getChildContext.calledByRenderer
+            && typeof instance.getChildContext === 'function'
+          ) {
+            getChildContextSpy = spyMethod(instance, 'getChildContext');
+          }
+        }
+        if (!shouldComponentUpdateSpy && isPureComponent(instance)) {
           shouldRender = pureComponentShouldComponentUpdate(
             prevProps,
             instance.props,
@@ -534,31 +624,34 @@ class ShallowWrapper {
         } else {
           instance.setState(statePayload);
         }
-        if (spy) {
-          shouldRender = spy.getLastReturnValue();
-          spy.restore();
+        if (shouldComponentUpdateSpy) {
+          shouldRender = shouldComponentUpdateSpy.getLastReturnValue();
+          shouldComponentUpdateSpy.restore();
         }
         if (
           maybeHasUpdate
           && shouldRender
           && !this[OPTIONS].disableLifecycleMethods
-          && lifecycles.componentDidUpdate
-          && lifecycles.componentDidUpdate.onSetState
-          && instance
         ) {
+          privateSetChildContext(adapter, this, instance, node, getChildContextSpy);
           if (
-            lifecycles.getSnapshotBeforeUpdate
-            && typeof instance.getSnapshotBeforeUpdate === 'function'
+            lifecycles.componentDidUpdate
+            && lifecycles.componentDidUpdate.onSetState
           ) {
-            const snapshot = instance.getSnapshotBeforeUpdate(prevProps, prevState);
-            if (typeof instance.componentDidUpdate === 'function') {
-              instance.componentDidUpdate(prevProps, prevState, snapshot);
-            }
-          } else if (typeof instance.componentDidUpdate === 'function') {
-            if (lifecycles.componentDidUpdate.prevContext) {
-              instance.componentDidUpdate(prevProps, prevState, prevContext);
-            } else {
-              instance.componentDidUpdate(prevProps, prevState);
+            if (
+              lifecycles.getSnapshotBeforeUpdate
+              && typeof instance.getSnapshotBeforeUpdate === 'function'
+            ) {
+              const snapshot = instance.getSnapshotBeforeUpdate(prevProps, prevState);
+              if (typeof instance.componentDidUpdate === 'function') {
+                instance.componentDidUpdate(prevProps, prevState, snapshot);
+              }
+            } else if (typeof instance.componentDidUpdate === 'function') {
+              if (lifecycles.componentDidUpdate.prevContext) {
+                instance.componentDidUpdate(prevProps, prevState, prevContext);
+              } else {
+                instance.componentDidUpdate(prevProps, prevState);
+              }
             }
           }
         }
@@ -1411,7 +1504,14 @@ class ShallowWrapper {
       if (!isCustomComponentElement(el, adapter)) {
         throw new TypeError(`ShallowWrapper::${name}() can only be called on components`);
       }
-      return this.wrap(el, null, { ...this[OPTIONS], ...options });
+      return this.wrap(el, null, {
+        ...this[OPTIONS],
+        ...options,
+        context: options.context || {
+          ...this[OPTIONS].context,
+          ...this[ROOT][CHILD_CONTEXT],
+        },
+      });
     });
   }
 
