@@ -234,6 +234,7 @@ class ReactSixteenOneAdapter extends EnzymeAdapter {
     const { lifecycles } = this.options;
     this.options = {
       ...this.options,
+      legacyContextMode: 'parent',
       lifecycles: {
         ...lifecycles,
         componentDidUpdate: {
@@ -241,6 +242,9 @@ class ReactSixteenOneAdapter extends EnzymeAdapter {
         },
         setState: {
           skipsComponentDidUpdateOnNullish: true,
+        },
+        getChildContext: {
+          calledByRenderer: false,
         },
       },
     };

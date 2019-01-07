@@ -236,6 +236,7 @@ class ReactSixteenTwoAdapter extends EnzymeAdapter {
     this.options = {
       ...this.options,
       enableComponentDidUpdateOnSetState: true, // TODO: remove, semver-major
+      legacyContextMode: 'parent',
       lifecycles: {
         ...lifecycles,
         componentDidUpdate: {
@@ -243,6 +244,9 @@ class ReactSixteenTwoAdapter extends EnzymeAdapter {
         },
         setState: {
           skipsComponentDidUpdateOnNullish: true,
+        },
+        getChildContext: {
+          calledByRenderer: false,
         },
       },
     };

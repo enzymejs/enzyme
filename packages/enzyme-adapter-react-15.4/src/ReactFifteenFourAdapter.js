@@ -114,10 +114,14 @@ class ReactFifteenFourAdapter extends EnzymeAdapter {
     this.options = {
       ...this.options,
       supportPrevContextArgumentOfComponentDidUpdate: true, // TODO: remove, semver-major
+      legacyContextMode: 'parent',
       lifecycles: {
         ...lifecycles,
         componentDidUpdate: {
           prevContext: true,
+        },
+        getChildContext: {
+          calledByRenderer: true,
         },
       },
     };

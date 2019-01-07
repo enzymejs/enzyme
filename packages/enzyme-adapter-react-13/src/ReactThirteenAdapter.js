@@ -106,6 +106,7 @@ class ReactThirteenAdapter extends EnzymeAdapter {
     this.options = {
       ...this.options,
       supportPrevContextArgumentOfComponentDidUpdate: true, // TODO: remove, semver-major
+      legacyContextMode: 'owner',
       lifecycles: {
         ...lifecycles,
         componentDidUpdate: {
