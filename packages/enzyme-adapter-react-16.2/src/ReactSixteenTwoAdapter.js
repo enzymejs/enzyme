@@ -30,6 +30,7 @@ import {
   ensureKeyOrUndefined,
   simulateError,
   wrap,
+  getMaskedContext,
 } from 'enzyme-adapter-utils';
 import { findCurrentFiberUsingSlowPath } from 'react-reconciler/reflection';
 
@@ -317,7 +318,7 @@ class ReactSixteenTwoAdapter extends EnzymeAdapter {
     let isDOM = false;
     let cachedNode = null;
     return {
-      render(el, context) {
+      render(el, unmaskedContext) {
         cachedNode = el;
         /* eslint consistent-return: 0 */
         if (typeof el.type === 'string') {
@@ -330,6 +331,7 @@ class ReactSixteenTwoAdapter extends EnzymeAdapter {
             Component.prototype.isReactComponent
             || Array.isArray(Component.__reactAutoBindPairs) // fallback for createClass components
           );
+          const context = getMaskedContext(Component.contextTypes, unmaskedContext);
 
           if (!isStateful && typeof Component === 'function') {
             const wrappedEl = Object.assign(

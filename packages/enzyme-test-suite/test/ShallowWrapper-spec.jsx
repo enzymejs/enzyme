@@ -4480,6 +4480,30 @@ describe('shallow', () => {
         expect(wrapper.context().name).to.equal(context.name);
         expect(wrapper.context('name')).to.equal(context.name);
       });
+
+      it('filters context to childContextTypes', () => {
+        class Bar extends React.Component {
+          render() {
+            return <div />;
+          }
+        }
+        Bar.contextTypes = {
+          name: PropTypes.string,
+        };
+        class Foo extends React.Component {
+          render() {
+            return (
+              <div>
+                <Bar />
+              </div>
+            );
+          }
+        }
+
+        const context = { name: 'foo', hello: 'world' };
+        const wrapper = shallow(<Foo />, { context });
+        expect(wrapper.find(Bar).dive().context()).to.eql({ name: 'foo' });
+      });
     });
 
     describeIf(is('> 0.13'), 'stateless function components', () => {
