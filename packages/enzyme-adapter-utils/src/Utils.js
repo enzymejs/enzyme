@@ -1,4 +1,5 @@
 import functionName from 'function.prototype.name';
+import fromEntries from 'object.fromentries';
 import createMountWrapper from './createMountWrapper';
 import createRenderWrapper from './createRenderWrapper';
 import wrap from './wrapWithSimpleWrapper';
@@ -278,4 +279,11 @@ export function simulateError(
   );
 
   componentDidCatch.call(catchingInstance, error, { componentStack });
+}
+
+export function getMaskedContext(contextTypes, unmaskedContext) {
+  if (!contextTypes || !unmaskedContext) {
+    return {};
+  }
+  return fromEntries(Object.keys(contextTypes).map(key => [key, unmaskedContext[key]]));
 }

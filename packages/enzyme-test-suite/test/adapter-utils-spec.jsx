@@ -3,6 +3,7 @@ import { expect } from 'chai';
 import {
   displayNameOfNode,
   ensureKeyOrUndefined,
+  getMaskedContext,
 } from 'enzyme-adapter-utils';
 
 import './_helpers/setupAdapters';
@@ -79,6 +80,38 @@ describe('enzyme-adapter-utils', () => {
     describe('given a DOM node', () => {
       it('returns the type', () => {
         expect(displayNameOfNode(<div />)).to.equal('div');
+      });
+    });
+  });
+
+  describe('getMaskedContext', () => {
+    const contextTypes = {
+      a() {},
+      c() {},
+    };
+    const unmaskedContext = {
+      a: 1,
+      b: 2,
+      c: 3,
+    };
+    const falsies = [undefined, null, false, '', NaN, 0];
+
+    it('returns an empty object with falsy `contextTypes`', () => {
+      falsies.forEach((falsy) => {
+        expect(getMaskedContext(falsy, unmaskedContext)).to.eql({});
+      });
+    });
+
+    it('returns an empty object with falsy `unmaskedContext`', () => {
+      falsies.forEach((falsy) => {
+        expect(getMaskedContext(contextTypes, falsy)).to.eql({});
+      });
+    });
+
+    it('filters `unmaskedContext` down to `contextTypes`', () => {
+      expect(getMaskedContext(contextTypes, unmaskedContext)).to.eql({
+        a: unmaskedContext.a,
+        c: unmaskedContext.c,
       });
     });
   });
