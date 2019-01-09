@@ -12,6 +12,7 @@ import {
   getNodeFromRootFinder,
   wrapWithWrappingComponent,
   getWrappingComponentMountRenderer,
+  fakeDynamicImport,
 } from 'enzyme-adapter-utils';
 
 import './_helpers/setupAdapters';
@@ -375,6 +376,24 @@ describe('enzyme-adapter-utils', () => {
       it('throws an error if there is no instance', () => {
         instance = undefined;
         expect(() => renderer.render(<div />, null, () => {})).to.throw('The wrapping component may not be updated if the root is unmounted.');
+      });
+    });
+  });
+
+  describe('fakeDynamicImport', () => {
+    it('is a function', () => {
+      expect(fakeDynamicImport).to.be.a('function');
+    });
+
+    it('returns a promise', () => {
+      const promise = fakeDynamicImport();
+      expect(Promise.resolve(promise)).to.equal(promise);
+    });
+
+    it('returns a promise for an object containing the provided argument', () => {
+      const signal = {};
+      return fakeDynamicImport(signal).then((actual) => {
+        expect(actual).to.have.property('default', signal);
       });
     });
   });

@@ -363,3 +363,7 @@ export function getWrappingComponentMountRenderer({ toTree, getMountWrapperInsta
     },
   };
 }
+
+export function fakeDynamicImport(moduleToImport) {
+  return Promise.resolve({ default: moduleToImport });
+}
