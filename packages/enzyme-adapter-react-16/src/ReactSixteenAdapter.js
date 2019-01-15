@@ -933,6 +933,18 @@ class ReactSixteenAdapter extends EnzymeAdapter {
     return isElement(element);
   }
 
+  shouldComponentUpdate(prevProps, root) {
+    const instance = root.instance();
+    if (instance !== null) {
+      const { updater, props } = instance;
+      return (
+        updater._renderer._newState !== null || !shallowEqual(prevProps, props)
+      );
+    }
+
+    return true;
+  }
+
   isValidElementType(object) {
     return !!object && isValidElementType(object);
   }
