@@ -6114,7 +6114,7 @@ describe('shallow', () => {
         ]);
       });
 
-      it('calls GDSFP when expected', () => {
+      it('calls gDSFP when expected', () => {
         const prevProps = { a: 1 };
         const state = { state: true };
         const wrapper = shallow(<GDSFP {...prevProps} />);
@@ -6160,6 +6160,35 @@ describe('shallow', () => {
             prevContext: is('>= 16') ? undefined : prevContext,
           }],
         ]);
+      });
+
+      it('cDU’s nextState differs from `this.state` when gDSFP returns new state', () => {
+        class SimpleComponent extends React.Component {
+          constructor(props) {
+            super(props);
+            this.state = { value: props.value };
+          }
+
+          static getDerivedStateFromProps(props, state) {
+            return props.value === state.value ? null : { value: props.value };
+          }
+
+          shouldComponentUpdate(nextProps, nextState) {
+            return nextState.value !== this.state.value;
+          }
+
+          render() {
+            const { value } = this.state;
+            return (<input value={value} />);
+          }
+        }
+        const wrapper = shallow(<SimpleComponent value="initial" />);
+
+        expect(wrapper.find('input').prop('value')).to.equal('initial');
+
+        wrapper.setProps({ value: 'updated' });
+
+        expect(wrapper.find('input').prop('value')).to.equal('updated');
       });
     });
 
