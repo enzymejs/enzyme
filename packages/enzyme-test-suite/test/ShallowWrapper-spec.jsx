@@ -5047,7 +5047,7 @@ describe('shallow', () => {
 
         beforeEach(() => {
           wrapper = shallow(<Foo />, options);
-          spy.reset();
+          spy.resetHistory();
         });
 
         it('does not call componentDidMount when mounting', () => {
@@ -5325,7 +5325,7 @@ describe('shallow', () => {
           ['constructor'],
           ['render'],
         ]);
-        spy.reset();
+        spy.resetHistory();
 
         const foo = {};
         const props = { foo };
@@ -5367,7 +5367,7 @@ describe('shallow', () => {
           ['constructor'],
           ['render'],
         ]);
-        spy.reset();
+        spy.resetHistory();
 
         const foo = {};
         const props = { foo };
@@ -5416,7 +5416,7 @@ describe('shallow', () => {
           }],
           ['render'],
         ]);
-        spy.reset();
+        spy.resetHistory();
 
         const foo = {};
         const props = { foo };
@@ -6555,14 +6555,14 @@ describe('shallow', () => {
           }
         }
         const wrapper = shallow(<Foo name="foo" />);
-        spy.reset();
+        spy.resetHistory();
         wrapper.setProps({ name: 'bar' });
         expect(spy.args).to.deep.equal([
           ['render'],
           ['getSnapshotBeforeUpdate', { name: 'foo' }, { name: 'bar' }, { foo: 'bar' }, { foo: 'bar' }],
           ['componentDidUpdate', { name: 'foo' }, { name: 'bar' }, { foo: 'bar' }, { foo: 'bar' }, { snapshot: 'ok' }],
         ]);
-        spy.reset();
+        spy.resetHistory();
         wrapper.setState({ foo: 'baz' });
         expect(spy.args).to.deep.equal([
           ['render'],

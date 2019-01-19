@@ -5281,7 +5281,7 @@ describeWithDOM('mount', () => {
           ['constructor'],
           ['render'],
         ]);
-        spy.reset();
+        spy.resetHistory();
 
         const foo = {};
         const props = { foo };
@@ -5323,7 +5323,7 @@ describeWithDOM('mount', () => {
           ['constructor'],
           ['render'],
         ]);
-        spy.reset();
+        spy.resetHistory();
 
         const foo = {};
         const props = { foo };
@@ -5372,7 +5372,7 @@ describeWithDOM('mount', () => {
           }],
           ['render'],
         ]);
-        spy.reset();
+        spy.resetHistory();
 
         const foo = {};
         const props = { foo };
@@ -6562,14 +6562,14 @@ describeWithDOM('mount', () => {
           }
         }
         const wrapper = mount(<Foo name="foo" />);
-        spy.reset();
+        spy.resetHistory();
         wrapper.setProps({ name: 'bar' });
         expect(spy.args).to.deep.equal([
           ['render'],
           ['getSnapshotBeforeUpdate', { name: 'foo' }, { name: 'bar' }, { foo: 'bar' }, { foo: 'bar' }],
           ['componentDidUpdate', { name: 'foo' }, { name: 'bar' }, { foo: 'bar' }, { foo: 'bar' }, { snapshot: 'ok' }],
         ]);
-        spy.reset();
+        spy.resetHistory();
         wrapper.setState({ foo: 'baz' });
         expect(spy.args).to.deep.equal([
           ['render'],

@@ -30,16 +30,16 @@
   "license": "MIT",
   "dependencies": {
     "chai": "^4.1.2",
-    "enzyme": "^3.3.0",
-    "enzyme-adapter-utils": "^1.5.0",
+    "enzyme": "^3.8.0",
+    "enzyme-adapter-utils": "^1.9.1",
     "jsdom": "^6.5.1",
     "lodash.isequal": "^4.5.0",
     "mocha-wrap": "^2.1.2",
-    "object.assign": "^4.1.0",
     "object-inspect": "^1.6.0",
+    "object.assign": "^4.1.0",
     "prop-types": "^15.6.2",
-    "semver": "^5.5.0",
-    "sinon": "^4.1.6"
+    "semver": "^5.6.0",
+    "sinon": "^5.1.1"
   },
   "peerDependencies": {
     "react": "^15.5.0",
@@ -47,12 +47,12 @@
   },
   "devDependencies": {
     "create-react-class": "^15.6.3",
-    "eslint": "^5.10.0",
+    "eslint": "^5.12.1",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-jsx-a11y": "^6.1.2",
-    "eslint-plugin-mocha": "^5.2.0",
-    "eslint-plugin-react": "^7.12.3",
+    "eslint-plugin-mocha": "^5.2.1",
+    "eslint-plugin-react": "^7.12.4",
     "react-is": "^16.7.0"
   }
 }
