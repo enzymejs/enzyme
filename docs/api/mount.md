@@ -84,6 +84,9 @@ Returns whether or not all the given react elements are somewhere in the render 
 #### [`.containsAnyMatchingElements(nodes) => Boolean`](ReactWrapper/containsAnyMatchingElements.md)
 Returns whether or not one of the given react elements is somewhere in the render tree.
 
+#### [`.equals(node) => Boolean`](ReactWrapper/equals.md)
+Returns whether or not the current wrapper root node render tree looks like the one passed in.
+
 #### [`.hasClass(className) => Boolean`](ReactWrapper/hasClass.md)
 Returns whether or not the current root node has the given class name or not.
 
