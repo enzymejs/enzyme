@@ -37,7 +37,7 @@
     "enzyme-adapter-utils": "^1.9.0",
     "function.prototype.name": "^1.1.0",
     "object.assign": "^4.1.0",
-    "object.values": "^1.0.4",
+    "object.values": "^1.1.0",
     "prop-types": "^15.6.2",
     "react-is": "^16.7.0",
     "react-reconciler": "^0.7.0",

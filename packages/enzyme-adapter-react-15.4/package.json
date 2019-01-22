@@ -34,10 +34,10 @@
   "author": "Leland Richardson <leland.richardson@airbnb.com>",
   "license": "MIT",
   "dependencies": {
-    "enzyme-adapter-react-helper": "^1.3.0",
+    "enzyme-adapter-react-helper": "^1.3.1",
     "enzyme-adapter-utils": "^1.9.0",
     "object.assign": "^4.1.0",
-    "object.values": "^1.0.4",
+    "object.values": "^1.1.0",
     "prop-types": "^15.6.2",
     "react-is": "^16.7.0"
   },
