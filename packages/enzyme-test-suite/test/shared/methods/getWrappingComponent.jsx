@@ -183,6 +183,31 @@ export default function describeGetWrappingComponent({
       }
     });
 
+    itIf(is('>= 16.3'), 'updates a <Provider /> if it is rendered as root', () => {
+      const Context = React.createContext();
+      function WrappingComponent(props) {
+        const { value, children } = props;
+        return (
+          <Context.Provider value={value}>
+            {children}
+          </Context.Provider>
+        );
+      }
+      const wrapper = Wrap((
+        <Context.Consumer>
+          {value => <div>{value}</div>}
+        </Context.Consumer>
+      ), {
+        wrappingComponent: WrappingComponent,
+        wrappingComponentProps: { value: 'hello!' },
+      });
+      const wrappingComponent = wrapper.getWrappingComponent();
+      expect(wrapper.text()).to.equal('hello!');
+
+      wrappingComponent.setProps({ value: 'goodbye!' });
+      expect(wrapper.text()).to.equal('goodbye!');
+    });
+
     itIf(!isShallow, 'handles a partial prop update', () => {
       const wrapper = Wrap(<MyComponent />, {
         wrappingComponent: MyWrappingComponent,
