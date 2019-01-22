@@ -57,11 +57,11 @@
   },
   "dependencies": {
     "airbnb-js-shims": "^2.1.1",
-    "install-peerdeps": "^1.8.0",
+    "install-peerdeps": "^1.10.2",
     "npm-run": "^5.0.1",
     "object.assign": "^4.1.0",
     "object.getownpropertydescriptors": "^2.0.3",
-    "rimraf": "^2.6.2",
-    "semver": "^5.5.1"
+    "rimraf": "^2.6.3",
+    "semver": "^5.6.0"
   }
 }
