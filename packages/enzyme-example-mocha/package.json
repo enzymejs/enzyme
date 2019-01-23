@@ -23,7 +23,7 @@
     "babel-register": "^6.26.0",
     "eslint": "^5.12.1",
     "eslint-config-airbnb": "^17.1.0",
-    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-import": "^2.15.0",
     "eslint-plugin-jsx-a11y": "^6.1.2",
     "eslint-plugin-react": "^7.12.4",
     "espree": "^4.1.0",
