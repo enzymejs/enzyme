@@ -2,6 +2,7 @@ import flat from 'array.prototype.flat';
 import entries from 'object.entries';
 import isSubset from 'is-subset';
 import functionName from 'function.prototype.name';
+import isRegex from 'is-regex';
 import getAdapter from './getAdapter';
 
 export function propsOfNode(node) {
@@ -34,6 +35,7 @@ export function childrenOfNode(node) {
 export function hasClassName(node, className) {
   let classes = propsOfNode(node).className || '';
   classes = String(classes).replace(/\s/g, ' ');
+  if (isRegex(className)) return className.test(classes);
   return ` ${classes} `.indexOf(` ${className} `) > -1;
 }
 

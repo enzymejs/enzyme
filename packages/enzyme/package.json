@@ -42,6 +42,7 @@
     "is-boolean-object": "^1.0.0",
     "is-callable": "^1.1.4",
     "is-number-object": "^1.0.3",
+    "is-regex": "^1.0.4",
     "is-string": "^1.0.4",
     "is-subset": "^0.1.1",
     "lodash.escape": "^4.0.1",

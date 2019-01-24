@@ -43,6 +43,16 @@ describe('RSTTraversal', () => {
       const node = $(<div className={classes} />);
       expect(hasClassName(node, 'foo-bar')).to.equal(true);
     });
+
+    it('works if searching with a RegExp', () => {
+      const node = $(<div className="ComponentName-classname-123" />);
+      expect(hasClassName(node, /(ComponentName)-(classname)-(\d+)/)).to.equal(true);
+    });
+
+    it('fails if searching for a missing classname with a RegExp', () => {
+      const node = $(<div className="ComponentName-classname-123 ComponentName-otherclassname-23" />);
+      expect(hasClassName(node, /(ComponentName)-(other)-(\d+)/)).to.equal(false);
+    });
   });
 
   describe('treeForEach', () => {
