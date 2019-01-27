@@ -32,6 +32,7 @@
     "chai": "^4.1.2",
     "enzyme": "^3.8.0",
     "enzyme-adapter-utils": "^1.9.1",
+    "html-element-map": "^1.0.0",
     "jsdom": "^6.5.1",
     "lodash.isequal": "^4.5.0",
     "mocha-wrap": "^2.1.2",

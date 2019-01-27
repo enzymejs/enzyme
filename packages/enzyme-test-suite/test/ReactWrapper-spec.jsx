@@ -5,6 +5,7 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 import wrap from 'mocha-wrap';
 import isEqual from 'lodash.isequal';
+import getData from 'html-element-map/getData';
 import {
   mount,
   render,
@@ -1524,6 +1525,52 @@ describeWithDOM('mount', () => {
         const wrapper = mount(<Foo />);
         expect(wrapper.find(Component)).to.have.lengthOf(2);
         expect(wrapper.find(Component.displayName)).to.have.lengthOf(2);
+      });
+    });
+
+    // in React 0.13 and 0.14, these HTML tags get moved around by the DOM, and React fails
+    // they're tested in `shallow`, and in React 15+, so we can skip them here.
+    const tagsWithRenderError = new Set([
+      'body',
+      'frame',
+      'frameset',
+      'head',
+      'html',
+      'caption',
+      'td',
+      'th',
+      'tr',
+      'col',
+      'colgroup',
+      'tbody',
+      'thead',
+      'tfoot',
+    ]);
+    function hasRenderError(Tag) {
+      return is('< 15') && tagsWithRenderError.has(Tag);
+    }
+
+    describeWithDOM('find DOM elements by constructor', () => {
+      const { elements, all } = getData();
+
+      elements.filter(({ constructor: C }) => C && C !== all).forEach(({
+        tag: Tag,
+        constructorName: name,
+      }) => {
+        class Foo extends React.Component {
+          render() {
+            return <Tag />;
+          }
+        }
+
+        itIf(!hasRenderError(Tag), `${Tag}: found with \`${name}\``, () => {
+          const wrapper = mount(<Foo />);
+
+          const rendered = wrapper.childAt(0);
+          expect(rendered.type()).to.equal(Tag);
+          expect(rendered.is(Tag)).to.equal(true);
+          expect(wrapper.find(Tag)).to.have.lengthOf(1);
+        });
       });
     });
   });

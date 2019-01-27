@@ -4,6 +4,7 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 import wrap from 'mocha-wrap';
 import isEqual from 'lodash.isequal';
+import getData from 'html-element-map/getData';
 import {
   shallow,
   render,
@@ -32,6 +33,7 @@ import {
 } from './_helpers/react-compat';
 import {
   describeIf,
+  describeWithDOM,
   itIf,
   itWithData,
   generateEmptyRenderData,
@@ -1521,6 +1523,30 @@ describe('shallow', () => {
         const wrapper = shallow(<Foo />);
         expect(wrapper.find(Component)).to.have.lengthOf(2);
         expect(wrapper.find(Component.displayName)).to.have.lengthOf(2);
+      });
+    });
+
+    describeWithDOM('find DOM elements by constructor', () => {
+      const { elements, all } = getData();
+
+      elements.filter(({ constructor: C }) => C && C !== all).forEach(({
+        tag: Tag,
+        constructorName: name,
+      }) => {
+        class Foo extends React.Component {
+          render() {
+            return <Tag />;
+          }
+        }
+
+        it(`${Tag}: found with \`${name}\``, () => {
+          const wrapper = shallow(<Foo />);
+
+          const rendered = wrapper;
+          expect(rendered.type()).to.equal(Tag);
+          expect(rendered.is(Tag)).to.equal(true);
+          expect(wrapper.filter(Tag)).to.have.lengthOf(1);
+        });
       });
     });
   });

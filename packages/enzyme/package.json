@@ -38,6 +38,7 @@
     "cheerio": "^1.0.0-rc.2",
     "function.prototype.name": "^1.1.0",
     "has": "^1.0.3",
+    "html-element-map": "^1.0.0",
     "is-boolean-object": "^1.0.0",
     "is-callable": "^1.1.4",
     "is-number-object": "^1.0.3",
