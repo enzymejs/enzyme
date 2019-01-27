@@ -1528,6 +1528,28 @@ describeWithDOM('mount', () => {
       });
     });
 
+    // in React 0.13 and 0.14, these HTML tags get moved around by the DOM, and React fails
+    // they're tested in `shallow`, and in React 15+, so we can skip them here.
+    const tagsWithRenderError = new Set([
+      'body',
+      'frame',
+      'frameset',
+      'head',
+      'html',
+      'caption',
+      'td',
+      'th',
+      'tr',
+      'col',
+      'colgroup',
+      'tbody',
+      'thead',
+      'tfoot',
+    ]);
+    function hasRenderError(Tag) {
+      return is('< 15') && tagsWithRenderError.has(Tag);
+    }
+
     describeWithDOM('find DOM elements by constructor', () => {
       const { elements, all } = getData();
 
@@ -1541,11 +1563,12 @@ describeWithDOM('mount', () => {
           }
         }
 
-        it(`${Tag}: finds by constructor “${name}”`, () => {
+        itIf(!hasRenderError(Tag), `${Tag}: found with \`${name}\``, () => {
           const wrapper = mount(<Foo />);
 
-          expect(wrapper.childAt(0).type()).to.equal(Tag);
-          expect(wrapper.childAt(0).is(Tag)).to.equal(true);
+          const rendered = wrapper.childAt(0);
+          expect(rendered.type()).to.equal(Tag);
+          expect(rendered.is(Tag)).to.equal(true);
           expect(wrapper.find(Tag)).to.have.lengthOf(1);
         });
       });

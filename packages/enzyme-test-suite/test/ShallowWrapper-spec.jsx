@@ -1539,11 +1539,12 @@ describe('shallow', () => {
           }
         }
 
-        it(`${Tag}: finds by constructor “${name}”`, () => {
+        it(`${Tag}: found with \`${name}\``, () => {
           const wrapper = shallow(<Foo />);
 
-          expect(wrapper.type()).to.equal(Tag);
-          expect(wrapper.is(Tag)).to.equal(true);
+          const rendered = wrapper;
+          expect(rendered.type()).to.equal(Tag);
+          expect(rendered.is(Tag)).to.equal(true);
           expect(wrapper.filter(Tag)).to.have.lengthOf(1);
         });
       });
