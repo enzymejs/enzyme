@@ -55,6 +55,33 @@ export default function describeUseState({
       expect(wrapper.find('.counter').text()).to.equal(String(initialCount - 1));
     });
 
+    it('handles useState', () => {
+      function ComponentUsingStateHook() {
+        const [count] = useState(0);
+        return <div>{count}</div>;
+      }
+
+      const wrapper = Wrap(<ComponentUsingStateHook />);
+
+      expect(wrapper.find('div').length).to.equal(1);
+      expect(wrapper.find('div').text()).to.equal('0');
+    });
+
+    it('handles setState returned from useState', () => {
+      function ComponentUsingStateHook() {
+        const [count, setCount] = useState(0);
+        return <div onClick={() => setCount(count + 1)}>{count}</div>;
+      }
+
+      const wrapper = Wrap(<ComponentUsingStateHook />);
+      const div = wrapper.find('div');
+      const setCount = div.prop('onClick');
+      setCount();
+      wrapper.update();
+
+      expect(wrapper.find('div').text()).to.equal('1');
+    });
+
     describe('useState with willReceive prop effect / simulate getDerivedStateFromProp', () => {
       const newPropCount = 10;
 
