@@ -6,7 +6,7 @@ Karma is a popular test runner that can run tests in multiple browser environmen
 
 ### Configure Enzyme
 
-Create an Enzyme setup file. This file will configure Enzyme with the appropiate React adapter. It can also be used to initialize any that you'd like available for all tests. To avoid having to import this file and Enzyme, you can re-export all Enzyme exports from this file and just import it.
+Create an Enzyme setup file. This file will configure Enzyme with the appropriate React adapter. It can also be used to initialize any that you'd like available for all tests. To avoid having to import this file and Enzyme, you can re-export all Enzyme exports from this file and just import it.
 
 ```js
 /* test/enzyme.js */

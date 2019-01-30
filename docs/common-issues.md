@@ -12,7 +12,7 @@ selectors we currently support: https://github.com/airbnb/enzyme/blob/master/doc
 
 ### Testing third party libraries
 
-Some third party libraries are difficult or impossible to test. enzyme's scope is severly limited to what
+Some third party libraries are difficult or impossible to test. enzyme's scope is severely limited to what
 React exposes and provides for us. Things like "portals" are not currently testable with enzyme directly for that reason.
 
 An example:
