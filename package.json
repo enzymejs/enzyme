@@ -94,6 +94,7 @@
     "karma-webpack": "^1.8.1",
     "lerna": "^2.11.0",
     "mocha": "^3.5.3",
+    "normalize-package-data": "=2.4.0",
     "prop-types": "^15.6.2",
     "rimraf": "^2.6.3",
     "safe-publish-latest": "^1.1.2",
