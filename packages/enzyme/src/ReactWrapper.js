@@ -579,7 +579,16 @@ class ReactWrapper {
       if (!node) {
         return typeof n === 'string' ? n : node;
       }
-      return node.textContent;
+
+      const nodeArray = Array.isArray(node) ? node : [node];
+      const textContent = nodeArray.map((item) => {
+        if (!item) {
+          return '';
+        }
+        return item.textContent || '';
+      });
+
+      return textContent.join('');
     });
   }
 
@@ -594,10 +603,17 @@ class ReactWrapper {
     return this.single('html', (n) => {
       if (n === null) return null;
       const adapter = getAdapter(this[OPTIONS]);
-      const node = adapter.nodeToHostNode(n);
-      return node === null
+      const node = adapter.nodeToHostNode(n, true);
+
+      if (node === null) return null;
+
+      const nodeArray = Array.isArray(node) ? node : [node];
+      const nodesHTML = nodeArray.map(item => (item === null
         ? null
-        : node.outerHTML.replace(/\sdata-(reactid|reactroot)+="([^"]*)+"/g, '');
+        : item.outerHTML.replace(/\sdata-(reactid|reactroot)+="([^"]*)+"/g, '')
+      ));
+
+      return nodesHTML.join('');
     });
   }
 

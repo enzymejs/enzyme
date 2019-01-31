@@ -141,6 +141,5 @@ export function getTextFromNode(node) {
     return `<${node.type.displayName || functionName(node.type)} />`;
   }
 
-  return childrenOfNode(node).map(getTextFromNode)
-    .join('');
+  return childrenOfNode(node).map(getTextFromNode).join('');
 }
