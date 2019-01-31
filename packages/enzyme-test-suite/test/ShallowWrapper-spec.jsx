@@ -1584,7 +1584,7 @@ describe('shallow', () => {
       const stub = sinon.stub();
       wrapper.findWhere(stub);
       const passedNodeLengths = stub.getCalls().map(({ args: [firstArg] }) => firstArg.length);
-      expect(passedNodeLengths).to.eql([1, 1]);
+      expect(passedNodeLengths).to.eql([1]);
     });
 
     it('calls the predicate with the wrapped node as the first argument', () => {
@@ -1695,6 +1695,39 @@ describe('shallow', () => {
         n.type() !== 'span' && n.props()['data-foo'] === selector
       ));
       expect(foundNotSpan).to.have.lengthOf(0);
+    });
+
+    it('does not get trapped when conditionally rendering using an empty string variable as the condition', () => {
+      const emptyString = '';
+
+      class Foo extends React.Component {
+        render() {
+          return (
+            <div>
+              <header>
+                <span />
+                {emptyString && <i />}
+              </header>
+              <div>
+                <span data-foo={this.props.selector}>Test</span>
+              </div>
+            </div>
+          );
+        }
+      }
+
+      const selector = 'blah';
+      const wrapper = shallow(<Foo selector={selector} />);
+      const foundSpan = wrapper.findWhere(n => (
+        n.type() === 'span'
+        && n.props()['data-foo'] === selector
+      ));
+
+      expect(foundSpan.debug()).to.equal((
+        `<span data-foo="${selector}">
+  Test
+</span>`
+      ));
     });
 
     it('returns props object when props() is called', () => {

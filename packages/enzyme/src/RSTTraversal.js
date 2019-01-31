@@ -40,7 +40,7 @@ export function hasClassName(node, className) {
 }
 
 export function treeForEach(tree, fn) {
-  if (tree !== null && tree !== false && typeof tree !== 'undefined') {
+  if (tree) {
     fn(tree);
   }
   childrenOfNode(tree).forEach(node => treeForEach(node, fn));

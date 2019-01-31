@@ -350,10 +350,11 @@ describe('RSTTraversal', () => {
       const node = $((
         <div>
           <p>{''}</p>
+          <p>Test</p>
         </div>
       ));
       treeForEach(node, spy);
-      expect(spy).to.have.property('callCount', 3);
+      expect(spy).to.have.property('callCount', 4); // div, p, p, 'Test'
     });
 
     it('passes in the node', () => {
