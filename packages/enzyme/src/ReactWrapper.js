@@ -1019,7 +1019,10 @@ class ReactWrapper {
    * @returns {ReactWrapper}
    */
   findWhere(predicate) {
-    return findWhereUnwrapped(this, n => predicate(this.wrap(n)));
+    return findWhereUnwrapped(this, (n) => {
+      const node = this.wrap(n);
+      return node.length > 0 && predicate(node);
+    });
   }
 
   /**

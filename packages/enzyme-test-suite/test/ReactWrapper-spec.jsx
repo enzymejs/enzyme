@@ -1596,6 +1596,21 @@ describeWithDOM('mount', () => {
       expect(wrapper.findWhere(() => false)).to.have.lengthOf(0);
     });
 
+    it('does not pass empty wrappers', () => {
+      class EditableText extends React.Component {
+        render() {
+          return <div>{''}</div>;
+        }
+      }
+
+      const wrapper = mount(<EditableText />);
+
+      const stub = sinon.stub();
+      wrapper.findWhere(stub);
+      const passedNodeLengths = stub.getCalls().map(({ args: [firstArg] }) => firstArg.length);
+      expect(passedNodeLengths).to.eql([1, 1]);
+    });
+
     it('calls the predicate with the wrapped node as the first argument', () => {
       const wrapper = mount((
         <div>
