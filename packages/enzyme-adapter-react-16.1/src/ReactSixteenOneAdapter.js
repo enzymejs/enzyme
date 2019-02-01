@@ -205,13 +205,18 @@ function nodeToHostNode(_node) {
   if (!node) {
     return null;
   }
+
+  const mapper = (item) => {
+    if (item && item.instance) return ReactDOM.findDOMNode(item.instance);
+    return null;
+  };
   if (Array.isArray(node)) {
-    return node.map(item => ReactDOM.findDOMNode(item.instance));
+    return node.map(mapper);
   }
   if (Array.isArray(node.rendered) && node.nodeType === 'class') {
-    return node.rendered.map(item => ReactDOM.findDOMNode(item.instance));
+    return node.rendered.map(mapper);
   }
-  return ReactDOM.findDOMNode(node.instance);
+  return mapper(node);
 }
 
 const eventOptions = { animation: true };
