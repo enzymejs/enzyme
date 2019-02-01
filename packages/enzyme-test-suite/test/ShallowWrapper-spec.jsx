@@ -1831,6 +1831,32 @@ describe('shallow', () => {
 
     it('does not pass in null or false nodes', () => {
       const wrapper = shallow((
+        <section>
+          <div className="foo bar" />
+          <div>foo bar</div>
+          {null}
+          {false}
+        </section>
+      ));
+      const stub = sinon.stub();
+      wrapper.findWhere(stub);
+
+      const passedNodes = stub.getCalls().map(({ args: [firstArg] }) => firstArg);
+      const hasElements = passedNodes.map(n => [n.debug(), n.getElement() && true]);
+      const expected = [
+        [wrapper.debug(), true], // root
+        ['<div className="foo bar" />', true], // first div
+        ['<div>\n  foo bar\n</div>', true], // second div
+        ['foo bar', null], // second div's contents
+      ];
+      expect(hasElements).to.eql(expected);
+
+      // the root, plus the 2 renderable children, plus the grandchild text
+      expect(stub).to.have.property('callCount', 4);
+    });
+
+    it('does not pass in null or false nodes', () => {
+      const wrapper = shallow((
         <div>
           <div className="foo bar" />
           {null}
@@ -1842,6 +1868,31 @@ describe('shallow', () => {
       const spy = sinon.spy(stub);
       wrapper.findWhere(spy);
       expect(spy).to.have.property('callCount', 2);
+    });
+
+    it('allows `.text()` to be called on text nodes', () => {
+      const wrapper = shallow((
+        <section>
+          <div className="foo bar" />
+          <div>foo bar</div>
+          {null}
+          {false}
+        </section>
+      ));
+
+      const stub = sinon.stub();
+      wrapper.findWhere(stub);
+
+      const passedNodes = stub.getCalls().map(({ args: [firstArg] }) => firstArg);
+
+      const textContents = passedNodes.map(n => [n.debug(), n.text()]);
+      const expected = [
+        [wrapper.debug(), 'foo bar'], // root
+        ['<div className="foo bar" />', ''], // first div
+        ['<div>\n  foo bar\n</div>', 'foo bar'], // second div
+        ['foo bar', 'foo bar'], // second div's contents
+      ];
+      expect(textContents).to.eql(expected);
     });
 
     itIf(is('>= 16'), 'finds portals by react-is Portal type', () => {

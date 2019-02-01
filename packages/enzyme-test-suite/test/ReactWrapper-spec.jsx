@@ -1856,6 +1856,21 @@ describeWithDOM('mount', () => {
       expect(stub).to.have.property('callCount', 4);
     });
 
+    it('does not pass in null or false nodes', () => {
+      const wrapper = mount((
+        <div>
+          <div className="foo bar" />
+          {null}
+          {false}
+        </div>
+      ));
+      const stub = sinon.stub();
+      stub.returns(true);
+      const spy = sinon.spy(stub);
+      wrapper.findWhere(spy);
+      expect(spy).to.have.property('callCount', 2);
+    });
+
     it('allows `.text()` to be called on text nodes', () => {
       const wrapper = mount((
         <section>
@@ -1876,24 +1891,9 @@ describeWithDOM('mount', () => {
         [wrapper.debug(), 'foo bar'], // root
         ['<div className="foo bar" />', ''], // first div
         ['<div>\n  foo bar\n</div>', 'foo bar'], // second div
-        ['foo bar', null], // second div's contents
+        ['foo bar', 'foo bar'], // second div's contents
       ];
       expect(textContents).to.eql(expected);
-    });
-
-    it('does not pass in null or false nodes', () => {
-      const wrapper = mount((
-        <div>
-          <div className="foo bar" />
-          {null}
-          {false}
-        </div>
-      ));
-      const stub = sinon.stub();
-      stub.returns(true);
-      const spy = sinon.spy(stub);
-      wrapper.findWhere(spy);
-      expect(spy).to.have.property('callCount', 2);
     });
 
     itIf(is('>= 16'), 'finds portals by react-is Portal type', () => {
