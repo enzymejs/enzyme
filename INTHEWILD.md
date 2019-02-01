@@ -28,6 +28,7 @@ Organizations
  - [IBM X-Force Exchange](https://exchange.xforce.ibmcloud.com)
  - [Zendesk](https://zendesk.com/)
  - [idealo](https://www.idealo.de/)
+ - [LendingHome](https://www.lendinghome.com)
 
 Projects
 ----------
