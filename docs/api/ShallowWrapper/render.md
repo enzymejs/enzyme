@@ -28,7 +28,7 @@ function Bar() {
 ```
 
 ```jsx
-const wrapper = shallow(<Bar />);
+const wrapper = render(<Bar />);
 expect(wrapper.find('.in-foo')).to.have.lengthOf(0);
 expect(wrapper.find(Foo).render().find('.in-foo')).to.have.lengthOf(1);
 ```
