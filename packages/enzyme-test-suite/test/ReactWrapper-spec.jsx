@@ -3702,6 +3702,38 @@ describeWithDOM('mount', () => {
         expect(wrapper.text()).to.equal('{ some text }');
       });
     });
+
+    describeIf(is('> 16.2'), 'fragments', () => {
+      class FragmentClassExample extends React.Component {
+        render() {
+          return (
+            <Fragment>
+              <div>Foo</div>
+              <div>Bar</div>
+            </Fragment>
+          );
+        }
+      }
+
+      const FragmentConstExample = () => (
+        <Fragment>
+          <div><span>Foo</span></div>
+          <div><span>Bar</span></div>
+        </Fragment>
+      );
+
+      it('correctly gets text for both children for class', () => {
+        const classWrapper = mount(<FragmentClassExample />);
+        expect(classWrapper.text()).to.include('Foo');
+        expect(classWrapper.text()).to.include('Bar');
+      });
+
+      it('correctly gets text for both children for const', () => {
+        const constWrapper = mount(<FragmentConstExample />);
+        expect(constWrapper.text()).to.include('Foo');
+        expect(constWrapper.text()).to.include('Bar');
+      });
+    });
   });
 
   describe('.props()', () => {
@@ -5133,6 +5165,36 @@ describeWithDOM('mount', () => {
         const wrapper = mount(<Bar />);
         expect(wrapper.html()).to.equal('<div class="in-bar"><div class="in-foo"></div></div>');
         expect(wrapper.find(Foo).html()).to.equal('<div class="in-foo"></div>');
+      });
+    });
+
+    describeIf(is('>16.2'), 'fragments', () => {
+      class FragmentClassExample extends React.Component {
+        render() {
+          return (
+            <Fragment>
+              <div><span>Foo</span></div>
+              <div><span>Bar</span></div>
+            </Fragment>
+          );
+        }
+      }
+
+      const FragmentConstExample = () => (
+        <Fragment>
+          <div><span>Foo</span></div>
+          <div><span>Bar</span></div>
+        </Fragment>
+      );
+
+      it('correctly renders html for both children for class', () => {
+        const classWrapper = mount(<FragmentClassExample />);
+        expect(classWrapper.html()).to.equal('<div><span>Foo</span></div><div><span>Bar</span></div>');
+      });
+
+      it('correctly renders html for both children for const', () => {
+        const constWrapper = mount(<FragmentConstExample />);
+        expect(constWrapper.html()).to.equal('<div><span>Foo</span></div><div><span>Bar</span></div>');
       });
     });
   });

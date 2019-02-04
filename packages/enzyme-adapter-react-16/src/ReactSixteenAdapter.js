@@ -219,15 +219,22 @@ function nodeToHostNode(_node) {
   while (node && !Array.isArray(node) && node.instance === null) {
     node = node.rendered;
   }
-  if (Array.isArray(node)) {
-    // TODO(lmr): throw warning regarding not being able to get a host node here
-    throw new Error('Trying to get host node of an array');
-  }
   // if the SFC returned null effectively, there is no host node.
   if (!node) {
     return null;
   }
-  return ReactDOM.findDOMNode(node.instance);
+
+  const mapper = (item) => {
+    if (item && item.instance) return ReactDOM.findDOMNode(item.instance);
+    return null;
+  };
+  if (Array.isArray(node)) {
+    return node.map(mapper);
+  }
+  if (Array.isArray(node.rendered) && node.nodeType === 'class') {
+    return node.rendered.map(mapper);
+  }
+  return mapper(node);
 }
 
 const eventOptions = {
