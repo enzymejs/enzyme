@@ -5240,7 +5240,7 @@ describe('shallow', () => {
       });
     });
 
-    describeIf(is('>16.2'), 'fragments', () => {
+    describeIf(is('>16.2'), 'Fragments', () => {
       class FragmentClassExample extends React.Component {
         render() {
           return (

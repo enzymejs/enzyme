@@ -187,7 +187,7 @@ class ReactWrapper {
    */
   getDOMNode() {
     const adapter = getAdapter(this[OPTIONS]);
-    return this.single('getDOMNode', n => adapter.nodeToHostNode(n));
+    return this.single('getDOMNode', n => adapter.nodeToHostNode(n, true));
   }
 
   /**
@@ -575,7 +575,7 @@ class ReactWrapper {
   text() {
     const adapter = getAdapter(this[OPTIONS]);
     return this.single('text', (n) => {
-      const node = adapter.nodeToHostNode(n);
+      const node = adapter.nodeToHostNode(n, true);
       if (!node) {
         return typeof n === 'string' ? n : node;
       }

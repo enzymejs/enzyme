@@ -482,8 +482,12 @@ class ReactSixteenOneAdapter extends EnzymeAdapter {
     return elementToTree(element);
   }
 
-  nodeToHostNode(node) {
-    return nodeToHostNode(node);
+  nodeToHostNode(node, supportsArray = false) {
+    const nodes = nodeToHostNode(node);
+    if (Array.isArray(nodes) && !supportsArray) {
+      return nodes[0];
+    }
+    return nodes;
   }
 
   displayNameOfNode(node) {
