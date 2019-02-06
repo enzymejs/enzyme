@@ -52,6 +52,7 @@ const adapterVersions = {
   16.5: 16,
   16.6: 16,
   16.7: 16,
+  16.8: 16,
 };
 const reactVersion = version < 15 ? '0.' + version : version;
 const adapterVersion = process.env.ADAPTER || adapterVersions[version] || version;
