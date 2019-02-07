@@ -7,8 +7,7 @@ your component's external API (which is often accessible via [`.instance()`](ins
 to get it into whatever state you want to test, in order to be as accurate of a test as possible.
 This is not always practical, however.
 
-NOTE: can only be called on a wrapper instance that is also the root instance.
-
+NOTE: Prior to v3.8.0 of enzyme, can only be called on a wrapper instance that is also the root instance.
 
 #### Arguments
 
