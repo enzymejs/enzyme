@@ -7,7 +7,7 @@ To run the setup file to configure Enzyme and the Adapter (as shown in the [Inst
 ```json
 {
   "jest": {
-    "setupTestFrameworkScriptFile": "<rootDir>src/setupTests.js"
+    "setupFilesAfterEnv": ["<rootDir>src/setupTests.js"]
   }
 }
 ```
