@@ -1,5 +1,4 @@
 /* eslint no-use-before-define: 0 */
-import functionName from 'function.prototype.name';
 import React from 'react';
 import ReactDOM from 'react-dom';
 // eslint-disable-next-line import/no-unresolved
@@ -496,7 +495,7 @@ class ReactSixteenThreeAdapter extends EnzymeAdapter {
         if (type.displayName) {
           return type.displayName;
         }
-        const name = type.render.displayName || functionName(type.render);
+        const name = displayNameOfNode({ type: type.render });
         return name ? `ForwardRef(${name})` : 'ForwardRef';
       }
       default: return displayNameOfNode(node);
