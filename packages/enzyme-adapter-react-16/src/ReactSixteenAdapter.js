@@ -405,6 +405,27 @@ class ReactSixteenAdapter extends EnzymeAdapter {
     const renderer = new ShallowRenderer();
     let isDOM = false;
     let cachedNode = null;
+
+    let lastComponent = null;
+    let wrappedComponent = null;
+
+    // Wrap functional components on versions prior to 16.5,
+    // to avoid inadvertently pass a `this` instance to it.
+    const wrapFunctionalComponent = (Component) => {
+      if (is165) {
+        return Component;
+      }
+
+      if (lastComponent !== Component) {
+        wrappedComponent = Object.assign(
+          (...args) => Component(...args), // eslint-disable-line new-cap
+          Component,
+        );
+        lastComponent = Component;
+      }
+      return wrappedComponent;
+    };
+
     return {
       render(el, unmaskedContext) {
         cachedNode = el;
@@ -424,20 +445,19 @@ class ReactSixteenAdapter extends EnzymeAdapter {
 
           if (!isStateful && isMemo(el.type)) {
             const InnerComp = el.type.type;
-            const wrappedEl = Object.assign(
-              (...args) => InnerComp(...args), // eslint-disable-line new-cap
-              InnerComp,
-            );
-            return withSetStateAllowed(() => renderer.render({ ...el, type: wrappedEl }, context));
+            return withSetStateAllowed(() => renderer.render(
+              { ...el, type: wrapFunctionalComponent(InnerComp) },
+              context,
+            ));
           }
 
           if (!isStateful && typeof Component === 'function') {
-            const wrappedEl = Object.assign(
-              (...args) => Component(...args), // eslint-disable-line new-cap
-              Component,
-            );
-            return withSetStateAllowed(() => renderer.render({ ...el, type: wrappedEl }, context));
+            return withSetStateAllowed(() => renderer.render(
+              { ...el, type: wrapFunctionalComponent(Component) },
+              context,
+            ));
           }
+
           if (isStateful) {
             // fix react bug; see implementation of `getEmptyStateValue`
             const emptyStateValue = getEmptyStateValue();

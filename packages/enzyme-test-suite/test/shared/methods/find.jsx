@@ -17,6 +17,7 @@ import {
   Fragment,
   forwardRef,
   memo,
+  useState,
 } from '../../_helpers/react-compat';
 
 export default function describeFind({
@@ -767,6 +768,49 @@ export default function describeFind({
       });
     });
 
+    describeIf(is('>= 16.8'), 'hooks', () => {
+      it('handles useState', () => {
+        const ComponentUsingStateHook = () => {
+          const [count] = useState(0);
+          return <div>{count}</div>;
+        };
+
+        const wrapper = Wrap(<ComponentUsingStateHook />);
+
+        expect(wrapper.find('div')).to.have.lengthOf(1);
+        expect(wrapper.find('div').text()).to.equal('0');
+      });
+
+      it('handles setState returned from useState', () => {
+        const ComponentUsingStateHook = () => {
+          const [count, setCount] = useState(0);
+          return <div onClick={() => setCount(count + 1)}>{count}</div>;
+        };
+
+        const wrapper = Wrap(<ComponentUsingStateHook />);
+        wrapper.simulate('click'); // FIXME: avoid simulate
+
+        expect(wrapper.find('div').text()).to.equal('1');
+      });
+
+      it('handles keep hook state for same component type', () => {
+        const ComponentUsingStateHook = () => {
+          const [count, setCount] = useState(0);
+          return <div onClick={() => setCount(count + 1)}>{count}</div>;
+        };
+
+        const wrapper = Wrap(<ComponentUsingStateHook />);
+        wrapper.simulate('click'); // FIXME: avoid simulate
+        expect(wrapper.find('div').text()).to.equal('1');
+
+        wrapper.setProps({ newProp: 1 });
+        expect(wrapper.find('div').text()).to.equal('1');
+
+        wrapper.simulate('click'); // FIXME: avoid simulate
+        expect(wrapper.find('div').text()).to.equal('2');
+      });
+    });
+
     describeWithDOM('find DOM elements by constructor', () => {
       // in React 0.13 and 0.14, these HTML tags get moved around by the DOM, and React fails
       // they're tested in `shallow`, and in React 15+, so we can skip them here.
@@ -859,33 +903,7 @@ export default function describeFind({
         expect(wrapper.find('.qoo').text()).to.equal('qux');
       });
 
-      // TODO; reevaluate
-      itIf(isShallow, 'throws with a class component', () => {
-        class InnerComp extends React.Component {
-          render() {
-            return <div><span>Hello</span></div>;
-          }
-        }
-
-        class Foo extends React.Component {
-          render() {
-            const { foo } = this.props;
-            return (
-              <div>
-                <InnerComp />
-                <div className="bar">bar</div>
-                <div className="qoo">{foo}</div>
-              </div>
-            );
-          }
-        }
-        const FooMemo = memo(Foo);
-
-        expect(() => Wrap(<FooMemo foo="qux" />)).to.throw(TypeError);
-      });
-
-      // FIXME: fix for shallow
-      itIf(!isShallow, 'works with a class component', () => {
+      it('works with a class component', () => {
         class InnerComp extends React.Component {
           render() {
             return <div><span>Hello</span></div>;
@@ -907,7 +925,17 @@ export default function describeFind({
         const FooMemo = memo(Foo);
 
         const wrapper = Wrap(<FooMemo foo="qux" />);
-        expect(wrapper.debug()).to.equal(`<Foo foo="qux">
+        const expectedDebug = isShallow
+          ? `<div>
+  <InnerComp />
+  <div className="bar">
+    bar
+  </div>
+  <div className="qoo">
+    qux
+  </div>
+</div>`
+          : `<Foo foo="qux">
   <div>
     <InnerComp>
       <div>
@@ -923,7 +951,8 @@ export default function describeFind({
       qux
     </div>
   </div>
-</Foo>`);
+</Foo>`;
+        expect(wrapper.debug()).to.equal(expectedDebug);
         expect(wrapper.find('InnerComp')).to.have.lengthOf(1);
         expect(wrapper.find('.bar')).to.have.lengthOf(1);
         expect(wrapper.find('.qoo').text()).to.equal('qux');

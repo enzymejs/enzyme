@@ -643,7 +643,7 @@ describe('shallow', () => {
     });
   });
 
-  describeIf(is('>= 16.8'), 'hooks', () => {
+  describeIf(is('>= 16.8.5'), 'hooks', () => {
     // TODO: enable when the shallow renderer fixes its bug
     it.skip('works with `useEffect`', (done) => {
       function ComponentUsingEffectHook() {
