@@ -6,6 +6,8 @@
 
 import { is } from './version';
 
+const { createFactory } = require('react');
+
 let createClass;
 let renderToString;
 let createPortal;
@@ -21,6 +23,16 @@ let PureComponent;
 let Suspense;
 let lazy;
 let memo;
+let useCallback;
+let useContext;
+let useDebugValue;
+let useEffect;
+let useImperativeHandle;
+let useLayoutEffect;
+let useMemo;
+let useReducer;
+let useRef;
+let useState;
 
 if (is('>=15.5 || ^16.0.0-alpha || ^16.3.0-alpha')) {
   // eslint-disable-next-line import/no-extraneous-dependencies
@@ -92,8 +104,35 @@ if (is('^16.6.0-0')) {
   memo = null;
 }
 
+if (is('^16.8.0-0')) {
+  ({
+    useCallback,
+    useContext,
+    useDebugValue,
+    useEffect,
+    useImperativeHandle,
+    useLayoutEffect,
+    useMemo,
+    useReducer,
+    useRef,
+    useState,
+  } = require('react'));
+} else {
+  useCallback = null;
+  useContext = null;
+  useDebugValue = null;
+  useEffect = null;
+  useImperativeHandle = null;
+  useLayoutEffect = null;
+  useMemo = null;
+  useReducer = null;
+  useRef = null;
+  useState = null;
+}
+
 export {
   createClass,
+  createFactory,
   renderToString,
   createPortal,
   createContext,
@@ -108,4 +147,14 @@ export {
   Suspense,
   lazy,
   memo,
+  useCallback,
+  useContext,
+  useDebugValue,
+  useEffect,
+  useImperativeHandle,
+  useLayoutEffect,
+  useMemo,
+  useReducer,
+  useRef,
+  useState,
 };
