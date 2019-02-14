@@ -15,7 +15,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/airbnb/enzyme.git"
+    "url": "https://github.com/airbnb/enzyme.git",
+    "directory": "packages/enzyme-adapter-react-16"
   },
   "keywords": [
     "javascript",
