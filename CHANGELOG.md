@@ -1,5 +1,38 @@
 # Change Log
 
+## 3.9.0
+
+### New Stuff
+ - `shallow`: `isEmptyRender`: allow on multiple elements (#1924)
+ - `mount`: support `:focus` selector (#1965)
+ - `shallow`: Support `getChildContext()` (#1971)
+ - `shallow`/`mount`: `.find`: find HTML elements by their constructor (#1933)
+ - `shallow`/`mount`: `selectors`: support universal selector (#1945)
+ - `mount`/`shallow`: add regex support to `.hasClass` (#1987)
+
+### Fixes
+ - `mount`/`shallow`: `.text`/`.html`: handle an array of nodes properly (#2001)
+ - `shallow`: `.setProps()`: only call cDU once (#2007)
+ - `mount`: ensure `findWhere` doesn‘t abort early on an empty string (#1995)
+ - `mount`: `findWhere`: avoid passing empty wrappers to predicate
+ - `mount`: `text()` via `findWhere`: return the string for a wrapper around a string
+ - `mount`/`shallow`: Fix .exists not accepting any EnzymeSelector (#1934)
+ - `mount`: Recursive `isEmptyRender` (#1924)
+ - `mount`: `setState`: allow setting state on a class child of an SFC root
+
+### Documentation
+ - [jest] update Jest to setupFilesAfterEnv (#2015)
+ - [jest] Change deprecated `setupTestFrameworkScriptFile` to `setupFilesAfterEnv` (#2013)
+ - `mount`: `setState`: note that you can now call it on "not the root" (#2010)
+ - general improvements (#1947)
+ - Fix typos (#1992)
+ - Added missing pages: `isEmptyRender`, `renderProp`, `equals`, SystemJS guide (#1984, #1985)
+ - Fix link to .shallow() (#1951)
+ - update jsdoc to use "EnzymeSelector" where applicable
+
+### Meta Stuff
+ - add "directory" field to package.json
+
 ## 3.8.0
 
 ### New Stuff
@@ -9,7 +42,7 @@
  - `shallow`/`mount`: improve error message for "single node" assertion (#1904)
  - `shallow`: shallow compare, not deep compare, state and props to determine rerendering (#1915)
 
-### Docs
+### Documentation
  - `shallow`: `dive`: add a note about throwing an error (#1905)
  - `selectors: update re `displayName` (#1932)
  - `shallow`: `get`: fixed wrong `props()` usage (#1921)
