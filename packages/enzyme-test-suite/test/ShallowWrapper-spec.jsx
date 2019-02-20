@@ -86,6 +86,13 @@ describe('shallow', () => {
       expect(wrapper.children().props().bam).to.equal(undefined);
     });
 
+    it('works with numeric literals', () => {
+      const wrapper = shallow(<div>{50}</div>);
+      expect(wrapper.debug()).to.equal(`<div>
+  50
+</div>`);
+    });
+
     describe('wrapping invalid elements', () => {
       it('throws with combined dangerouslySetInnerHTML and children on host nodes', () => {
         /* eslint react/no-danger-with-children: 0 */

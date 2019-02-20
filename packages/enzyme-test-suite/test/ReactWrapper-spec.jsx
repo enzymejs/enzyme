@@ -85,6 +85,13 @@ describeWithDOM('mount', () => {
       expect(wrapper.children().props().bam).to.equal(true);
     });
 
+    it('works with numeric literals', () => {
+      const wrapper = mount(<div>{50}</div>);
+      expect(wrapper.debug()).to.equal(`<div>
+  50
+</div>`);
+    });
+
     it('calls ref', () => {
       const spy = sinon.spy();
       mount(<div ref={spy} />);
