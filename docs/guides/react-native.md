@@ -52,22 +52,22 @@ expect(wrapper.findWhere(node => node.prop('testID') === 'todo-item')).toExist()
 ## Example configuration for Jest
 
 To perform the necessary configuration in your testing framework, it is recommended to use a setup script,
-such as with Jest's `setupTestFrameworkScriptFile` setting.
+such as with Jest's `setupFilesAfterEnv` setting.
 
-Create or update a `jest.config.js` file at the root of your project to include the `setupTestFrameworkScriptFile` setting:
+Create or update a `jest.config.js` file at the root of your project to include the `setupFilesAfterEnv` setting:
 
 ```jsx
 // jest.config.js
 
 module.exports = {
   // Load setup-tests.js before test execution
-  setupTestFrameworkScriptFile: '<rootDir>setup-tests.js',
+  setupFilesAfterEnv: '<rootDir>setup-tests.js',
 
   // ...
 };
 ```
 
-Then create or update the file specified in `setupTestFrameworkScriptFile`, in this case `setup-tests.js` in the project root:
+Then create or update the file specified in `setupFilesAfterEnv`, in this case `setup-tests.js` in the project root:
 
 ```jsx
 // setup-tests.js
