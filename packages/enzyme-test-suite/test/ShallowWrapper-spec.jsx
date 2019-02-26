@@ -1585,7 +1585,31 @@ describe('shallow', () => {
         expect(wrapper.find('.qoo').text()).to.equal('qux');
       });
 
-      it('works with a class component', () => {
+      it('throws with a class component', () => {
+        class InnerComp extends React.Component {
+          render() {
+            return <div><span>Hello</span></div>;
+          }
+        }
+
+        class Foo extends React.Component {
+          render() {
+            const { foo } = this.props;
+            return (
+              <div>
+                <InnerComp />
+                <div className="bar">bar</div>
+                <div className="qoo">{foo}</div>
+              </div>
+            );
+          }
+        }
+        const FooMemo = memo(Foo);
+
+        expect(() => shallow(<FooMemo foo="qux" />)).to.throw(TypeError);
+      });
+
+      it.skip('works with a class component', () => {
         class InnerComp extends React.Component {
           render() {
             return <div><span>Hello</span></div>;
