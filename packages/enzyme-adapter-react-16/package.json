@@ -40,7 +40,8 @@
     "object.values": "^1.1.0",
     "prop-types": "^15.7.2",
     "react-is": "^16.7.0",
-    "react-test-renderer": "^16.0.0-0"
+    "react-test-renderer": "^16.0.0-0",
+    "semver": "^5.6.0"
   },
   "peerDependencies": {
     "enzyme": "^3.0.0",

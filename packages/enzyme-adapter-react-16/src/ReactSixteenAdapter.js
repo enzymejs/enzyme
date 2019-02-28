@@ -5,8 +5,10 @@ import ReactDOM from 'react-dom';
 import ReactDOMServer from 'react-dom/server';
 // eslint-disable-next-line import/no-unresolved
 import ShallowRenderer from 'react-test-renderer/shallow';
+import { version as testRendererVersion } from 'react-test-renderer/package';
 // eslint-disable-next-line import/no-unresolved
 import TestUtils from 'react-dom/test-utils';
+import semver from 'semver';
 import checkPropTypes from 'prop-types/checkPropTypes';
 import {
   isElement,
@@ -51,6 +53,8 @@ const is164 = !!TestUtils.Simulate.touchStart; // 16.4+
 const is165 = !!TestUtils.Simulate.auxClick; // 16.5+
 const is166 = is165 && !React.unstable_AsyncMode; // 16.6+
 const is168 = is166 && typeof TestUtils.act === 'function';
+
+const hasShouldComponentUpdateBug = semver.satisfies(testRendererVersion, '< 16.8');
 
 // Lazily populated if DOM is available.
 let FiberTags = null;
@@ -303,7 +307,7 @@ class ReactSixteenAdapter extends EnzymeAdapter {
           onSetState: true,
         },
         getDerivedStateFromProps: {
-          hasShouldComponentUpdateBug: !is168,
+          hasShouldComponentUpdateBug,
         },
         getSnapshotBeforeUpdate: true,
         setState: {

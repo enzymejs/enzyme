@@ -131,6 +131,10 @@ function getAdapterLifecycles({ options }) {
       }),
     }
     : null;
+  const { getDerivedStateFromProps: originalGDSFP } = lifecycles;
+  const getDerivedStateFromProps = originalGDSFP ? {
+    hasShouldComponentUpdateBug: !!originalGDSFP.hasShouldComponentUpdateBug,
+  } : false;
 
   return {
     ...lifecycles,
@@ -142,6 +146,7 @@ function getAdapterLifecycles({ options }) {
       ...lifecycles.getChildContext,
     },
     ...(componentDidUpdate && { componentDidUpdate }),
+    getDerivedStateFromProps,
   };
 }
 
@@ -243,6 +248,30 @@ function privateSetChildContext(adapter, wrapper, instance, renderedNode, getChi
   }
 }
 
+function mockSCUIfgDSFPReturnNonNull(node, state) {
+  const { getDerivedStateFromProps } = node.type;
+
+  if (typeof getDerivedStateFromProps === 'function') {
+    // we try to fix a React shallow renderer bug here.
+    // (facebook/react#14607, which has been fixed in react 16.8):
+    // when gDSFP return derived state, it will set instance state in shallow renderer before SCU,
+    // this will cause `this.state` in sCU be the updated state, which is wrong behavior.
+    // so we have to wrap sCU to pass the old state to original sCU.
+    const { instance } = node;
+    const { restore } = spyMethod(
+      instance,
+      'shouldComponentUpdate',
+      originalSCU => function shouldComponentUpdate(...args) {
+        instance.state = state;
+        const sCUResult = originalSCU.apply(instance, args);
+        const [, nextState] = args;
+        instance.state = nextState;
+        restore();
+        return sCUResult;
+      },
+    );
+  }
+}
 
 /**
  * @class ShallowWrapper
@@ -452,6 +481,10 @@ class ShallowWrapper {
             && instance
           ) {
             if (typeof instance.shouldComponentUpdate === 'function') {
+              const { getDerivedStateFromProps: gDSFP } = lifecycles;
+              if (gDSFP && gDSFP.hasShouldComponentUpdateBug) {
+                mockSCUIfgDSFPReturnNonNull(node, state);
+              }
               shouldComponentUpdateSpy = spyMethod(instance, 'shouldComponentUpdate');
             }
             if (
@@ -601,6 +634,10 @@ class ShallowWrapper {
             && lifecycles.componentDidUpdate.onSetState
             && typeof instance.shouldComponentUpdate === 'function'
           ) {
+            const { getDerivedStateFromProps: gDSFP } = lifecycles;
+            if (gDSFP && gDSFP.hasShouldComponentUpdateBug) {
+              mockSCUIfgDSFPReturnNonNull(node, state);
+            }
             shouldComponentUpdateSpy = spyMethod(instance, 'shouldComponentUpdate');
           }
           if (
