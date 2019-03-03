@@ -128,6 +128,26 @@ export default function describeUseEffect({
       });
     });
 
+    it('will receive Props', () => {
+      function Foo(props) {
+        const [fooVal, setFooVal] = useState('');
+        const { initialFooVal } = props;
+        useEffect(() => {
+          setFooVal(initialFooVal);
+        }, [initialFooVal]);
+
+        return (
+          <div>
+            <p>{fooVal}</p>
+          </div>
+        );
+      }
+
+      const wrapper = Wrap(<Foo />);
+      wrapper.setProps({ initialFooVal: 'hey' });
+      expect(wrapper.find('p').text()).to.equal('hey');
+    });
+
     describe('on componentDidUpdate & componentDidMount', () => {
       const expectedCountString = x => `You clicked ${x} times`;
 
