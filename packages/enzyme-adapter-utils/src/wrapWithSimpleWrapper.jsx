@@ -3,7 +3,7 @@ import { intersects } from 'semver';
 import PropTypes from 'prop-types';
 
 const propTypes = {
-  children: PropTypes.element.isRequired,
+  children: PropTypes.node.isRequired,
 };
 
 const Wrapper = (intersects('>= 0.14', React.version)
