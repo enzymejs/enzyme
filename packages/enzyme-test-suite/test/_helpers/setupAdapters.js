@@ -1,5 +1,7 @@
 const Enzyme = require('enzyme');
 const wrap = require('mocha-wrap');
+// eslint-disable-next-line prefer-destructuring
+const resetWarningCache = require('prop-types').checkPropTypes.resetWarningCache;
 
 const Adapter = require('./adapter');
 
@@ -17,5 +19,12 @@ wrap.register(function withConsoleThrows() {
       origWarn.apply(console, arguments); // eslint-disable-line prefer-rest-params
       throw new EvalError(msg);
     },
-  }));
+  })).extend('with console throws', {
+    beforeEach() {
+      resetWarningCache();
+    },
+    afterEach() {
+      resetWarningCache();
+    },
+  });
 });

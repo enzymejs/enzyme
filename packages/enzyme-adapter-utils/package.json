@@ -38,7 +38,7 @@
     "function.prototype.name": "^1.1.0",
     "object.assign": "^4.1.0",
     "object.fromentries": "^2.0.0",
-    "prop-types": "^15.6.2",
+    "prop-types": "^15.7.2",
     "semver": "^5.6.0"
   },
   "peerDependencies": {
