@@ -31,6 +31,8 @@ import {
   forwardRef,
   memo,
   PureComponent,
+  useEffect,
+  useState,
 } from './_helpers/react-compat';
 import {
   describeIf,
@@ -650,6 +652,39 @@ describe('shallow', () => {
     InPortal
   </div>
 </Portal>`);
+    });
+  });
+
+  describeIf(is('>= 16.8'), 'hooks', () => {
+    // TODO: enable when the shallow renderer fixes its bug
+    it.skip('works with `useEffect`', (done) => {
+      function ComponentUsingEffectHook() {
+        const [ctr, setCtr] = useState(0);
+        useEffect(() => {
+          setCtr(1);
+          setTimeout(() => {
+            setCtr(2);
+          }, 1e3);
+        }, []);
+        return (
+          <div>
+            {ctr}
+          </div>
+        );
+      }
+      const wrapper = shallow(<ComponentUsingEffectHook />);
+
+      expect(wrapper.debug()).to.equal(`<div>
+  1
+</div>`);
+
+      setTimeout(() => {
+        wrapper.update();
+        expect(wrapper.debug()).to.equal(`<div>
+  2
+</div>`);
+        done();
+      }, 1e3);
     });
   });
 
