@@ -279,6 +279,15 @@ function getEmptyStateValue() {
   return testRenderer._instance.state;
 }
 
+function wrapAct(fn) {
+  if (typeof TestUtils.act !== 'function') {
+    return fn();
+  }
+  let returnVal;
+  TestUtils.act(() => { returnVal = fn(); });
+  return returnVal;
+}
+
 class ReactSixteenAdapter extends EnzymeAdapter {
   constructor() {
     super();
@@ -316,25 +325,27 @@ class ReactSixteenAdapter extends EnzymeAdapter {
     const adapter = this;
     return {
       render(el, context, callback) {
-        if (instance === null) {
-          const { type, props, ref } = el;
-          const wrapperProps = {
-            Component: type,
-            props,
-            context,
-            ...(ref && { ref }),
-          };
-          const ReactWrapperComponent = createMountWrapper(el, { ...options, adapter });
-          const wrappedEl = React.createElement(ReactWrapperComponent, wrapperProps);
-          instance = hydrateIn
-            ? ReactDOM.hydrate(wrappedEl, domNode)
-            : ReactDOM.render(wrappedEl, domNode);
-          if (typeof callback === 'function') {
-            callback();
+        return wrapAct(() => {
+          if (instance === null) {
+            const { type, props, ref } = el;
+            const wrapperProps = {
+              Component: type,
+              props,
+              context,
+              ...(ref && { ref }),
+            };
+            const ReactWrapperComponent = createMountWrapper(el, { ...options, adapter });
+            const wrappedEl = React.createElement(ReactWrapperComponent, wrapperProps);
+            instance = hydrateIn
+              ? ReactDOM.hydrate(wrappedEl, domNode)
+              : ReactDOM.render(wrappedEl, domNode);
+            if (typeof callback === 'function') {
+              callback();
+            }
+          } else {
+            instance.setChildProps(el.props, context, callback);
           }
-        } else {
-          instance.setChildProps(el.props, context, callback);
-        }
+        });
       },
       unmount() {
         ReactDOM.unmountComponentAtNode(domNode);
@@ -378,63 +389,65 @@ class ReactSixteenAdapter extends EnzymeAdapter {
     let cachedNode = null;
     return {
       render(el, unmaskedContext) {
-        cachedNode = el;
-        /* eslint consistent-return: 0 */
-        if (typeof el.type === 'string') {
-          isDOM = true;
-        } else {
-          isDOM = false;
-          const { type: Component } = el;
+        return wrapAct(() => {
+          cachedNode = el;
+          /* eslint consistent-return: 0 */
+          if (typeof el.type === 'string') {
+            isDOM = true;
+          } else {
+            isDOM = false;
+            const { type: Component } = el;
 
-          const isStateful = Component.prototype && (
-            Component.prototype.isReactComponent
-            || Array.isArray(Component.__reactAutoBindPairs) // fallback for createClass components
-          );
-
-          const context = getMaskedContext(Component.contextTypes, unmaskedContext);
-
-          if (!isStateful && isMemo(el.type)) {
-            const InnerComp = el.type.type;
-            const wrappedEl = Object.assign(
-              (...args) => InnerComp(...args), // eslint-disable-line new-cap
-              InnerComp,
+            const isStateful = Component.prototype && (
+              Component.prototype.isReactComponent
+              || Array.isArray(Component.__reactAutoBindPairs) // fallback for createClass components
             );
-            return withSetStateAllowed(() => renderer.render({ ...el, type: wrappedEl }, context));
-          }
 
-          if (!isStateful && typeof Component === 'function') {
-            const wrappedEl = Object.assign(
-              (...args) => Component(...args), // eslint-disable-line new-cap
-              Component,
-            );
-            return withSetStateAllowed(() => renderer.render({ ...el, type: wrappedEl }, context));
-          }
-          if (isStateful) {
-            // fix react bug; see implementation of `getEmptyStateValue`
-            const emptyStateValue = getEmptyStateValue();
-            if (emptyStateValue) {
-              Object.defineProperty(Component.prototype, 'state', {
-                configurable: true,
-                enumerable: true,
-                get() {
-                  return null;
-                },
-                set(value) {
-                  if (value !== emptyStateValue) {
-                    Object.defineProperty(this, 'state', {
-                      configurable: true,
-                      enumerable: true,
-                      value,
-                      writable: true,
-                    });
-                  }
-                  return true;
-                },
-              });
+            const context = getMaskedContext(Component.contextTypes, unmaskedContext);
+
+            if (!isStateful && isMemo(el.type)) {
+              const InnerComp = el.type.type;
+              const wrappedEl = Object.assign(
+                (...args) => InnerComp(...args), // eslint-disable-line new-cap
+                InnerComp,
+              );
+              return withSetStateAllowed(() => renderer.render({ ...el, type: wrappedEl }, context));
             }
+
+            if (!isStateful && typeof Component === 'function') {
+              const wrappedEl = Object.assign(
+                (...args) => Component(...args), // eslint-disable-line new-cap
+                Component,
+              );
+              return withSetStateAllowed(() => renderer.render({ ...el, type: wrappedEl }, context));
+            }
+            if (isStateful) {
+              // fix react bug; see implementation of `getEmptyStateValue`
+              const emptyStateValue = getEmptyStateValue();
+              if (emptyStateValue) {
+                Object.defineProperty(Component.prototype, 'state', {
+                  configurable: true,
+                  enumerable: true,
+                  get() {
+                    return null;
+                  },
+                  set(value) {
+                    if (value !== emptyStateValue) {
+                      Object.defineProperty(this, 'state', {
+                        configurable: true,
+                        enumerable: true,
+                        value,
+                        writable: true,
+                      });
+                    }
+                    return true;
+                  },
+                });
+              }
+            }
+            return withSetStateAllowed(() => renderer.render(el, context));
           }
-          return withSetStateAllowed(() => renderer.render(el, context));
-        }
+        });
       },
       unmount() {
         renderer.unmount();
