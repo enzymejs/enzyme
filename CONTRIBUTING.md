@@ -17,8 +17,13 @@ git clone https://github.com/airbnb/enzyme.git
 # step into local repo
 cd enzyme
 
-# install dependencies (use react:13 if you want to use React 0.13)
-npm install && npm run react 14
+# install dependencies (use `react 13` if you want to use React 0.13)
+npm install
+
+# install react version
+# accepts `13` for v0.13, `14` for v0.14, and for versions 15+,
+# accepts either a major (`15`, `16`) or a minor (`15.4`, `16.8`)
+npm run react 16
 ```
 
 
