@@ -1050,6 +1050,8 @@ describeWithDOM('mount', () => {
     'useEffect',
     'useLayoutEffect',
     'useMemo',
+    'useState',
+    'custom',
   );
 
   describeIf(is('>= 16.6'), 'Suspense & lazy', () => {
