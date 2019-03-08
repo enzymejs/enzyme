@@ -33,6 +33,7 @@ let useMemo;
 let useReducer;
 let useRef;
 let useState;
+let act;
 
 if (is('>=15.5 || ^16.0.0-alpha || ^16.3.0-alpha')) {
   // eslint-disable-next-line import/no-extraneous-dependencies
@@ -117,6 +118,12 @@ if (is('^16.8.0-0')) {
     useRef,
     useState,
   } = require('react'));
+
+  ({
+    act,
+  } = require('react-dom/test-utils'));
+
+
 } else {
   useCallback = null;
   useContext = null;
@@ -128,6 +135,7 @@ if (is('^16.8.0-0')) {
   useReducer = null;
   useRef = null;
   useState = null;
+  act = null;
 }
 
 export {
@@ -157,4 +165,5 @@ export {
   useReducer,
   useRef,
   useState,
+  act,
 };
