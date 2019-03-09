@@ -177,6 +177,9 @@ Returns the named prop of the current node.
 #### [`.key() => String`](ShallowWrapper/key.md)
 Returns the key of the current node.
 
+#### [`.invoke(propName)(...args) => Any`](ShallowWrapper/invoke.md)
+Invokes a prop function on the current node and returns the function's return value.
+
 #### [`.simulate(event[, data]) => ShallowWrapper`](ShallowWrapper/simulate.md)
 Simulates an event on the current node.
 

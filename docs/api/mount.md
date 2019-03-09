@@ -161,6 +161,9 @@ Returns the props of the root component.
 #### [`.prop(key) => Any`](ReactWrapper/prop.md)
 Returns the named prop of the root component.
 
+#### [`.invoke(propName)(...args) => Any`](ReactWrapper/invoke.md)
+Invokes a prop function on the current node and returns the function's return value.
+
 #### [`.key() => String`](ReactWrapper/key.md)
 Returns the key of the root component.
 
