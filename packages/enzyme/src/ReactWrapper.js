@@ -23,6 +23,7 @@ import {
   childrenOfNode,
   parentsOfNode,
   treeFilter,
+  getTextFromHostNodes,
 } from './RSTTraversal';
 
 import { buildPredicate, reduceTreesBySelector } from './selectors';
@@ -574,22 +575,7 @@ class ReactWrapper {
    */
   text() {
     const adapter = getAdapter(this[OPTIONS]);
-    return this.single('text', (n) => {
-      const node = adapter.nodeToHostNode(n, true);
-      if (!node) {
-        return typeof n === 'string' ? n : node;
-      }
-
-      const nodeArray = Array.isArray(node) ? node : [node];
-      const textContent = nodeArray.map((item) => {
-        if (!item) {
-          return '';
-        }
-        return item.textContent || '';
-      });
-
-      return textContent.join('');
-    });
+    return this.single('text', n => getTextFromHostNodes(n, adapter));
   }
 
   /**

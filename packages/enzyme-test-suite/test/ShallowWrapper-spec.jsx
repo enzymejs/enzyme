@@ -3820,6 +3820,26 @@ describe('shallow', () => {
         expect(constWrapper.text()).to.include('Foo');
         expect(constWrapper.text()).to.include('Bar');
       });
+
+      it('works with a nested component', () => {
+        const Title = ({ children }) => <span>{children}</span>;
+        const Foobar = () => (
+          <Fragment>
+            <Title>Foo</Title>
+            <Fragment>Bar</Fragment>
+          </Fragment>
+        );
+
+        const wrapper = shallow(<Foobar />);
+        const text = wrapper.text();
+        expect(wrapper.debug()).to.equal(`<Fragment>
+  <Title>
+    Foo
+  </Title>
+  Bar
+</Fragment>`);
+        expect(text).to.equal('<Title />Bar');
+      });
     });
   });
 

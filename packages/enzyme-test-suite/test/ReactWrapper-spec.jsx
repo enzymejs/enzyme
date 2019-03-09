@@ -3860,6 +3860,28 @@ describeWithDOM('mount', () => {
         expect(constWrapper.text()).to.include('Foo');
         expect(constWrapper.text()).to.include('Bar');
       });
+
+      it('works with a nested component', () => {
+        const Title = ({ children }) => <span>{children}</span>;
+        const Foobar = () => (
+          <Fragment>
+            <Title>Foo</Title>
+            <Fragment>Bar</Fragment>
+          </Fragment>
+        );
+
+        const wrapper = mount(<Foobar />);
+        const text = wrapper.text();
+        expect(wrapper.debug()).to.equal(`<Foobar>
+  <Title>
+    <span>
+      Foo
+    </span>
+  </Title>
+  Bar
+</Foobar>`);
+        expect(text).to.equal('FooBar');
+      });
     });
   });
 

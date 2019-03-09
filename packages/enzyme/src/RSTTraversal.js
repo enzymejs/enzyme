@@ -128,7 +128,21 @@ export function nodeMatchesObjectProps(node, props) {
   return isSubset(propsOfNode(node), replaceUndefinedValues(props));
 }
 
-export function getTextFromNode(node) {
+function getTextFromHostNode(hostNode) {
+  if (typeof hostNode === 'string') {
+    return String(hostNode || '');
+  }
+  if (!hostNode) {
+    return '';
+  }
+  return hostNode.textContent || '';
+}
+
+function getTextFromRSTNode(node, {
+  getCustom,
+  handleHostNodes,
+  recurse,
+}) {
   if (node == null) {
     return '';
   }
@@ -137,9 +151,33 @@ export function getTextFromNode(node) {
     return String(node);
   }
 
-  if (node.type && typeof node.type === 'function') {
-    return `<${node.type.displayName || functionName(node.type)} />`;
+  if (getCustom && node.type && typeof node.type === 'function') {
+    return getCustom(node);
   }
 
-  return childrenOfNode(node).map(getTextFromNode).join('');
+  if (handleHostNodes && node.nodeType === 'host') {
+    return handleHostNodes(node);
+  }
+  return childrenOfNode(node).map(recurse).join('');
+}
+
+export function getTextFromNode(node) {
+  return getTextFromRSTNode(node, {
+    recurse: getTextFromNode,
+    getCustom({ type }) {
+      return `<${type.displayName || functionName(type)} />`;
+    },
+  });
+}
+
+export function getTextFromHostNodes(node, adapter) {
+  return getTextFromRSTNode(node, {
+    recurse(item) {
+      return getTextFromHostNodes(item, adapter);
+    },
+    handleHostNodes(item) {
+      const nodes = [].concat(adapter.nodeToHostNode(item, true));
+      return nodes.map(getTextFromHostNode).join('');
+    },
+  });
 }
