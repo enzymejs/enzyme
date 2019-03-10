@@ -2,6 +2,7 @@
   "extends": "airbnb",
   "root": true,
   "rules": {
+    "max-len": 0,
     "import/no-extraneous-dependencies": 0,
     "import/no-unresolved": 0,
     "import/extensions": 0,
@@ -13,7 +14,7 @@
   },
   "settings": {
     "react": {
-      "version": "16.4.0",
+      "version": "16",
     },
   },
 }

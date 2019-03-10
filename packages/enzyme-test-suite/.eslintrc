@@ -7,6 +7,9 @@
   "plugins": ["mocha"],
   "settings": {
     "mocha/additionalTestFunctions": ["itIf", "describeIf"],
+    "react": {
+      "version": "detect",
+    },
   },
   "rules": {
     "max-len": 0,
