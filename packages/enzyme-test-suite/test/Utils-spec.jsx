@@ -787,6 +787,27 @@ describe('Utils', () => {
       spy.restore();
       expect(Object.getOwnPropertyDescriptor(obj, 'method')).to.deep.equal(descriptor);
     });
+
+    it('accepts an optional `getStub` argument', () => {
+      const obj = {};
+      const descriptor = {
+        configurable: true,
+        enumerable: true,
+        writable: true,
+        value: () => {},
+      };
+      Object.defineProperty(obj, 'method', descriptor);
+      let stub;
+      let original;
+      spyMethod(obj, 'method', (originalMethod) => {
+        original = originalMethod;
+        stub = () => { throw new EvalError('stubbed'); };
+        return stub;
+      });
+      expect(original).to.equal(descriptor.value);
+      expect(obj).to.have.property('method', stub);
+      expect(() => obj.method()).to.throw(EvalError);
+    });
   });
 
   describe('isCustomComponentElement()', () => {

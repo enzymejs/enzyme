@@ -282,7 +282,7 @@ export function cloneElement(adapter, el, props) {
   );
 }
 
-export function spyMethod(instance, methodName) {
+export function spyMethod(instance, methodName, getStub = () => {}) {
   let lastReturnValue;
   const originalMethod = instance[methodName];
   const hasOwn = has(instance, methodName);
@@ -293,7 +293,7 @@ export function spyMethod(instance, methodName) {
   Object.defineProperty(instance, methodName, {
     configurable: true,
     enumerable: !descriptor || !!descriptor.enumerable,
-    value(...args) {
+    value: getStub(originalMethod) || function spied(...args) {
       const result = originalMethod.apply(this, args);
       lastReturnValue = result;
       return result;
