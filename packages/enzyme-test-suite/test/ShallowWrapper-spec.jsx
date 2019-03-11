@@ -3372,7 +3372,7 @@ describe('shallow', () => {
         }
       }
 
-      it('sets the state of the parent', () => {
+      it('sets the state of a stateful root', () => {
         const wrapper = shallow(<Parent />);
 
         expect(wrapper.debug()).to.equal('<Child prop={1} />');
@@ -3385,15 +3385,34 @@ describe('shallow', () => {
         });
       });
 
-      it('can not set the state of the child', () => {
+      it('can not set the state of the stateful child of a stateful root', () => {
         const wrapper = shallow(<Parent />);
 
         expect(wrapper.debug()).to.equal('<Child prop={1} />');
 
-        expect(() => wrapper.find(Child).setState({ state: 'b' })).to.throw(
+        const child = wrapper.find(Child);
+        expect(() => child.setState({ state: 'b' })).to.throw(
           Error,
           'ShallowWrapper::setState() can only be called on the root',
         );
+      });
+
+      describeIf(is('> 0.13'), 'stateless function components (SFCs)', () => {
+        function SFC(props) {
+          return <Parent {...props} />;
+        }
+
+        it('can not set the state of the stateful child of a stateless root', () => {
+          const wrapper = shallow(<SFC />);
+
+          expect(wrapper.text().trim()).to.equal('<Parent />');
+
+          const child = wrapper.find(Child);
+          expect(() => child.setState({ state: 'b' })).to.throw(
+            Error,
+            'ShallowWrapper::setState() can only be called on the root',
+          );
+        });
       });
     });
   });
@@ -4036,7 +4055,7 @@ describe('shallow', () => {
     });
   });
 
-  describe('.state(name)', () => {
+  describe('.state([name])', () => {
     it('returns the state object', () => {
       class Foo extends React.Component {
         constructor(props) {
@@ -4135,16 +4154,30 @@ describe('shallow', () => {
         }
       }
 
-      it('gets the state of the parent', () => {
+      it('gets the state of a stateful parent', () => {
         const wrapper = shallow(<Parent />);
 
         expect(wrapper.state()).to.eql({ childProp: 1 });
       });
 
-      it('can not get the state of the child', () => {
+      it('can not get the state of the stateful child of a stateful root', () => {
         const wrapper = shallow(<Parent />);
 
-        expect(() => wrapper.find(Child).state()).to.throw(Error, 'ShallowWrapper::state() can only be called on the root');
+        const child = wrapper.find(Child);
+        expect(() => child.state()).to.throw(Error, 'ShallowWrapper::state() can only be called on the root');
+      });
+
+      describeIf(is('> 0.13'), 'stateless function components (SFCs)', () => {
+        function StatelessParent(props) {
+          return <Child {...props} />;
+        }
+
+        it('can not get the state of the stateful child of a stateless root', () => {
+          const wrapper = shallow(<StatelessParent />);
+
+          const child = wrapper.find(Child);
+          expect(() => child.state()).to.throw(Error, 'ShallowWrapper::state() can only be called on the root');
+        });
       });
     });
   });

@@ -682,7 +682,8 @@ class ReactWrapper {
    * @returns {*}
    */
   state(name) {
-    if (this.instance() === null || this[RENDERER].getNode().nodeType !== 'class') {
+    const thisNode = this[ROOT] === this ? this[RENDERER].getNode() : this.getNodeInternal();
+    if (this.instance() === null || thisNode.nodeType !== 'class') {
       throw new Error('ReactWrapper::state() can only be called on class components');
     }
     const _state = this.single('state', () => this.instance().state);

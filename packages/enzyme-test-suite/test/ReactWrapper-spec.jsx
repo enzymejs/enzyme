@@ -3398,7 +3398,7 @@ describeWithDOM('mount', () => {
         }
       }
 
-      it('sets the state of the parent', () => {
+      it('sets the state of a stateful root', () => {
         const wrapper = mount(<Parent />);
 
         expect(wrapper.text().trim()).to.equal('1 - a');
@@ -3411,32 +3411,36 @@ describeWithDOM('mount', () => {
         });
       });
 
-      it('sets the state of the child', () => {
+      it('sets the state of the stateful child of a stateful root', () => {
         const wrapper = mount(<Parent />);
 
         expect(wrapper.text().trim()).to.equal('1 - a');
 
+        const child = wrapper.find(Child);
         return new Promise((resolve) => {
-          wrapper.find(Child).setState({ state: 'b' }, () => {
+          child.setState({ state: 'b' }, () => {
             expect(wrapper.text().trim()).to.equal('1 - b');
             resolve();
           });
         });
       });
 
-      itIf(is('> 0.13'), 'sets the state of a class child with a root SFC', () => {
+      describeIf(is('> 0.13'), 'stateless function components (SFCs)', () => {
         function SFC(props) {
           return <Parent {...props} />;
         }
 
-        const wrapper = mount(<SFC />);
+        it('sets the state of the stateful child of a stateless root', () => {
+          const wrapper = mount(<SFC />);
 
-        expect(wrapper.text().trim()).to.equal('1 - a');
+          expect(wrapper.text().trim()).to.equal('1 - a');
 
-        return new Promise((resolve) => {
-          wrapper.find(Child).setState({ state: 'b' }, () => {
-            expect(wrapper.text().trim()).to.equal('1 - b');
-            resolve();
+          const child = wrapper.find(Child);
+          return new Promise((resolve) => {
+            child.setState({ state: 'b' }, () => {
+              expect(wrapper.text().trim()).to.equal('1 - b');
+              resolve();
+            });
           });
         });
       });
@@ -4082,7 +4086,7 @@ describeWithDOM('mount', () => {
     });
   });
 
-  describe('.state(name)', () => {
+  describe('.state([name])', () => {
     it('returns the state object', () => {
       class Foo extends React.Component {
         constructor(props) {
@@ -4181,16 +4185,30 @@ describeWithDOM('mount', () => {
         }
       }
 
-      it('gets the state of the parent', () => {
+      it('gets the state of a stateful parent', () => {
         const wrapper = mount(<Parent />);
 
         expect(wrapper.state()).to.eql({ childProp: 1 });
       });
 
-      it('gets the state of the child', () => {
+      it('gets the state of the stateful child of a stateful root', () => {
         const wrapper = mount(<Parent />);
 
-        expect(wrapper.find(Child).state()).to.eql({ state: 'a' });
+        const child = wrapper.find(Child);
+        expect(child.state()).to.eql({ state: 'a' });
+      });
+
+      describeIf(is('> 0.13'), 'stateless function components (SFCs)', () => {
+        function StatelessParent(props) {
+          return <Child {...props} />;
+        }
+
+        it('gets the state of the stateful child of a stateless root', () => {
+          const wrapper = mount(<StatelessParent />);
+
+          const child = wrapper.find(Child);
+          expect(child.state()).to.eql({ state: 'a' });
+        });
       });
     });
   });
