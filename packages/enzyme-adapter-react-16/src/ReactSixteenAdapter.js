@@ -50,6 +50,7 @@ import detectFiberTags from './detectFiberTags';
 const is164 = !!TestUtils.Simulate.touchStart; // 16.4+
 const is165 = !!TestUtils.Simulate.auxClick; // 16.5+
 const is166 = is165 && !React.unstable_AsyncMode; // 16.6+
+const is168 = is166 && typeof TestUtils.act === 'function';
 
 // Lazily populated if DOM is available.
 let FiberTags = null;
@@ -280,7 +281,7 @@ function getEmptyStateValue() {
 }
 
 function wrapAct(fn) {
-  if (typeof TestUtils.act !== 'function') {
+  if (!is168) {
     return fn();
   }
   let returnVal;
@@ -301,7 +302,9 @@ class ReactSixteenAdapter extends EnzymeAdapter {
         componentDidUpdate: {
           onSetState: true,
         },
-        getDerivedStateFromProps: true,
+        getDerivedStateFromProps: {
+          hasShouldComponentUpdateBug: !is168,
+        },
         getSnapshotBeforeUpdate: true,
         setState: {
           skipsComponentDidUpdateOnNullish: true,

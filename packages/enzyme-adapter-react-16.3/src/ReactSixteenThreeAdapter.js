@@ -251,7 +251,9 @@ class ReactSixteenThreeAdapter extends EnzymeAdapter {
         componentDidUpdate: {
           onSetState: true,
         },
-        getDerivedStateFromProps: true,
+        getDerivedStateFromProps: {
+          hasShouldComponentUpdateBug: true,
+        },
         getSnapshotBeforeUpdate: true,
         setState: {
           skipsComponentDidUpdateOnNullish: true,
