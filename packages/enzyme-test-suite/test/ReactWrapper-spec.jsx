@@ -3120,7 +3120,7 @@ describeWithDOM('mount', () => {
           expect(wrapper.state()).to.eql({ id: 'bar' });
           expect(this).to.equal(wrapper.instance());
           expect(this.state).to.eql({ id: 'bar' });
-          expect(wrapper.find('div').prop('className')).to.eql('bar');
+          expect(wrapper.find('div').prop('className')).to.equal('bar');
           expect(args).to.eql(CALLING_SETSTATE_CALLBACK_WITH_UNDEFINED ? [undefined] : []);
           resolve();
         });
@@ -3401,11 +3401,11 @@ describeWithDOM('mount', () => {
       it('sets the state of the parent', () => {
         const wrapper = mount(<Parent />);
 
-        expect(wrapper.text().trim()).to.eql('1 - a');
+        expect(wrapper.text().trim()).to.equal('1 - a');
 
         return new Promise((resolve) => {
           wrapper.setState({ childProp: 2 }, () => {
-            expect(wrapper.text().trim()).to.eql('2 - a');
+            expect(wrapper.text().trim()).to.equal('2 - a');
             resolve();
           });
         });
@@ -3414,11 +3414,11 @@ describeWithDOM('mount', () => {
       it('sets the state of the child', () => {
         const wrapper = mount(<Parent />);
 
-        expect(wrapper.text().trim()).to.eql('1 - a');
+        expect(wrapper.text().trim()).to.equal('1 - a');
 
         return new Promise((resolve) => {
           wrapper.find(Child).setState({ state: 'b' }, () => {
-            expect(wrapper.text().trim()).to.eql('1 - b');
+            expect(wrapper.text().trim()).to.equal('1 - b');
             resolve();
           });
         });
@@ -3431,11 +3431,11 @@ describeWithDOM('mount', () => {
 
         const wrapper = mount(<SFC />);
 
-        expect(wrapper.text().trim()).to.eql('1 - a');
+        expect(wrapper.text().trim()).to.equal('1 - a');
 
         return new Promise((resolve) => {
           wrapper.find(Child).setState({ state: 'b' }, () => {
-            expect(wrapper.text().trim()).to.eql('1 - b');
+            expect(wrapper.text().trim()).to.equal('1 - b');
             resolve();
           });
         });

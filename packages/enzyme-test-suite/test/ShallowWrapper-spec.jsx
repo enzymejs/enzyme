@@ -3095,7 +3095,7 @@ describe('shallow', () => {
           expect(wrapper.state()).to.eql({ id: 'bar' });
           expect(this).to.equal(wrapper.instance());
           expect(this.state).to.eql({ id: 'bar' });
-          expect(wrapper.find('div').prop('className')).to.eql('bar');
+          expect(wrapper.find('div').prop('className')).to.equal('bar');
           expect(args).to.eql(CALLING_SETSTATE_CALLBACK_WITH_UNDEFINED ? [undefined] : []);
           resolve();
         });
@@ -3375,11 +3375,11 @@ describe('shallow', () => {
       it('sets the state of the parent', () => {
         const wrapper = shallow(<Parent />);
 
-        expect(wrapper.debug()).to.eql('<Child prop={1} />');
+        expect(wrapper.debug()).to.equal('<Child prop={1} />');
 
         return new Promise((resolve) => {
           wrapper.setState({ childProp: 2 }, () => {
-            expect(wrapper.debug()).to.eql('<Child prop={2} />');
+            expect(wrapper.debug()).to.equal('<Child prop={2} />');
             resolve();
           });
         });
@@ -3388,7 +3388,7 @@ describe('shallow', () => {
       it('can not set the state of the child', () => {
         const wrapper = shallow(<Parent />);
 
-        expect(wrapper.debug()).to.eql('<Child prop={1} />');
+        expect(wrapper.debug()).to.equal('<Child prop={1} />');
 
         expect(() => wrapper.find(Child).setState({ state: 'b' })).to.throw(
           Error,
