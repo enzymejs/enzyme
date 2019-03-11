@@ -9,7 +9,6 @@ import {
   shallow,
   render,
   ShallowWrapper,
-  mount,
 } from 'enzyme';
 import {
   ITERATOR_SYMBOL,
@@ -1886,13 +1885,11 @@ describe('shallow', () => {
       }
 
       const content = 'blah';
-      const wrapper = mount(<Foo data={content} />);
+      const wrapper = shallow(<Foo data={content} />);
       expect(wrapper.debug()).to.equal((
-        `<Foo data="${content}">
-  <div data-foo="${content}">
-    Test Component
-  </div>
-</Foo>`
+        `<div data-foo="${content}">
+  Test Component
+</div>`
       ));
     });
 
@@ -3501,7 +3498,7 @@ describe('shallow', () => {
       });
 
       itIf(is('>= 16'), 'returns false for multiple nested elements that all return null', () => {
-        const wrapper = mount((
+        const wrapper = shallow((
           <RenderChildren>
             <RenderNull />
             <RenderChildren>
@@ -7196,7 +7193,7 @@ describe('shallow', () => {
           }
         }
         const spy = sinon.spy(Foo.prototype, 'componentDidUpdate');
-        const wrapper = mount(<Foo id={1} />);
+        const wrapper = shallow(<Foo id={1} />);
         wrapper.setState({ foo: 'update' });
         expect(spy).to.have.property('callCount', 1);
         wrapper.setState({ foo: 'update' });
