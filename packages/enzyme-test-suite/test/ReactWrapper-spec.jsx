@@ -1430,7 +1430,7 @@ describeWithDOM('mount', () => {
       expect(wrapper.find('[data-foo="bar  baz quz"]')).to.have.lengthOf(0);
     });
 
-    describeIf(is('> 0.13'), 'stateless function components', () => {
+    describeIf(is('> 0.13'), 'stateless function components (SFCs)', () => {
       it('finds a component based on a constructor', () => {
         const Foo = () => <div />;
         const wrapper = mount((
@@ -2535,7 +2535,7 @@ describeWithDOM('mount', () => {
       });
     });
 
-    describeIf(is('> 0.13'), 'stateless function components', () => {
+    describeIf(is('> 0.13'), 'stateless function components (SFCs)', () => {
       it('sets props for a component multiple times', () => {
         const Foo = props => (
           <div className={props.id}>
@@ -2647,7 +2647,7 @@ describeWithDOM('mount', () => {
       );
     });
 
-    describeIf(is('> 0.13'), 'stateless function components', () => {
+    describeIf(is('> 0.13'), 'stateless function components (SFCs)', () => {
       it('sets context for a component multiple times', () => {
         const SimpleComponent = (props, context) => (
           <div>{context.name}</div>
@@ -3270,7 +3270,7 @@ describeWithDOM('mount', () => {
     });
 
 
-    describeIf(is('> 0.13'), 'stateless function components', () => {
+    describeIf(is('> 0.13'), 'stateless function components (SFCs)', () => {
       it('throws when trying to access state', () => {
         const Foo = () => (
           <div>abc</div>
@@ -3608,7 +3608,7 @@ describeWithDOM('mount', () => {
       expect(wrapper.isEmptyRender()).to.equal(false);
     });
 
-    describeIf(is('>=15 || ^16.0.0-alpha'), 'stateless function components', () => {
+    describeIf(is('>=15 || ^16.0.0-alpha'), 'stateless function components (SFCs)', () => {
       itWithData(emptyRenderValues, 'when a component returns: ', (data) => {
         function Foo() {
           return data.value;
@@ -3811,7 +3811,7 @@ describeWithDOM('mount', () => {
       ]);
     });
 
-    describeIf(is('> 0.13'), 'stateless function components', () => {
+    describeIf(is('> 0.13'), 'stateless function components (SFCs)', () => {
       it('handles nodes with mapped children', () => {
         const Foo = props => (
           <div>
@@ -3965,7 +3965,7 @@ describeWithDOM('mount', () => {
       expect(wrapper.props()).to.eql({ bar: 'bye', foo: 'hi' });
     });
 
-    describeIf(is('> 0.13'), 'stateless function components', () => {
+    describeIf(is('> 0.13'), 'stateless function components (SFCs)', () => {
       it('called on root should return props of root node', () => {
         const Foo = ({ bar, foo }) => (
           <div className={bar} id={foo} />
@@ -4066,7 +4066,7 @@ describeWithDOM('mount', () => {
       expect(wrapper.prop('bar')).to.equal('bye');
     });
 
-    describeIf(is('> 0.13'), 'stateless function components', () => {
+    describeIf(is('> 0.13'), 'stateless function components (SFCs)', () => {
       it('returns props of root rendered node', () => {
         const Foo = ({ bar, foo }) => (
           <div className={bar} id={foo} />
@@ -4140,7 +4140,7 @@ describeWithDOM('mount', () => {
       expect(() => wrapper.state()).to.throw(Error, 'ReactWrapper::state() can only be called on class components');
     });
 
-    describeIf(is('> 0.13'), 'stateless function components', () => {
+    describeIf(is('> 0.13'), 'stateless function components (SFCs)', () => {
       it('throws on SFCs', () => {
         function Foo() {
           return <div />;
@@ -4274,7 +4274,7 @@ describeWithDOM('mount', () => {
       expect(children).to.have.lengthOf(1);
     });
 
-    describeIf(is('> 0.13'), 'stateless function components', () => {
+    describeIf(is('> 0.13'), 'stateless function components (SFCs)', () => {
       it('handles mixed children with and without arrays', () => {
         const Foo = props => (
           <div>
@@ -5340,7 +5340,7 @@ describeWithDOM('mount', () => {
       expect(wrapper.find(Foo).html()).to.equal('<div class="in-foo"></div>');
     });
 
-    describeIf(is('> 0.13'), 'stateless function components', () => {
+    describeIf(is('> 0.13'), 'stateless function components (SFCs)', () => {
       it('renders out nested composite components', () => {
         const Foo = () => <div className="in-foo" />;
         const Bar = () => (
@@ -5443,7 +5443,7 @@ describeWithDOM('mount', () => {
       expect(renderedFoo.find('.in-bar')).to.have.lengthOf(0);
     });
 
-    describeIf(is('> 0.13'), 'stateless function components', () => {
+    describeIf(is('> 0.13'), 'stateless function components (SFCs)', () => {
       it('returns a cheerio wrapper around the current node', () => {
         const Foo = () => (
           <div className="in-foo" />
@@ -7069,7 +7069,7 @@ describeWithDOM('mount', () => {
       expect(document.body.childNodes).to.have.lengthOf(0);
     });
 
-    describeIf(is('> 0.13'), 'stateless function components', () => {
+    describeIf(is('> 0.13'), 'stateless function components (SFCs)', () => {
       it('attaches and stuff', () => {
         const Foo = () => <div className="in-foo" />;
 
@@ -7606,7 +7606,7 @@ describeWithDOM('mount', () => {
           expect(wrapper.name()).to.equal('CustomWrapper');
         });
 
-        describeIf(is('> 0.13'), 'stateless function components', () => {
+        describeIf(is('> 0.13'), 'stateless function components (SFCs)', () => {
           it('returns the name of the node', () => {
             function SFC() {
               return <div />;
@@ -7665,7 +7665,7 @@ describeWithDOM('mount', () => {
           expect(wrapper.name()).to.equal('Foo');
         });
 
-        describeIf(is('> 0.13'), 'stateless function components', () => {
+        describeIf(is('> 0.13'), 'stateless function components (SFCs)', () => {
           it('returns the name of the node', () => {
             function SFC() {
               return <div />;

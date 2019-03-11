@@ -251,7 +251,7 @@ describe('shallow', () => {
       expect(wrapper.find('.child2')).to.have.lengthOf(1);
     });
 
-    describeIf(is('> 0.13'), 'stateless function components', () => {
+    describeIf(is('> 0.13'), 'stateless function components (SFCs)', () => {
       it('can pass in context', () => {
         const SimpleComponent = (props, context) => (
           <div>{context.name}</div>
@@ -792,7 +792,7 @@ describe('shallow', () => {
       );
     });
 
-    describeIf(is('> 0.13'), 'stateless function components', () => {
+    describeIf(is('> 0.13'), 'stateless function components (SFCs)', () => {
       it('matches composite components', () => {
         function Foo() {
           return <div />;
@@ -1362,7 +1362,7 @@ describe('shallow', () => {
       expect(wrapper.find('[data-foo="bar  baz quz"]')).to.have.lengthOf(0);
     });
 
-    describeIf(is('> 0.13'), 'stateless function components', () => {
+    describeIf(is('> 0.13'), 'stateless function components (SFCs)', () => {
       it('finds a component based on a constructor', () => {
         const Foo = () => (
           <div />
@@ -1896,7 +1896,7 @@ describe('shallow', () => {
       ));
     });
 
-    describeIf(is('> 0.13'), 'stateless function components', () => {
+    describeIf(is('> 0.13'), 'stateless function components (SFCs)', () => {
       it('finds nodes', () => {
         const SFC = function SFC({ selector }) {
           return (
@@ -2541,7 +2541,7 @@ describe('shallow', () => {
       });
     });
 
-    describeIf(is('> 0.13'), 'stateless function components', () => {
+    describeIf(is('> 0.13'), 'stateless function components (SFCs)', () => {
       it('sets props for a component multiple times', () => {
         const Foo = props => (
           <div className={props.id}>
@@ -2722,7 +2722,7 @@ describe('shallow', () => {
       expect(spy.args[0][1]).to.equal(b);
     });
 
-    describeIf(is('> 0.13'), 'stateless function components', () => {
+    describeIf(is('> 0.13'), 'stateless function components (SFCs)', () => {
       it('simulates events', () => {
         const spy = sinon.spy();
         const Foo = props => (
@@ -3247,7 +3247,7 @@ describe('shallow', () => {
       });
     });
 
-    describeIf(is('> 0.13'), 'stateless function components', () => {
+    describeIf(is('> 0.13'), 'stateless function components (SFCs)', () => {
       it('throws when trying to access state', () => {
         const Foo = () => (
           <div>abc</div>
@@ -3565,7 +3565,7 @@ describe('shallow', () => {
       expect(wrapper.isEmptyRender()).to.equal(false);
     });
 
-    describeIf(is('>=15 || ^16.0.0-alpha'), 'stateless function components', () => {
+    describeIf(is('>=15 || ^16.0.0-alpha'), 'stateless function components (SFCs)', () => {
       itWithData(emptyRenderValues, 'when a component returns: ', (data) => {
         function Foo() {
           return data.value;
@@ -3768,7 +3768,7 @@ describe('shallow', () => {
       ]);
     });
 
-    describeIf(is('> 0.13'), 'stateless function components', () => {
+    describeIf(is('> 0.13'), 'stateless function components (SFCs)', () => {
       it('handles nodes with mapped children', () => {
         const Foo = props => (
           <div>
@@ -3921,7 +3921,7 @@ describe('shallow', () => {
       expect(wrapper.props()).to.eql({ className: 'bye', id: 'hi' });
     });
 
-    describeIf(is('> 0.13'), 'stateless function components', () => {
+    describeIf(is('> 0.13'), 'stateless function components (SFCs)', () => {
       it('returns props of root rendered node', () => {
         const Foo = ({ bar, foo }) => (
           <div className={bar} id={foo} />
@@ -4023,7 +4023,7 @@ describe('shallow', () => {
       expect(wrapper.prop('bar')).to.equal(undefined);
     });
 
-    describeIf(is('> 0.13'), 'stateless function components', () => {
+    describeIf(is('> 0.13'), 'stateless function components (SFCs)', () => {
       it('returns props of root rendered node', () => {
         const Foo = ({ bar, foo }) => (
           <div className={bar} id={foo} />
@@ -4097,7 +4097,7 @@ describe('shallow', () => {
       expect(() => wrapper.state()).to.throw(Error, 'ShallowWrapper::state() can only be called on class components');
     });
 
-    describeIf(is('> 0.13'), 'stateless function components', () => {
+    describeIf(is('> 0.13'), 'stateless function components (SFCs)', () => {
       it('throws on SFCs', () => {
         function Foo() {
           return <div />;
@@ -4250,7 +4250,7 @@ describe('shallow', () => {
       expect(children.at(1).hasClass('baz')).to.equal(true);
     });
 
-    describeIf(is('> 0.13'), 'stateless function components', () => {
+    describeIf(is('> 0.13'), 'stateless function components (SFCs)', () => {
       it('handles mixed children with and without arrays', () => {
         const Foo = props => (
           <div>
@@ -5104,7 +5104,7 @@ describe('shallow', () => {
       });
     });
 
-    describeIf(is('> 0.13'), 'stateless function components', () => {
+    describeIf(is('> 0.13'), 'stateless function components (SFCs)', () => {
       it('returns a shallow rendered instance of the current node', () => {
         const Bar = () => (
           <div>
@@ -5410,7 +5410,7 @@ describe('shallow', () => {
       ));
     });
 
-    describeIf(is('> 0.13'), 'stateless function components', () => {
+    describeIf(is('> 0.13'), 'stateless function components (SFCs)', () => {
       it('renders out nested composite components', () => {
         const Foo = () => (
           <div className="in-foo" />
@@ -7713,7 +7713,7 @@ describe('shallow', () => {
           expect(wrapper.name()).to.equal('CustomWrapper');
         });
 
-        describeIf(is('> 0.13'), 'stateless function components', () => {
+        describeIf(is('> 0.13'), 'stateless function components (SFCs)', () => {
           it('returns the name of the node', () => {
             function SFC() {
               return <div />;
@@ -7782,7 +7782,7 @@ describe('shallow', () => {
           expect(wrapper.name()).to.equal('Foo');
         });
 
-        describeIf(is('> 0.13'), 'stateless function components', () => {
+        describeIf(is('> 0.13'), 'stateless function components (SFCs)', () => {
           it('returns the name of the node', () => {
             function SFC() {
               return <div />;
