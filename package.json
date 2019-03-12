@@ -69,7 +69,7 @@
     "babel-register": "^6.26.0",
     "chai": "^4.2.0",
     "coveralls": "^2.13.3",
-    "eslint": "^5.13.0",
+    "eslint": "^5.15.1",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-plugin-import": "^2.16.0",
     "eslint-plugin-jsx-a11y": "^6.2.1",
