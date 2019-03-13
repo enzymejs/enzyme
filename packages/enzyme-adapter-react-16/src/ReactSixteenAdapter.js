@@ -5,7 +5,7 @@ import ReactDOM from 'react-dom';
 import ReactDOMServer from 'react-dom/server';
 // eslint-disable-next-line import/no-unresolved
 import ShallowRenderer from 'react-test-renderer/shallow';
-import { version as testRendererVersion } from 'react-test-renderer/package';
+import { version as testRendererVersion } from 'react-test-renderer/package.json';
 // eslint-disable-next-line import/no-unresolved
 import TestUtils from 'react-dom/test-utils';
 import semver from 'semver';
