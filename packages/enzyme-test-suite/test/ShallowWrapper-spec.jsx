@@ -6352,14 +6352,17 @@ describe('shallow', () => {
           }
 
           render() {
-            const { throws } = this.state;
+            const {
+              didThrow,
+              throws,
+            } = this.state;
             return (
               <div>
                 <MaybeFragment>
                   <span>
                     <Thrower throws={throws} />
                     <div>
-                      {this.state.didThrow ? 'HasThrown' : 'HasNotThrown'}
+                      {didThrow ? 'HasThrown' : 'HasNotThrown'}
                     </div>
                   </span>
                 </MaybeFragment>
@@ -6434,6 +6437,349 @@ describe('shallow', () => {
 
           expect(wrapper.find({ children: 'HasThrown' })).to.have.lengthOf(0);
           expect(wrapper.find({ children: 'HasNotThrown' })).to.have.lengthOf(1);
+        });
+      });
+    });
+
+    describeIf(is('>= 16.6'), 'getDerivedStateFromError', () => {
+      describe('errors inside an error boundary', () => {
+        const errorToThrow = new EvalError('threw an error!');
+
+        function Thrower({ throws }) {
+          if (throws) {
+            throw errorToThrow;
+          }
+          return null;
+        }
+
+        function getErrorBoundary() {
+          return class ErrorBoundary extends React.Component {
+            static getDerivedStateFromError() {
+              return {
+                throws: false,
+                didThrow: true,
+              };
+            }
+
+            constructor(props) {
+              super(props);
+              this.state = {
+                throws: false,
+                didThrow: false,
+              };
+            }
+
+            render() {
+              const {
+                didThrow,
+                throws,
+              } = this.state;
+
+              return (
+                <div>
+                  <Fragment>
+                    <span>
+                      <Thrower throws={throws} />
+                      <div>
+                        {didThrow ? 'HasThrown' : 'HasNotThrown'}
+                      </div>
+                    </span>
+                  </Fragment>
+                </div>
+              );
+            }
+          };
+        }
+
+        describe('Thrower', () => {
+          it('does not throw when `throws` is `false`', () => {
+            expect(() => shallow(<Thrower throws={false} />)).not.to.throw();
+          });
+
+          it('throws when `throws` is `true`', () => {
+            expect(() => shallow(<Thrower throws />)).to.throw();
+          });
+        });
+
+        it('catches a simulated error', () => {
+          const ErrorBoundary = getErrorBoundary();
+
+          const spy = sinon.spy(ErrorBoundary, 'getDerivedStateFromError');
+          const wrapper = shallow(<ErrorBoundary />);
+
+          expect(spy).to.have.property('callCount', 0);
+
+          expect(() => wrapper.find(Thrower).simulateError(errorToThrow)).not.to.throw();
+
+          expect(spy).to.have.property('callCount', 1);
+
+          expect(spy.args).to.be.an('array').and.have.lengthOf(1);
+          const [[actualError]] = spy.args;
+          expect(actualError).to.equal(errorToThrow);
+        });
+
+        it('rerenders on a simulated error', () => {
+          const ErrorBoundary = getErrorBoundary();
+
+          const wrapper = shallow(<ErrorBoundary />);
+
+          expect(wrapper.find({ children: 'HasThrown' })).to.have.lengthOf(0);
+          expect(wrapper.find({ children: 'HasNotThrown' })).to.have.lengthOf(1);
+
+          expect(() => wrapper.find(Thrower).simulateError(errorToThrow)).not.to.throw();
+
+          expect(wrapper.find({ children: 'HasThrown' })).to.have.lengthOf(1);
+          expect(wrapper.find({ children: 'HasNotThrown' })).to.have.lengthOf(0);
+        });
+
+        it('does not catch errors during shallow render', () => {
+          const ErrorBoundary = getErrorBoundary();
+
+          const spy = sinon.spy(ErrorBoundary, 'getDerivedStateFromError');
+          const wrapper = shallow(<ErrorBoundary />);
+
+          expect(spy).to.have.property('callCount', 0);
+
+          wrapper.setState({ throws: true });
+
+          expect(spy).to.have.property('callCount', 0);
+
+          const thrower = wrapper.find(Thrower);
+          expect(thrower).to.have.lengthOf(1);
+          expect(thrower.props()).to.have.property('throws', true);
+
+          expect(() => thrower.dive()).to.throw(errorToThrow);
+
+          expect(spy).to.have.property('callCount', 0);
+
+          expect(wrapper.find({ children: 'HasThrown' })).to.have.lengthOf(0);
+          expect(wrapper.find({ children: 'HasNotThrown' })).to.have.lengthOf(1);
+        });
+      });
+    });
+
+    describeIf(is('>= 16.6'), 'getDerivedStateFromError and componentDidCatch combined', () => {
+
+      const errorToThrow = new EvalError('threw an error!');
+      const expectedInfo = {
+        componentStack: `
+    in Thrower (created by ErrorBoundary)
+    in div (created by ErrorBoundary)
+    in ErrorBoundary (created by WrapperComponent)
+    in WrapperComponent`,
+      };
+
+      function Thrower({ throws }) {
+        if (throws) {
+          throw errorToThrow;
+        }
+        return null;
+      }
+
+      describe('errors inside error boundary when getDerivedStateFromProps returns update', () => {
+        let lifecycleSpy;
+        let stateSpy;
+
+        beforeEach(() => {
+          lifecycleSpy = sinon.spy();
+          stateSpy = sinon.spy();
+        });
+
+        class ErrorBoundary extends React.Component {
+          static getDerivedStateFromError(error) {
+            lifecycleSpy('getDerivedStateFromError', error);
+            return {
+              didThrow: true,
+              throws: false,
+            };
+          }
+
+          constructor(props) {
+            super(props);
+            this.state = {
+              didThrow: false,
+              throws: false,
+            };
+
+            lifecycleSpy('constructor');
+          }
+
+          componentDidCatch(error, info) {
+            lifecycleSpy('componentDidCatch', error, info);
+            stateSpy({ ...this.state });
+          }
+
+          render() {
+            lifecycleSpy('render');
+
+            const {
+              throws,
+            } = this.state;
+
+            return (
+              <div>
+                <Thrower throws={throws} />
+              </div>
+            );
+          }
+        }
+
+        it('does not catch errors during shallow render', () => {
+          const wrapper = shallow(<ErrorBoundary />);
+
+          expect(lifecycleSpy).to.have.property('callCount', 2);
+          expect(lifecycleSpy.args).to.deep.equal([
+            ['constructor'],
+            ['render'],
+          ]);
+
+          expect(stateSpy).to.have.property('callCount', 0);
+
+          lifecycleSpy.resetHistory();
+
+          wrapper.setState({ throws: true });
+
+          const thrower = wrapper.find(Thrower);
+          expect(thrower).to.have.lengthOf(1);
+          expect(thrower.props()).to.have.property('throws', true);
+
+          expect(() => thrower.dive()).to.throw(errorToThrow);
+
+          expect(lifecycleSpy).to.have.property('callCount', 1);
+          expect(lifecycleSpy.args).to.deep.equal([
+            ['render'],
+          ]);
+        });
+
+        it('calls getDerivedStateFromError first and then componentDidCatch for simulated error', () => {
+          const wrapper = shallow(<ErrorBoundary />);
+
+          expect(lifecycleSpy).to.have.property('callCount', 2);
+          expect(lifecycleSpy.args).to.deep.equal([
+            ['constructor'],
+            ['render'],
+          ]);
+
+          expect(stateSpy).to.have.property('callCount', 0);
+
+          lifecycleSpy.resetHistory();
+
+          expect(() => wrapper.find(Thrower).simulateError(errorToThrow)).not.to.throw();
+
+          expect(lifecycleSpy).to.have.property('callCount', 3);
+          expect(lifecycleSpy.args).to.deep.equal([
+            ['getDerivedStateFromError', errorToThrow],
+            ['render'],
+            ['componentDidCatch', errorToThrow, expectedInfo],
+          ]);
+
+          expect(stateSpy).to.have.property('callCount', 1);
+          expect(stateSpy.args).to.deep.equal([
+            [{
+              throws: false,
+              didThrow: true,
+            }],
+          ]);
+        });
+      });
+
+      describe('errors inside error boundary when getDerivedStateFromError does not return update', () => {
+        let spy;
+
+        beforeEach(() => {
+          spy = sinon.spy();
+        });
+
+        class ErrorBoundary extends React.Component {
+          static getDerivedStateFromError(error) {
+            spy('getDerivedStateFromError', error);
+            return null;
+          }
+
+          constructor(props) {
+            super(props);
+            this.state = {
+              didThrow: false,
+              throws: false,
+            };
+
+            spy('constructor');
+          }
+
+          componentDidCatch(error, info) {
+            spy('componentDidCatch', error, info);
+
+            this.setState({
+              didThrow: true,
+              throws: false,
+            });
+          }
+
+          render() {
+            spy('render');
+
+            const {
+              didThrow,
+              throws,
+            } = this.state;
+
+            return (
+              <div>
+                <Thrower throws={throws} />
+                <div>
+                  {didThrow ? 'HasThrown' : 'HasNotThrown'}
+                </div>
+              </div>
+            );
+          }
+        }
+
+        it('does not catch errors during shallow render', () => {
+          const wrapper = shallow(<ErrorBoundary />);
+
+          expect(spy).to.have.property('callCount', 2);
+          expect(spy.args).to.deep.equal([
+            ['constructor'],
+            ['render'],
+          ]);
+
+          spy.resetHistory();
+
+          wrapper.setState({ throws: true });
+
+          const thrower = wrapper.find(Thrower);
+          expect(thrower).to.have.lengthOf(1);
+          expect(thrower.props()).to.have.property('throws', true);
+
+          expect(() => thrower.dive()).to.throw(errorToThrow);
+
+          expect(spy).to.have.property('callCount', 1);
+          expect(spy.args).to.deep.equal([
+            ['render'],
+          ]);
+        });
+
+        it('rerenders on a simulated error', () => {
+          const wrapper = shallow(<ErrorBoundary />);
+
+          expect(spy).to.have.property('callCount', 2);
+          expect(spy.args).to.deep.equal([
+            ['constructor'],
+            ['render'],
+          ]);
+
+          spy.resetHistory();
+
+          const thrower = wrapper.find(Thrower);
+
+          expect(() => thrower.simulateError(errorToThrow)).not.to.throw(errorToThrow);
+
+          expect(spy).to.have.property('callCount', 3);
+          expect(spy.args).to.deep.equal([
+            ['getDerivedStateFromError', errorToThrow],
+            ['componentDidCatch', errorToThrow, expectedInfo],
+            ['render'],
+          ]);
         });
       });
     });

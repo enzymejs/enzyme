@@ -316,6 +316,7 @@ class ReactSixteenAdapter extends EnzymeAdapter {
         getChildContext: {
           calledByRenderer: false,
         },
+        getDerivedStateFromError: is166,
       },
     };
   }
@@ -362,8 +363,17 @@ class ReactSixteenAdapter extends EnzymeAdapter {
         return instance ? toTree(instance._reactInternalFiber).rendered : null;
       },
       simulateError(nodeHierarchy, rootNode, error) {
-        const { instance: catchingInstance } = nodeHierarchy
-          .find(x => x.instance && x.instance.componentDidCatch) || {};
+        const isErrorBoundary = ({ instance: elInstance, type }) => {
+          if (is166 && type && type.getDerivedStateFromError) {
+            return true;
+          }
+          return elInstance && elInstance.componentDidCatch;
+        };
+
+        const {
+          instance: catchingInstance,
+          type: catchingType,
+        } = nodeHierarchy.find(isErrorBoundary) || {};
 
         simulateError(
           error,
@@ -372,6 +382,7 @@ class ReactSixteenAdapter extends EnzymeAdapter {
           nodeHierarchy,
           nodeTypeFromType,
           adapter.displayNameOfNode,
+          is166 ? catchingType : undefined,
         );
       },
       simulateEvent(node, event, mock) {
@@ -482,6 +493,7 @@ class ReactSixteenAdapter extends EnzymeAdapter {
           nodeHierarchy.concat(cachedNode),
           nodeTypeFromType,
           adapter.displayNameOfNode,
+          is166 ? cachedNode.type : undefined,
         );
       },
       simulateEvent(node, event, ...args) {

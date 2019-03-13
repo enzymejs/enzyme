@@ -266,19 +266,27 @@ export function simulateError(
   hierarchy,
   getNodeType = nodeTypeFromType,
   getDisplayName = displayNameOfNode,
+  catchingType = {},
 ) {
-  const { componentDidCatch } = catchingInstance || {};
-  if (!componentDidCatch) {
+  const instance = catchingInstance || {};
+
+  const { componentDidCatch } = instance;
+
+  const { getDerivedStateFromError } = catchingType;
+
+  if (!componentDidCatch && !getDerivedStateFromError) {
     throw error;
   }
 
-  const componentStack = getComponentStack(
-    hierarchy,
-    getNodeType,
-    getDisplayName,
-  );
+  if (getDerivedStateFromError) {
+    const stateUpdate = getDerivedStateFromError.call(catchingType, error);
+    instance.setState(stateUpdate);
+  }
 
-  componentDidCatch.call(catchingInstance, error, { componentStack });
+  if (componentDidCatch) {
+    const componentStack = getComponentStack(hierarchy, getNodeType, getDisplayName);
+    componentDidCatch.call(instance, error, { componentStack });
+  }
 }
 
 export function getMaskedContext(contextTypes, unmaskedContext) {
