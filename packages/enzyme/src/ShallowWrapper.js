@@ -462,6 +462,7 @@ class ShallowWrapper {
         // this case, state will be undefined, but props/context will exist.
         const node = this[RENDERER].getNode();
         const instance = node.instance || {};
+        const type = node.type || {};
         const { state } = instance;
         const prevProps = instance.props || this[UNRENDERED].props;
         const prevContext = instance.context || this[OPTIONS].context;
@@ -522,7 +523,11 @@ class ShallowWrapper {
               if (
                 lifecycles.componentDidUpdate
                 && typeof instance.componentDidUpdate === 'function'
-                && (!state || shallowEqual(state, this.instance().state))
+                && (
+                  !state
+                  || shallowEqual(state, this.instance().state)
+                  || typeof type.getDerivedStateFromProps === 'function'
+                )
               ) {
                 instance.componentDidUpdate(prevProps, state, snapshot);
               }
