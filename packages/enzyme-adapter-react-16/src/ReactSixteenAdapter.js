@@ -396,65 +396,63 @@ class ReactSixteenAdapter extends EnzymeAdapter {
     let cachedNode = null;
     return {
       render(el, unmaskedContext) {
-        return wrapAct(() => {
-          cachedNode = el;
-          /* eslint consistent-return: 0 */
-          if (typeof el.type === 'string') {
-            isDOM = true;
-          } else {
-            isDOM = false;
-            const { type: Component } = el;
+        cachedNode = el;
+        /* eslint consistent-return: 0 */
+        if (typeof el.type === 'string') {
+          isDOM = true;
+        } else {
+          isDOM = false;
+          const { type: Component } = el;
 
-            const isStateful = Component.prototype && (
-              Component.prototype.isReactComponent
-              || Array.isArray(Component.__reactAutoBindPairs) // fallback for createClass components
+          const isStateful = Component.prototype && (
+            Component.prototype.isReactComponent
+            || Array.isArray(Component.__reactAutoBindPairs) // fallback for createClass components
+          );
+
+          const context = getMaskedContext(Component.contextTypes, unmaskedContext);
+
+          if (!isStateful && isMemo(el.type)) {
+            const InnerComp = el.type.type;
+            const wrappedEl = Object.assign(
+              (...args) => InnerComp(...args), // eslint-disable-line new-cap
+              InnerComp,
             );
-
-            const context = getMaskedContext(Component.contextTypes, unmaskedContext);
-
-            if (!isStateful && isMemo(el.type)) {
-              const InnerComp = el.type.type;
-              const wrappedEl = Object.assign(
-                (...args) => InnerComp(...args), // eslint-disable-line new-cap
-                InnerComp,
-              );
-              return withSetStateAllowed(() => renderer.render({ ...el, type: wrappedEl }, context));
-            }
-
-            if (!isStateful && typeof Component === 'function') {
-              const wrappedEl = Object.assign(
-                (...args) => Component(...args), // eslint-disable-line new-cap
-                Component,
-              );
-              return withSetStateAllowed(() => renderer.render({ ...el, type: wrappedEl }, context));
-            }
-            if (isStateful) {
-              // fix react bug; see implementation of `getEmptyStateValue`
-              const emptyStateValue = getEmptyStateValue();
-              if (emptyStateValue) {
-                Object.defineProperty(Component.prototype, 'state', {
-                  configurable: true,
-                  enumerable: true,
-                  get() {
-                    return null;
-                  },
-                  set(value) {
-                    if (value !== emptyStateValue) {
-                      Object.defineProperty(this, 'state', {
-                        configurable: true,
-                        enumerable: true,
-                        value,
-                        writable: true,
-                      });
-                    }
-                    return true;
-                  },
-                });
-              }
-            }
-            return withSetStateAllowed(() => renderer.render(el, context));
+            return withSetStateAllowed(() => renderer.render({ ...el, type: wrappedEl }, context));
           }
-        });
+
+          if (!isStateful && typeof Component === 'function') {
+            const wrappedEl = Object.assign(
+              (...args) => Component(...args), // eslint-disable-line new-cap
+              Component,
+            );
+            return withSetStateAllowed(() => renderer.render({ ...el, type: wrappedEl }, context));
+          }
+          if (isStateful) {
+            // fix react bug; see implementation of `getEmptyStateValue`
+            const emptyStateValue = getEmptyStateValue();
+            if (emptyStateValue) {
+              Object.defineProperty(Component.prototype, 'state', {
+                configurable: true,
+                enumerable: true,
+                get() {
+                  return null;
+                },
+                set(value) {
+                  if (value !== emptyStateValue) {
+                    Object.defineProperty(this, 'state', {
+                      configurable: true,
+                      enumerable: true,
+                      value,
+                      writable: true,
+                    });
+                  }
+                  return true;
+                },
+              });
+            }
+          }
+          return withSetStateAllowed(() => renderer.render(el, context));
+        }
       },
       unmount() {
         renderer.unmount();
