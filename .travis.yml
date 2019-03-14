@@ -17,7 +17,7 @@ before_script:
 script:
   - 'if [ -n "${LINT-}" ]; then npm run lint; elif [ -n "${KARMA-}" ]; then npm run test:karma -- --single-run; elif [ -n "${REACT-}" ]; then npm run travis; else false ; fi'
 after_script:
-  - 'if [ "${TRAVIS_NODE_VERSION}" = "4" ] || [ "${TRAVIS_NODE_VERSION}" = "0.12" ]; then cat ./coverage/lcov.info | ./node_modules/.bin/coveralls ; fi'
+  - 'if [ -n "${REACT-}" ]; then case "${TRAVIS_NODE_VERSION}" in "10" | "4" | "0.12") cat ./coverage/lcov.info | ./node_modules/.bin/coveralls ;; esac ; fi'
 sudo: false
 matrix:
   fast_finish: true
