@@ -11,6 +11,8 @@ import {
   render,
   ReactWrapper,
 } from 'enzyme';
+import mountEntry from 'enzyme/mount';
+import ReactWrapperEntry from 'enzyme/ReactWrapper';
 import {
   ITERATOR_SYMBOL,
   withSetStateAllowed,
@@ -55,6 +57,11 @@ const getWrapperPropSelector = prop => x => x.prop(prop);
 const CALLING_SETSTATE_CALLBACK_WITH_UNDEFINED = is('^15.5');
 
 describeWithDOM('mount', () => {
+  describe('top level entry points', () => {
+    expect(mountEntry).to.equal(mount);
+    expect(ReactWrapperEntry).to.equal(ReactWrapper);
+  });
+
   describe('top level wrapper', () => {
     it('does what i expect', () => {
       class Box extends React.Component {

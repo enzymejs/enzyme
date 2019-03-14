@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { expect } from 'chai';
 import { render } from 'enzyme';
+import renderEntry from 'enzyme/render';
 
 import './_helpers/setupAdapters';
 import { describeWithDOM, describeIf } from './_helpers';
@@ -9,6 +10,10 @@ import { is } from './_helpers/version';
 import { createClass } from './_helpers/react-compat';
 
 describeWithDOM('render', () => {
+  describe('top level entry points', () => {
+    expect(renderEntry).to.equal(render);
+  });
+
   describeIf(is('> 0.13'), 'context', () => {
     it('can pass in context', () => {
       const SimpleComponent = createClass({

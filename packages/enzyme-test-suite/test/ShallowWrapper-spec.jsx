@@ -10,6 +10,8 @@ import {
   render,
   ShallowWrapper,
 } from 'enzyme';
+import shallowEntry from 'enzyme/shallow';
+import ShallowWrapperEntry from 'enzyme/ShallowWrapper';
 import {
   ITERATOR_SYMBOL,
   withSetStateAllowed,
@@ -58,6 +60,11 @@ const getElementPropSelector = prop => x => x.props[prop];
 const getWrapperPropSelector = prop => x => x.prop(prop);
 
 describe('shallow', () => {
+  describe('top level entry points', () => {
+    expect(shallowEntry).to.equal(shallow);
+    expect(ShallowWrapperEntry).to.equal(ShallowWrapper);
+  });
+
   describe('top level wrapper', () => {
     it('does what i expect', () => {
       class Box extends React.Component {
