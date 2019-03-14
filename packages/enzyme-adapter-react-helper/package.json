@@ -9,7 +9,7 @@
     "lint": "eslint --ext js,jsx .",
     "pretest": "npm run lint",
     "prebuild": "npm run clean",
-    "build": "babel src --out-dir build",
+    "build": "babel --source-maps=both src --out-dir build",
     "watch": "npm run build -- -w",
     "prepublish": "npm run build && safe-publish-latest && (not-in-publish || cp ../../LICENSE.md ./)"
   },

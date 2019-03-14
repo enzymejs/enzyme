@@ -6,4 +6,5 @@
   ignore: [
     "packages/enzyme-test-suite/test/_helpers/untranspiled*",
   ],
+  sourceMaps: "both",
 }
