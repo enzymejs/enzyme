@@ -2505,8 +2505,8 @@ describe('shallow', () => {
       ]);
     });
 
-    describe('setProps should not call componentDidUpdate twice', () => {
-      it('first test case', () => {
+    describe('setProps does not call componentDidUpdate twice', () => {
+      it('when setState is called in cWRP', () => {
         class Dummy extends React.Component {
           constructor(...args) {
             super(...args);
@@ -7234,6 +7234,125 @@ describe('shallow', () => {
         const wrapper = shallow(<Test onUpdate={updateSpy} />);
         wrapper.instance().setDeepDifferentState();
         expect(updateSpy).to.have.property('callCount', 1);
+      });
+
+      describeIf(is('>= 16.3'), 'setProps calls `componentDidUpdate` when `getDerivedStateFromProps` is defined', () => {
+        class DummyComp extends PureComponent {
+          constructor(...args) {
+            super(...args);
+            this.state = { state: -1 };
+          }
+
+          static getDerivedStateFromProps({ changeState, counter }) {
+            return changeState ? { state: counter * 10 } : null;
+          }
+
+          componentDidUpdate() {}
+
+          render() {
+            const { counter } = this.props;
+            const { state } = this.state;
+            return (
+              <p>
+                {counter}
+                {state}
+              </p>
+            );
+          }
+        }
+
+        const cDU = sinon.spy(DummyComp.prototype, 'componentDidUpdate');
+        const gDSFP = sinon.spy(DummyComp, 'getDerivedStateFromProps');
+
+        beforeEach(() => { // eslint-disable-line mocha/no-sibling-hooks
+          cDU.resetHistory();
+          gDSFP.resetHistory();
+        });
+
+        it('with no state changes, calls both methods with a sync and async setProps', () => {
+          const wrapper = shallow(<DummyComp changeState={false} counter={0} />);
+
+          expect(gDSFP).to.have.property('callCount', 1);
+          const [firstCall] = gDSFP.args;
+          expect(firstCall).to.eql([{
+            changeState: false,
+            counter: 0,
+          }, {
+            state: -1,
+          }]);
+          expect(wrapper.state()).to.eql({ state: -1 });
+
+          wrapper.setProps({ counter: 1 });
+
+          expect(cDU).to.have.property('callCount', 1);
+          expect(gDSFP).to.have.property('callCount', 2);
+          const [, secondCall] = gDSFP.args;
+          expect(secondCall).to.eql([{
+            changeState: false,
+            counter: 1,
+          }, {
+            state: -1,
+          }]);
+          expect(wrapper.state()).to.eql({ state: -1 });
+
+          return new Promise((resolve) => {
+            wrapper.setProps({ counter: 2 }, resolve);
+          }).then(() => {
+            expect(cDU).to.have.property('callCount', 2);
+            expect(gDSFP).to.have.property('callCount', 3);
+            const [, , thirdCall] = gDSFP.args;
+            expect(thirdCall).to.eql([{
+              changeState: false,
+              counter: 2,
+            }, {
+              state: -1,
+            }]);
+            expect(wrapper.state()).to.eql({ state: -1 });
+          });
+        });
+
+        it('with a state changes, calls both methods with a sync and async setProps', () => {
+          const wrapper = shallow(<DummyComp changeState counter={0} />);
+
+          expect(cDU).to.have.property('callCount', 0);
+          expect(gDSFP).to.have.property('callCount', 1);
+          const [firstCall] = gDSFP.args;
+          expect(firstCall).to.eql([{
+            changeState: true,
+            counter: 0,
+          }, {
+            state: -1,
+          }]);
+          expect(wrapper.state()).to.eql({ state: 0 });
+
+          wrapper.setProps({ counter: 1 });
+
+          expect(cDU).to.have.property('callCount', 1);
+          expect(gDSFP).to.have.property('callCount', 2);
+          const [, secondCall] = gDSFP.args;
+          expect(secondCall).to.eql([{
+            changeState: true,
+            counter: 1,
+          }, {
+            state: 0,
+          }]);
+          expect(wrapper.state()).to.eql({ state: 10 });
+
+          return new Promise((resolve) => {
+            wrapper.setProps({ counter: 2 }, resolve);
+          }).then(() => {
+            expect(cDU).to.have.property('callCount', 2);
+            expect(gDSFP).to.have.property('callCount', 3);
+            const [, , thirdCall] = gDSFP.args;
+            expect(thirdCall).to.eql([{
+              changeState: true,
+              counter: 2,
+            }, {
+              state: 10,
+            }]);
+            expect(wrapper.state()).to.eql({ state: 20 });
+          });
+        });
       });
     });
 
