@@ -142,6 +142,7 @@ function getTextFromRSTNode(node, {
   getCustom,
   handleHostNodes,
   recurse,
+  nullRenderReturnsNull = false,
 }) {
   if (node == null) {
     return '';
@@ -157,6 +158,9 @@ function getTextFromRSTNode(node, {
 
   if (handleHostNodes && node.nodeType === 'host') {
     return handleHostNodes(node);
+  }
+  if (node.rendered == null && nullRenderReturnsNull) {
+    return null;
   }
   return childrenOfNode(node).map(recurse).join('');
 }
@@ -190,13 +194,14 @@ function getHTMLFromHostNode(hostNode) {
 }
 
 export function getHTMLFromHostNodes(node, adapter) {
-  if (node === null) return null;
-
-  const hostNode = adapter.nodeToHostNode(node, true);
-  if (hostNode === null) return null;
-
-  const nodeArray = Array.isArray(hostNode) ? hostNode : [hostNode];
-  const nodesHTML = nodeArray.map(item => getHTMLFromHostNode(item));
-
-  return nodesHTML.join('');
+  return getTextFromRSTNode(node, {
+    recurse(item) {
+      return getHTMLFromHostNodes(item, adapter);
+    },
+    handleHostNodes(item) {
+      const nodes = [].concat(adapter.nodeToHostNode(item, true));
+      return nodes.map(getHTMLFromHostNode).join('');
+    },
+    nullRenderReturnsNull: true,
+  });
 }

@@ -5399,6 +5399,27 @@ describeWithDOM('mount', () => {
         </Fragment>
       );
 
+      class ClassChild extends React.Component {
+        render() {
+          return <div>Class child</div>;
+        }
+      }
+
+      function SFCChild() {
+        return <div>SFC child</div>;
+      }
+
+      class FragmentWithCustomChildClass extends React.Component {
+        render() {
+          return (
+            <Fragment>
+              <ClassChild />
+              <SFCChild />
+            </Fragment>
+          );
+        }
+      }
+
       it('correctly renders html for both children for class', () => {
         const classWrapper = mount(<FragmentClassExample />);
         expect(classWrapper.html()).to.equal('<div><span>Foo</span></div><div><span>Bar</span></div>');
@@ -5407,6 +5428,11 @@ describeWithDOM('mount', () => {
       it('correctly renders html for both children for const', () => {
         const constWrapper = mount(<FragmentConstExample />);
         expect(constWrapper.html()).to.equal('<div><span>Foo</span></div><div><span>Bar</span></div>');
+      });
+
+      it('correctly renders html for custom component children', () => {
+        const withChildrenWrapper = mount(<FragmentWithCustomChildClass />);
+        expect(withChildrenWrapper.html()).to.equal('<div>Class child</div><div>SFC child</div>');
       });
     });
   });
