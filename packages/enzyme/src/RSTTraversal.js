@@ -181,3 +181,18 @@ export function getTextFromHostNodes(node, adapter) {
     },
   });
 }
+
+export function getHTMLFromHostNodes(node, adapter) {
+  if (node === null) return null;
+
+  const hostNode = adapter.nodeToHostNode(node, true);
+  if (hostNode === null) return null;
+
+  const nodeArray = Array.isArray(hostNode) ? hostNode : [hostNode];
+  const nodesHTML = nodeArray.map(item => (item === null
+    ? null
+    : item.outerHTML.replace(/\sdata-(reactid|reactroot)+="([^"]*)+"/g, '')
+  ));
+
+  return nodesHTML.join('');
+}
