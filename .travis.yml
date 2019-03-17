@@ -29,7 +29,11 @@ matrix:
     - node_js: "lts/*"
       env: REACT=16.8.3
     - node_js: "lts/*"
-      env: REACT=16.7
+      env: REACT=16.8 RENDERER=16.7
+    - node_js: "lts/*"
+      env: REACT=16.7 RENDERER=16.8
+    - node_js: "lts/*"
+      env: REACT=16.7 RENDERER=16.7
     - node_js: "lts/*"
       env: REACT=16.6
     - node_js: "lts/*"
