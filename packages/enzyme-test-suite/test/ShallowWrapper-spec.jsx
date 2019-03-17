@@ -1231,6 +1231,7 @@ describe('shallow', () => {
     'useEffect',
     'useLayoutEffect',
     'useMemo',
+    'useReducer',
     'useState',
     'custom',
   );
