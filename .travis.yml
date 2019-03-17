@@ -1,8 +1,6 @@
 language: node_js
 node_js:
   - "10"
-  - "8"
-  - "6"
   - "4"
 before_install:
   - 'nvm install-latest-npm'
@@ -24,6 +22,10 @@ matrix:
   include:
     - node_js: "lts/*"
       env: LINT=true
+    - node_js: "8"
+      env: REACT=16
+    - node_js: "6"
+      env: REACT=16
     - node_js: "lts/*"
       env: REACT=16.7
     - node_js: "lts/*"
@@ -58,40 +60,6 @@ matrix:
   exclude:
     - node_js: "6"
       env: REACT=0.13
-    - node_js: "8"
-      env: REACT=0.13
-    - node_js: "6"
-      env: REACT=0.14
-    - node_js: "8"
-      env: REACT=0.14
-    - node_js: "6"
-      env: REACT=15.4
-    - node_js: "8"
-      env: REACT=15.4
-    - node_js: "6"
-      env: REACT=15.5
-    - node_js: "8"
-      env: REACT=15.5
-    - node_js: "6"
-      env: REACT=16.0
-    - node_js: "8"
-      env: REACT=16.0
-    - node_js: "6"
-      env: REACT=16.1
-    - node_js: "8"
-      env: REACT=16.1
-    - node_js: "6"
-      env: REACT=16.2
-    - node_js: "8"
-      env: REACT=16.2
-    - node_js: "6"
-      env: REACT=16.3
-    - node_js: "8"
-      env: REACT=16.3
-    - node_js: "6"
-      env: REACT=16.4
-    - node_js: "8"
-      env: REACT=16.4
 env:
   - REACT=16.8
   - REACT=16.7

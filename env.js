@@ -67,22 +67,24 @@ function getAdapter(reactVersion) {
     return '14';
   }
   if (semver.intersects(reactVersion, '^15.0.0-0')) {
-    if (semver.intersects(reactVersion, '< 15.5')) {
-      return '15.4';
+    if (semver.intersects(reactVersion, '>= 15.5')) {
+      return '15';
     }
-    return '15';
+    return '15.4';
   }
   if (semver.intersects(reactVersion, '^16.0.0-0')) {
-    if (semver.intersects(reactVersion, '~16.0 || ~16.1')) {
-      return '16.1';
-    }
-    if (semver.intersects(reactVersion, '~16.2')) {
-      return '16.2';
+    if (semver.intersects(reactVersion, '>= 16.4')) {
+      return '16';
     }
     if (semver.intersects(reactVersion, '~16.3')) {
       return '16.3';
     }
-    return '16';
+    if (semver.intersects(reactVersion, '~16.2')) {
+      return '16.2';
+    }
+    if (semver.intersects(reactVersion, '~16.0 || ~16.1')) {
+      return '16.1';
+    }
   }
   return null;
 }
