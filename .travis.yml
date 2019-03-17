@@ -25,13 +25,13 @@ matrix:
     - node_js: "lts/*"
       env: LINT=true
     - node_js: "lts/*"
-      env: REACT=16.7 ADAPTER=16
+      env: REACT=16.7
     - node_js: "lts/*"
-      env: REACT=16.6 ADAPTER=16
+      env: REACT=16.6
     - node_js: "lts/*"
-      env: REACT=16.5 ADAPTER=16
+      env: REACT=16.5
     - node_js: "lts/*"
-      env: REACT=16.4 ADAPTER=16
+      env: REACT=16.4
     - node_js: "lts/*"
       env: REACT=16.3 ADAPTER=16
     - node_js: "6"

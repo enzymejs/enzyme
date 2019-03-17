@@ -4,6 +4,7 @@ const path = require('path');
 const fs = require('fs');
 const spawn = require('child_process').spawn;
 const rimraf = require('rimraf');
+const semver = require('semver');
 
 const promisify = fn => new Promise((res, rej) => {
   const done = (err, val) => (err ? rej(err) : res(val));
@@ -41,21 +42,35 @@ const version = process.argv[2];
 
 const root = process.cwd();
 
-const adapterVersions = {
-  '15.0': 15.4,
-  15.1: 15.4,
-  15.2: 15.4,
-  15.3: 15.4,
-  15.5: 15,
-  '16.0': 16.1,
-  16.4: 16,
-  16.5: 16,
-  16.6: 16,
-  16.7: 16,
-  16.8: 16,
-};
+function getAdapter(reactVersion) {
+  if (semver.intersects(reactVersion, '0.13.x')) {
+    return '13';
+  }
+  if (semver.intersects(reactVersion, '0.14.x')) {
+    return '14';
+  }
+  if (semver.intersects(reactVersion, '^15.0.0-0')) {
+    if (semver.intersects(reactVersion, '< 15.5')) {
+      return '15.4';
+    }
+    return '15';
+  }
+  if (semver.intersects(reactVersion, '^16.0.0-0')) {
+    if (semver.intersects(reactVersion, '~16.0 || ~16.1')) {
+      return '16.1';
+    }
+    if (semver.intersects(reactVersion, '~16.2')) {
+      return '16.2';
+    }
+    if (semver.intersects(reactVersion, '~16.3')) {
+      return '16.3';
+    }
+    return '16';
+  }
+  return null;
+}
 const reactVersion = version < 15 ? '0.' + version : version;
-const adapterVersion = process.env.ADAPTER || adapterVersions[version] || version;
+const adapterVersion = process.env.ADAPTER || getAdapter(reactVersion) || version;
 const adapterName = `enzyme-adapter-react-${adapterVersion}`;
 const adapterPackageJsonPath = path.join(root, 'packages', adapterName, 'package.json');
 const testPackageJsonPath = path.join(root, 'packages', 'enzyme-test-suite', 'package.json');
