@@ -216,6 +216,7 @@ function toTree(vnode) {
     case FiberTags.ContextProvider:
     case FiberTags.ContextConsumer:
       return childrenToTree(node.child);
+    case FiberTags.Profiler:
     case FiberTags.ForwardRef: {
       return {
         nodeType: 'function',

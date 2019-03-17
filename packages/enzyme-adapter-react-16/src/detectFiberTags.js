@@ -19,6 +19,7 @@ module.exports = function detectFiberTags() {
   const supportsContext = typeof React.createContext !== 'undefined';
   const supportsForwardRef = typeof React.forwardRef !== 'undefined';
   const supportsMemo = typeof React.memo !== 'undefined';
+  const supportsProfiler = typeof React.unstable_Profiler !== 'undefined';
 
   function Fn() {
     return null;
@@ -65,6 +66,9 @@ module.exports = function detectFiberTags() {
       : -1,
     ForwardRef: supportsForwardRef
       ? getFiber(React.createElement(FwdRef)).tag
+      : -1,
+    Profiler: supportsProfiler
+      ? getFiber(React.createElement(React.unstable_Profiler, { id: 'mock', onRender: () => {} })).tag
       : -1,
   };
 };

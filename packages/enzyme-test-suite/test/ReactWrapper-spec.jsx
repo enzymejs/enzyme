@@ -24,6 +24,7 @@ import {
   Fragment,
   forwardRef,
   memo,
+  Profiler,
   PureComponent,
   useEffect,
   useState,
@@ -841,6 +842,122 @@ describeWithDOM('mount', () => {
     </div>
   </Portal>
 </Foo>`);
+    });
+  });
+
+  describeIf(is('>= 16.4'), 'Profiler', () => {
+    function SomeComponent() {
+      return (
+        <Profiler id="SomeComponent" onRender={() => {}}>
+          <main>
+            <div className="child" />
+          </main>
+        </Profiler>
+      );
+    }
+
+    wrap()
+      .withConsoleThrows()
+      .it('mounts without complaint', () => {
+        expect(() => mount(<SomeComponent />)).not.to.throw();
+      });
+
+    it('renders', () => {
+      const wrapper = mount(<SomeComponent />);
+      expect(wrapper.debug()).to.equal(`<SomeComponent>
+  <Profiler id="SomeComponent" onRender={[Function: onRender]}>
+    <main>
+      <div className="child" />
+    </main>
+  </Profiler>
+</SomeComponent>`);
+    });
+
+    it('finds elements through Profiler elements', () => {
+      const wrapper = mount(<SomeComponent />);
+
+      expect(wrapper.find('.child')).to.have.lengthOf(1);
+    });
+
+    it('finds Profiler element', () => {
+      const Parent = () => <span><SomeComponent foo="hello" /></span>;
+
+      const wrapper = mount(<Parent foo="hello" />);
+      const results = wrapper.find(SomeComponent);
+
+      expect(results).to.have.lengthOf(1);
+      expect(results.type()).to.equal(SomeComponent);
+      expect(results.props()).to.eql({ foo: 'hello' });
+    });
+
+    it('can find Profiler by id', () => {
+      const wrapper = mount(<SomeComponent />);
+      expect(wrapper.find('[id="SomeComponent"]').exists()).to.equal(true);
+    });
+
+    it('can find Profiler by display name', () => {
+      const wrapper = mount(<SomeComponent />);
+      const profiler = wrapper.find('Profiler');
+      expect(profiler).to.have.lengthOf(1);
+      expect(profiler.type()).to.equal(Profiler);
+    });
+
+    it('recognizes render phases', () => {
+      const handleRender = sinon.spy();
+      function AnotherComponent() {
+        return (
+          <Profiler id="AnotherComponent" onRender={handleRender}>
+            <div />
+          </Profiler>
+        );
+      }
+
+      const wrapper = mount(<AnotherComponent />);
+      expect(handleRender).to.have.property('callCount', 1);
+      expect(handleRender.args[0][1]).to.equal('mount');
+
+      wrapper.setProps({ unusedProp: true });
+      expect(handleRender).to.have.property('callCount', 2);
+      expect(handleRender.args[1][1]).to.equal('update');
+    });
+
+    it('measures timings', () => {
+      /**
+       * test environment has no access to the performance API at which point
+       * the profiling API has to fallback to Date.now() which isn't precise enough
+       * which results in 0 duration for these simple examples most of the time.
+       * With performance API it should test for greaterThan(0) instead of least(0)
+       */
+      const handleRender = sinon.spy();
+      function AnotherComponent() {
+        return (
+          <Profiler id="AnotherComponent" onRender={handleRender}>
+            <div />
+          </Profiler>
+        );
+      }
+
+      const wrapper = mount(<AnotherComponent />);
+      expect(handleRender).to.have.property('callCount', 1);
+      const [firstArgs] = handleRender.args;
+      if (typeof performance === 'undefined') {
+        expect(firstArgs[2]).to.be.least(0);
+        expect(firstArgs[3]).to.be.least(0);
+      } else {
+        expect(firstArgs[2]).to.be.greaterThan(0);
+        expect(firstArgs[3]).to.be.greaterThan(0);
+      }
+
+      wrapper.setProps({ unusedProp: true });
+      expect(handleRender).to.have.property('callCount', 2);
+      const [, secondArgs] = handleRender.args;
+      if (typeof performance === 'undefined') {
+        expect(secondArgs[2]).to.be.least(0);
+        expect(secondArgs[3]).to.be.least(0);
+      } else {
+        expect(secondArgs[2]).to.be.greaterThan(0);
+        expect(secondArgs[3]).to.be.greaterThan(0);
+      }
     });
   });
 
