@@ -67,6 +67,18 @@ matrix:
     - node_js: "lts/*"
       env: REACT=16.3 ADAPTER=16
       stage: test
+    - node_js: "lts/*"
+      env: REACT=15.3
+      stage: test
+    - node_js: "lts/*"
+      env: REACT=15.2
+      stage: test
+    - node_js: "lts/*"
+      env: REACT=15.1
+      stage: test
+    - node_js: "lts/*"
+      env: REACT=15.0
+      stage: test
     - node_js: "6"
       env: KARMA=true REACT=0.13
       stage: test
