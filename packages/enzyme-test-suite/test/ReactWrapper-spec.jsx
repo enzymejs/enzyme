@@ -1047,6 +1047,7 @@ describeWithDOM('mount', () => {
   describeHooks(
     { Wrap, Wrapper },
     'useCallback',
+    'useContext',
     'useEffect',
     'useLayoutEffect',
     'useMemo',
