@@ -4726,6 +4726,24 @@ describe('shallow', () => {
       expect(wrapper.hasClass('classB')).to.equal(false);
       expect(wrapper.hasClass(String(obj))).to.equal(true);
     });
+
+    it('allows hyphens', () => {
+      const wrapper = shallow(<div className="foo-bar" />);
+      expect(wrapper.hasClass('foo-bar')).to.equal(true);
+    });
+
+    it('works if className has a function in toString property', () => {
+      function classes() {}
+      classes.toString = () => 'foo-bar';
+      const wrapper = shallow(<div className={classes} />);
+      expect(wrapper.hasClass('foo-bar')).to.equal(true);
+    });
+
+    it('works if searching with a RegExp', () => {
+      const wrapper = shallow(<div className="ComponentName-classname-123" />);
+      expect(wrapper.hasClass(/(ComponentName)-(classname)-(\d+)/)).to.equal(true);
+      expect(wrapper.hasClass(/(ComponentName)-(other)-(\d+)/)).to.equal(false);
+    });
   });
 
   describe('.forEach(fn)', () => {
