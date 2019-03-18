@@ -13,16 +13,33 @@ const promisify = fn => new Promise((res, rej) => {
 const getFile = fpath => promisify(cb => fs.readFile(fpath, 'utf8', cb));
 // const getFiles = fpath => promisify(cb => fs.readdir(fpath, cb));
 const getJSON = fpath => getFile(fpath).then(json => JSON.parse(json));
-const writeFile = (fpath, src) => promisify(cb => fs.writeFile(fpath, src, cb));
+const writeFile = (fpath, src) => promisify((cb) => {
+  console.log('writeFile', fpath, src);
+  if (process.env.DEBUG) {
+    cb();
+  } else {
+    fs.writeFile(fpath, src, cb);
+  }
+});
 const writeJSON = (fpath, json, pretty = false) => writeFile(
   fpath,
-  pretty
-    ? JSON.stringify(json, null, 2)
-    : JSON.stringify(json)
+  (pretty ? JSON.stringify(json, null, 2) : JSON.stringify(json)) + '\n'
 );
-const primraf = fpath => promisify(cb => rimraf(fpath, cb));
+const primraf = fpath => promisify((cb) => {
+  console.log('rimraf', fpath);
+  if (process.env.DEBUG) {
+    cb();
+  } else {
+    rimraf(fpath, cb);
+  }
+});
 const run = (cmd, ...args) => promisify((cb) => {
-  const child = spawn(cmd, args, { stdio: 'inherit' });
+  console.log(cmd + ' ' + args.join(' '));
+  const child = spawn(
+    process.env.DEBUG ? 'echo' : cmd,
+    process.env.DEBUG ? [cmd].concat(args) : args,
+    { stdio: 'inherit' }
+  );
   child.on('exit', cb);
 });
 
