@@ -1,0 +1,42 @@
+import React from 'react';
+import PropTypes from 'prop-types';
+import { expect } from 'chai';
+import wrap from 'mocha-wrap';
+import sinon from 'sinon-sandbox';
+import { Portal } from 'react-is';
+
+import { render } from 'enzyme';
+import getAdapter from 'enzyme/build/getAdapter';
+import {
+  ITERATOR_SYMBOL,
+  sym,
+} from 'enzyme/build/Utils';
+
+import {
+  describeIf,
+  itIf,
+} from '../../_helpers';
+import realArrowFunction from '../../_helpers/realArrowFunction';
+import { getElementPropSelector, getWrapperPropSelector } from '../../_helpers/selectors';
+import {
+  is,
+  REACT16,
+} from '../../_helpers/version';
+
+import {
+  createClass,
+  createPortal,
+  createRef,
+  Fragment,
+} from '../../_helpers/react-compat';
+
+export default function describe$Method({
+  Wrap,
+  WrapRendered,
+  Wrapper,
+  WrapperName,
+  isShallow,
+  isMount,
+  makeDOMElement,
+}) {
+}

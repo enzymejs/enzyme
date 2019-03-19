@@ -85,6 +85,19 @@ npm run build:watch
 npm run test:watch
 ```
 
+### Tests for functionality shared between `shallow` and `mount`
+
+Tests for a method "foo" are stored in `packages/enzyme-test-suite/test/shared/methods/foo`. The file default exports a function that receives an injected object argument, containing the following properties:
+ - `Wrap`: e.g. `shallow`, `mount`
+ - `WrapRendered`: this abstracts around the differences between `shallow` and `mount` - e.g., that the root of a shallow wrapper around `Foo` is what `Foo` *renders*, where the root of a mount wrapper around `Foo` is `Foo` itself. Thus, this function produces a wrapper around what `Foo` renders, regardless of the `Wrap` method used.
+ - `Wrapper`: e.g. `ShallowWrapper`, `ReactWrapper`
+ - `WrapperName`: e.g. `"ShallowWrapper"`, `"ReactWrapper"`
+ - `isShallow`: true if `shallow`. note: needing to use this is a code smell, please avoid.
+ - `isMount`: true if `mount`. note: needing to use this is a code smell, please avoid.
+ - `makeDOMElement`: in `mount`, makes a real DOM element; in `shallow`, makes a mock object.
+
+ These tests are ran via an explicit list in a `describeMethods` call in the ReactWrapper and ShallowWrapper test files. If you add a new test file for a shared method, you'll need to add its name to both calls.
+
 ### Style & Linting
 
 This codebase adheres to the [Airbnb Styleguide](https://github.com/airbnb/javascript) and is
