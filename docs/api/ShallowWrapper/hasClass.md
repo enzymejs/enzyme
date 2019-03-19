@@ -23,7 +23,7 @@ expect(wrapper.find('.my-button').hasClass('disabled')).to.equal(true);
 
 ```jsx
 // Searching using RegExp works fine when classes were injected by a jss decorator
-const wrapper = mount(<MyComponent />);
+const wrapper = shallow(<MyComponent />);
 expect(wrapper.find('.my-button').hasClass(/(ComponentName)-(other)-(\d+)/)).to.equal(true);
 ```
 
