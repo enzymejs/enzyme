@@ -14,15 +14,18 @@ import {
   withSetStateAllowed,
 } from 'enzyme/build/Utils';
 import getAdapter from 'enzyme/build/getAdapter';
+import { fakeDynamicImport } from 'enzyme-adapter-utils';
 
 import './_helpers/setupAdapters';
 import {
   createClass,
   createContext,
   createPortal,
-  Fragment,
   forwardRef,
+  Fragment,
+  lazy,
   PureComponent,
+  Suspense,
   useEffect,
   useState,
   Profiler,
@@ -1588,6 +1591,223 @@ describe('shallow', () => {
 
       underwater = wrapper.dive({ context: { foo: 'enzyme!' } });
       expect(underwater.context()).to.deep.equal({ foo: 'enzyme!' });
+    });
+  });
+
+  describeIf(is('>= 16.6'), 'Suspense & lazy', () => {
+    class DynamicComponent extends React.Component {
+      render() {
+        return (
+          <div>Dynamic Component</div>
+        );
+      }
+    }
+
+    class Fallback extends React.Component {
+      render() {
+        return (
+          <div>Fallback</div>
+        );
+      }
+    }
+
+    it('finds Suspense and its children when no lazy component', () => {
+      class Component extends React.Component {
+        render() {
+          return (
+            <div>test</div>
+          );
+        }
+      }
+
+      const SuspenseComponent = () => (
+        <Suspense fallback={<Fallback />}>
+          <Component />
+        </Suspense>
+      );
+
+      const wrapper = shallow(<SuspenseComponent />);
+
+      expect(wrapper.is(Suspense)).to.equal(true);
+      expect(wrapper.find(Component)).to.have.lengthOf(1);
+      expect(wrapper.find(Fallback)).to.have.lengthOf(0);
+    });
+
+    it('finds LazyComponent when render component wrapping lazy component', () => {
+      const LazyComponent = lazy(fakeDynamicImport(DynamicComponent));
+      const SuspenseComponent = () => (
+        <Suspense fallback={<Fallback />}>
+          <LazyComponent />
+        </Suspense>
+      );
+
+      const wrapper = shallow(<SuspenseComponent />);
+
+      expect(wrapper.is(Suspense)).to.equal(true);
+      expect(wrapper.find(LazyComponent)).to.have.lengthOf(1);
+      expect(wrapper.find(Fallback)).to.have.lengthOf(0);
+    });
+
+    it('returns suspense and lazy component string when debug() is called', () => {
+      const LazyComponent = lazy(fakeDynamicImport(DynamicComponent));
+      const SuspenseComponent = () => (
+        <Suspense fallback={<Fallback />}>
+          <LazyComponent />
+        </Suspense>
+      );
+
+      const wrapper = shallow(<SuspenseComponent />);
+
+      expect(wrapper.debug()).to.equal(`<Suspense fallback={{...}}>
+  <lazy />
+</Suspense>`);
+    });
+
+    it('renders lazy component when render Suspense without option', () => {
+      const LazyComponent = lazy(fakeDynamicImport(DynamicComponent));
+
+      const wrapper = shallow((
+        <Suspense fallback={<Fallback />}>
+          <LazyComponent />
+        </Suspense>
+      ));
+
+      expect(wrapper.find(LazyComponent)).to.have.lengthOf(1);
+      expect(wrapper.find(Fallback)).to.have.lengthOf(0);
+    });
+
+    it('returns lazy component string when debug() is called', () => {
+      const LazyComponent = lazy(fakeDynamicImport(DynamicComponent));
+
+      const wrapper = shallow((
+        <Suspense fallback={<Fallback />}>
+          <LazyComponent />
+        </Suspense>
+      ));
+
+      expect(wrapper.debug()).to.equal('<lazy />');
+    });
+
+    it('returns lazy component string including wrapped component when debug() is called and lazy component is loaded', () => {
+      const LazyComponent = lazy(fakeDynamicImport(DynamicComponent));
+      /* eslint-disable no-underscore-dangle */
+      LazyComponent._result = DynamicComponent;
+
+      const wrapper = shallow((
+        <Suspense fallback={<Fallback />}>
+          <LazyComponent />
+        </Suspense>
+      ));
+
+      expect(wrapper.debug()).to.equal('<lazy(DynamicComponent) />');
+    });
+
+    it('replaces LazyComponent with Fallback when render Suspense if options.suspenseFallback=true', () => {
+      const LazyComponent = lazy(fakeDynamicImport(DynamicComponent));
+
+      const wrapper = shallow((
+        <Suspense fallback={<Fallback />}>
+          <LazyComponent />
+        </Suspense>
+      ), { suspenseFallback: true });
+
+      expect(wrapper.find(LazyComponent)).to.have.lengthOf(0);
+      expect(wrapper.find(Fallback)).to.have.lengthOf(1);
+    });
+
+    it('returns fallback component string when debug() is called if options.suspenseFallback=true', () => {
+      const LazyComponent = lazy(fakeDynamicImport(DynamicComponent));
+
+      const wrapper = shallow((
+        <Suspense fallback={<Fallback />}>
+          <LazyComponent />
+        </Suspense>
+      ), { suspenseFallback: true });
+
+      expect(wrapper.debug()).to.equal('<Fallback />');
+    });
+
+    it('throws if options.suspenseFallback is not boolean or undefined', () => {
+      const LazyComponent = lazy(fakeDynamicImport(DynamicComponent));
+      const SuspenseComponent = () => (
+        <Suspense fallback={<Fallback />}>
+          <LazyComponent />
+        </Suspense>
+      );
+      expect(() => shallow(<SuspenseComponent />, { suspenseFallback: 'true' })).to.throw();
+    });
+
+    it('finds fallback after dive into functional component wrapping Suspense', () => {
+      const LazyComponent = lazy(fakeDynamicImport(DynamicComponent));
+      const SuspenseComponent = () => (
+        <Suspense fallback={<Fallback />}>
+          <LazyComponent />
+        </Suspense>
+      );
+
+      const wrapper = shallow(<SuspenseComponent />, { suspenseFallback: true });
+      const inner = wrapper.dive();
+
+      expect(inner.find(LazyComponent)).to.have.lengthOf(0);
+      expect(inner.find(Fallback)).to.have.lengthOf(1);
+    });
+
+    it('replaces nested LazyComponent with Fallback when render Suspense with options.suspenseFallback=true', () => {
+      const LazyComponent = lazy(fakeDynamicImport(DynamicComponent));
+
+      const wrapper = shallow((
+        <Suspense fallback={<Fallback />}>
+          <div className="should-be-rendered" />
+          <LazyComponent />
+          <div className="should-be-rendered">
+            <LazyComponent />
+            <div className="inner" />
+          </div>
+        </Suspense>
+      ), { suspenseFallback: true });
+
+      expect(wrapper.find(LazyComponent)).to.have.lengthOf(0);
+      expect(wrapper.find(Fallback)).to.have.lengthOf(2);
+      expect(wrapper.find('.should-be-rendered')).to.have.lengthOf(2);
+      expect(wrapper.find('.should-be-rendered > .inner')).to.have.lengthOf(1);
+    });
+
+    it('does not replace LazyComponent with Fallback when render Suspense if options.suspenseFallback = false', () => {
+      const LazyComponent = lazy(fakeDynamicImport(DynamicComponent));
+
+      const wrapper = shallow((
+        <Suspense fallback={<Fallback />}>
+          <LazyComponent />
+        </Suspense>
+      ), { suspenseFallback: false });
+
+      expect(wrapper.find(LazyComponent)).to.have.lengthOf(1);
+      expect(wrapper.find(Fallback)).to.have.lengthOf(0);
+    });
+
+    it('does not replace nested LazyComponent with Fallback when render Suspense if option.suspenseFallback = false', () => {
+      const LazyComponent = lazy(fakeDynamicImport(DynamicComponent));
+
+      const wrapper = shallow((
+        <Suspense fallback={<Fallback />}>
+          <div className="should-be-rendered" />
+          <LazyComponent />
+          <div className="should-be-rendered">
+            <LazyComponent />
+            <div className="inner" />
+          </div>
+        </Suspense>
+      ), { suspenseFallback: false });
+
+      expect(wrapper.find(LazyComponent)).to.have.lengthOf(2);
+      expect(wrapper.find(Fallback)).to.have.lengthOf(0);
+      expect(wrapper.find('.should-be-rendered')).to.have.lengthOf(2);
+      expect(wrapper.find('.should-be-rendered > .inner')).to.have.lengthOf(1);
+    });
+
+    it('throws when rendering lazy component', () => {
+      const LazyComponent = lazy(fakeDynamicImport(DynamicComponent));
+      expect(() => shallow(<LazyComponent />)).to.throw();
     });
   });
 

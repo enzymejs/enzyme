@@ -10,6 +10,7 @@ import { version as testRendererVersion } from 'react-test-renderer/package.json
 import TestUtils from 'react-dom/test-utils';
 import semver from 'semver';
 import checkPropTypes from 'prop-types/checkPropTypes';
+import has from 'has';
 import {
   AsyncMode,
   ConcurrentMode,
@@ -22,13 +23,17 @@ import {
   isContextProvider,
   isElement,
   isForwardRef,
+  isLazy,
   isMemo,
   isPortal,
+  isSuspense,
   isValidElementType,
+  Lazy,
   Memo,
   Portal,
   Profiler,
   StrictMode,
+  Suspense,
 } from 'react-is';
 import { EnzymeAdapter } from 'enzyme';
 import { typeOfNode } from 'enzyme/build/Utils';
@@ -228,6 +233,19 @@ function toTree(vnode) {
         rendered: childrenToTree(node.child),
       };
     }
+    case FiberTags.Suspense: {
+      return {
+        nodeType: 'function',
+        type: Suspense,
+        props: { ...node.memoizedProps },
+        key: ensureKeyOrUndefined(node.key),
+        ref: node.ref,
+        instance: null,
+        rendered: childrenToTree(node.child),
+      };
+    }
+    case FiberTags.Lazy:
+      return childrenToTree(node.child);
     default:
       throw new Error(`Enzyme Internal Error: unknown node with tag ${node.tag}`);
   }
@@ -273,6 +291,25 @@ function nodeToHostNode(_node) {
     return node.rendered.map(mapper);
   }
   return mapper(node);
+}
+
+function replaceLazyWithFallback(node, fallback) {
+  if (!node) {
+    return null;
+  }
+  if (Array.isArray(node)) {
+    return node.map(el => replaceLazyWithFallback(el, fallback));
+  }
+  if (isLazy(node.type)) {
+    return fallback;
+  }
+  return {
+    ...node,
+    props: {
+      ...node.props,
+      children: replaceLazyWithFallback(node.props.children, fallback),
+    },
+  };
 }
 
 const eventOptions = {
@@ -351,6 +388,9 @@ class ReactSixteenAdapter extends EnzymeAdapter {
 
   createMountRenderer(options) {
     assertDomAvailable('mount');
+    if (has(options, 'suspenseFallback')) {
+      throw new TypeError('`suspenseFallback` is not supported by the `mount` renderer');
+    }
     if (FiberTags === null) {
       // Requires DOM.
       FiberTags = detectFiberTags();
@@ -445,9 +485,13 @@ class ReactSixteenAdapter extends EnzymeAdapter {
     };
   }
 
-  createShallowRenderer(/* options */) {
+  createShallowRenderer(options = {}) {
     const adapter = this;
     const renderer = new ShallowRenderer();
+    const { suspenseFallback } = options;
+    if (typeof suspenseFallback !== 'undefined' && typeof suspenseFallback !== 'boolean') {
+      throw TypeError('`options.suspenseFallback` should be boolean or undefined');
+    }
     let isDOM = false;
     let cachedNode = null;
 
@@ -498,8 +542,20 @@ class ReactSixteenAdapter extends EnzymeAdapter {
           return withSetStateAllowed(() => renderer.render({ ...el, type: MockConsumer }));
         } else {
           isDOM = false;
-          const { type: Component } = el;
-
+          let renderedEl = el;
+          if (isLazy(renderedEl)) {
+            throw TypeError('`React.lazy` is not supported by shallow rendering.');
+          }
+          if (isSuspense(renderedEl)) {
+            let { children } = renderedEl.props;
+            if (suspenseFallback) {
+              const { fallback } = renderedEl.props;
+              children = replaceLazyWithFallback(children, fallback);
+            }
+            const FakeSuspenseWrapper = () => children;
+            renderedEl = React.createElement(FakeSuspenseWrapper, null, children);
+          }
+          const { type: Component } = renderedEl;
           const isStateful = Component.prototype && (
             Component.prototype.isReactComponent
             || Array.isArray(Component.__reactAutoBindPairs) // fallback for createClass components
@@ -517,7 +573,7 @@ class ReactSixteenAdapter extends EnzymeAdapter {
 
           if (!isStateful && typeof Component === 'function') {
             return withSetStateAllowed(() => renderer.render(
-              { ...el, type: wrapFunctionalComponent(Component) },
+              { ...renderedEl, type: wrapFunctionalComponent(Component) },
               context,
             ));
           }
@@ -546,7 +602,7 @@ class ReactSixteenAdapter extends EnzymeAdapter {
               });
             }
           }
-          return withSetStateAllowed(() => renderer.render(el, context));
+          return withSetStateAllowed(() => renderer.render(renderedEl, context));
         }
       },
       unmount() {
@@ -609,6 +665,9 @@ class ReactSixteenAdapter extends EnzymeAdapter {
   }
 
   createStringRenderer(options) {
+    if (has(options, 'suspenseFallback')) {
+      throw new TypeError('`suspenseFallback` should not be specified in options of string renderer');
+    }
     return {
       render(el, context) {
         if (options.context && (el.type.contextTypes || options.childContextTypes)) {
@@ -676,6 +735,7 @@ class ReactSixteenAdapter extends EnzymeAdapter {
         case StrictMode || NaN: return 'StrictMode';
         case Profiler || NaN: return 'Profiler';
         case Portal || NaN: return 'Portal';
+        case Suspense || NaN: return 'Suspense';
         default:
       }
     }
@@ -692,6 +752,13 @@ class ReactSixteenAdapter extends EnzymeAdapter {
         }
         const name = displayNameOfNode({ type: type.render });
         return name ? `ForwardRef(${name})` : 'ForwardRef';
+      }
+      case Lazy || NaN: {
+        if (type.displayName) {
+          return type.displayName;
+        }
+        const name = displayNameOfNode({ type: type._result });
+        return name ? `lazy(${name})` : 'lazy';
       }
       default: return displayNameOfNode(node);
     }
@@ -716,6 +783,7 @@ class ReactSixteenAdapter extends EnzymeAdapter {
       || isForwardRef(fakeElement)
       || isContextProvider(fakeElement)
       || isContextConsumer(fakeElement)
+      || isSuspense(fakeElement)
     );
   }
 

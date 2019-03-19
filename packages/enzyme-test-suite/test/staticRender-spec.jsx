@@ -3,11 +3,12 @@ import PropTypes from 'prop-types';
 import { expect } from 'chai';
 import { render } from 'enzyme';
 import renderEntry from 'enzyme/render';
+import { fakeDynamicImport } from 'enzyme-adapter-utils';
 
 import './_helpers/setupAdapters';
 import { describeWithDOM, describeIf } from './_helpers';
 import { is } from './_helpers/version';
-import { createClass } from './_helpers/react-compat';
+import { createClass, lazy } from './_helpers/react-compat';
 
 describeWithDOM('render', () => {
   describe('top level entry points', () => {
@@ -78,6 +79,20 @@ describeWithDOM('render', () => {
 
       const context = { name: 'foo' };
       expect(() => render(<SimpleComponent />, { context })).to.not.throw(Error);
+    });
+  });
+
+  describeIf(is('> 16.6'), 'suspense fallback option', () => {
+    it('throws if options.suspenseFallback is specified', () => {
+      class DynamicComponent extends React.Component {
+        render() {
+          return (
+            <div>Dynamic Component</div>
+          );
+        }
+      }
+      const LazyComponent = lazy(fakeDynamicImport(DynamicComponent));
+      expect(() => render(<LazyComponent />, { suspenseFallback: false })).to.throw();
     });
   });
 });

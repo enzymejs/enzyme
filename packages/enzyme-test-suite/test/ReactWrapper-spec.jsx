@@ -15,17 +15,20 @@ import {
   withSetStateAllowed,
 } from 'enzyme/build/Utils';
 import getAdapter from 'enzyme/build/getAdapter';
+import { fakeDynamicImport } from 'enzyme-adapter-utils';
 
 import './_helpers/setupAdapters';
 import {
   createClass,
   createContext,
   createPortal,
-  Fragment,
   forwardRef,
+  Fragment,
+  lazy,
   memo,
   Profiler,
   PureComponent,
+  Suspense,
   useEffect,
   useState,
 } from './_helpers/react-compat';
@@ -34,6 +37,7 @@ import {
   describeIf,
   itIf,
 } from './_helpers';
+import getLoadedLazyComponent from './_helpers/getLoadedLazyComponent';
 import describeMethods from './_helpers/describeMethods';
 import {
   is,
@@ -1077,6 +1081,132 @@ describeWithDOM('mount', () => {
     'unmount',
     'wrap',
   );
+
+  describeIf(is('>= 16.6'), 'Suspense & lazy', () => {
+    class DynamicComponent extends React.Component {
+      render() {
+        return (
+          <div>Dynamic Component</div>
+        );
+      }
+    }
+    class Fallback extends React.Component {
+      render() {
+        return (
+          <div>Fallback</div>
+        );
+      }
+    }
+    it('finds Suspense and its children when no lazy component', () => {
+      class Component extends React.Component {
+        render() {
+          return (
+            <div>test</div>
+          );
+        }
+      }
+
+      const SuspenseComponent = () => (
+        <Suspense fallback={Fallback}>
+          <Component />
+        </Suspense>
+      );
+
+      const wrapper = mount(<SuspenseComponent />);
+
+      expect(wrapper.is(SuspenseComponent)).to.equal(true);
+      expect(wrapper.find(Component)).to.have.lengthOf(1);
+      expect(wrapper.find(Fallback)).to.have.lengthOf(0);
+    });
+
+    it('can mount Suspense directly', () => {
+      const wrapper = mount(<Suspense fallback={Fallback} />);
+      expect(wrapper.is(Suspense)).to.equal(true);
+    });
+
+    it('finds fallback when given lazy component in initial mount', () => {
+      const LazyComponent = lazy(() => fakeDynamicImport(DynamicComponent));
+      const SuspenseComponent = () => (
+        <Suspense fallback={<Fallback />}>
+          <LazyComponent />
+        </Suspense>
+      );
+
+      const wrapper = mount(<SuspenseComponent />);
+
+      expect(wrapper.is(SuspenseComponent)).to.equal(true);
+      expect(wrapper.find(LazyComponent)).to.have.lengthOf(0);
+      expect(wrapper.find(Fallback)).to.have.lengthOf(1);
+    });
+
+    it('return fallback string when given lazy component in initial mount and call .debug()', () => {
+      const LazyComponent = lazy(() => fakeDynamicImport(DynamicComponent));
+      const SuspenseComponent = () => (
+        <Suspense fallback={<Fallback />}>
+          <LazyComponent />
+        </Suspense>
+      );
+
+      const wrapper = mount(<SuspenseComponent />);
+
+      expect(wrapper.debug()).to.equal(`<SuspenseComponent>
+  <Suspense fallback={{...}}>
+    <Fallback>
+      <div>
+        Fallback
+      </div>
+    </Fallback>
+  </Suspense>
+</SuspenseComponent>`);
+    });
+
+    it('return wrapped component when given loaded lazy component in initial mount', () => {
+      const LazyComponent = getLoadedLazyComponent(DynamicComponent);
+      const SuspenseComponent = () => (
+        <Suspense fallback={<Fallback />}>
+          <LazyComponent />
+        </Suspense>
+      );
+
+      const wrapper = mount(<SuspenseComponent />);
+
+      expect(wrapper.is(SuspenseComponent)).to.equal(true);
+      expect(wrapper.find(LazyComponent)).to.have.lengthOf(0);
+      expect(wrapper.find(DynamicComponent)).to.have.lengthOf(1);
+      expect(wrapper.find(Fallback)).to.have.lengthOf(0);
+    });
+
+    it('return wrapped component string when given loaded lazy component in initial mount and call .debug()', () => {
+      const LazyComponent = getLoadedLazyComponent(DynamicComponent);
+      const SuspenseComponent = () => (
+        <Suspense fallback={<Fallback />}>
+          <LazyComponent />
+        </Suspense>
+      );
+
+      const wrapper = mount(<SuspenseComponent />);
+
+      expect(wrapper.debug()).to.equal(`<SuspenseComponent>
+  <Suspense fallback={{...}}>
+    <DynamicComponent>
+      <div>
+        Dynamic Component
+      </div>
+    </DynamicComponent>
+  </Suspense>
+</SuspenseComponent>`);
+    });
+
+    it('throws if options.suspenseFallback is specified', () => {
+      const LazyComponent = lazy(fakeDynamicImport(DynamicComponent));
+      const SuspenseComponent = () => (
+        <Suspense fallback={<Fallback />}>
+          <LazyComponent />
+        </Suspense>
+      );
+      expect(() => mount(<SuspenseComponent />, { suspenseFallback: false })).to.throw();
+    });
+  });
 
   describe('.mount()', () => {
     it('calls componentWillUnmount()', () => {

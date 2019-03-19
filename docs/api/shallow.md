@@ -50,8 +50,9 @@ describe('<MyComponent />', () => {
   - `options.disableLifecycleMethods`: (`Boolean` [optional]): If set to true, `componentDidMount`
 is not called on the component, and `componentDidUpdate` is not called after
 [`setProps`](ShallowWrapper/setProps.md) and [`setContext`](ShallowWrapper/setContext.md). Default to `false`.
-- `options.wrappingComponent`: (`ComponentType` [optional]): A component that will render as a parent of the `node`. It can be used to provide context to the `node`, among other things. See the [`getWrappingComponent()` docs](ShallowWrapper/getWrappingComponent.md) for an example. **Note**: `wrappingComponent` _must_ render its children.
-- `options.wrappingComponentProps`: (`Object` [optional]): Initial props to pass to the `wrappingComponent` if it is specified.
+  - `options.wrappingComponent`: (`ComponentType` [optional]): A component that will render as a parent of the `node`. It can be used to provide context to the `node`, among other things. See the [`getWrappingComponent()` docs](ShallowWrapper/getWrappingComponent.md) for an example. **Note**: `wrappingComponent` _must_ render its children.
+  - `options.wrappingComponentProps`: (`Object` [optional]): Initial props to pass to the `wrappingComponent` if it is specified.
+  - `options.suspenseFallback`: (`Boolean` [optional]): If set to true, when rendering `Suspense` enzyme will replace all the lazy components in children with `fallback` element prop. Otherwise it won't handle fallback of lazy component. Default to `true`. Note: not supported in React < 16.6.
 
 #### Returns
 
