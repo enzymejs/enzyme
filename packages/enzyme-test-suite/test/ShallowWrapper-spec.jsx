@@ -1688,20 +1688,6 @@ describe('shallow', () => {
       expect(wrapper.debug()).to.equal('<lazy />');
     });
 
-    it('returns lazy component string including wrapped component when debug() is called and lazy component is loaded', () => {
-      const LazyComponent = lazy(fakeDynamicImport(DynamicComponent));
-      /* eslint-disable no-underscore-dangle */
-      LazyComponent._result = DynamicComponent;
-
-      const wrapper = shallow((
-        <Suspense fallback={<Fallback />}>
-          <LazyComponent />
-        </Suspense>
-      ));
-
-      expect(wrapper.debug()).to.equal('<lazy(DynamicComponent) />');
-    });
-
     it('replaces LazyComponent with Fallback when render Suspense if options.suspenseFallback=true', () => {
       const LazyComponent = lazy(fakeDynamicImport(DynamicComponent));
 

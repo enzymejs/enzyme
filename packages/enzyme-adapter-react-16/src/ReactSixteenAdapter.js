@@ -754,11 +754,7 @@ class ReactSixteenAdapter extends EnzymeAdapter {
         return name ? `ForwardRef(${name})` : 'ForwardRef';
       }
       case Lazy || NaN: {
-        if (type.displayName) {
-          return type.displayName;
-        }
-        const name = displayNameOfNode({ type: type._result });
-        return name ? `lazy(${name})` : 'lazy';
+        return 'lazy';
       }
       default: return displayNameOfNode(node);
     }

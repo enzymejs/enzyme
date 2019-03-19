@@ -1079,42 +1079,6 @@ describe('Adapter', () => {
       const LazyComponent = lazy(() => fakeDynamicImport(DynamicComponent));
       expect(getDisplayName(<LazyComponent />)).to.equal('lazy');
     });
-
-    itIf(is('>= 16.6'), 'show explicitly defined display name of lazy component', () => {
-      class DynamicComponent extends React.Component {
-        render() {
-          return <div>DynamicComponent</div>;
-        }
-      }
-      const theDisplayName = 'SOMETHING';
-      const LazyComponent = Object.assign(lazy(() => fakeDynamicImport(DynamicComponent)), { displayName: theDisplayName });
-      expect(getDisplayName(<LazyComponent />)).to.equal(theDisplayName);
-    });
-
-    itIf(is('>= 16.6'), 'show display name of wrapped component of lazy', () => {
-      class ComponentWithDisplayName extends React.Component {
-        render() {
-          return <div>DynamicComponent</div>;
-        }
-      }
-      ComponentWithDisplayName.displayName = 'Something';
-      const LazyComponent = lazy(() => fakeDynamicImport(ComponentWithDisplayName));
-      /* eslint-disable no-underscore-dangle */
-      LazyComponent._result = ComponentWithDisplayName;
-      expect(getDisplayName(<LazyComponent />)).to.equal(`lazy(${ComponentWithDisplayName.displayName})`);
-    });
-
-    itIf(is('>= 16.6'), 'show name of wrapped component of lazy if its displayName is empty', () => {
-      class ComponentWithoutDisplayName extends React.Component {
-        render() {
-          return <div>DynamicComponent</div>;
-        }
-      }
-      const LazyComponent = lazy(() => fakeDynamicImport(ComponentWithoutDisplayName));
-      /* eslint-disable no-underscore-dangle */
-      LazyComponent._result = ComponentWithoutDisplayName;
-      expect(getDisplayName(<LazyComponent />)).to.equal('lazy(ComponentWithoutDisplayName)');
-    });
   });
 
   describeIf(is('>= 16.2'), 'determines if node isFragment', () => {
