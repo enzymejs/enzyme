@@ -126,10 +126,11 @@ Promise.resolve()
     const peerDeps = adapterJson.peerDependencies;
     const installs = Object.keys(peerDeps)
       .filter(key => !key.startsWith('enzyme'))
-      .map((key) => {
-        const peerVersion = (key === 'react-test-renderer' && process.env.RENDERER) ? process.env.RENDERER : peerDeps[key];
-        return `${key}@${key.startsWith('react') ? reactVersion : peerVersion}`;
-      });
+      .map(key => `${key}@${key.startsWith('react') ? reactVersion : peerDeps[key]}`);
+
+    if (process.env.RENDERER) {
+      installs.push(`react-test-renderer@${process.env.RENDERER}`);
+    }
 
     // eslint-disable-next-line no-param-reassign
     testJson.dependencies[adapterName] = adapterJson.version;
