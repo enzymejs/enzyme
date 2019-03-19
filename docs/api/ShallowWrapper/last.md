@@ -12,7 +12,7 @@ Reduce the set of matched nodes to the last in the set, just like `.at(length - 
 
 ```jsx
 const wrapper = shallow(<MyComponent />);
-expect(wrapper.find(Foo).last().props().foo).to.equal('bar');
+expect(wrapper.find(Foo).last().props().foo).toEqual('bar');
 ```
 
 
