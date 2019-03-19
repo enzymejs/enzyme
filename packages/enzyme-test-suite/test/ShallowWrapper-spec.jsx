@@ -284,6 +284,7 @@ describe('shallow', () => {
         );
         SimpleComponent.contextTypes = { name: PropTypes.string };
 
+        const context = { name: 'foo' };
         const wrapper = shallow(<SimpleComponent />, { context });
 
         expect(wrapper.context().name).to.equal(context.name);
