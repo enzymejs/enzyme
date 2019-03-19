@@ -4663,7 +4663,7 @@ describeWithDOM('mount', () => {
   });
 
   describe('.hasClass(className)', () => {
-    context('When using a DOM component', () => {
+    context('when using a DOM component', () => {
       it('returns whether or not node has a certain class', () => {
         const wrapper = mount(<div className="foo bar baz some-long-string FoOo" />);
 
@@ -4697,7 +4697,7 @@ describeWithDOM('mount', () => {
       });
     });
 
-    context('When using a Composite class component', () => {
+    context('when using a Composite class component', () => {
       it('returns whether or not node has a certain class', () => {
         class Foo extends React.Component {
           render() {
@@ -4722,7 +4722,7 @@ describeWithDOM('mount', () => {
       });
     });
 
-    context('When using nested composite components', () => {
+    context('when using nested composite components', () => {
       it('returns whether or not node has a certain class', () => {
         class Foo extends React.Component {
           render() {
@@ -4754,7 +4754,7 @@ describeWithDOM('mount', () => {
       });
     });
 
-    context('When using a Composite component that renders null', () => {
+    context('when using a Composite component that renders null', () => {
       it('returns whether or not node has a certain class', () => {
         class Foo extends React.Component {
           render() {
@@ -4773,8 +4773,12 @@ describeWithDOM('mount', () => {
           return <div {...this.props} />;
         }
       }
-      const wrapper = mount(<Foo className={{ classA: true, classB: false }} />);
+      const obj = { classA: true, classB: false };
+      const wrapper = mount(<Foo className={obj} />);
       expect(wrapper.hasClass('foo')).to.equal(false);
+      expect(wrapper.hasClass('classA')).to.equal(false);
+      expect(wrapper.hasClass('classB')).to.equal(false);
+      expect(wrapper.hasClass(String(obj))).to.equal(true);
     });
   });
 

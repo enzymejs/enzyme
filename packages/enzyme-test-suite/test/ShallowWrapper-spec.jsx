@@ -4628,6 +4628,65 @@ describe('shallow', () => {
   });
 
   describe('.hasClass(className)', () => {
+    context('when using a DOM component', () => {
+      it('returns whether or not node has a certain class', () => {
+        const wrapper = shallow(<div className="foo bar baz some-long-string FoOo" />);
+
+        expect(wrapper.hasClass('foo')).to.equal(true);
+        expect(wrapper.hasClass('bar')).to.equal(true);
+        expect(wrapper.hasClass('baz')).to.equal(true);
+        expect(wrapper.hasClass('some-long-string')).to.equal(true);
+        expect(wrapper.hasClass('FoOo')).to.equal(true);
+        expect(wrapper.hasClass('doesnt-exist')).to.equal(false);
+      });
+    });
+
+    describeIf(is('> 0.13'), 'with stateless function components (SFCs)', () => {
+      it('returns whether or not node has a certain class', () => {
+        const Foo = () => <main><div className="foo bar baz some-long-string FoOo" /></main>;
+        const wrapper = shallow(<Foo />);
+
+        expect(wrapper.hasClass('foo')).to.equal(false);
+        expect(wrapper.hasClass('bar')).to.equal(false);
+        expect(wrapper.hasClass('baz')).to.equal(false);
+        expect(wrapper.hasClass('some-long-string')).to.equal(false);
+        expect(wrapper.hasClass('FoOo')).to.equal(false);
+        expect(wrapper.hasClass('doesnt-exist')).to.equal(false);
+
+        expect(wrapper.children().hasClass('foo')).to.equal(true);
+        expect(wrapper.children().hasClass('bar')).to.equal(true);
+        expect(wrapper.children().hasClass('baz')).to.equal(true);
+        expect(wrapper.children().hasClass('some-long-string')).to.equal(true);
+        expect(wrapper.children().hasClass('FoOo')).to.equal(true);
+        expect(wrapper.children().hasClass('doesnt-exist')).to.equal(false);
+      });
+    });
+
+    context('when using a Composite class component', () => {
+      it('returns whether or not node has a certain class', () => {
+        class Foo extends React.Component {
+          render() {
+            return (<main><div className="foo bar baz some-long-string FoOo" /></main>);
+          }
+        }
+        const wrapper = shallow(<Foo />);
+
+        expect(wrapper.hasClass('foo')).to.equal(false);
+        expect(wrapper.hasClass('bar')).to.equal(false);
+        expect(wrapper.hasClass('baz')).to.equal(false);
+        expect(wrapper.hasClass('some-long-string')).to.equal(false);
+        expect(wrapper.hasClass('FoOo')).to.equal(false);
+        expect(wrapper.hasClass('doesnt-exist')).to.equal(false);
+
+        expect(wrapper.children().hasClass('foo')).to.equal(true);
+        expect(wrapper.children().hasClass('bar')).to.equal(true);
+        expect(wrapper.children().hasClass('baz')).to.equal(true);
+        expect(wrapper.children().hasClass('some-long-string')).to.equal(true);
+        expect(wrapper.children().hasClass('FoOo')).to.equal(true);
+        expect(wrapper.children().hasClass('doesnt-exist')).to.equal(false);
+      });
+    });
+
     it('returns whether or not node has a certain class', () => {
       const wrapper = shallow((
         <div className="foo bar baz some-long-string FoOo" />
@@ -4641,14 +4700,31 @@ describe('shallow', () => {
       expect(wrapper.hasClass('doesnt-exist')).to.equal(false);
     });
 
+    context('when using a Composite component that renders null', () => {
+      it('returns whether or not node has a certain class', () => {
+        class Foo extends React.Component {
+          render() {
+            return null;
+          }
+        }
+        const wrapper = shallow(<Foo />);
+
+        expect(wrapper.hasClass('foo')).to.equal(false);
+      });
+    });
+
     it('works with a non-string `className` prop', () => {
       class Foo extends React.Component {
         render() {
-          return <Foo {...this.props} />;
+          return <div {...this.props} />;
         }
       }
-      const wrapper = shallow(<Foo className={{ classA: true, classB: false }} />);
+      const obj = { classA: true, classB: false };
+      const wrapper = shallow(<Foo className={obj} />);
       expect(wrapper.hasClass('foo')).to.equal(false);
+      expect(wrapper.hasClass('classA')).to.equal(false);
+      expect(wrapper.hasClass('classB')).to.equal(false);
+      expect(wrapper.hasClass(String(obj))).to.equal(true);
     });
   });
 
