@@ -747,7 +747,7 @@ class ShallowWrapper {
   contains(nodeOrNodes) {
     const adapter = getAdapter(this[OPTIONS]);
     if (!isReactElementAlike(nodeOrNodes, adapter)) {
-      throw new Error('ShallowWrapper::contains() can only be called with ReactElement (or array of them), string or number as argument.');
+      throw new Error('ShallowWrapper::contains() can only be called with a ReactElement (or an array of them), a string, or a number as an argument.');
     }
     const predicate = Array.isArray(nodeOrNodes)
       ? other => containsChildrenSubArray(

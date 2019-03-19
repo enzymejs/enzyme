@@ -791,11 +791,11 @@ describe('shallow', () => {
 
       expect(() => wrapper.contains({})).to.throw(
         Error,
-        'ShallowWrapper::contains() can only be called with ReactElement (or array of them), string or number as argument.', // eslint-disable-line max-len
+        'ShallowWrapper::contains() can only be called with a ReactElement (or an array of them), a string, or a number as an argument.',
       );
       expect(() => wrapper.contains(() => ({}))).to.throw(
         Error,
-        'ShallowWrapper::contains() can only be called with ReactElement (or array of them), string or number as argument.', // eslint-disable-line max-len
+        'ShallowWrapper::contains() can only be called with a ReactElement (or an array of them), a string, or a number as an argument.',
       );
     });
 
