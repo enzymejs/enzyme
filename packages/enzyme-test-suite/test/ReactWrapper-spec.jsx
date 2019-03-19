@@ -416,26 +416,6 @@ describeWithDOM('mount', () => {
         expect(wrapper.context().name).to.equal(context.name);
         expect(wrapper.context('name')).to.equal(context.name);
       });
-
-      itIf(is('< 16'), 'works with SFCs', () => {
-        const Foo = ({ foo }) => (
-          <div>
-            <div className="bar">bar</div>
-            <div className="qoo">{foo}</div>
-          </div>
-        );
-
-        Foo.contextTypes = {
-          _: PropTypes.string,
-        };
-
-        const wrapper = mount(<Foo foo="qux" />, {
-          context: {
-            _: 'foo',
-          },
-        });
-        expect(wrapper.context('_')).to.equal('foo');
-      });
     });
   });
 
