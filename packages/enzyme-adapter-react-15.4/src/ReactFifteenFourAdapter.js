@@ -7,6 +7,7 @@ import TestUtils from 'react-addons-test-utils';
 import values from 'object.values';
 import { isElement, isValidElementType } from 'react-is';
 import { EnzymeAdapter } from 'enzyme';
+import has from 'has';
 import {
   displayNameOfNode,
   elementToTree,
@@ -49,6 +50,14 @@ function childrenFromInst(inst, el) {
 function nodeType(inst) {
   if (inst._compositeType != null) {
     return compositeTypeToNodeType(inst._compositeType);
+  }
+
+  const type = inst._instance && inst._instance.constructor;
+  if (type && type.prototype && type.prototype.isReactComponent) {
+    return 'class';
+  }
+  if (typeof type === 'function') {
+    return 'function';
   }
   return 'host';
 }
@@ -218,13 +227,15 @@ class ReactFifteenFourAdapter extends EnzymeAdapter {
           return elementToTree(cachedNode);
         }
         const output = renderer.getRenderOutput();
+
+        const internalInstance = renderer._instance;
         return {
-          nodeType: compositeTypeToNodeType(renderer._instance._compositeType),
+          nodeType: nodeType(internalInstance),
           type: cachedNode.type,
           props: cachedNode.props,
           key: ensureKeyOrUndefined(cachedNode.key),
           ref: cachedNode.ref,
-          instance: renderer._instance._instance,
+          instance: internalInstance._instance,
           rendered: elementToTree(output),
         };
       },
