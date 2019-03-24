@@ -36,8 +36,8 @@ function Foo() {
 
 ```jsx
 const wrapper = mount(<Foo />);
-const total = wrapper.find(Bar).reduceRight((amount, n) => amount + n.prop('amount'));
-expect(total).to.equal(16);
+const total = wrapper.find(Bar).reduceRight((amount, n) => amount + n.prop('amount'), 0);
+expect(total).to.equal(14);
 ```
 
 
