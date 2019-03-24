@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { expect } from 'chai';
-import sinon from 'sinon';
+import sinon from 'sinon-sandbox';
 import wrap from 'mocha-wrap';
 import isEqual from 'lodash.isequal';
 import getData from 'html-element-map/getData';
@@ -7728,12 +7728,12 @@ describe('shallow', () => {
           }
         }
 
-        const cDU = sinon.spy(DummyComp.prototype, 'componentDidUpdate');
-        const gDSFP = sinon.spy(DummyComp, 'getDerivedStateFromProps');
+        let cDU;
+        let gDSFP;
 
         beforeEach(() => { // eslint-disable-line mocha/no-sibling-hooks
-          cDU.resetHistory();
-          gDSFP.resetHistory();
+          cDU = sinon.spy(DummyComp.prototype, 'componentDidUpdate');
+          gDSFP = sinon.spy(DummyComp, 'getDerivedStateFromProps');
         });
 
         it('with no state changes, calls both methods with a sync and async setProps', () => {

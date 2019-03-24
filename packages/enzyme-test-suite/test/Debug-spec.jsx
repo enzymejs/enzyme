@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import React from 'react';
 import wrap from 'mocha-wrap';
-import sinon from 'sinon';
+import sinon from 'sinon-sandbox';
 
 import { mount, shallow } from 'enzyme';
 import { get } from 'enzyme/build/configuration';

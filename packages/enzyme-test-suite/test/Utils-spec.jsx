@@ -1,7 +1,7 @@
 import React from 'react';
 import { expect } from 'chai';
 import wrap from 'mocha-wrap';
-import sinon from 'sinon';
+import sinon from 'sinon-sandbox';
 import {
   childrenToSimplifiedArray,
   nodeEqual,

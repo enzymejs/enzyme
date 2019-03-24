@@ -1,5 +1,5 @@
 import React from 'react';
-import sinon from 'sinon';
+import sinon from 'sinon-sandbox';
 import { expect } from 'chai';
 import { elementToTree } from 'enzyme-adapter-utils';
 import {
