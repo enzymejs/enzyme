@@ -2630,7 +2630,7 @@ describeWithDOM('mount', () => {
       const wrapper = mount(<SimpleComponent />);
       expect(() => wrapper.setContext({ name: 'bar' })).to.throw(
         Error,
-        'ShallowWrapper::setContext() can only be called on a wrapper that was originally passed a context option', // eslint-disable-line max-len
+        'ReactWrapper::setContext() can only be called on a wrapper that was originally passed a context option', // eslint-disable-line max-len
       );
     });
 
@@ -2659,7 +2659,7 @@ describeWithDOM('mount', () => {
         const wrapper = mount(<SimpleComponent />);
         expect(() => wrapper.setContext({ name: 'bar' })).to.throw(
           Error,
-          'ShallowWrapper::setContext() can only be called on a wrapper that was originally passed a context option', // eslint-disable-line max-len
+          'ReactWrapper::setContext() can only be called on a wrapper that was originally passed a context option', // eslint-disable-line max-len
         );
       });
     });
@@ -8859,7 +8859,7 @@ describeWithDOM('mount', () => {
 
         onChange() {
           // enzyme can't handle the update because `this` is a ReactComponent instance,
-          // not a ShallowWrapper instance.
+          // not a Wrapper instance.
           this.setState({ foo: 'onChange update' });
         }
 

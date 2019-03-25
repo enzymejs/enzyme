@@ -353,7 +353,7 @@ class ReactWrapper {
       throw new Error('ReactWrapper::setContext() can only be called on the root');
     }
     if (!this[OPTIONS].context) {
-      throw new Error('ShallowWrapper::setContext() can only be called on a wrapper that was originally passed a context option');
+      throw new Error('ReactWrapper::setContext() can only be called on a wrapper that was originally passed a context option');
     }
     this[RENDERER].render(this[UNRENDERED], context, () => this.update());
     return this;
