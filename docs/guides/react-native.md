@@ -49,7 +49,7 @@ prop, that can be used a selector similar to `className` in standard React:
 expect(wrapper.findWhere(node => node.prop('testID') === 'todo-item')).toExist();
 ```
 
-## Example configuration for Jest
+## Default example configuration for Jest and JSDOM replacement
 
 To perform the necessary configuration in your testing framework, it is recommended to use a setup script,
 such as with Jest's `setupFilesAfterEnv` setting.
@@ -104,23 +104,50 @@ copyProps(window, global);
  * and inspect the DOM in tests.
  */
 Enzyme.configure({ adapter: new Adapter() });
-
-/**
- * Ignore some expected warnings
- * see: https://jestjs.io/docs/en/tutorial-react.html#snapshot-testing-with-mocks-enzyme-and-react-16
- * see https://github.com/Root-App/react-native-mock-render/issues/6
- */
-const originalConsoleError = console.error;
-console.error = (message) => {
-  if (message.startsWith('Warning:')) {
-    return;
-  }
-
-  originalConsoleError(message);
-};
 ```
 
-You should then be able to start writing tests!
+## Configure enzyme with other test libraries and include JSDOM on the fly
+
+Update the file specified in `setupFilesAfterEnv`, in this case `setup-tests.js` in the project root:
+
+```jsx
+import 'react-native';
+import 'jest-enzyme';
+import Adapter from 'enzyme-adapter-react-16';
+import Enzyme from 'enzyme';
+
+/**
+ * Set up Enzyme to mount to DOM, simulate events,
+ * and inspect the DOM in tests.
+ */
+Enzyme.configure({ adapter: new Adapter() });
+```
+
+### Create a separate test file
+
+Create a file prefixed with enzyme.test.ts for example `component.enzyme.test.js`:
+
+```jsx
+/**
+ * @jest-environment jsdom
+ */
+import React from 'react';
+import { mount } from 'enzyme';
+import { Text } from '../../../component/text';
+
+describe('Component tested with airbnb enzyme', () => {
+  test('App mount with enzyme', () => {
+    const wrapper = mount(<Text />);
+    // other tests operations
+  });
+});
+```
+
+**The most important part is to ensure that the test runs with the `jestEnvironment` set to `jsdom`** - one way is to include a `/* @jest-environment jsdom */` comment at the top of the file.
+
+
+
+Then you should then be able to start writing tests!
 
 Note that you may want to perform some additional mocking around native components,
 or if you want to perform snapshot testing against React Native components. Notice
