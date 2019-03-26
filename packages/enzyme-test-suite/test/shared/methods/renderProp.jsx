@@ -13,6 +13,7 @@ import { is } from '../../_helpers/version';
 export default function describeRenderProp({
   Wrap,
   WrapRendered,
+  WrapperName,
 }) {
   wrap()
     .withConsoleThrows()
@@ -25,7 +26,12 @@ export default function describeRenderProp({
       class Bar extends React.Component {
         render() {
           const { render: r } = this.props;
-          return <div className="in-bar">{r()}</div>;
+          return <div className="in-bar">{typeof r === 'function' && r()}</div>;
+        }
+      }
+      class RendersBar extends React.Component {
+        render() {
+          return <Bar {...this.props} />;
         }
       }
 
@@ -43,6 +49,30 @@ export default function describeRenderProp({
         stub.resetHistory();
         wrapperC.find(Bar).renderProp('render')('one', 'two');
         expect(stub.args).to.deep.equal([['one', 'two']]);
+      });
+
+      it('throws on a non-string prop name', () => {
+        const wrapper = Wrap(<RendersBar render={() => {}} />);
+        expect(() => wrapper.renderProp()).to.throw(
+          TypeError,
+          `${WrapperName}::renderProp(): \`propName\` must be a string`,
+        );
+      });
+
+      it('throws on a missing prop', () => {
+        const wrapper = Wrap(<RendersBar render={() => {}} />);
+        expect(() => wrapper.renderProp('nope')).to.throw(
+          Error,
+          `${WrapperName}::renderProp(): no prop called “nope“ found`,
+        );
+      });
+
+      it('throws on a non-function render prop value', () => {
+        const wrapper = Wrap(<RendersBar render={{}} />);
+        expect(() => wrapper.renderProp('render')).to.throw(
+          TypeError,
+          `${WrapperName}::renderProp(): expected prop “render“ to contain a function, but it holds “object“`,
+        );
       });
 
       it('throws on host elements', () => {

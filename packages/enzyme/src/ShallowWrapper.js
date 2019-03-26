@@ -1191,15 +1191,15 @@ class ShallowWrapper {
         throw new TypeError('ShallowWrapper::renderProp() can only be called on custom components');
       }
       if (typeof propName !== 'string') {
-        throw new TypeError('`propName` must be a string');
+        throw new TypeError('ShallowWrapper::renderProp(): `propName` must be a string');
       }
       const props = this.props();
       if (!has(props, propName)) {
-        throw new Error(`no prop called “${propName}“ found`);
+        throw new Error(`ShallowWrapper::renderProp(): no prop called “${propName}“ found`);
       }
       const propValue = props[propName];
       if (typeof propValue !== 'function') {
-        throw new TypeError(`expected prop “${propName}“ to contain a function, but it holds “${typeof prop}“`);
+        throw new TypeError(`ShallowWrapper::renderProp(): expected prop “${propName}“ to contain a function, but it holds “${typeof propValue}“`);
       }
 
       return (...args) => {
