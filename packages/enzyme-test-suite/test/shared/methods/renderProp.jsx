@@ -17,19 +17,19 @@ export default function describeRenderProp({
   wrap()
     .withConsoleThrows()
     .describe('.renderProp()', () => {
-      it('returns a wrapper around the node returned from the render prop', () => {
-        class Foo extends React.Component {
-          render() {
-            return <div className="in-foo" />;
-          }
+      class Foo extends React.Component {
+        render() {
+          return <div className="in-foo" />;
         }
-        class Bar extends React.Component {
-          render() {
-            const { render: r } = this.props;
-            return <div className="in-bar">{r()}</div>;
-          }
+      }
+      class Bar extends React.Component {
+        render() {
+          const { render: r } = this.props;
+          return <div className="in-bar">{r()}</div>;
         }
+      }
 
+      it('returns a wrapper around the node returned from the render prop', () => {
         const wrapperA = Wrap(<div><Bar render={() => <div><Foo /></div>} /></div>);
         const renderPropWrapperA = wrapperA.find(Bar).renderProp('render')();
         expect(renderPropWrapperA.find(Foo)).to.have.lengthOf(1);
@@ -61,18 +61,6 @@ export default function describeRenderProp({
       wrap()
         .withOverride(() => getAdapter(), 'wrap', () => undefined)
         .it('throws with a react adapter that lacks a `.wrap`', () => {
-          class Foo extends React.Component {
-            render() {
-              return <div className="in-foo" />;
-            }
-          }
-          class Bar extends React.Component {
-            render() {
-              const { render: r } = this.props;
-              return <div className="in-bar">{r()}</div>;
-            }
-          }
-
           const wrapper = Wrap(<div><Bar render={() => <div><Foo /></div>} /></div>);
           expect(() => wrapper.find(Bar).renderProp('render')).to.throw(RangeError);
         });

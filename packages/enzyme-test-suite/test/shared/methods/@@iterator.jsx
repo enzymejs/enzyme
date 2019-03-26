@@ -27,7 +27,7 @@ export default function describeIterator({
         }
       }
       const wrapper = Wrap(<Foo />);
-      const [a, b, c, d] = wrapper.find('a');
+      const [a, b, c, d, ...e] = wrapper.find('a');
       const a1 = wrapper.find('a').get(0);
       const b1 = wrapper.find('a').get(1);
       const c1 = wrapper.find('a').get(2);
@@ -36,6 +36,7 @@ export default function describeIterator({
       expect(b1).to.deep.equal(b);
       expect(c1).to.deep.equal(c);
       expect(d1).to.deep.equal(d);
+      expect(e).to.eql([]);
     });
 
     it('returns an iterable iterator', () => {

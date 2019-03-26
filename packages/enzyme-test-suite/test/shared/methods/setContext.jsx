@@ -44,6 +44,17 @@ export default function describeSetContext({
       );
     });
 
+    it('throws when not called on the root', () => {
+      const context = { name: <main /> };
+      const wrapper = Wrap(<SimpleComponent />, { context });
+      const main = wrapper.find('main');
+      expect(main).to.have.lengthOf(1);
+      expect(() => main.setContext()).to.throw(
+        Error,
+        `${WrapperName}::setContext() can only be called on the root`,
+      );
+    });
+
     describeIf(is('> 0.13'), 'stateless functional components', () => {
       const SFC = (props, { name }) => (
         <div>{name}</div>

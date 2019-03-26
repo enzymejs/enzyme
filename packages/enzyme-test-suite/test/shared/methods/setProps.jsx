@@ -15,6 +15,7 @@ import { is } from '../../_helpers/version';
 
 export default function describeSetProps({
   Wrap,
+  WrapperName,
   isShallow,
 }) {
   describe('.setProps(newProps[, callback)', () => {
@@ -43,6 +44,16 @@ export default function describeSetProps({
       );
     }
 
+    class RendersFoo extends React.Component {
+      render() {
+        return (
+          <main>
+            <Foo {...this.props} />
+          </main>
+        );
+      }
+    }
+
     it('throws on a non-function callback', () => {
       const wrapper = Wrap(<RendersNull />);
 
@@ -52,6 +63,16 @@ export default function describeSetProps({
       expect(() => wrapper.setProps({}, true)).to.throw();
       expect(() => wrapper.setProps({}, [])).to.throw();
       expect(() => wrapper.setProps({}, {})).to.throw();
+    });
+
+    it('throws when not called on the root', () => {
+      const wrapper = Wrap(<RendersFoo id="a" foo="b" />);
+      const child = wrapper.find(Foo);
+      expect(child).to.have.lengthOf(1);
+      expect(() => child.setProps({})).to.throw(
+        Error,
+        `${WrapperName}::setProps() can only be called on the root`,
+      );
     });
 
     it('sets props for a component multiple times', () => {

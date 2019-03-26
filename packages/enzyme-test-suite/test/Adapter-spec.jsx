@@ -2,7 +2,7 @@ import React from 'react';
 import { expect } from 'chai';
 import jsdom from 'jsdom';
 import { get } from 'enzyme/build/configuration';
-import { configure, shallow } from 'enzyme';
+import { configure, shallow, EnzymeAdapter } from 'enzyme';
 import inspect from 'object-inspect';
 import {
   Portal,
@@ -74,6 +74,41 @@ describe('Adapter', () => {
 
     it('fails to render when a non-adapter-constructor function is configured', () => {
       expect(() => configure({ adapter() {} })).to.throw(Error, /an enzyme adapter must be an object instance; you provided a function/);
+    });
+  });
+
+  describe('base class', () => {
+    it('constructs', () => {
+      const instance = new EnzymeAdapter();
+      expect(instance).to.have.property('options');
+      expect(instance.options).to.be.an('object');
+    });
+
+    it('throws on abstract methods', () => {
+      expect(() => new EnzymeAdapter().createRenderer()).to.throw(
+        Error,
+        'createRenderer is a required method of EnzymeAdapter, but was not implemented.',
+      );
+      expect(() => new EnzymeAdapter().nodeToElement()).to.throw(
+        Error,
+        'nodeToElement is a required method of EnzymeAdapter, but was not implemented.',
+      );
+      expect(() => new EnzymeAdapter().isValidElement()).to.throw(
+        Error,
+        'isValidElement is a required method of EnzymeAdapter, but was not implemented.',
+      );
+      expect(() => new EnzymeAdapter().createElement()).to.throw(
+        Error,
+        'createElement is a required method of EnzymeAdapter, but was not implemented.',
+      );
+    });
+
+    describe('invokeSetStateCallback', () => {
+      it('has the right length', () => {
+        expect(EnzymeAdapter.prototype).to.have.property('invokeSetStateCallback');
+        expect(EnzymeAdapter.prototype.invokeSetStateCallback).to.be.a('function');
+        expect(EnzymeAdapter.prototype.invokeSetStateCallback).to.have.lengthOf(2);
+      });
     });
   });
 
