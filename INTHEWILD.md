@@ -29,6 +29,7 @@ Organizations
  - [Zendesk](https://zendesk.com/)
  - [idealo](https://www.idealo.de/)
  - [LendingHome](https://www.lendinghome.com)
+ - [Diffia](https://diffia.com)
 
 Projects
 ----------
