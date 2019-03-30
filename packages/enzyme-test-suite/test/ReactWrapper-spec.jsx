@@ -5611,6 +5611,19 @@ describeWithDOM('mount', () => {
           wrapper.find(ComponentWithRenderProp).renderProp('r')(NaN);
         });
 
+        it('works with null', () => {
+          const wrapper = mount(<MyComponent val={null} />);
+
+          wrapper.find(ComponentWithRenderProp).renderProp('r')(null);
+        });
+
+        // FIXME: figure out how to test this reliably
+        it.skip('throws with undefined', () => {
+          const wrapper = mount(<MyComponent val="" />);
+
+          expect(() => wrapper.find(ComponentWithRenderProp).renderProp('r')(undefined)).to.throw();
+        });
+
         it('works with arrays', () => {
           const wrapper = mount(<MyComponent val={[]} />);
 

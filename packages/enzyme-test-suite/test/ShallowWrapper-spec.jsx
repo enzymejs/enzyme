@@ -5792,6 +5792,18 @@ describe('shallow', () => {
           wrapper.find(ComponentWithRenderProp).renderProp('r')(NaN);
         });
 
+        it('works with null', () => {
+          const wrapper = shallow(<MyComponent val={null} />);
+
+          wrapper.find(ComponentWithRenderProp).renderProp('r')(null);
+        });
+
+        it('throws with undefined', () => {
+          const wrapper = shallow(<MyComponent val="" />);
+
+          expect(() => wrapper.find(ComponentWithRenderProp).renderProp('r')(undefined).shallow()).to.throw();
+        });
+
         it('works with arrays', () => {
           const wrapper = shallow(<MyComponent val={[]} />);
 
