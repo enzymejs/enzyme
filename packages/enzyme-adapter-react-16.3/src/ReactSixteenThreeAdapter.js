@@ -9,16 +9,18 @@ import ShallowRenderer from 'react-test-renderer/shallow';
 import TestUtils from 'react-dom/test-utils';
 import checkPropTypes from 'prop-types/checkPropTypes';
 import {
-  isElement,
-  isPortal,
-  isValidElementType,
   AsyncMode,
-  Fragment,
   ContextConsumer,
   ContextProvider,
-  StrictMode,
+  Element,
   ForwardRef,
+  Fragment,
+  isElement,
+  isForwardRef,
+  isPortal,
+  isValidElementType,
   Portal,
+  StrictMode,
 } from 'react-is';
 import { EnzymeAdapter } from 'enzyme';
 import { typeOfNode } from 'enzyme/build/Utils';
@@ -537,7 +539,11 @@ class ReactSixteenThreeAdapter extends EnzymeAdapter {
   }
 
   isCustomComponent(type) {
-    return !!type && (typeof type === 'function' || type.$$typeof === ForwardRef);
+    const fakeElement = { $$typeof: Element, type };
+    return !!type && (
+      typeof type === 'function'
+      || isForwardRef(fakeElement)
+    );
   }
 
   isCustomComponentElement(inst) {

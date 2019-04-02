@@ -11,20 +11,22 @@ import TestUtils from 'react-dom/test-utils';
 import semver from 'semver';
 import checkPropTypes from 'prop-types/checkPropTypes';
 import {
-  isElement,
-  isPortal,
-  isValidElementType,
   AsyncMode,
   ConcurrentMode,
-  Fragment,
   ContextConsumer,
   ContextProvider,
-  StrictMode,
+  Element,
   ForwardRef,
-  Profiler,
-  Portal,
+  Fragment,
+  isElement,
+  isForwardRef,
   isMemo,
+  isPortal,
+  isValidElementType,
   Memo,
+  Portal,
+  Profiler,
+  StrictMode,
 } from 'react-is';
 import { EnzymeAdapter } from 'enzyme';
 import { typeOfNode } from 'enzyme/build/Utils';
@@ -666,7 +668,11 @@ class ReactSixteenAdapter extends EnzymeAdapter {
   }
 
   isCustomComponent(type) {
-    return !!type && (typeof type === 'function' || type.$$typeof === ForwardRef);
+    const fakeElement = { $$typeof: Element, type };
+    return !!type && (
+      typeof type === 'function'
+      || isForwardRef(fakeElement)
+    );
   }
 
   isCustomComponentElement(inst) {
