@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import RootFinder from './RootFinder';
 
 /* eslint react/forbid-prop-types: 0 */
 
@@ -41,15 +42,17 @@ const makeValidElementType = (adapter) => {
  * pass new props in.
  */
 export default function createMountWrapper(node, options = {}) {
-  const { adapter } = options;
+  const { adapter, wrappingComponent: WrappingComponent } = options;
 
   class WrapperComponent extends React.Component {
     constructor(...args) {
       super(...args);
-      const { props, context } = this.props;
+      const { props, wrappingComponentProps, context } = this.props;
+      this.rootFinderInstance = null;
       this.state = {
         mount: true,
         props,
+        wrappingComponentProps,
         context,
       };
     }
@@ -59,6 +62,10 @@ export default function createMountWrapper(node, options = {}) {
       const props = { ...oldProps, ...newProps };
       const context = { ...oldContext, ...newContext };
       this.setState({ props, context }, callback);
+    }
+
+    setWrappingComponentProps(props, callback = undefined) {
+      this.setState({ wrappingComponentProps: props }, callback);
     }
 
     getInstance() {
@@ -85,20 +92,28 @@ export default function createMountWrapper(node, options = {}) {
 
     render() {
       const { Component } = this.props;
-      const { mount, props } = this.state;
+      const { mount, props, wrappingComponentProps } = this.state;
       if (!mount) return null;
-      return (
-        <Component {...props} />
-      );
+      const component = <Component {...props} />;
+      if (WrappingComponent) {
+        return (
+          <WrappingComponent {...wrappingComponentProps}>
+            <RootFinder>{component}</RootFinder>
+          </WrappingComponent>
+        );
+      }
+      return component;
     }
   }
   WrapperComponent.propTypes = {
     Component: makeValidElementType(adapter).isRequired,
     props: PropTypes.object.isRequired,
+    wrappingComponentProps: PropTypes.object,
     context: PropTypes.object,
   };
   WrapperComponent.defaultProps = {
     context: null,
+    wrappingComponentProps: null,
   };
 
   if (options.context && (node.type.contextTypes || options.childContextTypes)) {

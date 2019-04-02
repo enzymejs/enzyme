@@ -21,6 +21,10 @@ import {
   propsWithKeysAndRef,
   ensureKeyOrUndefined,
   wrap,
+  RootFinder,
+  getNodeFromRootFinder,
+  wrapWithWrappingComponent,
+  getWrappingComponentMountRenderer,
 } from 'enzyme-adapter-utils';
 
 function compositeTypeToNodeType(type) {
@@ -138,6 +142,7 @@ class ReactFifteenAdapter extends EnzymeAdapter {
           const { type, props, ref } = el;
           const wrapperProps = {
             Component: type,
+            wrappingComponentProps: options.wrappingComponentProps,
             props,
             context,
             ...(ref && { ref }),
@@ -157,7 +162,14 @@ class ReactFifteenAdapter extends EnzymeAdapter {
         instance = null;
       },
       getNode() {
-        return instance ? instanceToTree(instance._reactInternalInstance).rendered : null;
+        if (!instance) {
+          return null;
+        }
+        return getNodeFromRootFinder(
+          adapter.isCustomComponent,
+          instanceToTree(instance._reactInternalInstance),
+          options,
+        );
       },
       simulateEvent(node, event, mock) {
         const mappedEvent = mapNativeEventNames(event, eventOptions);
@@ -170,6 +182,15 @@ class ReactFifteenAdapter extends EnzymeAdapter {
       },
       batchedUpdates(fn) {
         return ReactDOM.unstable_batchedUpdates(fn);
+      },
+      getWrappingComponentRenderer() {
+        return {
+          ...this,
+          ...getWrappingComponentMountRenderer({
+            toTree: inst => instanceToTree(inst._reactInternalInstance),
+            getMountWrapperInstance: () => instance,
+          }),
+        };
       },
     };
   }
@@ -287,6 +308,10 @@ class ReactFifteenAdapter extends EnzymeAdapter {
     return isValidElementType(object);
   }
 
+  isCustomComponent(component) {
+    return typeof component === 'function';
+  }
+
   createElement(...args) {
     return React.createElement(...args);
   }
@@ -294,6 +319,13 @@ class ReactFifteenAdapter extends EnzymeAdapter {
   invokeSetStateCallback(instance, callback) {
     // React in >= 15.4, and < 16 pass undefined to a setState callback
     callback.call(instance, undefined);
+  }
+
+  wrapWithWrappingComponent(node, options) {
+    return {
+      RootFinder,
+      node: wrapWithWrappingComponent(React.createElement, node, options),
+    };
   }
 }
 

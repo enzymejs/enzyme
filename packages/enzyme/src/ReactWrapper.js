@@ -14,6 +14,7 @@ import {
   privateSet,
   cloneElement,
   renderedDive,
+  isCustomComponent,
 } from './Utils';
 import getAdapter from './getAdapter';
 import { debugNodes } from './Debug';
@@ -36,6 +37,9 @@ const UNRENDERED = sym('__unrendered__');
 const ROOT = sym('__root__');
 const OPTIONS = sym('__options__');
 const ROOT_NODES = sym('__rootNodes__');
+const WRAPPING_COMPONENT = sym('__wrappingComponent__');
+const LINKED_ROOTS = sym('__linkedRoots__');
+const UPDATED_BY = sym('__updatedBy__');
 
 /**
  * Finds all nodes in the current wrapper nodes' render trees that match the provided predicate
@@ -106,20 +110,35 @@ class ReactWrapper {
         throw new TypeError('ReactWrapper can only wrap valid elements');
       }
 
-      privateSet(this, UNRENDERED, nodes);
       const renderer = adapter.createRenderer({ mode: 'mount', ...options });
       privateSet(this, RENDERER, renderer);
       renderer.render(nodes, options.context);
       privateSet(this, ROOT, this);
       privateSetNodes(this, this[RENDERER].getNode());
+      privateSet(this, OPTIONS, options);
+      privateSet(this, LINKED_ROOTS, []);
+
+      if (isCustomComponent(options.wrappingComponent, adapter)) {
+        if (typeof this[RENDERER].getWrappingComponentRenderer !== 'function') {
+          throw new TypeError('your adapter does not support `wrappingComponent`. Try upgrading it!');
+        }
+
+        // eslint-disable-next-line no-use-before-define
+        privateSet(this, WRAPPING_COMPONENT, new WrappingComponentWrapper(
+          this, this[RENDERER].getWrappingComponentRenderer(),
+        ));
+        this[LINKED_ROOTS].push(this[WRAPPING_COMPONENT]);
+      }
     } else {
-      privateSet(this, UNRENDERED, null);
       privateSet(this, RENDERER, root[RENDERER]);
       privateSet(this, ROOT, root);
       privateSetNodes(this, nodes);
       privateSet(this, ROOT_NODES, root[NODES]);
+      privateSet(this, OPTIONS, root[OPTIONS]);
+      privateSet(this, LINKED_ROOTS, []);
     }
-    privateSet(this, OPTIONS, root ? root[OPTIONS] : options);
+    privateSet(this, UNRENDERED, nodes);
+    privateSet(this, UPDATED_BY, null);
   }
 
   /**
@@ -224,6 +243,23 @@ class ReactWrapper {
   }
 
   /**
+   * If a `wrappingComponent` was passed in `options`, this methods returns a `ReactWrapper` around
+   * the rendered `wrappingComponent`. This `ReactWrapper` can be used to update the
+   * `wrappingComponent`'s props, state, etc.
+   *
+   * @returns ReactWrapper
+   */
+  getWrappingComponent() {
+    if (this[ROOT] !== this) {
+      throw new Error('ReactWrapper::getWrappingComponent() can only be called on the root');
+    }
+    if (!this[OPTIONS].wrappingComponent) {
+      throw new Error('ReactWrapper::getWrappingComponent() can only be called on a wrapper that was originally passed a `wrappingComponent` option');
+    }
+    return this[WRAPPING_COMPONENT];
+  }
+
+  /**
    * Forces a re-render. Useful to run before checking the render output if something external
    * may be updating the state of the component somewhere.
    *
@@ -237,6 +273,20 @@ class ReactWrapper {
       return root.update();
     }
     privateSetNodes(this, this[RENDERER].getNode());
+    this[LINKED_ROOTS].forEach((linkedRoot) => {
+      if (linkedRoot !== this[UPDATED_BY]) {
+        /* eslint-disable no-param-reassign */
+        // Only update a linked it root if it is not the originator of our update().
+        // This is needed to prevent infinite recursion when there is a bi-directional
+        // link between two roots.
+        linkedRoot[UPDATED_BY] = this;
+        try {
+          linkedRoot.update();
+        } finally {
+          linkedRoot[UPDATED_BY] = null;
+        }
+      }
+    });
     return this;
   }
 
@@ -1161,6 +1211,28 @@ class ReactWrapper {
    */
   hostNodes() {
     return this.filterWhere(n => typeof n.type() === 'string');
+  }
+}
+
+/**
+ * A *special* "root" wrapper that represents the component passed as `wrappingComponent`.
+ * It is linked to the primary root such that updates to it will update the primary,
+ * and vice versa.
+ *
+ * @class WrappingComponentWrapper
+ */
+class WrappingComponentWrapper extends ReactWrapper {
+  /* eslint-disable class-methods-use-this */
+  constructor(root, renderer) {
+    super(renderer.getNode(), root);
+
+    privateSet(this, ROOT, this);
+    privateSet(this, RENDERER, renderer);
+    this[LINKED_ROOTS].push(root);
+  }
+
+  getWrappingComponent() {
+    throw new TypeError('ReactWrapper::getWrappingComponent() can only be called on the root');
   }
 }
 

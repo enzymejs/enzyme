@@ -11,7 +11,6 @@ import checkPropTypes from 'prop-types/checkPropTypes';
 import {
   isElement,
   isPortal,
-  isForwardRef,
   isValidElementType,
   AsyncMode,
   Fragment,
@@ -38,6 +37,10 @@ import {
   simulateError,
   wrap,
   getComponentStack,
+  RootFinder,
+  getNodeFromRootFinder,
+  wrapWithWrappingComponent,
+  getWrappingComponentMountRenderer,
 } from 'enzyme-adapter-utils';
 import { findCurrentFiberUsingSlowPath } from 'react-reconciler/reflection';
 
@@ -267,7 +270,7 @@ class ReactSixteenThreeAdapter extends EnzymeAdapter {
 
   createMountRenderer(options) {
     assertDomAvailable('mount');
-    const { attachTo, hydrateIn } = options;
+    const { attachTo, hydrateIn, wrappingComponentProps } = options;
     const domNode = hydrateIn || attachTo || global.document.createElement('div');
     let instance = null;
     const adapter = this;
@@ -278,6 +281,7 @@ class ReactSixteenThreeAdapter extends EnzymeAdapter {
           const wrapperProps = {
             Component: type,
             props,
+            wrappingComponentProps,
             context,
             ...(ref && { ref }),
           };
@@ -298,7 +302,14 @@ class ReactSixteenThreeAdapter extends EnzymeAdapter {
         instance = null;
       },
       getNode() {
-        return instance ? toTree(instance._reactInternalFiber).rendered : null;
+        if (!instance) {
+          return null;
+        }
+        return getNodeFromRootFinder(
+          adapter.isCustomComponent,
+          toTree(instance._reactInternalFiber),
+          options,
+        );
       },
       simulateError(nodeHierarchy, rootNode, error) {
         const { instance: catchingInstance } = nodeHierarchy
@@ -325,6 +336,15 @@ class ReactSixteenThreeAdapter extends EnzymeAdapter {
       batchedUpdates(fn) {
         return fn();
         // return ReactDOM.unstable_batchedUpdates(fn);
+      },
+      getWrappingComponentRenderer() {
+        return {
+          ...this,
+          ...getWrappingComponentMountRenderer({
+            toTree: inst => toTree(inst._reactInternalFiber),
+            getMountWrapperInstance: () => instance,
+          }),
+        };
       },
     };
   }
@@ -516,15 +536,26 @@ class ReactSixteenThreeAdapter extends EnzymeAdapter {
     return typeOfNode(fragment) === Fragment;
   }
 
+  isCustomComponent(type) {
+    return !!type && (typeof type === 'function' || type.$$typeof === ForwardRef);
+  }
+
   isCustomComponentElement(inst) {
     if (!inst || !this.isValidElement(inst)) {
       return false;
     }
-    return typeof inst.type === 'function' || isForwardRef(inst);
+    return this.isCustomComponent(inst.type);
   }
 
   createElement(...args) {
     return React.createElement(...args);
+  }
+
+  wrapWithWrappingComponent(node, options) {
+    return {
+      RootFinder,
+      node: wrapWithWrappingComponent(React.createElement, node, options),
+    };
   }
 }
 

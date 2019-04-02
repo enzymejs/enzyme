@@ -19,6 +19,10 @@ import {
   propsWithKeysAndRef,
   ensureKeyOrUndefined,
   wrap,
+  RootFinder,
+  getNodeFromRootFinder,
+  wrapWithWrappingComponent,
+  getWrappingComponentMountRenderer,
 } from 'enzyme-adapter-utils';
 import ifReact from 'enzyme-adapter-react-helper/build/ifReact';
 
@@ -138,6 +142,7 @@ class ReactFifteenFourAdapter extends EnzymeAdapter {
           const { type, props, ref } = el;
           const wrapperProps = {
             Component: type,
+            wrappingComponentProps: options.wrappingComponentProps,
             props,
             context,
             ...(ref && { ref }),
@@ -157,7 +162,14 @@ class ReactFifteenFourAdapter extends EnzymeAdapter {
         instance = null;
       },
       getNode() {
-        return instance ? instanceToTree(instance._reactInternalInstance).rendered : null;
+        if (!instance) {
+          return null;
+        }
+        return getNodeFromRootFinder(
+          adapter.isCustomComponent,
+          instanceToTree(instance._reactInternalInstance),
+          options,
+        );
       },
       simulateEvent(node, event, mock) {
         const mappedEvent = mapNativeEventNames(event, eventOptions);
@@ -170,6 +182,15 @@ class ReactFifteenFourAdapter extends EnzymeAdapter {
       },
       batchedUpdates(fn) {
         return ReactDOM.unstable_batchedUpdates(fn);
+      },
+      getWrappingComponentRenderer() {
+        return {
+          ...this,
+          ...getWrappingComponentMountRenderer({
+            toTree: inst => instanceToTree(inst._reactInternalInstance),
+            getMountWrapperInstance: () => instance,
+          }),
+        };
       },
     };
   }
@@ -287,6 +308,10 @@ class ReactFifteenFourAdapter extends EnzymeAdapter {
     return isValidElementType(object);
   }
 
+  isCustomComponent(component) {
+    return typeof component === 'function';
+  }
+
   createElement(...args) {
     return React.createElement(...args);
   }
@@ -299,6 +324,13 @@ class ReactFifteenFourAdapter extends EnzymeAdapter {
       () => { super.invokeSetStateCallback(instance, callback); },
     );
     invoke();
+  }
+
+  wrapWithWrappingComponent(node, options) {
+    return {
+      RootFinder,
+      node: wrapWithWrappingComponent(React.createElement, node, options),
+    };
   }
 }
 

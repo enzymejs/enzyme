@@ -154,6 +154,152 @@ describe('shallow', () => {
       `.trim());
       expect(() => wrapper.state('key')).to.throw('ShallowWrapper::state("key") requires that `state` not be `null` or `undefined`');
     });
+
+    describeIf(is('>= 0.14'), 'wrappingComponent', () => {
+      class More extends React.Component {
+        render() {
+          return null;
+        }
+      }
+
+      class StateTester extends React.Component {
+        render() {
+          return null;
+        }
+      }
+
+      class TestProvider extends React.Component {
+        getChildContext() {
+          const { value, renderMore, renderStateTester } = this.props;
+
+          return {
+            testContext: value || 'Hello world!',
+            renderMore: renderMore || false,
+            renderStateTester: renderStateTester || false,
+          };
+        }
+
+        render() {
+          const { children } = this.props;
+
+          return <span>{children}</span>;
+        }
+      }
+      TestProvider.childContextTypes = {
+        testContext: PropTypes.string,
+        renderMore: PropTypes.bool,
+        renderStateTester: PropTypes.bool,
+      };
+
+      class MyWrappingComponent extends React.Component {
+        constructor() {
+          super();
+          this.state = { renderStateTester: false };
+        }
+
+        render() {
+          const { children, contextValue, renderMore } = this.props;
+          const { renderStateTester } = this.state;
+
+          return (
+            <div>
+              <TestProvider
+                value={contextValue}
+                renderMore={renderMore}
+                renderStateTester={renderStateTester}
+              >
+                <div>
+                  {children}
+                </div>
+              </TestProvider>
+            </div>
+          );
+        }
+      }
+
+      class MyComponent extends React.Component {
+        render() {
+          const {
+            testContext,
+            renderMore = true,
+            renderStateTester,
+            explicitContext,
+          } = this.context;
+          return (
+            <div>
+              <div>Context says: {testContext}{explicitContext}</div>
+              {renderMore && <More />}
+              {renderStateTester && <StateTester />}
+            </div>
+          );
+        }
+      }
+      MyComponent.contextTypes = {
+        ...TestProvider.childContextTypes,
+        explicitContext: PropTypes.bool,
+      };
+
+      it('mounts the passed node as the root as per usual', () => {
+        const wrapper = shallow(<MyComponent />, {
+          wrappingComponent: MyWrappingComponent,
+          context: {
+            explicitContext: ' stop!',
+          },
+        });
+        expect(wrapper.type()).to.equal('div');
+        expect(wrapper.parent().exists()).to.equal(false);
+        expect(() => wrapper.setProps({ foo: 'bar' })).not.to.throw();
+      });
+
+      it('renders the root in the wrapping component', () => {
+        const wrapper = shallow(<MyComponent />, {
+          wrappingComponent: MyWrappingComponent,
+          context: {
+            explicitContext: ' stop!',
+          },
+        });
+        // Context will only be set properly if the root node is rendered as a descendent of the wrapping component.
+        expect(wrapper.text()).to.equal('Context says: Hello world! stop!');
+      });
+
+      it('supports mounting the wrapping component with initial props', () => {
+        const wrapper = shallow(<MyComponent />, {
+          wrappingComponent: MyWrappingComponent,
+          wrappingComponentProps: { contextValue: 'I can be set!' },
+        });
+        expect(wrapper.text()).to.equal('Context says: I can be set!');
+      });
+
+      it('throws an error if the wrappingComponent does not render its children', () => {
+        class BadWrapper extends React.Component {
+          render() {
+            return <div />;
+          }
+        }
+        expect(() => shallow(<MyComponent />, {
+          wrappingComponent: BadWrapper,
+        })).to.throw('`wrappingComponent` must render its children!');
+      });
+
+      wrap()
+        .withOverrides(() => getAdapter(), () => ({
+          RootFinder: undefined,
+          wrapWithWrappingComponent: undefined,
+          isCustomComponent: undefined,
+        }))
+        .describe('with an old adapter', () => {
+          it('renders fine when wrappingComponent is not passed', () => {
+            const wrapper = shallow(<MyComponent />);
+            expect(wrapper.type()).to.equal('div');
+          });
+
+          it('throws an error if wrappingComponent is passed', () => {
+            expect(() => shallow(<MyComponent />, {
+              wrappingComponent: MyWrappingComponent,
+            })).to.throw('your adapter does not support `wrappingComponent`. Try upgrading it!');
+          });
+        });
+    });
   });
 
   describe('context', () => {
@@ -717,6 +863,7 @@ describe('shallow', () => {
     'getElements',
     'getNode',
     'getNodes',
+    'getWrappingComponent',
     'hasClass',
     'hostNodes',
     'html',

@@ -13,8 +13,10 @@ import {
   makeOptions,
   isEmptyValue,
   renderedDive,
+  isCustomComponent,
 } from 'enzyme/build/Utils';
 import getAdapter from 'enzyme/build/getAdapter';
+import EnzymeAdapter from 'enzyme/build/EnzymeAdapter';
 import {
   flatten,
   mapNativeEventNames,
@@ -470,7 +472,7 @@ describe('Utils', () => {
   });
 
   describe('mapNativeEventNames', () => {
-    describe('given an event that isn\'t a mapped', () => {
+    describe('given an event that isn‘t a mapped', () => {
       it('returns the original event', () => {
         const result = mapNativeEventNames('click');
         expect(result).to.equal('click');
@@ -1035,4 +1037,40 @@ describe('Utils', () => {
           });
         });
     });
+
+  describe('isCustomComponent', () => {
+    class TestAdapter extends EnzymeAdapter {
+      isCustomComponent() {} // eslint-disable-line class-methods-use-this
+    }
+
+    it('delegates to the adapter has method', () => {
+      const component = {};
+      const result = {};
+      const adapter = new TestAdapter();
+      sinon.stub(adapter, 'isCustomComponent').returns(result);
+
+      const actual = isCustomComponent(component, adapter);
+
+      expect(actual).to.equal(!!result);
+
+      expect(adapter.isCustomComponent).to.have.property('callCount', 1);
+      const [args] = adapter.isCustomComponent.args;
+      expect(args).to.eql([component]);
+    });
+
+    it('returns "is a function" when adapter lacks method', () => {
+      const adapter = new TestAdapter();
+      adapter.isCustomComponent = null;
+
+      expect(isCustomComponent({}, adapter)).to.equal(false);
+      expect(isCustomComponent(() => {}, adapter)).to.equal(true);
+    });
+
+    it('throws without a valid adapter', () => {
+      expect(() => isCustomComponent({})).to.throw(Error);
+      expect(() => isCustomComponent({}, null)).to.throw(Error);
+      expect(() => isCustomComponent({}, false)).to.throw(Error);
+      expect(() => isCustomComponent({}, {})).to.throw(Error);
+    });
+  });
 });
