@@ -858,10 +858,14 @@ export default function describeFind({
 
     describeIf(is('>= 16.6'), 'React.memo', () => {
       it('works with an SFC', () => {
-        const InnerComp = () => <div><span>Hello</span></div>;
+        function InnerComp({ message }) {
+          return <div><span>{message}</span></div>;
+        }
+        const InnerMemo = React.memo(InnerComp);
         const InnerFoo = ({ foo }) => (
           <div>
-            <InnerComp />
+            <InnerComp message="Hello" />
+            <InnerMemo message="find me?" />
             <div className="bar">bar</div>
             <div className="qoo">{foo}</div>
           </div>
@@ -871,7 +875,8 @@ export default function describeFind({
         const wrapper = Wrap(<Foo foo="qux" />);
         const expectedDebug = isShallow
           ? `<div>
-  <InnerComp />
+  <InnerComp message="Hello" />
+  <InnerComp message="find me?" />
   <div className="bar">
     bar
   </div>
@@ -881,10 +886,17 @@ export default function describeFind({
 </div>`
           : `<InnerFoo foo="qux">
   <div>
-    <InnerComp>
+    <InnerComp message="Hello">
       <div>
         <span>
           Hello
+        </span>
+      </div>
+    </InnerComp>
+    <InnerComp message="find me?">
+      <div>
+        <span>
+          find me?
         </span>
       </div>
     </InnerComp>
@@ -897,9 +909,10 @@ export default function describeFind({
   </div>
 </InnerFoo>`;
         expect(wrapper.debug()).to.equal(expectedDebug);
-        expect(wrapper.find('InnerComp')).to.have.lengthOf(1);
+        expect(wrapper.find('InnerComp')).to.have.lengthOf(2);
         expect(wrapper.find('.bar')).to.have.lengthOf(1);
         expect(wrapper.find('.qoo').text()).to.equal('qux');
+        expect(wrapper.find(InnerMemo)).to.have.lengthOf(1);
       });
 
       it('works with a class component', () => {

@@ -184,7 +184,7 @@ function toTree(vnode) {
       }
       return {
         nodeType: 'function',
-        type: node.elementType.type,
+        type: node.elementType,
         props: { ...node.memoizedProps },
         key: ensureKeyOrUndefined(node.key),
         ref: node.ref,
@@ -648,7 +648,7 @@ class ReactSixteenAdapter extends EnzymeAdapter {
     switch ($$typeofType) {
       case ContextConsumer || NaN: return 'ContextConsumer';
       case ContextProvider || NaN: return 'ContextProvider';
-      case Memo || NaN: return displayNameOfNode(type.type);
+      case Memo || NaN: return displayNameOfNode(type);
       case ForwardRef || NaN: {
         if (type.displayName) {
           return type.displayName;
