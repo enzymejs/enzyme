@@ -177,7 +177,11 @@ function toTree(vnode) {
         instance: node.stateNode,
         rendered: childrenToTree(node.child.child),
       };
-    case FiberTags.MemoSFC:
+    case FiberTags.MemoSFC: {
+      let renderedNodes = flatten(nodeAndSiblingsArray(node.child).map(toTree));
+      if (renderedNodes.length === 0) {
+        renderedNodes = [node.memoizedProps.children];
+      }
       return {
         nodeType: 'function',
         type: node.elementType.type,
@@ -185,8 +189,9 @@ function toTree(vnode) {
         key: ensureKeyOrUndefined(node.key),
         ref: node.ref,
         instance: null,
-        rendered: childrenToTree(node.child.child),
+        rendered: renderedNodes,
       };
+    }
     case FiberTags.HostComponent: {
       let renderedNodes = flatten(nodeAndSiblingsArray(node.child).map(toTree));
       if (renderedNodes.length === 0) {

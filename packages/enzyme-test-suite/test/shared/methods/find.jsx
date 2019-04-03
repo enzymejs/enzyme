@@ -857,8 +857,7 @@ export default function describeFind({
     });
 
     describeIf(is('>= 16.6'), 'React.memo', () => {
-      // FIXME: fix bug for mount
-      itIf(!isMount, 'works with an SFC', () => {
+      it('works with an SFC', () => {
         const InnerComp = () => <div><span>Hello</span></div>;
         const InnerFoo = ({ foo }) => (
           <div>

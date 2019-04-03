@@ -601,18 +601,20 @@ describeWithDOM('mount', () => {
 
         const wrapper = mount(<Foo foo="qux" />);
         expect(wrapper.debug()).to.equal(`<InnerFoo foo="qux">
-  <InnerComp>
-    <div>
-      <span>
-        Hello
-      </span>
+  <div>
+    <InnerComp>
+      <div>
+        <span>
+          Hello
+        </span>
+      </div>
+    </InnerComp>
+    <div className="bar">
+      bar
     </div>
-  </InnerComp>
-  <div className="bar">
-    bar
-  </div>
-  <div className="qoo">
-    qux
+    <div className="qoo">
+      qux
+    </div>
   </div>
 </InnerFoo>`);
         expect(wrapper.find('InnerComp')).to.have.lengthOf(1);
