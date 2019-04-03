@@ -274,14 +274,15 @@ describeWithDOM('mount', () => {
 
       wrap()
         .withOverrides(() => getAdapter(), () => ({
+          isCustomComponent: undefined,
           RootFinder: undefined,
+          wrapWithWrappingComponent: undefined,
           createMountRenderer: (...args) => {
             const renderer = realCreateMountRenderer(...args);
             delete renderer.getWrappingComponentRenderer;
             renderer.getNode = () => null;
             return renderer;
           },
-          isCustomComponent: undefined,
         }))
         .describe('with an old adapter', () => {
           it('renders fine when wrappingComponent is not passed', () => {
@@ -297,15 +298,16 @@ describeWithDOM('mount', () => {
         });
     });
 
-    itIf(is('<=0.13'), 'throws an error if wrappingComponent is passed', () => {
-      class WrappingComponent extends React.Component {
-        render() {
-          const { children } = this.props;
-          return children;
-        }
+    class RendersChildren extends React.Component {
+      render() {
+        const { children } = this.props;
+        return children;
       }
+    }
+
+    itIf(is('<=0.13'), 'throws an error if wrappingComponent is passed', () => {
       expect(() => mount(<div />, {
-        wrappingComponent: WrappingComponent,
+        wrappingComponent: RendersChildren,
       })).to.throw('your adapter does not support `wrappingComponent`. Try upgrading it!');
     });
 

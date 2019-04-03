@@ -283,14 +283,19 @@ describe('shallow', () => {
 
       wrap()
         .withOverrides(() => getAdapter(), () => ({
+          isCustomComponent: undefined,
           RootFinder: undefined,
           wrapWithWrappingComponent: undefined,
-          isCustomComponent: undefined,
         }))
         .describe('with an old adapter', () => {
           it('renders fine when wrappingComponent is not passed', () => {
             const wrapper = shallow(<MyComponent />);
-            expect(wrapper.type()).to.equal('div');
+            expect(wrapper.debug()).to.equal(`<div>
+  <div>
+    Context says:${' '}
+  </div>
+  <More />
+</div>`);
           });
 
           it('throws an error if wrappingComponent is passed', () => {
@@ -298,6 +303,32 @@ describe('shallow', () => {
               wrappingComponent: MyWrappingComponent,
             })).to.throw('your adapter does not support `wrappingComponent`. Try upgrading it!');
           });
+        });
+    });
+
+    class RendersChildren extends React.Component {
+      render() {
+        const { children } = this.props;
+        return children;
+      }
+    }
+
+    itIf.skip(is('<=0.13'), 'throws an error if wrappingComponent is passed', () => {
+      expect(() => shallow(<div />, {
+        wrappingComponent: RendersChildren,
+      })).to.throw('your adapter does not support `wrappingComponent`. Try upgrading it!');
+    });
+
+    describeIf.skip(is('>= 16.3'), 'uses the isValidElementType from the Adapter to validate the prop type of Component', () => {
+      const Foo = () => null;
+      const Bar = () => null;
+      wrap()
+        .withConsoleThrows()
+        .withOverride(() => getAdapter(), 'isValidElementType', () => val => val === Foo)
+        .it('with isValidElementType defined on the Adapter', () => {
+          expect(() => {
+            shallow(<Bar />);
+          }).to.throw('Warning: Failed prop type: Component must be a valid element type!\n    in WrapperComponent');
         });
     });
   });
