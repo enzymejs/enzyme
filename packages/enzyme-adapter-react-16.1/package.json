@@ -38,7 +38,7 @@
     "enzyme-adapter-utils": "^1.10.1",
     "object.assign": "^4.1.0",
     "prop-types": "^15.7.2",
-    "react-is": "^16.8.4",
+    "react-is": "^16.8.6",
     "react-reconciler": "^0.7.0",
     "react-test-renderer": "~16.0.0-0 || ~16.1"
   },

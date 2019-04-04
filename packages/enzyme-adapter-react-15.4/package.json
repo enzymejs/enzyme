@@ -40,7 +40,7 @@
     "object.assign": "^4.1.0",
     "object.values": "^1.1.0",
     "prop-types": "^15.7.2",
-    "react-is": "^16.8.4"
+    "react-is": "^16.8.6"
   },
   "peerDependencies": {
     "enzyme": "^3.0.0",
