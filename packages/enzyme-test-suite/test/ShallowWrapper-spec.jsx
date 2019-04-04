@@ -270,6 +270,54 @@ describe('shallow', () => {
         expect(wrapper.text()).to.equal('Context says: I can be set!');
       });
 
+      describeIf(is('>= 16.3'), 'with createContext()', () => {
+        let Context1;
+        let Context2;
+        beforeEach(() => {
+          Context1 = createContext('default1');
+          Context2 = createContext('default2');
+        });
+
+        function WrappingComponent(props) {
+          const { value1, value2, children } = props;
+          return (
+            <Context1.Provider value={value1}>
+              <Context2.Provider value={value2}>
+                {children}
+              </Context2.Provider>
+            </Context1.Provider>
+          );
+        }
+
+        function Component() {
+          return (
+            <Context1.Consumer>
+              {value1 => (
+                <Context2.Consumer>
+                  {value2 => (
+                    <div>Value 1: {value1}; Value 2: {value2}</div>
+                  )}
+                </Context2.Consumer>
+              )}
+            </Context1.Consumer>
+          );
+        }
+
+        it('renders', () => {
+          const wrapper = shallow(<Component />, {
+            wrappingComponent: WrappingComponent,
+            wrappingComponentProps: {
+              value1: 'one',
+              value2: 'two',
+            },
+          });
+          const consumer1 = wrapper.find(Context1.Consumer).dive();
+          const consumer2 = consumer1.find(Context2.Consumer).dive();
+
+          expect(consumer2.text()).to.equal('Value 1: one; Value 2: two');
+        });
+      });
+
       it('throws an error if the wrappingComponent does not render its children', () => {
         class BadWrapper extends React.Component {
           render() {
@@ -413,6 +461,145 @@ describe('shallow', () => {
       const wrapper = shallow(<SomeComponent />);
 
       expect(wrapper.find('.child2')).to.have.lengthOf(1);
+    });
+
+    describeIf(is('>= 16.3'), 'createContext()', () => {
+      describe('rendering as root:', () => {
+        let Context;
+
+        beforeEach(() => {
+          Context = createContext('cool');
+        });
+
+        describe('<Provider />', () => {
+          it('can be rendered as the root', () => {
+            const wrapper = shallow(
+              <Context.Provider value="hello">
+                <Context.Consumer>
+                  {value => <div>{value}</div>}
+                </Context.Consumer>
+              </Context.Provider>,
+            );
+            expect(wrapper.debug()).to.eql(`
+<ContextConsumer>
+  [function]
+</ContextConsumer>
+            `.trim());
+          });
+
+          it('supports changing the value', () => {
+            const wrapper = shallow(
+              <Context.Provider value="hello">
+                <Context.Consumer>
+                  {value => <div>{value}</div>}
+                </Context.Consumer>
+              </Context.Provider>,
+            );
+            wrapper.setProps({ value: 'world' });
+            expect(wrapper.find(Context.Consumer).dive().text()).to.eql('world');
+          });
+        });
+
+        describe('<Consumer />', () => {
+          function DivRenderer({ children }) {
+            return <div>{children}</div>;
+          }
+          it('can be rendered as the root', () => {
+            const wrapper = shallow(
+              <Context.Consumer>
+                {value => <DivRenderer>{value}</DivRenderer>}
+              </Context.Consumer>,
+            );
+            expect(wrapper.debug()).to.eql(`
+<DivRenderer>
+  cool
+</DivRenderer>
+            `.trim());
+          });
+
+          it('supports changing the children', () => {
+            const wrapper = shallow(
+              <Context.Consumer>
+                {value => <DivRenderer>{value}</DivRenderer>}
+              </Context.Consumer>,
+            );
+            wrapper.setProps({ children: value => <DivRenderer>Changed: {value}</DivRenderer> });
+            expect(wrapper.find(DivRenderer).dive().text()).to.eql('Changed: cool');
+          });
+        });
+      });
+
+      describe('dive() on Provider and Consumer', () => {
+        let Provider;
+        let Consumer;
+
+        beforeEach(() => {
+          ({ Provider, Consumer } = React.createContext('howdy!'));
+        });
+
+        class Consumes extends React.Component {
+          render() {
+            return (
+              <span>
+                <Consumer>{value => <span>{value}</span>}</Consumer>
+              </span>
+            );
+          }
+        }
+
+        class Provides extends React.Component {
+          render() {
+            const { children } = this.props;
+
+            return (
+              <Provider value="foo"><div><div />{children}</div></Provider>
+            );
+          }
+        }
+
+        class MyComponent extends React.Component {
+          render() {
+            return (
+              <Provides><Consumes /></Provides>
+            );
+          }
+        }
+
+        it('works on a Provider', () => {
+          const wrapper = shallow(<MyComponent />);
+          const provides = wrapper.find(Provides).dive();
+          const provider = provides.find(Provider).dive();
+          expect(provider.text()).to.equal('<Consumes />');
+        });
+
+        it('always gives the default provider value if dive()ing directly to a <Consumer />', () => {
+          // Diving directly on a consumer will give you the default value
+          const wrapper = shallow(<MyComponent />);
+          const consumes = wrapper.find(Consumes).dive();
+          const consumer = consumes.find(Consumer).dive();
+          expect(consumer.text()).to.equal('howdy!');
+        });
+
+        it('gives the actual <Provider /> value if one dive()s it', () => {
+          const wrapper = shallow(<MyComponent />);
+          const provides = wrapper.find(Provides).dive();
+          const provider = provides.find(Provider).dive();
+          const consumes = provider.find(Consumes).dive();
+          const consumer = consumes.find(Consumer).dive();
+          expect(consumer.text()).to.equal('foo');
+        });
+
+        it('does not leak values across roots', () => {
+          const wrapper = shallow(<MyComponent />);
+          const provides = wrapper.find(Provides).dive();
+          const provider = provides.find(Provider).dive();
+          expect(provider).to.have.lengthOf(1);
+
+          const consumes = wrapper.find(Consumes).dive();
+          const consumer = consumes.find(Consumer).dive();
+          expect(consumer.text()).to.equal('howdy!');
+        });
+      });
     });
 
     describeIf(is('> 0.13'), 'stateless function components (SFCs)', () => {

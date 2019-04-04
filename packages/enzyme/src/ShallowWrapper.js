@@ -45,6 +45,7 @@ const CHILD_CONTEXT = sym('__childContext__');
 const WRAPPING_COMPONENT = sym('__wrappingComponent__');
 const PRIMARY_WRAPPER = sym('__primaryWrapper__');
 const ROOT_FINDER = sym('__rootFinder__');
+const PROVIDER_VALUES = sym('__providerValues__');
 
 /**
  * Finds all nodes in the current wrapper nodes' render trees that match the provided predicate
@@ -313,14 +314,18 @@ function deepRender(wrapper, target, adapter) {
  * @param {WrappingComponentWrapper} wrapper The `WrappingComponentWrapper` for a
  *  `wrappingComponent`
  * @param {Adapter} adapter An Enzyme adapter
- * @returns {object} The context collected
+ * @returns {object} An object containing an object of legacy context values and a Map of
+ *  `createContext()` Provider values.
  */
 function getContextFromWrappingComponent(wrapper, adapter) {
   const rootFinder = deepRender(wrapper, wrapper[ROOT_FINDER], adapter);
   if (!rootFinder) {
     throw new Error('`wrappingComponent` must render its children!');
   }
-  return rootFinder[OPTIONS].context;
+  return {
+    legacyContext: rootFinder[OPTIONS].context,
+    providerValues: rootFinder[PROVIDER_VALUES],
+  };
 }
 
 /**
@@ -338,6 +343,7 @@ function getContextFromWrappingComponent(wrapper, adapter) {
 function makeShallowOptions(nodes, root, passedOptions, wrapper) {
   const options = makeOptions(passedOptions);
   const adapter = getAdapter(passedOptions);
+  privateSet(options, PROVIDER_VALUES, passedOptions[PROVIDER_VALUES]);
   if (root || !isCustomComponent(options.wrappingComponent, adapter)) {
     return options;
   }
@@ -347,16 +353,18 @@ function makeShallowOptions(nodes, root, passedOptions, wrapper) {
   const { node: wrappedNode, RootFinder } = adapter.wrapWithWrappingComponent(nodes, options);
   // eslint-disable-next-line no-use-before-define
   const wrappingComponent = new WrappingComponentWrapper(wrappedNode, wrapper, RootFinder);
-  const wrappingComponentContext = getContextFromWrappingComponent(
-    wrappingComponent, adapter,
-  );
+  const {
+    legacyContext: wrappingComponentLegacyContext,
+    providerValues: wrappingComponentProviderValues,
+  } = getContextFromWrappingComponent(wrappingComponent, adapter);
   privateSet(wrapper, WRAPPING_COMPONENT, wrappingComponent);
   return {
     ...options,
     context: {
       ...options.context,
-      ...wrappingComponentContext,
+      ...wrappingComponentLegacyContext,
     },
+    [PROVIDER_VALUES]: wrappingComponentProviderValues,
   };
 }
 
@@ -385,10 +393,12 @@ class ShallowWrapper {
       privateSet(this, UNRENDERED, nodes);
       const renderer = adapter.createRenderer({ mode: 'shallow', ...options });
       privateSet(this, RENDERER, renderer);
-      this[RENDERER].render(nodes, options.context);
+      const providerValues = new Map(options[PROVIDER_VALUES] || []);
+      this[RENDERER].render(nodes, options.context, { providerValues });
       const renderedNode = this[RENDERER].getNode();
       privateSetNodes(this, getRootNode(renderedNode));
       privateSet(this, OPTIONS, options);
+      privateSet(this, PROVIDER_VALUES, providerValues);
 
       const { instance } = renderedNode;
       if (instance && !options.disableLifecycleMethods) {
@@ -415,6 +425,7 @@ class ShallowWrapper {
       privateSetNodes(this, nodes);
       privateSet(this, OPTIONS, root[OPTIONS]);
       privateSet(this, ROOT_NODES, root[NODES]);
+      privateSet(this, PROVIDER_VALUES, null);
     }
   }
 
@@ -612,7 +623,9 @@ class ShallowWrapper {
             );
           }
           if (props) this[UNRENDERED] = cloneElement(adapter, this[UNRENDERED], props);
-          this[RENDERER].render(this[UNRENDERED], nextContext);
+          this[RENDERER].render(this[UNRENDERED], nextContext, {
+            providerValues: this[PROVIDER_VALUES],
+          });
           if (shouldComponentUpdateSpy) {
             shouldRender = shouldComponentUpdateSpy.getLastReturnValue();
             shouldComponentUpdateSpy.restore();
@@ -1659,14 +1672,16 @@ class ShallowWrapper {
       if (!isCustomComponentElement(el, adapter)) {
         throw new TypeError(`ShallowWrapper::${name}() can only be called on components`);
       }
-      return this.wrap(el, null, {
+      const childOptions = {
         ...this[OPTIONS],
         ...options,
         context: options.context || {
           ...this[OPTIONS].context,
           ...this[ROOT][CHILD_CONTEXT],
         },
-      });
+      };
+      privateSet(childOptions, PROVIDER_VALUES, this[ROOT][PROVIDER_VALUES]);
+      return this.wrap(el, null, childOptions);
     });
   }
 
@@ -1686,14 +1701,35 @@ class ShallowWrapper {
  * `wrappingComponent` re-renders.
  */
 function updatePrimaryRootContext(wrappingComponent) {
-  const context = getContextFromWrappingComponent(
-    wrappingComponent,
-    getAdapter(wrappingComponent[OPTIONS]),
-  );
-  wrappingComponent[PRIMARY_WRAPPER].setContext({
+  const adapter = getAdapter(wrappingComponent[OPTIONS]);
+  const primaryWrapper = wrappingComponent[PRIMARY_WRAPPER];
+  const primaryRenderer = primaryWrapper[RENDERER];
+  const primaryNode = primaryRenderer.getNode();
+  const {
+    legacyContext,
+    providerValues,
+  } = getContextFromWrappingComponent(wrappingComponent, adapter);
+  const prevProviderValues = primaryWrapper[PROVIDER_VALUES];
+
+  primaryWrapper.setContext({
     ...wrappingComponent[PRIMARY_WRAPPER][OPTIONS].context,
-    ...context,
+    ...legacyContext,
   });
+  primaryWrapper[PROVIDER_VALUES] = new Map([...prevProviderValues, ...providerValues]);
+
+  if (typeof adapter.isContextConsumer === 'function' && adapter.isContextConsumer(primaryNode.type)) {
+    const Consumer = primaryNode.type;
+    // Adapters with an `isContextConsumer` method will definitely have a `getProviderFromConsumer`
+    // method.
+    const Provider = adapter.getProviderFromConsumer(Consumer);
+    const newValue = providerValues.get(Provider);
+    const oldValue = prevProviderValues.get(Provider);
+
+    // Use referential comparison like React
+    if (newValue !== oldValue) {
+      primaryWrapper.rerender();
+    }
+  }
 }
 
 /**

@@ -261,6 +261,53 @@ describeWithDOM('mount', () => {
         expect(wrapper.text()).to.equal('Context says: I can be set!');
       });
 
+      describeIf(is('>= 16.3'), 'with createContext()', () => {
+        let Context1;
+        let Context2;
+
+        function WrappingComponent(props) {
+          const { value1, value2, children } = props;
+          return (
+            <Context1.Provider value={value1}>
+              <Context2.Provider value={value2}>
+                {children}
+              </Context2.Provider>
+            </Context1.Provider>
+          );
+        }
+
+        function Component() {
+          return (
+            <Context1.Consumer>
+              {value1 => (
+                <Context2.Consumer>
+                  {value2 => (
+                    <div>Value 1: {value1}; Value 2: {value2}</div>
+                  )}
+                </Context2.Consumer>
+              )}
+            </Context1.Consumer>
+          );
+        }
+
+        beforeEach(() => {
+          Context1 = createContext('default1');
+          Context2 = createContext('default2');
+        });
+
+        it('renders', () => {
+          const wrapper = mount(<Component />, {
+            wrappingComponent: WrappingComponent,
+            wrappingComponentProps: {
+              value1: 'one',
+              value2: 'two',
+            },
+          });
+
+          expect(wrapper.text()).to.equal('Value 1: one; Value 2: two');
+        });
+      });
+
       it('throws an error if the wrappingComponent does not render its children', () => {
         class BadWrapper extends React.Component {
           render() {
@@ -437,20 +484,50 @@ describeWithDOM('mount', () => {
       expect(wrapper.context('name')).to.equal(context.name);
     });
 
-    itIf(is('>= 16.3'), 'finds elements through Context elements', () => {
-      const { Provider, Consumer } = createContext('');
+    describeIf(is('>= 16.3'), 'createContext()', () => {
+      let Context;
 
-      class Foo extends React.Component {
-        render() {
-          return (
-            <Consumer>{value => <span>{value}</span>}</Consumer>
-          );
+      beforeEach(() => {
+        Context = createContext('hello');
+      });
+
+      it('finds elements through Context elements', () => {
+        class Foo extends React.Component {
+          render() {
+            return (
+              <Context.Consumer>{value => <span>{value}</span>}</Context.Consumer>
+            );
+          }
         }
-      }
 
-      const wrapper = mount(<Provider value="foo"><div><Foo /></div></Provider>);
+        const wrapper = mount(<Context.Provider value="foo"><div><Foo /></div></Context.Provider>);
 
-      expect(wrapper.find('span').text()).to.equal('foo');
+        expect(wrapper.find('span').text()).to.equal('foo');
+      });
+
+      it('can render a <Provider /> as the root', () => {
+        const wrapper = mount(
+          <Context.Provider value="cool">
+            <Context.Consumer>{value => <div>{value}</div>}</Context.Consumer>
+          </Context.Provider>,
+        );
+        expect(wrapper.text()).to.equal('cool');
+
+        wrapper.setProps({ value: 'test' });
+        expect(wrapper.text()).to.equal('test');
+      });
+
+      it('can render a <Consumer /> as the root', () => {
+        const wrapper = mount(
+          <Context.Consumer>{value => <div>{value}</div>}</Context.Consumer>,
+        );
+        expect(wrapper.text()).to.equal('hello');
+
+        wrapper.setProps({
+          children: value => <div>Value is: {value}</div>,
+        });
+        expect(wrapper.text()).to.equal('Value is: hello');
+      });
     });
 
     describeIf(is('>= 16.3'), 'forwarded ref Components', () => {

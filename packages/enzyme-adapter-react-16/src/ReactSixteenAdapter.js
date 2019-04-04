@@ -18,6 +18,8 @@ import {
   Element,
   ForwardRef,
   Fragment,
+  isContextConsumer,
+  isContextProvider,
   isElement,
   isForwardRef,
   isMemo,
@@ -303,6 +305,21 @@ function wrapAct(fn) {
   return returnVal;
 }
 
+function getProviderDefaultValue(Provider) {
+  // React stores references to the Provider's defaultValue differently across versions.
+  if ('_defaultValue' in Provider._context) {
+    return Provider._context._defaultValue;
+  }
+  if ('_currentValue' in Provider._context) {
+    return Provider._context._currentValue;
+  }
+  throw new Error('Enzyme Internal Error: can’t figure out how to get Provider’s default value');
+}
+
+function makeFakeElement(type) {
+  return { $$typeof: Element, type };
+}
+
 class ReactSixteenAdapter extends EnzymeAdapter {
   constructor() {
     super();
@@ -454,11 +471,30 @@ class ReactSixteenAdapter extends EnzymeAdapter {
     };
 
     return {
-      render(el, unmaskedContext) {
+      render(el, unmaskedContext, {
+        providerValues = new Map(),
+      } = {}) {
         cachedNode = el;
         /* eslint consistent-return: 0 */
         if (typeof el.type === 'string') {
           isDOM = true;
+        } else if (isContextProvider(el)) {
+          providerValues.set(el.type, el.props.value);
+          const MockProvider = Object.assign(
+            props => props.children,
+            el.type,
+          );
+          return withSetStateAllowed(() => renderer.render({ ...el, type: MockProvider }));
+        } else if (isContextConsumer(el)) {
+          const Provider = adapter.getProviderFromConsumer(el.type);
+          const value = providerValues.has(Provider)
+            ? providerValues.get(Provider)
+            : getProviderDefaultValue(Provider);
+          const MockConsumer = Object.assign(
+            props => props.children(value),
+            el.type,
+          );
+          return withSetStateAllowed(() => renderer.render({ ...el, type: MockConsumer }));
         } else {
           isDOM = false;
           const { type: Component } = el;
@@ -673,11 +709,17 @@ class ReactSixteenAdapter extends EnzymeAdapter {
   }
 
   isCustomComponent(type) {
-    const fakeElement = { $$typeof: Element, type };
+    const fakeElement = makeFakeElement(type);
     return !!type && (
       typeof type === 'function'
       || isForwardRef(fakeElement)
+      || isContextProvider(fakeElement)
+      || isContextConsumer(fakeElement)
     );
+  }
+
+  isContextConsumer(type) {
+    return !!type && isContextConsumer(makeFakeElement(type));
   }
 
   isCustomComponentElement(inst) {
@@ -685,6 +727,22 @@ class ReactSixteenAdapter extends EnzymeAdapter {
       return false;
     }
     return this.isCustomComponent(inst.type);
+  }
+
+  getProviderFromConsumer(Consumer) {
+    // React stores references to the Provider on a Consumer differently across versions.
+    if (Consumer) {
+      let Provider;
+      if (Consumer.Provider) {
+        ({ Provider } = Consumer);
+      } else if (Consumer._context) {
+        ({ Provider } = Consumer._context);
+      }
+      if (Provider) {
+        return Provider;
+      }
+    }
+    throw new Error('Enzyme Internal Error: can’t figure out how to get Provider from Consumer');
   }
 
   createElement(...args) {

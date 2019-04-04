@@ -1169,7 +1169,40 @@ Warning: Failed Adapter-spec type: Invalid Adapter-spec \`foo\` of type \`string
     });
 
     itIf(is('>=16.3'), 'returns true for forward refs', () => {
-      expect(adapter.isCustomComponent(React.forwardRef(() => null))).to.equal(true);
+      expect(adapter.isCustomComponent(forwardRef(() => null))).to.equal(true);
+    });
+  });
+
+  describeIf(is('>= 16.3'), 'isContextConsumer(type)', () => {
+    it('returns true for createContext() Consumers', () => {
+      expect(adapter.isContextConsumer(createContext().Consumer)).to.equal(true);
+    });
+
+    it('returns false for everything else', () => {
+      expect(adapter.isContextConsumer(null)).to.equal(false);
+      expect(adapter.isContextConsumer(true)).to.equal(false);
+      expect(adapter.isContextConsumer(undefined)).to.equal(false);
+      expect(adapter.isContextConsumer(false)).to.equal(false);
+      expect(adapter.isContextConsumer(() => <div />)).to.equal(false);
+      expect(adapter.isContextConsumer(forwardRef(() => null))).to.equal(false);
+      expect(adapter.isContextConsumer(createContext().Provider)).to.equal(false);
+    });
+  });
+
+  describeIf(is('>= 16.3'), 'getProviderFromConsumer(Consumer)', () => {
+    it('gets a createContext() Provider from a Consumer', () => {
+      const Context = createContext();
+
+      expect(adapter.getProviderFromConsumer(Context.Consumer)).to.equal(Context.Provider);
+    });
+
+    it('throws an internal error if something that is not a Consumer is passed', () => {
+      expect(() => adapter.getProviderFromConsumer(null)).to.throw(
+        'Enzyme Internal Error: can’t figure out how to get Provider from Consumer',
+      );
+      expect(() => adapter.getProviderFromConsumer({})).to.throw(
+        'Enzyme Internal Error: can’t figure out how to get Provider from Consumer',
+      );
     });
   });
 });
