@@ -61,14 +61,14 @@
     "babel-cli": "^6.26.0",
     "babel-plugin-transform-replace-object-assign": "^1.0.0",
     "babel-preset-airbnb": "^2.6.0",
-    "eslint": "^5.15.1",
+    "eslint": "^5.16.0",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-plugin-import": "^2.16.0",
     "eslint-plugin-jsx-a11y": "^6.2.1",
     "eslint-plugin-react": "^7.12.4",
     "in-publish": "^2.0.0",
     "jsdom": "^6.5.1",
-    "rimraf": "^2.6.2",
+    "rimraf": "^2.6.3",
     "safe-publish-latest": "^1.1.2"
   }
 }

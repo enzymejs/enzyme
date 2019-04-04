@@ -30,19 +30,19 @@
   "author": "Leland Richardson <leland.richardson@airbnb.com>",
   "license": "MIT",
   "dependencies": {
-    "chai": "^4.1.2",
+    "chai": "^4.2.0",
     "create-react-class": "^15.6.3",
-    "enzyme": "^3.8.0",
-    "enzyme-adapter-utils": "^1.9.1",
-    "html-element-map": "^1.0.0",
+    "enzyme": "^3.9.0",
+    "enzyme-adapter-utils": "^1.10.1",
+    "html-element-map": "^1.0.1",
     "jsdom": "^6.5.1",
     "lodash.isequal": "^4.5.0",
     "mocha-wrap": "^2.1.2",
     "object-inspect": "^1.6.0",
     "object.assign": "^4.1.0",
     "prop-types": "^15.7.2",
-    "react-is": "^16.8.4",
-    "semver": "^5.6.0",
+    "react-is": "^16.8.6",
+    "semver": "^6.0.0",
     "sinon-sandbox": "^2.0.0",
     "sinon": "^5.1.1"
   },
@@ -51,11 +51,11 @@
     "react-dom": "^15.5.0"
   },
   "devDependencies": {
-    "eslint": "^5.15.1",
+    "eslint": "^5.16.0",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-plugin-import": "^2.16.0",
     "eslint-plugin-jsx-a11y": "^6.2.1",
-    "eslint-plugin-mocha": "^5.2.1",
+    "eslint-plugin-mocha": "^5.3.0",
     "eslint-plugin-react": "^7.12.4"
   }
 }
