@@ -62,13 +62,13 @@ module.exports = function detectFiberTags() {
       ? getFiber(React.createElement(Ctx.Consumer, null, () => null)).tag
       : -1,
     ContextProvider: supportsContext
-      ? getFiber(React.createElement(Ctx.Provider, { value: null })).tag
+      ? getFiber(React.createElement(Ctx.Provider, { value: null }, null)).tag
       : -1,
     ForwardRef: supportsForwardRef
       ? getFiber(React.createElement(FwdRef)).tag
       : -1,
     Profiler: supportsProfiler
-      ? getFiber(React.createElement(React.unstable_Profiler, { id: 'mock', onRender: () => {} })).tag
+      ? getFiber(React.createElement(React.unstable_Profiler, { id: 'mock', onRender() {} })).tag
       : -1,
   };
 };
