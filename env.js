@@ -129,19 +129,20 @@ Promise.resolve()
       .map(key => `${key}@${key.startsWith('react') ? reactVersion : peerDeps[key]}`);
 
     if (process.env.RENDERER) {
-      installs.push(`react-test-renderer@${process.env.RENDERER}`);
+      // eslint-disable-next-line no-param-reassign
+      adapterJson.dependencies['react-test-renderer'] = process.env.RENDERER;
     }
 
     // eslint-disable-next-line no-param-reassign
     testJson.dependencies[adapterName] = adapterJson.version;
 
-    return Promise.all([
+    return writeJSON(adapterPackageJsonPath, adapterJson, true).then(() => Promise.all([
       // npm install the peer deps at the root
       run('npm', 'i', '--no-save', ...installs),
 
       // add the adapter to the dependencies of the test suite
       writeJSON(testPackageJsonPath, testJson, true),
-    ]);
+    ]));
   })
   .then(() => run('lerna', 'bootstrap', '--hoist=\'react*\''))
   .then(() => getJSON(testPackageJsonPath))

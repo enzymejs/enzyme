@@ -29,6 +29,8 @@ matrix:
     - node_js: "lts/*"
       env: REACT=16.8.5 RENDERER=16.8.5
     - node_js: "lts/*"
+      env: REACT=16.8.5 RENDERER=16.8.3
+    - node_js: "lts/*"
       env: REACT=16.8.3
     - node_js: "lts/*"
       env: REACT=16.8 RENDERER=16.7
@@ -65,6 +67,10 @@ matrix:
       env: KARMA=true REACT=15
     - node_js: "6"
       env: KARMA=true REACT=16
+    - node_js: "lts/*"
+      env: REACT=16.8.5 RENDERER=16.8.3
+    - node_js: "lts/*"
+      env: REACT=16.8 RENDERER=16.7
   exclude:
     - node_js: "6"
       env: REACT=0.13
