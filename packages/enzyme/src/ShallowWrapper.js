@@ -1296,6 +1296,27 @@ class ShallowWrapper {
   }
 
   /**
+   * Used to invoke a function prop.
+   * Will invoke an function prop and return its value.
+   *
+   * @param {String} propName
+   * @returns {Any}
+   */
+  invoke(propName) {
+    return this.single('invoke', () => {
+      const handler = this.prop(propName);
+      if (typeof handler !== 'function') {
+        throw new TypeError('ShallowWrapper::invoke() requires the name of a prop whose value is a function');
+      }
+      return (...args) => {
+        const response = handler(...args);
+        this[ROOT].update();
+        return response;
+      };
+    });
+  }
+
+  /**
    * Returns a wrapper of the node rendered by the provided render prop.
    *
    * @param {String} propName

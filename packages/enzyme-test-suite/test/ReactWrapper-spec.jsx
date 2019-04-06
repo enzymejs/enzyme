@@ -1043,6 +1043,7 @@ describeWithDOM('mount', () => {
     'hostNodes',
     'html',
     'instance',
+    'invoke',
     'is',
     'isEmpty',
     'isEmptyRender',
