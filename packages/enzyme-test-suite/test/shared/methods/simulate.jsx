@@ -287,5 +287,30 @@ export default function describeSimulate({
         expect(onClick).to.have.property('callCount', 1);
       });
     });
+
+    describeIf(is('>= 16.6'), 'React.memo', () => {
+      itIf(isMount, 'can simulate events', () => {
+        function Child({ onClick }) {
+          return <button onClick={onClick} type="button" />;
+        }
+        const MemoizedChild = React.memo(Child);
+
+        function Parent(props) {
+          const { onClick } = props;
+
+          return <MemoizedChild onClick={onClick} />;
+        }
+
+        const handleClick = sinon.spy();
+        const wrapper = Wrap(<Parent onClick={handleClick} />);
+
+        wrapper.find(MemoizedChild).props().onClick();
+        expect(handleClick).to.have.property('callCount', 1);
+        wrapper.find(MemoizedChild).simulate('click');
+        expect(handleClick).to.have.property('callCount', 2);
+        wrapper.find(MemoizedChild).props().onClick();
+        expect(handleClick).to.have.property('callCount', 3);
+      });
+    });
   });
 }

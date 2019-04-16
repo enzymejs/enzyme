@@ -427,7 +427,7 @@ class ReactSixteenAdapter extends EnzymeAdapter {
         if (!eventFn) {
           throw new TypeError(`ReactWrapper::simulate() event '${event}' does not exist`);
         }
-        eventFn(nodeToHostNode(node), mock);
+        eventFn(adapter.nodeToHostNode(node), mock);
       },
       batchedUpdates(fn) {
         return fn();

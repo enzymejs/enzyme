@@ -326,7 +326,7 @@ class ReactSixteenOneAdapter extends EnzymeAdapter {
           throw new TypeError(`ReactWrapper::simulate() event '${event}' does not exist`);
         }
         // eslint-disable-next-line react/no-find-dom-node
-        eventFn(nodeToHostNode(node), mock);
+        eventFn(adapter.nodeToHostNode(node), mock);
       },
       batchedUpdates(fn) {
         return fn();
