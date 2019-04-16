@@ -107,8 +107,14 @@ describeWithDOM('mount', () => {
     describeWithDOM('refs', () => {
       it('calls ref', () => {
         const spy = sinon.spy();
+
         mount(<div ref={spy} />);
+
         expect(spy).to.have.property('callCount', 1);
+
+        const [instance] = spy.firstCall.args;
+        const element = is('<= 0.13') ? instance.getDOMNode() : instance;
+        expect(element).to.be.instanceOf(global.HTMLElement);
       });
 
       /* global HTMLElement */

@@ -69,11 +69,11 @@ export default function createMountWrapper(node, options = {}) {
     }
 
     render() {
-      const { Component, refProp } = this.props;
+      const { Component, forwardedRef } = this.props;
       const { mount, props, wrappingComponentProps } = this.state;
       if (!mount) return null;
       // eslint-disable-next-line react/jsx-props-no-spreading
-      const component = <Component ref={refProp} {...props} />;
+      const component = <Component ref={forwardedRef} {...props} />;
       if (WrappingComponent) {
         return (
           // eslint-disable-next-line react/jsx-props-no-spreading
@@ -85,17 +85,20 @@ export default function createMountWrapper(node, options = {}) {
       return component;
     }
   }
+  WrapperComponent.supportsForwardedRef = true;
   WrapperComponent.propTypes = {
     Component: makeValidElementType(adapter).isRequired,
     refProp: PropTypes.oneOfType([PropTypes.string, ref()]),
     props: PropTypes.object.isRequired,
     wrappingComponentProps: PropTypes.object,
     context: PropTypes.object,
+    forwardedRef: ref(),
   };
   WrapperComponent.defaultProps = {
     refProp: null,
     context: null,
     wrappingComponentProps: null,
+    forwardedRef: undefined,
   };
 
   if (options.context && (node.type.contextTypes || options.childContextTypes)) {
