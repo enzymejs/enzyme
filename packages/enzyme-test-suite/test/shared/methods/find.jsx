@@ -861,7 +861,7 @@ export default function describeFind({
         function InnerComp({ message }) {
           return <div><span>{message}</span></div>;
         }
-        const InnerMemo = React.memo(InnerComp);
+        const InnerMemo = memo(InnerComp);
         const InnerFoo = ({ foo }) => (
           <div>
             <InnerComp message="Hello" />

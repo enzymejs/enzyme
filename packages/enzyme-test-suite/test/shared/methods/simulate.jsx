@@ -11,6 +11,10 @@ import {
   REACT16,
 } from '../../_helpers/version';
 
+import {
+  memo,
+} from '../../_helpers/react-compat';
+
 export default function describeSimulate({
   Wrap,
   WrapperName,
@@ -293,7 +297,7 @@ export default function describeSimulate({
         function Child({ onClick }) {
           return <button onClick={onClick} type="button" />;
         }
-        const MemoizedChild = React.memo(Child);
+        const MemoizedChild = memo(Child);
 
         function Parent(props) {
           const { onClick } = props;

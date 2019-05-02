@@ -4,16 +4,19 @@ import { expect } from 'chai';
 import { debugNodes } from 'enzyme/build/Debug';
 
 import {
+  describeIf,
   itIf,
 } from '../../_helpers';
 import { is } from '../../_helpers/version';
 
 import {
   createClass,
+  memo,
 } from '../../_helpers/react-compat';
 
 export default function describeDebug({
   Wrap,
+  WrapRendered,
   isShallow,
 }) {
   describe('.debug()', () => {
@@ -63,6 +66,50 @@ export default function describeDebug({
 
         expect(wrapper.debug()).to.equal('<div />');
         expect(wrapper.debug()).to.equal(debugNodes(wrapper.getNodesInternal()));
+      });
+    });
+
+    describeIf(is('>= 16.6'), 'React.memo', () => {
+      function Add({ a, b, c }) {
+        return <div>{String(a)}|{String(b)}|{String(c)}</div>;
+      }
+      Add.defaultProps = {
+        b: 2,
+        c: 3,
+      };
+      const MemoAdd = memo(Add);
+
+      it('applies defaultProps to the component', () => {
+        const wrapper = WrapRendered(<Add />);
+        expect(wrapper.debug()).to.equal(`<div>
+  undefined
+  |
+  2
+  |
+  3
+</div>`);
+      });
+
+      it('applies defaultProps to the memoized component', () => {
+        const wrapper = WrapRendered(<MemoAdd />);
+        expect(wrapper.debug()).to.equal(`<div>
+  undefined
+  |
+  2
+  |
+  3
+</div>`);
+      });
+
+      it('applies defaultProps to the memoized component and does not override real props', () => {
+        const wrapper = WrapRendered(<MemoAdd a={10} b={20} />);
+        expect(wrapper.debug()).to.equal(`<div>
+  10
+  |
+  20
+  |
+  3
+</div>`);
       });
     });
   });

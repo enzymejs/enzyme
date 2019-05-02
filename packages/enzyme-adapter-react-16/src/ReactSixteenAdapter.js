@@ -501,6 +501,17 @@ class ReactSixteenAdapter extends EnzymeAdapter {
     // Wrap functional components on versions prior to 16.5,
     // to avoid inadvertently pass a `this` instance to it.
     const wrapFunctionalComponent = (Component) => {
+      if (is166 && has(Component, 'defaultProps')) {
+        if (lastComponent !== Component) {
+          wrappedComponent = Object.assign(
+            // eslint-disable-next-line new-cap
+            (props, ...args) => Component({ ...Component.defaultProps, ...props }, ...args),
+            Component,
+          );
+          lastComponent = Component;
+        }
+        return wrappedComponent;
+      }
       if (is165) {
         return Component;
       }
