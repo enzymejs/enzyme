@@ -778,7 +778,7 @@ class ShallowWrapper {
             prevProps,
             instance.props,
             prevState,
-            statePayload,
+            { ...prevState, ...statePayload },
           );
         }
 

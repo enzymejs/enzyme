@@ -3402,6 +3402,41 @@ describeWithDOM('mount', () => {
           });
         });
       });
+
+      it('does not infinitely loop when a PureComponent fires a noop setState in cDU', () => {
+        class Example extends PureComponent {
+          constructor(props) {
+            super(props);
+
+            this.renders = 0;
+            this.state = {
+              a: false,
+              b: false,
+            };
+          }
+
+          componentDidMount() {
+            this.setState({ b: false });
+          }
+
+          componentDidUpdate() {
+            this.setState({ b: false }); // eslint-disable-line react/no-did-update-set-state
+          }
+
+          render() {
+            this.renders += 1;
+            const { a, b } = this.state;
+            return <div>{`${a} ${b} ${this.renders}`}</div>;
+          }
+        }
+
+        const wrapper = mount(<Example />);
+        expect(wrapper.debug()).to.equal(`<Example>
+  <div>
+    false false 1
+  </div>
+</Example>`);
+      });
     });
 
     describe('Own PureComponent implementation', () => {
