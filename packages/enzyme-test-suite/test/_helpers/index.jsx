@@ -14,7 +14,7 @@ export function describeIf(test, a, b) {
   if (test) {
     describe(a, b);
   } else {
-    describe.skip(a);
+    describe.skip(a, b);
   }
 }
 
@@ -27,7 +27,7 @@ describeIf.only = (test, a, b) => {
     describe.only(a, b);
   } else {
     describe.only('only:', () => {
-      describe.skip(a);
+      describe.skip(a, b);
     });
   }
 };

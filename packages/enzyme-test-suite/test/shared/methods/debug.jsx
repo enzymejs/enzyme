@@ -77,7 +77,7 @@ export default function describeDebug({
         b: 2,
         c: 3,
       };
-      const MemoAdd = memo(Add);
+      const MemoAdd = memo && memo(Add);
 
       it('applies defaultProps to the component', () => {
         const wrapper = WrapRendered(<Add />);

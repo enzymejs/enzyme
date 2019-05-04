@@ -32,7 +32,7 @@ export default function describeGetWrappingComponent({
     }
   }
 
-  describeIf(is('<= 0.13'), '.getWrappingComponent()', () => {
+  describeIf(is('<= 0.13'), '<= 0.13: .getWrappingComponent()', () => {
     it('throws', () => {
       expect(() => Wrap(<div />, {
         wrappingComponent: RendersChildren,
@@ -40,7 +40,7 @@ export default function describeGetWrappingComponent({
     });
   });
 
-  describeIf(is('> 0.13'), '.getWrappingComponent()', () => {
+  describeIf(is('> 0.13'), '> 0.13: .getWrappingComponent()', () => {
     class TestProvider extends React.Component {
       getChildContext() {
         const { value, renderMore, renderStateTester } = this.props;
