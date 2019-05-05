@@ -57,6 +57,12 @@ function cleanNode(node) {
 }
 
 describe('Adapter', () => {
+  class RendersNull extends React.Component {
+    render() {
+      return null;
+    }
+  }
+
   describe('error message', () => {
     afterEach(() => {
       configure({ adapter });
@@ -143,12 +149,17 @@ describe('Adapter', () => {
       expect(prettyFormat(nodeA)).to.equal(prettyFormat(nodeB));
     }
 
-    /* eslint react/destructuring-assignment: 0 */
     class BamBam extends React.Component {
-      render() { return (<div>{this.props.children}</div>); }
+      render() {
+        const { children } = this.props;
+        return (<div>{children}</div>);
+      }
     }
     class FooBar extends React.Component {
-      render() { return (<BamBam>{this.props.children}</BamBam>); }
+      render() {
+        const { children } = this.props;
+        return (<BamBam>{children}</BamBam>);
+      }
     }
     class One extends React.Component {
       render() { return (<FooBar><span><FooBar /></span></FooBar>); }
@@ -180,9 +191,7 @@ describe('Adapter', () => {
     it('treats mixed children correctly', () => {
       class Foo extends React.Component {
         render() {
-          return (
-            <div>hello{4}{'world'}</div>
-          );
+          return (<div>hello{4}{'world'}</div>);
         }
       }
 
@@ -219,16 +228,10 @@ describe('Adapter', () => {
     });
 
     it('treats null renders correctly', () => {
-      class Foo extends React.Component {
-        render() {
-          return null;
-        }
-      }
-
       const options = { mode: 'mount' };
       const renderer = adapter.createRenderer(options);
 
-      renderer.render(<Foo />);
+      renderer.render(<RendersNull />);
 
       const node = renderer.getNode();
 
@@ -236,7 +239,7 @@ describe('Adapter', () => {
 
       expect(prettyFormat(node)).to.equal(prettyFormat({
         nodeType: 'class',
-        type: Foo,
+        type: RendersNull,
         props: {},
         key: undefined,
         ref: null,
@@ -417,23 +420,17 @@ describe('Adapter', () => {
       const options = { mode: 'mount' };
       const renderer = adapter.createRenderer(options);
 
-      class Foo extends React.Component {
-        render() {
-          return null;
-        }
-      }
-
-      renderer.render(<Foo />);
+      renderer.render(<RendersNull />);
 
       const node = renderer.getNode();
 
-      expect(node.instance).to.be.instanceof(Foo);
+      expect(node.instance).to.be.instanceof(RendersNull);
 
       cleanNode(node);
 
       expect(prettyFormat(node)).to.equal(prettyFormat({
         nodeType: 'class',
-        type: Foo,
+        type: RendersNull,
         props: {},
         key: undefined,
         ref: null,
@@ -675,12 +672,6 @@ describe('Adapter', () => {
   });
 
   it('render node with updated props', () => {
-    class Dummy extends React.Component {
-      render() {
-        return null;
-      }
-    }
-
     class Counter extends React.Component {
       constructor(props) {
         super(props);
@@ -692,7 +683,7 @@ describe('Adapter', () => {
       }
 
       render() {
-        return <Dummy {...this.state} />;
+        return <RendersNull {...this.state} />;
       }
     }
 
@@ -712,21 +703,19 @@ describe('Adapter', () => {
   });
 
   it('renders basic shallow as well', () => {
-    // eslint-disable-next-line react/require-render-return
     class Bar extends React.Component {
       constructor(props) {
         super(props);
         throw new Error('Bar constructor should not be called');
       }
 
-      render() {
+      render() { // eslint-disable-line react/require-render-return
         throw new Error('Bar render method should not be called');
       }
     }
 
-    // eslint-disable-next-line react/require-render-return
     class Foo extends React.Component {
-      render() {
+      render() { // eslint-disable-line react/require-render-return
         throw new Error('Foo render method should not be called');
       }
     }
@@ -801,14 +790,13 @@ describe('Adapter', () => {
   });
 
   it('does not erroneously add a key when refs are present', () => {
-    // eslint-disable-next-line react/require-render-return
     class Inner extends React.Component {
       constructor(props) {
         super(props);
         throw new Error('Inner constructor should not be called');
       }
 
-      render() {
+      render() { // eslint-disable-line react/require-render-return
         throw new Error('Inner render method should not be called');
       }
     }
@@ -857,14 +845,13 @@ describe('Adapter', () => {
   });
 
   it('adds keys correctly to elements that have them', () => {
-    // eslint-disable-next-line react/require-render-return
     class Inner extends React.Component {
       constructor(props) {
         super(props);
         throw new Error('Inner constructor should not be called');
       }
 
-      render() {
+      render() { // eslint-disable-line react/require-render-return
         throw new Error('Inner render method should not be called');
       }
     }
@@ -904,14 +891,13 @@ describe('Adapter', () => {
   });
 
   it('adds null keys to elements correctly', () => {
-    // eslint-disable-next-line react/require-render-return
     class Inner extends React.Component {
       constructor(props) {
         super(props);
         throw new Error('Inner constructor should not be called');
       }
 
-      render() {
+      render() { // eslint-disable-line react/require-render-return
         throw new Error('Inner render method should not be called');
       }
     }
