@@ -29,6 +29,7 @@ import {
   useEffect,
   useState,
   Profiler,
+  memo,
 } from './_helpers/react-compat';
 import {
   describeIf,
@@ -1591,6 +1592,33 @@ describe('shallow', () => {
 
       underwater = wrapper.dive({ context: { foo: 'enzyme!' } });
       expect(underwater.context()).to.deep.equal({ foo: 'enzyme!' });
+    });
+
+    describeIf(is('>= 16.6'), 'memo', () => {
+      const App = () => <div>Guest</div>;
+
+      const AppMemoized = memo && Object.assign(memo(App), { displayName: 'AppMemoized' });
+
+      const RendersApp = () => <App />;
+      const RendersAppMemoized = () => <AppMemoized />;
+
+      it('works without memoizing', () => {
+        const wrapper = shallow(<RendersApp />);
+        expect(wrapper.debug()).to.equal('<App />');
+        expect(wrapper.dive().debug()).to.equal(`<div>
+  Guest
+</div>`);
+        expect(() => wrapper.dive().dive()).to.throw(TypeError);
+      });
+
+      it('works with memoizing', () => {
+        const wrapper = shallow(<RendersAppMemoized />);
+        expect(wrapper.debug()).to.equal('<App />');
+        expect(wrapper.dive().debug()).to.equal(`<div>
+  Guest
+</div>`);
+        expect(() => wrapper.dive().dive()).to.throw(TypeError);
+      });
     });
   });
 

@@ -717,7 +717,8 @@ class ReactSixteenAdapter extends EnzymeAdapter {
   // eslint-disable-next-line class-methods-use-this
   nodeToElement(node) {
     if (!node || typeof node !== 'object') return null;
-    return React.createElement(node.type, propsWithKeysAndRef(node));
+    const { type } = node;
+    return React.createElement(isMemo(type) ? type.type : type, propsWithKeysAndRef(node));
   }
 
   elementToNode(element) {
