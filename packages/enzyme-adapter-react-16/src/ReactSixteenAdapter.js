@@ -809,10 +809,10 @@ class ReactSixteenAdapter extends EnzymeAdapter {
     // React stores references to the Provider on a Consumer differently across versions.
     if (Consumer) {
       let Provider;
-      if (Consumer.Provider) {
-        ({ Provider } = Consumer);
-      } else if (Consumer._context) {
+      if (Consumer._context) { // check this first, to avoid a deprecation warning
         ({ Provider } = Consumer._context);
+      } else if (Consumer.Provider) {
+        ({ Provider } = Consumer);
       }
       if (Provider) {
         return Provider;
