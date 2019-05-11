@@ -113,40 +113,39 @@ export default function describeDebug({
   3
 </div>`);
         });
-      });
 
-      describe('full tree', () => {
-        function TransitionGroup({ children }) { return children; }
-        function CSSTransition({ children }) { return children; }
-        function Body({ imageToShow, switchImage }) {
-          const handlerClick = useCallback(
-            () => {
-              if (imageToShow === 1) {
-                return switchImage(2);
-              }
+        describeIf(is('>= 16.8'), 'full tree', () => {
+          function TransitionGroup({ children }) { return children; }
+          function CSSTransition({ children }) { return children; }
+          function Body({ imageToShow, switchImage }) {
+            const handlerClick = useCallback(
+              () => {
+                if (imageToShow === 1) {
+                  return switchImage(2);
+                }
 
-              return switchImage(1);
-            },
-            [imageToShow, switchImage],
-          );
+                return switchImage(1);
+              },
+              [imageToShow, switchImage],
+            );
 
-          return (
-            <div className="styles.body">
-              <button type="button" onClick={handlerClick} className="buttonsStyles.button">
-                <TransitionGroup className="body.animWrap">
-                  <CSSTransition classNames="mainImage" timeout={500} key={imageToShow}>
-                    <img className="bodyImg" src={`../assets/${imageToShow}.png`} alt="main_img" />
-                  </CSSTransition>
-                </TransitionGroup>
-              </button>
-            </div>
-          );
-        }
-        const BodyMemo = memo && memo(Body);
+            return (
+              <div className="styles.body">
+                <button type="button" onClick={handlerClick} className="buttonsStyles.button">
+                  <TransitionGroup className="body.animWrap">
+                    <CSSTransition classNames="mainImage" timeout={500} key={imageToShow}>
+                      <img className="bodyImg" src={`../assets/${imageToShow}.png`} alt="main_img" />
+                    </CSSTransition>
+                  </TransitionGroup>
+                </button>
+              </div>
+            );
+          }
+          const BodyMemo = memo && memo(Body);
 
-        it('shows everything when not memoized', () => {
-          const wrapper = WrapRendered(<Body imageToShow={1} switchImage={() => {}} />);
-          expect(wrapper.debug()).to.equal(`<div className="styles.body">
+          it('shows everything when not memoized', () => {
+            const wrapper = WrapRendered(<Body imageToShow={1} switchImage={() => {}} />);
+            expect(wrapper.debug()).to.equal(`<div className="styles.body">
   <button type="button" onClick={[Function]} className="buttonsStyles.button">
     <TransitionGroup className="body.animWrap">
       <CSSTransition classNames="mainImage" timeout={500}>
@@ -155,11 +154,11 @@ export default function describeDebug({
     </TransitionGroup>
   </button>
 </div>`);
-        });
+          });
 
-        it('shows everything when memoized', () => {
-          const wrapper = WrapRendered(<BodyMemo imageToShow={1} switchImage={() => {}} />);
-          expect(wrapper.debug()).to.equal(`<div className="styles.body">
+          it('shows everything when memoized', () => {
+            const wrapper = WrapRendered(<BodyMemo imageToShow={1} switchImage={() => {}} />);
+            expect(wrapper.debug()).to.equal(`<div className="styles.body">
   <button type="button" onClick={[Function]} className="buttonsStyles.button">
     <TransitionGroup className="body.animWrap">
       <CSSTransition classNames="mainImage" timeout={500}>
@@ -168,6 +167,7 @@ export default function describeDebug({
     </TransitionGroup>
   </button>
 </div>`);
+          });
         });
       });
     });
