@@ -12,6 +12,7 @@ import { is } from '../../_helpers/version';
 import {
   createClass,
   memo,
+  useCallback,
 } from '../../_helpers/react-compat';
 
 export default function describeDebug({
@@ -70,46 +71,104 @@ export default function describeDebug({
     });
 
     describeIf(is('>= 16.6'), 'React.memo', () => {
-      function Add({ a, b, c }) {
-        return <div>{String(a)}|{String(b)}|{String(c)}</div>;
-      }
-      Add.defaultProps = {
-        b: 2,
-        c: 3,
-      };
-      const MemoAdd = memo && memo(Add);
+      describe('defaultProps', () => {
+        function Add({ a, b, c }) {
+          return <div>{String(a)}|{String(b)}|{String(c)}</div>;
+        }
+        Add.defaultProps = {
+          b: 2,
+          c: 3,
+        };
+        const MemoAdd = memo && memo(Add);
 
-      it('applies defaultProps to the component', () => {
-        const wrapper = WrapRendered(<Add />);
-        expect(wrapper.debug()).to.equal(`<div>
+        it('applies defaultProps to the component', () => {
+          const wrapper = WrapRendered(<Add />);
+          expect(wrapper.debug()).to.equal(`<div>
   undefined
   |
   2
   |
   3
 </div>`);
-      });
+        });
 
-      it('applies defaultProps to the memoized component', () => {
-        const wrapper = WrapRendered(<MemoAdd />);
-        expect(wrapper.debug()).to.equal(`<div>
+        it('applies defaultProps to the memoized component', () => {
+          const wrapper = WrapRendered(<MemoAdd />);
+          expect(wrapper.debug()).to.equal(`<div>
   undefined
   |
   2
   |
   3
 </div>`);
-      });
+        });
 
-      it('applies defaultProps to the memoized component and does not override real props', () => {
-        const wrapper = WrapRendered(<MemoAdd a={10} b={20} />);
-        expect(wrapper.debug()).to.equal(`<div>
+        it('applies defaultProps to the memoized component and does not override real props', () => {
+          const wrapper = WrapRendered(<MemoAdd a={10} b={20} />);
+          expect(wrapper.debug()).to.equal(`<div>
   10
   |
   20
   |
   3
 </div>`);
+        });
+      });
+
+      describe('full tree', () => {
+        function TransitionGroup({ children }) { return children; }
+        function CSSTransition({ children }) { return children; }
+        function Body({ imageToShow, switchImage }) {
+          const handlerClick = useCallback(
+            () => {
+              if (imageToShow === 1) {
+                return switchImage(2);
+              }
+
+              return switchImage(1);
+            },
+            [imageToShow, switchImage],
+          );
+
+          return (
+            <div className="styles.body">
+              <button type="button" onClick={handlerClick} className="buttonsStyles.button">
+                <TransitionGroup className="body.animWrap">
+                  <CSSTransition classNames="mainImage" timeout={500} key={imageToShow}>
+                    <img className="bodyImg" src={`../assets/${imageToShow}.png`} alt="main_img" />
+                  </CSSTransition>
+                </TransitionGroup>
+              </button>
+            </div>
+          );
+        }
+        const BodyMemo = memo && memo(Body);
+
+        it('shows everything when not memoized', () => {
+          const wrapper = WrapRendered(<Body imageToShow={1} switchImage={() => {}} />);
+          expect(wrapper.debug()).to.equal(`<div className="styles.body">
+  <button type="button" onClick={[Function]} className="buttonsStyles.button">
+    <TransitionGroup className="body.animWrap">
+      <CSSTransition classNames="mainImage" timeout={500}>
+        <img className="bodyImg" src="../assets/1.png" alt="main_img" />
+      </CSSTransition>
+    </TransitionGroup>
+  </button>
+</div>`);
+        });
+
+        it('shows everything when memoized', () => {
+          const wrapper = WrapRendered(<BodyMemo imageToShow={1} switchImage={() => {}} />);
+          expect(wrapper.debug()).to.equal(`<div className="styles.body">
+  <button type="button" onClick={[Function]} className="buttonsStyles.button">
+    <TransitionGroup className="body.animWrap">
+      <CSSTransition classNames="mainImage" timeout={500}>
+        <img className="bodyImg" src="../assets/1.png" alt="main_img" />
+      </CSSTransition>
+    </TransitionGroup>
+  </button>
+</div>`);
+        });
       });
     });
   });
