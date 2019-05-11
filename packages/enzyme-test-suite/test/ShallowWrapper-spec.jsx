@@ -27,6 +27,7 @@ import {
   PureComponent,
   Suspense,
   useEffect,
+  useLayoutEffect,
   useState,
   Profiler,
   memo,
@@ -1131,13 +1132,44 @@ describe('shallow', () => {
   describeIf(is('>= 16.8.5'), 'hooks', () => {
     // TODO: enable when the shallow renderer fixes its bug
     it.skip('works with `useEffect`', (done) => {
-      function ComponentUsingEffectHook() {
+      function ComponentUsingLayoutEffectHook() {
         const [ctr, setCtr] = useState(0);
         useEffect(() => {
           setCtr(1);
           setTimeout(() => {
             setCtr(2);
-          }, 1e3);
+          }, 100);
+        }, []);
+        return (
+          <div>
+            {ctr}
+          </div>
+        );
+      }
+      const wrapper = shallow(<ComponentUsingLayoutEffectHook />);
+
+      expect(wrapper.debug()).to.equal(`<div>
+  1
+</div>`);
+
+      setTimeout(() => {
+        wrapper.update();
+        expect(wrapper.debug()).to.equal(`<div>
+  2
+</div>`);
+        done();
+      }, 100);
+    });
+
+    // TODO: enable when https://github.com/facebook/react/issues/15275 is fixed
+    it.skip('works with `useLayoutEffect`', (done) => {
+      function ComponentUsingEffectHook() {
+        const [ctr, setCtr] = useState(0);
+        useLayoutEffect(() => {
+          setCtr(1);
+          setTimeout(() => {
+            setCtr(2);
+          }, 100);
         }, []);
         return (
           <div>
@@ -1157,7 +1189,7 @@ describe('shallow', () => {
   2
 </div>`);
         done();
-      }, 1e3);
+      }, 100);
     });
   });
 

@@ -30,6 +30,7 @@ import {
   PureComponent,
   Suspense,
   useEffect,
+  useLayoutEffect,
   useState,
 } from './_helpers/react-compat';
 import {
@@ -973,7 +974,7 @@ describeWithDOM('mount', () => {
           setCtr(1);
           setTimeout(() => {
             setCtr(2);
-          }, 1e3);
+          }, 100);
         }, []);
         return (
           <div>
@@ -997,7 +998,41 @@ describeWithDOM('mount', () => {
   </div>
 </ComponentUsingEffectHook>`);
         done();
-      }, 1e3);
+      }, 100);
+    });
+
+    it('works with `useLayoutEffect`', (done) => {
+      function ComponentUsingLayoutEffectHook() {
+        const [ctr, setCtr] = useState(0);
+        useLayoutEffect(() => {
+          setCtr(1);
+          setTimeout(() => {
+            setCtr(2);
+          }, 100);
+        }, []);
+        return (
+          <div>
+            {ctr}
+          </div>
+        );
+      }
+      const wrapper = mount(<ComponentUsingLayoutEffectHook />);
+
+      expect(wrapper.debug()).to.equal(`<ComponentUsingLayoutEffectHook>
+  <div>
+    1
+  </div>
+</ComponentUsingLayoutEffectHook>`);
+
+      setTimeout(() => {
+        wrapper.update();
+        expect(wrapper.debug()).to.equal(`<ComponentUsingLayoutEffectHook>
+  <div>
+    2
+  </div>
+</ComponentUsingLayoutEffectHook>`);
+        done();
+      }, 100);
     });
   });
 
