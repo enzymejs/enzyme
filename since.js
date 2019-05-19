@@ -15,7 +15,7 @@ const packages = (process.argv.length > 2 ? [process.argv[2]] : glob.sync('*', {
 packages.forEach((pkg) => {
   const tag = `${pkg.name === 'docs' ? 'enzyme' : pkg.name}@${pkg.version}`;
   const dir = path.join(packagesDir, pkg.name);
-  const logArgs = ['--no-pager', 'log', '--oneline', `${tag}..HEAD`, dir].concat(pkg.name === 'enzyme' ? docsDir : []);
+  const logArgs = ['--no-pager', 'log', '--oneline', `${tag}..HEAD`, dir, ':!**/.eslintrc'].concat(pkg.name === 'enzyme' ? docsDir : []);
   const log = spawnSync('git', logArgs, { stdio: 'pipe' });
   if (log.stdout.length > 0 || log.stderr.length > 0) {
     console.log(tag);
