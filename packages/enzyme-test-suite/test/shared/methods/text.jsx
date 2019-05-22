@@ -11,6 +11,7 @@ import { is } from '../../_helpers/version';
 
 import {
   Fragment,
+  memo,
 } from '../../_helpers/react-compat';
 
 export default function describeText({
@@ -254,6 +255,102 @@ export default function describeText({
 </Foobar>`;
         expect(wrapper.debug()).to.equal(expectedDebug);
         expect(text).to.equal(isShallow ? '<Title />Bar' : 'FooBar');
+      });
+    });
+
+    describeIf(is('> 16.6'), 'React.memo', () => {
+      class Dumb extends React.Component {
+        render() {
+          const { number } = this.props;
+          return <span>It’s number {String(number)}</span>;
+        }
+      }
+
+      function DumbSFC({ number }) {
+        return <span>It’s number {String(number)}</span>;
+      }
+
+      function areEqual(props, nextProps) {
+        return nextProps.number > 10 && nextProps.number < 20;
+      }
+
+      const DumbMemo = memo && memo(Dumb, areEqual);
+      const DumbMemoNoCompare = memo && memo(Dumb);
+      const DumbSFCMemo = memo && memo(DumbSFC, areEqual);
+      const DumbSFCMemoNoCompare = memo && memo(DumbSFC);
+
+      it('<Dumb /> - should always re-render', () => {
+        const tree = Wrap(<Dumb number={5} />);
+
+        expect(tree.text()).to.equal('It’s number 5');
+
+        tree.setProps({ number: 15 });
+
+        expect(tree.text()).to.equal('It’s number 15');
+      });
+
+      it('<DumbMemo /> - should only re-render when number is between 10 and 20', () => {
+        const tree = Wrap(<DumbMemo number={5} />);
+
+        expect(tree.text()).to.equal('It’s number 5');
+
+        tree.setProps({ number: 15 });
+
+        expect(tree.text()).to.equal('It’s number 5');
+      });
+
+      it('<DumbSFC /> - should always re-render', () => {
+        const tree = Wrap(<DumbSFC number={5} />);
+
+        expect(tree.text()).to.equal('It’s number 5');
+
+        tree.setProps({ number: 15 });
+
+        expect(tree.text()).to.equal('It’s number 15');
+      });
+
+      it('<DumbSFCMemo /> - should only re-render when number is between 10 and 20', () => {
+        const tree = Wrap(<DumbSFCMemo number={5} />);
+
+        expect(tree.text()).to.equal('It’s number 5');
+
+        tree.setProps({ number: 15 });
+
+        expect(tree.text()).to.equal('It’s number 5');
+      });
+
+      it('<DumbMemoNoCompare /> - should only re-render when prop identity changes', () => {
+        const obj = { toString() { return 5; } };
+
+        const tree = Wrap(<DumbMemoNoCompare number={obj} />);
+
+        expect(tree.text()).to.equal('It’s number 5');
+
+        obj.toString = () => 15;
+        tree.setProps({ number: obj });
+
+        expect(tree.text()).to.equal('It’s number 5');
+
+        tree.setProps({ number: { toString() { return 15; } } });
+
+        expect(tree.text()).to.equal('It’s number 15');
+      });
+
+      it('<DumbSFCMemoNoCompare /> - should only re-render when prop identity changes', () => {
+        const obj = { toString() { return 5; } };
+
+        const tree = Wrap(<DumbSFCMemoNoCompare number={obj} />);
+
+        expect(tree.text()).to.equal('It’s number 5');
+
+        obj.toString = () => 15;
+        tree.setProps({ number: obj });
+
+        expect(tree.text()).to.equal('It’s number 5');
+
+        tree.setProps({ number: { toString() { return 15; } } });
+
+        expect(tree.text()).to.equal('It’s number 15');
       });
     });
   });

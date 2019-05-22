@@ -36,7 +36,7 @@ import {
   Suspense,
 } from 'react-is';
 import { EnzymeAdapter } from 'enzyme';
-import { typeOfNode } from 'enzyme/build/Utils';
+import { typeOfNode, shallowEqual } from 'enzyme/build/Utils';
 import {
   displayNameOfNode,
   elementToTree as utilElementToTree,
@@ -358,6 +358,13 @@ function makeFakeElement(type) {
   return { $$typeof: Element, type };
 }
 
+function isStateful(Component) {
+  return Component.prototype && (
+    Component.prototype.isReactComponent
+    || Array.isArray(Component.__reactAutoBindPairs) // fallback for createClass components
+  );
+}
+
 class ReactSixteenAdapter extends EnzymeAdapter {
   constructor() {
     super();
@@ -497,6 +504,45 @@ class ReactSixteenAdapter extends EnzymeAdapter {
 
     let lastComponent = null;
     let wrappedComponent = null;
+    const sentinel = {};
+
+    // wrap memo components with a PureComponent, or a class component with sCU
+    const wrapPureComponent = (Component, compare) => {
+      if (!is166) {
+        throw new RangeError('this function should not be called in React < 16.6. Please report this!');
+      }
+      if (lastComponent !== Component) {
+        if (isStateful(Component)) {
+          wrappedComponent = class extends Component {}; // eslint-disable-line react/prefer-stateless-function
+          if (compare) {
+            wrappedComponent.prototype.shouldComponentUpdate = nextProps => !compare(this.props, nextProps);
+          } else {
+            wrappedComponent.prototype.isPureReactComponent = true;
+          }
+        } else {
+          let memoized = sentinel;
+          let prevProps;
+          wrappedComponent = function (props, ...args) {
+            const shouldUpdate = memoized === sentinel || (compare
+              ? !compare(prevProps, props)
+              : !shallowEqual(prevProps, props)
+            );
+            if (shouldUpdate) {
+              memoized = Component({ ...Component.defaultProps, ...props }, ...args);
+              prevProps = props;
+            }
+            return memoized;
+          };
+        }
+        Object.assign(
+          wrappedComponent,
+          Component,
+          { displayName: adapter.displayNameOfNode({ type: Component }) },
+        );
+        lastComponent = Component;
+      }
+      return wrappedComponent;
+    };
 
     // Wrap functional components on versions prior to 16.5,
     // to avoid inadvertently pass a `this` instance to it.
@@ -507,6 +553,7 @@ class ReactSixteenAdapter extends EnzymeAdapter {
             // eslint-disable-next-line new-cap
             (props, ...args) => Component({ ...Component.defaultProps, ...props }, ...args),
             Component,
+            { displayName: adapter.displayNameOfNode({ type: Component }) },
           );
           lastComponent = Component;
         }
@@ -567,22 +614,19 @@ class ReactSixteenAdapter extends EnzymeAdapter {
             renderedEl = React.createElement(FakeSuspenseWrapper, null, children);
           }
           const { type: Component } = renderedEl;
-          const isStateful = Component.prototype && (
-            Component.prototype.isReactComponent
-            || Array.isArray(Component.__reactAutoBindPairs) // fallback for createClass components
-          );
 
           const context = getMaskedContext(Component.contextTypes, unmaskedContext);
 
-          if (!isStateful && isMemo(el.type)) {
-            const InnerComp = el.type.type;
+          if (isMemo(el.type)) {
+            const { type: InnerComp, compare } = el.type;
+
             return withSetStateAllowed(() => renderer.render(
-              { ...el, type: wrapFunctionalComponent(InnerComp) },
+              { ...el, type: wrapPureComponent(InnerComp, compare) },
               context,
             ));
           }
 
-          if (!isStateful && typeof Component === 'function') {
+          if (!isStateful(Component) && typeof Component === 'function') {
             return withSetStateAllowed(() => renderer.render(
               { ...renderedEl, type: wrapFunctionalComponent(Component) },
               context,
