@@ -811,6 +811,25 @@ describe('shallow', () => {
           expect(consumer.context()).to.eql(expectedContext);
         });
 
+        it('propagates updates to rendered children', () => {
+          const wrapper = shallow(<TestComponent />, { context: { baz: 'enzyme' } });
+
+          const fooProvider = wrapper.find(FooProvider).dive();
+          const barProvider = fooProvider.find(BarProvider).dive();
+          const consumer = barProvider.find(FooBarBazConsumer).dive();
+
+          expect(consumer.context()).to.eql({ foo: 'i', bar: 'love', baz: 'enzyme' });
+
+          fooProvider.setProps({ value: 'we' });
+
+          const nextBarProvider = fooProvider.find(BarProvider).dive();
+          nextBarProvider.setState({ value: 'maintain' });
+          const nextConsumer = nextBarProvider.find(FooBarBazConsumer).dive();
+
+          const expectedContext = { foo: 'we', bar: 'maintain', baz: 'enzyme' };
+          expect(nextConsumer.context()).to.eql(expectedContext);
+        });
+
         it('does nothing if disableLifecycleMethods is true', () => {
           const wrapper = shallow(<TestComponent />, {
             context: { baz: 'enzyme' },
