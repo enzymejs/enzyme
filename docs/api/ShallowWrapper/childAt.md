@@ -25,4 +25,4 @@ expect(wrapper.find('ul').childAt(0).type()).to.equal('li');
 - [`.parents() => ShallowWrapper`](parents.md)
 - [`.parent() => ShallowWrapper`](parent.md)
 - [`.closest(selector) => ShallowWrapper`](closest.md)
-- [`.children() => ReactWrapper`](children.md)
+- [`.children() => ShallowWrapper`](children.md)
