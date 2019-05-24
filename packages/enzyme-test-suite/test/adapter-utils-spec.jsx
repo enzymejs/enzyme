@@ -58,6 +58,14 @@ describe('enzyme-adapter-utils', () => {
           expect(displayNameOfNode(<Foo />)).to.equal('CustomWrapper');
         });
       });
+
+      describeIf(is('>= 16.6'), 'stateless memoized function components', () => {
+        it('returns the displayName', () => {
+          const Foo = Object.assign(React.memo(() => <div />), { displayName: 'Memoized(CustomWrapper)' });
+
+          expect(displayNameOfNode(<Foo />)).to.equal('Memoized(CustomWrapper)');
+        });
+      });
     });
 
     describe('given a node without displayName', () => {
