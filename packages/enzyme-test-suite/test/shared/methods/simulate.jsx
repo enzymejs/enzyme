@@ -13,6 +13,8 @@ import {
 
 import {
   memo,
+  useEffect,
+  useState,
 } from '../../_helpers/react-compat';
 
 export default function describeSimulate({
@@ -314,6 +316,31 @@ export default function describeSimulate({
         expect(handleClick).to.have.property('callCount', 2);
         wrapper.find(MemoizedChild).props().onClick();
         expect(handleClick).to.have.property('callCount', 3);
+      });
+    });
+
+    describeIf(is('>= 16.8'), 'hooks', () => {
+      // TODO: fix for shallow when useEffect works for shallow
+      itIf(!isShallow, 'works with `useEffect` simulated events', () => {
+        const effectSpy = sinon.spy();
+        function ComponentUsingEffectHook() {
+          useEffect(effectSpy);
+          const [counter, setCounter] = useState(0);
+
+          return (
+            <button type="button" onClick={() => setCounter(counter + 1)}>{counter}</button>
+          );
+        }
+        const wrapper = Wrap(<ComponentUsingEffectHook />);
+
+        const button = wrapper.find('button');
+        expect(button.text()).to.equal('0');
+        expect(effectSpy).to.have.property('callCount', 1);
+
+        button.simulate('click');
+
+        expect(button.text()).to.equal('1');
+        expect(effectSpy).to.have.property('callCount', 2);
       });
     });
   });
