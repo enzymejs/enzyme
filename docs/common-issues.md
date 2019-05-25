@@ -10,6 +10,51 @@ This could be due to a regression, or the feature is not yet implemented. If you
 certain query syntax, make sure it is implemented first before raising an issue. Here is the list of
 selectors we currently support: https://github.com/airbnb/enzyme/blob/master/docs/api/selector.md
 
+### Nested component may not be updated after wrapper updates
+
+Assume we have a simple component with an `<input />` and a `<button>`. Clicking the `<button>` updates the `<input>`'s value.
+
+However, this test fails:
+```jsx
+const input = wrapper.find('input');
+const button = wrapper.find('button');
+button.prop('onClick')();
+expect(input.prop('value')).to.equal('test');
+```
+fails. While this test:
+```jsx
+const input = wrapper.find('input');
+const button = wrapper.find('button');
+button.prop('onClick')();
+expect(wrapper.find('input').prop('value')).to.equal('test');
+```
+passes.
+
+This is because the wrapper returned by `.find()` (and every other method that produces a new wrapper) is immutable and won't update.
+
+More details and motivation can be found at [migration from 2 to 3: Calling props() after a state change](https://github.com/airbnb/enzyme/blob/master/docs/guides/migration-from-2-to-3.md#calling-props-after-a-state-change).
+
+###### Solutions
+
+Instead of storing `.find()` results into a local variable, re-find from the root after any change.
+
+```jsx
+wrapper.find('button').props().onClick();
+expect(wrapper.find('input').prop('value')).to.equal('test');
+```
+
+or we may wrap that into helper function(s) to call them each time
+
+```jsx
+function getButton(wrapper) {
+  return wrapper.find('button');
+}
+
+// …
+
+getButton(wrapper).prop('onClick')();
+```
+
 ### Testing third party libraries
 
 Some third party libraries are difficult or impossible to test. enzyme's scope is severely limited to what
