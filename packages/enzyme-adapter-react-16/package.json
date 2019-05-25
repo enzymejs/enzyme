@@ -42,7 +42,7 @@
     "prop-types": "^15.7.2",
     "react-is": "^16.8.6",
     "react-test-renderer": "^16.0.0-0",
-    "semver": "^5.6.0"
+    "semver": "^5.7.0"
   },
   "peerDependencies": {
     "enzyme": "^3.0.0",
