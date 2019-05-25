@@ -1664,7 +1664,7 @@ describe('shallow', () => {
 
       it('works with memoizing', () => {
         const wrapper = shallow(<RendersAppMemoized />);
-        expect(wrapper.debug()).to.equal('<App />');
+        expect(wrapper.debug()).to.equal('<AppMemoized />');
         expect(wrapper.dive().debug()).to.equal(`<div>
   Guest
 </div>`);

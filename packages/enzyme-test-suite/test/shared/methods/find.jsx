@@ -876,7 +876,7 @@ export default function describeFind({
         const expectedDebug = isShallow
           ? `<div>
   <InnerComp message="Hello" />
-  <InnerComp message="find me?" />
+  <Memo(InnerComp) message="find me?" />
   <div className="bar">
     bar
   </div>
@@ -884,7 +884,7 @@ export default function describeFind({
     qux
   </div>
 </div>`
-          : `<InnerFoo foo="qux">
+          : `<Memo(InnerFoo) foo="qux">
   <div>
     <InnerComp message="Hello">
       <div>
@@ -893,13 +893,13 @@ export default function describeFind({
         </span>
       </div>
     </InnerComp>
-    <InnerComp message="find me?">
+    <Memo(InnerComp) message="find me?">
       <div>
         <span>
           find me?
         </span>
       </div>
-    </InnerComp>
+    </Memo(InnerComp)>
     <div className="bar">
       bar
     </div>
@@ -907,9 +907,10 @@ export default function describeFind({
       qux
     </div>
   </div>
-</InnerFoo>`;
+</Memo(InnerFoo)>`;
         expect(wrapper.debug()).to.equal(expectedDebug);
-        expect(wrapper.find('InnerComp')).to.have.lengthOf(2);
+        expect(wrapper.find('InnerComp')).to.have.lengthOf(1);
+        expect(wrapper.find('Memo(InnerComp)')).to.have.lengthOf(1);
         expect(wrapper.find('.bar')).to.have.lengthOf(1);
         expect(wrapper.find('.qoo').text()).to.equal('qux');
         expect(wrapper.find(InnerMemo)).to.have.lengthOf(1);

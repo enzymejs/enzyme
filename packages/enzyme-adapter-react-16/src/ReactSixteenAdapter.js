@@ -803,7 +803,10 @@ class ReactSixteenAdapter extends EnzymeAdapter {
     switch ($$typeofType) {
       case ContextConsumer || NaN: return 'ContextConsumer';
       case ContextProvider || NaN: return 'ContextProvider';
-      case Memo || NaN: return displayNameOfNode(type);
+      case Memo || NaN: {
+        const nodeName = displayNameOfNode(node);
+        return typeof nodeName === 'string' ? nodeName : `Memo(${displayNameOfNode(type)})`;
+      }
       case ForwardRef || NaN: {
         if (type.displayName) {
           return type.displayName;

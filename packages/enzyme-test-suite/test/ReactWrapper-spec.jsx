@@ -685,7 +685,7 @@ describeWithDOM('mount', () => {
         const Foo = memo(InnerFoo);
 
         const wrapper = mount(<Foo foo="qux" />);
-        expect(wrapper.debug()).to.equal(`<InnerFoo foo="qux">
+        expect(wrapper.debug()).to.equal(`<Memo(InnerFoo) foo="qux">
   <div>
     <InnerComp>
       <div>
@@ -701,7 +701,7 @@ describeWithDOM('mount', () => {
       qux
     </div>
   </div>
-</InnerFoo>`);
+</Memo(InnerFoo)>`);
         expect(wrapper.find('InnerComp')).to.have.lengthOf(1);
         expect(wrapper.find('.bar')).to.have.lengthOf(1);
         expect(wrapper.find('.qoo').text()).to.equal('qux');

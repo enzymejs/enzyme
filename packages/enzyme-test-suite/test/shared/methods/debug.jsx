@@ -71,6 +71,43 @@ export default function describeDebug({
     });
 
     describeIf(is('>= 16.6'), 'React.memo', () => {
+      describe('display names', () => {
+        function SFC() { return null; }
+        function SFCwithDisplayName() { return null; }
+        SFCwithDisplayName.displayName = 'SFC!';
+
+        const SFCMemo = memo && memo(SFC);
+        const SFCwithDisplayNameMemo = memo && memo(SFCwithDisplayName);
+
+        const SFCMemoWithDisplayName = memo && Object.assign(memo(SFC), {
+          displayName: 'SFCMemoWithDisplayName!',
+        });
+        const SFCMemoWitDoubleDisplayName = memo && Object.assign(memo(SFCwithDisplayName), {
+          displayName: 'SFCMemoWitDoubleDisplayName!',
+        });
+
+        it('displays the expected display names', () => {
+          const wrapper = Wrap((
+            <div>
+              <SFC />
+              <SFCwithDisplayName />
+              <SFCMemo />
+              <SFCwithDisplayNameMemo />
+              <SFCMemoWithDisplayName />
+              <SFCMemoWitDoubleDisplayName />
+            </div>
+          ));
+          expect(wrapper.debug()).to.equal(`<div>
+  <SFC />
+  <SFC! />
+  <Memo(SFC) />
+  <Memo(SFC!) />
+  <SFCMemoWithDisplayName! />
+  <SFCMemoWitDoubleDisplayName! />
+</div>`);
+        });
+      });
+
       describe('defaultProps', () => {
         function Add({ a, b, c }) {
           return <div>{String(a)}|{String(b)}|{String(c)}</div>;
