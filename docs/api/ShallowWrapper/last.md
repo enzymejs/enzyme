@@ -2,6 +2,10 @@
 
 Reduce the set of matched nodes to the last in the set, just like `.at(length - 1)`.
 
+#### Arguments
+
+1. fromIndex (Number [optional]): The index at which item you wan't moving backwards.
+
 
 #### Returns
 
@@ -13,6 +17,11 @@ Reduce the set of matched nodes to the last in the set, just like `.at(length - 
 ```jsx
 const wrapper = shallow(<MyComponent />);
 expect(wrapper.find(Foo).last().props().foo).to.equal('bar');
+```
+
+```jsx
+const wrapper = shallow(<MyComponent />);
+expect(wrapper.find(Foo).last(-1).props().foo).to.equal('baz');
 ```
 
 

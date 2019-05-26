@@ -1123,10 +1123,14 @@ class ReactWrapper {
   /**
    * Returns a wrapper around the last node of the current wrapper.
    *
+   * @param {Number} fromIndex (optional)
    * @returns {ReactWrapper}
    */
-  last() {
-    return this.at(this.length - 1);
+  last(fromIndex = 0) {
+    const lengthToReturn = fromIndex >= 0
+      ? -1
+      : fromIndex - 1;
+    return this.at(this.length + lengthToReturn);
   }
 
   /**
