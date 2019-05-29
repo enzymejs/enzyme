@@ -27,6 +27,7 @@ import {
   PureComponent,
   Suspense,
   useEffect,
+  useMemo,
   useLayoutEffect,
   useState,
   Profiler,
@@ -1209,6 +1210,42 @@ describe('shallow', () => {
 </div>`);
         done();
       }, 100);
+    });
+
+    it('get same value when using `useMemo` and rerender with same prop in dependencies', () => {
+      function Child() {
+        return false;
+      }
+      function ComponentUsingMemoHook(props) {
+        const { count } = props;
+        const memoized = useMemo(() => ({ result: count * 2 }), [count]);
+        return (
+          <Child memoized={memoized} />
+        );
+      }
+      const wrapper = shallow(<ComponentUsingMemoHook count={1} />);
+      const initialValue = wrapper.find(Child).prop('memoized');
+      wrapper.setProps({ unRelatedProp: '123' });
+      const nextValue = wrapper.find(Child).prop('memoized');
+      expect(initialValue).to.equal(nextValue);
+    });
+
+    it('get different value when using `useMemo` and rerender with different prop in dependencies', () => {
+      function Child() {
+        return false;
+      }
+      function ComponentUsingMemoHook(props) {
+        const { count, relatedProp } = props;
+        const memoized = useMemo(() => ({ result: count * 2 }), [count, relatedProp]);
+        return (
+          <Child memoized={memoized} relatedProp={relatedProp} />
+        );
+      }
+      const wrapper = shallow(<ComponentUsingMemoHook relatedProp="456" count={1} />);
+      const initialValue = wrapper.find(Child).prop('memoized');
+      wrapper.setProps({ relatedProp: '123' });
+      const nextValue = wrapper.find(Child).prop('memoized');
+      expect(initialValue).to.not.equal(nextValue);
     });
   });
 

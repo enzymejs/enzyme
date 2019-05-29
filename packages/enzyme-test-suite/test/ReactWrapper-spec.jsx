@@ -31,6 +31,7 @@ import {
   Suspense,
   useEffect,
   useLayoutEffect,
+  useMemo,
   useState,
 } from './_helpers/react-compat';
 import {
@@ -1033,6 +1034,42 @@ describeWithDOM('mount', () => {
 </ComponentUsingLayoutEffectHook>`);
         done();
       }, 100);
+    });
+
+    it('get same value when using `useMemo` and rerender with same prop in dependencies', () => {
+      function Child() {
+        return false;
+      }
+      function ComponentUsingMemoHook(props) {
+        const { count } = props;
+        const memoized = useMemo(() => ({ result: count * 2 }), [count]);
+        return (
+          <Child memoized={memoized} />
+        );
+      }
+      const wrapper = mount(<ComponentUsingMemoHook count={1} />);
+      const initialValue = wrapper.find(Child).prop('memoized');
+      wrapper.setProps({ unRelatedProp: '123' });
+      const nextValue = wrapper.find(Child).prop('memoized');
+      expect(initialValue).to.equal(nextValue);
+    });
+
+    it('get different value when using `useMemo` and rerender with different prop in dependencies', () => {
+      function Child() {
+        return false;
+      }
+      function ComponentUsingMemoHook(props) {
+        const { count, relatedProp } = props;
+        const memoized = useMemo(() => ({ result: count * 2 }), [count, relatedProp]);
+        return (
+          <Child memoized={memoized} relatedProp={relatedProp} />
+        );
+      }
+      const wrapper = mount(<ComponentUsingMemoHook relatedProp="456" count={1} />);
+      const initialValue = wrapper.find(Child).prop('memoized');
+      wrapper.setProps({ relatedProp: '123' });
+      const nextValue = wrapper.find(Child).prop('memoized');
+      expect(initialValue).to.not.equal(nextValue);
     });
   });
 
