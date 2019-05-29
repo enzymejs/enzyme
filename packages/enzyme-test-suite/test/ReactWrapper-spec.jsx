@@ -29,6 +29,7 @@ import {
   Profiler,
   PureComponent,
   Suspense,
+  useCallback,
   useEffect,
   useLayoutEffect,
   useMemo,
@@ -613,7 +614,7 @@ describeWithDOM('mount', () => {
         );
 
         const context = { name: 'foo' };
-        expect(() => mount(<SimpleComponent />, { context })).to.not.throw();
+        expect(() => mount(<SimpleComponent />, { context })).not.to.throw();
       });
 
       itIf(is('< 16'), 'is introspectable through context API', () => {
@@ -1069,7 +1070,45 @@ describeWithDOM('mount', () => {
       const initialValue = wrapper.find(Child).prop('memoized');
       wrapper.setProps({ relatedProp: '123' });
       const nextValue = wrapper.find(Child).prop('memoized');
-      expect(initialValue).to.not.equal(nextValue);
+      expect(initialValue).not.to.equal(nextValue);
+    });
+
+    it('get same callback when using `useCallback` and rerender with same prop in dependencies', () => {
+      function Child() {
+        return null;
+      }
+      function ComponentUsingCallbackHook(props) {
+        const { onChange } = props;
+        const callback = useCallback(value => onChange(value), [onChange]);
+        return (
+          <Child callback={callback} />
+        );
+      }
+      const onChange = () => {};
+      const wrapper = mount(<ComponentUsingCallbackHook onChange={onChange} />);
+      const initialCallback = wrapper.find(Child).prop('callback');
+      wrapper.setProps({ unRelatedProp: '123' });
+      const nextCallback = wrapper.find(Child).prop('callback');
+      expect(initialCallback).to.equal(nextCallback);
+    });
+
+    it('get different callback when using `useCallback` and rerender with different prop in dependencies', () => {
+      function Child() {
+        return null;
+      }
+      function ComponentUsingCallbackHook(props) {
+        const { onChange, relatedProp } = props;
+        const callback = useCallback(value => onChange(value), [onChange, relatedProp]);
+        return (
+          <Child callback={callback} />
+        );
+      }
+      const onChange = () => {};
+      const wrapper = mount(<ComponentUsingCallbackHook onChange={onChange} relatedProp="456" />);
+      const initialCallback = wrapper.find(Child).prop('callback');
+      wrapper.setProps({ relatedProp: '123' });
+      const nextCallback = wrapper.find(Child).prop('callback');
+      expect(initialCallback).not.to.equal(nextCallback);
     });
   });
 

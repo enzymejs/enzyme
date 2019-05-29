@@ -26,6 +26,7 @@ import {
   lazy,
   PureComponent,
   Suspense,
+  useCallback,
   useEffect,
   useMemo,
   useLayoutEffect,
@@ -412,7 +413,7 @@ describe('shallow', () => {
       });
 
       const context = { name: 'foo' };
-      expect(() => shallow(<SimpleComponent />, { context })).to.not.throw();
+      expect(() => shallow(<SimpleComponent />, { context })).not.to.throw();
     });
 
     it('is introspectable through context API', () => {
@@ -1214,7 +1215,7 @@ describe('shallow', () => {
 
     it('get same value when using `useMemo` and rerender with same prop in dependencies', () => {
       function Child() {
-        return false;
+        return null;
       }
       function ComponentUsingMemoHook(props) {
         const { count } = props;
@@ -1232,7 +1233,7 @@ describe('shallow', () => {
 
     it('get different value when using `useMemo` and rerender with different prop in dependencies', () => {
       function Child() {
-        return false;
+        return null;
       }
       function ComponentUsingMemoHook(props) {
         const { count, relatedProp } = props;
@@ -1245,7 +1246,46 @@ describe('shallow', () => {
       const initialValue = wrapper.find(Child).prop('memoized');
       wrapper.setProps({ relatedProp: '123' });
       const nextValue = wrapper.find(Child).prop('memoized');
-      expect(initialValue).to.not.equal(nextValue);
+      expect(initialValue).not.to.equal(nextValue);
+    });
+
+    // pending https://github.com/facebook/react/issues/15774
+    it.skip('get same callback when using `useCallback` and rerender with same prop in dependencies', () => {
+      function Child() {
+        return false;
+      }
+      function ComponentUsingCallbackHook(props) {
+        const { onChange } = props;
+        const callback = useCallback(value => onChange(value), [onChange]);
+        return (
+          <Child callback={callback} />
+        );
+      }
+      const onChange = () => { };
+      const wrapper = shallow(<ComponentUsingCallbackHook onChange={onChange} />);
+      const initialCallback = wrapper.find(Child).prop('callback');
+      wrapper.setProps({ unRelatedProp: '123' });
+      const nextCallback = wrapper.find(Child).prop('callback');
+      expect(initialCallback).to.equal(nextCallback);
+    });
+
+    it('get different callback when using `useCallback` and rerender with different prop in dependencies', () => {
+      function Child() {
+        return false;
+      }
+      function ComponentUsingCallbackHook(props) {
+        const { onChange, relatedProp } = props;
+        const callback = useCallback(value => onChange(value), [onChange, relatedProp]);
+        return (
+          <Child callback={callback} />
+        );
+      }
+      const onChange = () => { };
+      const wrapper = shallow(<ComponentUsingCallbackHook onChange={onChange} relatedProp="456" />);
+      const initialCallback = wrapper.find(Child).prop('callback');
+      wrapper.setProps({ relatedProp: '123' });
+      const nextCallback = wrapper.find(Child).prop('callback');
+      expect(initialCallback).not.to.equal(nextCallback);
     });
   });
 
@@ -1399,7 +1439,7 @@ describe('shallow', () => {
 
         const context = { name: 'foo' };
         const wrapper = shallow(<Foo />);
-        expect(() => wrapper.find(Bar).shallow({ context })).to.not.throw();
+        expect(() => wrapper.find(Bar).shallow({ context })).not.to.throw();
       });
 
       it('is introspectable through context API', () => {
@@ -1501,7 +1541,7 @@ describe('shallow', () => {
 
           const context = { name: 'foo' };
           const wrapper = shallow(<Foo />);
-          expect(() => wrapper.find(Bar).shallow({ context })).to.not.throw();
+          expect(() => wrapper.find(Bar).shallow({ context })).not.to.throw();
         });
 
         itIf(is('< 16'), 'is introspectable through context API', () => {
