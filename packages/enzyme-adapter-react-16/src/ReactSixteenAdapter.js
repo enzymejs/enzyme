@@ -767,6 +767,18 @@ class ReactSixteenAdapter extends EnzymeAdapter {
     return React.createElement(isMemo(type) ? type.type : type, propsWithKeysAndRef(node));
   }
 
+  matchesElementType(node, matchingType) {
+    if (!node) {
+      return node;
+    }
+    const { type } = node;
+
+    const nodeType = isMemo(type) ? type.type : type;
+    const matchingTypeType = isMemo(matchingType) ? matchingType.type : matchingType;
+    // console.log('**', isMemo(type), type === matchingType, type.type === matchingType, type === matchingType.type, type.type === matchingType.type);
+    return nodeType === matchingTypeType;
+  }
+
   elementToNode(element) {
     return elementToTree(element);
   }

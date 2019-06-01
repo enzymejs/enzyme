@@ -22,6 +22,14 @@ class EnzymeAdapter {
     throw unimplementedError('nodeToElement', 'EnzymeAdapter');
   }
 
+  matchesElementType(node, matchingType) {
+    if (!node) {
+      return node;
+    }
+    const { type } = node;
+    return type === matchingType;
+  }
+
   // eslint-disable-next-line class-methods-use-this, no-unused-vars
   isValidElement(element) {
     throw unimplementedError('isValidElement', 'EnzymeAdapter');
