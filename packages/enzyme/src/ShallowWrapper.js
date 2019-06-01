@@ -480,7 +480,7 @@ class ShallowWrapper {
    * @return {Array<ReactElement>}
    */
   getElements() {
-    return this.getNodesInternal().map(getAdapter(this[OPTIONS]).nodeToElement);
+    return this.getNodesInternal().map(n => getAdapter(this[OPTIONS]).nodeToElement(n));
   }
 
   // eslint-disable-next-line class-methods-use-this

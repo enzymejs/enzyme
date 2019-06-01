@@ -186,7 +186,7 @@ class ReactWrapper {
    * @return {Array<ReactElement>}
    */
   getElements() {
-    return this[NODES].map(getAdapter(this[OPTIONS]).nodeToElement);
+    return this[NODES].map(n => getAdapter(this[OPTIONS]).nodeToElement(n));
   }
 
   // eslint-disable-next-line class-methods-use-this
