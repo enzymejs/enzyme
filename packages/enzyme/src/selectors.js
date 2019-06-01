@@ -274,7 +274,7 @@ export function buildPredicate(selector) {
     ? adapter.isValidElementType(selector)
     : typeof selector === 'function';
   if (isElementType) {
-    return node => node && node.type === selector;
+    return node => adapter.matchesElementType(node, selector);
   }
   // If the selector is an non-empty object, treat the keys/values as props
   if (typeof selector === 'object') {

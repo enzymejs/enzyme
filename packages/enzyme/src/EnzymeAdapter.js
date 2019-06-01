@@ -22,6 +22,7 @@ class EnzymeAdapter {
     throw unimplementedError('nodeToElement', 'EnzymeAdapter');
   }
 
+  // eslint-disable-next-line class-methods-use-this
   matchesElementType(node, matchingType) {
     if (!node) {
       return node;

@@ -909,11 +909,13 @@ export default function describeFind({
   </div>
 </Memo(InnerFoo)>`;
         expect(wrapper.debug()).to.equal(expectedDebug);
-        expect(wrapper.find('InnerComp')).to.have.lengthOf(1);
-        expect(wrapper.find('Memo(InnerComp)')).to.have.lengthOf(1);
+        const inner = wrapper.find('InnerComp');
+        expect(inner).to.have.lengthOf(1);
+        const memoInner = wrapper.find('Memo(InnerComp)');
+        expect(memoInner).to.have.lengthOf(1);
         expect(wrapper.find('.bar')).to.have.lengthOf(1);
         expect(wrapper.find('.qoo').text()).to.equal('qux');
-        expect(wrapper.find(InnerMemo)).to.have.lengthOf(1);
+        expect(wrapper.find(InnerMemo)).to.have.lengthOf(inner.length + memoInner.length); // 2
       });
 
       it('works with a class component', () => {

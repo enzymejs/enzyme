@@ -108,6 +108,10 @@ function nodeTypeFromType(type) {
   return utilNodeTypeFromType(type);
 }
 
+function unmemoType(type) {
+  return isMemo(type) ? type.type : type;
+}
+
 function elementToTree(el) {
   if (!isPortal(el)) {
     return utilElementToTree(el, elementToTree);
@@ -764,19 +768,16 @@ class ReactSixteenAdapter extends EnzymeAdapter {
   nodeToElement(node) {
     if (!node || typeof node !== 'object') return null;
     const { type } = node;
-    return React.createElement(isMemo(type) ? type.type : type, propsWithKeysAndRef(node));
+    return React.createElement(unmemoType(type), propsWithKeysAndRef(node));
   }
 
+  // eslint-disable-next-line class-methods-use-this
   matchesElementType(node, matchingType) {
     if (!node) {
       return node;
     }
     const { type } = node;
-
-    const nodeType = isMemo(type) ? type.type : type;
-    const matchingTypeType = isMemo(matchingType) ? matchingType.type : matchingType;
-    // console.log('**', isMemo(type), type === matchingType, type.type === matchingType, type === matchingType.type, type.type === matchingType.type);
-    return nodeType === matchingTypeType;
+    return unmemoType(type) === unmemoType(matchingType);
   }
 
   elementToNode(element) {
