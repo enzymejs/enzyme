@@ -1,5 +1,46 @@
 # Change Log
 
+## 3.10.0
+
+### New Stuff
+ - `shallow` add `suspenseFallback` option; support `Suspense`/`Lazy` (#1975)
+ - `shallow`/`mount`: add `invoke(propName)(...args)` (#1856, #945)
+ - `shallow`: Support rendering and `dive()`ing `createContext()` providers and consumers (#1966)
+ - `mount`/`shallow`: add `getWrappingComponent` (#1960)
+ - `Utils`: add `isCustomComponent` (#1960)
+ - `Utils`: add `stub` argument to `spyMethod`
+ - `EnzymeAdapter`: add `matchesElementType` (#2146)
+ - `RSTTraversal`: add `getHTMLFromHostNodes`
+
+### Fixes
+ - `selectors`: unwrap `memo` elements - in both directions (#2146)
+ - `shallow`: properly determine "should render" for `PureComponent`s (#2096)
+ - `mount`/`shallow`: `renderProp`: improve error messages (#2070)
+ - `mount`: `setContext`: use proper wrapper name in error message
+ - `shallow`: `.contains()`: clean up error message
+ - `shallow`/`mount`: `hasClass`: avoid a crash with a non-string argument (#2057)
+ - `mount`: properly handle HTML of multiple nodes (#2052)
+ - `shallow`: ensure that if gDSFP exists, cDU is called. (#2027)
+ - `shallow`: Mock sCU if gDSFP defined in shallow renderer rerender (#1981)
+ - `mount`: `.state()`: allow getting state from stateful children of a stateless root (#2043)
+ - `mount`: `.text()`: properly recurse through fragments and arrays (#2028)
+
+### Refactors
+ - `ReactWrapper`/`ShallowWrapper`: ensure calling an adapter‘s nodeToElement preserves the receiver
+ - `mount`: use `getHTMLFromHostNodes`
+
+### Docs
+ - explain why need to re-call .find() after update (#2140)
+ - `shallow`: fix childAt (#2134)
+ - Update v2 -> v3 migration guide re props after a stage change (#1300)
+ - `debug`: Added documentation for `verbose` flag (#2104)
+ - Add on the fly JSDOM include example (#2072)
+ - `reduce`/`reduceRight`: fix example code (#2066, #2065, #2064)
+ - update `simulateError` with `getDerivedStateFromError` (#2036)
+ - `shallow`: `.hasClass`: fix use of `mount`
+ - add link to Cheerio API and another example (#756)
+ - `jest`: Update deprecated jest config key (#2024)
+
 ## 3.9.0
 
 ### New Stuff
