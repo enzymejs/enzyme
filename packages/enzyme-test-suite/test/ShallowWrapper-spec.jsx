@@ -1987,7 +1987,6 @@ describe('shallow', () => {
       });
 
       describe('when disabled', () => {
-        let wrapper;
         const spy = sinon.spy();
         class Foo extends React.Component {
           componentWillMount() { spy('componentWillMount'); }
@@ -2021,12 +2020,11 @@ describe('shallow', () => {
         };
 
         beforeEach(() => {
-          wrapper = shallow(<Foo />, options);
           spy.resetHistory();
         });
 
         it('does not call componentDidMount when mounting', () => {
-          wrapper = shallow(<Foo />, options);
+          shallow(<Foo />, options);
           expect(spy.args).to.deep.equal([
             ['componentWillMount'],
             ['render'],
@@ -2034,6 +2032,12 @@ describe('shallow', () => {
         });
 
         it('calls expected methods when receiving new props', () => {
+          const wrapper = shallow(<Foo />, options);
+          expect(spy.args).to.deep.equal([
+            ['componentWillMount'],
+            ['render'],
+          ]);
+          spy.resetHistory();
           wrapper.setProps({ foo: 'foo' });
           expect(spy.args).to.deep.equal([
             ['componentWillReceiveProps'],
@@ -2045,6 +2049,7 @@ describe('shallow', () => {
 
         describeIf(is('0.13 || 15 || > 16'), 'setContext', () => {
           it('calls expected methods when receiving new context', () => {
+            const wrapper = shallow(<Foo />, options);
             wrapper.setContext({ foo: 'foo' });
             expect(spy.args).to.deep.equal([
               ['componentWillReceiveProps'],
@@ -2057,6 +2062,12 @@ describe('shallow', () => {
 
         describeIf(is('16'), 'setContext', () => {
           it('calls expected methods when receiving new context', () => {
+            const wrapper = shallow(<Foo />, options);
+            expect(spy.args).to.deep.equal([
+              ['componentWillMount'],
+              ['render'],
+            ]);
+            spy.resetHistory();
             wrapper.setContext({ foo: 'foo' });
             expect(spy.args).to.deep.equal([
               ['shouldComponentUpdate'],
@@ -2068,6 +2079,7 @@ describe('shallow', () => {
 
         describeIf(is('0.14'), 'setContext', () => {
           it('calls expected methods when receiving new context', () => {
+            const wrapper = shallow(<Foo />, options);
             wrapper.setContext({ foo: 'foo' });
             expect(spy.args).to.deep.equal([
               ['shouldComponentUpdate'],
@@ -2078,6 +2090,7 @@ describe('shallow', () => {
         });
 
         itIf(is('< 16'), 'calls expected methods for setState', () => {
+          const wrapper = shallow(<Foo />, options);
           wrapper.setState({ bar: 'bar' });
           expect(spy.args).to.deep.equal([
             ['shouldComponentUpdate'],
@@ -2089,6 +2102,12 @@ describe('shallow', () => {
 
         // componentDidUpdate is not called in react 16
         itIf(is('>= 16'), 'calls expected methods for setState', () => {
+          const wrapper = shallow(<Foo />, options);
+          expect(spy.args).to.deep.equal([
+            ['componentWillMount'],
+            ['render'],
+          ]);
+          spy.resetHistory();
           wrapper.setState({ bar: 'bar' });
           expect(spy.args).to.deep.equal([
             ['shouldComponentUpdate'],
@@ -2098,6 +2117,12 @@ describe('shallow', () => {
         });
 
         it('calls expected methods when unmounting', () => {
+          const wrapper = shallow(<Foo />, options);
+          expect(spy.args).to.deep.equal([
+            ['componentWillMount'],
+            ['render'],
+          ]);
+          spy.resetHistory();
           wrapper.unmount();
           expect(spy.args).to.deep.equal([
             ['componentWillUnmount'],
