@@ -1,7 +1,7 @@
 # `.setContext(context) => Self`
 
-A method that sets the context of the root component, and re-renders. Useful for when you are
-wanting to test how the component behaves over time with changing contexts.
+A method that sets the legacy context of the root component, and re-renders. Useful for when you are
+wanting to test how the component behaves over time with changing legacy contexts.
 
 NOTE: can only be called on a wrapper instance that is also the root instance.
 

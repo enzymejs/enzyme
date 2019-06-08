@@ -1,6 +1,6 @@
 # `.context([key]) => Any`
 
-Returns the context hash for the root node of the wrapper. Optionally pass in a prop name and it
+Returns the legacy context hash for the root node of the wrapper. Optionally pass in a prop name and it
 will return just that value.
 
 

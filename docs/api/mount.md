@@ -46,7 +46,7 @@ describe('<Foo />', () => {
 
 1. `node` (`ReactElement`): The node to render
 2. `options` (`Object` [optional]):
-- `options.context`: (`Object` [optional]): Context to be passed into the component
+- `options.context`: (`Object` [optional]): Legacy context to be passed into the component
 - `options.attachTo`: (`DOMElement` [optional]): DOM Element to attach the component to.
 - `options.childContextTypes`: (`Object` [optional]): Merged contextTypes for all children of the wrapper.
 - `options.wrappingComponent`: (`ComponentType` [optional]): A component that will render as a parent of the `node`. It can be used to provide context to the `node`, among other things. See the [`getWrappingComponent()` docs](ReactWrapper/getWrappingComponent.md) for an example. **Note**: `wrappingComponent` _must_ render its children.
@@ -153,7 +153,7 @@ Returns a wrapper of the last node of the current wrapper.
 Returns the state of the root component.
 
 #### [`.context([key]) => Any`](ReactWrapper/context.md)
-Returns the context of the root component.
+Returns the legacy context of the root component.
 
 #### [`.props() => Object`](ReactWrapper/props.md)
 Returns the props of the root component.
@@ -177,7 +177,7 @@ Manually sets state of the root component.
 Manually sets props of the root component.
 
 #### [`.setContext(context) => ReactWrapper`](ReactWrapper/setContext.md)
-Manually sets context of the root component.
+Manually sets legacy context of the root component.
 
 #### [`.instance() => ReactComponent|DOMComponent`](ReactWrapper/instance.md)
 Returns the wrapper's underlying instance.
