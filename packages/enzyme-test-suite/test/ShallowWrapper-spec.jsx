@@ -24,21 +24,17 @@ import {
   forwardRef,
   Fragment,
   lazy,
+  memo,
+  Profiler,
   PureComponent,
   Suspense,
-  useCallback,
-  useEffect,
-  useMemo,
-  useLayoutEffect,
-  useState,
-  Profiler,
-  memo,
 } from './_helpers/react-compat';
 import {
   describeIf,
   itIf,
 } from './_helpers';
 import describeMethods from './_helpers/describeMethods';
+import describeHooks from './_helpers/describeHooks';
 import {
   REACT16,
   is,
@@ -1150,145 +1146,6 @@ describe('shallow', () => {
     });
   });
 
-  describeIf(is('>= 16.8.5'), 'hooks', () => {
-    // TODO: enable when the shallow renderer fixes its bug
-    it.skip('works with `useEffect`', (done) => {
-      function ComponentUsingLayoutEffectHook() {
-        const [ctr, setCtr] = useState(0);
-        useEffect(() => {
-          setCtr(1);
-          setTimeout(() => {
-            setCtr(2);
-          }, 100);
-        }, []);
-        return (
-          <div>
-            {ctr}
-          </div>
-        );
-      }
-      const wrapper = shallow(<ComponentUsingLayoutEffectHook />);
-
-      expect(wrapper.debug()).to.equal(`<div>
-  1
-</div>`);
-
-      setTimeout(() => {
-        wrapper.update();
-        expect(wrapper.debug()).to.equal(`<div>
-  2
-</div>`);
-        done();
-      }, 100);
-    });
-
-    // TODO: enable when https://github.com/facebook/react/issues/15275 is fixed
-    it.skip('works with `useLayoutEffect`', (done) => {
-      function ComponentUsingEffectHook() {
-        const [ctr, setCtr] = useState(0);
-        useLayoutEffect(() => {
-          setCtr(1);
-          setTimeout(() => {
-            setCtr(2);
-          }, 100);
-        }, []);
-        return (
-          <div>
-            {ctr}
-          </div>
-        );
-      }
-      const wrapper = shallow(<ComponentUsingEffectHook />);
-
-      expect(wrapper.debug()).to.equal(`<div>
-  1
-</div>`);
-
-      setTimeout(() => {
-        wrapper.update();
-        expect(wrapper.debug()).to.equal(`<div>
-  2
-</div>`);
-        done();
-      }, 100);
-    });
-
-    it('get same value when using `useMemo` and rerender with same prop in dependencies', () => {
-      function Child() {
-        return null;
-      }
-      function ComponentUsingMemoHook(props) {
-        const { count } = props;
-        const memoized = useMemo(() => ({ result: count * 2 }), [count]);
-        return (
-          <Child memoized={memoized} />
-        );
-      }
-      const wrapper = shallow(<ComponentUsingMemoHook count={1} />);
-      const initialValue = wrapper.find(Child).prop('memoized');
-      wrapper.setProps({ unRelatedProp: '123' });
-      const nextValue = wrapper.find(Child).prop('memoized');
-      expect(initialValue).to.equal(nextValue);
-    });
-
-    it('get different value when using `useMemo` and rerender with different prop in dependencies', () => {
-      function Child() {
-        return null;
-      }
-      function ComponentUsingMemoHook(props) {
-        const { count, relatedProp } = props;
-        const memoized = useMemo(() => ({ result: count * 2 }), [count, relatedProp]);
-        return (
-          <Child memoized={memoized} relatedProp={relatedProp} />
-        );
-      }
-      const wrapper = shallow(<ComponentUsingMemoHook relatedProp="456" count={1} />);
-      const initialValue = wrapper.find(Child).prop('memoized');
-      wrapper.setProps({ relatedProp: '123' });
-      const nextValue = wrapper.find(Child).prop('memoized');
-      expect(initialValue).not.to.equal(nextValue);
-    });
-
-    // pending https://github.com/facebook/react/issues/15774
-    it.skip('get same callback when using `useCallback` and rerender with same prop in dependencies', () => {
-      function Child() {
-        return false;
-      }
-      function ComponentUsingCallbackHook(props) {
-        const { onChange } = props;
-        const callback = useCallback(value => onChange(value), [onChange]);
-        return (
-          <Child callback={callback} />
-        );
-      }
-      const onChange = () => { };
-      const wrapper = shallow(<ComponentUsingCallbackHook onChange={onChange} />);
-      const initialCallback = wrapper.find(Child).prop('callback');
-      wrapper.setProps({ unRelatedProp: '123' });
-      const nextCallback = wrapper.find(Child).prop('callback');
-      expect(initialCallback).to.equal(nextCallback);
-    });
-
-    it('get different callback when using `useCallback` and rerender with different prop in dependencies', () => {
-      function Child() {
-        return false;
-      }
-      function ComponentUsingCallbackHook(props) {
-        const { onChange, relatedProp } = props;
-        const callback = useCallback(value => onChange(value), [onChange, relatedProp]);
-        return (
-          <Child callback={callback} />
-        );
-      }
-      const onChange = () => { };
-      const wrapper = shallow(<ComponentUsingCallbackHook onChange={onChange} relatedProp="456" />);
-      const initialCallback = wrapper.find(Child).prop('callback');
-      wrapper.setProps({ relatedProp: '123' });
-      const nextCallback = wrapper.find(Child).prop('callback');
-      expect(initialCallback).not.to.equal(nextCallback);
-    });
-  });
-
   itIf(is('>= 16.2'), 'does not support fragments', () => {
     const wrapper = () => shallow((
       <Fragment>
@@ -1367,6 +1224,13 @@ describe('shallow', () => {
     'text',
     'unmount',
     'wrap',
+  );
+  describeHooks(
+    { Wrap, Wrapper },
+    'useCallback',
+    'useEffect',
+    'useLayoutEffect',
+    'useMemo',
   );
 
   describe('.shallow()', () => {
@@ -2050,6 +1914,11 @@ describe('shallow', () => {
         describeIf(is('0.13 || 15 || > 16'), 'setContext', () => {
           it('calls expected methods when receiving new context', () => {
             const wrapper = shallow(<Foo />, options);
+            expect(spy.args).to.deep.equal([
+              ['componentWillMount'],
+              ['render'],
+            ]);
+            spy.resetHistory();
             wrapper.setContext({ foo: 'foo' });
             expect(spy.args).to.deep.equal([
               ['componentWillReceiveProps'],
@@ -2080,6 +1949,11 @@ describe('shallow', () => {
         describeIf(is('0.14'), 'setContext', () => {
           it('calls expected methods when receiving new context', () => {
             const wrapper = shallow(<Foo />, options);
+            expect(spy.args).to.deep.equal([
+              ['componentWillMount'],
+              ['render'],
+            ]);
+            spy.resetHistory();
             wrapper.setContext({ foo: 'foo' });
             expect(spy.args).to.deep.equal([
               ['shouldComponentUpdate'],
@@ -2091,6 +1965,11 @@ describe('shallow', () => {
 
         itIf(is('< 16'), 'calls expected methods for setState', () => {
           const wrapper = shallow(<Foo />, options);
+          expect(spy.args).to.deep.equal([
+            ['componentWillMount'],
+            ['render'],
+          ]);
+          spy.resetHistory();
           wrapper.setState({ bar: 'bar' });
           expect(spy.args).to.deep.equal([
             ['shouldComponentUpdate'],

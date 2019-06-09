@@ -29,11 +29,6 @@ import {
   Profiler,
   PureComponent,
   Suspense,
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useState,
 } from './_helpers/react-compat';
 import {
   describeWithDOM,
@@ -42,6 +37,7 @@ import {
 } from './_helpers';
 import getLoadedLazyComponent from './_helpers/getLoadedLazyComponent';
 import describeMethods from './_helpers/describeMethods';
+import describeHooks from './_helpers/describeHooks';
 import {
   is,
 } from './_helpers/version';
@@ -968,150 +964,6 @@ describeWithDOM('mount', () => {
     });
   });
 
-  describeIf(is('>= 16.8'), 'hooks', () => {
-    it('works with `useEffect`', (done) => {
-      function ComponentUsingEffectHook() {
-        const [ctr, setCtr] = useState(0);
-        useEffect(() => {
-          setCtr(1);
-          setTimeout(() => {
-            setCtr(2);
-          }, 100);
-        }, []);
-        return (
-          <div>
-            {ctr}
-          </div>
-        );
-      }
-      const wrapper = mount(<ComponentUsingEffectHook />);
-
-      expect(wrapper.debug()).to.equal(`<ComponentUsingEffectHook>
-  <div>
-    1
-  </div>
-</ComponentUsingEffectHook>`);
-
-      setTimeout(() => {
-        wrapper.update();
-        expect(wrapper.debug()).to.equal(`<ComponentUsingEffectHook>
-  <div>
-    2
-  </div>
-</ComponentUsingEffectHook>`);
-        done();
-      }, 100);
-    });
-
-    it('works with `useLayoutEffect`', (done) => {
-      function ComponentUsingLayoutEffectHook() {
-        const [ctr, setCtr] = useState(0);
-        useLayoutEffect(() => {
-          setCtr(1);
-          setTimeout(() => {
-            setCtr(2);
-          }, 100);
-        }, []);
-        return (
-          <div>
-            {ctr}
-          </div>
-        );
-      }
-      const wrapper = mount(<ComponentUsingLayoutEffectHook />);
-
-      expect(wrapper.debug()).to.equal(`<ComponentUsingLayoutEffectHook>
-  <div>
-    1
-  </div>
-</ComponentUsingLayoutEffectHook>`);
-
-      setTimeout(() => {
-        wrapper.update();
-        expect(wrapper.debug()).to.equal(`<ComponentUsingLayoutEffectHook>
-  <div>
-    2
-  </div>
-</ComponentUsingLayoutEffectHook>`);
-        done();
-      }, 100);
-    });
-
-    it('get same value when using `useMemo` and rerender with same prop in dependencies', () => {
-      function Child() {
-        return false;
-      }
-      function ComponentUsingMemoHook(props) {
-        const { count } = props;
-        const memoized = useMemo(() => ({ result: count * 2 }), [count]);
-        return (
-          <Child memoized={memoized} />
-        );
-      }
-      const wrapper = mount(<ComponentUsingMemoHook count={1} />);
-      const initialValue = wrapper.find(Child).prop('memoized');
-      wrapper.setProps({ unRelatedProp: '123' });
-      const nextValue = wrapper.find(Child).prop('memoized');
-      expect(initialValue).to.equal(nextValue);
-    });
-
-    it('get different value when using `useMemo` and rerender with different prop in dependencies', () => {
-      function Child() {
-        return false;
-      }
-      function ComponentUsingMemoHook(props) {
-        const { count, relatedProp } = props;
-        const memoized = useMemo(() => ({ result: count * 2 }), [count, relatedProp]);
-        return (
-          <Child memoized={memoized} relatedProp={relatedProp} />
-        );
-      }
-      const wrapper = mount(<ComponentUsingMemoHook relatedProp="456" count={1} />);
-      const initialValue = wrapper.find(Child).prop('memoized');
-      wrapper.setProps({ relatedProp: '123' });
-      const nextValue = wrapper.find(Child).prop('memoized');
-      expect(initialValue).not.to.equal(nextValue);
-    });
-
-    it('get same callback when using `useCallback` and rerender with same prop in dependencies', () => {
-      function Child() {
-        return null;
-      }
-      function ComponentUsingCallbackHook(props) {
-        const { onChange } = props;
-        const callback = useCallback(value => onChange(value), [onChange]);
-        return (
-          <Child callback={callback} />
-        );
-      }
-      const onChange = () => {};
-      const wrapper = mount(<ComponentUsingCallbackHook onChange={onChange} />);
-      const initialCallback = wrapper.find(Child).prop('callback');
-      wrapper.setProps({ unRelatedProp: '123' });
-      const nextCallback = wrapper.find(Child).prop('callback');
-      expect(initialCallback).to.equal(nextCallback);
-    });
-
-    it('get different callback when using `useCallback` and rerender with different prop in dependencies', () => {
-      function Child() {
-        return null;
-      }
-      function ComponentUsingCallbackHook(props) {
-        const { onChange, relatedProp } = props;
-        const callback = useCallback(value => onChange(value), [onChange, relatedProp]);
-        return (
-          <Child callback={callback} />
-        );
-      }
-      const onChange = () => {};
-      const wrapper = mount(<ComponentUsingCallbackHook onChange={onChange} relatedProp="456" />);
-      const initialCallback = wrapper.find(Child).prop('callback');
-      wrapper.setProps({ relatedProp: '123' });
-      const nextCallback = wrapper.find(Child).prop('callback');
-      expect(initialCallback).not.to.equal(nextCallback);
-    });
-  });
-
   itIf(is('>= 16.2'), 'supports fragments', () => {
     const wrapper = mount((
       <Fragment>
@@ -1191,6 +1043,13 @@ describeWithDOM('mount', () => {
     'text',
     'unmount',
     'wrap',
+  );
+  describeHooks(
+    { Wrap, Wrapper },
+    'useCallback',
+    'useEffect',
+    'useLayoutEffect',
+    'useMemo',
   );
 
   describeIf(is('>= 16.6'), 'Suspense & lazy', () => {
