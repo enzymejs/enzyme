@@ -495,6 +495,7 @@ class ReactSixteenAdapter extends EnzymeAdapter {
           }),
         };
       },
+      ...(is168 && { wrapInvoke: wrapAct }),
     };
   }
 
