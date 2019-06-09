@@ -841,7 +841,9 @@ class ReactWrapper {
         throw new TypeError('ReactWrapper::invoke() requires the name of a prop whose value is a function');
       }
       return (...args) => {
-        const response = handler(...args);
+        const response = typeof this[RENDERER].wrapInvoke === 'function'
+          ? this[RENDERER].wrapInvoke(() => handler(...args))
+          : handler(...args);
         this[ROOT].update();
         return response;
       };

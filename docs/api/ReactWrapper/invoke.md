@@ -1,6 +1,7 @@
 # `.invoke(propName)(...args) => Any`
 
 Invokes a function prop.
+Note that in React 16.8+, `.invoke` will wrap your handler with [`ReactTestUtils.act`](https://reactjs.org/docs/test-utils.html#act) and call `.update()` automatically.
 
 #### Arguments
 
