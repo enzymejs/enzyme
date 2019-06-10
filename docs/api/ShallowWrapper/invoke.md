@@ -38,3 +38,4 @@ const wrapper = shallow(<Foo />);
 wrapper.find('a').invoke('onClick')().then(() => {
   // expect()
 });
+```
