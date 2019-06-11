@@ -4,8 +4,11 @@ import sinon from 'sinon-sandbox';
 
 import {
   describeIf,
+  itIf,
 } from '../../_helpers';
-
+import {
+  is,
+} from '../../_helpers/version';
 import {
   useEffect,
   useState,
@@ -158,26 +161,27 @@ export default function describeUseEffect({
         expect(setDocumentTitle.args).to.deep.equal([[expectedCountString(0)]]);
       });
 
-      // TODO: useEffect fixme
-      it.skip('on didupdate', () => {
+      it('on didupdate', () => {
         const wrapper = Wrap(<ClickCounterPage />);
 
         expect(setDocumentTitle).to.have.property('callCount', 1);
-        expect(setDocumentTitle.args).to.deep.equal([[expectedCountString(0)]]);
+        const [firstCall] = setDocumentTitle.args;
+        expect(firstCall).to.deep.equal([expectedCountString(0)]);
         expect(wrapper.find('p').text()).to.equal(expectedCountString(0));
 
-        const { onClick } = wrapper.find('button').props();
-        onClick();
+        wrapper.find('button').invoke('onClick')();
 
         expect(setDocumentTitle).to.have.property('callCount', 2);
-        expect(setDocumentTitle.args).to.deep.equal([[expectedCountString(1)]]);
+        const [, secondCall] = setDocumentTitle.args;
+        expect(secondCall).to.deep.equal([expectedCountString(1)]);
         expect(wrapper.find('p').text()).to.equal(expectedCountString(1));
 
-        onClick();
-        onClick();
+        wrapper.find('button').invoke('onClick')();
+        wrapper.find('button').invoke('onClick')();
 
         expect(setDocumentTitle).to.have.property('callCount', 4);
-        expect(setDocumentTitle.args).to.deep.equal([[expectedCountString(3)]]);
+        const [,,, fourthCall] = setDocumentTitle.args;
+        expect(fourthCall).to.deep.equal([expectedCountString(3)]);
         expect(wrapper.find('p').text()).to.equal(expectedCountString(3));
       });
     });
@@ -235,12 +239,14 @@ export default function describeUseEffect({
         expect(wrapper.html()).to.eql('Online');
       });
 
-      it('cleanup on unmount', () => {
+      itIf(is('> 16.8.3'), 'cleanup on unmount', () => {
         const wrapper = Wrap(<FriendStatus friend={friend} />);
 
         wrapper.unmount();
 
-        expect(ChatAPI.unsubscribeFromFriendStatus.calledOnceWith(friend.id)).to.equal(true);
+        expect(ChatAPI.unsubscribeFromFriendStatus).to.have.property('callCount', 1);
+        const [[firstArg]] = ChatAPI.unsubscribeFromFriendStatus.args;
+        expect(firstArg).to.equal(friend.id);
       });
     });
   });
