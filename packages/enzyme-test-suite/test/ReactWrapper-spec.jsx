@@ -1047,9 +1047,13 @@ describeWithDOM('mount', () => {
   describeHooks(
     { Wrap, Wrapper },
     'useCallback',
+    'useContext',
     'useEffect',
     'useLayoutEffect',
     'useMemo',
+    'useReducer',
+    'useState',
+    'custom',
   );
 
   describeIf(is('>= 16.6'), 'Suspense & lazy', () => {

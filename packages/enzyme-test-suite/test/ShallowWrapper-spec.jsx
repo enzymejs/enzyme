@@ -1228,9 +1228,13 @@ describe('shallow', () => {
   describeHooks(
     { Wrap, Wrapper },
     'useCallback',
+    'useContext',
     'useEffect',
     'useLayoutEffect',
     'useMemo',
+    'useReducer',
+    'useState',
+    'custom',
   );
 
   describe('.shallow()', () => {
