@@ -76,7 +76,7 @@ export default function describeCustomHooks({
     });
 
     // todo: enable shallow when useEffect works in the shallow renderer. see https://github.com/facebook/react/issues/15275
-    describeIf(!isShallow, 'custom hook: formInput simulate', () => {
+    describeIf(!isShallow, 'custom hook: formInput invoke props', () => {
       function useFormInput(initialValue = '') {
         const [value, setValue] = useState(initialValue);
 
@@ -122,24 +122,27 @@ export default function describeCustomHooks({
         return <input {...search} />;
       }
 
-      it('does not succeed without act', () => {
+      it('work with native input', () => {
         const spy = sinon.spy();
         const wrapper = Wrap(<ControlledInputWithNativeInput searchSomething={spy} />);
-        // Works with Act
-        // act(() => {
-        wrapper.simulate('change', { target: { value: 'foo' } });
-        // });
+        wrapper.find('input').invoke('onChange')({ target: { value: 'foo' } });
 
         expect(spy.withArgs('foo')).to.have.property('callCount', 1);
       });
 
-      // TODO: Need to evaluate as per issue raised
-      it.skip('does not succeed with/without act', () => {
+      it('work with custom wrapped Input', () => {
         const spy = sinon.spy();
         const wrapper = Wrap(<ControlledInputWithEnhancedInput searchSomething={spy} />);
-        // act(() => {
-        wrapper.simulate('change', { target: { value: 'foo' } });
-        // });
+        const input = wrapper.find('Input');
+        input.invoke('onChange')({ target: { value: 'foo' } });
+        expect(spy.withArgs('foo')).to.have.property('callCount', 1);
+      });
+
+      it('work with custom wrapped input', () => {
+        const spy = sinon.spy();
+        const wrapper = Wrap(<ControlledInputWithEnhancedInput searchSomething={spy} />);
+        const input = wrapper.find('input');
+        input.invoke('onChange')({ target: { value: 'foo' } });
         expect(spy.withArgs('foo')).to.have.property('callCount', 1);
       });
     });
