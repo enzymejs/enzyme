@@ -259,7 +259,8 @@ export default function describeUseEffect({
         expect(wrapper.html()).to.eql('Online');
       });
 
-      itIf(is('> 16.8.3'), 'cleanup on unmount', () => {
+      // TODO: figure out why this test is flaky. Perhaps unmount of useEffect is async?
+      itIf.skip(is('> 16.8.3'), 'cleanup on unmount', () => {
         const wrapper = Wrap(<FriendStatus friend={friend} />);
 
         wrapper.unmount();
