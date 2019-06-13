@@ -1229,6 +1229,7 @@ describe('shallow', () => {
     { Wrap, Wrapper },
     'useCallback',
     'useContext',
+    'useDebugValue',
     'useEffect',
     'useLayoutEffect',
     'useMemo',
