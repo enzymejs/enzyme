@@ -1231,6 +1231,7 @@ describe('shallow', () => {
     'useContext',
     'useDebugValue',
     'useEffect',
+    'useImperativeHandle',
     'useLayoutEffect',
     'useMemo',
     'useReducer',

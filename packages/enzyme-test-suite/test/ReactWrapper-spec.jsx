@@ -1050,6 +1050,7 @@ describeWithDOM('mount', () => {
     'useContext',
     'useDebugValue',
     'useEffect',
+    'useImperativeHandle',
     'useLayoutEffect',
     'useMemo',
     'useReducer',
