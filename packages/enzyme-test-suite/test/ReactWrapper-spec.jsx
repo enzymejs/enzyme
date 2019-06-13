@@ -1052,6 +1052,7 @@ describeWithDOM('mount', () => {
     'useLayoutEffect',
     'useMemo',
     'useReducer',
+    'useRef',
     'useState',
     'custom',
   );
