@@ -219,6 +219,35 @@ describe('<Foo />', () => {
 
 Read the full [API Documentation](/docs/api/render.md)
 
+### React Hooks support
+
+Enzyme supports [react hooks](https://reactjs.org/docs/hooks-intro.html) with some limitations in [`.shallow()`](https://airbnb.io/enzyme/docs/api/shallow.html) due to upstream issues in React's shallow renderer:
+
+* `useEffect()` and `useLayoutEffect()` don't get called in the React shallow renderer. [Related issue](https://github.com/facebook/react/issues/15275)
+
+* `useCallback()` doesn't memoize callback in React shallow renderer. [Related issue](https://github.com/facebook/react/issues/15774)
+
+#### [`ReactTestUtils.act()`](https://reactjs.org/docs/test-utils.html#act) wrap
+
+If you're using React 16.8+ and `.mount()`, Enzyme will wrap apis including [`.simulate()`](https://airbnb.io/enzyme/docs/api/ReactWrapper/simulate.html), [`.setProps()`](https://airbnb.io/enzyme/docs/api/ReactWrapper/setProps.html), [`.setContext()`](https://airbnb.io/enzyme/docs/api/ReactWrapper/setContext.html), [`.invoke()`](https://airbnb.io/enzyme/docs/api/ReactWrapper/invoke.html) with [`ReactTestUtils.act()`](https://reactjs.org/docs/test-utils.html#act) so you don't need to manually wrap it.
+
+A common pattern to trigger handlers with `.act()` and assert is:
+
+```javascript
+const wrapper = mount(<SomeComponent />);
+act(() => wrapper.prop('handler')());
+wrapper.update();
+expect(/* ... */);
+```
+
+We cannot wrap the result of `.prop()` (or `.props()`) with `.act()` in Enzyme internally since it will break the equality of the returned value.
+However, you could use `.invoke()` to simplify the code:
+
+```javascript
+const wrapper = mount(<SomeComponent />);
+wrapper.invoke('handler')();
+expect(/* ... */);
+```
 
 ### Future
 
