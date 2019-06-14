@@ -35,7 +35,7 @@ class Foo extends React.Component {
   }
 }
 const wrapper = shallow(<Foo />);
-wrapper.find('a').invoke('onClick')().then(() => {
+wrapper.find('button').invoke('onClick')().then(() => {
   // expect()
 });
 ```
