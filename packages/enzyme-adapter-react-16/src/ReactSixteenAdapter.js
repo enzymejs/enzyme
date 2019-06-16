@@ -36,7 +36,8 @@ import {
   Suspense,
 } from 'react-is';
 import { EnzymeAdapter } from 'enzyme';
-import { typeOfNode, shallowEqual } from 'enzyme/build/Utils';
+import { typeOfNode } from 'enzyme/build/Utils';
+import shallowEqual from 'enzyme-shallow-equal';
 import {
   displayNameOfNode,
   elementToTree as utilElementToTree,

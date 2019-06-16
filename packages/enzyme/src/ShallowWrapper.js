@@ -1,6 +1,7 @@
 import flat from 'array.prototype.flat';
 import cheerio from 'cheerio';
 import has from 'has';
+import shallowEqual from 'enzyme-shallow-equal';
 
 import {
   nodeEqual,
@@ -18,7 +19,6 @@ import {
   privateSet,
   cloneElement,
   spyMethod,
-  shallowEqual,
   isEmptyValue,
 } from './Utils';
 import getAdapter from './getAdapter';
