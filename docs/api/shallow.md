@@ -104,7 +104,7 @@ Returns whether or not the current node matches a provided selector.
 Returns whether or not the current node exists, or, if given a selector, whether that selector has any matching results.
 
 #### [`.isEmpty() => Boolean`](ShallowWrapper/isEmpty.md)
-*Deprecated*: Use [.exists()](ShallowWrapper/exists.md) instead.
+*Deprecated*: Use [`.exists()`](ShallowWrapper/exists.md) instead.
 
 #### [`.isEmptyRender() => Boolean`](ShallowWrapper/isEmptyRender.md)
 Returns whether or not the current component returns a falsy value.

@@ -120,4 +120,4 @@ wrapper.find({ foo: 3, bar: undefined });
 // => TypeError: Enzyme::Props can't have 'undefined' values. Try using 'findWhere()' instead.
 ```
 
-If you have to search by `undefined` property value, use [.findWhere()](ShallowWrapper/findWhere.md).
+If you have to search by `undefined` property value, use [`.findWhere()`](ShallowWrapper/findWhere.md).

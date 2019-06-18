@@ -99,7 +99,7 @@ Returns whether or not the current node matches a provided selector.
 Returns whether or not the current node exists, or, if given a selector, whether that selector has any matching results.
 
 #### [`.isEmpty() => Boolean`](ReactWrapper/isEmpty.md)
-*Deprecated*: Use [.exists()](ReactWrapper/exists.md) instead.
+*Deprecated*: Use [`.exists()`](ReactWrapper/exists.md) instead.
 
 #### [`.isEmptyRender() => Boolean`](ReactWrapper/isEmptyRender.md)
 Returns whether or not the current component returns a falsy value.

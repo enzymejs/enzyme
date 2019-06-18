@@ -1,5 +1,5 @@
 # `.isEmpty() => Boolean`
-**Deprecated**: Use [.exists()](exists.md) instead.
+**Deprecated**: Use [`.exists()`](exists.md) instead.
 
 Returns whether or not the wrapper is empty.
 

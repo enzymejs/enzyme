@@ -4,7 +4,7 @@ Shallow render the one non-DOM child of the current wrapper, and return a wrappe
 
 There is no corresponding `dive` method for ReactWrappers.
 
-NOTE: can only be called on a wrapper of a single non-DOM component element node, otherwise it will throw an error. If you have to shallow-wrap a wrapper with multiple child nodes, use [.shallow()](shallow.md).
+NOTE: can only be called on a wrapper of a single non-DOM component element node, otherwise it will throw an error. If you have to shallow-wrap a wrapper with multiple child nodes, use [`.shallow()`](shallow.md).
 
 
 #### Arguments
