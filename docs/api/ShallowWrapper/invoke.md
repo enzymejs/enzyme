@@ -15,7 +15,7 @@ This essentially calls wrapper.prop(propName)(...args).
 
 #### Example
 
-```jsx
+```jsx 
 class Foo extends React.Component {
   loadData() {
     return fetch();
