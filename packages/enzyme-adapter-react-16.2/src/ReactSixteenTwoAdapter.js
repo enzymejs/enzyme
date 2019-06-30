@@ -48,6 +48,7 @@ const HostPortal = 4;
 const HostComponent = 5;
 const HostText = 6;
 const Mode = 11;
+const HOCComponent = 9;
 
 function nodeAndSiblingsArray(nodeWithSibling) {
   const array = [];
@@ -121,6 +122,8 @@ function toTree(vnode) {
   switch (node.tag) {
     case HostRoot: // 3
       return childrenToTree(node.child);
+    case HOCComponent: // 9
+        return childrenToTree(node.child);
     case HostPortal: { // 4
       const {
         stateNode: { containerInfo },
