@@ -13,6 +13,7 @@ follows:
 - id syntax (`#foo`, `#foo-bar`, etc.)
 - attribute syntax (`[href="foo"]`, `[type="text"]`, and the other attribute selectors listed [here](https://developer.mozilla.org/en-US/docs/Learn/CSS/Introduction_to_CSS/Attribute_selectors).)
 - universal syntax (`*`)
+- React component name and props (`Button`, `Button[type="submit"]`, etc) - however, please note that it is strongly encouraged to find by component constructor/function and not by display name.
 
 The attribute syntax also works by value, rather than by string. Strings, numbers, and boolean property values are supported. Example:
 
@@ -40,7 +41,7 @@ a[href="foo"]
 .foo input
 ```
 
-**The Key and Ref Props**
+**React Key and Ref Props**
 
 While in most cases, any React prop can be used, there are exceptions.
 The `key` and `ref` props will never work; React uses these props internally.
