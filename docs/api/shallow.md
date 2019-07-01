@@ -184,6 +184,8 @@ Invokes a prop function on the current node and returns the function's return va
 #### [`.simulate(event[, data]) => ShallowWrapper`](ShallowWrapper/simulate.md)
 Simulates an event on the current node.
 
+*Deprecated:* Will be removed in later versions of Enzyme. [Click here for more information.](https://github.com/airbnb/enzyme/issues/2173#issuecomment-505551552)
+
 #### [`.setState(nextState) => ShallowWrapper`](ShallowWrapper/setState.md)
 Manually sets state of the root component.
 

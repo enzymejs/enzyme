@@ -55,3 +55,4 @@ the event handler set.
 target the component's prop based on the event you give it. For example, `.simulate('click')` will
 actually get the `onClick` prop and call it.
 - As noted in the function signature above passing a mock event is optional. Keep in mind that if the code you are testing uses the event for something like, calling `event.preventDefault()` or accessing any of its properties you must provide a mock event object with the properties your code requires.
+- One important thing to know is that the simulate function does not faithfully **simulate anything** - all it does is transform the event name to a prop name, and invoke the function provided prop.
