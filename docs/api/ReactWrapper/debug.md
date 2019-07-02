@@ -8,6 +8,7 @@ console when tests are not passing when you expect them to.
 
 `options` (`Object` [optional]):
 - `options.ignoreProps`: (`Boolean` [optional]): Whether props should be omitted in the resulting string. Props are included by default.
+- `options.verbose`: (`Boolean` [optional]): Whether arrays and objects passed as props should be verbosely printed.
 
 #### Returns
 
