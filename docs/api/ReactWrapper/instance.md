@@ -2,8 +2,9 @@
 
 Returns the single-node wrapper's node's underlying class instance; `this` in its methods. It must be a single-node wrapper.
 
-NOTE: With React `16` and above, `instance()` returns `null` for stateless functional components.
+NOTE: can only be called on a wrapper instance that is also the root instance.
 
+NOTE: With React `16` and above, `instance()` returns `null` for stateless functional components.
 
 #### Returns
 
