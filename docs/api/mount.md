@@ -192,7 +192,7 @@ A method that un-mounts the component.
 A method that re-mounts the component.
 
 #### [`.update() => ReactWrapper`](ReactWrapper/update.md)
-Calls `.forceUpdate()` on the root component instance.
+Syncs the enzyme component tree snapshot with the react component tree.
 
 #### [`.debug() => String`](ReactWrapper/debug.md)
 Returns a string representation of the current render tree for debugging purposes.

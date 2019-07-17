@@ -200,7 +200,7 @@ Returns a wrapper representing the `wrappingComponent`, if one was passed.
 Returns the instance of the root component.
 
 #### [`.update() => ShallowWrapper`](ShallowWrapper/update.md)
-Calls `.forceUpdate()` on the root component instance.
+Syncs the enzyme component tree snapshot with the react component tree.
 
 #### [`.debug() => String`](ShallowWrapper/debug.md)
 Returns a string representation of the current shallow render tree for debugging purposes.
