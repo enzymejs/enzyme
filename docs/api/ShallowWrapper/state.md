@@ -16,8 +16,8 @@ root component instance.
 
 ```jsx
 const wrapper = shallow(<MyComponent />);
-expect(wrapper.state().foo).to.equal(10);
-expect(wrapper.state('foo')).to.equal(10);
+expect(wrapper.state().foo).toEqual(10);
+expect(wrapper.state('foo')).toEqual(10);
 ```
 
 
