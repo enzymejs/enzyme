@@ -30,6 +30,7 @@ Organizations
  - [idealo](https://www.idealo.de/)
  - [LendingHome](https://www.lendinghome.com)
  - [Diffia](https://diffia.com)
+ - [MinuteMedia](https://www.minutemedia.com)
 
 Projects
 ----------
