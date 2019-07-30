@@ -1,13 +1,17 @@
 import semver from 'semver';
 
-function removePreRelease(version) {
-  return semver.inc(version, 'patch');
+function getValidRange(version) {
+  return semver.prerelease(version)
+    // Remove pre-release versions by incrementing them. This works because a pre-release is less
+    // than the corresponding non-pre-prelease version.
+    ? semver.inc(version, 'patch')
+    // Convert partial versions, such as 16 or 16.8, to their corresponding range notation, so that
+    // they work with the rest of the semver functions.
+    : semver.validRange(version);
 }
 
 export default function getAdapterForReactVersion(reactVersion) {
-  const versionRange = semver.prerelease(reactVersion)
-    ? removePreRelease(reactVersion)
-    : semver.validRange(reactVersion);
+  const versionRange = getValidRange(reactVersion);
 
   if (semver.intersects(versionRange, '^16.4.0')) {
     return 'enzyme-adapter-react-16';
