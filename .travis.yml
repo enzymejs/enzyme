@@ -75,6 +75,7 @@ matrix:
     - node_js: "6"
       env: REACT=0.13
 env:
+  - REACT=16.9
   - REACT=16.8
   - REACT=16.7
   - REACT=16.6
