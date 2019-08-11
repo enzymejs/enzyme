@@ -6,6 +6,8 @@ import functionName from 'function.prototype.name';
 import has from 'has';
 import flat from 'array.prototype.flat';
 import trim from 'string.prototype.trim';
+import cheerio from 'cheerio';
+import { isHtml } from 'cheerio/lib/utils';
 
 import { get } from './configuration';
 import { childrenOfNode } from './RSTTraversal';
@@ -349,4 +351,17 @@ export function renderedDive(nodes) {
 
     return isEmptyValue(n);
   });
+}
+
+export function loadCheerioRoot(html) {
+  if (!html) {
+    return cheerio.root();
+  }
+
+  if (!isHtml(html)) {
+    // use isDocument=false to create fragment
+    return cheerio.load(html, null, false).root();
+  }
+
+  return cheerio.load('')(html);
 }

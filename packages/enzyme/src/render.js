@@ -1,5 +1,5 @@
-import cheerio from 'cheerio';
 import getAdapter from './getAdapter';
+import { loadCheerioRoot } from './Utils';
 
 /**
  * Renders a react component into static HTML and provides a cheerio wrapper around it. This is
@@ -19,5 +19,5 @@ export default function render(node, options = {}) {
   const adapter = getAdapter(options);
   const renderer = adapter.createRenderer({ mode: 'string', ...options });
   const html = renderer.render(node, options.context);
-  return cheerio.load('')(html);
+  return loadCheerioRoot(html);
 }

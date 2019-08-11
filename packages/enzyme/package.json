@@ -36,7 +36,7 @@
   "license": "MIT",
   "dependencies": {
     "array.prototype.flat": "^1.2.1",
-    "cheerio": "^1.0.0-rc.2",
+    "cheerio": "^1.0.0-rc.3",
     "enzyme-shallow-equal": "^1.0.0",
     "function.prototype.name": "^1.1.0",
     "has": "^1.0.3",

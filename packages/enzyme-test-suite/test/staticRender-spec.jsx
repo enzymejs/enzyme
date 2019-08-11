@@ -78,7 +78,51 @@ describeWithDOM('render', () => {
       });
 
       const context = { name: 'foo' };
-      expect(() => render(<SimpleComponent />, { context })).to.not.throw(Error);
+      expect(() => render(<SimpleComponent />, { context })).not.to.throw();
+    });
+  });
+
+  describe('rendering non-elements', () => {
+    it('can render strings', () => {
+      const StringComponent = createClass({
+        render() {
+          return 'foo';
+        },
+      });
+
+      const getWrapper = (options) => render(<StringComponent />, options);
+      if (is('>= 16')) {
+        expect(getWrapper).to.not.throw();
+
+        const wrapper = getWrapper();
+        expect(wrapper.text()).to.equal('foo');
+        expect(wrapper.html()).to.equal('foo');
+        expect(String(wrapper)).to.equal('foo');
+        expect(wrapper).to.have.lengthOf(1);
+      } else {
+        expect(getWrapper).to.throw();
+      }
+    });
+
+    it('can render numbers', () => {
+      const NumberComponent = createClass({
+        render() {
+          return 42;
+        },
+      });
+
+      const getWrapper = (options) => render(<NumberComponent />, options);
+      if (is('>= 16')) {
+        expect(getWrapper).to.not.throw();
+
+        const wrapper = getWrapper();
+        expect(wrapper.text()).to.equal('42');
+        expect(wrapper.html()).to.equal('42');
+        expect(String(wrapper)).to.equal('42');
+        expect(wrapper).to.have.lengthOf(1);
+      } else {
+        expect(getWrapper).to.throw();
+      }
     });
   });
 

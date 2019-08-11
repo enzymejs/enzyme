@@ -14,6 +14,7 @@ import {
   isEmptyValue,
   renderedDive,
   isCustomComponent,
+  loadCheerioRoot,
 } from 'enzyme/build/Utils';
 import getAdapter from 'enzyme/build/getAdapter';
 import EnzymeAdapter from 'enzyme/build/EnzymeAdapter';
@@ -1071,6 +1072,19 @@ describe('Utils', () => {
       expect(() => isCustomComponent({}, null)).to.throw(Error);
       expect(() => isCustomComponent({}, false)).to.throw(Error);
       expect(() => isCustomComponent({}, {})).to.throw(Error);
+    });
+  });
+
+  describe('loadCheerioRoot', () => {
+    it('always returns a Cheerio instance', () => {
+      expect(loadCheerioRoot()).to.have.property('cheerio', '[cheerio object]');
+      expect(loadCheerioRoot(null)).to.have.property('cheerio', '[cheerio object]');
+      expect(loadCheerioRoot('')).to.have.property('cheerio', '[cheerio object]');
+      expect(loadCheerioRoot('foo')).to.have.property('cheerio', '[cheerio object]');
+      expect(loadCheerioRoot('123')).to.have.property('cheerio', '[cheerio object]');
+      expect(loadCheerioRoot('<div>bar</div>')).to.have.property('cheerio', '[cheerio object]');
+      expect(loadCheerioRoot('leading <span>text</span>')).to.have.property('cheerio', '[cheerio object]');
+      expect(loadCheerioRoot('<div>malformed</><<html')).to.have.property('cheerio', '[cheerio object]');
     });
   });
 });

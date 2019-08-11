@@ -1,5 +1,4 @@
 import flat from 'array.prototype.flat';
-import cheerio from 'cheerio';
 import has from 'has';
 import shallowEqual from 'enzyme-shallow-equal';
 
@@ -20,6 +19,7 @@ import {
   cloneElement,
   spyMethod,
   isEmptyValue,
+  loadCheerioRoot,
 } from './Utils';
 import getAdapter from './getAdapter';
 import { debugNodes } from './Debug';
@@ -1103,7 +1103,8 @@ class ShallowWrapper {
    * @returns {CheerioWrapper}
    */
   render() {
-    return this.type() === null ? cheerio() : cheerio.load('')(this.html());
+    const html = this.html();
+    return loadCheerioRoot(html);
   }
 
   /**

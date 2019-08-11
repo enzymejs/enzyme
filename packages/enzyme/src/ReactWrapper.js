@@ -1,4 +1,3 @@
-import cheerio from 'cheerio';
 import flat from 'array.prototype.flat';
 import has from 'has';
 
@@ -15,6 +14,7 @@ import {
   cloneElement,
   renderedDive,
   isCustomComponent,
+  loadCheerioRoot,
 } from './Utils';
 import getAdapter from './getAdapter';
 import { debugNodes } from './Debug';
@@ -650,7 +650,7 @@ class ReactWrapper {
    */
   render() {
     const html = this.html();
-    return html === null ? cheerio() : cheerio.load('')(html);
+    return loadCheerioRoot(html);
   }
 
   /**
