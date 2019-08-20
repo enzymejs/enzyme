@@ -10,7 +10,7 @@ export default function validateAdapter(adapter) {
 
       import Adapter from 'enzyme-adapter-react-15';
 
-      To find out more about this, see http://airbnb.io/enzyme/docs/installation/index.html
+      To find out more about this, see https://airbnb.io/enzyme/docs/installation/index.html
     `);
   }
   if (typeof adapter === 'function') {
@@ -24,7 +24,7 @@ export default function validateAdapter(adapter) {
 
         import Adapter from 'enzyme-adapter-react-15';
 
-        To find out more about this, see http://airbnb.io/enzyme/docs/installation/index.html
+        To find out more about this, see https://airbnb.io/enzyme/docs/installation/index.html
       `);
     }
     throw new Error(`
@@ -36,7 +36,7 @@ export default function validateAdapter(adapter) {
 
       import Adapter from 'enzyme-adapter-react-15';
 
-      To find out more about this, see http://airbnb.io/enzyme/docs/installation/index.html
+      To find out more about this, see https://airbnb.io/enzyme/docs/installation/index.html
     `);
   }
   if (!(adapter instanceof EnzymeAdapter)) {

@@ -2,7 +2,7 @@
   "name": "enzyme-adapter-react-16.2",
   "version": "1.6.1",
   "description": "JavaScript Testing utilities for React",
-  "homepage": "http://airbnb.io/enzyme/",
+  "homepage": "https://airbnb.io/enzyme/",
   "main": "build",
   "scripts": {
     "clean": "rimraf build",

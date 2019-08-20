@@ -2,7 +2,7 @@
   "name": "enzyme-shallow-equal",
   "version": "1.0.0",
   "description": "Adaptation of react-addons-shallow-compare, for independent usage",
-  "homepage": "http://airbnb.io/enzyme/",
+  "homepage": "https://airbnb.io/enzyme/",
   "main": "build",
   "scripts": {
     "clean": "rimraf build",
