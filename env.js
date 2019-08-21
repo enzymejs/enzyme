@@ -11,7 +11,8 @@ const promisify = (fn) => new Promise((res, rej) => {
   fn(done);
 });
 const getFile = (fpath) => promisify((cb) => fs.readFile(fpath, 'utf8', cb));
-// const getFiles = fpath => promisify(cb => fs.readdir(fpath, cb));
+const unlinkFile = (fpath) => promisify(cb => fs.unlink(fpath, cb));
+// const getFiles = (fpath) => promisify(cb => fs.readdir(fpath, cb));
 const getJSON = (fpath) => getFile(fpath).then((json) => JSON.parse(json));
 const writeFile = (fpath, src) => promisify((cb) => {
   console.log('writeFile', fpath, src);
@@ -106,14 +107,18 @@ const packagesToRemove = [
   'create-react-class',
 ].map((s) => `./node_modules/${s}`);
 
-const additionalDirsToRemove = [
+// lerna puts this here but it prevents installing packages without root access
+const lernaNpmSymlink = 'node_modules/npm';
+
+const additionalPathsToRemove = [
   'node_modules/.bin/npm',
   'node_modules/.bin/npm.cmd',
+  lernaNpmSymlink,
 ];
 
 const rmrfs = []
   .concat(packagesToRemove)
-  .concat(additionalDirsToRemove);
+  .concat(additionalPathsToRemove);
 
 Promise.resolve()
   .then(() => Promise.all(rmrfs.map((s) => primraf(s))))
@@ -138,7 +143,9 @@ Promise.resolve()
 
     return writeJSON(adapterPackageJsonPath, adapterJson, true).then(() => Promise.all([
       // npm install the peer deps at the root
-      run('npm', 'i', '--no-save', ...installs),
+      unlinkFile(lernaNpmSymlink).then(
+        () => run('npm', 'i', '--no-save', ...installs)
+      ),
 
       // add the adapter to the dependencies of the test suite
       writeJSON(testPackageJsonPath, testJson, true),
