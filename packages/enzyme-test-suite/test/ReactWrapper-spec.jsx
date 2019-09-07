@@ -1541,6 +1541,14 @@ describeWithDOM('mount', () => {
   });
 
   describe('lifecycle methods', () => {
+    const errorToThrow = new EvalError('threw an error!');
+    // in React 16.0 - 16.2 and 16.9+, and some older nodes, the actual error thrown isn't reported.
+    const reactError = new Error('An error was thrown inside one of your components, but React doesn\'t know what it was. This is likely due to browser flakiness. React does its best to preserve the "Pause on exceptions" behavior of the DevTools, which requires some DEV-mode only tricks. It\'s possible that these don\'t work in your browser. Try triggering the error in production mode, or switching to a modern browser. If you suspect that this is actually an issue with React, please file an issue.');
+    const properErrorMessage = error => error instanceof Error && (
+      error.message === errorToThrow.message
+      || error.message === reactError.message
+    );
+
     describeIf(is('>= 16.3'), 'getDerivedStateFromProps', () => {
       let spy;
 
@@ -1794,14 +1802,6 @@ describeWithDOM('mount', () => {
 
     describeIf(is('>= 16'), 'componentDidCatch', () => {
       describe('errors inside an error boundary', () => {
-        const errorToThrow = new EvalError('threw an error!');
-        // in React 16.0 - 16.2, and some older nodes, the actual error thrown isn't reported.
-        const reactError = new Error('An error was thrown inside one of your components, but React doesn\'t know what it was. This is likely due to browser flakiness. React does its best to preserve the "Pause on exceptions" behavior of the DevTools, which requires some DEV-mode only tricks. It\'s possible that these don\'t work in your browser. Try triggering the error in production mode, or switching to a modern browser. If you suspect that this is actually an issue with React, please file an issue.');
-        const properErrorMessage = error => error instanceof Error && (
-          error.message === errorToThrow.message
-          || error.message === reactError.message
-        );
-
         const hasFragments = is('>= 16.2');
         const MaybeFragment = hasFragments ? Fragment : 'main';
 
@@ -1972,8 +1972,6 @@ describeWithDOM('mount', () => {
 
     describeIf(is('>= 16.6'), 'getDerivedStateFromError', () => {
       describe('errors inside an error boundary', () => {
-        const errorToThrow = new EvalError('threw an error!');
-
         function Thrower({ throws }) {
           if (throws) {
             throw errorToThrow;
@@ -2035,7 +2033,7 @@ describeWithDOM('mount', () => {
               mount(<Thrower throws />);
               expect(true).to.equal(false, 'this line should not be reached');
             } catch (error) {
-              expect(error).to.equal(errorToThrow);
+              expect(error).to.satisfy(properErrorMessage);
             }
           });
         });
@@ -2099,7 +2097,7 @@ describeWithDOM('mount', () => {
 
           expect(spy.args).to.be.an('array').and.have.lengthOf(1);
           const [[actualError]] = spy.args;
-          expect(actualError).to.equal(errorToThrow);
+          expect(actualError).to.satisfy(properErrorMessage);
         });
 
         it('works when the root is an SFC', () => {
@@ -2116,14 +2114,12 @@ describeWithDOM('mount', () => {
 
           expect(spy.args).to.be.an('array').and.have.lengthOf(1);
           const [[actualError]] = spy.args;
-          expect(actualError).to.equal(errorToThrow);
+          expect(actualError).to.satisfy(properErrorMessage);
         });
       });
     });
 
     describeIf(is('>= 16.6'), 'getDerivedStateFromError and componentDidCatch combined', () => {
-
-      const errorToThrow = new EvalError('threw an error!');
       const expectedInfo = {
         componentStack: `
     in Thrower (created by ErrorBoundary)
@@ -2203,12 +2199,17 @@ describeWithDOM('mount', () => {
           wrapper.setState({ throws: true });
 
           expect(lifecycleSpy).to.have.property('callCount', 4);
-          expect(lifecycleSpy.args).to.deep.equal([
-            ['render'],
-            ['getDerivedStateFromError', errorToThrow],
-            ['render'],
-            ['componentDidCatch', errorToThrow, expectedInfo],
-          ]);
+          const [first, second, third, fourth] = lifecycleSpy.args;
+          expect(first).to.deep.equal(['render']);
+          expect(second).to.satisfy(([name, error, ...rest]) => {
+            return name === 'getDerivedStateFromError'
+              && properErrorMessage(error)
+              && rest.length === 0;
+          });
+          expect(third).to.deep.equal(['render']);
+          expect(fourth).to.satisfy(([name, error, info]) => {
+            return name === 'componentDidCatch' && properErrorMessage(error) && isEqual(info, expectedInfo);
+          });
 
           expect(stateSpy).to.have.property('callCount', 1);
           expect(stateSpy.args).to.deep.equal([
@@ -2313,14 +2314,22 @@ describeWithDOM('mount', () => {
 
           spy.resetHistory();
 
-          expect(() => wrapper.setState({ throws: true })).to.throw(errorToThrow);
+          try {
+            wrapper.setState({ throws: true })
+            expect('should never get here').to.equal(false);
+          } catch (e) {
+            expect(e).to.satisfy(properErrorMessage);
+          }
 
           expect(spy).to.have.property('callCount', 3);
-          expect(spy.args).to.deep.equal([
-            ['render'],
-            ['getDerivedStateFromError', errorToThrow],
-            ['render'],
-          ]);
+          const [first, second, third] = spy.args;
+          expect(first).to.deep.equal(['render']);
+          expect(second).to.satisfy(([name, arg, ...rest]) => {
+            return name === 'getDerivedStateFromError'
+              && properErrorMessage(arg)
+              && rest.length === 0;
+          });
+          expect(third).to.deep.equal(['render']);
         });
 
         it('renders again on simulated error', () => {
