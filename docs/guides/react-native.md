@@ -46,7 +46,7 @@ prop, that can be used a selector similar to `className` in standard React:
 ```
 
 ```jsx
-expect(wrapper.findWhere(node => node.prop('testID') === 'todo-item')).toExist();
+expect(wrapper.findWhere((node) => node.prop('testID') === 'todo-item')).toExist();
 ```
 
 ## Default example configuration for Jest and JSDOM replacement
@@ -185,7 +185,7 @@ describe('todo-list', () => {
       const newTodoTextInput = wrapper.find('Input').first();
       const addTodoButton = wrapper
         .find('Button')
-        .findWhere(w => w.text() === 'Add Todo')
+        .findWhere((w) => w.text() === 'Add Todo')
         .first();
 
       newTodoTextInput.props().onChangeText(newTodoText);
@@ -199,7 +199,7 @@ describe('todo-list', () => {
 
       // You can either check for a testID prop, similar to className in React:
       expect(
-        wrapper.findWhere(node => node.prop('testID') === 'todo-item'),
+        wrapper.findWhere((node) => node.prop('testID') === 'todo-item'),
       ).toExist();
 
       // Or even just find a component itself, if you broke the JSX out into its own component:

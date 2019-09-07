@@ -57,7 +57,7 @@ const PROVIDER_VALUES = sym('__providerValues__');
  * @returns {ShallowWrapper}
  */
 function findWhereUnwrapped(wrapper, predicate, filter = treeFilter) {
-  return wrapper.flatMap(n => filter(n.getNodeInternal(), predicate));
+  return wrapper.flatMap((n) => filter(n.getNodeInternal(), predicate));
 }
 
 /**
@@ -266,7 +266,7 @@ function mockSCUIfgDSFPReturnNonNull(node, state) {
     const { restore } = spyMethod(
       instance,
       'shouldComponentUpdate',
-      originalSCU => function shouldComponentUpdate(...args) {
+      (originalSCU) => function shouldComponentUpdate(...args) {
         instance.state = state;
         const sCUResult = originalSCU.apply(instance, args);
         const [, nextState] = args;
@@ -471,7 +471,7 @@ class ShallowWrapper {
    * @return {ReactElement}
    */
   getElement() {
-    return this.single('getElement', n => getAdapter(this[OPTIONS]).nodeToElement(n));
+    return this.single('getElement', (n) => getAdapter(this[OPTIONS]).nodeToElement(n));
   }
 
   /**
@@ -480,7 +480,7 @@ class ShallowWrapper {
    * @return {Array<ReactElement>}
    */
   getElements() {
-    return this.getNodesInternal().map(n => getAdapter(this[OPTIONS]).nodeToElement(n));
+    return this.getNodesInternal().map((n) => getAdapter(this[OPTIONS]).nodeToElement(n));
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -871,12 +871,12 @@ class ShallowWrapper {
       throw new Error('ShallowWrapper::contains() can only be called with a ReactElement (or an array of them), a string, or a number as an argument.');
     }
     const predicate = Array.isArray(nodeOrNodes)
-      ? other => containsChildrenSubArray(
+      ? (other) => containsChildrenSubArray(
         nodeEqual,
         other,
-        nodeOrNodes.map(node => adapter.elementToNode(node)),
+        nodeOrNodes.map((node) => adapter.elementToNode(node)),
       )
-      : other => nodeEqual(adapter.elementToNode(nodeOrNodes), other);
+      : (other) => nodeEqual(adapter.elementToNode(nodeOrNodes), other);
 
     return findWhereUnwrapped(this, predicate).length > 0;
   }
@@ -901,7 +901,7 @@ class ShallowWrapper {
   containsMatchingElement(node) {
     const adapter = getAdapter(this[OPTIONS]);
     const rstNode = adapter.elementToNode(node);
-    const predicate = other => nodeMatches(rstNode, other, (a, b) => a <= b);
+    const predicate = (other) => nodeMatches(rstNode, other, (a, b) => a <= b);
     return findWhereUnwrapped(this, predicate).length > 0;
   }
 
@@ -929,7 +929,7 @@ class ShallowWrapper {
       throw new TypeError('nodes should be an Array');
     }
 
-    return nodes.every(node => this.containsMatchingElement(node));
+    return nodes.every((node) => this.containsMatchingElement(node));
   }
 
   /**
@@ -952,7 +952,7 @@ class ShallowWrapper {
    * @returns {Boolean}
    */
   containsAnyMatchingElements(nodes) {
-    return Array.isArray(nodes) && nodes.some(node => this.containsMatchingElement(node));
+    return Array.isArray(nodes) && nodes.some((node) => this.containsMatchingElement(node));
   }
 
   /**
@@ -1016,7 +1016,7 @@ class ShallowWrapper {
    */
   is(selector) {
     const predicate = buildPredicate(selector);
-    return this.single('is', n => predicate(n));
+    return this.single('is', (n) => predicate(n));
   }
 
   /**
@@ -1027,7 +1027,7 @@ class ShallowWrapper {
   isEmptyRender() {
     const nodes = this.getNodesInternal();
 
-    return nodes.every(n => isEmptyValue(n));
+    return nodes.every((n) => isEmptyValue(n));
   }
 
   /**
@@ -1039,7 +1039,7 @@ class ShallowWrapper {
    * @returns {ShallowWrapper}
    */
   filterWhere(predicate) {
-    return filterWhereUnwrapped(this, n => predicate(this.wrap(n)));
+    return filterWhereUnwrapped(this, (n) => predicate(this.wrap(n)));
   }
 
   /**
@@ -1063,7 +1063,7 @@ class ShallowWrapper {
    */
   not(selector) {
     const predicate = buildPredicate(selector);
-    return filterWhereUnwrapped(this, n => !predicate(n));
+    return filterWhereUnwrapped(this, (n) => !predicate(n));
   }
 
   /**
@@ -1219,7 +1219,7 @@ class ShallowWrapper {
    * @returns {ShallowWrapper}
    */
   children(selector) {
-    const allChildren = this.flatMap(n => childrenOfNode(n.getNodeInternal()));
+    const allChildren = this.flatMap((n) => childrenOfNode(n.getNodeInternal()));
     return selector ? allChildren.filter(selector) : allChildren;
   }
 
@@ -1255,7 +1255,7 @@ class ShallowWrapper {
    * @returns {ShallowWrapper}
    */
   parent() {
-    return this.flatMap(n => [n.parents().get(0)]);
+    return this.flatMap((n) => [n.parents().get(0)]);
   }
 
   /**
@@ -1280,7 +1280,7 @@ class ShallowWrapper {
    * @returns {ShallowWrapper}
    */
   shallow(options) {
-    return this.single('shallow', n => (
+    return this.single('shallow', (n) => (
       this.wrap(getAdapter(this[OPTIONS]).nodeToElement(n), null, options)
     ));
   }
@@ -1358,7 +1358,7 @@ class ShallowWrapper {
    * @returns {String}
    */
   key() {
-    return this.single('key', n => (n.key === undefined ? null : n.key));
+    return this.single('key', (n) => (n.key === undefined ? null : n.key));
   }
 
   /**
@@ -1369,7 +1369,7 @@ class ShallowWrapper {
    * @returns {String|Function|null}
    */
   type() {
-    return this.single('type', n => typeOfNode(n));
+    return this.single('type', (n) => typeOfNode(n));
   }
 
   /**
@@ -1381,7 +1381,7 @@ class ShallowWrapper {
    */
   name() {
     const adapter = getAdapter(this[OPTIONS]);
-    return this.single('name', n => (
+    return this.single('name', (n) => (
       adapter.displayNameOfNode ? adapter.displayNameOfNode(n) : displayNameOfNode(n)
     ));
   }
@@ -1399,7 +1399,7 @@ class ShallowWrapper {
       // eslint-disable-next-line no-console
       console.warn('It looks like you\'re calling `ShallowWrapper::hasClass()` with a CSS selector. hasClass() expects a class name, not a CSS selector.');
     }
-    return this.single('hasClass', n => hasClassName(n, className));
+    return this.single('hasClass', (n) => hasClassName(n, className));
   }
 
   /**
@@ -1713,7 +1713,7 @@ class ShallowWrapper {
    * (actually rendered HTML elements) ignoring the React nodes.
    */
   hostNodes() {
-    return this.filterWhere(n => typeof n.type() === 'string');
+    return this.filterWhere((n) => typeof n.type() === 'string');
   }
 }
 

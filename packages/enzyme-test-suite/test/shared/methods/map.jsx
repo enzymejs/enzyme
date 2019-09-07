@@ -39,7 +39,7 @@ export default function describeMap({
           <div className="foo baz" />
         </div>
       ));
-      const result = wrapper.find('.foo').map(w => w.props().className);
+      const result = wrapper.find('.foo').map((w) => w.props().className);
 
       expect(result).to.eql([
         'foo bax',

@@ -8,7 +8,7 @@ Returns the key value for the node of the current wrapper. It must be a single-n
 ```jsx
 const wrapper = shallow((
   <ul>
-    {['foo', 'bar'].map(s => <li key={s}>{s}</li>)}
+    {['foo', 'bar'].map((s) => <li key={s}>{s}</li>)}
   </ul>
 )).find('li');
 expect(wrapper.at(0).key()).to.equal('foo');

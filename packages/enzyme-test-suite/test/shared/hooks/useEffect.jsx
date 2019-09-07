@@ -149,7 +149,7 @@ export default function describeUseEffect({
     });
 
     describe('on componentDidUpdate & componentDidMount', () => {
-      const expectedCountString = x => `You clicked ${x} times`;
+      const expectedCountString = (x) => `You clicked ${x} times`;
 
       let setDocumentTitle;
       function ClickCounterPage() {

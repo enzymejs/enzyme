@@ -8,7 +8,7 @@ export default function describeKey({
     it('returns the key of the node', () => {
       const wrapper = Wrap((
         <ul>
-          {['foo', 'bar', ''].map(s => <li key={s}>{s}</li>)}
+          {['foo', 'bar', ''].map((s) => <li key={s}>{s}</li>)}
         </ul>
       )).find('li');
       expect(wrapper.at(0).key()).to.equal('foo');

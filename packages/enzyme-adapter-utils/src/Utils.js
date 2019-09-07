@@ -209,7 +209,7 @@ export function elementToTree(el, recurse = elementToTree) {
   const { children } = props;
   let rendered = null;
   if (isArrayLike(children)) {
-    rendered = flatten(children).map(x => recurse(x));
+    rendered = flatten(children).map((x) => recurse(x));
   } else if (typeof children !== 'undefined') {
     rendered = recurse(children);
   }
@@ -253,7 +253,7 @@ export function findElement(el, predicate) {
   }
   const { rendered } = el;
   if (isArrayLike(rendered)) {
-    return mapFind(rendered, x => findElement(x, predicate), x => typeof x !== 'undefined');
+    return mapFind(rendered, (x) => findElement(x, predicate), (x) => typeof x !== 'undefined');
   }
   return findElement(rendered, predicate);
 }
@@ -274,7 +274,7 @@ export function getComponentStack(
   getNodeType = nodeTypeFromType,
   getDisplayName = displayNameOfNode,
 ) {
-  const tuples = hierarchy.filter(node => node.type !== RootFinder).map(x => [
+  const tuples = hierarchy.filter((node) => node.type !== RootFinder).map((x) => [
     getNodeType(x.type),
     getDisplayName(x),
   ]).concat([[
@@ -322,14 +322,14 @@ export function getMaskedContext(contextTypes, unmaskedContext) {
   if (!contextTypes || !unmaskedContext) {
     return {};
   }
-  return fromEntries(Object.keys(contextTypes).map(key => [key, unmaskedContext[key]]));
+  return fromEntries(Object.keys(contextTypes).map((key) => [key, unmaskedContext[key]]));
 }
 
 export function getNodeFromRootFinder(isCustomComponent, tree, options) {
   if (!isCustomComponent(options.wrappingComponent)) {
     return tree.rendered;
   }
-  const rootFinder = findElement(tree, node => node.type === RootFinder);
+  const rootFinder = findElement(tree, (node) => node.type === RootFinder);
   if (!rootFinder) {
     throw new Error('`wrappingComponent` must render its children!');
   }

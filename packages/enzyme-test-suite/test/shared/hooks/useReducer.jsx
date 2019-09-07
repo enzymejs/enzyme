@@ -40,7 +40,7 @@ export default function describeUseReducer({
           <div className="FooBarTextList">
             <Child text="foo" dispatch={dispatch} />
             <Child text="bar" dispatch={dispatch} />
-            {state.map(text => (
+            {state.map((text) => (
               <p key={text}>{text}</p>
             ))}
           </div>

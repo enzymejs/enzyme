@@ -30,7 +30,7 @@ export function spaces(n) {
 }
 
 export function indent(depth, string) {
-  return string.split('\n').map(x => `${spaces(depth)}${x}`).join('\n');
+  return string.split('\n').map((x) => `${spaces(depth)}${x}`).join('\n');
 }
 
 function propString(prop, options) {
@@ -58,13 +58,13 @@ function propString(prop, options) {
 
 function propsString(node, options) {
   const props = propsOfNode(node);
-  const keys = Object.keys(props).filter(x => x !== 'children');
-  return keys.map(key => `${key}=${propString(props[key], options)}`).join(' ');
+  const keys = Object.keys(props).filter((x) => x !== 'children');
+  return keys.map((key) => `${key}=${propString(props[key], options)}`).join(' ');
 }
 
 function indentChildren(childrenStrs, indentLength) {
   return childrenStrs.length
-    ? `\n${childrenStrs.map(x => indent(indentLength, x)).join('\n')}\n`
+    ? `\n${childrenStrs.map((x) => indent(indentLength, x)).join('\n')}\n`
     : '';
 }
 
@@ -92,7 +92,7 @@ export function debugNode(node, indentLength = 2, options = {}) {
   }
 
   const childrenStrs = childrenOfNode(node)
-    .map(n => debugNode(n, indentLength, options))
+    .map((n) => debugNode(n, indentLength, options))
     .filter(Boolean);
   const type = typeName(node);
 
@@ -107,5 +107,5 @@ export function debugNode(node, indentLength = 2, options = {}) {
 }
 
 export function debugNodes(nodes, options = {}) {
-  return nodes.map(node => debugNode(node, undefined, options)).join('\n\n\n');
+  return nodes.map((node) => debugNode(node, undefined, options)).join('\n\n\n');
 }

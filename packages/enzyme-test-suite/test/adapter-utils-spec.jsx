@@ -224,20 +224,20 @@ describe('enzyme-adapter-utils', () => {
     );
 
     it('finds an element in the render tree using a predicate', () => {
-      expect(findElement(tree, node => node.type === Target)).to.eql(target);
+      expect(findElement(tree, (node) => node.type === Target)).to.eql(target);
     });
 
     it('returns undefined if the element cannot be found', () => {
-      expect(findElement(tree, node => node.type === Unfound)).to.equal(undefined);
+      expect(findElement(tree, (node) => node.type === Unfound)).to.equal(undefined);
     });
 
     it('returns undefined if some non-element is passed', () => {
-      expect(findElement({}, node => node.type === Target)).to.equal(undefined);
+      expect(findElement({}, (node) => node.type === Target)).to.equal(undefined);
     });
   });
 
   describe('getNodeFromRootFinder', () => {
-    const isCustomComponent = component => typeof component === 'function';
+    const isCustomComponent = (component) => typeof component === 'function';
     class Target extends React.Component { render() { return null; } }
     class WrappingComponent extends React.Component { render() { return null; } }
 

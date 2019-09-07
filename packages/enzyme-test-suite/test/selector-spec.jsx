@@ -298,7 +298,7 @@ describe('selectors', () => {
         expect(wrapper.find('.to-find')).to.have.lengthOf(3);
         const toFind = wrapper.find('.to-find + .sibling');
         expect(toFind).to.have.lengthOf(2);
-        toFind.map(found => expect(found.text()).to.equal('Adjacent'));
+        toFind.map((found) => expect(found.text()).to.equal('Adjacent'));
       });
 
       it('simple general siblings', () => {
@@ -336,7 +336,7 @@ describe('selectors', () => {
         const spans = wrapper.find('span');
         const siblings = wrapper.find('span ~ span');
         expect(spans.length - 2).to.equal(siblings.length);
-        siblings.map(sibling => expect(sibling.text()).to.not.equal('Top'));
+        siblings.map((sibling) => expect(sibling.text()).to.not.equal('Top'));
       });
 
       it('handles using general siblings on root', () => {

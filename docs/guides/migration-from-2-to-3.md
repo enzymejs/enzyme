@@ -152,7 +152,7 @@ enzyme has a `.children()` method which is intended to return the rendered child
 When using `mount(...)`, it can sometimes be unclear exactly what this would mean. Consider for
 example the following react components:
 
-<!-- eslint react/prop-types: 0, react/prefer-stateless-function: 0 -->
+<!-- eslint react/prop-types: 0, react/prefer-stateless-function: 0, max-classes-per-file: 0 -->
 ```js
 class Box extends React.Component {
   render() {
@@ -438,7 +438,7 @@ method.
 To get the wrapper that was returned by enzyme 2:
 ```js
 const wrapper = mount(<Bar />);
-const refWrapper = wrapper.findWhere(n => n.instance() === wrapper.ref('abc'));
+const refWrapper = wrapper.findWhere((n) => n.instance() === wrapper.ref('abc'));
 ```
 
 ## With `mount`, `.instance()` can be called at any level of the tree
@@ -501,7 +501,7 @@ have found something that did indeed break, please file an issue with us. Thank 
 enzyme v3 now returns **all** nodes in the result set and not just html nodes.
 Consider this example:
 
-<!-- eslint react/prop-types: 0, react/prefer-stateless-function: 0 -->
+<!-- eslint react/prop-types: 0, react/prefer-stateless-function: 0, react/jsx-props-no-spreading: 0 -->
 
 ```js
 const HelpLink = ({ text, ...rest }) => <a {...rest}>{text}</a>;

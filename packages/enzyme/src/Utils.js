@@ -224,7 +224,7 @@ export function childrenToSimplifiedArray(nodeChildren, isLoose = false) {
   }
 
   if (isLoose) {
-    return simplifiedArray.map(x => (typeof x === 'string' ? trim(x) : x));
+    return simplifiedArray.map((x) => (typeof x === 'string' ? trim(x) : x));
   }
 
   return simplifiedArray;
@@ -259,7 +259,7 @@ export function withSetStateAllowed(fn) {
 
 export function AND(fns) {
   const fnsReversed = fns.slice().reverse();
-  return x => fnsReversed.every(fn => fn(x));
+  return (x) => fnsReversed.every((fn) => fn(x));
 }
 
 export function displayNameOfNode(node) {

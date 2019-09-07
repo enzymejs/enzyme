@@ -31,7 +31,7 @@ import { itIf, describeWithDOM, describeIf } from './_helpers';
 
 const { adapter } = get();
 
-const prettyFormat = x => inspect(x).replace(/,/g, ',\n');
+const prettyFormat = (x) => inspect(x).replace(/,/g, ',\n');
 
 // Kind of hacky, but we nullify all the instances to test the tree structure
 // with jasmine's deep equality function, and test the instances separate. We
@@ -988,7 +988,7 @@ describe('Adapter', () => {
   });
 
   describe('provides node displayNames', () => {
-    const getDisplayName = el => adapter.displayNameOfNode(adapter.elementToNode(el));
+    const getDisplayName = (el) => adapter.displayNameOfNode(adapter.elementToNode(el));
 
     itIf(is('> 0.13'), 'supports stateless function components', () => {
       const SFC = () => null;

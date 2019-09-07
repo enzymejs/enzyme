@@ -47,7 +47,7 @@ const getEmptyElementType = (() => {
 
 const createShallowRenderer = function createRendererCompatible() {
   const renderer = TestUtils.createRenderer();
-  renderer.render = (originalRender => function contextCompatibleRender(node, context = {}) {
+  renderer.render = ((originalRender) => function contextCompatibleRender(node, context = {}) {
     ReactContext.current = context;
     originalRender.call(this, React.createElement(node.type, node.props), context);
     ReactContext.current = {};

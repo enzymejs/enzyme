@@ -296,9 +296,9 @@ describe('shallow', () => {
         function Component() {
           return (
             <Context1.Consumer>
-              {value1 => (
+              {(value1) => (
                 <Context2.Consumer>
-                  {value2 => (
+                  {(value2) => (
                     <div>Value 1: {value1}; Value 2: {value2}</div>
                   )}
                 </Context2.Consumer>
@@ -376,7 +376,7 @@ describe('shallow', () => {
       const Bar = () => null;
       wrap()
         .withConsoleThrows()
-        .withOverride(() => getAdapter(), 'isValidElementType', () => val => val === Foo)
+        .withOverride(() => getAdapter(), 'isValidElementType', () => (val) => val === Foo)
         .it('with isValidElementType defined on the Adapter', () => {
           expect(() => {
             shallow(<Bar />);
@@ -436,7 +436,7 @@ describe('shallow', () => {
         render() {
           return (
             <span>
-              <Consumer>{value => <span>{value}</span>}</Consumer>
+              <Consumer>{(value) => <span>{value}</span>}</Consumer>
             </span>
           );
         }
@@ -480,7 +480,7 @@ describe('shallow', () => {
             const wrapper = shallow(
               <Context.Provider value="hello">
                 <Context.Consumer>
-                  {value => <div>{value}</div>}
+                  {(value) => <div>{value}</div>}
                 </Context.Consumer>
               </Context.Provider>,
             );
@@ -495,7 +495,7 @@ describe('shallow', () => {
             const wrapper = shallow(
               <Context.Provider value="hello">
                 <Context.Consumer>
-                  {value => <div>{value}</div>}
+                  {(value) => <div>{value}</div>}
                 </Context.Consumer>
               </Context.Provider>,
             );
@@ -511,7 +511,7 @@ describe('shallow', () => {
           it('can be rendered as the root', () => {
             const wrapper = shallow(
               <Context.Consumer>
-                {value => <DivRenderer>{value}</DivRenderer>}
+                {(value) => <DivRenderer>{value}</DivRenderer>}
               </Context.Consumer>,
             );
             expect(wrapper.debug()).to.eql(`
@@ -524,10 +524,10 @@ describe('shallow', () => {
           it('supports changing the children', () => {
             const wrapper = shallow(
               <Context.Consumer>
-                {value => <DivRenderer>{value}</DivRenderer>}
+                {(value) => <DivRenderer>{value}</DivRenderer>}
               </Context.Consumer>,
             );
-            wrapper.setProps({ children: value => <DivRenderer>Changed: {value}</DivRenderer> });
+            wrapper.setProps({ children: (value) => <DivRenderer>Changed: {value}</DivRenderer> });
             expect(wrapper.find(DivRenderer).dive().text()).to.eql('Changed: cool');
           });
         });
@@ -545,7 +545,7 @@ describe('shallow', () => {
           render() {
             return (
               <span>
-                <Consumer>{value => <span>{value}</span>}</Consumer>
+                <Consumer>{(value) => <span>{value}</span>}</Consumer>
               </span>
             );
           }

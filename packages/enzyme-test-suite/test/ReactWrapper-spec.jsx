@@ -283,9 +283,9 @@ describeWithDOM('mount', () => {
         function Component() {
           return (
             <Context1.Consumer>
-              {value1 => (
+              {(value1) => (
                 <Context2.Consumer>
-                  {value2 => (
+                  {(value2) => (
                     <div>Value 1: {value1}; Value 2: {value2}</div>
                   )}
                 </Context2.Consumer>
@@ -367,7 +367,7 @@ describeWithDOM('mount', () => {
       const Bar = () => null;
       wrap()
         .withConsoleThrows()
-        .withOverride(() => getAdapter(), 'isValidElementType', () => val => val === Foo)
+        .withOverride(() => getAdapter(), 'isValidElementType', () => (val) => val === Foo)
         .it('with isValidElementType defined on the Adapter', () => {
           expect(() => {
             mount(<Bar />);
@@ -499,7 +499,7 @@ describeWithDOM('mount', () => {
         class Foo extends React.Component {
           render() {
             return (
-              <Context.Consumer>{value => <span>{value}</span>}</Context.Consumer>
+              <Context.Consumer>{(value) => <span>{value}</span>}</Context.Consumer>
             );
           }
         }
@@ -512,7 +512,7 @@ describeWithDOM('mount', () => {
       it('can render a <Provider /> as the root', () => {
         const wrapper = mount(
           <Context.Provider value="cool">
-            <Context.Consumer>{value => <div>{value}</div>}</Context.Consumer>
+            <Context.Consumer>{(value) => <div>{value}</div>}</Context.Consumer>
           </Context.Provider>,
         );
         expect(wrapper.text()).to.equal('cool');
@@ -523,12 +523,12 @@ describeWithDOM('mount', () => {
 
       it('can render a <Consumer /> as the root', () => {
         const wrapper = mount(
-          <Context.Consumer>{value => <div>{value}</div>}</Context.Consumer>,
+          <Context.Consumer>{(value) => <div>{value}</div>}</Context.Consumer>,
         );
         expect(wrapper.text()).to.equal('hello');
 
         wrapper.setProps({
-          children: value => <div>Value is: {value}</div>,
+          children: (value) => <div>Value is: {value}</div>,
         });
         expect(wrapper.text()).to.equal('Value is: hello');
       });
@@ -1544,7 +1544,7 @@ describeWithDOM('mount', () => {
     const errorToThrow = new EvalError('threw an error!');
     // in React 16.0 - 16.2 and 16.9+, and some older nodes, the actual error thrown isn't reported.
     const reactError = new Error('An error was thrown inside one of your components, but React doesn\'t know what it was. This is likely due to browser flakiness. React does its best to preserve the "Pause on exceptions" behavior of the DevTools, which requires some DEV-mode only tricks. It\'s possible that these don\'t work in your browser. Try triggering the error in production mode, or switching to a modern browser. If you suspect that this is actually an issue with React, please file an issue.');
-    const properErrorMessage = error => error instanceof Error && (
+    const properErrorMessage = (error) => error instanceof Error && (
       error.message === errorToThrow.message
       || error.message === reactError.message
     );
@@ -2201,15 +2201,11 @@ describeWithDOM('mount', () => {
           expect(lifecycleSpy).to.have.property('callCount', 4);
           const [first, second, third, fourth] = lifecycleSpy.args;
           expect(first).to.deep.equal(['render']);
-          expect(second).to.satisfy(([name, error, ...rest]) => {
-            return name === 'getDerivedStateFromError'
+          expect(second).to.satisfy(([name, error, ...rest]) => name === 'getDerivedStateFromError'
               && properErrorMessage(error)
-              && rest.length === 0;
-          });
+              && rest.length === 0);
           expect(third).to.deep.equal(['render']);
-          expect(fourth).to.satisfy(([name, error, info]) => {
-            return name === 'componentDidCatch' && properErrorMessage(error) && isEqual(info, expectedInfo);
-          });
+          expect(fourth).to.satisfy(([name, error, info]) => name === 'componentDidCatch' && properErrorMessage(error) && isEqual(info, expectedInfo));
 
           expect(stateSpy).to.have.property('callCount', 1);
           expect(stateSpy.args).to.deep.equal([
@@ -2315,7 +2311,7 @@ describeWithDOM('mount', () => {
           spy.resetHistory();
 
           try {
-            wrapper.setState({ throws: true })
+            wrapper.setState({ throws: true });
             expect('should never get here').to.equal(false);
           } catch (e) {
             expect(e).to.satisfy(properErrorMessage);
@@ -2324,11 +2320,9 @@ describeWithDOM('mount', () => {
           expect(spy).to.have.property('callCount', 3);
           const [first, second, third] = spy.args;
           expect(first).to.deep.equal(['render']);
-          expect(second).to.satisfy(([name, arg, ...rest]) => {
-            return name === 'getDerivedStateFromError'
+          expect(second).to.satisfy(([name, arg, ...rest]) => name === 'getDerivedStateFromError'
               && properErrorMessage(arg)
-              && rest.length === 0;
-          });
+              && rest.length === 0);
           expect(third).to.deep.equal(['render']);
         });
 

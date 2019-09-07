@@ -21,7 +21,7 @@ export default function describeReduceRight({
           <div className="foo baz" />
         </div>
       ));
-      const spy = sinon.spy(n => n + 1);
+      const spy = sinon.spy((n) => n + 1);
 
       wrapper.find('.foo').reduceRight(spy, 0);
 

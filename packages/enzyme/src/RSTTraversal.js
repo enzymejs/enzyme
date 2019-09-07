@@ -43,7 +43,7 @@ export function treeForEach(tree, fn) {
   if (tree) {
     fn(tree);
   }
-  childrenOfNode(tree).forEach(node => treeForEach(node, fn));
+  childrenOfNode(tree).forEach((node) => treeForEach(node, fn));
 }
 
 export function treeFilter(tree, fn) {
@@ -81,14 +81,14 @@ export function findParentNode(root, targetNode) {
 }
 
 function pathFilter(path, fn) {
-  return path.filter(tree => treeFilter(tree, fn).length !== 0);
+  return path.filter((tree) => treeFilter(tree, fn).length !== 0);
 }
 
 export function pathToNode(node, root) {
   const queue = [root];
   const path = [];
 
-  const hasNode = testNode => node === testNode;
+  const hasNode = (testNode) => node === testNode;
 
   while (queue.length) {
     const current = queue.pop();

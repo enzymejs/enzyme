@@ -21,7 +21,7 @@ export default function describeReduce({
           <div className="foo baz" />
         </div>
       ));
-      const spy = sinon.spy(n => n + 1);
+      const spy = sinon.spy((n) => n + 1);
 
       wrapper.find('.foo').reduce(spy, 0);
 

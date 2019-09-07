@@ -87,16 +87,18 @@ export default function createMountWrapper(node, options = {}) {
     }
 
     setChildContext(context) {
-      return new Promise(resolve => this.setState({ context }, resolve));
+      return new Promise((resolve) => this.setState({ context }, resolve));
     }
 
     render() {
       const { Component } = this.props;
       const { mount, props, wrappingComponentProps } = this.state;
       if (!mount) return null;
+      // eslint-disable-next-line react/jsx-props-no-spreading
       const component = <Component {...props} />;
       if (WrappingComponent) {
         return (
+          // eslint-disable-next-line react/jsx-props-no-spreading
           <WrappingComponent {...wrappingComponentProps}>
             <RootFinder>{component}</RootFinder>
           </WrappingComponent>

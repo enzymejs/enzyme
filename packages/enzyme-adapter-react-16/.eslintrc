@@ -2,6 +2,7 @@
   "extends": "airbnb",
   "root": true,
   "rules": {
+    "max-classes-per-file": 0,
     "max-len": 0,
     "import/no-extraneous-dependencies": 2,
     "import/no-unresolved": 2,

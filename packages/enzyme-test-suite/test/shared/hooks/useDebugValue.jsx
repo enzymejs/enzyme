@@ -22,7 +22,7 @@ export default function describeUseDebugValue({
       return (<div>{value}</div>);
     }
 
-    function ComponentUsingDebugValueAndCallback({ value, fn = x => `debug value: ${x}` }) {
+    function ComponentUsingDebugValueAndCallback({ value, fn = (x) => `debug value: ${x}` }) {
       useDebugValue(value, fn);
 
       return (<div>{value}</div>);

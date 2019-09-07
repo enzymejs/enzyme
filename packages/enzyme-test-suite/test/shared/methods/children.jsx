@@ -82,7 +82,7 @@ export default function describeChildren({
           return (
             <div>
               <span className="foo" />
-              {items.map(x => x)}
+              {items.map((x) => x)}
             </div>
           );
         }
@@ -120,7 +120,7 @@ export default function describeChildren({
         const Foo = ({ items }) => (
           <div>
             <span className="foo" />
-            {items.map(x => x)}
+            {items.map((x) => x)}
           </div>
         );
 
@@ -153,7 +153,7 @@ export default function describeChildren({
 
       const wrapper = Wrap(<Foo />);
       const children = wrapper.children();
-      const textNodes = children.map(x => x.text());
+      const textNodes = children.map((x) => x.text());
       const expectedShallowNodes = ['Foo', ' Bar ', 'Foo', ' Bar ', 'Foo'];
       const expectedTextNodes = isShallow ? expectedShallowNodes : [expectedShallowNodes.join('')];
       expect(textNodes).to.eql(expectedTextNodes);
@@ -165,7 +165,7 @@ export default function describeChildren({
           const { children } = this.props;
           const wrappedChildren = React.Children.map(
             children,
-            child => child && <span>{child}</span>,
+            (child) => child && <span>{child}</span>,
           );
 
           const justifiedChildren = [];
@@ -188,7 +188,7 @@ export default function describeChildren({
         </JustificationRow>
       ));
 
-      expect(wrapper.children().map(x => x.debug())).to.eql([
+      expect(wrapper.children().map((x) => x.debug())).to.eql([
         `<span>
   <div>
     foo

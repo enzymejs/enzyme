@@ -14,9 +14,9 @@ export default function describeSomeWhere({
         </div>
       ));
       const foo = wrapper.find('.foo');
-      expect(foo.someWhere(n => n.hasClass('qoo'))).to.equal(true);
-      expect(foo.someWhere(n => n.hasClass('foo'))).to.equal(true);
-      expect(foo.someWhere(n => n.hasClass('bar'))).to.equal(false);
+      expect(foo.someWhere((n) => n.hasClass('qoo'))).to.equal(true);
+      expect(foo.someWhere((n) => n.hasClass('foo'))).to.equal(true);
+      expect(foo.someWhere((n) => n.hasClass('bar'))).to.equal(false);
     });
   });
 }

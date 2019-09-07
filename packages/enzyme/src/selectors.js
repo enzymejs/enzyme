@@ -148,10 +148,10 @@ function matchPseudoSelector(node, token, root) {
   const { name, parameters } = token;
   if (name === 'not') {
     // eslint-disable-next-line no-use-before-define
-    return parameters.every(selector => reduceTreeBySelector(selector, node).length === 0);
+    return parameters.every((selector) => reduceTreeBySelector(selector, node).length === 0);
   }
   if (name === 'empty') {
-    return treeFilter(node, n => n !== node).length === 0;
+    return treeFilter(node, (n) => n !== node).length === 0;
   }
   if (name === 'first-child') {
     const { rendered } = findParentNode(root, node);
@@ -238,7 +238,7 @@ function nodeMatchesToken(node, token, root) {
  * @param {Token} token
  */
 function buildPredicateFromToken(token, root) {
-  return node => token.body.every(bodyToken => nodeMatchesToken(node, bodyToken, root));
+  return (node) => token.body.every((bodyToken) => nodeMatchesToken(node, bodyToken, root));
 }
 
 /**
@@ -247,7 +247,7 @@ function buildPredicateFromToken(token, root) {
  * @param {Array<Token>} tokens
  */
 function isComplexSelector(tokens) {
-  return tokens.some(token => token.type !== SELECTOR);
+  return tokens.some((token) => token.type !== SELECTOR);
 }
 
 
@@ -274,16 +274,16 @@ export function buildPredicate(selector) {
     ? adapter.isValidElementType(selector)
     : typeof selector === 'function';
   if (isElementType) {
-    return node => adapter.matchesElementType(node, selector);
+    return (node) => adapter.matchesElementType(node, selector);
   }
   // If the selector is an non-empty object, treat the keys/values as props
   if (typeof selector === 'object') {
     if (!Array.isArray(selector) && selector !== null && Object.keys(selector).length > 0) {
-      const hasUndefinedValues = values(selector).some(value => typeof value === 'undefined');
+      const hasUndefinedValues = values(selector).some((value) => typeof value === 'undefined');
       if (hasUndefinedValues) {
         throw new TypeError('Enzyme::Props can’t have `undefined` values. Try using ‘findWhere()’ instead.');
       }
-      return node => nodeMatchesObjectProps(node, selector);
+      return (node) => nodeMatchesObjectProps(node, selector);
     }
     throw new TypeError('Enzyme::Selector does not support an array, null, or empty object as a selector');
   }
@@ -378,7 +378,7 @@ export function reduceTreeBySelector(selector, root) {
   if (typeof selector !== 'string') {
     const elements = elementsByConstructor(selector);
     if (elements.length > 0) {
-      return flat(elements.map(x => reduceTreeBySelector(x.tag, root)));
+      return flat(elements.map((x) => reduceTreeBySelector(x.tag, root)));
 
       // when https://github.com/aweary/rst-selector-parser/issues/15 is resolved
       // const htmlTagNames = elements.map(x => x.tag).join(', ');
@@ -454,6 +454,6 @@ export function reduceTreeBySelector(selector, root) {
 }
 
 export function reduceTreesBySelector(selector, roots) {
-  const results = roots.map(n => reduceTreeBySelector(selector, n));
+  const results = roots.map((n) => reduceTreeBySelector(selector, n));
   return unique(flat(results, 1));
 }

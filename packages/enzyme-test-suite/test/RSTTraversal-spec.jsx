@@ -115,7 +115,7 @@ describe('RSTTraversal', () => {
       ));
       treeForEach(node, spy);
       expect(spy).to.have.property('callCount', 3);
-      const nodes = spy.args.map(arg => arg[0]);
+      const nodes = spy.args.map((arg) => arg[0]);
       expect(nodes).to.deep.equal([node, divA, divB]);
     });
 
@@ -141,7 +141,7 @@ describe('RSTTraversal', () => {
       ));
       treeForEach(node, spy);
       expect(spy).to.have.property('callCount', 5);
-      const nodes = spy.args.map(arg => arg[0]);
+      const nodes = spy.args.map((arg) => arg[0]);
       expect(nodes).to.deep.equal([node, divA, divB, divC, divD]);
     });
 
@@ -160,7 +160,7 @@ describe('RSTTraversal', () => {
       ));
       treeForEach(node, spy);
       expect(spy).to.have.property('callCount', 3);
-      const nodes = spy.args.map(arg => arg[0]);
+      const nodes = spy.args.map((arg) => arg[0]);
       expect(nodes).to.deep.equal([node, divA, divB]);
     });
 
@@ -186,7 +186,7 @@ describe('RSTTraversal', () => {
       ));
       treeForEach(node, spy);
       expect(spy).to.have.property('callCount', 5);
-      const nodes = spy.args.map(arg => arg[0]);
+      const nodes = spy.args.map((arg) => arg[0]);
       expect(nodes).to.deep.equal([node, divA, divB, divC, divD]);
     });
 
@@ -205,7 +205,7 @@ describe('RSTTraversal', () => {
       ));
       treeForEach(node, spy);
       expect(spy).to.have.property('callCount', 3);
-      const nodes = spy.args.map(arg => arg[0]);
+      const nodes = spy.args.map((arg) => arg[0]);
       expect(nodes).to.deep.equal([node, divA, divB]);
     });
 
@@ -231,7 +231,7 @@ describe('RSTTraversal', () => {
       ));
       treeForEach(node, spy);
       expect(spy).to.have.property('callCount', 5);
-      const nodes = spy.args.map(arg => arg[0]);
+      const nodes = spy.args.map((arg) => arg[0]);
       expect(nodes).to.deep.equal([node, divA, divB, divC, divD]);
     });
 
@@ -275,7 +275,7 @@ describe('RSTTraversal', () => {
 
         treeForEach(node, spy);
         expect(spy).to.have.property('callCount', 3);
-        const nodes = spy.args.map(arg => arg[0]);
+        const nodes = spy.args.map((arg) => arg[0]);
         expect(nodes).to.deep.equal([node, divA, divB]);
       });
 
@@ -298,7 +298,7 @@ describe('RSTTraversal', () => {
 
         treeForEach(node, spy);
         expect(spy).to.have.property('callCount', 5);
-        const nodes = spy.args.map(arg => arg[0]);
+        const nodes = spy.args.map((arg) => arg[0]);
         expect(nodes).to.deep.equal([node, divA, divB, divC, divD]);
       });
 
@@ -317,7 +317,7 @@ describe('RSTTraversal', () => {
 
         treeForEach(node, spy);
         expect(spy).to.have.property('callCount', 3);
-        const nodes = spy.args.map(arg => arg[0]);
+        const nodes = spy.args.map((arg) => arg[0]);
         expect(nodes).to.deep.equal([node, divA, divB]);
       });
 
@@ -340,7 +340,7 @@ describe('RSTTraversal', () => {
 
         treeForEach(node, spy);
         expect(spy).to.have.property('callCount', 5);
-        const nodes = spy.args.map(arg => arg[0]);
+        const nodes = spy.args.map((arg) => arg[0]);
         expect(nodes).to.deep.equal([node, divA, divB, divC, divD]);
       });
     });
@@ -397,8 +397,8 @@ describe('RSTTraversal', () => {
     });
 
     it('filters for truthiness', () => {
-      expect(treeFilter(tree, node => node.type === 'nav').length).to.equal(1);
-      expect(treeFilter(tree, node => node.type === 'button').length).to.equal(2);
+      expect(treeFilter(tree, (node) => node.type === 'nav').length).to.equal(1);
+      expect(treeFilter(tree, (node) => node.type === 'button').length).to.equal(2);
     });
 
   });

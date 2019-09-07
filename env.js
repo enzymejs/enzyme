@@ -6,13 +6,13 @@ const spawn = require('child_process').spawn;
 const rimraf = require('rimraf');
 const semver = require('semver');
 
-const promisify = fn => new Promise((res, rej) => {
+const promisify = (fn) => new Promise((res, rej) => {
   const done = (err, val) => (err ? rej(err) : res(val));
   fn(done);
 });
-const getFile = fpath => promisify(cb => fs.readFile(fpath, 'utf8', cb));
+const getFile = (fpath) => promisify((cb) => fs.readFile(fpath, 'utf8', cb));
 // const getFiles = fpath => promisify(cb => fs.readdir(fpath, cb));
-const getJSON = fpath => getFile(fpath).then(json => JSON.parse(json));
+const getJSON = (fpath) => getFile(fpath).then((json) => JSON.parse(json));
 const writeFile = (fpath, src) => promisify((cb) => {
   console.log('writeFile', fpath, src);
   if (process.env.DEBUG) {
@@ -25,7 +25,7 @@ const writeJSON = (fpath, json, pretty = false) => writeFile(
   fpath,
   (pretty ? JSON.stringify(json, null, 2) : JSON.stringify(json)) + '\n'
 );
-const primraf = fpath => promisify((cb) => {
+const primraf = (fpath) => promisify((cb) => {
   console.log('rimraf', fpath);
   if (process.env.DEBUG) {
     cb();
@@ -104,7 +104,7 @@ const packagesToRemove = [
   'react-addons-test-utils',
   'react-test-renderer',
   'create-react-class',
-].map(s => `./node_modules/${s}`);
+].map((s) => `./node_modules/${s}`);
 
 const additionalDirsToRemove = [
   'node_modules/.bin/npm',
@@ -116,7 +116,7 @@ const rmrfs = []
   .concat(additionalDirsToRemove);
 
 Promise.resolve()
-  .then(() => Promise.all(rmrfs.map(s => primraf(s))))
+  .then(() => Promise.all(rmrfs.map((s) => primraf(s))))
   .then(() => run('npm', 'i'))
   .then(() => Promise.all([
     getJSON(adapterPackageJsonPath),
@@ -125,8 +125,8 @@ Promise.resolve()
   .then(([adapterJson, testJson]) => {
     const peerDeps = adapterJson.peerDependencies;
     const installs = Object.keys(peerDeps)
-      .filter(key => !key.startsWith('enzyme'))
-      .map(key => `${key}@${key.startsWith('react') ? reactVersion : peerDeps[key]}`);
+      .filter((key) => !key.startsWith('enzyme'))
+      .map((key) => `${key}@${key.startsWith('react') ? reactVersion : peerDeps[key]}`);
 
     if (process.env.RENDERER) {
       // eslint-disable-next-line no-param-reassign
@@ -153,4 +153,4 @@ Promise.resolve()
     delete testJson.dependencies[adapterName];
     return writeJSON(testPackageJsonPath, testJson, true);
   })
-  .catch(err => console.error(err));
+  .catch((err) => console.error(err));

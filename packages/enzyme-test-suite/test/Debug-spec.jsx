@@ -26,7 +26,7 @@ import { is } from './_helpers/version';
 
 const { adapter } = get();
 
-const debugElement = element => debugNode(adapter.elementToNode(element));
+const debugElement = (element) => debugNode(adapter.elementToNode(element));
 
 describe('debug', () => {
   wrap()
@@ -818,7 +818,7 @@ describe('debug', () => {
             <div>
               {function Foo() { /* hi */ }}
               {<span />}
-              {arrow => arrow('function')}
+              {(arrow) => arrow('function')}
               {[1, 2, NaN]}
               {function (anonymous) {}}
               {{ a: 'b' }}

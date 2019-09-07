@@ -187,7 +187,7 @@ class ReactFifteenAdapter extends EnzymeAdapter {
         return {
           ...this,
           ...getWrappingComponentMountRenderer({
-            toTree: inst => instanceToTree(inst._reactInternalInstance),
+            toTree: (inst) => instanceToTree(inst._reactInternalInstance),
             getMountWrapperInstance: () => instance,
           }),
         };

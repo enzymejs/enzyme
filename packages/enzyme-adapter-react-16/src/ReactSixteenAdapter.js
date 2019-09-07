@@ -303,7 +303,7 @@ function replaceLazyWithFallback(node, fallback) {
     return null;
   }
   if (Array.isArray(node)) {
-    return node.map(el => replaceLazyWithFallback(el, fallback));
+    return node.map((el) => replaceLazyWithFallback(el, fallback));
   }
   if (isLazy(node.type)) {
     return fallback;
@@ -491,7 +491,7 @@ class ReactSixteenAdapter extends EnzymeAdapter {
         return {
           ...this,
           ...getWrappingComponentMountRenderer({
-            toTree: inst => toTree(inst._reactInternalFiber),
+            toTree: (inst) => toTree(inst._reactInternalFiber),
             getMountWrapperInstance: () => instance,
           }),
         };
@@ -523,7 +523,7 @@ class ReactSixteenAdapter extends EnzymeAdapter {
         if (isStateful(Component)) {
           wrappedComponent = class extends Component {}; // eslint-disable-line react/prefer-stateless-function
           if (compare) {
-            wrappedComponent.prototype.shouldComponentUpdate = nextProps => !compare(this.props, nextProps);
+            wrappedComponent.prototype.shouldComponentUpdate = (nextProps) => !compare(this.props, nextProps);
           } else {
             wrappedComponent.prototype.isPureReactComponent = true;
           }
@@ -592,7 +592,7 @@ class ReactSixteenAdapter extends EnzymeAdapter {
         } else if (isContextProvider(el)) {
           providerValues.set(el.type, el.props.value);
           const MockProvider = Object.assign(
-            props => props.children,
+            (props) => props.children,
             el.type,
           );
           return withSetStateAllowed(() => renderer.render({ ...el, type: MockProvider }));
@@ -602,7 +602,7 @@ class ReactSixteenAdapter extends EnzymeAdapter {
             ? providerValues.get(Provider)
             : getProviderDefaultValue(Provider);
           const MockConsumer = Object.assign(
-            props => props.children(value),
+            (props) => props.children(value),
             el.type,
           );
           return withSetStateAllowed(() => renderer.render({ ...el, type: MockConsumer }));
@@ -684,7 +684,7 @@ class ReactSixteenAdapter extends EnzymeAdapter {
           ref: cachedNode.ref,
           instance: renderer._instance,
           rendered: Array.isArray(output)
-            ? flatten(output).map(el => elementToTree(el))
+            ? flatten(output).map((el) => elementToTree(el))
             : elementToTree(output),
         };
       },

@@ -51,7 +51,7 @@ const UPDATED_BY = sym('__updatedBy__');
  * @returns {ReactWrapper}
  */
 function findWhereUnwrapped(wrapper, predicate, filter = treeFilter) {
-  return wrapper.flatMap(n => filter(n.getNodeInternal(), predicate));
+  return wrapper.flatMap((n) => filter(n.getNodeInternal(), predicate));
 }
 
 /**
@@ -186,7 +186,7 @@ class ReactWrapper {
    * @return {Array<ReactElement>}
    */
   getElements() {
-    return this[NODES].map(n => getAdapter(this[OPTIONS]).nodeToElement(n));
+    return this[NODES].map((n) => getAdapter(this[OPTIONS]).nodeToElement(n));
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -208,7 +208,7 @@ class ReactWrapper {
    */
   getDOMNode() {
     const adapter = getAdapter(this[OPTIONS]);
-    return this.single('getDOMNode', n => adapter.nodeToHostNode(n, true));
+    return this.single('getDOMNode', (n) => adapter.nodeToHostNode(n, true));
   }
 
   /**
@@ -425,12 +425,12 @@ class ReactWrapper {
     const adapter = getAdapter(this[OPTIONS]);
 
     const predicate = Array.isArray(nodeOrNodes)
-      ? other => containsChildrenSubArray(
+      ? (other) => containsChildrenSubArray(
         nodeEqual,
         other,
-        nodeOrNodes.map(node => adapter.elementToNode(node)),
+        nodeOrNodes.map((node) => adapter.elementToNode(node)),
       )
-      : other => nodeEqual(adapter.elementToNode(nodeOrNodes), other);
+      : (other) => nodeEqual(adapter.elementToNode(nodeOrNodes), other);
 
     return findWhereUnwrapped(this, predicate).length > 0;
   }
@@ -453,7 +453,7 @@ class ReactWrapper {
    */
   containsMatchingElement(node) {
     const rstNode = getAdapter(this[OPTIONS]).elementToNode(node);
-    const predicate = other => nodeMatches(rstNode, other, (a, b) => a <= b);
+    const predicate = (other) => nodeMatches(rstNode, other, (a, b) => a <= b);
     return findWhereUnwrapped(this, predicate).length > 0;
   }
 
@@ -480,7 +480,7 @@ class ReactWrapper {
       throw new TypeError('nodes should be an Array');
     }
 
-    return nodes.every(node => this.containsMatchingElement(node));
+    return nodes.every((node) => this.containsMatchingElement(node));
   }
 
   /**
@@ -502,7 +502,7 @@ class ReactWrapper {
    * @returns {Boolean}
    */
   containsAnyMatchingElements(nodes) {
-    return Array.isArray(nodes) && nodes.some(node => this.containsMatchingElement(node));
+    return Array.isArray(nodes) && nodes.some((node) => this.containsMatchingElement(node));
   }
 
   /**
@@ -566,7 +566,7 @@ class ReactWrapper {
    */
   is(selector) {
     const predicate = buildPredicate(selector);
-    return this.single('is', n => predicate(n));
+    return this.single('is', (n) => predicate(n));
   }
 
   /**
@@ -588,7 +588,7 @@ class ReactWrapper {
    * @returns {ReactWrapper}
    */
   filterWhere(predicate) {
-    return filterWhereUnwrapped(this, n => predicate(this.wrap(n)));
+    return filterWhereUnwrapped(this, (n) => predicate(this.wrap(n)));
   }
 
   /**
@@ -612,7 +612,7 @@ class ReactWrapper {
    */
   not(selector) {
     const predicate = buildPredicate(selector);
-    return filterWhereUnwrapped(this, n => !predicate(n));
+    return filterWhereUnwrapped(this, (n) => !predicate(n));
   }
 
   /**
@@ -626,7 +626,7 @@ class ReactWrapper {
    */
   text() {
     const adapter = getAdapter(this[OPTIONS]);
-    return this.single('text', n => getTextFromHostNodes(n, adapter));
+    return this.single('text', (n) => getTextFromHostNodes(n, adapter));
   }
 
   /**
@@ -638,7 +638,7 @@ class ReactWrapper {
    */
   html() {
     const adapter = getAdapter(this[OPTIONS]);
-    return this.single('html', n => getHTMLFromHostNodes(n, adapter));
+    return this.single('html', (n) => getHTMLFromHostNodes(n, adapter));
   }
 
   /**
@@ -765,7 +765,7 @@ class ReactWrapper {
    * @returns {ReactWrapper}
    */
   children(selector) {
-    const allChildren = this.flatMap(n => childrenOfNode(n.getNodeInternal()).filter(x => typeof x === 'object'));
+    const allChildren = this.flatMap((n) => childrenOfNode(n.getNodeInternal()).filter((x) => typeof x === 'object'));
     return selector ? allChildren.filter(selector) : allChildren;
   }
 
@@ -801,7 +801,7 @@ class ReactWrapper {
    * @returns {ReactWrapper}
    */
   parent() {
-    return this.flatMap(n => [n.parents().get(0)]);
+    return this.flatMap((n) => [n.parents().get(0)]);
   }
 
   /**
@@ -892,7 +892,7 @@ class ReactWrapper {
    * @returns {String}
    */
   key() {
-    return this.single('key', n => (n.key === undefined ? null : n.key));
+    return this.single('key', (n) => (n.key === undefined ? null : n.key));
   }
 
   /**
@@ -902,7 +902,7 @@ class ReactWrapper {
    * @returns {String|Function}
    */
   type() {
-    return this.single('type', n => typeOfNode(n));
+    return this.single('type', (n) => typeOfNode(n));
   }
 
   /**
@@ -914,7 +914,7 @@ class ReactWrapper {
    */
   name() {
     const adapter = getAdapter(this[OPTIONS]);
-    return this.single('name', n => (
+    return this.single('name', (n) => (
       adapter.displayNameOfNode ? adapter.displayNameOfNode(n) : displayNameOfNode(n)
     ));
   }
@@ -932,7 +932,7 @@ class ReactWrapper {
       // eslint-disable-next-line no-console
       console.warn('It looks like you\'re calling `ReactWrapper::hasClass()` with a CSS selector. hasClass() expects a class name, not a CSS selector.');
     }
-    return this.single('hasClass', n => hasClassName(n, className));
+    return this.single('hasClass', (n) => hasClassName(n, className));
   }
 
   /**
@@ -1233,7 +1233,7 @@ class ReactWrapper {
    * (actually rendered HTML elements) ignoring the React nodes.
    */
   hostNodes() {
-    return this.filterWhere(n => typeof n.type() === 'string');
+    return this.filterWhere((n) => typeof n.type() === 'string');
   }
 }
 

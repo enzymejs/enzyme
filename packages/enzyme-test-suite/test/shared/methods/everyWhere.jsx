@@ -14,9 +14,9 @@ export default function describeEveryWhere({
         </div>
       ));
       const foo = wrapper.find('.foo');
-      expect(foo.everyWhere(n => n.hasClass('foo'))).to.equal(true);
-      expect(foo.everyWhere(n => n.hasClass('qoo'))).to.equal(false);
-      expect(foo.everyWhere(n => n.hasClass('bar'))).to.equal(false);
+      expect(foo.everyWhere((n) => n.hasClass('foo'))).to.equal(true);
+      expect(foo.everyWhere((n) => n.hasClass('qoo'))).to.equal(false);
+      expect(foo.everyWhere((n) => n.hasClass('bar'))).to.equal(false);
     });
   });
 }

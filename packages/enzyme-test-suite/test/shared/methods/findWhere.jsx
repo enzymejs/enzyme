@@ -96,12 +96,12 @@ export default function describeFindWhere({
 
       const selector = 'blah';
       const wrapper = Wrap(<Foo selector={selector} />);
-      const foundSpan = wrapper.findWhere(n => (
+      const foundSpan = wrapper.findWhere((n) => (
         n.type() === 'span' && n.props()['data-foo'] === selector
       ));
       expect(foundSpan.type()).to.equal('span');
 
-      const foundNotSpan = wrapper.findWhere(n => (
+      const foundNotSpan = wrapper.findWhere((n) => (
         n.type() !== 'span' && n.props()['data-foo'] === selector
       ));
       expect(foundNotSpan.type()).to.equal('i');
@@ -129,14 +129,14 @@ export default function describeFindWhere({
 
         const selector = 'blah';
         const wrapper = Wrap(<FragmentFoo selector={selector} />);
-        const foundSpans = wrapper.findWhere(n => (
+        const foundSpans = wrapper.findWhere((n) => (
           n.type() === 'span' && n.props()['data-foo'] === selector
         ));
         expect(foundSpans).to.have.lengthOf(2);
         expect(foundSpans.get(0).type).to.equal('span');
         expect(foundSpans.get(1).type).to.equal('span');
 
-        const foundNotSpans = wrapper.findWhere(n => (
+        const foundNotSpans = wrapper.findWhere((n) => (
           n.type() !== 'span' && n.props()['data-foo'] === selector
         ));
         expect(foundNotSpans).to.have.lengthOf(2);
@@ -160,12 +160,12 @@ export default function describeFindWhere({
 
       const selector = 'blah';
       const wrapper = Wrap(<Foo selector={selector} />);
-      const foundSpan = wrapper.findWhere(n => (
+      const foundSpan = wrapper.findWhere((n) => (
         n.type() === 'span' && n.props()['data-foo'] === selector
       ));
       expect(foundSpan.type()).to.equal('span');
 
-      const foundNotSpan = wrapper.findWhere(n => (
+      const foundNotSpan = wrapper.findWhere((n) => (
         n.type() !== 'span' && n.props()['data-foo'] === selector
       ));
       expect(foundNotSpan).to.have.lengthOf(0);
@@ -193,7 +193,7 @@ export default function describeFindWhere({
 
       const selector = 'blah';
       const wrapper = Wrap(<Foo selector={selector} />);
-      const foundSpan = wrapper.findWhere(n => (
+      const foundSpan = wrapper.findWhere((n) => (
         n.type() === 'span'
         && n.props()['data-foo'] === selector
       ));
@@ -248,12 +248,12 @@ export default function describeFindWhere({
 
         const selector = 'blah';
         const wrapper = Wrap(<SFC selector={selector} />);
-        const foundSpan = wrapper.findWhere(n => (
+        const foundSpan = wrapper.findWhere((n) => (
           n.type() === 'span' && n.props()['data-foo'] === selector
         ));
         expect(foundSpan.type()).to.equal('span');
 
-        const foundNotSpan = wrapper.findWhere(n => (
+        const foundNotSpan = wrapper.findWhere((n) => (
           n.type() !== 'span' && n.props()['data-foo'] === selector
         ));
         expect(foundNotSpan.type()).to.equal('i');
@@ -271,12 +271,12 @@ export default function describeFindWhere({
 
         const selector = 'blah';
         const wrapper = Wrap(<SFC selector={selector} />);
-        const foundSpan = wrapper.findWhere(n => (
+        const foundSpan = wrapper.findWhere((n) => (
           n.type() === 'span' && n.props()['data-foo'] === selector
         ));
         expect(foundSpan.type()).to.equal('span');
 
-        const foundNotSpan = wrapper.findWhere(n => (
+        const foundNotSpan = wrapper.findWhere((n) => (
           n.type() !== 'span' && n.props()['data-foo'] === selector
         ));
         expect(foundNotSpan).to.have.lengthOf(0);
@@ -349,7 +349,7 @@ export default function describeFindWhere({
 
       const passedNodes = stub.getCalls().map(({ args: [firstArg] }) => firstArg);
 
-      const textContents = passedNodes.map(n => [n.debug(), n.text()]);
+      const textContents = passedNodes.map((n) => [n.debug(), n.text()]);
       const expected = [
         [wrapper.debug(), 'foo bar'], // root
         ['<div className="foo bar" />', ''], // first div
@@ -372,8 +372,8 @@ export default function describeFindWhere({
       wrapper.findWhere(stub);
 
       const passedNodes = stub.getCalls().map(({ args: [firstArg] }) => firstArg);
-      const getElement = n => (isShallow ? n.getElement() : n.getDOMNode());
-      const hasElements = passedNodes.map(n => [n.debug(), getElement(n) && true]);
+      const getElement = (n) => (isShallow ? n.getElement() : n.getDOMNode());
+      const hasElements = passedNodes.map((n) => [n.debug(), getElement(n) && true]);
       const expected = [
         [wrapper.debug(), true], // root
         ['<div className="foo bar" />', true], // first div
@@ -414,7 +414,7 @@ export default function describeFindWhere({
 
       const wrapper = Wrap(<Foo />);
 
-      expect(wrapper.findWhere(node => node.type() === Portal)).to.have.lengthOf(1);
+      expect(wrapper.findWhere((node) => node.type() === Portal)).to.have.lengthOf(1);
     });
   });
 }

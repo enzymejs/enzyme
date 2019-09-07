@@ -29,7 +29,7 @@ const wrapper = shallow((
   </div>
 ));
 
-const texts = wrapper.find('.foo').map(node => node.text());
+const texts = wrapper.find('.foo').map((node) => node.text());
 expect(texts).to.eql(['bax', 'bar', 'baz']);
 ```
 

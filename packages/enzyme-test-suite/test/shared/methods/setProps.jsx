@@ -525,7 +525,7 @@ export default function describeSetProps({
       });
 
       it('merges newProps with oldProps', () => {
-        const RendersBarSFC = props => (
+        const RendersBarSFC = (props) => (
           <BarSFC {...props} />
         );
         const BarSFC = () => (

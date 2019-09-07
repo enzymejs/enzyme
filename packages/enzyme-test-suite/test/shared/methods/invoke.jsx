@@ -107,7 +107,7 @@ export default function describeInvoke({
           [counter],
         );
         return (
-          <button type="button" onClick={() => setCounter(input => input + 1)}>{result}</button>
+          <button type="button" onClick={() => setCounter((input) => input + 1)}>{result}</button>
         );
       }
       const wrapper = Wrap(<App />);

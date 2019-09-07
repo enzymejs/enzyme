@@ -733,11 +733,11 @@ describe('Utils', () => {
     ];
 
     it('returns true when renderedDive receives nodes that render validEmpty values', () => {
-      emptyNodetestData.forEach(node => expect(renderedDive(node)).to.equal(true));
+      emptyNodetestData.forEach((node) => expect(renderedDive(node)).to.equal(true));
     });
 
     it('returns false when renderedDive receives nodes that render non-valid empty values', () => {
-      nonEmptyNodeData.forEach(node => expect(renderedDive(node)).to.equal(false));
+      nonEmptyNodeData.forEach((node) => expect(renderedDive(node)).to.equal(false));
     });
   });
 

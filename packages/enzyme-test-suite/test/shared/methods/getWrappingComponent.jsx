@@ -195,7 +195,7 @@ export default function describeGetWrappingComponent({
       }
       const wrapper = Wrap((
         <Context.Consumer>
-          {value => <div>{value}</div>}
+          {(value) => <div>{value}</div>}
         </Context.Consumer>
       ), {
         wrappingComponent: WrappingComponent,

@@ -38,7 +38,7 @@ export default function describeText({
           const { items } = this.props;
           return (
             <div>
-              {items.map(x => x)}
+              {items.map((x) => x)}
             </div>
           );
         }
@@ -120,7 +120,7 @@ export default function describeText({
         }
       }
       const wrapper = Wrap(<Foo />);
-      const charCodes = wrapper.text().split('').map(x => x.charCodeAt(0));
+      const charCodes = wrapper.text().split('').map((x) => x.charCodeAt(0));
       expect(charCodes).to.eql([
         0x00a0, // non-breaking space
         0x20, // normal space
@@ -132,7 +132,7 @@ export default function describeText({
       it('handles nodes with mapped children', () => {
         const Foo = ({ items }) => (
           <div>
-            {items.map(x => x)}
+            {items.map((x) => x)}
           </div>
         );
         matchesRender(<Foo items={['abc', 'def', 'hij']} />);

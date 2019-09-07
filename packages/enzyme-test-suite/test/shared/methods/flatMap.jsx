@@ -23,7 +23,7 @@ export default function describeFlatMap({
         </div>
       ));
 
-      const nodes = wrapper.find('.foo').flatMap(w => w.children().getElements());
+      const nodes = wrapper.find('.foo').flatMap((w) => w.children().getElements());
 
       expect(nodes).to.have.lengthOf(6);
       expect(nodes.at(0).hasClass('bar')).to.equal(true);

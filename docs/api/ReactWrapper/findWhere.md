@@ -20,7 +20,7 @@ nodes.
 
 ```jsx
 const wrapper = mount(<MyComponent />);
-const complexComponents = wrapper.findWhere(n => typeof n.type() !== 'string');
+const complexComponents = wrapper.findWhere((n) => typeof n.type() !== 'string');
 expect(complexComponents).to.have.lengthOf(8);
 ```
 

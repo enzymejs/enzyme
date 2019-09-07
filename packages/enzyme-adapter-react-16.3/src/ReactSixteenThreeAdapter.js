@@ -329,7 +329,7 @@ class ReactSixteenThreeAdapter extends EnzymeAdapter {
       },
       simulateError(nodeHierarchy, rootNode, error) {
         const { instance: catchingInstance } = nodeHierarchy
-          .find(x => x.instance && x.instance.componentDidCatch) || {};
+          .find((x) => x.instance && x.instance.componentDidCatch) || {};
 
         simulateError(
           error,
@@ -357,7 +357,7 @@ class ReactSixteenThreeAdapter extends EnzymeAdapter {
         return {
           ...this,
           ...getWrappingComponentMountRenderer({
-            toTree: inst => toTree(inst._reactInternalFiber),
+            toTree: (inst) => toTree(inst._reactInternalFiber),
             getMountWrapperInstance: () => instance,
           }),
         };
@@ -381,7 +381,7 @@ class ReactSixteenThreeAdapter extends EnzymeAdapter {
         } else if (isContextProvider(el)) {
           providerValues.set(el.type, el.props.value);
           const MockProvider = Object.assign(
-            props => props.children,
+            (props) => props.children,
             el.type,
           );
           return withSetStateAllowed(() => renderer.render({ ...el, type: MockProvider }));
@@ -391,7 +391,7 @@ class ReactSixteenThreeAdapter extends EnzymeAdapter {
             ? providerValues.get(Provider)
             : getProviderDefaultValue(Provider);
           const MockConsumer = Object.assign(
-            props => props.children(value),
+            (props) => props.children(value),
             el.type,
           );
           return withSetStateAllowed(() => renderer.render({ ...el, type: MockConsumer }));
@@ -430,7 +430,7 @@ class ReactSixteenThreeAdapter extends EnzymeAdapter {
           ref: cachedNode.ref,
           instance: renderer._instance,
           rendered: Array.isArray(output)
-            ? flatten(output).map(el => elementToTree(el))
+            ? flatten(output).map((el) => elementToTree(el))
             : elementToTree(output),
         };
       },

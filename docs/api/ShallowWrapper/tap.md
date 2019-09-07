@@ -26,6 +26,6 @@ const result = shallow((
     <li>zzz</li>
   </ul>
 )).find('li')
-  .tap(n => console.log(n.debug()))
-  .map(n => n.text());
+  .tap((n) => console.log(n.debug()))
+  .map((n) => n.text());
 ```

@@ -97,7 +97,7 @@ export default function describeRenderProp({
 
       describeIf(is('>= 16'), 'allows non-nodes', () => {
         function MyComponent({ val }) {
-          return <ComponentWithRenderProp val={val} r={x => x} />;
+          return <ComponentWithRenderProp val={val} r={(x) => x} />;
         }
 
         function ComponentWithRenderProp({ val, r }) {

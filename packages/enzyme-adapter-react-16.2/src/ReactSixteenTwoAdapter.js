@@ -310,7 +310,7 @@ class ReactSixteenTwoAdapter extends EnzymeAdapter {
       },
       simulateError(nodeHierarchy, rootNode, error) {
         const { instance: catchingInstance } = nodeHierarchy
-          .find(x => x.instance && x.instance.componentDidCatch) || {};
+          .find((x) => x.instance && x.instance.componentDidCatch) || {};
 
         simulateError(
           error,
@@ -338,7 +338,7 @@ class ReactSixteenTwoAdapter extends EnzymeAdapter {
         return {
           ...this,
           ...getWrappingComponentMountRenderer({
-            toTree: inst => toTree(inst._reactInternalFiber),
+            toTree: (inst) => toTree(inst._reactInternalFiber),
             getMountWrapperInstance: () => instance,
           }),
         };
@@ -417,7 +417,7 @@ class ReactSixteenTwoAdapter extends EnzymeAdapter {
           ref: cachedNode.ref,
           instance: renderer._instance,
           rendered: Array.isArray(output)
-            ? flatten(output).map(el => elementToTree(el))
+            ? flatten(output).map((el) => elementToTree(el))
             : elementToTree(output),
         };
       },

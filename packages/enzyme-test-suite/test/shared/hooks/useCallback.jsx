@@ -21,14 +21,14 @@ export default function describeUseCallback({
     }
 
     function ComponentUsingCallbackHook({ onChange }) {
-      const callback = useCallback(value => onChange(value), [onChange]);
+      const callback = useCallback((value) => onChange(value), [onChange]);
       return (
         <RendersNull callback={callback} />
       );
     }
 
     function ComponentUsingCallbackHookWithRelatedProp({ onChange, relatedProp }) {
-      const callback = useCallback(value => onChange(value), [onChange, relatedProp]);
+      const callback = useCallback((value) => onChange(value), [onChange, relatedProp]);
       return (
         <RendersNull callback={callback} />
       );

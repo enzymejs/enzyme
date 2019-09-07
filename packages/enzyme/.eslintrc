@@ -7,6 +7,7 @@
   },
   "rules": {
     "id-length": 0,
+    "max-classes-per-file": 0,
     "new-cap": [2, { "capIsNewExceptions": ["AND"] }],
     "react/jsx-pascal-case": [2, { "allowAllCaps": true }],
     "react/no-find-dom-node": 1,
