@@ -69,7 +69,7 @@
     "eslint-plugin-react": "^7.14.3",
     "in-publish": "^2.0.0",
     "jsdom": "^6.5.1",
-    "rimraf": "^2.6.3",
-    "safe-publish-latest": "^1.1.2"
+    "rimraf": "^2.7.1",
+    "safe-publish-latest": "^1.1.3"
   }
 }

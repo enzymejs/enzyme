@@ -59,6 +59,6 @@
     "eslint-plugin-react": "^7.14.3",
     "in-publish": "^2.0.0",
     "rimraf": "^2.6.3",
-    "safe-publish-latest": "^1.1.2"
+    "safe-publish-latest": "^1.1.3"
   }
 }
