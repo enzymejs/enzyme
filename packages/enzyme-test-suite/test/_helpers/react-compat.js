@@ -18,6 +18,7 @@ let Fragment;
 let StrictMode;
 let AsyncMode;
 let ConcurrentMode;
+let createRoot;
 let Profiler;
 let PureComponent;
 let Suspense;
@@ -83,7 +84,9 @@ if (is('^16.3.0-0')) {
   AsyncMode = null;
 }
 
-if (is('^16.4.0-0')) {
+if (is('^16.9.0-0')) {
+  ({ Profiler } = require('react'));
+} else if (is('^16.4.0-0')) {
   ({
     unstable_Profiler: Profiler,
   } = require('react'));
@@ -93,16 +96,30 @@ if (is('^16.4.0-0')) {
 
 if (is('^16.6.0-0')) {
   ({
-    unstable_ConcurrentMode: ConcurrentMode,
     Suspense,
     lazy,
     memo,
   } = require('react'));
 } else {
-  ConcurrentMode = null;
   Suspense = null;
   lazy = null;
   memo = null;
+}
+
+if (is('^16.6.0-0') && !is('^16.9.0-0')) {
+  ({
+    unstable_ConcurrentMode: ConcurrentMode,
+  } = require('react'));
+} else {
+  ConcurrentMode = null;
+}
+
+if (is('^16.9.0-0')) {
+  ({
+    unstable_createRoot: createRoot,
+  } = require('react'));
+} else {
+  createRoot = null;
 }
 
 if (is('^16.8.0-0')) {
@@ -145,6 +162,7 @@ export {
   createPortal,
   createContext,
   createRef,
+  createRoot,
   forwardRef,
   Fragment,
   StrictMode,

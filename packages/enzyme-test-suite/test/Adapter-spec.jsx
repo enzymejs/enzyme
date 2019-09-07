@@ -1048,7 +1048,7 @@ describe('Adapter', () => {
       expect(getDisplayName(<Profiler />)).to.equal('Profiler');
     });
 
-    itIf(is('>= 16.6'), 'supports ConcurrentMode', () => {
+    itIf((is('>= 16.6') && is('<16.9')), 'supports ConcurrentMode', () => {
       expect(getDisplayName(<ConcurrentMode />)).to.equal('ConcurrentMode');
     });
 

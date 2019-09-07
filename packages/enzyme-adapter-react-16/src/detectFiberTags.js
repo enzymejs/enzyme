@@ -44,7 +44,7 @@ module.exports = function detectFiberTags() {
   const supportsContext = typeof React.createContext !== 'undefined';
   const supportsForwardRef = typeof React.forwardRef !== 'undefined';
   const supportsMemo = typeof React.memo !== 'undefined';
-  const supportsProfiler = typeof React.unstable_Profiler !== 'undefined';
+  const supportsProfiler = typeof React.unstable_Profiler !== 'undefined' || typeof React.Profiler !== 'undefined';
   const supportsSuspense = typeof React.Suspense !== 'undefined';
   const supportsLazy = typeof React.lazy !== 'undefined';
 
@@ -99,7 +99,7 @@ module.exports = function detectFiberTags() {
       ? getFiber(React.createElement(FwdRef)).tag
       : -1,
     Profiler: supportsProfiler
-      ? getFiber(React.createElement(React.unstable_Profiler, { id: 'mock', onRender() {} })).tag
+      ? getFiber(React.createElement((React.Profiler || React.unstable_Profiler), { id: 'mock', onRender() {} })).tag
       : -1,
     Suspense: supportsSuspense
       ? getFiber(React.createElement(React.Suspense, { fallback: false })).tag
