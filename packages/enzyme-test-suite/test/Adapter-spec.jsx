@@ -6,6 +6,8 @@ import { configure, shallow, EnzymeAdapter } from 'enzyme';
 import inspect from 'object-inspect';
 import {
   Portal,
+  Memo,
+  isMemo,
 } from 'react-is';
 import PropTypes from 'prop-types';
 import wrap from 'mocha-wrap';
@@ -1205,6 +1207,52 @@ Warning: Failed Adapter-spec type: Invalid Adapter-spec \`foo\` of type \`string
       expect(() => adapter.getProviderFromConsumer({})).to.throw(
         'Enzyme Internal Error: can’t figure out how to get Provider from Consumer',
       );
+    });
+  });
+
+  describe('matchesElementType(node, matchingType)', () => {
+    it('returns a falsy node', () => {
+      expect(adapter.matchesElementType()).to.equal();
+      expect(adapter.matchesElementType(null)).to.equal(null);
+      expect(adapter.matchesElementType(false)).to.equal(false);
+      expect(adapter.matchesElementType('')).to.equal('');
+      expect(adapter.matchesElementType(0)).to.equal(0);
+    });
+
+    it('compares the node’s `type` property to `matchingType`', () => {
+      const sentinel = {};
+      expect(adapter.matchesElementType({ type: sentinel }, sentinel)).to.equal(true);
+      expect(adapter.matchesElementType({ type: {} }, sentinel)).to.equal(false);
+    });
+
+    describeIf(is('>= 16.6'), 'memoized components', () => {
+      const matchingType = {};
+      const node = { type: matchingType };
+      const memoNode = {
+        $$typeof: Memo,
+        type: node.type,
+      };
+      const memoMatchingType = {
+        $$typeof: Memo,
+        type: matchingType,
+      };
+
+      beforeEach(() => {
+        expect(isMemo(memoNode)).to.equal(true); // sanity check
+        expect(isMemo(memoMatchingType)).to.equal(true); // sanity check
+      });
+
+      it('unmemoizes the node’s type', () => {
+        expect(adapter.matchesElementType(memoNode, matchingType)).to.equal(true);
+      });
+
+      it('unmemoizes the matchingType', () => {
+        expect(adapter.matchesElementType(node, memoMatchingType)).to.equal(true);
+      });
+
+      it('unmemoizes both the node’s type and matchingType', () => {
+        expect(adapter.matchesElementType(memoNode, memoMatchingType)).to.equal(true);
+      });
     });
   });
 });

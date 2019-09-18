@@ -13,10 +13,12 @@ import {
   wrapWithWrappingComponent,
   getWrappingComponentMountRenderer,
   fakeDynamicImport,
+  assertDomAvailable,
 } from 'enzyme-adapter-utils';
+import wrap from 'mocha-wrap';
 
 import './_helpers/setupAdapters';
-import { describeIf } from './_helpers';
+import { describeIf, describeWithDOM } from './_helpers';
 import { is } from './_helpers/version';
 
 describe('enzyme-adapter-utils', () => {
@@ -202,6 +204,65 @@ describe('enzyme-adapter-utils', () => {
     in Bee (created by WrapperComponent)
     in Sea (created by WrapperComponent)
     in WrapperComponent`);
+    });
+  });
+
+  describe('elementToTree', () => {
+    class Target extends React.Component { render() { return null; } }
+    const classNodeType = is('< 0.14') ? 'function' : 'class';
+
+    it('produces a tree', () => {
+      const target = elementToTree(<Target a="1"><div /></Target>);
+      expect(target).to.eql({
+        nodeType: classNodeType,
+        type: Target,
+        props: {
+          a: '1',
+          children: <div />,
+        },
+        key: undefined,
+        ref: null,
+        instance: null,
+        rendered: {
+          instance: null,
+          key: undefined,
+          nodeType: 'host',
+          props: {},
+          ref: null,
+          rendered: null,
+          type: 'div',
+        },
+      });
+    });
+
+    it('works with Array map', () => {
+      const targets = [<Target a="1"><div /></Target>];
+      expect(targets.map(elementToTree)).to.eql([{
+        nodeType: classNodeType,
+        type: Target,
+        props: {
+          a: '1',
+          children: <div />,
+        },
+        key: undefined,
+        ref: null,
+        instance: null,
+        rendered: {
+          instance: null,
+          key: undefined,
+          nodeType: 'host',
+          props: {},
+          ref: null,
+          rendered: null,
+          type: 'div',
+        },
+      }]);
+    });
+
+    it('throws when `dangerouslySetInnerHTML` and `children` are combined on host elements', () => {
+      /* eslint react/no-danger-with-children: 0 */
+      expect(() => elementToTree(<div dangerouslySetInnerHTML="hi">nope</div>)).to.throw();
+      expect(() => elementToTree(<Target dangerouslySetInnerHTML="hi">yep</Target>)).not.to.throw();
     });
   });
 
@@ -402,6 +463,23 @@ describe('enzyme-adapter-utils', () => {
       const signal = {};
       return fakeDynamicImport(signal).then((actual) => {
         expect(actual).to.have.property('default', signal);
+      });
+    });
+  });
+
+  describe('assertDomAvailable', () => {
+    describeWithDOM('with DOM', () => {
+      it('throws', () => {
+        expect(global).to.have.property('document');
+        expect(global.document).to.have.property('createElement');
+        expect(assertDomAvailable).not.to.throw();
+      });
+    });
+
+    describe('without DOM', () => {
+      wrap().withGlobal('document', () => null).it('noops', () => {
+        expect(!!global.document).to.equal(false);
+        expect(assertDomAvailable).to.throw();
       });
     });
   });
