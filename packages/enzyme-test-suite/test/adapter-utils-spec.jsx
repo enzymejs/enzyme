@@ -1,6 +1,8 @@
 import React from 'react';
 import { expect } from 'chai';
 import sinon from 'sinon-sandbox';
+import PropTypes from 'prop-types';
+import { shallow } from 'enzyme';
 import {
   displayNameOfNode,
   ensureKeyOrUndefined,
@@ -14,6 +16,7 @@ import {
   getWrappingComponentMountRenderer,
   fakeDynamicImport,
   assertDomAvailable,
+  createMountWrapper,
 } from 'enzyme-adapter-utils';
 import wrap from 'mocha-wrap';
 
@@ -482,5 +485,29 @@ describe('enzyme-adapter-utils', () => {
         expect(assertDomAvailable).to.throw();
       });
     });
+  });
+
+  describe('createMountWrapper', () => {
+    class Foo extends React.Component {
+      render() { return <div>{this.context.foo}</div>; }
+    }
+    Foo.contextTypes = {
+      foo: PropTypes.string,
+    };
+
+    it('returns a component', () => {
+      const node = <Foo />;
+      const Wrapper = createMountWrapper(node);
+      expect(React.isValidElement(<Wrapper />)).to.equal(true);
+    });
+
+    it('returns the wrapped component’s instance', () => {
+      const node = <Foo />;
+      const Wrapper = createMountWrapper(node);
+      const wrapper = shallow(<Wrapper />);
+      expect(wrapper.instance()).to.be.instanceOf(Wrapper);
+    });
+
+    it('uses the passed `wrappingComponent`', () => {});
   });
 });

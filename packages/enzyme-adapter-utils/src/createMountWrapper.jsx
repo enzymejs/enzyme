@@ -48,7 +48,6 @@ export default function createMountWrapper(node, options = {}) {
     constructor(...args) {
       super(...args);
       const { props, wrappingComponentProps, context } = this.props;
-      this.rootFinderInstance = null;
       this.state = {
         mount: true,
         props,
@@ -66,28 +65,6 @@ export default function createMountWrapper(node, options = {}) {
 
     setWrappingComponentProps(props, callback = undefined) {
       this.setState({ wrappingComponentProps: props }, callback);
-    }
-
-    getInstance() {
-      const component = this._reactInternalInstance._renderedComponent;
-      const inst = component.getPublicInstance();
-      if (inst === null) {
-        return component._instance;
-      }
-      return inst;
-    }
-
-    getWrappedComponent() {
-      const component = this._reactInternalInstance._renderedComponent;
-      const inst = component.getPublicInstance();
-      if (inst === null) {
-        return component._instance;
-      }
-      return inst;
-    }
-
-    setChildContext(context) {
-      return new Promise((resolve) => this.setState({ context }, resolve));
     }
 
     render() {
