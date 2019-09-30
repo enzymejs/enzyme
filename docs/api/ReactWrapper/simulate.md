@@ -14,7 +14,7 @@ Simulate events on the root node in the wrapper. It must be a single-node wrappe
 `ReactWrapper`: Returns itself.
 
 
-#### Example
+#### Example `class component`
 
 ```jsx
 class Foo extends React.Component {
@@ -45,7 +45,39 @@ wrapper.find('a').simulate('click');
 expect(wrapper.find('.clicks-1').length).to.equal(1);
 ```
 
+#### Example `functional component`
 
+```jsx
+const Foo = ({ width, height, onChange }) => (
+  <div>
+    <input name="width" value={width} onChange={onChange} />
+    <input name="height" value={height} onChange={onChange} />
+  </div>
+);
+Foo.propTypes = {
+  width: PropTypes.number.isRequired,
+  height: PropTypes.number.isRequired,
+  onChange: PropTypes.func.isRequired,
+};
+
+const testState = { width: 10, height: 20 };
+const wrapper = mount((
+  <Foo
+    width={testState.width}
+    height={testState.height}
+    onChange={(e) => {
+      testState[e.target.name] = e.target.value;
+    }}
+  />
+));
+
+expect(wrapper.find('input').at(0).prop('value')).toEqual(10);
+expect(wrapper.find('input').at(1).prop('value')).toEqual(20);
+wrapper.find('input').at(0).simulate('change', { target: { name: 'width', value: 50 } });
+wrapper.find('input').at(1).simulate('change', { target: { name: 'height', value: 70 } });
+expect(testState.width).toEqual(50);
+expect(testState.height).toEqual(70);
+```
 
 #### Common Gotchas
 
