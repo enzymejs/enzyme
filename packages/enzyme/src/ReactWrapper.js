@@ -887,6 +887,36 @@ class ReactWrapper {
   }
 
   /**
+   * Returns a new `ReactWrapper` around the node provided to the prop
+   *
+   * @param {String} propName
+   * @param {Object} options
+   * @returns {ReactWrapper}
+   */
+  wrapProp(propName, options) {
+    const adapter = getAdapter(this[OPTIONS]);
+    if (typeof adapter.wrap !== 'function') {
+      throw new RangeError('your adapter does not support `wrap`. Try upgrading it!');
+    }
+
+    return this.single('wrapProp', () => {
+      if (typeof propName !== 'string') {
+        throw new TypeError('ReactWrapper::wrapProp(): `propName` must be a string');
+      }
+      const props = this.props();
+      if (!has(props, propName)) {
+        throw new Error(`ReactWrapper::wrapProp(): no prop called "${propName}" found`);
+      }
+      const node = props[propName];
+      if (!adapter.isValidElement(node)) {
+        throw new TypeError(`ReactWrapper::wrapProp(): prop "${propName}" does not contain a valid element`);
+      }
+
+      return new ReactWrapper(node, null, options);
+    });
+  }
+
+  /**
    * Returns the key assigned to the current node.
    *
    * @returns {String}
@@ -1010,7 +1040,7 @@ class ReactWrapper {
    *
    * @param {Number} begin
    * @param {Number} end
-   * @returns {ShallowWrapper}
+   * @returns {ReactWrapper}
    */
   slice(begin, end) {
     return this.wrap(this.getNodesInternal().slice(begin, end));

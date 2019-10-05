@@ -706,7 +706,7 @@ class ShallowWrapper {
       throw new Error('ShallowWrapper::setProps() can only be called on the root');
     }
     if (arguments.length > 1 && typeof callback !== 'function') {
-      throw new TypeError('ReactWrapper::setProps() expects a function as its second argument');
+      throw new TypeError('ShallowWrapper::setProps() expects a function as its second argument');
     }
     this.rerender(props);
     if (callback) {
@@ -736,7 +736,7 @@ class ShallowWrapper {
       throw new Error('ShallowWrapper::setState() can only be called on class components');
     }
     if (arguments.length > 1 && typeof callback !== 'function') {
-      throw new TypeError('ReactWrapper::setState() expects a function as its second argument');
+      throw new TypeError('ShallowWrapper::setState() expects a function as its second argument');
     }
 
     this.single('setState', () => {
@@ -1313,7 +1313,7 @@ class ShallowWrapper {
 
   /**
    * Used to invoke a function prop.
-   * Will invoke an function prop and return its value.
+   * Will invoke a function prop and return its value.
    *
    * @param {String} propName
    * @returns {Any}
@@ -1365,6 +1365,36 @@ class ShallowWrapper {
         const wrapped = adapter.wrap(element);
         return this.wrap(wrapped, null, this[OPTIONS]);
       };
+    });
+  }
+
+  /**
+   * Returns a new `ShallowWrapper` around the node provided to the prop
+   *
+   * @param {String} propName
+   * @param {Object} options
+   * @returns {ShallowWrapper}
+   */
+  wrapProp(propName, options) {
+    const adapter = getAdapter(this[OPTIONS]);
+    if (typeof adapter.wrap !== 'function') {
+      throw new RangeError('your adapter does not support `wrap`. Try upgrading it!');
+    }
+
+    return this.single('wrapProp', () => {
+      if (typeof propName !== 'string') {
+        throw new TypeError('ShallowWrapper::wrapProp(): `propName` must be a string');
+      }
+      const props = this.props();
+      if (!has(props, propName)) {
+        throw new Error(`ShallowWrapper::wrapProp(): no prop called "${propName}" found`);
+      }
+      const node = props[propName];
+      if (!adapter.isValidElement(node)) {
+        throw new TypeError(`ShallowWrapper::wrapProp(): prop "${propName}" does not contain a valid element`);
+      }
+
+      return new ShallowWrapper(node, null, options);
     });
   }
 

@@ -1285,6 +1285,7 @@ describe('shallow', () => {
     'text',
     'unmount',
     'wrap',
+    'wrapProp',
   );
   describeHooks(
     { Wrap, Wrapper },
