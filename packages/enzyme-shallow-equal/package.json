@@ -43,7 +43,7 @@
     "babel-cli": "^6.26.0",
     "babel-plugin-transform-replace-object-assign": "^1.0.0",
     "babel-preset-airbnb": "^2.6.0",
-    "eslint": "^6.3.0",
+    "eslint": "^6.5.1",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-plugin-import": "^2.18.2",
     "in-publish": "^2.0.0",

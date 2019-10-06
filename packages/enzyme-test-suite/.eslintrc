@@ -17,6 +17,7 @@
     "no-param-reassign": 0,
     "padded-blocks": 0,
     "react/jsx-props-no-spreading": 0,
+    "react/no-deprecated": 0,
     "react/no-did-mount-set-state": 0,
     "react/no-will-update-set-state": 0,
     "react/no-multi-comp": 0,

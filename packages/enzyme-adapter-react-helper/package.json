@@ -43,11 +43,11 @@
     "babel-plugin-transform-replace-object-assign": "^1.0.0",
     "babel-preset-airbnb": "^2.6.0",
     "enzyme": "^3.0.0",
-    "eslint": "^6.3.0",
+    "eslint": "^6.5.1",
     "eslint-config-airbnb": "^18.0.1",
     "eslint-plugin-import": "^2.18.2",
     "eslint-plugin-jsx-a11y": "^6.2.3",
-    "eslint-plugin-react": "^7.14.3",
+    "eslint-plugin-react": "^7.16.0",
     "in-publish": "^2.0.0",
     "react": "0.13.x || 0.14.x || ^15.0.0-0 || ^16.0.0-0 || ^16.3.0-0 || ^16.4.0-0",
     "safe-publish-latest": "^1.1.3"
