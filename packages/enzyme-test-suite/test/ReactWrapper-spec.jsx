@@ -104,10 +104,44 @@ describeWithDOM('mount', () => {
 </div>`);
     });
 
-    it('calls ref', () => {
-      const spy = sinon.spy();
-      mount(<div ref={spy} />);
-      expect(spy).to.have.property('callCount', 1);
+    describeWithDOM('refs', () => {
+      it('calls ref', () => {
+        const spy = sinon.spy();
+        mount(<div ref={spy} />);
+        expect(spy).to.have.property('callCount', 1);
+      });
+
+      /* global HTMLElement */
+
+      itIf(is('> 0.13'), 'passes an HTML element to `ref` when root rendered', () => {
+        const spy = sinon.spy();
+        mount(<div ref={spy} />);
+        expect(spy).to.have.property('callCount', 1);
+
+        // sanity check
+        expect(document.createElement('div')).to.be.instanceOf(HTMLElement);
+
+        const [[firstArg]] = spy.args;
+        console.log(firstArg);
+        expect(firstArg).to.be.instanceOf(HTMLElement);
+      });
+
+      itIf(is('> 0.13'), 'passes an HTML element to `ref` when sub-rendered', () => {
+        const spy = sinon.spy();
+        class Foo extends React.Component {
+          render() {
+            return <div ref={spy} />;
+          }
+        }
+        mount(<Foo />);
+        expect(spy).to.have.property('callCount', 1);
+
+        // sanity check
+        expect(document.createElement('div')).to.be.instanceOf(HTMLElement);
+
+        const [[firstArg]] = spy.args;
+        expect(firstArg).to.be.instanceOf(HTMLElement);
+      });
     });
 
     describe('wrapping invalid elements', () => {
