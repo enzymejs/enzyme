@@ -83,7 +83,7 @@ Returns whether or not a given node or array of nodes is somewhere in the render
 Returns whether or not a given react element exists in the shallow render tree.
 
 #### [`.containsAllMatchingElements(nodes) => Boolean`](ShallowWrapper/containsAllMatchingElements.md)
-Returns whether or not all the given react elements exists in the shallow render tree.
+Returns whether or not all the given react elements exist in the shallow render tree.
 
 #### [`.containsAnyMatchingElements(nodes) => Boolean`](ShallowWrapper/containsAnyMatchingElements.md)
 Returns whether or not one of the given react elements exists in the shallow render tree.

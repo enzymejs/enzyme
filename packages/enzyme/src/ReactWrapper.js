@@ -458,7 +458,7 @@ class ReactWrapper {
   }
 
   /**
-   * Whether or not all the given react elements exists in the current render tree.
+   * Whether or not all the given react elements exist in the current render tree.
    * It will determine if one of the wrappers element "looks like" the expected
    * element by checking if all props of the expected element are present
    * on the wrappers element and equals to each other.

@@ -906,7 +906,7 @@ class ShallowWrapper {
   }
 
   /**
-   * Whether or not all the given react elements exists in the shallow render tree.
+   * Whether or not all the given react elements exist in the shallow render tree.
    * Match is based on the expected element and not on wrappers element.
    * It will determine if one of the wrappers element "looks like" the expected
    * element by checking if all props of the expected element are present
