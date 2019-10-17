@@ -23,6 +23,6 @@ expect(wrapper.find('ul').parents()).to.have.lengthOf(2);
 
 #### Related Methods
 
-- [`.children() => ReactWrapper`](children.md)
+- [`.children([selector]) => ReactWrapper`](children.md)
 - [`.parent() => ReactWrapper`](parent.md)
 - [`.closest(selector) => ReactWrapper`](closest.md)

@@ -22,7 +22,7 @@ expect(wrapper.find('ul').childAt(0).type()).to.equal('li');
 
 #### Related Methods
 
-- [`.parents() => ShallowWrapper`](parents.md)
+- [`.parents([selector]) => ShallowWrapper`](parents.md)
 - [`.parent() => ShallowWrapper`](parent.md)
 - [`.closest(selector) => ShallowWrapper`](closest.md)
-- [`.children() => ShallowWrapper`](children.md)
+- [`.children([selector]) => ShallowWrapper`](children.md)

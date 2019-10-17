@@ -24,6 +24,6 @@ expect(wrapper.find('ul').children()).to.have.lengthOf(items.length);
 
 #### Related Methods
 
-- [`.parents() => ShallowWrapper`](parents.md)
+- [`.parents([selector]) => ShallowWrapper`](parents.md)
 - [`.parent() => ShallowWrapper`](parent.md)
 - [`.closest(selector) => ShallowWrapper`](closest.md)

@@ -107,13 +107,13 @@ Returns whether or not the current component returns a falsy value.
 #### [`.not(selector) => ReactWrapper`](ReactWrapper/not.md)
 Remove nodes in the current wrapper that match the provided selector. (inverse of `.filter()`)
 
-#### [`.children() => ReactWrapper`](ReactWrapper/children.md)
+#### [`.children([selector]) => ReactWrapper`](ReactWrapper/children.md)
 Get a wrapper with all of the children nodes of the current wrapper.
 
 #### [`.childAt(index) => ReactWrapper`](ReactWrapper/childAt.md)
 Returns a new wrapper with child at the specified index.
 
-#### [`.parents() => ReactWrapper`](ReactWrapper/parents.md)
+#### [`.parents([selector]) => ReactWrapper`](ReactWrapper/parents.md)
 Get a wrapper with all of the parents (ancestors) of the current node.
 
 #### [`.parent() => ReactWrapper`](ReactWrapper/parent.md)

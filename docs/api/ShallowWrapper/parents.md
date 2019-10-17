@@ -23,6 +23,6 @@ expect(wrapper.find('ul').parents()).to.have.lengthOf(2);
 
 #### Related Methods
 
-- [`.children() => ShallowWrapper`](children.md)
+- [`.children([selector]) => ShallowWrapper`](children.md)
 - [`.parent() => ShallowWrapper`](parent.md)
 - [`.closest(selector) => ShallowWrapper`](closest.md)

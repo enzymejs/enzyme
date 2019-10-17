@@ -112,13 +112,13 @@ Returns whether or not the current component returns a falsy value.
 #### [`.not(selector) => ShallowWrapper`](ShallowWrapper/not.md)
 Remove nodes in the current wrapper that match the provided selector. (inverse of `.filter()`)
 
-#### [`.children() => ShallowWrapper`](ShallowWrapper/children.md)
+#### [`.children([selector]) => ShallowWrapper`](ShallowWrapper/children.md)
 Get a wrapper with all of the children nodes of the current wrapper.
 
 #### [`.childAt(index) => ShallowWrapper`](ShallowWrapper/childAt.md)
 Returns a new wrapper with child at the specified index.
 
-#### [`.parents() => ShallowWrapper`](ShallowWrapper/parents.md)
+#### [`.parents([selector]) => ShallowWrapper`](ShallowWrapper/parents.md)
 Get a wrapper with all of the parents (ancestors) of the current node.
 
 #### [`.parent() => ShallowWrapper`](ShallowWrapper/parent.md)

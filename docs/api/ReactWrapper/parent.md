@@ -17,6 +17,6 @@ expect(wrapper.find('ul').parent().is('div')).to.equal(true);
 
 #### Related Methods
 
-- [`.parents() => ReactWrapper`](parents.md)
-- [`.children() => ReactWrapper`](children.md)
+- [`.parents([selector]) => ReactWrapper`](parents.md)
+- [`.children([selector]) => ReactWrapper`](children.md)
 - [`.closest(selector) => ReactWrapper`](closest.md)
