@@ -765,7 +765,7 @@ class ReactWrapper {
    * @returns {ReactWrapper}
    */
   children(selector) {
-    const allChildren = this.flatMap((n) => childrenOfNode(n.getNodeInternal()).filter((x) => typeof x === 'object'));
+    const allChildren = this.flatMap((n) => childrenOfNode(n.getNodeInternal()));
     return selector ? allChildren.filter(selector) : allChildren;
   }
 

@@ -17,9 +17,14 @@ export default function describeChildren({
       expect(wrapper.children()).to.have.lengthOf(0);
     });
 
+    it('includes text nodes', () => {
+      const wrapper = Wrap(<div>B<span />C</div>).children();
+      expect(wrapper).to.have.lengthOf(3);
+    });
+
     it('does not attempt to get an instance for text nodes', () => {
       const wrapper = WrapRendered(<div>B<span />C</div>);
-      expect(wrapper).to.have.lengthOf(1);
+      expect(wrapper).to.have.lengthOf(isShallow ? 1 : 3);
     });
 
     it('skips the falsy children', () => {
@@ -194,13 +199,13 @@ export default function describeChildren({
     foo
   </div>
 </span>`,
-        ...(isShallow ? [' '] : []),
+        ' ',
         `<span>
   <div>
     bar
   </div>
 </span>`,
-        ...(isShallow ? [' '] : []),
+        ' ',
         `<span>
   <div>
     baz
