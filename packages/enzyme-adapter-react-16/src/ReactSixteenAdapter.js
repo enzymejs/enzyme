@@ -641,29 +641,27 @@ class ReactSixteenAdapter extends EnzymeAdapter {
             ));
           }
 
-          if (isStateful) {
-            // fix react bug; see implementation of `getEmptyStateValue`
-            const emptyStateValue = getEmptyStateValue();
-            if (emptyStateValue) {
-              Object.defineProperty(Component.prototype, 'state', {
-                configurable: true,
-                enumerable: true,
-                get() {
-                  return null;
-                },
-                set(value) {
-                  if (value !== emptyStateValue) {
-                    Object.defineProperty(this, 'state', {
-                      configurable: true,
-                      enumerable: true,
-                      value,
-                      writable: true,
-                    });
-                  }
-                  return true;
-                },
-              });
-            }
+          // fix react bug; see implementation of `getEmptyStateValue`
+          const emptyStateValue = getEmptyStateValue();
+          if (emptyStateValue) {
+            Object.defineProperty(Component.prototype, 'state', {
+              configurable: true,
+              enumerable: true,
+              get() {
+                return null;
+              },
+              set(value) {
+                if (value !== emptyStateValue) {
+                  Object.defineProperty(this, 'state', {
+                    configurable: true,
+                    enumerable: true,
+                    value,
+                    writable: true,
+                  });
+                }
+                return true;
+              },
+            });
           }
           return withSetStateAllowed(() => renderer.render(renderedEl, context));
         }
