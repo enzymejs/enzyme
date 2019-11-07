@@ -28,12 +28,12 @@ const wrapper = shallow((
   </div>
 ));
 
-expect(wrapper.contains(<div data-foo="foo" data-bar="bar">Hello</div>)).to.equal(true);
+expect(wrapper.contains(<div data-foo="foo" data-bar="bar">Hello</div>)).toEqual(true);
 
-expect(wrapper.contains(<div data-foo="foo">Hello</div>)).to.equal(false);
-expect(wrapper.contains(<div data-foo="foo" data-bar="bar" data-baz="baz">Hello</div>)).to.equal(false);
-expect(wrapper.contains(<div data-foo="foo" data-bar="Hello">Hello</div>)).to.equal(false);
-expect(wrapper.contains(<div data-foo="foo" data-bar="bar" />)).to.equal(false);
+expect(wrapper.contains(<div data-foo="foo">Hello</div>)).toEqual(false);
+expect(wrapper.contains(<div data-foo="foo" data-bar="bar" data-baz="baz">Hello</div>)).toEqual(false);
+expect(wrapper.contains(<div data-foo="foo" data-bar="Hello">Hello</div>)).toEqual(false);
+expect(wrapper.contains(<div data-foo="foo" data-bar="bar" />)).toEqual(false);
 ```
 
 ```jsx
@@ -48,12 +48,12 @@ const wrapper = shallow((
 expect(wrapper.contains([
   <span>Hello</span>,
   <div>Goodbye</div>,
-])).to.equal(true);
+])).toEqual(true);
 
 expect(wrapper.contains([
   <span>Hello</span>,
   <div>World</div>,
-])).to.equal(false);
+])).toEqual(false);
 ```
 
 ```jsx
@@ -65,7 +65,7 @@ const wrapper = shallow((
   </div>
 ));
 
-expect(wrapper.contains(<div data-foo="foo" data-bar="bar">{4}</div>)).to.equal(true);
+expect(wrapper.contains(<div data-foo="foo" data-bar="bar">{4}</div>)).toEqual(true);
 ```
 
 #### Common Gotchas
