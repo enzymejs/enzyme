@@ -369,6 +369,20 @@ function makeShallowOptions(nodes, root, passedOptions, wrapper) {
 }
 
 
+function makeInheritedChildOptions(wrapper, options = {}) {
+  const childOptions = {
+    ...wrapper[OPTIONS],
+    ...options,
+    context: options.context || {
+      ...wrapper[OPTIONS].context,
+      ...wrapper[ROOT][CHILD_CONTEXT],
+    },
+  };
+  privateSet(childOptions, PROVIDER_VALUES, wrapper[ROOT][PROVIDER_VALUES]);
+  return childOptions;
+}
+
+
 /**
  * @class ShallowWrapper
  */
@@ -1280,10 +1294,11 @@ class ShallowWrapper {
    * @param {Object} options
    * @returns {ShallowWrapper}
    */
-  shallow(options) {
-    return this.single('shallow', (n) => (
-      this.wrap(getAdapter(this[OPTIONS]).nodeToElement(n), null, options)
-    ));
+  shallow(options = {}) {
+    return this.single('shallow', (n) => {
+      const childOptions = makeInheritedChildOptions(this, options);
+      return this.wrap(getAdapter(this[OPTIONS]).nodeToElement(n), null, childOptions);
+    });
   }
 
   /**
@@ -1694,15 +1709,7 @@ class ShallowWrapper {
       if (!isCustomComponentElement(el, adapter)) {
         throw new TypeError(`ShallowWrapper::${name}() can only be called on components`);
       }
-      const childOptions = {
-        ...this[OPTIONS],
-        ...options,
-        context: options.context || {
-          ...this[OPTIONS].context,
-          ...this[ROOT][CHILD_CONTEXT],
-        },
-      };
-      privateSet(childOptions, PROVIDER_VALUES, this[ROOT][PROVIDER_VALUES]);
+      const childOptions = makeInheritedChildOptions(this, options);
       return this.wrap(el, null, childOptions);
     });
   }

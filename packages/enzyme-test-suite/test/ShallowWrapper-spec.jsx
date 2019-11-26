@@ -604,6 +604,67 @@ describe('shallow', () => {
           expect(consumer.text()).to.equal('howdy!');
         });
       });
+
+      describe('shallow() on Provider and Consumer', () => {
+        let Provider;
+        let Consumer;
+
+        beforeEach(() => {
+          ({ Provider, Consumer } = React.createContext('howdy!'));
+        });
+
+        class Consumes extends React.Component {
+          render() {
+            return (
+              <span>
+                <Consumer>{(value) => <span>{value}</span>}</Consumer>
+              </span>
+            );
+          }
+        }
+
+        class Provides extends React.Component {
+          render() {
+            const { children } = this.props;
+
+            return (
+              <Provider value="foo"><div><div />{children}</div></Provider>
+            );
+          }
+        }
+
+        class MyComponent extends React.Component {
+          render() {
+            return (
+              <Provides><Consumes /></Provides>
+            );
+          }
+        }
+
+        it('works on a Provider', () => {
+          const wrapper = shallow(<MyComponent />);
+          const provides = wrapper.find(Provides).dive();
+          const provider = provides.find(Provider).shallow();
+          expect(provider.text()).to.equal('<Consumes />');
+        });
+
+        it('always gives the default provider value if shallow() rendering a <Consumer /> directly', () => {
+          // Diving directly on a consumer will give you the default value
+          const wrapper = shallow(<MyComponent />);
+          const consumes = wrapper.find(Consumes).shallow();
+          const consumer = consumes.find(Consumer).shallow();
+          expect(consumer.text()).to.equal('howdy!');
+        });
+
+        it('gives the actual <Provider /> value if one dive()s it', () => {
+          const wrapper = shallow(<MyComponent />);
+          const provides = wrapper.find(Provides).shallow();
+          const provider = provides.find(Provider).shallow();
+          const consumes = provider.find(Consumes).shallow();
+          const consumer = consumes.find(Consumer).shallow();
+          expect(consumer.text()).to.equal('foo');
+        });
+      });
     });
 
     describeIf(is('> 0.13'), 'stateless function components (SFCs)', () => {
