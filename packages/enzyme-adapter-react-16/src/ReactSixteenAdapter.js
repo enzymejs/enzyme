@@ -23,8 +23,9 @@ import {
   isContextProvider,
   isElement,
   isForwardRef,
-  isLazy,
-  isMemo,
+  // NOTE: should uncomment after update new version of `react-is`
+  // isLazy,
+  // isMemo,
   isPortal,
   isSuspense,
   isValidElementType,
@@ -107,6 +108,23 @@ function nodeTypeFromType(type) {
   }
 
   return utilNodeTypeFromType(type);
+}
+
+// NOTE: should remove (1), (2), (3) after update new version of `react-is`
+// (1) refer at https://github.com/facebook/react/blob/053cf0fedc91a1507080afe43d3be354ec346e9e/packages/react-is/src/ReactIs.js#L48
+function getTypeofType(object, typeOfElement) {
+  const typeOfObject = object;
+
+  const $$typeofType = typeOfObject && typeOfObject.$$typeof;
+  return $$typeofType === typeOfElement;
+}
+// (2)
+function isLazy(object) {
+  return getTypeofType(object, Lazy);
+}
+// (3)
+function isMemo(object) {
+  return getTypeofType(object, Memo);
 }
 
 function unmemoType(type) {
@@ -521,7 +539,7 @@ class ReactSixteenAdapter extends EnzymeAdapter {
       }
       if (lastComponent !== Component) {
         if (isStateful(Component)) {
-          wrappedComponent = class extends Component {}; // eslint-disable-line react/prefer-stateless-function
+          wrappedComponent = class extends Component { }; // eslint-disable-line react/prefer-stateless-function
           if (compare) {
             wrappedComponent.prototype.shouldComponentUpdate = (nextProps) => !compare(this.props, nextProps);
           } else {
