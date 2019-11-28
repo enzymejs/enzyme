@@ -7,7 +7,7 @@ import inspect from 'object-inspect';
 import {
   Portal,
   Memo,
-  isMemo,
+  isMemo as checkIsMemo,
 } from 'react-is';
 import PropTypes from 'prop-types';
 import wrap from 'mocha-wrap';
@@ -56,6 +56,17 @@ function cleanNode(node) {
   } else if (typeof node.rendered === 'object') {
     cleanNode(node.rendered);
   }
+}
+
+// NOTE: should remove after update new version of `react-is`
+function getTypeofType(object, typeOfElement) {
+  const typeOfObject = object;
+  const $$typeofType = typeOfObject && typeOfObject.$$typeof;
+  return $$typeofType === typeOfElement;
+}
+
+function isMemo(object) {
+  return checkIsMemo(object) || getTypeofType(object, Memo);
 }
 
 describe('Adapter', () => {
