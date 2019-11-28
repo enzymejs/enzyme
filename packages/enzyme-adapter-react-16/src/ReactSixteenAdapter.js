@@ -23,9 +23,9 @@ import {
   isContextProvider,
   isElement,
   isForwardRef,
-  // NOTE: should uncomment after update new version of `react-is`
-  // isLazy,
-  // isMemo,
+  // NOTE: should update after update new version of `react-is`
+  isLazy as checkIsLazy,
+  isMemo as checkIsMemo,
   isPortal,
   isSuspense,
   isValidElementType,
@@ -120,11 +120,11 @@ function getTypeofType(object, typeOfElement) {
 }
 // (2)
 function isLazy(object) {
-  return getTypeofType(object, Lazy);
+  return checkIsLazy(object) || getTypeofType(object, Lazy);
 }
 // (3)
 function isMemo(object) {
-  return getTypeofType(object, Memo);
+  return checkIsMemo(object) || getTypeofType(object, Memo);
 }
 
 function unmemoType(type) {
