@@ -750,7 +750,7 @@ describe('Utils', () => {
         }
 
         incrementAndGet() {
-          this.count = this.count + 1;
+          this.count += 1;
           return this.count;
         }
       }
@@ -758,7 +758,7 @@ describe('Utils', () => {
       const obj = {
         count: 1,
         incrementAndGet() {
-          this.count = this.count + 1;
+          this.count += 1;
           return this.count;
         },
       };
