@@ -367,3 +367,10 @@ export function getWrappingComponentMountRenderer({ toTree, getMountWrapperInsta
 export function fakeDynamicImport(moduleToImport) {
   return Promise.resolve({ default: moduleToImport });
 }
+
+export function compareNodeTypeOf(node, matchingTypeOf) {
+  if (!node) {
+    return false;
+  }
+  return node.$$typeof === matchingTypeOf;
+}
