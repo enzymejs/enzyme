@@ -23,8 +23,6 @@ import {
   isContextProvider,
   isElement,
   isForwardRef,
-  isLazy,
-  isMemo,
   isPortal,
   isSuspense,
   isValidElementType,
@@ -58,6 +56,7 @@ import {
   getNodeFromRootFinder,
   wrapWithWrappingComponent,
   getWrappingComponentMountRenderer,
+  compareNodeTypeOf,
 } from 'enzyme-adapter-utils';
 import findCurrentFiberUsingSlowPath from './findCurrentFiberUsingSlowPath';
 import detectFiberTags from './detectFiberTags';
@@ -107,6 +106,14 @@ function nodeTypeFromType(type) {
   }
 
   return utilNodeTypeFromType(type);
+}
+
+function isMemo(type) {
+  return compareNodeTypeOf(type, Memo);
+}
+
+function isLazy(type) {
+  return compareNodeTypeOf(type, Lazy);
 }
 
 function unmemoType(type) {

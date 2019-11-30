@@ -7,7 +7,6 @@ import inspect from 'object-inspect';
 import {
   Portal,
   Memo,
-  isMemo,
 } from 'react-is';
 import PropTypes from 'prop-types';
 import wrap from 'mocha-wrap';
@@ -29,7 +28,12 @@ import {
   Suspense,
 } from './_helpers/react-compat';
 import { is } from './_helpers/version';
-import { itIf, describeWithDOM, describeIf } from './_helpers';
+import {
+  itIf,
+  describeWithDOM,
+  describeIf,
+  isMemo,
+} from './_helpers';
 
 const { adapter } = get();
 

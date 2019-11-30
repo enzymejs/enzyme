@@ -1,6 +1,9 @@
 /* globals jsdom */
 
 import React from 'react';
+import { Memo } from 'react-is';
+import { compareNodeTypeOf } from 'enzyme-adapter-utils';
+
 
 /**
  * Simple wrapper around mocha describe which allows a boolean to be passed in first which
@@ -157,4 +160,8 @@ export function delay(ms) {
   return new Promise((resolve) => {
     setTimeout(resolve, ms);
   });
+}
+
+export function isMemo(type) {
+  return compareNodeTypeOf(type, Memo);
 }
