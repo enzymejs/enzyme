@@ -60,12 +60,12 @@
     "react": "0.13.x || 0.14.x || ^15.0.0-0 || ^16.0.0-0 || ^16.3.0-0 || ^16.4.0-0"
   },
   "dependencies": {
-    "airbnb-js-shims": "^2.2.0",
-    "install-peerdeps": "^1.10.2",
+    "airbnb-js-shims": "^2.2.1",
+    "install-peerdeps": "^1.11.0",
     "npm-run": "^5.0.1",
     "object.assign": "^4.1.0",
-    "object.getownpropertydescriptors": "^2.0.3",
-    "rimraf": "^2.6.3",
-    "semver": "^5.7.0"
+    "object.getownpropertydescriptors": "^2.1.0",
+    "rimraf": "^2.7.1",
+    "semver": "^5.7.1"
   }
 }
