@@ -1,5 +1,32 @@
 # Change Log
 
+## 3.11.0
+
+### New Stuff
+ - `render`: handle Fiber strings and numbers (#2221)
+
+### Fixes
+ - `shallow`: Share child context logic between `shallow` and `dive` (#2296)
+ - `mount`: `children`: include text nodes ($2269)
+ - `mount`: `invoke`: use adapter’s `wrapInvoke` if present (#2158)
+
+### Docs
+ - `mount`/`shallow`: `closest`/`parent`: Add missing arguments description (#2264)
+ - `mount`/`shallow`: fix pluralization of “exist” (#2262)
+ - `shallow`/`mount`: `simulate`: added functional component example to simulate doc (#2248)
+ - `mount`: `debug`: add missing verbose option flag (#2184)
+ - `mount`/`shallow`: `update`: fix semantics description (#2194)
+ - add missing backticks to linked method names (#2170)
+ - `invoke`: Add missing backticks to end of codeblock (#2160)
+ - `invoke`: Fix typo (#2167)
+ - Explicit React CSS selector syntax description (#2178)
+
+### Meta Stuff
+ - [meta] add `funding` field
+ - [meta] Update airbnb.io URLs to use https (#2222)
+ - [deps] update `is-boolean-object`, `is-callable`, `is-number-object`, `is-string`, `enzyme-shallow-equal`, `array.prototype.flat`, `function.prototype.name`, `html-element-map`, `is-regex`, `object-inspect`, `object-is`, `object.entries`, `object.vales`, `raf`, `string.prototype.trim`
+ - [dev deps] update `eslint`, `eslint-plugin-import`, `eslint-plugin-markdown`, `eslint-plugin-react`, `safe-publish-latest`, `eslint-config-airbnb`, `rimraf`, `safe-publish-latest`, `karma-firefox-launcher`, `babel-preset-airbnb`, `glob-gitignore`, `semver`, `eslint-plugin-jsx-a11y`
+
 ## 3.10.0
 
 ### New Stuff
