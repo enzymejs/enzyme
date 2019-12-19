@@ -36,6 +36,9 @@
     "mocha"
   ],
   "author": "Bruce Paul <brucewpaul@gmail.com>",
+  "funding": {
+    "url": "https://github.com/sponsors/ljharb"
+  },
   "license": "MIT",
   "devDependencies": {
     "babel-cli": "^6.26.0",

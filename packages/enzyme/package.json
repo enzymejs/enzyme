@@ -33,6 +33,9 @@
     "mocha"
   ],
   "author": "Leland Richardson <leland.richardson@airbnb.com>",
+  "funding": {
+    "url": "https://github.com/sponsors/ljharb"
+  },
   "license": "MIT",
   "dependencies": {
     "array.prototype.flat": "^1.2.3",

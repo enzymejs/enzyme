@@ -33,6 +33,9 @@
     "mocha"
   ],
   "author": "Jordan Harband <ljharb@gmail.com>",
+  "funding": {
+    "url": "https://github.com/sponsors/ljharb"
+  },
   "license": "MIT",
   "dependencies": {
     "has": "^1.0.3",

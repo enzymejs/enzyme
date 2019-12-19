@@ -33,6 +33,9 @@
     "mocha"
   ],
   "author": "Leland Richardson <leland.richardson@airbnb.com>",
+  "funding": {
+    "url": "https://github.com/sponsors/ljharb"
+  },
   "license": "MIT",
   "dependencies": {
     "enzyme-adapter-react-helper": "^1.3.6",
