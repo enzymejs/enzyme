@@ -40,7 +40,7 @@
   "dependencies": {
     "array.prototype.flat": "^1.2.3",
     "cheerio": "^1.0.0-rc.3",
-    "enzyme-shallow-equal": "^1.0.0",
+    "enzyme-shallow-equal": "^1.0.1",
     "function.prototype.name": "^1.1.2",
     "has": "^1.0.3",
     "html-element-map": "^1.2.0",
