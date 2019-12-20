@@ -1,0 +1,66 @@
+{
+  "extends": "airbnb",
+  "root": true,
+  "env": {
+    "mocha": true,
+  },
+  "plugins": ["mocha"],
+  "settings": {
+    "mocha/additionalTestFunctions": ["itIf", "describeIf"],
+    "react": {
+      "version": "detect",
+    },
+  },
+  "rules": {
+    "max-classes-per-file": 0,
+    "max-len": 0,
+    "no-param-reassign": 0,
+    "padded-blocks": 0,
+    "react/jsx-props-no-spreading": 0,
+    "react/no-deprecated": 0,
+    "react/no-did-mount-set-state": 0,
+    "react/no-will-update-set-state": 0,
+    "react/no-multi-comp": 0,
+    "react/prefer-es6-class": 0,
+    "react/prefer-stateless-function": 0,
+    "react/prop-types": 0,
+    "react/no-string-refs": 0,
+    "import/no-extraneous-dependencies": [2, {
+      "devDependencies": true
+    }],
+    "jsx-a11y/click-events-have-key-events": 0,
+    "jsx-a11y/no-static-element-interactions": 0,
+    "jsx-a11y/anchor-has-content": 0,
+    "jsx-a11y/anchor-is-valid": 0,
+    "jsx-a11y/label-has-for": 0,
+    "jsx-a11y/label-has-associated-control": 0,
+    "jsx-a11y/control-has-associated-label": 0,
+    "react/jsx-curly-brace-presence": 0,
+    "react/no-danger": 1,
+    "react/jsx-one-expression-per-line": 0,
+    "react/no-this-in-sfc": 0, // TODO: re-enable once fixed
+    "react/destructuring-assignment": 1,
+    "react/no-access-state-in-setstate": 1,
+    "react/button-has-type": 1,
+
+    "mocha/no-exclusive-tests": 2,
+    "mocha/no-global-tests": 2,
+    "mocha/no-nested-tests": 2,
+    "mocha/no-pending-tests": 2,
+    "mocha/no-sibling-hooks": 2,
+    "mocha/no-skipped-tests": 1,
+    "mocha/no-top-level-hooks": 2,
+    "mocha/valid-suite-description": [2, "^(?!should )"],
+    "mocha/valid-test-description": [2, "^(?!should )"],
+  },
+  "overrides": [
+    {
+      "files": [
+        "test/_helpers/*",
+      ],
+      "rules": {
+        "mocha/no-exclusive-tests": 0,
+      },
+    }
+  ],
+}

@@ -1,0 +1,33 @@
+{
+  "extension": [
+    ".js",
+    ".jsx"
+  ],
+  "include": [
+    "*",
+    "packages/*/*",
+    "packages/*/src"
+  ],
+  "exclude": [
+    "packages/enzyme-test-suite",
+    "_book",
+    "coverage",
+    "packages/*/node_modules"
+  ],
+  "require": [
+    "babel-register"
+  ],
+  "reporter": [
+    "text",
+    "html",
+    "lcov"
+  ],
+  "all": false,
+  "check-coverage": false,
+  "statements": 100,
+  "branches": 100,
+  "lines": 100,
+  "functions": 100,
+  "sourceMap": true,
+  "instrument": true
+}

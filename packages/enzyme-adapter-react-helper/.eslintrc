@@ -1,0 +1,12 @@
+{
+  "extends": "airbnb",
+  "root": true,
+  "rules": {
+    "max-len": 0,
+  },
+  "settings": {
+    "react": {
+      "version": "detect",
+    },
+  },
+}

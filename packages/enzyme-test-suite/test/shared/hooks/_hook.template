@@ -1,0 +1,43 @@
+import React from 'react';
+import PropTypes from 'prop-types';
+import { expect } from 'chai';
+import wrap from 'mocha-wrap';
+import sinon from 'sinon-sandbox';
+import { Portal } from 'react-is';
+
+import { render } from 'enzyme';
+import getAdapter from 'enzyme/build/getAdapter';
+
+import {
+  describeIf,
+  itIf,
+} from '../../_helpers';
+import {
+  is,
+  REACT16,
+} from '../../_helpers/version';
+
+import {
+  useCallback,
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useReducer,
+  useState,
+  act,
+} from '../../_helpers/react-compat';
+
+export default function describe$Hook({
+  hasHooks,
+  Wrap,
+  WrapRendered,
+  Wrapper,
+  WrapperName,
+  isShallow,
+  isMount,
+  makeDOMElement,
+}) {
+  describeIf(hasHooks, 'hooks: $Hook', () => {
+  });
+}

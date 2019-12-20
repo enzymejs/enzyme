@@ -1,0 +1,56 @@
+{
+  "name": "enzyme-shallow-equal",
+  "version": "1.0.1",
+  "description": "Adaptation of react-addons-shallow-compare, for independent usage",
+  "homepage": "https://airbnb.io/enzyme/",
+  "main": "build",
+  "scripts": {
+    "clean": "rimraf build",
+    "lint": "eslint --ext js,jsx .",
+    "pretest": "npm run lint",
+    "prebuild": "npm run clean",
+    "build": "babel --source-maps=both src --out-dir build",
+    "watch": "npm run build -- -w",
+    "prepublish": "npm run build && safe-publish-latest && (not-in-publish || cp ../../LICENSE.md ./)"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/airbnb/enzyme.git",
+    "directory": "packages/enzyme-shallow-equal"
+  },
+  "keywords": [
+    "javascript",
+    "shallow rendering",
+    "shallowRender",
+    "test",
+    "reactjs",
+    "react",
+    "flux",
+    "testing",
+    "test utils",
+    "assertion helpers",
+    "tdd",
+    "mocha"
+  ],
+  "author": "Jordan Harband <ljharb@gmail.com>",
+  "funding": {
+    "url": "https://github.com/sponsors/ljharb"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "has": "^1.0.3",
+    "object-is": "^1.0.2"
+  },
+  "peerDependencies": {},
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-plugin-transform-replace-object-assign": "^1.0.0",
+    "babel-preset-airbnb": "^2.6.0",
+    "eslint": "^6.7.2",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-plugin-import": "^2.19.1",
+    "in-publish": "^2.0.0",
+    "rimraf": "^2.7.1",
+    "safe-publish-latest": "^1.1.4"
+  }
+}

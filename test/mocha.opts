@@ -1,0 +1,3 @@
+--require ./packages/enzyme/withDom.js ./packages/enzyme-test-suite/test/_helpers/setupAdapters.js ./packages/enzyme-test-suite/test/_helpers/beforeEach.js
+--compilers js:babel-core/register,jsx:babel-core/register
+--extensions js,jsx

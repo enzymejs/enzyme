@@ -1,0 +1,2355 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>Full DOM Rendering · Enzyme</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.2">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-anchors/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="ReactWrapper/at.html" />
+    
+    
+    <link rel="prev" href="ShallowWrapper/update.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        <li class="header">Table of Contents</li>
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../../">
+            
+                <a href="../../">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="../guides.html">
+            
+                <a href="../guides.html">
+            
+                    
+                    Guides
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1" data-path="../guides/migration-from-2-to-3.html">
+            
+                <a href="../guides/migration-from-2-to-3.html">
+            
+                    
+                    Migration from 2.x to 3.x
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2" data-path="../guides/browserify.html">
+            
+                <a href="../guides/browserify.html">
+            
+                    
+                    Browserify
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3" data-path="../guides/systemjs.html">
+            
+                <a href="../guides/systemjs.html">
+            
+                    
+                    SystemJS
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.4" data-path="../guides/webpack.html">
+            
+                <a href="../guides/webpack.html">
+            
+                    
+                    Webpack
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.5" data-path="../guides/jsdom.html">
+            
+                <a href="../guides/jsdom.html">
+            
+                    
+                    JSDOM
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.6" data-path="../guides/jest.html">
+            
+                <a href="../guides/jest.html">
+            
+                    
+                    Jest
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7" data-path="../guides/karma.html">
+            
+                <a href="../guides/karma.html">
+            
+                    
+                    Karma
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.8" data-path="../guides/mocha.html">
+            
+                <a href="../guides/mocha.html">
+            
+                    
+                    Mocha
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.9" data-path="../guides/react-native.html">
+            
+                <a href="../guides/react-native.html">
+            
+                    
+                    React Native
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.10" data-path="../guides/lab.html">
+            
+                <a href="../guides/lab.html">
+            
+                    
+                    Lab
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.11" data-path="../guides/tape-ava.html">
+            
+                <a href="../guides/tape-ava.html">
+            
+                    
+                    Tape and AVA
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="../installation/">
+            
+                <a href="../installation/">
+            
+                    
+                    Installation
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.1" data-path="../installation/react-16.html">
+            
+                <a href="../installation/react-16.html">
+            
+                    
+                    Working with React 16.x
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.2" data-path="../installation/react-15.html">
+            
+                <a href="../installation/react-15.html">
+            
+                    
+                    Working with React 15.x
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.3" data-path="../installation/react-014.html">
+            
+                <a href="../installation/react-014.html">
+            
+                    
+                    Working with React 0.14.x
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.4" data-path="../installation/react-013.html">
+            
+                <a href="../installation/react-013.html">
+            
+                    
+                    Working with React 0.13.x
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    API Reference
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.1" data-path="shallow.html">
+            
+                <a href="shallow.html">
+            
+                    
+                    Shallow Rendering
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.1.1" data-path="ShallowWrapper/at.html">
+            
+                <a href="ShallowWrapper/at.html">
+            
+                    
+                    at(index)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.2" data-path="ShallowWrapper/childAt.html">
+            
+                <a href="ShallowWrapper/childAt.html">
+            
+                    
+                    childAt()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.3" data-path="ShallowWrapper/children.html">
+            
+                <a href="ShallowWrapper/children.html">
+            
+                    
+                    children()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.4" data-path="ShallowWrapper/closest.html">
+            
+                <a href="ShallowWrapper/closest.html">
+            
+                    
+                    closest(selector)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.5" data-path="ShallowWrapper/contains.html">
+            
+                <a href="ShallowWrapper/contains.html">
+            
+                    
+                    contains(nodeOrNodes)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.6" data-path="ShallowWrapper/containsAllMatchingElements.html">
+            
+                <a href="ShallowWrapper/containsAllMatchingElements.html">
+            
+                    
+                    containsAllMatchingElements(nodes)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.7" data-path="ShallowWrapper/containsAnyMatchingElements.html">
+            
+                <a href="ShallowWrapper/containsAnyMatchingElements.html">
+            
+                    
+                    containsAnyMatchingElements(nodes)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.8" data-path="ShallowWrapper/containsMatchingElement.html">
+            
+                <a href="ShallowWrapper/containsMatchingElement.html">
+            
+                    
+                    containsMatchingElement(node)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.9" data-path="ShallowWrapper/context.html">
+            
+                <a href="ShallowWrapper/context.html">
+            
+                    
+                    context([key])
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.10" data-path="ShallowWrapper/debug.html">
+            
+                <a href="ShallowWrapper/debug.html">
+            
+                    
+                    debug()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.11" data-path="ShallowWrapper/dive.html">
+            
+                <a href="ShallowWrapper/dive.html">
+            
+                    
+                    dive()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.12" data-path="ShallowWrapper/equals.html">
+            
+                <a href="ShallowWrapper/equals.html">
+            
+                    
+                    equals(node)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.13" data-path="ShallowWrapper/every.html">
+            
+                <a href="ShallowWrapper/every.html">
+            
+                    
+                    every(selector)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.14" data-path="ShallowWrapper/everyWhere.html">
+            
+                <a href="ShallowWrapper/everyWhere.html">
+            
+                    
+                    everyWhere(predicate)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.15" data-path="ShallowWrapper/exists.html">
+            
+                <a href="ShallowWrapper/exists.html">
+            
+                    
+                    exists([selector])
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.16" data-path="ShallowWrapper/filter.html">
+            
+                <a href="ShallowWrapper/filter.html">
+            
+                    
+                    filter(selector)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.17" data-path="ShallowWrapper/filterWhere.html">
+            
+                <a href="ShallowWrapper/filterWhere.html">
+            
+                    
+                    filterWhere(predicate)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.18" data-path="ShallowWrapper/find.html">
+            
+                <a href="ShallowWrapper/find.html">
+            
+                    
+                    find(selector)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.19" data-path="ShallowWrapper/findWhere.html">
+            
+                <a href="ShallowWrapper/findWhere.html">
+            
+                    
+                    findWhere(predicate)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.20" data-path="ShallowWrapper/first.html">
+            
+                <a href="ShallowWrapper/first.html">
+            
+                    
+                    first()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.21" data-path="ShallowWrapper/forEach.html">
+            
+                <a href="ShallowWrapper/forEach.html">
+            
+                    
+                    forEach(fn)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.22" data-path="ShallowWrapper/get.html">
+            
+                <a href="ShallowWrapper/get.html">
+            
+                    
+                    get(index)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.23" data-path="ShallowWrapper/getWrappingComponent.html">
+            
+                <a href="ShallowWrapper/getWrappingComponent.html">
+            
+                    
+                    getWrappingComponent()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.24" data-path="ShallowWrapper/getElement.html">
+            
+                <a href="ShallowWrapper/getElement.html">
+            
+                    
+                    getElement(index)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.25" data-path="ShallowWrapper/getElements.html">
+            
+                <a href="ShallowWrapper/getElements.html">
+            
+                    
+                    getElements(index)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.26" data-path="ShallowWrapper/hasClass.html">
+            
+                <a href="ShallowWrapper/hasClass.html">
+            
+                    
+                    hasClass(className)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.27" data-path="ShallowWrapper/hostNodes.html">
+            
+                <a href="ShallowWrapper/hostNodes.html">
+            
+                    
+                    hostNodes()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.28" data-path="ShallowWrapper/html.html">
+            
+                <a href="ShallowWrapper/html.html">
+            
+                    
+                    html()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.29" data-path="ShallowWrapper/instance.html">
+            
+                <a href="ShallowWrapper/instance.html">
+            
+                    
+                    instance()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.30" data-path="ShallowWrapper/invoke.html">
+            
+                <a href="ShallowWrapper/invoke.html">
+            
+                    
+                    invoke(propName)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.31" data-path="ShallowWrapper/is.html">
+            
+                <a href="ShallowWrapper/is.html">
+            
+                    
+                    is(selector)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.32" data-path="ShallowWrapper/isEmpty.html">
+            
+                <a href="ShallowWrapper/isEmpty.html">
+            
+                    
+                    isEmpty()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.33" data-path="ShallowWrapper/isEmptyRender.html">
+            
+                <a href="ShallowWrapper/isEmptyRender.html">
+            
+                    
+                    isEmptyRender()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.34" data-path="ShallowWrapper/key.html">
+            
+                <a href="ShallowWrapper/key.html">
+            
+                    
+                    key()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.35" data-path="ShallowWrapper/last.html">
+            
+                <a href="ShallowWrapper/last.html">
+            
+                    
+                    last()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.36" data-path="ShallowWrapper/map.html">
+            
+                <a href="ShallowWrapper/map.html">
+            
+                    
+                    map(fn)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.37" data-path="ShallowWrapper/matchesElement.html">
+            
+                <a href="ShallowWrapper/matchesElement.html">
+            
+                    
+                    matchesElement(node)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.38" data-path="ShallowWrapper/name.html">
+            
+                <a href="ShallowWrapper/name.html">
+            
+                    
+                    name()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.39" data-path="ShallowWrapper/not.html">
+            
+                <a href="ShallowWrapper/not.html">
+            
+                    
+                    not(selector)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.40" data-path="ShallowWrapper/parent.html">
+            
+                <a href="ShallowWrapper/parent.html">
+            
+                    
+                    parent()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.41" data-path="ShallowWrapper/parents.html">
+            
+                <a href="ShallowWrapper/parents.html">
+            
+                    
+                    parents()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.42" data-path="ShallowWrapper/prop.html">
+            
+                <a href="ShallowWrapper/prop.html">
+            
+                    
+                    prop(key)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.43" data-path="ShallowWrapper/props.html">
+            
+                <a href="ShallowWrapper/props.html">
+            
+                    
+                    props()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.44" data-path="ShallowWrapper/reduce.html">
+            
+                <a href="ShallowWrapper/reduce.html">
+            
+                    
+                    reduce(fn[, initialValue])
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.45" data-path="ShallowWrapper/reduceRight.html">
+            
+                <a href="ShallowWrapper/reduceRight.html">
+            
+                    
+                    reduceRight(fn[, initialValue])
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.46" data-path="ShallowWrapper/render.html">
+            
+                <a href="ShallowWrapper/render.html">
+            
+                    
+                    render()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.47" data-path="ShallowWrapper/renderProp.html">
+            
+                <a href="ShallowWrapper/renderProp.html">
+            
+                    
+                    renderProp(key)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.48" data-path="ShallowWrapper/setContext.html">
+            
+                <a href="ShallowWrapper/setContext.html">
+            
+                    
+                    setContext(context)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.49" data-path="ShallowWrapper/setProps.html">
+            
+                <a href="ShallowWrapper/setProps.html">
+            
+                    
+                    setProps(nextProps)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.50" data-path="ShallowWrapper/setState.html">
+            
+                <a href="ShallowWrapper/setState.html">
+            
+                    
+                    setState(nextState[, callback])
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.51" data-path="ShallowWrapper/shallow.html">
+            
+                <a href="ShallowWrapper/shallow.html">
+            
+                    
+                    shallow([options])
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.52" data-path="ShallowWrapper/simulate.html">
+            
+                <a href="ShallowWrapper/simulate.html">
+            
+                    
+                    simulate(event[, data])
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.53" data-path="ShallowWrapper/simulateError.html">
+            
+                <a href="ShallowWrapper/simulateError.html">
+            
+                    
+                    simulateError(error)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.54" data-path="ShallowWrapper/slice.html">
+            
+                <a href="ShallowWrapper/slice.html">
+            
+                    
+                    slice([begin[, end]])
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.55" data-path="ShallowWrapper/some.html">
+            
+                <a href="ShallowWrapper/some.html">
+            
+                    
+                    some(selector)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.56" data-path="ShallowWrapper/someWhere.html">
+            
+                <a href="ShallowWrapper/someWhere.html">
+            
+                    
+                    someWhere(predicate)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.57" data-path="ShallowWrapper/state.html">
+            
+                <a href="ShallowWrapper/state.html">
+            
+                    
+                    state([key])
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.58" data-path="ShallowWrapper/tap.html">
+            
+                <a href="ShallowWrapper/tap.html">
+            
+                    
+                    tap(intercepter)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.59" data-path="ShallowWrapper/text.html">
+            
+                <a href="ShallowWrapper/text.html">
+            
+                    
+                    text()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.60" data-path="ShallowWrapper/type.html">
+            
+                <a href="ShallowWrapper/type.html">
+            
+                    
+                    type()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.61" data-path="ShallowWrapper/unmount.html">
+            
+                <a href="ShallowWrapper/unmount.html">
+            
+                    
+                    unmount()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.62" data-path="ShallowWrapper/update.html">
+            
+                <a href="ShallowWrapper/update.html">
+            
+                    
+                    update()
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.4.2" data-path="mount.html">
+            
+                <a href="mount.html">
+            
+                    
+                    Full DOM Rendering
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.2.1" data-path="ReactWrapper/at.html">
+            
+                <a href="ReactWrapper/at.html">
+            
+                    
+                    at(index)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.2" data-path="ReactWrapper/childAt.html">
+            
+                <a href="ReactWrapper/childAt.html">
+            
+                    
+                    childAt()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.3" data-path="ReactWrapper/children.html">
+            
+                <a href="ReactWrapper/children.html">
+            
+                    
+                    children()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.4" data-path="ReactWrapper/contains.html">
+            
+                <a href="ReactWrapper/contains.html">
+            
+                    
+                    contains(nodeOrNodes)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.5" data-path="ReactWrapper/containsAllMatchingElements.html">
+            
+                <a href="ReactWrapper/containsAllMatchingElements.html">
+            
+                    
+                    containsAllMatchingElements(nodes)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.6" data-path="ReactWrapper/containsAnyMatchingElements.html">
+            
+                <a href="ReactWrapper/containsAnyMatchingElements.html">
+            
+                    
+                    containsAnyMatchingElements(nodes)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.7" data-path="ReactWrapper/containsMatchingElement.html">
+            
+                <a href="ReactWrapper/containsMatchingElement.html">
+            
+                    
+                    containsMatchingElement(node)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.8" data-path="ReactWrapper/closest.html">
+            
+                <a href="ReactWrapper/closest.html">
+            
+                    
+                    closest(selector)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.9" data-path="ReactWrapper/context.html">
+            
+                <a href="ReactWrapper/context.html">
+            
+                    
+                    context([key])
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.10" data-path="ReactWrapper/debug.html">
+            
+                <a href="ReactWrapper/debug.html">
+            
+                    
+                    debug()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.11" data-path="ReactWrapper/detach.html">
+            
+                <a href="ReactWrapper/detach.html">
+            
+                    
+                    detach()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.12" data-path="ReactWrapper/equals.html">
+            
+                <a href="ReactWrapper/equals.html">
+            
+                    
+                    equals(node)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.13" data-path="ReactWrapper/every.html">
+            
+                <a href="ReactWrapper/every.html">
+            
+                    
+                    every(selector)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.14" data-path="ReactWrapper/everyWhere.html">
+            
+                <a href="ReactWrapper/everyWhere.html">
+            
+                    
+                    everyWhere(predicate)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.15" data-path="ReactWrapper/exists.html">
+            
+                <a href="ReactWrapper/exists.html">
+            
+                    
+                    exists([selector])
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.16" data-path="ReactWrapper/filter.html">
+            
+                <a href="ReactWrapper/filter.html">
+            
+                    
+                    filter(selector)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.17" data-path="ReactWrapper/filterWhere.html">
+            
+                <a href="ReactWrapper/filterWhere.html">
+            
+                    
+                    filterWhere(predicate)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.18" data-path="ReactWrapper/find.html">
+            
+                <a href="ReactWrapper/find.html">
+            
+                    
+                    find(selector)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.19" data-path="ReactWrapper/findWhere.html">
+            
+                <a href="ReactWrapper/findWhere.html">
+            
+                    
+                    findWhere(predicate)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.20" data-path="ReactWrapper/first.html">
+            
+                <a href="ReactWrapper/first.html">
+            
+                    
+                    first()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.21" data-path="ReactWrapper/forEach.html">
+            
+                <a href="ReactWrapper/forEach.html">
+            
+                    
+                    forEach(fn)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.22" data-path="ReactWrapper/get.html">
+            
+                <a href="ReactWrapper/get.html">
+            
+                    
+                    get(index)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.23" data-path="ReactWrapper/getDOMNode.html">
+            
+                <a href="ReactWrapper/getDOMNode.html">
+            
+                    
+                    getDOMNode()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.24" data-path="ReactWrapper/getWrappingComponent.html">
+            
+                <a href="ReactWrapper/getWrappingComponent.html">
+            
+                    
+                    getWrappingComponent()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.25" data-path="ReactWrapper/hasClass.html">
+            
+                <a href="ReactWrapper/hasClass.html">
+            
+                    
+                    hasClass(className)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.26" data-path="ReactWrapper/hostNodes.html">
+            
+                <a href="ReactWrapper/hostNodes.html">
+            
+                    
+                    hostNodes()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.27" data-path="ReactWrapper/html.html">
+            
+                <a href="ReactWrapper/html.html">
+            
+                    
+                    html()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.28" data-path="ReactWrapper/instance.html">
+            
+                <a href="ReactWrapper/instance.html">
+            
+                    
+                    instance()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.29" data-path="ReactWrapper/invoke.html">
+            
+                <a href="ReactWrapper/invoke.html">
+            
+                    
+                    invoke(propName)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.30" data-path="ReactWrapper/is.html">
+            
+                <a href="ReactWrapper/is.html">
+            
+                    
+                    is(selector)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.31" data-path="ReactWrapper/isEmpty.html">
+            
+                <a href="ReactWrapper/isEmpty.html">
+            
+                    
+                    isEmpty()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.32" data-path="ReactWrapper/isEmptyRender.html">
+            
+                <a href="ReactWrapper/isEmptyRender.html">
+            
+                    
+                    isEmptyRender()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.33" data-path="ReactWrapper/key.html">
+            
+                <a href="ReactWrapper/key.html">
+            
+                    
+                    key()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.34" data-path="ReactWrapper/last.html">
+            
+                <a href="ReactWrapper/last.html">
+            
+                    
+                    last()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.35" data-path="ReactWrapper/map.html">
+            
+                <a href="ReactWrapper/map.html">
+            
+                    
+                    map(fn)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.36" data-path="ReactWrapper/matchesElement.html">
+            
+                <a href="ReactWrapper/matchesElement.html">
+            
+                    
+                    matchesElement(node)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.37" data-path="ReactWrapper/mount.html">
+            
+                <a href="ReactWrapper/mount.html">
+            
+                    
+                    mount()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.38" data-path="ReactWrapper/name.html">
+            
+                <a href="ReactWrapper/name.html">
+            
+                    
+                    name()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.39" data-path="ReactWrapper/not.html">
+            
+                <a href="ReactWrapper/not.html">
+            
+                    
+                    not(selector)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.40" data-path="ReactWrapper/parent.html">
+            
+                <a href="ReactWrapper/parent.html">
+            
+                    
+                    parent()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.41" data-path="ReactWrapper/parents.html">
+            
+                <a href="ReactWrapper/parents.html">
+            
+                    
+                    parents()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.42" data-path="ReactWrapper/prop.html">
+            
+                <a href="ReactWrapper/prop.html">
+            
+                    
+                    prop(key)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.43" data-path="ReactWrapper/props.html">
+            
+                <a href="ReactWrapper/props.html">
+            
+                    
+                    props()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.44" data-path="ReactWrapper/reduce.html">
+            
+                <a href="ReactWrapper/reduce.html">
+            
+                    
+                    reduce(fn[, initialValue])
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.45" data-path="ReactWrapper/reduceRight.html">
+            
+                <a href="ReactWrapper/reduceRight.html">
+            
+                    
+                    reduceRight(fn[, initialValue])
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.46" data-path="ReactWrapper/ref.html">
+            
+                <a href="ReactWrapper/ref.html">
+            
+                    
+                    ref(refName)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.47" data-path="ReactWrapper/render.html">
+            
+                <a href="ReactWrapper/render.html">
+            
+                    
+                    render()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.48" data-path="ReactWrapper/renderProp.html">
+            
+                <a href="ReactWrapper/renderProp.html">
+            
+                    
+                    renderProp(key)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.49" data-path="ReactWrapper/setContext.html">
+            
+                <a href="ReactWrapper/setContext.html">
+            
+                    
+                    setContext(context)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.50" data-path="ReactWrapper/setProps.html">
+            
+                <a href="ReactWrapper/setProps.html">
+            
+                    
+                    setProps(nextProps[, callback])
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.51" data-path="ReactWrapper/setState.html">
+            
+                <a href="ReactWrapper/setState.html">
+            
+                    
+                    setState(nextState[, callback])
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.52" data-path="ReactWrapper/simulate.html">
+            
+                <a href="ReactWrapper/simulate.html">
+            
+                    
+                    simulate(event[, data])
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.53" data-path="ReactWrapper/simulateError.html">
+            
+                <a href="ReactWrapper/simulateError.html">
+            
+                    
+                    simulateError(error)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.54" data-path="ReactWrapper/slice.html">
+            
+                <a href="ReactWrapper/slice.html">
+            
+                    
+                    slice([begin[, end]])
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.55" data-path="ReactWrapper/some.html">
+            
+                <a href="ReactWrapper/some.html">
+            
+                    
+                    some(selector)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.56" data-path="ReactWrapper/someWhere.html">
+            
+                <a href="ReactWrapper/someWhere.html">
+            
+                    
+                    someWhere(predicate)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.57" data-path="ReactWrapper/state.html">
+            
+                <a href="ReactWrapper/state.html">
+            
+                    
+                    state([key])
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.58" data-path="ReactWrapper/tap.html">
+            
+                <a href="ReactWrapper/tap.html">
+            
+                    
+                    tap(intercepter)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.59" data-path="ReactWrapper/text.html">
+            
+                <a href="ReactWrapper/text.html">
+            
+                    
+                    text()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.60" data-path="ReactWrapper/type.html">
+            
+                <a href="ReactWrapper/type.html">
+            
+                    
+                    type()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.61" data-path="ReactWrapper/unmount.html">
+            
+                <a href="ReactWrapper/unmount.html">
+            
+                    
+                    unmount()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.62" data-path="ReactWrapper/update.html">
+            
+                <a href="ReactWrapper/update.html">
+            
+                    
+                    update()
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.3" data-path="render.html">
+            
+                <a href="render.html">
+            
+                    
+                    Static Rendering
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.4" data-path="selector.html">
+            
+                <a href="selector.html">
+            
+                    
+                    Selectors
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" data-path="../../CHANGELOG.html">
+            
+                <a href="../../CHANGELOG.html">
+            
+                    
+                    Change Log
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6" data-path="../future.html">
+            
+                <a href="../future.html">
+            
+                    
+                    Future
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7" data-path="../../CONTRIBUTING.html">
+            
+                <a href="../../CONTRIBUTING.html">
+            
+                    
+                    Contributing Guide
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="../.." >Full DOM Rendering</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="full-rendering-api-mount"><a name="full-rendering-api-mount" class="plugin-anchor" href="#full-rendering-api-mount"><i class="fa fa-link" aria-hidden="true"></i></a>Full Rendering API (<code>mount(...)</code>)</h1>
+<p>Full DOM rendering is ideal for use cases where you have components that may interact with DOM APIs or need to test components that are wrapped in higher order components.</p>
+<p>Full DOM rendering requires that a full DOM API be available at the global scope. This means that
+it must be run in an environment that at least &#x201C;looks like&#x201D; a browser environment. If you do not
+want to run your tests inside of a browser, the recommended approach to using <code>mount</code> is to depend
+on a library called <a href="https://github.com/tmpvar/jsdom" target="_blank">jsdom</a> which is essentially a headless browser
+implemented completely in JS.</p>
+<p><strong>Note</strong>: unlike shallow or static rendering, full rendering actually mounts the component in the DOM, which means that tests can affect each other if they are all using the same DOM. Keep that in mind while writing your tests and, if necessary, use <a href="ReactWrapper/unmount.html"><code>.unmount()</code></a> or something similar as cleanup.</p>
+<pre><code class="lang-jsx"><span class="hljs-keyword">import</span> { mount } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;enzyme&apos;</span>;
+<span class="hljs-keyword">import</span> sinon <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;sinon&apos;</span>;
+<span class="hljs-keyword">import</span> Foo <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;./Foo&apos;</span>;
+
+describe(<span class="hljs-string">&apos;&lt;Foo /&gt;&apos;</span>, () =&gt; {
+  it(<span class="hljs-string">&apos;calls componentDidMount&apos;</span>, () =&gt; {
+    sinon.spy(Foo.prototype, <span class="hljs-string">&apos;componentDidMount&apos;</span>);
+    <span class="hljs-keyword">const</span> wrapper = mount(&lt;Foo /&gt;);
+    expect(Foo.prototype.componentDidMount).to.have.property(&apos;callCount&apos;, 1);
+  });
+
+  it(&apos;allows us to set props&apos;, () =&gt; {
+    const wrapper = mount(&lt;Foo bar=&quot;baz&quot; /&gt;);
+    expect(wrapper.props().bar).to.equal(&apos;baz&apos;);
+    wrapper.setProps({ bar: &apos;foo&apos; });
+    expect(wrapper.props().bar).to.equal(&apos;foo&apos;);
+  });
+
+  it(&apos;simulates click events&apos;, () =&gt; {
+    const onButtonClick = sinon.spy();
+    const wrapper = mount((
+      &lt;Foo onButtonClick={onButtonClick} /&gt;
+    ));
+    wrapper.find(&apos;button&apos;).simulate(&apos;click&apos;);
+    expect(onButtonClick).to.have.property(&apos;callCount&apos;, 1);
+  });
+});
+</code></pre>
+<h2 id="mountnode-options--reactwrapper"><a name="mountnode-options--reactwrapper" class="plugin-anchor" href="#mountnode-options--reactwrapper"><i class="fa fa-link" aria-hidden="true"></i></a><code>mount(node[, options]) =&gt; ReactWrapper</code></h2>
+<h4 id="arguments"><a name="arguments" class="plugin-anchor" href="#arguments"><i class="fa fa-link" aria-hidden="true"></i></a>Arguments</h4>
+<ol>
+<li><code>node</code> (<code>ReactElement</code>): The node to render</li>
+<li><code>options</code> (<code>Object</code> [optional]):</li>
+<li><code>options.context</code>: (<code>Object</code> [optional]): Context to be passed into the component</li>
+<li><code>options.attachTo</code>: (<code>DOMElement</code> [optional]): DOM Element to attach the component to.</li>
+<li><code>options.childContextTypes</code>: (<code>Object</code> [optional]): Merged contextTypes for all children of the wrapper.</li>
+<li><code>options.wrappingComponent</code>: (<code>ComponentType</code> [optional]): A component that will render as a parent of the <code>node</code>. It can be used to provide context to the <code>node</code>, among other things. See the <a href="ReactWrapper/getWrappingComponent.html"><code>getWrappingComponent()</code> docs</a> for an example. <strong>Note</strong>: <code>wrappingComponent</code> <em>must</em> render its children.</li>
+<li><code>options.wrappingComponentProps</code>: (<code>Object</code> [optional]): Initial props to pass to the <code>wrappingComponent</code> if it is specified.</li>
+</ol>
+<h4 id="returns"><a name="returns" class="plugin-anchor" href="#returns"><i class="fa fa-link" aria-hidden="true"></i></a>Returns</h4>
+<p><code>ReactWrapper</code>: The wrapper instance around the rendered output.</p>
+<h2 id="reactwrapper-api"><a name="reactwrapper-api" class="plugin-anchor" href="#reactwrapper-api"><i class="fa fa-link" aria-hidden="true"></i></a>ReactWrapper API</h2>
+<h4 id="findselector--reactwrapper"><a name="findselector--reactwrapper" class="plugin-anchor" href="#findselector--reactwrapper"><i class="fa fa-link" aria-hidden="true"></i></a><a href="ReactWrapper/find.html"><code>.find(selector) =&gt; ReactWrapper</code></a></h4>
+<p>Find every node in the render tree that matches the provided selector.</p>
+<h4 id="findwherepredicate--reactwrapper"><a name="findwherepredicate--reactwrapper" class="plugin-anchor" href="#findwherepredicate--reactwrapper"><i class="fa fa-link" aria-hidden="true"></i></a><a href="ReactWrapper/findWhere.html"><code>.findWhere(predicate) =&gt; ReactWrapper</code></a></h4>
+<p>Find every node in the render tree that returns true for the provided predicate function.</p>
+<h4 id="filterselector--reactwrapper"><a name="filterselector--reactwrapper" class="plugin-anchor" href="#filterselector--reactwrapper"><i class="fa fa-link" aria-hidden="true"></i></a><a href="ReactWrapper/filter.html"><code>.filter(selector) =&gt; ReactWrapper</code></a></h4>
+<p>Remove nodes in the current wrapper that do not match the provided selector.</p>
+<h4 id="filterwherepredicate--reactwrapper"><a name="filterwherepredicate--reactwrapper" class="plugin-anchor" href="#filterwherepredicate--reactwrapper"><i class="fa fa-link" aria-hidden="true"></i></a><a href="ReactWrapper/filterWhere.html"><code>.filterWhere(predicate) =&gt; ReactWrapper</code></a></h4>
+<p>Remove nodes in the current wrapper that do not return true for the provided predicate function.</p>
+<h4 id="hostnodes--reactwrapper"><a name="hostnodes--reactwrapper" class="plugin-anchor" href="#hostnodes--reactwrapper"><i class="fa fa-link" aria-hidden="true"></i></a><a href="ReactWrapper/hostNodes.html"><code>.hostNodes() =&gt; ReactWrapper</code></a></h4>
+<p>Removes nodes that are not host nodes; e.g., this will only return HTML nodes.</p>
+<h4 id="containsnodeornodes--boolean"><a name="containsnodeornodes--boolean" class="plugin-anchor" href="#containsnodeornodes--boolean"><i class="fa fa-link" aria-hidden="true"></i></a><a href="ReactWrapper/contains.html"><code>.contains(nodeOrNodes) =&gt; Boolean</code></a></h4>
+<p>Returns whether or not a given node or array of nodes exists in the render tree.</p>
+<h4 id="containsmatchingelementnode--boolean"><a name="containsmatchingelementnode--boolean" class="plugin-anchor" href="#containsmatchingelementnode--boolean"><i class="fa fa-link" aria-hidden="true"></i></a><a href="ReactWrapper/containsMatchingElement.html"><code>.containsMatchingElement(node) =&gt; Boolean</code></a></h4>
+<p>Returns whether or not a given react element exists in the render tree.</p>
+<h4 id="containsallmatchingelementsnodes--boolean"><a name="containsallmatchingelementsnodes--boolean" class="plugin-anchor" href="#containsallmatchingelementsnodes--boolean"><i class="fa fa-link" aria-hidden="true"></i></a><a href="ReactWrapper/containsAllMatchingElements.html"><code>.containsAllMatchingElements(nodes) =&gt; Boolean</code></a></h4>
+<p>Returns whether or not all the given react elements exist in the render tree.</p>
+<h4 id="containsanymatchingelementsnodes--boolean"><a name="containsanymatchingelementsnodes--boolean" class="plugin-anchor" href="#containsanymatchingelementsnodes--boolean"><i class="fa fa-link" aria-hidden="true"></i></a><a href="ReactWrapper/containsAnyMatchingElements.html"><code>.containsAnyMatchingElements(nodes) =&gt; Boolean</code></a></h4>
+<p>Returns whether or not one of the given react elements exist in the render tree.</p>
+<h4 id="equalsnode--boolean"><a name="equalsnode--boolean" class="plugin-anchor" href="#equalsnode--boolean"><i class="fa fa-link" aria-hidden="true"></i></a><a href="ReactWrapper/equals.html"><code>.equals(node) =&gt; Boolean</code></a></h4>
+<p>Returns whether or not the current wrapper root node render tree looks like the one passed in.</p>
+<h4 id="hasclassclassname--boolean"><a name="hasclassclassname--boolean" class="plugin-anchor" href="#hasclassclassname--boolean"><i class="fa fa-link" aria-hidden="true"></i></a><a href="ReactWrapper/hasClass.html"><code>.hasClass(className) =&gt; Boolean</code></a></h4>
+<p>Returns whether or not the current root node has the given class name or not.</p>
+<h4 id="isselector--boolean"><a name="isselector--boolean" class="plugin-anchor" href="#isselector--boolean"><i class="fa fa-link" aria-hidden="true"></i></a><a href="ReactWrapper/is.html"><code>.is(selector) =&gt; Boolean</code></a></h4>
+<p>Returns whether or not the current node matches a provided selector.</p>
+<h4 id="existsselector--boolean"><a name="existsselector--boolean" class="plugin-anchor" href="#existsselector--boolean"><i class="fa fa-link" aria-hidden="true"></i></a><a href="ReactWrapper/exists.html"><code>.exists([selector]) =&gt; Boolean</code></a></h4>
+<p>Returns whether or not the current node exists, or, if given a selector, whether that selector has any matching results.</p>
+<h4 id="isempty--boolean"><a name="isempty--boolean" class="plugin-anchor" href="#isempty--boolean"><i class="fa fa-link" aria-hidden="true"></i></a><a href="ReactWrapper/isEmpty.html"><code>.isEmpty() =&gt; Boolean</code></a></h4>
+<p><em>Deprecated</em>: Use <a href="ReactWrapper/exists.html"><code>.exists()</code></a> instead.</p>
+<h4 id="isemptyrender--boolean"><a name="isemptyrender--boolean" class="plugin-anchor" href="#isemptyrender--boolean"><i class="fa fa-link" aria-hidden="true"></i></a><a href="ReactWrapper/isEmptyRender.html"><code>.isEmptyRender() =&gt; Boolean</code></a></h4>
+<p>Returns whether or not the current component returns a falsy value.</p>
+<h4 id="notselector--reactwrapper"><a name="notselector--reactwrapper" class="plugin-anchor" href="#notselector--reactwrapper"><i class="fa fa-link" aria-hidden="true"></i></a><a href="ReactWrapper/not.html"><code>.not(selector) =&gt; ReactWrapper</code></a></h4>
+<p>Remove nodes in the current wrapper that match the provided selector. (inverse of <code>.filter()</code>)</p>
+<h4 id="childrenselector--reactwrapper"><a name="childrenselector--reactwrapper" class="plugin-anchor" href="#childrenselector--reactwrapper"><i class="fa fa-link" aria-hidden="true"></i></a><a href="ReactWrapper/children.html"><code>.children([selector]) =&gt; ReactWrapper</code></a></h4>
+<p>Get a wrapper with all of the children nodes of the current wrapper.</p>
+<h4 id="childatindex--reactwrapper"><a name="childatindex--reactwrapper" class="plugin-anchor" href="#childatindex--reactwrapper"><i class="fa fa-link" aria-hidden="true"></i></a><a href="ReactWrapper/childAt.html"><code>.childAt(index) =&gt; ReactWrapper</code></a></h4>
+<p>Returns a new wrapper with child at the specified index.</p>
+<h4 id="parentsselector--reactwrapper"><a name="parentsselector--reactwrapper" class="plugin-anchor" href="#parentsselector--reactwrapper"><i class="fa fa-link" aria-hidden="true"></i></a><a href="ReactWrapper/parents.html"><code>.parents([selector]) =&gt; ReactWrapper</code></a></h4>
+<p>Get a wrapper with all of the parents (ancestors) of the current node.</p>
+<h4 id="parent--reactwrapper"><a name="parent--reactwrapper" class="plugin-anchor" href="#parent--reactwrapper"><i class="fa fa-link" aria-hidden="true"></i></a><a href="ReactWrapper/parent.html"><code>.parent() =&gt; ReactWrapper</code></a></h4>
+<p>Get a wrapper with the direct parent of the current node.</p>
+<h4 id="closestselector--reactwrapper"><a name="closestselector--reactwrapper" class="plugin-anchor" href="#closestselector--reactwrapper"><i class="fa fa-link" aria-hidden="true"></i></a><a href="ReactWrapper/closest.html"><code>.closest(selector) =&gt; ReactWrapper</code></a></h4>
+<p>Get a wrapper with the first ancestor of the current node to match the provided selector.</p>
+<h4 id="render--cheeriowrapper"><a name="render--cheeriowrapper" class="plugin-anchor" href="#render--cheeriowrapper"><i class="fa fa-link" aria-hidden="true"></i></a><a href="ReactWrapper/render.html"><code>.render() =&gt; CheerioWrapper</code></a></h4>
+<p>Returns a CheerioWrapper of the current node&apos;s subtree.</p>
+<h4 id="renderpropkey--reactwrapper"><a name="renderpropkey--reactwrapper" class="plugin-anchor" href="#renderpropkey--reactwrapper"><i class="fa fa-link" aria-hidden="true"></i></a><a href="ReactWrapper/renderProp.html"><code>.renderProp(key)() =&gt; ReactWrapper</code></a></h4>
+<p>Returns a wrapper of the node rendered by the provided render prop.</p>
+<h4 id="text--string"><a name="text--string" class="plugin-anchor" href="#text--string"><i class="fa fa-link" aria-hidden="true"></i></a><a href="ReactWrapper/text.html"><code>.text() =&gt; String</code></a></h4>
+<p>Returns a string representation of the text nodes in the current render tree.</p>
+<h4 id="html--string"><a name="html--string" class="plugin-anchor" href="#html--string"><i class="fa fa-link" aria-hidden="true"></i></a><a href="ReactWrapper/html.html"><code>.html() =&gt; String</code></a></h4>
+<p>Returns a static HTML rendering of the current node.</p>
+<h4 id="getindex--reactelement"><a name="getindex--reactelement" class="plugin-anchor" href="#getindex--reactelement"><i class="fa fa-link" aria-hidden="true"></i></a><a href="ReactWrapper/get.html"><code>.get(index) =&gt; ReactElement</code></a></h4>
+<p>Returns the node at the provided index of the current wrapper.</p>
+<h4 id="getdomnode--domcomponent"><a name="getdomnode--domcomponent" class="plugin-anchor" href="#getdomnode--domcomponent"><i class="fa fa-link" aria-hidden="true"></i></a><a href="ReactWrapper/getDOMNode.html"><code>.getDOMNode() =&gt; DOMComponent</code></a></h4>
+<p>Returns the outer most DOMComponent of the current wrapper.</p>
+<h4 id="atindex--reactwrapper"><a name="atindex--reactwrapper" class="plugin-anchor" href="#atindex--reactwrapper"><i class="fa fa-link" aria-hidden="true"></i></a><a href="ReactWrapper/at.html"><code>.at(index) =&gt; ReactWrapper</code></a></h4>
+<p>Returns a wrapper of the node at the provided index of the current wrapper.</p>
+<h4 id="first--reactwrapper"><a name="first--reactwrapper" class="plugin-anchor" href="#first--reactwrapper"><i class="fa fa-link" aria-hidden="true"></i></a><a href="ReactWrapper/first.html"><code>.first() =&gt; ReactWrapper</code></a></h4>
+<p>Returns a wrapper of the first node of the current wrapper.</p>
+<h4 id="last--reactwrapper"><a name="last--reactwrapper" class="plugin-anchor" href="#last--reactwrapper"><i class="fa fa-link" aria-hidden="true"></i></a><a href="ReactWrapper/last.html"><code>.last() =&gt; ReactWrapper</code></a></h4>
+<p>Returns a wrapper of the last node of the current wrapper.</p>
+<h4 id="statekey--any"><a name="statekey--any" class="plugin-anchor" href="#statekey--any"><i class="fa fa-link" aria-hidden="true"></i></a><a href="ReactWrapper/state.html"><code>.state([key]) =&gt; Any</code></a></h4>
+<p>Returns the state of the root component.</p>
+<h4 id="contextkey--any"><a name="contextkey--any" class="plugin-anchor" href="#contextkey--any"><i class="fa fa-link" aria-hidden="true"></i></a><a href="ReactWrapper/context.html"><code>.context([key]) =&gt; Any</code></a></h4>
+<p>Returns the context of the root component.</p>
+<h4 id="props--object"><a name="props--object" class="plugin-anchor" href="#props--object"><i class="fa fa-link" aria-hidden="true"></i></a><a href="ReactWrapper/props.html"><code>.props() =&gt; Object</code></a></h4>
+<p>Returns the props of the root component.</p>
+<h4 id="propkey--any"><a name="propkey--any" class="plugin-anchor" href="#propkey--any"><i class="fa fa-link" aria-hidden="true"></i></a><a href="ReactWrapper/prop.html"><code>.prop(key) =&gt; Any</code></a></h4>
+<p>Returns the named prop of the root component.</p>
+<h4 id="invokepropnameargs--any"><a name="invokepropnameargs--any" class="plugin-anchor" href="#invokepropnameargs--any"><i class="fa fa-link" aria-hidden="true"></i></a><a href="ReactWrapper/invoke.html"><code>.invoke(propName)(...args) =&gt; Any</code></a></h4>
+<p>Invokes a prop function on the current node and returns the function&apos;s return value.</p>
+<h4 id="key--string"><a name="key--string" class="plugin-anchor" href="#key--string"><i class="fa fa-link" aria-hidden="true"></i></a><a href="ReactWrapper/key.html"><code>.key() =&gt; String</code></a></h4>
+<p>Returns the key of the root component.</p>
+<h4 id="simulateevent-mock--reactwrapper"><a name="simulateevent-mock--reactwrapper" class="plugin-anchor" href="#simulateevent-mock--reactwrapper"><i class="fa fa-link" aria-hidden="true"></i></a><a href="ReactWrapper/simulate.html"><code>.simulate(event[, mock]) =&gt; ReactWrapper</code></a></h4>
+<p>Simulates an event on the current node.</p>
+<h4 id="setstatenextstate--reactwrapper"><a name="setstatenextstate--reactwrapper" class="plugin-anchor" href="#setstatenextstate--reactwrapper"><i class="fa fa-link" aria-hidden="true"></i></a><a href="ReactWrapper/setState.html"><code>.setState(nextState) =&gt; ReactWrapper</code></a></h4>
+<p>Manually sets state of the root component.</p>
+<h4 id="setpropsnextprops-callback--reactwrapper"><a name="setpropsnextprops-callback--reactwrapper" class="plugin-anchor" href="#setpropsnextprops-callback--reactwrapper"><i class="fa fa-link" aria-hidden="true"></i></a><a href="ReactWrapper/setProps.html"><code>.setProps(nextProps[, callback]) =&gt; ReactWrapper</code></a></h4>
+<p>Manually sets props of the root component.</p>
+<h4 id="setcontextcontext--reactwrapper"><a name="setcontextcontext--reactwrapper" class="plugin-anchor" href="#setcontextcontext--reactwrapper"><i class="fa fa-link" aria-hidden="true"></i></a><a href="ReactWrapper/setContext.html"><code>.setContext(context) =&gt; ReactWrapper</code></a></h4>
+<p>Manually sets context of the root component.</p>
+<h4 id="instance--reactcomponentdomcomponent"><a name="instance--reactcomponentdomcomponent" class="plugin-anchor" href="#instance--reactcomponentdomcomponent"><i class="fa fa-link" aria-hidden="true"></i></a><a href="ReactWrapper/instance.html"><code>.instance() =&gt; ReactComponent|DOMComponent</code></a></h4>
+<p>Returns the wrapper&apos;s underlying instance.</p>
+<h4 id="getwrappingcomponent--reactwrapper"><a name="getwrappingcomponent--reactwrapper" class="plugin-anchor" href="#getwrappingcomponent--reactwrapper"><i class="fa fa-link" aria-hidden="true"></i></a><a href="ReactWrapper/getWrappingComponent.html"><code>.getWrappingComponent() =&gt; ReactWrapper</code></a></h4>
+<p>Returns a wrapper representing the <code>wrappingComponent</code>, if one was passed.</p>
+<h4 id="unmount--reactwrapper"><a name="unmount--reactwrapper" class="plugin-anchor" href="#unmount--reactwrapper"><i class="fa fa-link" aria-hidden="true"></i></a><a href="ReactWrapper/unmount.html"><code>.unmount() =&gt; ReactWrapper</code></a></h4>
+<p>A method that un-mounts the component.</p>
+<h4 id="mount--reactwrapper"><a name="mount--reactwrapper" class="plugin-anchor" href="#mount--reactwrapper"><i class="fa fa-link" aria-hidden="true"></i></a><a href="ReactWrapper/mount.html"><code>.mount() =&gt; ReactWrapper</code></a></h4>
+<p>A method that re-mounts the component.</p>
+<h4 id="update--reactwrapper"><a name="update--reactwrapper" class="plugin-anchor" href="#update--reactwrapper"><i class="fa fa-link" aria-hidden="true"></i></a><a href="ReactWrapper/update.html"><code>.update() =&gt; ReactWrapper</code></a></h4>
+<p>Syncs the enzyme component tree snapshot with the react component tree.</p>
+<h4 id="debug--string"><a name="debug--string" class="plugin-anchor" href="#debug--string"><i class="fa fa-link" aria-hidden="true"></i></a><a href="ReactWrapper/debug.html"><code>.debug() =&gt; String</code></a></h4>
+<p>Returns a string representation of the current render tree for debugging purposes.</p>
+<h4 id="type--stringfunction"><a name="type--stringfunction" class="plugin-anchor" href="#type--stringfunction"><i class="fa fa-link" aria-hidden="true"></i></a><a href="ReactWrapper/type.html"><code>.type() =&gt; String|Function</code></a></h4>
+<p>Returns the type of the current node of the wrapper.</p>
+<h4 id="name--string"><a name="name--string" class="plugin-anchor" href="#name--string"><i class="fa fa-link" aria-hidden="true"></i></a><a href="ReactWrapper/name.html"><code>.name() =&gt; String</code></a></h4>
+<p>Returns the name of the current node of the wrapper.</p>
+<h4 id="foreachfn--reactwrapper"><a name="foreachfn--reactwrapper" class="plugin-anchor" href="#foreachfn--reactwrapper"><i class="fa fa-link" aria-hidden="true"></i></a><a href="ReactWrapper/forEach.html"><code>.forEach(fn) =&gt; ReactWrapper</code></a></h4>
+<p>Iterates through each node of the current wrapper and executes the provided function</p>
+<h4 id="mapfn--array"><a name="mapfn--array" class="plugin-anchor" href="#mapfn--array"><i class="fa fa-link" aria-hidden="true"></i></a><a href="ReactWrapper/map.html"><code>.map(fn) =&gt; Array</code></a></h4>
+<p>Maps the current array of nodes to another array.</p>
+<h4 id="matcheselementnode--boolean"><a name="matcheselementnode--boolean" class="plugin-anchor" href="#matcheselementnode--boolean"><i class="fa fa-link" aria-hidden="true"></i></a><a href="ReactWrapper/matchesElement.html"><code>.matchesElement(node) =&gt; Boolean</code></a></h4>
+<p>Returns whether or not a given react element matches the current render tree.</p>
+<h4 id="reducefn-initialvalue--any"><a name="reducefn-initialvalue--any" class="plugin-anchor" href="#reducefn-initialvalue--any"><i class="fa fa-link" aria-hidden="true"></i></a><a href="ReactWrapper/reduce.html"><code>.reduce(fn[, initialValue]) =&gt; Any</code></a></h4>
+<p>Reduces the current array of nodes to a value</p>
+<h4 id="reducerightfn-initialvalue--any"><a name="reducerightfn-initialvalue--any" class="plugin-anchor" href="#reducerightfn-initialvalue--any"><i class="fa fa-link" aria-hidden="true"></i></a><a href="ReactWrapper/reduceRight.html"><code>.reduceRight(fn[, initialValue]) =&gt; Any</code></a></h4>
+<p>Reduces the current array of nodes to a value, from right to left.</p>
+<h4 id="slicebegin-end--reactwrapper"><a name="slicebegin-end--reactwrapper" class="plugin-anchor" href="#slicebegin-end--reactwrapper"><i class="fa fa-link" aria-hidden="true"></i></a><a href="ReactWrapper/slice.html"><code>.slice([begin[, end]]) =&gt; ReactWrapper</code></a></h4>
+<p>Returns a new wrapper with a subset of the nodes of the original wrapper, according to the rules of <code>Array#slice</code>.</p>
+<h4 id="tapintercepter--self"><a name="tapintercepter--self" class="plugin-anchor" href="#tapintercepter--self"><i class="fa fa-link" aria-hidden="true"></i></a><a href="ReactWrapper/tap.html"><code>.tap(intercepter) =&gt; Self</code></a></h4>
+<p>Taps into the wrapper method chain. Helpful for debugging.</p>
+<h4 id="someselector--boolean"><a name="someselector--boolean" class="plugin-anchor" href="#someselector--boolean"><i class="fa fa-link" aria-hidden="true"></i></a><a href="ReactWrapper/some.html"><code>.some(selector) =&gt; Boolean</code></a></h4>
+<p>Returns whether or not any of the nodes in the wrapper match the provided selector.</p>
+<h4 id="somewherepredicate--boolean"><a name="somewherepredicate--boolean" class="plugin-anchor" href="#somewherepredicate--boolean"><i class="fa fa-link" aria-hidden="true"></i></a><a href="ReactWrapper/someWhere.html"><code>.someWhere(predicate) =&gt; Boolean</code></a></h4>
+<p>Returns whether or not any of the nodes in the wrapper pass the provided predicate function.</p>
+<h4 id="everyselector--boolean"><a name="everyselector--boolean" class="plugin-anchor" href="#everyselector--boolean"><i class="fa fa-link" aria-hidden="true"></i></a><a href="ReactWrapper/every.html"><code>.every(selector) =&gt; Boolean</code></a></h4>
+<p>Returns whether or not all of the nodes in the wrapper match the provided selector.</p>
+<h4 id="everywherepredicate--boolean"><a name="everywherepredicate--boolean" class="plugin-anchor" href="#everywherepredicate--boolean"><i class="fa fa-link" aria-hidden="true"></i></a><a href="ReactWrapper/everyWhere.html"><code>.everyWhere(predicate) =&gt; Boolean</code></a></h4>
+<p>Returns whether or not all of the nodes in the wrapper pass the provided predicate function.</p>
+<h4 id="refrefname--reactcomponent--htmlelement"><a name="refrefname--reactcomponent--htmlelement" class="plugin-anchor" href="#refrefname--reactcomponent--htmlelement"><i class="fa fa-link" aria-hidden="true"></i></a><a href="ReactWrapper/ref.html"><code>.ref(refName) =&gt; ReactComponent | HTMLElement</code></a></h4>
+<p>Returns the node that matches the provided reference name.</p>
+<h4 id="detach--void"><a name="detach--void" class="plugin-anchor" href="#detach--void"><i class="fa fa-link" aria-hidden="true"></i></a><a href="ReactWrapper/detach.html"><code>.detach() =&gt; void</code></a></h4>
+<p>Unmount the component from the DOM node it&apos;s attached to.</p>
+
+                                
+                                </section>
+                            
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="ShallowWrapper/update.html" class="navigation navigation-prev " aria-label="Previous page: update()">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="ReactWrapper/at.html" class="navigation navigation-next " aria-label="Next page: at(index)">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"Full DOM Rendering","level":"1.4.2","depth":2,"next":{"title":"at(index)","level":"1.4.2.1","depth":3,"path":"docs/api/ReactWrapper/at.md","ref":"docs/api/ReactWrapper/at.md","articles":[]},"previous":{"title":"update()","level":"1.4.1.62","depth":3,"path":"docs/api/ShallowWrapper/update.md","ref":"docs/api/ShallowWrapper/update.md","articles":[]},"dir":"ltr"},"config":{"plugins":["edit-link","github","-search","codeblock-disable-glossary","collapsible-menu","anchors"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"collapsible-menu":{},"github":{"url":"https://github.com/airbnb/enzyme/"},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"codeblock-disable-glossary":{},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/airbnb/enzyme/tree/master"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"anchors":{}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"Enzyme","gitbook":"3.2.2","description":"React Testing"},"file":{"path":"docs/api/mount.md","mtime":"2019-12-19T07:26:42.819Z","type":"markdown"},"gitbook":{"version":"3.2.2","time":"2019-12-20T00:09:15.843Z"},"basePath":"../..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../../gitbook/gitbook.js"></script>
+    <script src="../../gitbook/theme.js"></script>
+    
+        
+        <script src="../../gitbook/gitbook-plugin-edit-link/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-github/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-codeblock-disable-glossary/disable-glossary.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-collapsible-menu/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

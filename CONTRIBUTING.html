@@ -1,0 +1,2313 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>Contributing Guide · Enzyme</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.2">
+        
+        
+        
+    
+    <link rel="stylesheet" href="gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-anchors/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    
+    <link rel="prev" href="docs/future.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        <li class="header">Table of Contents</li>
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="docs/guides.html">
+            
+                <a href="docs/guides.html">
+            
+                    
+                    Guides
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1" data-path="docs/guides/migration-from-2-to-3.html">
+            
+                <a href="docs/guides/migration-from-2-to-3.html">
+            
+                    
+                    Migration from 2.x to 3.x
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2" data-path="docs/guides/browserify.html">
+            
+                <a href="docs/guides/browserify.html">
+            
+                    
+                    Browserify
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3" data-path="docs/guides/systemjs.html">
+            
+                <a href="docs/guides/systemjs.html">
+            
+                    
+                    SystemJS
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.4" data-path="docs/guides/webpack.html">
+            
+                <a href="docs/guides/webpack.html">
+            
+                    
+                    Webpack
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.5" data-path="docs/guides/jsdom.html">
+            
+                <a href="docs/guides/jsdom.html">
+            
+                    
+                    JSDOM
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.6" data-path="docs/guides/jest.html">
+            
+                <a href="docs/guides/jest.html">
+            
+                    
+                    Jest
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7" data-path="docs/guides/karma.html">
+            
+                <a href="docs/guides/karma.html">
+            
+                    
+                    Karma
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.8" data-path="docs/guides/mocha.html">
+            
+                <a href="docs/guides/mocha.html">
+            
+                    
+                    Mocha
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.9" data-path="docs/guides/react-native.html">
+            
+                <a href="docs/guides/react-native.html">
+            
+                    
+                    React Native
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.10" data-path="docs/guides/lab.html">
+            
+                <a href="docs/guides/lab.html">
+            
+                    
+                    Lab
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.11" data-path="docs/guides/tape-ava.html">
+            
+                <a href="docs/guides/tape-ava.html">
+            
+                    
+                    Tape and AVA
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="docs/installation/">
+            
+                <a href="docs/installation/">
+            
+                    
+                    Installation
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.1" data-path="docs/installation/react-16.html">
+            
+                <a href="docs/installation/react-16.html">
+            
+                    
+                    Working with React 16.x
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.2" data-path="docs/installation/react-15.html">
+            
+                <a href="docs/installation/react-15.html">
+            
+                    
+                    Working with React 15.x
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.3" data-path="docs/installation/react-014.html">
+            
+                <a href="docs/installation/react-014.html">
+            
+                    
+                    Working with React 0.14.x
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.4" data-path="docs/installation/react-013.html">
+            
+                <a href="docs/installation/react-013.html">
+            
+                    
+                    Working with React 0.13.x
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="docs/api/">
+            
+                <a href="docs/api/">
+            
+                    
+                    API Reference
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.1" data-path="docs/api/shallow.html">
+            
+                <a href="docs/api/shallow.html">
+            
+                    
+                    Shallow Rendering
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.1.1" data-path="docs/api/ShallowWrapper/at.html">
+            
+                <a href="docs/api/ShallowWrapper/at.html">
+            
+                    
+                    at(index)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.2" data-path="docs/api/ShallowWrapper/childAt.html">
+            
+                <a href="docs/api/ShallowWrapper/childAt.html">
+            
+                    
+                    childAt()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.3" data-path="docs/api/ShallowWrapper/children.html">
+            
+                <a href="docs/api/ShallowWrapper/children.html">
+            
+                    
+                    children()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.4" data-path="docs/api/ShallowWrapper/closest.html">
+            
+                <a href="docs/api/ShallowWrapper/closest.html">
+            
+                    
+                    closest(selector)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.5" data-path="docs/api/ShallowWrapper/contains.html">
+            
+                <a href="docs/api/ShallowWrapper/contains.html">
+            
+                    
+                    contains(nodeOrNodes)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.6" data-path="docs/api/ShallowWrapper/containsAllMatchingElements.html">
+            
+                <a href="docs/api/ShallowWrapper/containsAllMatchingElements.html">
+            
+                    
+                    containsAllMatchingElements(nodes)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.7" data-path="docs/api/ShallowWrapper/containsAnyMatchingElements.html">
+            
+                <a href="docs/api/ShallowWrapper/containsAnyMatchingElements.html">
+            
+                    
+                    containsAnyMatchingElements(nodes)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.8" data-path="docs/api/ShallowWrapper/containsMatchingElement.html">
+            
+                <a href="docs/api/ShallowWrapper/containsMatchingElement.html">
+            
+                    
+                    containsMatchingElement(node)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.9" data-path="docs/api/ShallowWrapper/context.html">
+            
+                <a href="docs/api/ShallowWrapper/context.html">
+            
+                    
+                    context([key])
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.10" data-path="docs/api/ShallowWrapper/debug.html">
+            
+                <a href="docs/api/ShallowWrapper/debug.html">
+            
+                    
+                    debug()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.11" data-path="docs/api/ShallowWrapper/dive.html">
+            
+                <a href="docs/api/ShallowWrapper/dive.html">
+            
+                    
+                    dive()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.12" data-path="docs/api/ShallowWrapper/equals.html">
+            
+                <a href="docs/api/ShallowWrapper/equals.html">
+            
+                    
+                    equals(node)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.13" data-path="docs/api/ShallowWrapper/every.html">
+            
+                <a href="docs/api/ShallowWrapper/every.html">
+            
+                    
+                    every(selector)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.14" data-path="docs/api/ShallowWrapper/everyWhere.html">
+            
+                <a href="docs/api/ShallowWrapper/everyWhere.html">
+            
+                    
+                    everyWhere(predicate)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.15" data-path="docs/api/ShallowWrapper/exists.html">
+            
+                <a href="docs/api/ShallowWrapper/exists.html">
+            
+                    
+                    exists([selector])
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.16" data-path="docs/api/ShallowWrapper/filter.html">
+            
+                <a href="docs/api/ShallowWrapper/filter.html">
+            
+                    
+                    filter(selector)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.17" data-path="docs/api/ShallowWrapper/filterWhere.html">
+            
+                <a href="docs/api/ShallowWrapper/filterWhere.html">
+            
+                    
+                    filterWhere(predicate)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.18" data-path="docs/api/ShallowWrapper/find.html">
+            
+                <a href="docs/api/ShallowWrapper/find.html">
+            
+                    
+                    find(selector)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.19" data-path="docs/api/ShallowWrapper/findWhere.html">
+            
+                <a href="docs/api/ShallowWrapper/findWhere.html">
+            
+                    
+                    findWhere(predicate)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.20" data-path="docs/api/ShallowWrapper/first.html">
+            
+                <a href="docs/api/ShallowWrapper/first.html">
+            
+                    
+                    first()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.21" data-path="docs/api/ShallowWrapper/forEach.html">
+            
+                <a href="docs/api/ShallowWrapper/forEach.html">
+            
+                    
+                    forEach(fn)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.22" data-path="docs/api/ShallowWrapper/get.html">
+            
+                <a href="docs/api/ShallowWrapper/get.html">
+            
+                    
+                    get(index)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.23" data-path="docs/api/ShallowWrapper/getWrappingComponent.html">
+            
+                <a href="docs/api/ShallowWrapper/getWrappingComponent.html">
+            
+                    
+                    getWrappingComponent()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.24" data-path="docs/api/ShallowWrapper/getElement.html">
+            
+                <a href="docs/api/ShallowWrapper/getElement.html">
+            
+                    
+                    getElement(index)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.25" data-path="docs/api/ShallowWrapper/getElements.html">
+            
+                <a href="docs/api/ShallowWrapper/getElements.html">
+            
+                    
+                    getElements(index)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.26" data-path="docs/api/ShallowWrapper/hasClass.html">
+            
+                <a href="docs/api/ShallowWrapper/hasClass.html">
+            
+                    
+                    hasClass(className)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.27" data-path="docs/api/ShallowWrapper/hostNodes.html">
+            
+                <a href="docs/api/ShallowWrapper/hostNodes.html">
+            
+                    
+                    hostNodes()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.28" data-path="docs/api/ShallowWrapper/html.html">
+            
+                <a href="docs/api/ShallowWrapper/html.html">
+            
+                    
+                    html()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.29" data-path="docs/api/ShallowWrapper/instance.html">
+            
+                <a href="docs/api/ShallowWrapper/instance.html">
+            
+                    
+                    instance()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.30" data-path="docs/api/ShallowWrapper/invoke.html">
+            
+                <a href="docs/api/ShallowWrapper/invoke.html">
+            
+                    
+                    invoke(propName)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.31" data-path="docs/api/ShallowWrapper/is.html">
+            
+                <a href="docs/api/ShallowWrapper/is.html">
+            
+                    
+                    is(selector)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.32" data-path="docs/api/ShallowWrapper/isEmpty.html">
+            
+                <a href="docs/api/ShallowWrapper/isEmpty.html">
+            
+                    
+                    isEmpty()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.33" data-path="docs/api/ShallowWrapper/isEmptyRender.html">
+            
+                <a href="docs/api/ShallowWrapper/isEmptyRender.html">
+            
+                    
+                    isEmptyRender()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.34" data-path="docs/api/ShallowWrapper/key.html">
+            
+                <a href="docs/api/ShallowWrapper/key.html">
+            
+                    
+                    key()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.35" data-path="docs/api/ShallowWrapper/last.html">
+            
+                <a href="docs/api/ShallowWrapper/last.html">
+            
+                    
+                    last()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.36" data-path="docs/api/ShallowWrapper/map.html">
+            
+                <a href="docs/api/ShallowWrapper/map.html">
+            
+                    
+                    map(fn)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.37" data-path="docs/api/ShallowWrapper/matchesElement.html">
+            
+                <a href="docs/api/ShallowWrapper/matchesElement.html">
+            
+                    
+                    matchesElement(node)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.38" data-path="docs/api/ShallowWrapper/name.html">
+            
+                <a href="docs/api/ShallowWrapper/name.html">
+            
+                    
+                    name()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.39" data-path="docs/api/ShallowWrapper/not.html">
+            
+                <a href="docs/api/ShallowWrapper/not.html">
+            
+                    
+                    not(selector)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.40" data-path="docs/api/ShallowWrapper/parent.html">
+            
+                <a href="docs/api/ShallowWrapper/parent.html">
+            
+                    
+                    parent()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.41" data-path="docs/api/ShallowWrapper/parents.html">
+            
+                <a href="docs/api/ShallowWrapper/parents.html">
+            
+                    
+                    parents()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.42" data-path="docs/api/ShallowWrapper/prop.html">
+            
+                <a href="docs/api/ShallowWrapper/prop.html">
+            
+                    
+                    prop(key)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.43" data-path="docs/api/ShallowWrapper/props.html">
+            
+                <a href="docs/api/ShallowWrapper/props.html">
+            
+                    
+                    props()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.44" data-path="docs/api/ShallowWrapper/reduce.html">
+            
+                <a href="docs/api/ShallowWrapper/reduce.html">
+            
+                    
+                    reduce(fn[, initialValue])
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.45" data-path="docs/api/ShallowWrapper/reduceRight.html">
+            
+                <a href="docs/api/ShallowWrapper/reduceRight.html">
+            
+                    
+                    reduceRight(fn[, initialValue])
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.46" data-path="docs/api/ShallowWrapper/render.html">
+            
+                <a href="docs/api/ShallowWrapper/render.html">
+            
+                    
+                    render()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.47" data-path="docs/api/ShallowWrapper/renderProp.html">
+            
+                <a href="docs/api/ShallowWrapper/renderProp.html">
+            
+                    
+                    renderProp(key)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.48" data-path="docs/api/ShallowWrapper/setContext.html">
+            
+                <a href="docs/api/ShallowWrapper/setContext.html">
+            
+                    
+                    setContext(context)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.49" data-path="docs/api/ShallowWrapper/setProps.html">
+            
+                <a href="docs/api/ShallowWrapper/setProps.html">
+            
+                    
+                    setProps(nextProps)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.50" data-path="docs/api/ShallowWrapper/setState.html">
+            
+                <a href="docs/api/ShallowWrapper/setState.html">
+            
+                    
+                    setState(nextState[, callback])
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.51" data-path="docs/api/ShallowWrapper/shallow.html">
+            
+                <a href="docs/api/ShallowWrapper/shallow.html">
+            
+                    
+                    shallow([options])
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.52" data-path="docs/api/ShallowWrapper/simulate.html">
+            
+                <a href="docs/api/ShallowWrapper/simulate.html">
+            
+                    
+                    simulate(event[, data])
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.53" data-path="docs/api/ShallowWrapper/simulateError.html">
+            
+                <a href="docs/api/ShallowWrapper/simulateError.html">
+            
+                    
+                    simulateError(error)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.54" data-path="docs/api/ShallowWrapper/slice.html">
+            
+                <a href="docs/api/ShallowWrapper/slice.html">
+            
+                    
+                    slice([begin[, end]])
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.55" data-path="docs/api/ShallowWrapper/some.html">
+            
+                <a href="docs/api/ShallowWrapper/some.html">
+            
+                    
+                    some(selector)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.56" data-path="docs/api/ShallowWrapper/someWhere.html">
+            
+                <a href="docs/api/ShallowWrapper/someWhere.html">
+            
+                    
+                    someWhere(predicate)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.57" data-path="docs/api/ShallowWrapper/state.html">
+            
+                <a href="docs/api/ShallowWrapper/state.html">
+            
+                    
+                    state([key])
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.58" data-path="docs/api/ShallowWrapper/tap.html">
+            
+                <a href="docs/api/ShallowWrapper/tap.html">
+            
+                    
+                    tap(intercepter)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.59" data-path="docs/api/ShallowWrapper/text.html">
+            
+                <a href="docs/api/ShallowWrapper/text.html">
+            
+                    
+                    text()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.60" data-path="docs/api/ShallowWrapper/type.html">
+            
+                <a href="docs/api/ShallowWrapper/type.html">
+            
+                    
+                    type()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.61" data-path="docs/api/ShallowWrapper/unmount.html">
+            
+                <a href="docs/api/ShallowWrapper/unmount.html">
+            
+                    
+                    unmount()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.62" data-path="docs/api/ShallowWrapper/update.html">
+            
+                <a href="docs/api/ShallowWrapper/update.html">
+            
+                    
+                    update()
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2" data-path="docs/api/mount.html">
+            
+                <a href="docs/api/mount.html">
+            
+                    
+                    Full DOM Rendering
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.2.1" data-path="docs/api/ReactWrapper/at.html">
+            
+                <a href="docs/api/ReactWrapper/at.html">
+            
+                    
+                    at(index)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.2" data-path="docs/api/ReactWrapper/childAt.html">
+            
+                <a href="docs/api/ReactWrapper/childAt.html">
+            
+                    
+                    childAt()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.3" data-path="docs/api/ReactWrapper/children.html">
+            
+                <a href="docs/api/ReactWrapper/children.html">
+            
+                    
+                    children()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.4" data-path="docs/api/ReactWrapper/contains.html">
+            
+                <a href="docs/api/ReactWrapper/contains.html">
+            
+                    
+                    contains(nodeOrNodes)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.5" data-path="docs/api/ReactWrapper/containsAllMatchingElements.html">
+            
+                <a href="docs/api/ReactWrapper/containsAllMatchingElements.html">
+            
+                    
+                    containsAllMatchingElements(nodes)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.6" data-path="docs/api/ReactWrapper/containsAnyMatchingElements.html">
+            
+                <a href="docs/api/ReactWrapper/containsAnyMatchingElements.html">
+            
+                    
+                    containsAnyMatchingElements(nodes)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.7" data-path="docs/api/ReactWrapper/containsMatchingElement.html">
+            
+                <a href="docs/api/ReactWrapper/containsMatchingElement.html">
+            
+                    
+                    containsMatchingElement(node)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.8" data-path="docs/api/ReactWrapper/closest.html">
+            
+                <a href="docs/api/ReactWrapper/closest.html">
+            
+                    
+                    closest(selector)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.9" data-path="docs/api/ReactWrapper/context.html">
+            
+                <a href="docs/api/ReactWrapper/context.html">
+            
+                    
+                    context([key])
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.10" data-path="docs/api/ReactWrapper/debug.html">
+            
+                <a href="docs/api/ReactWrapper/debug.html">
+            
+                    
+                    debug()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.11" data-path="docs/api/ReactWrapper/detach.html">
+            
+                <a href="docs/api/ReactWrapper/detach.html">
+            
+                    
+                    detach()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.12" data-path="docs/api/ReactWrapper/equals.html">
+            
+                <a href="docs/api/ReactWrapper/equals.html">
+            
+                    
+                    equals(node)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.13" data-path="docs/api/ReactWrapper/every.html">
+            
+                <a href="docs/api/ReactWrapper/every.html">
+            
+                    
+                    every(selector)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.14" data-path="docs/api/ReactWrapper/everyWhere.html">
+            
+                <a href="docs/api/ReactWrapper/everyWhere.html">
+            
+                    
+                    everyWhere(predicate)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.15" data-path="docs/api/ReactWrapper/exists.html">
+            
+                <a href="docs/api/ReactWrapper/exists.html">
+            
+                    
+                    exists([selector])
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.16" data-path="docs/api/ReactWrapper/filter.html">
+            
+                <a href="docs/api/ReactWrapper/filter.html">
+            
+                    
+                    filter(selector)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.17" data-path="docs/api/ReactWrapper/filterWhere.html">
+            
+                <a href="docs/api/ReactWrapper/filterWhere.html">
+            
+                    
+                    filterWhere(predicate)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.18" data-path="docs/api/ReactWrapper/find.html">
+            
+                <a href="docs/api/ReactWrapper/find.html">
+            
+                    
+                    find(selector)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.19" data-path="docs/api/ReactWrapper/findWhere.html">
+            
+                <a href="docs/api/ReactWrapper/findWhere.html">
+            
+                    
+                    findWhere(predicate)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.20" data-path="docs/api/ReactWrapper/first.html">
+            
+                <a href="docs/api/ReactWrapper/first.html">
+            
+                    
+                    first()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.21" data-path="docs/api/ReactWrapper/forEach.html">
+            
+                <a href="docs/api/ReactWrapper/forEach.html">
+            
+                    
+                    forEach(fn)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.22" data-path="docs/api/ReactWrapper/get.html">
+            
+                <a href="docs/api/ReactWrapper/get.html">
+            
+                    
+                    get(index)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.23" data-path="docs/api/ReactWrapper/getDOMNode.html">
+            
+                <a href="docs/api/ReactWrapper/getDOMNode.html">
+            
+                    
+                    getDOMNode()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.24" data-path="docs/api/ReactWrapper/getWrappingComponent.html">
+            
+                <a href="docs/api/ReactWrapper/getWrappingComponent.html">
+            
+                    
+                    getWrappingComponent()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.25" data-path="docs/api/ReactWrapper/hasClass.html">
+            
+                <a href="docs/api/ReactWrapper/hasClass.html">
+            
+                    
+                    hasClass(className)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.26" data-path="docs/api/ReactWrapper/hostNodes.html">
+            
+                <a href="docs/api/ReactWrapper/hostNodes.html">
+            
+                    
+                    hostNodes()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.27" data-path="docs/api/ReactWrapper/html.html">
+            
+                <a href="docs/api/ReactWrapper/html.html">
+            
+                    
+                    html()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.28" data-path="docs/api/ReactWrapper/instance.html">
+            
+                <a href="docs/api/ReactWrapper/instance.html">
+            
+                    
+                    instance()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.29" data-path="docs/api/ReactWrapper/invoke.html">
+            
+                <a href="docs/api/ReactWrapper/invoke.html">
+            
+                    
+                    invoke(propName)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.30" data-path="docs/api/ReactWrapper/is.html">
+            
+                <a href="docs/api/ReactWrapper/is.html">
+            
+                    
+                    is(selector)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.31" data-path="docs/api/ReactWrapper/isEmpty.html">
+            
+                <a href="docs/api/ReactWrapper/isEmpty.html">
+            
+                    
+                    isEmpty()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.32" data-path="docs/api/ReactWrapper/isEmptyRender.html">
+            
+                <a href="docs/api/ReactWrapper/isEmptyRender.html">
+            
+                    
+                    isEmptyRender()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.33" data-path="docs/api/ReactWrapper/key.html">
+            
+                <a href="docs/api/ReactWrapper/key.html">
+            
+                    
+                    key()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.34" data-path="docs/api/ReactWrapper/last.html">
+            
+                <a href="docs/api/ReactWrapper/last.html">
+            
+                    
+                    last()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.35" data-path="docs/api/ReactWrapper/map.html">
+            
+                <a href="docs/api/ReactWrapper/map.html">
+            
+                    
+                    map(fn)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.36" data-path="docs/api/ReactWrapper/matchesElement.html">
+            
+                <a href="docs/api/ReactWrapper/matchesElement.html">
+            
+                    
+                    matchesElement(node)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.37" data-path="docs/api/ReactWrapper/mount.html">
+            
+                <a href="docs/api/ReactWrapper/mount.html">
+            
+                    
+                    mount()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.38" data-path="docs/api/ReactWrapper/name.html">
+            
+                <a href="docs/api/ReactWrapper/name.html">
+            
+                    
+                    name()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.39" data-path="docs/api/ReactWrapper/not.html">
+            
+                <a href="docs/api/ReactWrapper/not.html">
+            
+                    
+                    not(selector)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.40" data-path="docs/api/ReactWrapper/parent.html">
+            
+                <a href="docs/api/ReactWrapper/parent.html">
+            
+                    
+                    parent()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.41" data-path="docs/api/ReactWrapper/parents.html">
+            
+                <a href="docs/api/ReactWrapper/parents.html">
+            
+                    
+                    parents()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.42" data-path="docs/api/ReactWrapper/prop.html">
+            
+                <a href="docs/api/ReactWrapper/prop.html">
+            
+                    
+                    prop(key)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.43" data-path="docs/api/ReactWrapper/props.html">
+            
+                <a href="docs/api/ReactWrapper/props.html">
+            
+                    
+                    props()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.44" data-path="docs/api/ReactWrapper/reduce.html">
+            
+                <a href="docs/api/ReactWrapper/reduce.html">
+            
+                    
+                    reduce(fn[, initialValue])
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.45" data-path="docs/api/ReactWrapper/reduceRight.html">
+            
+                <a href="docs/api/ReactWrapper/reduceRight.html">
+            
+                    
+                    reduceRight(fn[, initialValue])
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.46" data-path="docs/api/ReactWrapper/ref.html">
+            
+                <a href="docs/api/ReactWrapper/ref.html">
+            
+                    
+                    ref(refName)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.47" data-path="docs/api/ReactWrapper/render.html">
+            
+                <a href="docs/api/ReactWrapper/render.html">
+            
+                    
+                    render()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.48" data-path="docs/api/ReactWrapper/renderProp.html">
+            
+                <a href="docs/api/ReactWrapper/renderProp.html">
+            
+                    
+                    renderProp(key)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.49" data-path="docs/api/ReactWrapper/setContext.html">
+            
+                <a href="docs/api/ReactWrapper/setContext.html">
+            
+                    
+                    setContext(context)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.50" data-path="docs/api/ReactWrapper/setProps.html">
+            
+                <a href="docs/api/ReactWrapper/setProps.html">
+            
+                    
+                    setProps(nextProps[, callback])
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.51" data-path="docs/api/ReactWrapper/setState.html">
+            
+                <a href="docs/api/ReactWrapper/setState.html">
+            
+                    
+                    setState(nextState[, callback])
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.52" data-path="docs/api/ReactWrapper/simulate.html">
+            
+                <a href="docs/api/ReactWrapper/simulate.html">
+            
+                    
+                    simulate(event[, data])
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.53" data-path="docs/api/ReactWrapper/simulateError.html">
+            
+                <a href="docs/api/ReactWrapper/simulateError.html">
+            
+                    
+                    simulateError(error)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.54" data-path="docs/api/ReactWrapper/slice.html">
+            
+                <a href="docs/api/ReactWrapper/slice.html">
+            
+                    
+                    slice([begin[, end]])
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.55" data-path="docs/api/ReactWrapper/some.html">
+            
+                <a href="docs/api/ReactWrapper/some.html">
+            
+                    
+                    some(selector)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.56" data-path="docs/api/ReactWrapper/someWhere.html">
+            
+                <a href="docs/api/ReactWrapper/someWhere.html">
+            
+                    
+                    someWhere(predicate)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.57" data-path="docs/api/ReactWrapper/state.html">
+            
+                <a href="docs/api/ReactWrapper/state.html">
+            
+                    
+                    state([key])
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.58" data-path="docs/api/ReactWrapper/tap.html">
+            
+                <a href="docs/api/ReactWrapper/tap.html">
+            
+                    
+                    tap(intercepter)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.59" data-path="docs/api/ReactWrapper/text.html">
+            
+                <a href="docs/api/ReactWrapper/text.html">
+            
+                    
+                    text()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.60" data-path="docs/api/ReactWrapper/type.html">
+            
+                <a href="docs/api/ReactWrapper/type.html">
+            
+                    
+                    type()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.61" data-path="docs/api/ReactWrapper/unmount.html">
+            
+                <a href="docs/api/ReactWrapper/unmount.html">
+            
+                    
+                    unmount()
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.62" data-path="docs/api/ReactWrapper/update.html">
+            
+                <a href="docs/api/ReactWrapper/update.html">
+            
+                    
+                    update()
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.3" data-path="docs/api/render.html">
+            
+                <a href="docs/api/render.html">
+            
+                    
+                    Static Rendering
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.4" data-path="docs/api/selector.html">
+            
+                <a href="docs/api/selector.html">
+            
+                    
+                    Selectors
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" data-path="CHANGELOG.html">
+            
+                <a href="CHANGELOG.html">
+            
+                    
+                    Change Log
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6" data-path="docs/future.html">
+            
+                <a href="docs/future.html">
+            
+                    
+                    Future
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.7" data-path="CONTRIBUTING.html">
+            
+                <a href="CONTRIBUTING.html">
+            
+                    
+                    Contributing Guide
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="." >Contributing Guide</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="contributing-guide"><a name="contributing-guide" class="plugin-anchor" href="#contributing-guide"><i class="fa fa-link" aria-hidden="true"></i></a>Contributing Guide</h1>
+<p>Contributions are welcome and are greatly appreciated! Every little bit helps, and credit will
+always be given.</p>
+<h2 id="setting-up-your-environment"><a name="setting-up-your-environment" class="plugin-anchor" href="#setting-up-your-environment"><i class="fa fa-link" aria-hidden="true"></i></a>Setting up your environment</h2>
+<p>After forking enzyme to your own github org, do the following steps to get started:</p>
+<pre><code class="lang-bash"><span class="hljs-comment"># clone your fork to your local machine</span>
+git <span class="hljs-built_in">clone</span> https://github.com/airbnb/enzyme.git
+
+<span class="hljs-comment"># step into local repo</span>
+<span class="hljs-built_in">cd</span> enzyme
+
+<span class="hljs-comment"># install dependencies (use `react 13` if you want to use React 0.13)</span>
+npm install
+
+<span class="hljs-comment"># install react version</span>
+<span class="hljs-comment"># accepts `13` for v0.13, `14` for v0.14, and for versions 15+,</span>
+<span class="hljs-comment"># accepts either a major (`15`, `16`) or a minor (`15.4`, `16.8`)</span>
+npm run react 16
+</code></pre>
+<h3 id="switching-between-react-16-react-15-react-014-and-react-013"><a name="switching-between-react-16-react-15-react-014-and-react-013" class="plugin-anchor" href="#switching-between-react-16-react-15-react-014-and-react-013"><i class="fa fa-link" aria-hidden="true"></i></a>Switching between React 16, React 15, React 0.14 and React 0.13</h3>
+<pre><code class="lang-bash"><span class="hljs-comment"># switch to React 0.13</span>
+npm run react 13
+</code></pre>
+<pre><code class="lang-bash"><span class="hljs-comment"># switch to React 0.14</span>
+npm run react 14
+</code></pre>
+<pre><code class="lang-bash"><span class="hljs-comment"># switch to React 15</span>
+npm run react 15
+</code></pre>
+<pre><code class="lang-bash"><span class="hljs-comment"># switch to React 16</span>
+npm run react 16
+</code></pre>
+<p>Specific versions can also be specified</p>
+<pre><code class="lang-bash"><span class="hljs-comment"># switch to React 16.5</span>
+npm run react 16.5
+</code></pre>
+<h3 id="running-tests"><a name="running-tests" class="plugin-anchor" href="#running-tests"><i class="fa fa-link" aria-hidden="true"></i></a>Running Tests</h3>
+<p>The test suite runs on <em>built</em> Enzyme.</p>
+<pre><code class="lang-bash"><span class="hljs-comment"># build Enzyme locally before testing</span>
+npm run build
+
+<span class="hljs-comment"># run tests on whatever version of React is currently installed</span>
+npm <span class="hljs-built_in">test</span>
+</code></pre>
+<pre><code class="lang-bash"><span class="hljs-comment"># run tests on all supported versions of React</span>
+npm run <span class="hljs-built_in">test</span>:all
+</code></pre>
+<p>If you are actively developing, Enzyme will always need to be built with the latest changes.</p>
+<p>For this, the recommended workflow is to have the build and tests watching for changes in separate terminals. This should provide you with ~realtime feedback:</p>
+<pre><code class="lang-bash"><span class="hljs-comment"># build Enzyme locally upon save</span>
+npm run build:watch
+
+<span class="hljs-comment"># faster feedback for TDD</span>
+npm run <span class="hljs-built_in">test</span>:watch
+</code></pre>
+<h3 id="tests-for-functionality-shared-between-shallow-and-mount"><a name="tests-for-functionality-shared-between-shallow-and-mount" class="plugin-anchor" href="#tests-for-functionality-shared-between-shallow-and-mount"><i class="fa fa-link" aria-hidden="true"></i></a>Tests for functionality shared between <code>shallow</code> and <code>mount</code></h3>
+<p>Tests for a method &quot;foo&quot; are stored in <code>packages/enzyme-test-suite/test/shared/methods/foo</code>. The file default exports a function that receives an injected object argument, containing the following properties:</p>
+<ul>
+<li><code>Wrap</code>: e.g. <code>shallow</code>, <code>mount</code></li>
+<li><code>WrapRendered</code>: this abstracts around the differences between <code>shallow</code> and <code>mount</code> - e.g., that the root of a shallow wrapper around <code>Foo</code> is what <code>Foo</code> <em>renders</em>, where the root of a mount wrapper around <code>Foo</code> is <code>Foo</code> itself. Thus, this function produces a wrapper around what <code>Foo</code> renders, regardless of the <code>Wrap</code> method used.</li>
+<li><code>Wrapper</code>: e.g. <code>ShallowWrapper</code>, <code>ReactWrapper</code></li>
+<li><code>WrapperName</code>: e.g. <code>&quot;ShallowWrapper&quot;</code>, <code>&quot;ReactWrapper&quot;</code></li>
+<li><code>isShallow</code>: true if <code>shallow</code>. note: needing to use this is a code smell, please avoid.</li>
+<li><code>isMount</code>: true if <code>mount</code>. note: needing to use this is a code smell, please avoid.</li>
+<li><p><code>makeDOMElement</code>: in <code>mount</code>, makes a real DOM element; in <code>shallow</code>, makes a mock object.</p>
+<p>These tests are ran via an explicit list in a <code>describeMethods</code> call in the ReactWrapper and ShallowWrapper test files. If you add a new test file for a shared method, you&apos;ll need to add its name to both calls.</p>
+</li>
+</ul>
+<h3 id="style--linting"><a name="style--linting" class="plugin-anchor" href="#style--linting"><i class="fa fa-link" aria-hidden="true"></i></a>Style &amp; Linting</h3>
+<p>This codebase adheres to the <a href="https://github.com/airbnb/javascript" target="_blank">Airbnb Styleguide</a> and is
+enforced using <a href="http://eslint.org/" target="_blank">ESLint</a>.</p>
+<p>As with the test suite, the linter will not fully pass unless it is running on <em>built</em> Enzyme. This is because the ESLint <code>import/*</code> rules rely on finding the target files in the filesystem (which won&apos;t be there unless they&apos;ve been built).</p>
+<p>It is recommended that you install an ESLint plugin for your editor of choice when working on this
+codebase, however you can always check to see if the source code is compliant by running:</p>
+<pre><code class="lang-bash"><span class="hljs-comment"># build Enzyme locally before linting</span>
+npm run build
+
+npm run lint
+</code></pre>
+<h3 id="publishing"><a name="publishing" class="plugin-anchor" href="#publishing"><i class="fa fa-link" aria-hidden="true"></i></a>Publishing</h3>
+<p>Enzyme uses <a href="https://github.com/lerna/lerna" target="_blank">lerna</a> to structure its repo, and has multiple packages
+to publish out of this one repo. We use lerna&apos;s &quot;independent&quot; mode, which means that the versioning
+of each package in the repo is versioned independently.</p>
+<p>We are waiting on <a href="https://github.com/lerna/lerna/issues/955" target="_blank">this issue</a> to be fixed, so that
+<code>peerDependencies</code> do not get updated with patch updates.</p>
+<p>Until this issue is fixed, we will publish each package manually instead of with <code>lerna publish</code>. In
+order to do this, we will:</p>
+<p>For enzyme:</p>
+<pre><code class="lang-bash"><span class="hljs-comment"># ... update version in enzyme/package.json, make changes to CHANGELOG, etc.</span>
+<span class="hljs-built_in">cd</span> packages/enzyme
+git commit -m v{version}
+git tag <span class="hljs-_">-a</span> -m v{version}
+git push --follow-tags
+npm publish
+</code></pre>
+<p>For other packages</p>
+<pre><code class="lang-bash"><span class="hljs-comment"># ... update version in {package}/package.json, make changes to CHANGELOG, etc.</span>
+<span class="hljs-built_in">cd</span> packages/{package}
+git commit -m <span class="hljs-string">&quot;{package}: v{version}&quot;</span>
+git tag <span class="hljs-_">-a</span> -m <span class="hljs-string">&quot;{package}: v{version}&quot;</span>
+git push --follow-tags
+npm publish
+</code></pre>
+<p>Once we are able to use <code>lerna publish</code>, the process will be as follows:</p>
+<p>Lerna by default will only publish packages that have changed since the last release. It will also
+create a tagged commit for each release.</p>
+<p>To publish, run:</p>
+<pre><code class="lang-bash">lerna publish -m <span class="hljs-string">&quot;{tag name}&quot;</span>
+</code></pre>
+<p>The tag name is determined by the <code>-m</code> CLI option. If <code>enzyme</code> is one of the packages that has
+updates, we default to just using that version as the tag name. For instance, when publishing
+<code>enzyme@3.1.1</code> and <code>enzyme-adapter-react-16@1.2.3</code> we would run:</p>
+<pre><code class="lang-bash">lerna publish -m <span class="hljs-string">&quot;v3.1.1&quot;</span>
+</code></pre>
+<p>If <code>enzyme</code> is <em>not</em> one of the packages being updated, use the other package&apos;s name and the version:</p>
+<pre><code class="lang-bash">lerna publish -m <span class="hljs-string">&quot;enzyme-adapter-react-16: v1.2.3&quot;</span>
+</code></pre>
+<p>The <code>lerna publish</code> command will present interactive prompts asking which version to use for each
+package independently. Just choose whichever</p>
+<h3 id="building-docs"><a name="building-docs" class="plugin-anchor" href="#building-docs"><i class="fa fa-link" aria-hidden="true"></i></a>Building Docs</h3>
+<p>Building the docs locally is extremely simple. First execute the following command:</p>
+<pre><code class="lang-bash">npm run docs:watch
+</code></pre>
+<p>After this, you can open up your browser to the specified port (usually <a href="http://localhost:4000" target="_blank">http://localhost:4000</a> )</p>
+<p>The browser will automatically refresh when there are changes to any of the source files.</p>
+<h2 id="pull-request-guidelines"><a name="pull-request-guidelines" class="plugin-anchor" href="#pull-request-guidelines"><i class="fa fa-link" aria-hidden="true"></i></a>Pull Request Guidelines</h2>
+<p>Before you submit a pull request from your forked repo, check that it meets these guidelines:</p>
+<ol>
+<li>If the pull request fixes a bug, it should include tests that fail without the changes, and pass
+with them.</li>
+<li>If the pull request adds functionality, the docs should be updated as part of the same PR.</li>
+<li>The pull request should work for React 15, React 0.14 and React 0.13. The CI server should run the
+tests in all versions automatically when you push the PR, but if you&apos;d like to check locally, you
+can do so (see above).</li>
+<li>Please rebase and resolve all conflicts before submitting.</li>
+</ol>
+
+                                
+                                </section>
+                            
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="docs/future.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page: Future">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"Contributing Guide","level":"1.7","depth":1,"previous":{"title":"Future","level":"1.6","depth":1,"path":"docs/future.md","ref":"docs/future.md","articles":[]},"dir":"ltr"},"config":{"plugins":["edit-link","github","-search","codeblock-disable-glossary","collapsible-menu","anchors"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"collapsible-menu":{},"github":{"url":"https://github.com/airbnb/enzyme/"},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"codeblock-disable-glossary":{},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/airbnb/enzyme/tree/master"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"anchors":{}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"Enzyme","gitbook":"3.2.2","description":"React Testing"},"file":{"path":"CONTRIBUTING.md","mtime":"2019-12-19T07:26:42.786Z","type":"markdown"},"gitbook":{"version":"3.2.2","time":"2019-12-20T00:09:15.843Z"},"basePath":".","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="gitbook/gitbook.js"></script>
+    <script src="gitbook/theme.js"></script>
+    
+        
+        <script src="gitbook/gitbook-plugin-edit-link/plugin.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-github/plugin.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-codeblock-disable-glossary/disable-glossary.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-collapsible-menu/plugin.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

@@ -1,0 +1,88 @@
+language: node_js
+node_js:
+  - "10"
+  - "4"
+before_install:
+  - 'nvm install-latest-npm'
+install:
+  - 'if [ "${TRAVIS_NODE_VERSION}" = "0.6" ] || [ "${TRAVIS_NODE_VERSION}" = "0.9" ]; then nvm install --latest-npm 0.8 && npm install && nvm use "${TRAVIS_NODE_VERSION}"; else npm install; fi;'
+  - 'npm run clean-local-npm'
+before_script:
+  - './node_modules/.bin/lerna bootstrap'
+  - './node_modules/.bin/lerna run build'
+  - 'sh install-relevant-react.sh'
+  - 'if [ -n "${KARMA-}" ]; then export CHROME_BIN=chromium-browser; export DISPLAY=:99.0; sh -e /etc/init.d/xvfb start; fi'
+script:
+  - 'if [ -n "${LINT-}" ]; then npm run lint; elif [ -n "${KARMA-}" ]; then npm run test:karma -- --single-run; elif [ -n "${REACT-}" ]; then npm run travis; else false ; fi'
+after_script:
+  - 'if [ -n "${REACT-}" ] && [ "${TRAVIS_ALLOW_FAILURE}" != true ]; then case "${TRAVIS_NODE_VERSION}" in "8" | "6") ;; *) cat ./coverage/lcov.info | ./node_modules/.bin/coveralls ;; esac ; fi'
+sudo: false
+matrix:
+  fast_finish: true
+  include:
+    - node_js: "lts/*"
+      env: LINT=true
+    - node_js: "8"
+      env: REACT=16
+    - node_js: "6"
+      env: REACT=16
+    - node_js: "lts/*"
+      env: REACT=16.8.5 RENDERER=16.8.5
+    - node_js: "lts/*"
+      env: REACT=16.8.5 RENDERER=16.8.3
+    - node_js: "lts/*"
+      env: REACT=16.8.3
+    - node_js: "lts/*"
+      env: REACT=16.8 RENDERER=16.7
+    - node_js: "lts/*"
+      env: REACT=16.7 RENDERER=16.8
+    - node_js: "lts/*"
+      env: REACT=16.7 RENDERER=16.7
+    - node_js: "lts/*"
+      env: REACT=16.3 ADAPTER=16
+    - node_js: "6"
+      env: KARMA=true REACT=0.13
+    - node_js: "6"
+      env: KARMA=true REACT=0.14
+    - node_js: "6"
+      env: KARMA=true REACT=15.4
+    - node_js: "6"
+      env: KARMA=true REACT=15
+    - node_js: "6"
+      env: KARMA=true REACT=16
+  allow_failures:
+    - node_js: "6"
+      env: KARMA=true REACT=0.13
+    - node_js: "6"
+      env: KARMA=true REACT=0.14
+    - node_js: "6"
+      env: KARMA=true REACT=15.4
+    - node_js: "6"
+      env: KARMA=true REACT=15
+    - node_js: "6"
+      env: KARMA=true REACT=16
+    - node_js: "lts/*"
+      env: REACT=16.8.5 RENDERER=16.8.3
+    - node_js: "lts/*"
+      env: REACT=16.8 RENDERER=16.7
+  exclude:
+    - node_js: "6"
+      env: REACT=0.13
+env:
+  - REACT=16.12
+  - REACT=16.11
+  - REACT=16.10
+  - REACT=16.9
+  - REACT=16.8
+  - REACT=16.7
+  - REACT=16.6
+  - REACT=16.5
+  - REACT=16.4
+  - REACT=16.3
+  - REACT=16.2
+  - REACT=16.1
+  - REACT=16.0
+  - REACT=15.5
+  - REACT=15.4
+  - REACT=0.14
+  - REACT=0.13
