@@ -21,7 +21,7 @@ const button = wrapper.find('button');
 button.prop('onClick')();
 expect(input.prop('value')).to.equal('test');
 ```
-fails. While this test:
+While this test:
 ```jsx
 const input = wrapper.find('input');
 const button = wrapper.find('button');
