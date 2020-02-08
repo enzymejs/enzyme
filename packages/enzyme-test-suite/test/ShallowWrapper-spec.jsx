@@ -1765,7 +1765,7 @@ describe('shallow', () => {
     });
 
     it('finds LazyComponent when render component wrapping lazy component', () => {
-      const LazyComponent = lazy(fakeDynamicImport(DynamicComponent));
+      const LazyComponent = lazy(() => fakeDynamicImport(DynamicComponent));
       const SuspenseComponent = () => (
         <Suspense fallback={<Fallback />}>
           <LazyComponent />
@@ -1780,7 +1780,7 @@ describe('shallow', () => {
     });
 
     it('returns suspense and lazy component string when debug() is called', () => {
-      const LazyComponent = lazy(fakeDynamicImport(DynamicComponent));
+      const LazyComponent = lazy(() => fakeDynamicImport(DynamicComponent));
       const SuspenseComponent = () => (
         <Suspense fallback={<Fallback />}>
           <LazyComponent />
@@ -1795,7 +1795,7 @@ describe('shallow', () => {
     });
 
     it('renders lazy component when render Suspense without option', () => {
-      const LazyComponent = lazy(fakeDynamicImport(DynamicComponent));
+      const LazyComponent = lazy(() => fakeDynamicImport(DynamicComponent));
 
       const wrapper = shallow((
         <Suspense fallback={<Fallback />}>
@@ -1808,7 +1808,7 @@ describe('shallow', () => {
     });
 
     it('returns lazy component string when debug() is called', () => {
-      const LazyComponent = lazy(fakeDynamicImport(DynamicComponent));
+      const LazyComponent = lazy(() => fakeDynamicImport(DynamicComponent));
 
       const wrapper = shallow((
         <Suspense fallback={<Fallback />}>
@@ -1820,7 +1820,7 @@ describe('shallow', () => {
     });
 
     it('replaces LazyComponent with Fallback when render Suspense if options.suspenseFallback=true', () => {
-      const LazyComponent = lazy(fakeDynamicImport(DynamicComponent));
+      const LazyComponent = lazy(() => fakeDynamicImport(DynamicComponent));
 
       const wrapper = shallow((
         <Suspense fallback={<Fallback />}>
@@ -1833,7 +1833,7 @@ describe('shallow', () => {
     });
 
     it('returns fallback component string when debug() is called if options.suspenseFallback=true', () => {
-      const LazyComponent = lazy(fakeDynamicImport(DynamicComponent));
+      const LazyComponent = lazy(() => fakeDynamicImport(DynamicComponent));
 
       const wrapper = shallow((
         <Suspense fallback={<Fallback />}>
@@ -1845,7 +1845,7 @@ describe('shallow', () => {
     });
 
     it('throws if options.suspenseFallback is not boolean or undefined', () => {
-      const LazyComponent = lazy(fakeDynamicImport(DynamicComponent));
+      const LazyComponent = lazy(() => fakeDynamicImport(DynamicComponent));
       const SuspenseComponent = () => (
         <Suspense fallback={<Fallback />}>
           <LazyComponent />
@@ -1855,7 +1855,7 @@ describe('shallow', () => {
     });
 
     it('finds fallback after dive into functional component wrapping Suspense', () => {
-      const LazyComponent = lazy(fakeDynamicImport(DynamicComponent));
+      const LazyComponent = lazy(() => fakeDynamicImport(DynamicComponent));
       const SuspenseComponent = () => (
         <Suspense fallback={<Fallback />}>
           <LazyComponent />
@@ -1870,7 +1870,7 @@ describe('shallow', () => {
     });
 
     it('replaces nested LazyComponent with Fallback when render Suspense with options.suspenseFallback=true', () => {
-      const LazyComponent = lazy(fakeDynamicImport(DynamicComponent));
+      const LazyComponent = lazy(() => fakeDynamicImport(DynamicComponent));
 
       const wrapper = shallow((
         <Suspense fallback={<Fallback />}>
@@ -1890,7 +1890,8 @@ describe('shallow', () => {
     });
 
     it('does not replace LazyComponent with Fallback when render Suspense if options.suspenseFallback = false', () => {
-      const LazyComponent = lazy(fakeDynamicImport(DynamicComponent));
+      const LazyComponent = lazy(() => fakeDynamicImport(DynamicComponent));
+
 
       const wrapper = shallow((
         <Suspense fallback={<Fallback />}>
@@ -1903,7 +1904,7 @@ describe('shallow', () => {
     });
 
     it('does not replace nested LazyComponent with Fallback when render Suspense if option.suspenseFallback = false', () => {
-      const LazyComponent = lazy(fakeDynamicImport(DynamicComponent));
+      const LazyComponent = lazy(() => fakeDynamicImport(DynamicComponent));
 
       const wrapper = shallow((
         <Suspense fallback={<Fallback />}>
@@ -1923,7 +1924,7 @@ describe('shallow', () => {
     });
 
     it('throws when rendering lazy component', () => {
-      const LazyComponent = lazy(fakeDynamicImport(DynamicComponent));
+      const LazyComponent = lazy(() => fakeDynamicImport(DynamicComponent));
       expect(() => shallow(<LazyComponent />)).to.throw();
     });
   });
