@@ -120,6 +120,22 @@ function unmemoType(type) {
   return isMemo(type) ? type.type : type;
 }
 
+function checkIsSuspenseAndCloneElement(el, { suspenseFallback }) {
+  if (!isSuspense(el)) {
+    return el;
+  }
+
+  let { children } = el.props;
+
+  if (suspenseFallback) {
+    const { fallback } = el.props;
+    children = replaceLazyWithFallback(children, fallback);
+  }
+
+  const FakeSuspenseWrapper = (props) => React.createElement(el.type, { ...el.props, ...props }, children);
+  return React.createElement(FakeSuspenseWrapper, null, children);
+}
+
 function elementToTree(el) {
   if (!isPortal(el)) {
     return utilElementToTree(el, elementToTree);
@@ -588,6 +604,22 @@ class ReactSixteenAdapter extends EnzymeAdapter {
       return wrappedComponent;
     };
 
+    const renderElement = (elConfig, ...rest) => {
+      const renderedEl = renderer.render(elConfig, ...rest);
+
+      const typeIsExisted = !!(renderedEl && renderedEl.type);
+      if (is166 && typeIsExisted) {
+        const clonedEl = checkIsSuspenseAndCloneElement(renderedEl, { suspenseFallback });
+
+        const elementIsChanged = clonedEl.type !== renderedEl.type;
+        if (elementIsChanged) {
+          return renderer.render({ ...elConfig, type: clonedEl.type }, ...rest);
+        }
+      }
+
+      return renderedEl;
+    };
+
     return {
       render(el, unmaskedContext, {
         providerValues = new Map(),
@@ -602,7 +634,7 @@ class ReactSixteenAdapter extends EnzymeAdapter {
             (props) => props.children,
             el.type,
           );
-          return withSetStateAllowed(() => renderer.render({ ...el, type: MockProvider }));
+          return withSetStateAllowed(() => renderElement({ ...el, type: MockProvider }));
         } else if (isContextConsumer(el)) {
           const Provider = adapter.getProviderFromConsumer(el.type);
           const value = providerValues.has(Provider)
@@ -612,22 +644,15 @@ class ReactSixteenAdapter extends EnzymeAdapter {
             (props) => props.children(value),
             el.type,
           );
-          return withSetStateAllowed(() => renderer.render({ ...el, type: MockConsumer }));
+          return withSetStateAllowed(() => renderElement({ ...el, type: MockConsumer }));
         } else {
           isDOM = false;
           let renderedEl = el;
           if (isLazy(renderedEl)) {
             throw TypeError('`React.lazy` is not supported by shallow rendering.');
           }
-          if (isSuspense(renderedEl)) {
-            let { children } = renderedEl.props;
-            if (suspenseFallback) {
-              const { fallback } = renderedEl.props;
-              children = replaceLazyWithFallback(children, fallback);
-            }
-            const FakeSuspenseWrapper = () => children;
-            renderedEl = React.createElement(FakeSuspenseWrapper, null, children);
-          }
+
+          renderedEl = checkIsSuspenseAndCloneElement(renderedEl, { suspenseFallback });
           const { type: Component } = renderedEl;
 
           const context = getMaskedContext(Component.contextTypes, unmaskedContext);
@@ -635,14 +660,15 @@ class ReactSixteenAdapter extends EnzymeAdapter {
           if (isMemo(el.type)) {
             const { type: InnerComp, compare } = el.type;
 
-            return withSetStateAllowed(() => renderer.render(
+            return withSetStateAllowed(() => renderElement(
               { ...el, type: wrapPureComponent(InnerComp, compare) },
               context,
             ));
           }
 
+
           if (!isStateful(Component) && typeof Component === 'function') {
-            return withSetStateAllowed(() => renderer.render(
+            return withSetStateAllowed(() => renderElement(
               { ...renderedEl, type: wrapFunctionalComponent(Component) },
               context,
             ));
@@ -672,7 +698,7 @@ class ReactSixteenAdapter extends EnzymeAdapter {
               });
             }
           }
-          return withSetStateAllowed(() => renderer.render(renderedEl, context));
+          return withSetStateAllowed(() => renderElement(renderedEl, context));
         }
       },
       unmount() {

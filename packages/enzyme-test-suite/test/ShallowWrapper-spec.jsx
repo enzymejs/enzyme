@@ -1816,7 +1816,9 @@ describe('shallow', () => {
         </Suspense>
       ));
 
-      expect(wrapper.debug()).to.equal('<lazy />');
+      expect(wrapper.debug()).to.equal(`<Suspense fallback={{...}}>
+  <lazy />
+</Suspense>`);
     });
 
     it('replaces LazyComponent with Fallback when render Suspense if options.suspenseFallback=true', () => {
@@ -1841,7 +1843,9 @@ describe('shallow', () => {
         </Suspense>
       ), { suspenseFallback: true });
 
-      expect(wrapper.debug()).to.equal('<Fallback />');
+      expect(wrapper.debug()).to.equal(`<Suspense fallback={{...}}>
+  <Fallback />
+</Suspense>`);
     });
 
     it('throws if options.suspenseFallback is not boolean or undefined', () => {
