@@ -1,11 +1,11 @@
 language: node_js
 node_js:
-  - "10"
+  - "12"
   - "4"
-before_install:
-  - 'nvm install-latest-npm'
+import:
+  - ljharb/travis-ci:node/latest-npm.yml
 install:
-  - 'if [ "${TRAVIS_NODE_VERSION}" = "0.6" ] || [ "${TRAVIS_NODE_VERSION}" = "0.9" ]; then nvm install --latest-npm 0.8 && npm install && nvm use "${TRAVIS_NODE_VERSION}"; else npm install; fi;'
+  - 'npm install'
   - 'npm run clean-local-npm'
 before_script:
   - './node_modules/.bin/lerna bootstrap'
@@ -70,6 +70,7 @@ matrix:
     - node_js: "6"
       env: REACT=0.13
 env:
+  - REACT=16.13
   - REACT=16.12
   - REACT=16.11
   - REACT=16.10
