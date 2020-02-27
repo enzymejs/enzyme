@@ -16,6 +16,7 @@ script:
   - 'if [ -n "${LINT-}" ]; then npm run lint; elif [ -n "${KARMA-}" ]; then npm run test:karma -- --single-run; elif [ -n "${REACT-}" ]; then npm run travis; else false ; fi'
 after_script:
   - 'if [ -n "${REACT-}" ] && [ "${TRAVIS_ALLOW_FAILURE}" != true ]; then case "${TRAVIS_NODE_VERSION}" in "8" | "6") ;; *) cat ./coverage/lcov.info | ./node_modules/.bin/coveralls ;; esac ; fi'
+  - 'if [ -n "${REACT-}" ] && [ "${TRAVIS_ALLOW_FAILURE}" != true ]; then bash <(curl -s https://codecov.io/bash) -f coverage/*.json; fi'
 sudo: false
 matrix:
   fast_finish: true
