@@ -12,7 +12,7 @@ After forking enzyme to your own github org, do the following steps to get start
 
 ```bash
 # clone your fork to your local machine
-git clone https://github.com/airbnb/enzyme.git
+git clone https://github.com/enzymejs/enzyme.git
 
 # step into local repo
 cd enzyme

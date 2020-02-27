@@ -8,7 +8,7 @@ This list aims to be comprehensive. If you find an issue that has been frequentl
 
 This could be due to a regression, or the feature is not yet implemented. If you are wanting to use a
 certain query syntax, make sure it is implemented first before raising an issue. Here is the list of
-selectors we currently support: https://github.com/airbnb/enzyme/blob/master/docs/api/selector.md
+selectors we currently support: https://github.com/enzymejs/enzyme/blob/master/docs/api/selector.md
 
 ### Nested component may not be updated after wrapper updates
 
@@ -32,7 +32,7 @@ passes.
 
 This is because the wrapper returned by `.find()` (and every other method that produces a new wrapper) is immutable and won't update.
 
-More details and motivation can be found at [migration from 2 to 3: Calling props() after a state change](https://github.com/airbnb/enzyme/blob/master/docs/guides/migration-from-2-to-3.md#calling-props-after-a-state-change).
+More details and motivation can be found at [migration from 2 to 3: Calling props() after a state change](https://github.com/enzymejs/enzyme/blob/master/docs/guides/migration-from-2-to-3.md#calling-props-after-a-state-change).
 
 ###### Solutions
 

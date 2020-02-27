@@ -1,9 +1,9 @@
 Enzyme
 =======
 
-[![Join the chat at https://gitter.im/airbnb/enzyme](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/airbnb/enzyme?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Join the chat at https://gitter.im/enzymejs/enzyme](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/enzymejs/enzyme?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-[![npm Version](https://img.shields.io/npm/v/enzyme.svg)](https://www.npmjs.com/package/enzyme) [![License](https://img.shields.io/npm/l/enzyme.svg)](https://github.com/airbnb/enzyme/blob/master/LICENSE.md) [![Build Status](https://travis-ci.org/airbnb/enzyme.svg)](https://travis-ci.org/airbnb/enzyme) [![Coverage Status](https://coveralls.io/repos/airbnb/enzyme/badge.svg?branch=master&service=github)](https://coveralls.io/github/airbnb/enzyme?branch=master)
+[![npm Version](https://img.shields.io/npm/v/enzyme.svg)](https://www.npmjs.com/package/enzyme) [![License](https://img.shields.io/npm/l/enzyme.svg)](https://github.com/enzymejs/enzyme/blob/master/LICENSE.md) [![Build Status](https://travis-ci.org/enzymejs/enzyme.svg)](https://travis-ci.org/enzymejs/enzyme) [![Coverage Status](https://coveralls.io/repos/enzymejs/enzyme/badge.svg?branch=master&service=github)](https://coveralls.io/github/enzymejs/enzyme?branch=master)
 
 
 Enzyme is a JavaScript Testing utility for React that makes it easier to test your React Components' output.
@@ -221,7 +221,7 @@ Read the full [API Documentation](/docs/api/render.md)
 
 ### React Hooks support
 
-Enzyme supports [react hooks](https://reactjs.org/docs/hooks-intro.html) with some limitations in [`.shallow()`](https://airbnb.io/enzyme/docs/api/shallow.html) due to upstream issues in React's shallow renderer:
+Enzyme supports [react hooks](https://reactjs.org/docs/hooks-intro.html) with some limitations in [`.shallow()`](https://enzymejs.github.io/enzyme/docs/api/shallow.html) due to upstream issues in React's shallow renderer:
 
 * `useEffect()` and `useLayoutEffect()` don't get called in the React shallow renderer. [Related issue](https://github.com/facebook/react/issues/15275)
 
@@ -229,7 +229,7 @@ Enzyme supports [react hooks](https://reactjs.org/docs/hooks-intro.html) with so
 
 #### [`ReactTestUtils.act()`](https://reactjs.org/docs/test-utils.html#act) wrap
 
-If you're using React 16.8+ and `.mount()`, Enzyme will wrap apis including [`.simulate()`](https://airbnb.io/enzyme/docs/api/ReactWrapper/simulate.html), [`.setProps()`](https://airbnb.io/enzyme/docs/api/ReactWrapper/setProps.html), [`.setContext()`](https://airbnb.io/enzyme/docs/api/ReactWrapper/setContext.html), [`.invoke()`](https://airbnb.io/enzyme/docs/api/ReactWrapper/invoke.html) with [`ReactTestUtils.act()`](https://reactjs.org/docs/test-utils.html#act) so you don't need to manually wrap it.
+If you're using React 16.8+ and `.mount()`, Enzyme will wrap apis including [`.simulate()`](https://enzymejs.github.io/enzyme/docs/api/ReactWrapper/simulate.html), [`.setProps()`](https://enzymejs.github.io/enzyme/docs/api/ReactWrapper/setProps.html), [`.setContext()`](https://enzymejs.github.io/enzyme/docs/api/ReactWrapper/setContext.html), [`.invoke()`](https://enzymejs.github.io/enzyme/docs/api/ReactWrapper/invoke.html) with [`ReactTestUtils.act()`](https://reactjs.org/docs/test-utils.html#act) so you don't need to manually wrap it.
 
 A common pattern to trigger handlers with `.act()` and assert is:
 

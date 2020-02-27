@@ -3,14 +3,14 @@
   "private": true,
   "version": "1.0.0",
   "description": "JavaScript Testing utilities for React",
-  "homepage": "https://airbnb.io/enzyme/",
+  "homepage": "https://enzymejs.github.io/enzyme/",
   "scripts": {
     "lint": "eslint --ext js,jsx .",
     "pretest": "npm run lint"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/airbnb/enzyme.git",
+    "url": "https://github.com/enzymejs/enzyme.git",
     "directory": "packages/enzyme-test-suite"
   },
   "keywords": [
@@ -27,7 +27,7 @@
     "tdd",
     "mocha"
   ],
-  "author": "Leland Richardson <leland.richardson@airbnb.com>",
+  "author": "Jordan Harband <ljharb@gmail.com>",
   "license": "MIT",
   "dependencies": {
     "chai": "^4.2.0",

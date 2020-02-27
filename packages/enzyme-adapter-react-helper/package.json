@@ -2,7 +2,7 @@
   "name": "enzyme-adapter-react-helper",
   "version": "1.3.7",
   "description": "JavaScript Testing utilities for React",
-  "homepage": "https://airbnb.io/enzyme/",
+  "homepage": "https://enzymejs.github.io/enzyme/",
   "main": "build",
   "scripts": {
     "clean": "rimraf build",
@@ -18,7 +18,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/airbnb/enzyme.git",
+    "url": "https://github.com/enzymejs/enzyme.git",
     "directory": "packages/enzyme-adapter-react-helper"
   },
   "keywords": [

@@ -1,4 +1,4 @@
-Please use [pull requests](https://github.com/airbnb/enzyme/pull/new/master) to add your organization and/or project to this document!
+Please use [pull requests](https://github.com/enzymejs/enzyme/pull/new/master) to add your organization and/or project to this document!
 
 Organizations
 ----------

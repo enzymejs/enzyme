@@ -2,7 +2,7 @@
   "name": "enzyme-adapter-react-14",
   "version": "1.4.1",
   "description": "JavaScript Testing utilities for React",
-  "homepage": "https://airbnb.io/enzyme/",
+  "homepage": "https://enzymejs.github.io/enzyme/",
   "main": "build",
   "scripts": {
     "clean": "rimraf build",
@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/airbnb/enzyme.git",
+    "url": "https://github.com/enzymejs/enzyme.git",
     "directory": "packages/enzyme-adapter-react-14"
   },
   "keywords": [
@@ -32,7 +32,7 @@
     "tdd",
     "mocha"
   ],
-  "author": "Leland Richardson <leland.richardson@airbnb.com>",
+  "author": "Jordan Harband <ljharb@gmail.com>",
   "funding": {
     "url": "https://github.com/sponsors/ljharb"
   },

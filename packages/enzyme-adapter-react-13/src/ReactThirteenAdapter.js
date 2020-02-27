@@ -21,7 +21,7 @@ import elementToTree from './ReactThirteenElementToTree';
 
 
 // this fixes some issues in React 0.13 with setState and jsdom...
-// see issue: https://github.com/airbnb/enzyme/issues/27
+// see issue: https://github.com/enzymejs/enzyme/issues/27
 // eslint-disable-next-line import/no-unresolved
 require('react/lib/ExecutionEnvironment').canUseDOM = true;
 

@@ -10,12 +10,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/airbnb/enzyme.git",
+    "url": "https://github.com/enzymejs/enzyme.git",
     "directory": "packages/enzyme-example-mocha"
   },
-  "author": "Leland Richardson <leland.richardson@airbnb.com>",
+  "author": "Jordan Harband <ljharb@gmail.com>",
   "license": "MIT",
-  "homepage": "https://github.com/airbnb/enzyme.git",
+  "homepage": "https://github.com/enzymejs/enzyme.git",
   "devDependencies": {
     "babel-plugin-transform-replace-object-assign": "^1.0.0",
     "babel-preset-airbnb": "^2.6.0",

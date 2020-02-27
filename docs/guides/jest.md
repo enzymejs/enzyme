@@ -2,7 +2,7 @@
 
 ## Configure with Jest
 
-To run the setup file to configure Enzyme and the Adapter (as shown in the [Installation docs](https://airbnb.io/enzyme/docs/installation/)) with Jest, set `setupFilesAfterEnv` (previously `setupTestFrameworkScriptFile`) in your config file (check [Jest's documentation](http://jestjs.io/docs/en/configuration) for the possible locations of that config file) to literally the string `<rootDir>` and the path to your setup file.
+To run the setup file to configure Enzyme and the Adapter (as shown in the [Installation docs](https://enzymejs.github.io/enzyme/docs/installation/)) with Jest, set `setupFilesAfterEnv` (previously `setupTestFrameworkScriptFile`) in your config file (check [Jest's documentation](http://jestjs.io/docs/en/configuration) for the possible locations of that config file) to literally the string `<rootDir>` and the path to your setup file.
 
 ```json
 {
@@ -47,4 +47,4 @@ If you are using Jest 0.9 – 14.0 with enzyme and using Jest's automocking feat
 }
 ```
 
-If you are using a previous version of Jest together with npm3, you may need to unmock [more modules](https://github.com/airbnb/enzyme/blob/78febd90fe2fb184771b8b0356b0fcffbdad386e/docs/guides/jest.md).
+If you are using a previous version of Jest together with npm3, you may need to unmock [more modules](https://github.com/enzymejs/enzyme/blob/78febd90fe2fb184771b8b0356b0fcffbdad386e/docs/guides/jest.md).

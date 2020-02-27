@@ -13,7 +13,7 @@ To use enzyme to test React Native, you currently need to configure an adapter, 
 
 ## Configuring an Adapter
 
-While a React Native adapter is [in discussion](https://github.com/airbnb/enzyme/issues/1436),
+While a React Native adapter is [in discussion](https://github.com/enzymejs/enzyme/issues/1436),
 a standard adapter may be used, such as 'enzyme-adapter-react-16':
 
 ```jsx
@@ -28,7 +28,7 @@ To use enzyme's `mount` until a React Native adapter exists, an emulated DOM mus
 
 While some have had success with [react-native-mock-renderer](https://github.com/Root-App/react-native-mock-render),
 the recommended approach is to use [https://github.com/tmpvar/jsdom](JSDOM),
-as documented for enzyme at the [JSDOM](https://airbnb.io/enzyme/docs/guides/jsdom.html) documentation page.
+as documented for enzyme at the [JSDOM](https://enzymejs.github.io/enzyme/docs/guides/jsdom.html) documentation page.
 
 JSDOM will allow all of the `enzyme` behavior you would expect. While Jest snapshot testing can be used with
 this approach as well, it isn't encouraged and is only supported through `wrapper.debug()`.
@@ -135,7 +135,7 @@ import React from 'react';
 import { mount } from 'enzyme';
 import { Text } from '../../../component/text';
 
-describe('Component tested with airbnb enzyme', () => {
+describe('Component tested with enzyme', () => {
   test('App mount with enzyme', () => {
     const wrapper = mount(<Text />);
     // other tests operations
