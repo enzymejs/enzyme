@@ -11,17 +11,7 @@ const makeValidElementType = (adapter) => {
     return stringOrFunction;
   }
 
-  function validElementType(props, propName, ...args) {
-    if (!adapter.isValidElementType) {
-      return stringOrFunction(props, propName, ...args);
-    }
-    const propValue = props[propName];
-    if (propValue == null || adapter.isValidElementType(propValue)) {
-      return null;
-    }
-    return new TypeError(`${propName} must be a valid element type!`);
-  }
-  validElementType.isRequired = function validElementTypeRequired(props, propName, ...args) {
+  function validElementTypeRequired(props, propName, ...args) {
     if (!adapter.isValidElementType) {
       return stringOrFunction.isRequired(props, propName, ...args);
     }
@@ -30,7 +20,17 @@ const makeValidElementType = (adapter) => {
       return null;
     }
     return new TypeError(`${propName} must be a valid element type!`);
-  };
+  }
+
+  function validElementType(props, propName, ...args) {
+    const propValue = props[propName];
+    if (propValue == null) {
+      return null;
+    }
+    return validElementTypeRequired(props, propName, ...args);
+  }
+  validElementType.isRequired = validElementTypeRequired;
+
   return validElementType;
 };
 

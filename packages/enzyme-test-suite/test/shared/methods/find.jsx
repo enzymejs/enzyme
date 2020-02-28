@@ -174,6 +174,21 @@ export default function describeFind({
         );
       });
 
+    wrap()
+      .withOverride(() => getAdapter(), 'isValidElementType', () => {})
+      .it('works when an adapter’s `isValidElementType` does not exist', () => {
+        class Foo extends React.Component {
+          render() { return <div />; }
+        }
+        const wrapper = Wrap((
+          <div>
+            <Foo className="foo" />
+          </div>
+        ));
+
+        expect(wrapper.find(Foo)).to.have.lengthOf(1);
+      });
+
     it('finds a component based on a component function name', () => {
       class Foo extends React.Component {
         render() { return <div />; }
