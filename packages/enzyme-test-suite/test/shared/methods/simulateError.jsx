@@ -1,6 +1,9 @@
 import React from 'react';
 import { expect } from 'chai';
 import sinon from 'sinon-sandbox';
+import wrap from 'mocha-wrap';
+
+import getAdapter from 'enzyme/build/getAdapter';
 
 import {
   sym,
@@ -63,6 +66,25 @@ export default function describeSimulateError({
         expect(e).not.to.equal(undefined);
       }
     });
+
+    wrap()
+      .withOverride(() => getAdapter(), 'createRenderer', () => {
+        const adapter = getAdapter();
+        const original = adapter.createRenderer;
+        return function () {
+          // eslint-disable-next-line prefer-rest-params
+          const renderer = original.apply(this, arguments);
+          delete renderer.simulateError;
+          return renderer;
+        };
+      })
+      .it('throws when the adapter does not support simulateError', () => {
+        const wrapper = WrapRendered(<Nested />);
+        expect(() => wrapper.simulateError()).to.throw(
+          TypeError,
+          'your adapter does not support `simulateError`. Try upgrading it!',
+        );
+      });
 
     context('calls through to renderer’s `simulateError`', () => {
       let hierarchy;

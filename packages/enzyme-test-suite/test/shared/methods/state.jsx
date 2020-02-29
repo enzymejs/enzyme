@@ -144,5 +144,23 @@ export default function describeState({
         });
       });
     });
+
+    it('throws when called on a wrapper of multiple nodes', () => {
+      const wrapper = Wrap((
+        <div>
+          <span />
+          <span />
+          <span />
+        </div>
+      ));
+      const spans = wrapper.find('span');
+      expect(spans).to.have.lengthOf(3);
+      expect(() => spans.state()).to.throw(
+        Error,
+        isShallow
+          ? 'ShallowWrapper::state() can only be called on the root'
+          : `${WrapperName}::getNode() can only be called when wrapping one node`,
+      );
+    });
   });
 }

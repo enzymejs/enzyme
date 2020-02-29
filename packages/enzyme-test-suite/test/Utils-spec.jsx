@@ -15,6 +15,7 @@ import {
   renderedDive,
   isCustomComponent,
   loadCheerioRoot,
+  AND,
 } from 'enzyme/build/Utils';
 import getAdapter from 'enzyme/build/getAdapter';
 import EnzymeAdapter from 'enzyme/build/EnzymeAdapter';
@@ -1085,6 +1086,49 @@ describe('Utils', () => {
       expect(loadCheerioRoot('<div>bar</div>')).to.have.property('cheerio', '[cheerio object]');
       expect(loadCheerioRoot('leading <span>text</span>')).to.have.property('cheerio', '[cheerio object]');
       expect(loadCheerioRoot('<div>malformed</><<html')).to.have.property('cheerio', '[cheerio object]');
+    });
+  });
+
+  describe('AND', () => {
+    it('throws on a non-array', () => {
+      expect(() => AND({})).to.throw(TypeError);
+    });
+
+    it('does not mutate the array', () => {
+      const fn1 = () => {};
+      const fn2 = () => {};
+      const arr = [fn1, fn2];
+      AND(arr);
+      expect(arr).to.eql([fn1, fn2]);
+    });
+
+    it('returns a thunk that calls each function in reverse order', () => {
+      const spy = sinon.spy();
+      const fn1 = (...args) => {
+        spy(1, args);
+        return true;
+      };
+      const fn2 = (...args) => {
+        spy(2, args);
+        return true;
+      };
+
+      const thunk = AND([fn1, fn2]);
+
+      expect(thunk).to.be.a('function');
+      expect(thunk()).to.equal(true);
+
+      expect(spy).to.have.property('callCount', 2);
+      const { args } = spy;
+      expect(args).to.eql([
+        [2, [undefined]],
+        [1, [undefined]],
+      ]);
+    });
+
+    it('matches `every`', () => {
+      expect(AND([() => true, () => false])()).to.equal(false);
+      expect(AND([() => true, () => true])()).to.equal(true);
     });
   });
 });

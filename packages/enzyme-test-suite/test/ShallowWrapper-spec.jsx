@@ -4,6 +4,8 @@ import { expect } from 'chai';
 import sinon from 'sinon-sandbox';
 import wrap from 'mocha-wrap';
 import isEqual from 'lodash.isequal';
+import inspect from 'object-inspect';
+
 import {
   shallow,
   ShallowWrapper,
@@ -940,6 +942,37 @@ describe('shallow', () => {
           expect(consumer.context()).to.eql(expectedContext);
         });
 
+        class Provider extends React.Component {
+          getChildContext() {
+            return {
+              foo: 'foo!',
+              bar: 'bar!',
+            };
+          }
+
+          render() {
+            const { children } = this.props;
+            return children;
+          }
+        }
+
+        class Receiver extends React.Component {
+          render() {
+            return <div>{inspect(this.context)}</div>;
+          }
+        }
+
+        // react 0.14 and 15 throw an invariant exception in this case
+        itIf(is('0.13 || > 15'), 'warns and works but provides no context, without childContextTypes', () => {
+          const stub = sinon.stub(console, 'warn');
+          const wrapper = shallow(<Provider><Receiver /></Provider>).dive();
+          expect(wrapper.debug()).to.equal(`<div>
+  {}
+</div>`);
+          expect(stub).to.have.property('callCount', 1);
+          expect(stub.args).to.eql([['Provider.getChildContext(): childContextTypes must be defined in order to use getChildContext().']]);
+        });
+
         wrap()
           .withConsoleThrows()
           .it('warns if childContextTypes is not defined', () => {
@@ -1253,6 +1286,7 @@ describe('shallow', () => {
     'hostNodes',
     'html',
     'instance',
+    'invoke',
     'is',
     'isEmpty',
     'isEmptyRender',

@@ -677,35 +677,37 @@ describe('Adapter', () => {
     });
   });
 
-  it('render node with updated props', () => {
-    class Counter extends React.Component {
-      constructor(props) {
-        super(props);
-        this.state = { count: 0 };
+  describeWithDOM('mount renderer', () => {
+    it('render node with updated props', () => {
+      class Counter extends React.Component {
+        constructor(props) {
+          super(props);
+          this.state = { count: 0 };
+        }
+
+        increment() {
+          this.setState(({ count }) => ({ count: count + 1 }));
+        }
+
+        render() {
+          return <RendersNull {...this.state} />;
+        }
       }
 
-      increment() {
-        this.setState(({ count }) => ({ count: count + 1 }));
-      }
+      const options = { mode: 'mount' };
+      const renderer = adapter.createRenderer(options);
 
-      render() {
-        return <RendersNull {...this.state} />;
-      }
-    }
+      renderer.render(<Counter />);
 
-    const options = { mode: 'mount' };
-    const renderer = adapter.createRenderer(options);
-
-    renderer.render(<Counter />);
-
-    let tree = renderer.getNode();
-    expect(tree.rendered.props).to.have.property('count', 0);
-    tree.instance.increment();
-    tree = renderer.getNode();
-    expect(tree.rendered.props).to.have.property('count', 1);
-    tree.instance.increment();
-    tree = renderer.getNode();
-    expect(tree.rendered.props).to.have.property('count', 2);
+      let tree = renderer.getNode();
+      expect(tree.rendered.props).to.have.property('count', 0);
+      tree.instance.increment();
+      tree = renderer.getNode();
+      expect(tree.rendered.props).to.have.property('count', 1);
+      tree.instance.increment();
+      tree = renderer.getNode();
+      expect(tree.rendered.props).to.have.property('count', 2);
+    });
   });
 
   it('renders basic shallow as well', () => {

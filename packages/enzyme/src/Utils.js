@@ -259,6 +259,7 @@ export function withSetStateAllowed(fn) {
   }
 }
 
+// TODO, semver-major: remove this
 export function AND(fns) {
   const fnsReversed = fns.slice().reverse();
   return (x) => fnsReversed.every((fn) => fn(x));

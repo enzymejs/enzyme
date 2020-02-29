@@ -1,6 +1,9 @@
 import React from 'react';
 import { expect } from 'chai';
 import sinon from 'sinon-sandbox';
+import wrap from 'mocha-wrap';
+
+import getAdapter from 'enzyme/build/getAdapter';
 
 import {
   describeIf,
@@ -96,6 +99,25 @@ export default function describeSetState({
         });
       });
     });
+
+    wrap()
+      .withOverride(() => getAdapter(), 'invokeSetStateCallback', () => {})
+      .describe('adapter lacks `invokeSetStateCallback`', () => {
+        it('calls the callback when setState has completed', () => {
+          const wrapper = Wrap(<HasIDState />);
+          expect(wrapper.state()).to.eql({ id: 'foo' });
+          return new Promise((resolve) => {
+            wrapper.setState({ id: 'bar' }, function callback(...args) {
+              expect(wrapper.state()).to.eql({ id: 'bar' });
+              expect(this).to.equal(wrapper.instance());
+              expect(this.state).to.eql({ id: 'bar' });
+              expect(wrapper.find('div').prop('className')).to.equal('bar');
+              expect(args).to.eql([]);
+              resolve();
+            });
+          });
+        });
+      });
 
     it('prevents the update if nextState is null or undefined', () => {
       const wrapper = Wrap(<HasIDState />);

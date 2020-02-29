@@ -17,6 +17,7 @@ import {
   fakeDynamicImport,
   assertDomAvailable,
   createMountWrapper,
+  simulateError,
 } from 'enzyme-adapter-utils';
 import wrap from 'mocha-wrap';
 
@@ -393,27 +394,28 @@ describe('enzyme-adapter-utils', () => {
     });
   });
 
-  describe('getWrappingComponentMountRenderer', () => {
+  describeWithDOM('getWrappingComponentMountRenderer', () => {
     let instance;
     let renderer;
-    const tree = {
-      nodeType: 'host',
-      type: 'div',
-      props: { children: <span /> },
-      key: undefined,
-      ref: undefined,
-      instance: global.document.createElement('div'),
-      rendered: {
-        nodeType: 'host',
-        type: 'span',
-        props: {},
-        key: undefined,
-        ref: undefined,
-        instance: global.document.createElement('span'),
-      },
-    };
+    let tree;
 
     beforeEach(() => {
+      tree = {
+        nodeType: 'host',
+        type: 'div',
+        props: { children: <span /> },
+        key: undefined,
+        ref: undefined,
+        instance: global.document.createElement('div'),
+        rendered: {
+          nodeType: 'host',
+          type: 'span',
+          props: {},
+          key: undefined,
+          ref: undefined,
+          instance: global.document.createElement('span'),
+        },
+      };
       instance = {
         setWrappingComponentProps: sinon.spy(),
       };
@@ -509,5 +511,106 @@ describe('enzyme-adapter-utils', () => {
     });
 
     it('uses the passed `wrappingComponent`', () => {});
+  });
+
+  describe('simulateError', () => {
+    const error = new SyntaxError('hi');
+
+    it('throws the error if neither cDC nor gDSFE exist', () => {
+      const instance = {};
+      expect(() => simulateError(error, instance)).to.throw(error);
+    });
+
+    it('calls gDSFE if it exists', () => {
+      const catchingInstance = {
+        setState: sinon.spy(),
+      };
+      const hierarchy = undefined;
+      const stateUpdate = {};
+      const getDerivedStateFromError = sinon.spy(() => stateUpdate);
+      const catchingType = { getDerivedStateFromError };
+
+      simulateError(error, catchingInstance, undefined, hierarchy, undefined, undefined, catchingType);
+
+      expect(catchingInstance.setState).to.have.property('callCount', 1);
+      const setStateCall = catchingInstance.setState.getCall(0);
+      expect(setStateCall).to.contain.keys({
+        args: [stateUpdate],
+        thisValue: catchingInstance,
+      });
+
+      expect(getDerivedStateFromError).to.have.property('callCount', 1);
+      const gDSFECall = getDerivedStateFromError.getCall(0);
+      expect(gDSFECall).to.have.property('thisValue', catchingType);
+      expect(gDSFECall.args).to.eql([error]);
+    });
+
+    class Foo extends React.Component {
+      render() { return <div />; }
+    }
+    class FooBang extends React.Component {
+      render() { return <div />; }
+    }
+    FooBang.displayName = 'Foo!';
+    const hierarchy = [
+      { type: 'a', displayName: '<a>!' },
+      { type: FooBang },
+      { type: 'b', displayName: '<b>!' },
+      { type: Foo },
+    ];
+    function Bar() { return null; }
+    const hasSFCs = is('> 0.14');
+    if (hasSFCs) {
+      hierarchy.push({ type: Bar });
+    }
+
+    it('calls cDC if it exists', () => {
+      const catchingInstance = {
+        componentDidCatch: sinon.spy(),
+        setState: sinon.spy(),
+      };
+      const catchingType = {};
+
+      simulateError(error, catchingInstance, undefined, hierarchy, undefined, undefined, catchingType);
+
+      expect(catchingInstance.setState).to.have.property('callCount', 0);
+
+      expect(catchingInstance.componentDidCatch).to.have.property('callCount', 1);
+      const cDCCall = catchingInstance.componentDidCatch.getCall(0);
+      const componentStack = hasSFCs
+        ? `
+    in a (created by Foo!)
+    in Foo! (created by Foo)
+    in b (created by Foo)
+    in Foo (created by Bar)
+    in Bar (created by WrapperComponent)
+    in WrapperComponent`
+        : `
+    in a (created by Foo!)
+    in Foo! (created by Foo)
+    in b (created by Foo)
+    in Foo (created by WrapperComponent)
+    in WrapperComponent`;
+      expect(cDCCall).to.have.property('thisValue', catchingInstance);
+      expect(cDCCall.args).to.eql([error, { componentStack }]);
+    });
+
+    it('calls both if both exist', () => {
+      const catchingInstance = {
+        componentDidCatch: sinon.spy(),
+        setState: sinon.spy(),
+      };
+      const stateUpdate = {};
+      const getDerivedStateFromError = sinon.spy(() => stateUpdate);
+      const catchingType = { getDerivedStateFromError };
+
+      simulateError(error, catchingInstance, undefined, hierarchy, undefined, undefined, catchingType);
+
+      expect(catchingInstance.setState).to.have.property('callCount', 1);
+
+      expect(catchingInstance.componentDidCatch).to.have.property('callCount', 1);
+
+      expect(getDerivedStateFromError).to.have.property('callCount', 1);
+    });
   });
 });

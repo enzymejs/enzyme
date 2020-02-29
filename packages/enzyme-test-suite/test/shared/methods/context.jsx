@@ -74,4 +74,17 @@ export default function describeContext({
       expect(wrapper.context('name')).to.equal(context.name);
     });
   });
+
+  it('throws on non-root', () => {
+    class Foo extends React.Component {
+      render() {
+        return <div><span>hi</span></div>;
+      }
+    }
+
+    const wrapper = Wrap(<Foo />);
+    const span = wrapper.find('span');
+    expect(span).to.have.lengthOf(1);
+    expect(() => span.context()).to.throw(Error);
+  });
 }

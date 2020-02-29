@@ -1254,6 +1254,17 @@ describeWithDOM('mount', () => {
       expect(didMount).to.have.property('callCount', 2);
       expect(willUnmount).to.have.property('callCount', 1);
     });
+
+    it('throws on non-root', () => {
+      class Foo extends React.Component {
+        render() {
+          return <div />;
+        }
+      }
+      const wrapper = mount(<Foo />);
+      const child = wrapper.find('div');
+      expect(() => child.mount()).to.throw(Error);
+    });
   });
 
   describe('.getDOMNode()', () => {
@@ -1398,6 +1409,34 @@ describeWithDOM('mount', () => {
         expect(wrapper.ref('secondRef').getAttribute('data-amount')).to.equal('4');
         expect(wrapper.ref('secondRef').textContent).to.equal('Second');
       }
+    });
+  });
+
+  describe('.detach', () => {
+    class Comp extends React.Component {
+      render() {
+        return <div><span>hi</span></div>;
+      }
+    }
+    it('throws on non-root', () => {
+      const div = global.document.createElement('div');
+      global.document.body.appendChild(div);
+
+      const wrapper = mount(<Comp />, { attachTo: div });
+      const span = wrapper.find('span');
+      expect(span).to.have.lengthOf(1);
+      expect(() => span.detach()).to.throw(
+        Error,
+        'ReactWrapper::detach() can only be called on the root',
+      );
+    });
+
+    it('throws without the attachTo option', () => {
+      const wrapper = mount(<Comp />);
+      expect(() => wrapper.detach()).to.throw(
+        Error,
+        'ReactWrapper::detach() can only be called on when the `attachTo` option was passed into `mount()`.',
+      );
     });
   });
 
