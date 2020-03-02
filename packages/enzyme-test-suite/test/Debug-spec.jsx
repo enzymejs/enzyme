@@ -2,6 +2,7 @@ import { expect } from 'chai';
 import React from 'react';
 import wrap from 'mocha-wrap';
 import sinon from 'sinon-sandbox';
+import hasSymbols from 'has-symbols';
 
 import { mount, shallow } from 'enzyme';
 import { get } from 'enzyme/build/configuration';
@@ -110,6 +111,14 @@ describe('debug', () => {
         <div id="foo" className="bar" />
       ))).to.equal((
         '<div id="foo" className="bar" />'
+      ));
+    });
+
+    itIf(hasSymbols(), 'renders symbol props', () => {
+      expect(debugElement((
+        <div symbol={Symbol.iterator} other={Symbol('foo')} />
+      ))).to.equal((
+        '<div symbol={[Symbol(Symbol.iterator)]} other={[Symbol(foo)]} />'
       ));
     });
 

@@ -53,7 +53,7 @@ function propString(prop, options) {
 
     return '{{...}}';
   }
-  return `{[${typeof prop}]}`;
+  return `{[${inspect(prop)}]}`;
 }
 
 function propsString(node, options) {
