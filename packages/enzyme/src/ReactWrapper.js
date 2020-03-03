@@ -1,5 +1,6 @@
 import flat from 'array.prototype.flat';
 import has from 'has';
+import trim from 'string.prototype.trim';
 
 import {
   containsChildrenSubArray,
@@ -1285,11 +1286,11 @@ if (ITERATOR_SYMBOL) {
 function privateWarning(prop, extraMessage) {
   Object.defineProperty(ReactWrapper.prototype, prop, {
     get() {
-      throw new Error(`
+      throw new Error(trim(`
         Attempted to access ReactWrapper::${prop}, which was previously a private property on
         Enzyme ReactWrapper instances, but is no longer and should not be relied upon.
         ${extraMessage}
-      `);
+      `));
     },
     enumerable: false,
     configurable: false,

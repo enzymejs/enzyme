@@ -1255,6 +1255,7 @@ describe('shallow', () => {
   const Wrapper = ShallowWrapper;
   describeMethods(
     { Wrap, Wrapper },
+    'deprecatedInstanceProperties',
     '@@iterator',
     'at',
     'childAt',

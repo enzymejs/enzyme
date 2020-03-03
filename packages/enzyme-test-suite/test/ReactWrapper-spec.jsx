@@ -1013,6 +1013,7 @@ describeWithDOM('mount', () => {
   const Wrapper = ReactWrapper;
   describeMethods(
     { Wrap, Wrapper },
+    'deprecatedInstanceProperties',
     '@@iterator',
     'at',
     'childAt',
