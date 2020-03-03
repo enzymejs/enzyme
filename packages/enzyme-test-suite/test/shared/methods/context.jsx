@@ -16,6 +16,7 @@ import {
 export default function describeContext({
   Wrap,
   WrapperName,
+  isShallow,
 }) {
   describe('.context()', () => {
     const contextTypes = {
@@ -45,8 +46,8 @@ export default function describeContext({
       );
     });
 
-    it('throws if it is called when wrapper didn’t include context', () => {
-      const wrapper = Wrap(<SimpleComponent />);
+    itIf(isShallow, 'throws if it is called when wrapper didn’t include context', () => {
+      const wrapper = Wrap(<SimpleComponent />, { context: false });
       expect(() => wrapper.context()).to.throw(
         Error,
         `${WrapperName}::context() can only be called on a wrapper that was originally passed a context option`,
@@ -63,28 +64,54 @@ export default function describeContext({
     });
 
     it('works with no arguments', () => {
-      const context = { name: {} };
-      const wrapper = Wrap(<SimpleComponentSFC />, { context });
+      const context = { name: 'foo' };
+      const wrapper = Wrap(<SimpleComponent />, { context });
       expect(wrapper.context()).to.eql(context);
     });
 
     it('works with a key name', () => {
-      const context = { name: {} };
-      const wrapper = Wrap(<SimpleComponentSFC />, { context });
+      const context = { name: 'foo' };
+      const wrapper = Wrap(<SimpleComponent />, { context });
       expect(wrapper.context('name')).to.equal(context.name);
     });
-  });
 
-  it('throws on non-root', () => {
-    class Foo extends React.Component {
+    class RendersHTML extends React.Component {
       render() {
         return <div><span>hi</span></div>;
       }
     }
 
-    const wrapper = Wrap(<Foo />);
-    const span = wrapper.find('span');
-    expect(span).to.have.lengthOf(1);
-    expect(() => span.context()).to.throw(Error);
+    it('throws on non-instance', () => {
+      const wrapper = Wrap(<RendersHTML />);
+      const span = wrapper.find('span');
+      expect(span).to.have.lengthOf(1);
+      expect(() => span.context()).to.throw(Error);
+    });
+
+    class RendersChildren extends React.Component {
+      render() {
+        const { children } = this.props;
+        return <div>{children}</div>;
+      }
+    }
+
+    it('throws on non-root', () => {
+
+      const wrapper = Wrap(<RendersChildren><RendersHTML /></RendersChildren>);
+      const child = wrapper.find(RendersHTML);
+      expect(child).to.have.lengthOf(1);
+      expect(() => child.context()).to.throw(Error);
+    });
+
+    itIf(is('>= 16'), 'throws on an SFC without an instance', () => {
+      function Bar() {
+        return <RendersHTML />;
+      }
+
+      const wrapper = Wrap(<RendersChildren><Bar /></RendersChildren>);
+      const child = wrapper.find(Bar);
+      expect(child).to.have.lengthOf(1);
+      expect(() => child.context()).to.throw(Error);
+    });
   });
 }

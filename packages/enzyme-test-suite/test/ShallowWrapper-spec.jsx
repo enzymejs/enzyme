@@ -1264,6 +1264,7 @@ describe('shallow', () => {
     'containsAllMatchingElements',
     'containsAnyMatchingElements',
     'containsMatchingElement',
+    'context',
     'debug',
     'equals',
     'every',

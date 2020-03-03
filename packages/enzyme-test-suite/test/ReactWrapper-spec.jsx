@@ -1022,6 +1022,7 @@ describeWithDOM('mount', () => {
     'containsAllMatchingElements',
     'containsAnyMatchingElements',
     'containsMatchingElement',
+    'context',
     'debug',
     'equals',
     'every',

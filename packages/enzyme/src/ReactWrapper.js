@@ -749,7 +749,7 @@ class ReactWrapper {
     }
     const instance = this.single('context', () => this.instance());
     if (instance === null) {
-      throw new Error('ReactWrapper::context() can only be called on components with instances');
+      throw new Error('ReactWrapper::context() can only be called on wrapped nodes that have a non-null instance');
     }
     const _context = instance.context;
     if (typeof name !== 'undefined') {
