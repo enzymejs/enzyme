@@ -538,14 +538,16 @@ describe('debug', () => {
     it('renders shallow wrapper properly', () => {
       class Foo extends React.Component {
         render() {
+          const { children } = this.props;
           return (
             <div className="foo">
               <span>From Foo</span>
-              {this.props.children}
+              {children}
             </div>
           );
         }
       }
+
       class Bar extends React.Component {
         render() {
           return (

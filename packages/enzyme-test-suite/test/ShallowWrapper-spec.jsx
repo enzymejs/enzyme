@@ -56,7 +56,8 @@ describe('shallow', () => {
     it('does what i expect', () => {
       class Box extends React.Component {
         render() {
-          return <div className="box">{this.props.children}</div>;
+          const { children } = this.props;
+          return <div className="box">{children}</div>;
         }
       }
       class Foo extends React.Component {
@@ -394,7 +395,8 @@ describe('shallow', () => {
           name: PropTypes.string,
         },
         render() {
-          return <div>{this.context.name}</div>;
+          const { name } = this.context;
+          return <div>{name}</div>;
         },
       });
 
@@ -406,7 +408,8 @@ describe('shallow', () => {
     it('does not throw if context is passed in but contextTypes is missing', () => {
       const SimpleComponent = createClass({
         render() {
-          return <div>{this.context.name}</div>;
+          const { name } = this.context;
+          return <div>{name}</div>;
         },
       });
 
@@ -420,7 +423,8 @@ describe('shallow', () => {
           name: PropTypes.string,
         },
         render() {
-          return <div>{this.context.name}</div>;
+          const { name } = this.context;
+          return <div>{name}</div>;
         },
       });
 
@@ -671,8 +675,8 @@ describe('shallow', () => {
 
     describeIf(is('> 0.13'), 'stateless function components (SFCs)', () => {
       it('can pass in context', () => {
-        const SimpleComponent = (props, context) => (
-          <div>{context.name}</div>
+        const SimpleComponent = (props, { name }) => (
+          <div>{name}</div>
         );
         SimpleComponent.contextTypes = { name: PropTypes.string };
 
@@ -682,8 +686,8 @@ describe('shallow', () => {
       });
 
       it('does not throw if context is passed in but contextTypes is missing', () => {
-        const SimpleComponent = (props, context) => (
-          <div>{context.name}</div>
+        const SimpleComponent = (props, { name }) => (
+          <div>{name}</div>
         );
 
         const context = { name: 'foo' };
@@ -691,8 +695,8 @@ describe('shallow', () => {
       });
 
       itIf(is('< 16'), 'is introspectable through context API', () => {
-        const SimpleComponent = (props, context) => (
-          <div>{context.name}</div>
+        const SimpleComponent = (props, { name }) => (
+          <div>{name}</div>
         );
         SimpleComponent.contextTypes = { name: PropTypes.string };
 
@@ -704,8 +708,8 @@ describe('shallow', () => {
       });
 
       itIf(is('>= 16'), 'is not introspectable through context API', () => {
-        const SimpleComponent = (props, context) => (
-          <div>{context.name}</div>
+        const SimpleComponent = (props, { name }) => (
+          <div>{name}</div>
         );
         SimpleComponent.contextTypes = { name: PropTypes.string };
 
@@ -1367,7 +1371,8 @@ describe('shallow', () => {
       it('can pass in context', () => {
         class Bar extends React.Component {
           render() {
-            return <div>{this.context.name}</div>;
+            const { name } = this.context;
+            return <div>{name}</div>;
           }
         }
         Bar.contextTypes = {
@@ -1392,7 +1397,8 @@ describe('shallow', () => {
       it('does not throw if context is passed in but contextTypes is missing', () => {
         class Bar extends React.Component {
           render() {
-            return <div>{this.context.name}</div>;
+            const { name } = this.context;
+            return <div>{name}</div>;
           }
         }
         class Foo extends React.Component {
@@ -1413,7 +1419,8 @@ describe('shallow', () => {
       it('is introspectable through context API', () => {
         class Bar extends React.Component {
           render() {
-            return <div>{this.context.name}</div>;
+            const { name } = this.context;
+            return <div>{name}</div>;
           }
         }
         Bar.contextTypes = {
@@ -1482,8 +1489,8 @@ describe('shallow', () => {
 
       describe('context', () => {
         it('can pass in context', () => {
-          const Bar = (props, context) => (
-            <div>{context.name}</div>
+          const Bar = (props, { name }) => (
+            <div>{name}</div>
           );
           Bar.contextTypes = { name: PropTypes.string };
           const Foo = () => (
@@ -1498,8 +1505,8 @@ describe('shallow', () => {
         });
 
         it('does not throw if context is passed in but contextTypes is missing', () => {
-          const Bar = (props, context) => (
-            <div>{context.name}</div>
+          const Bar = (props, { name }) => (
+            <div>{name}</div>
           );
           const Foo = () => (
             <div>
@@ -1513,8 +1520,8 @@ describe('shallow', () => {
         });
 
         itIf(is('< 16'), 'is introspectable through context API', () => {
-          const Bar = (props, context) => (
-            <div>{context.name}</div>
+          const Bar = (props, { name }) => (
+            <div>{name}</div>
           );
           Bar.contextTypes = { name: PropTypes.string };
           const Foo = () => (
@@ -1531,8 +1538,8 @@ describe('shallow', () => {
         });
 
         itIf(is('>= 16'), 'will throw when trying to inspect context', () => {
-          const Bar = (props, context) => (
-            <div>{context.name}</div>
+          const Bar = (props, { name }) => (
+            <div>{name}</div>
           );
           Bar.contextTypes = { name: PropTypes.string };
           const Foo = () => (
@@ -2174,7 +2181,8 @@ describe('shallow', () => {
           }
 
           render() {
-            return <div>{this.state.foo}</div>;
+            const { foo } = this.state;
+            return <div>{foo}</div>;
           }
         }
         const wrapper = shallow(
@@ -2447,7 +2455,8 @@ describe('shallow', () => {
           }
 
           shouldComponentUpdate(nextProps, nextState) {
-            return nextState.value !== this.state.value;
+            const { value } = this.state;
+            return nextState.value !== value;
           }
 
           render() {
@@ -2966,18 +2975,23 @@ describe('shallow', () => {
           }
 
           componentWillMount() {
+            /* eslint-disable react/destructuring-assignment */
             this.setState({ count: this.state.count + 1 });
             this.setState({ count: this.state.count + 1 });
+            /* eslint-enable react/destructuring-assignment */
           }
 
           componentDidMount() {
+            /* eslint-disable react/destructuring-assignment */
             this.setState({ count: this.state.count + 1 });
             this.setState({ count: this.state.count + 1 });
+            /* eslint-enable react/destructuring-assignment */
           }
 
           render() {
             spy();
-            return <div>{this.state.count}</div>;
+            const { count } = this.state;
+            return <div>{count}</div>;
           }
         }
         const result = shallow(<Foo />);
@@ -3017,7 +3031,8 @@ describe('shallow', () => {
 
           render() {
             spy('render');
-            return <div>{this.state.foo}</div>;
+            const { foo } = this.state;
+            return <div>{foo}</div>;
           }
         }
         Foo.contextTypes = {
@@ -3200,13 +3215,16 @@ describe('shallow', () => {
           }
 
           componentWillReceiveProps() {
+            /* eslint-disable react/destructuring-assignment */
             this.setState({ count: this.state.count + 1 });
             this.setState({ count: this.state.count + 1 });
+            /* eslint-enable react/destructuring-assignment */
           }
 
           render() {
             spy();
-            return <div>{this.props.foo}</div>;
+            const { foo } = this.props;
+            return <div>{foo}</div>;
           }
         }
         const result = shallow(<Foo />);
@@ -3230,14 +3248,17 @@ describe('shallow', () => {
           componentWillUpdate() {
             if (!this.updated) {
               this.updated = true;
+              /* eslint-disable react/destructuring-assignment */
               this.setState({ count: this.state.count + 1 });
               this.setState({ count: this.state.count + 1 });
+              /* eslint-enable react/destructuring-assignment */
             }
           }
 
           render() {
             spy();
-            return <div>{this.props.foo}</div>;
+            const { foo } = this.props;
+            return <div>{foo}</div>;
           }
         }
         const result = shallow(<Foo />);
@@ -3261,16 +3282,17 @@ describe('shallow', () => {
           componentDidUpdate() {
             if (!this.updated) {
               this.updated = true;
-              /* eslint-disable react/no-did-update-set-state */
+              /* eslint-disable react/no-did-update-set-state, react/destructuring-assignment */
               this.setState({ count: this.state.count + 1 });
               this.setState({ count: this.state.count + 1 });
-              /* eslint-enable react/no-did-update-set-state */
+              /* eslint-enable react/no-did-update-set-state, react/destructuring-assignment */
             }
           }
 
           render() {
             spy();
-            return <div>{this.props.foo}</div>;
+            const { foo } = this.props;
+            return <div>{foo}</div>;
           }
         }
         const result = shallow(<Foo />);
@@ -3308,7 +3330,8 @@ describe('shallow', () => {
 
           render() {
             spy('render');
-            return <div>{this.state.foo}</div>;
+            const { foo } = this.state;
+            return <div>{foo}</div>;
           }
         }
         Foo.contextTypes = {
@@ -3376,7 +3399,8 @@ describe('shallow', () => {
 
           render() {
             spy('render');
-            return <div>{this.state.foo}</div>;
+            const { foo } = this.state;
+            return <div>{foo}</div>;
           }
         }
         const wrapper = shallow(<Foo />);
@@ -3401,14 +3425,17 @@ describe('shallow', () => {
           componentWillUpdate() {
             if (!this.updated) {
               this.updated = true;
+              /* eslint-disable react/destructuring-assignment */
               this.setState({ count: this.state.count + 1 });
               this.setState({ count: this.state.count + 1 });
+              /* eslint-enable react/destructuring-assignment */
             }
           }
 
           render() {
             spy();
-            return <div>{this.state.name}</div>;
+            const { name } = this.state;
+            return <div>{name}</div>;
           }
         }
         const result = shallow(<Foo />);
@@ -3433,16 +3460,17 @@ describe('shallow', () => {
           componentDidUpdate() {
             if (!this.updated) {
               this.updated = true;
-              /* eslint-disable react/no-did-update-set-state */
+              /* eslint-disable react/no-did-update-set-state, react/destructuring-assignment */
               this.setState({ count: this.state.count + 1 });
               this.setState({ count: this.state.count + 1 });
-              /* eslint-enable react/no-did-update-set-state */
+              /* eslint-enable react/no-did-update-set-state, react/destructuring-assignment */
             }
           }
 
           render() {
             spy();
-            return <div>{this.state.name}</div>;
+            const { name } = this.state;
+            return <div>{name}</div>;
           }
         }
         const result = shallow(<Foo />);
@@ -3479,7 +3507,8 @@ describe('shallow', () => {
 
           render() {
             spy('render');
-            return <div>{this.state.foo}</div>;
+            const { foo } = this.state;
+            return <div>{foo}</div>;
           }
         }
         Foo.contextTypes = {
@@ -3570,14 +3599,17 @@ describe('shallow', () => {
           componentWillUpdate() {
             if (!this.updated) {
               this.updated = true;
+              /* eslint-disable react/destructuring-assignment */
               this.setState({ count: this.state.count + 1 });
               this.setState({ count: this.state.count + 1 });
+              /* eslint-enable react/destructuring-assignment */
             }
           }
 
           render() {
             spy();
-            return <div>{this.state.name}</div>;
+            const { name } = this.state;
+            return <div>{name}</div>;
           }
         }
         const result = shallow(
@@ -3606,16 +3638,17 @@ describe('shallow', () => {
           componentDidUpdate() {
             if (!this.updated) {
               this.updated = true;
-              /* eslint-disable react/no-did-update-set-state */
+              /* eslint-disable react/no-did-update-set-state, react/destructuring-assignment */
               this.setState({ count: this.state.count + 1 });
               this.setState({ count: this.state.count + 1 });
-              /* eslint-enable react/no-did-update-set-state */
+              /* eslint-enable react/no-did-update-set-state, react/destructuring-assignment */
             }
           }
 
           render() {
             spy();
-            return <div>{this.state.name}</div>;
+            const { name } = this.state;
+            return <div>{name}</div>;
           }
         }
         const result = shallow(
@@ -3668,7 +3701,8 @@ describe('shallow', () => {
           }
 
           render() {
-            return <div>{this.state.foo}</div>;
+            const { foo } = this.state;
+            return <div>{foo}</div>;
           }
         }
         const spy = sinon.spy(Foo.prototype, 'componentDidUpdate');
@@ -3701,10 +3735,11 @@ describe('shallow', () => {
           }
 
           render() {
+            const { foo } = this.state;
             return (
               <div>
-                {this.state.foo}
-                <button onClick={this.onChange}>click</button>
+                {foo}
+                <button type="button" onClick={this.onChange}>click</button>
               </div>
             );
           }
@@ -3734,7 +3769,8 @@ describe('shallow', () => {
           componentDidUpdate() {}
 
           render() {
-            return <div>{this.state.foo}</div>;
+            const { foo } = this.state;
+            return <div>{foo}</div>;
           }
         }
         const spy = sinon.spy(Foo.prototype, 'componentDidUpdate');
@@ -3756,12 +3792,13 @@ describe('shallow', () => {
           componentDidMount() {}
 
           render() {
+            const { foo } = this.state;
             return (
               <div>
-                <button onClick={() => this.setState({ foo: 'update2' })}>
+                <button type="button" onClick={() => this.setState({ foo: 'update2' })}>
                   click
                 </button>
-                {this.state.foo}
+                {foo}
               </div>
             );
           }
@@ -3788,9 +3825,10 @@ describe('shallow', () => {
           componentDidUpdate() {}
 
           render() {
+            const { foo } = this.state;
             return (
               <div>
-                {this.state.foo}
+                {foo}
               </div>
             );
           }
@@ -4018,9 +4056,10 @@ describe('shallow', () => {
           componentDidUpdate() {}
 
           render() {
+            const { foo } = this.state;
             return (
               <div>
-                {this.state.foo}
+                {foo}
               </div>
             );
           }
@@ -4150,13 +4189,15 @@ describe('shallow', () => {
       }
 
       render() {
+        /* eslint-disable react/destructuring-assignment */
         return (
           <div>
             {this.state && this.state.showSpan && <span className="show-me" />}
-            <button className="async-btn" onClick={() => this.asyncSetState()} />
+            <button type="button" className="async-btn" onClick={() => this.asyncSetState()} />
             <Child callback={() => this.callbackSetState()} />
           </div>
         );
+        /* eslint-enable react/destructuring-assignment */
       }
     }
 
@@ -4184,7 +4225,8 @@ describe('shallow', () => {
   describe('setState through a props method', () => {
     class Child extends React.Component {
       render() {
-        return <button onClick={this.props.onClick}>click</button>;
+        const { onClick } = this.props;
+        return <button type="button" onClick={onClick}>click</button>;
       }
     }
 
@@ -4199,15 +4241,16 @@ describe('shallow', () => {
 
         onIncrement() {
           this.setState({
-            count: this.state.count + 1,
+            count: this.state.count + 1, // eslint-disable-line react/destructuring-assignment
           });
         }
 
         render() {
+          const { count } = this.state;
           return (
             <div>
               <Child onClick={() => this.onIncrement()} />
-              <p>{this.state.count}</p>
+              <p>{count}</p>
             </div>
           );
         }
@@ -4226,7 +4269,8 @@ describe('shallow', () => {
   describe('setState through a props method in async', () => {
     class Child extends React.Component {
       render() {
-        return <button onClick={this.props.onClick}>click</button>;
+        const { onClick } = this.props;
+        return <button type="button" onClick={onClick}>click</button>;
       }
     }
 
@@ -4244,16 +4288,17 @@ describe('shallow', () => {
           onIncrement() {
             setTimeout(() => {
               this.setState({
-                count: this.state.count + 1,
+                count: this.state.count + 1, // eslint-disable-line react/destructuring-assignment
               }, resolve);
             });
           }
 
           render() {
+            const { count } = this.state;
             return (
               <div>
                 <Child onClick={() => this.onIncrement()} />
-                <p>{this.state.count}</p>
+                <p>{count}</p>
               </div>
             );
           }
@@ -4340,7 +4385,8 @@ describe('shallow', () => {
         }
 
         render() {
-          return <div>{this.state.foo}</div>;
+          const { foo } = this.state;
+          return <div>{foo}</div>;
         }
       }
       const spy = sinon.spy(Foo.prototype, 'componentDidUpdate');
@@ -4373,10 +4419,11 @@ describe('shallow', () => {
         }
 
         render() {
+          const { foo } = this.state;
           return (
             <div>
-              {this.state.foo}
-              <button onClick={this.onChange}>click</button>
+              {foo}
+              <button type="button" onClick={this.onChange}>click</button>
             </div>
           );
         }
@@ -4406,7 +4453,8 @@ describe('shallow', () => {
         componentDidUpdate() {}
 
         render() {
-          return <div>{this.state.foo}</div>;
+          const { foo } = this.state;
+          return <div>{foo}</div>;
         }
       }
       const spy = sinon.spy(Foo.prototype, 'componentDidUpdate');
@@ -4428,12 +4476,13 @@ describe('shallow', () => {
         componentDidMount() {}
 
         render() {
+          const { foo } = this.state;
           return (
             <div>
-              <button onClick={() => this.setState({ foo: 'update2' })}>
+              <button type="button" onClick={() => this.setState({ foo: 'update2' })}>
                 click
               </button>
-              {this.state.foo}
+              {foo}
             </div>
           );
         }

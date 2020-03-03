@@ -10,7 +10,7 @@ export default function describeDeprecatedInstanceProperties({
       return (
         <div>
           <span>
-            <button />
+            <button type="button" />
           </span>
         </div>
       );

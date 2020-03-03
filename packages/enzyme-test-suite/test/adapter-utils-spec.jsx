@@ -491,7 +491,10 @@ describe('enzyme-adapter-utils', () => {
 
   describe('createMountWrapper', () => {
     class Foo extends React.Component {
-      render() { return <div>{this.context.foo}</div>; }
+      render() {
+        const { foo } = this.context;
+        return <div>{foo}</div>;
+      }
     }
     Foo.contextTypes = {
       foo: PropTypes.string,

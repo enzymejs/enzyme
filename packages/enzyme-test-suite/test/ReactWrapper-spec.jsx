@@ -609,8 +609,8 @@ describeWithDOM('mount', () => {
 
     describeIf(is('> 0.13'), 'stateless function components (SFCs)', () => {
       it('can pass in context', () => {
-        const SimpleComponent = (props, context) => (
-          <div>{context.name}</div>
+        const SimpleComponent = (props, { name }) => (
+          <div>{name}</div>
         );
         SimpleComponent.contextTypes = { name: PropTypes.string };
 
@@ -620,8 +620,8 @@ describeWithDOM('mount', () => {
       });
 
       it('can pass context to the child of mounted component', () => {
-        const SimpleComponent = (props, context) => (
-          <div>{context.name}</div>
+        const SimpleComponent = (props, { name }) => (
+          <div>{name}</div>
         );
         SimpleComponent.contextTypes = { name: PropTypes.string };
 
@@ -639,8 +639,8 @@ describeWithDOM('mount', () => {
       });
 
       it('does not throw if context is passed in but contextTypes is missing', () => {
-        const SimpleComponent = (props, context) => (
-          <div>{context.name}</div>
+        const SimpleComponent = (props, { name }) => (
+          <div>{name}</div>
         );
 
         const context = { name: 'foo' };
@@ -648,8 +648,8 @@ describeWithDOM('mount', () => {
       });
 
       itIf(is('< 16'), 'is introspectable through context API', () => {
-        const SimpleComponent = (props, context) => (
-          <div>{context.name}</div>
+        const SimpleComponent = (props, { name }) => (
+          <div>{name}</div>
         );
         SimpleComponent.contextTypes = { name: PropTypes.string };
 
@@ -1236,9 +1236,10 @@ describeWithDOM('mount', () => {
         }
 
         render() {
+          const { id } = this.props;
           return (
-            <div className={this.props.id}>
-              {this.props.id}
+            <div className={id}>
+              {id}
             </div>
           );
         }
@@ -1857,6 +1858,7 @@ describeWithDOM('mount', () => {
           }
 
           shouldComponentUpdate(nextProps, nextState) {
+            // eslint-disable-next-line react/destructuring-assignment
             return nextState.value !== this.state.value;
           }
 
@@ -2460,18 +2462,23 @@ describeWithDOM('mount', () => {
           }
 
           componentWillMount() {
+            /* eslint-disable react/destructuring-assignment */
             this.setState({ count: this.state.count + 1 });
             this.setState({ count: this.state.count + 1 });
+            /* eslint-enable react/destructuring-assignment */
           }
 
           componentDidMount() {
+            /* eslint-disable react/destructuring-assignment */
             this.setState({ count: this.state.count + 1 });
             this.setState({ count: this.state.count + 1 });
+            /* eslint-enable react/destructuring-assignment */
           }
 
           render() {
             spy();
-            return <div>{this.state.count}</div>;
+            const { count } = this.state;
+            return <div>{count}</div>;
           }
         }
         const result = mount(<Foo />);
@@ -2511,7 +2518,8 @@ describeWithDOM('mount', () => {
 
           render() {
             spy('render');
-            return <div>{this.state.foo}</div>;
+            const { foo } = this.state;
+            return <div>{foo}</div>;
           }
         }
         Foo.contextTypes = {
@@ -2694,13 +2702,16 @@ describeWithDOM('mount', () => {
           }
 
           componentWillReceiveProps() {
+            /* eslint-disable react/destructuring-assignment */
             this.setState({ count: this.state.count + 1 });
             this.setState({ count: this.state.count + 1 });
+            /* eslint-enable react/destructuring-assignment */
           }
 
           render() {
             spy();
-            return <div>{this.props.foo}</div>;
+            const { foo } = this.props;
+            return <div>{foo}</div>;
           }
         }
         const result = mount(<Foo />);
@@ -2724,14 +2735,17 @@ describeWithDOM('mount', () => {
           componentWillUpdate() {
             if (!this.updated) {
               this.updated = true;
+              /* eslint-disable react/destructuring-assignment */
               this.setState({ count: this.state.count + 1 });
               this.setState({ count: this.state.count + 1 });
+              /* eslint-enable react/destructuring-assignment */
             }
           }
 
           render() {
             spy();
-            return <div>{this.props.foo}</div>;
+            const { foo } = this.props;
+            return <div>{foo}</div>;
           }
         }
         const result = mount(<Foo />);
@@ -2755,16 +2769,17 @@ describeWithDOM('mount', () => {
           componentDidUpdate() {
             if (!this.updated) {
               this.updated = true;
-              /* eslint-disable react/no-did-update-set-state */
+              /* eslint-disable react/no-did-update-set-state, react/destructuring-assignment */
               this.setState({ count: this.state.count + 1 });
               this.setState({ count: this.state.count + 1 });
-              /* eslint-enable react/no-did-update-set-state */
+              /* eslint-enable react/no-did-update-set-state, react/destructuring-assignment */
             }
           }
 
           render() {
             spy();
-            return <div>{this.props.foo}</div>;
+            const { foo } = this.props;
+            return <div>{foo}</div>;
           }
         }
         const result = mount(<Foo />);
@@ -2802,7 +2817,8 @@ describeWithDOM('mount', () => {
 
           render() {
             spy('render');
-            return <div>{this.state.foo}</div>;
+            const { foo } = this.state;
+            return <div>{foo}</div>;
           }
         }
         Foo.contextTypes = {
@@ -2870,7 +2886,8 @@ describeWithDOM('mount', () => {
 
           render() {
             spy('render');
-            return <div>{this.state.foo}</div>;
+            const { foo } = this.state;
+            return <div>{foo}</div>;
           }
         }
         const wrapper = mount(<Foo />);
@@ -2895,14 +2912,17 @@ describeWithDOM('mount', () => {
           componentWillUpdate() {
             if (!this.updated) {
               this.updated = true;
+              /* eslint-disable react/destructuring-assignment */
               this.setState({ count: this.state.count + 1 });
               this.setState({ count: this.state.count + 1 });
+              /* eslint-enable react/destructuring-assignment */
             }
           }
 
           render() {
             spy();
-            return <div>{this.state.name}</div>;
+            const { name } = this.state;
+            return <div>{name}</div>;
           }
         }
         const result = mount(<Foo />);
@@ -2927,16 +2947,17 @@ describeWithDOM('mount', () => {
           componentDidUpdate() {
             if (!this.updated) {
               this.updated = true;
-              /* eslint-disable react/no-did-update-set-state */
+              /* eslint-disable react/no-did-update-set-state, react/destructuring-assignment */
               this.setState({ count: this.state.count + 1 });
               this.setState({ count: this.state.count + 1 });
-              /* eslint-enable react/no-did-update-set-state */
+              /* eslint-enable react/no-did-update-set-state, react/destructuring-assignment */
             }
           }
 
           render() {
             spy();
-            return <div>{this.state.name}</div>;
+            const { name } = this.state;
+            return <div>{name}</div>;
           }
         }
         const result = mount(<Foo />);
@@ -2973,7 +2994,8 @@ describeWithDOM('mount', () => {
 
           render() {
             spy('render');
-            return <div>{this.state.foo}</div>;
+            const { foo } = this.state;
+            return <div>{foo}</div>;
           }
         }
         Foo.contextTypes = {
@@ -3065,14 +3087,17 @@ describeWithDOM('mount', () => {
           componentWillUpdate() {
             if (!this.updated) {
               this.updated = true;
+              /* eslint-disable react/destructuring-assignment */
               this.setState({ count: this.state.count + 1 });
               this.setState({ count: this.state.count + 1 });
+              /* eslint-enable react/destructuring-assignment */
             }
           }
 
           render() {
             spy();
-            return <div>{this.state.name}</div>;
+            const { name } = this.state;
+            return <div>{name}</div>;
           }
         }
         const result = mount(
@@ -3101,16 +3126,17 @@ describeWithDOM('mount', () => {
           componentDidUpdate() {
             if (!this.updated) {
               this.updated = true;
-              /* eslint-disable react/no-did-update-set-state */
+              /* eslint-disable react/no-did-update-set-state, react/destructuring-assignment */
               this.setState({ count: this.state.count + 1 });
               this.setState({ count: this.state.count + 1 });
-              /* eslint-enable react/no-did-update-set-state */
+              /* eslint-enable react/no-did-update-set-state, react/destructuring-assignment */
             }
           }
 
           render() {
             spy();
-            return <div>{this.state.name}</div>;
+            const { name } = this.state;
+            return <div>{name}</div>;
           }
         }
         const result = mount(
@@ -3161,7 +3187,8 @@ describeWithDOM('mount', () => {
           }
 
           render() {
-            return <div>{this.state.foo}</div>;
+            const { foo } = this.state;
+            return <div>{foo}</div>;
           }
         }
         const spy = sinon.spy(Foo.prototype, 'componentDidUpdate');
@@ -3192,10 +3219,11 @@ describeWithDOM('mount', () => {
           }
 
           render() {
+            const { foo } = this.state;
             return (
               <div>
-                {this.state.foo}
-                <button onClick={this.onChange}>click</button>
+                {foo}
+                <button type="button" onClick={this.onChange}>click</button>
               </div>
             );
           }
@@ -3225,7 +3253,8 @@ describeWithDOM('mount', () => {
           componentDidUpdate() {}
 
           render() {
-            return <div>{this.state.foo}</div>;
+            const { foo } = this.state;
+            return <div>{foo}</div>;
           }
         }
         const spy = sinon.spy(Foo.prototype, 'componentDidUpdate');
@@ -3247,12 +3276,13 @@ describeWithDOM('mount', () => {
           componentDidMount() {}
 
           render() {
+            const { foo } = this.state;
             return (
               <div>
-                <button onClick={() => this.setState({ foo: 'update2' })}>
+                <button type="button" onClick={() => this.setState({ foo: 'update2' })}>
                   click
                 </button>
-                {this.state.foo}
+                {foo}
               </div>
             );
           }
@@ -3279,11 +3309,8 @@ describeWithDOM('mount', () => {
           componentDidUpdate() {}
 
           render() {
-            return (
-              <div>
-                {this.state.foo}
-              </div>
-            );
+            const { foo } = this.state;
+            return <div>{foo}</div>;
           }
         }
         const spy = sinon.spy(Foo.prototype, 'componentDidUpdate');
@@ -3511,11 +3538,8 @@ describeWithDOM('mount', () => {
           componentDidUpdate() {}
 
           render() {
-            return (
-              <div>
-                {this.state.foo}
-              </div>
-            );
+            const { foo } = this.state;
+            return <div>{foo}</div>;
           }
         }
         const spy = sinon.spy(Foo.prototype, 'componentDidUpdate');
@@ -3645,13 +3669,15 @@ describeWithDOM('mount', () => {
       }
 
       render() {
+        /* eslint-disable react/destructuring-assignment */
         return (
           <div>
             {this.state && this.state.showSpan && <span className="show-me" />}
-            <button className="async-btn" onClick={() => this.asyncSetState()} />
+            <button type="button" className="async-btn" onClick={() => this.asyncSetState()} />
             <Child callback={() => this.callbackSetState()} />
           </div>
         );
+        /* eslint-enable react/destructuring-assignment */
       }
     }
 
@@ -3679,7 +3705,8 @@ describeWithDOM('mount', () => {
   describe('setState through a props method', () => {
     class Child extends React.Component {
       render() {
-        return <button onClick={this.props.onClick}>click</button>;
+        const { onClick } = this.props;
+        return <button type="button" onClick={onClick}>click</button>;
       }
     }
 
@@ -3694,15 +3721,16 @@ describeWithDOM('mount', () => {
 
         onIncrement() {
           this.setState({
-            count: this.state.count + 1,
+            count: this.state.count + 1, // eslint-disable-line react/destructuring-assignment
           });
         }
 
         render() {
+          const { count } = this.state;
           return (
             <div>
               <Child onClick={() => this.onIncrement()} />
-              <p>{this.state.count}</p>
+              <p>{count}</p>
             </div>
           );
         }
@@ -3721,7 +3749,8 @@ describeWithDOM('mount', () => {
   describe('setState through a props method in async', () => {
     class Child extends React.Component {
       render() {
-        return <button onClick={this.props.onClick}>click</button>;
+        const { onClick } = this.props;
+        return <button type="button" onClick={onClick}>click</button>;
       }
     }
 
@@ -3739,16 +3768,17 @@ describeWithDOM('mount', () => {
           onIncrement() {
             setTimeout(() => {
               this.setState({
-                count: this.state.count + 1,
+                count: this.state.count + 1, // eslint-disable-line react/destructuring-assignment
               }, resolve);
             });
           }
 
           render() {
+            const { count } = this.state;
             return (
               <div>
                 <Child onClick={() => this.onIncrement()} />
-                <p>{this.state.count}</p>
+                <p>{count}</p>
               </div>
             );
           }
@@ -3835,7 +3865,8 @@ describeWithDOM('mount', () => {
         }
 
         render() {
-          return <div>{this.state.foo}</div>;
+          const { foo } = this.state;
+          return <div>{foo}</div>;
         }
       }
       const spy = sinon.spy(Foo.prototype, 'componentDidUpdate');
@@ -3868,10 +3899,11 @@ describeWithDOM('mount', () => {
         }
 
         render() {
+          const { foo } = this.state;
           return (
             <div>
-              {this.state.foo}
-              <button onClick={this.onChange}>click</button>
+              {foo}
+              <button type="button" onClick={this.onChange}>click</button>
             </div>
           );
         }
@@ -3901,7 +3933,8 @@ describeWithDOM('mount', () => {
         componentDidUpdate() {}
 
         render() {
-          return <div>{this.state.foo}</div>;
+          const { foo } = this.state;
+          return <div>{foo}</div>;
         }
       }
       const spy = sinon.spy(Foo.prototype, 'componentDidUpdate');
@@ -3923,12 +3956,13 @@ describeWithDOM('mount', () => {
         componentDidMount() {}
 
         render() {
+          const { foo } = this.state;
           return (
             <div>
-              <button onClick={() => this.setState({ foo: 'update2' })}>
+              <button type="button" onClick={() => this.setState({ foo: 'update2' })}>
                 click
               </button>
-              {this.state.foo}
+              {foo}
             </div>
           );
         }

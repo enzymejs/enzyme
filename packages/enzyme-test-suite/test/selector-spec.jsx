@@ -760,7 +760,7 @@ tests.forEach(({ describeMethod, name, renderMethod }) => {
       const wrapper = renderMethod((
         <div>
           <span />
-          <button />
+          <button type="button" />
           <img alt="" />
         </div>
       ));

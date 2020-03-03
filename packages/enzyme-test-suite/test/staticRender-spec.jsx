@@ -22,7 +22,8 @@ describeWithDOM('render', () => {
           name: PropTypes.string,
         },
         render() {
-          return <div>{this.context.name}</div>;
+          const { name } = this.context;
+          return <div>{name}</div>;
         },
       });
 
@@ -42,7 +43,8 @@ describeWithDOM('render', () => {
           name: PropTypes.string,
         },
         render() {
-          return <span>{this.context.name}</span>;
+          const { name } = this.context;
+          return <span>{name}</span>;
         },
       });
       const ComplexComponent = createClass({
@@ -73,7 +75,8 @@ describeWithDOM('render', () => {
     it('does not throw if context is passed in but contextTypes is missing', () => {
       const SimpleComponent = createClass({
         render() {
-          return <div>{this.context.name}</div>;
+          const { name } = this.context;
+          return <div>{name}</div>;
         },
       });
 
