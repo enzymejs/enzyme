@@ -576,9 +576,9 @@ class ReactWrapper {
    * @returns {boolean}
    */
   isEmptyRender() {
-    const nodes = this.getNodeInternal();
+    const nodes = this.getNodesInternal();
 
-    return renderedDive(nodes);
+    return nodes.every((node) => renderedDive(node));
   }
 
   /**

@@ -15,9 +15,23 @@ import {
 
 export default function describeIsEmptyRender({
   Wrap,
+  WrapRendered,
   isShallow,
 }) {
   describe('.isEmptyRender()', () => {
+    class RenderChildren extends React.Component {
+      render() {
+        const { children } = this.props;
+        return children;
+      }
+    }
+
+    class RenderNull extends React.Component {
+      render() {
+        return null;
+      }
+    }
+
     const emptyRenderValues = generateEmptyRenderData();
 
     itWithData(emptyRenderValues, 'when a React createClass component returns: ', (data) => {
@@ -41,19 +55,6 @@ export default function describeIsEmptyRender({
     });
 
     describe('nested nodes', () => {
-      class RenderChildren extends React.Component {
-        render() {
-          const { children } = this.props;
-          return children;
-        }
-      }
-
-      class RenderNull extends React.Component {
-        render() {
-          return null;
-        }
-      }
-
       it(`returns ${!isShallow} for nested elements that return null`, () => {
         const wrapper = Wrap((
           <RenderChildren>
@@ -157,6 +158,25 @@ export default function describeIsEmptyRender({
         const wrapper = Wrap(<Foo />);
         expect(wrapper.isEmptyRender()).to.equal(data.expectResponse);
       });
+    });
+
+    it(`returns ${!isShallow} for > 1 elements`, () => {
+      class RendersThree extends React.Component {
+        render() {
+          return (
+            <div>
+              <RenderNull />
+              <RenderNull />
+              <RenderNull />
+            </div>
+          );
+        }
+      }
+
+      const wrapper = WrapRendered(<RendersThree />);
+      const elements = wrapper.find(RenderNull);
+      expect(elements).to.have.lengthOf(3);
+      expect(elements.isEmptyRender()).to.equal(!isShallow);
     });
   });
 }
