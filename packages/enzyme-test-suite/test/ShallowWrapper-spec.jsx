@@ -2222,6 +2222,46 @@ describe('shallow', () => {
       });
     });
 
+    describe('malformed lifecycle options', () => {
+      it('throws on invalid `enableComponentDidUpdateOnSetState` lifecycle config', () => {
+        const adapter = getAdapter();
+        const { lifecycles = {} } = adapter;
+        const options = {
+          enableComponentDidUpdateOnSetState: !!adapter.enableComponentDidUpdateOnSetState,
+          lifecycles: {
+            ...lifecycles,
+            componentDidUpdate: {
+              ...lifecycles.componentDidUpdate,
+              onSetState: !adapter.enableComponentDidUpdateOnSetState,
+            },
+          },
+        };
+        expect(() => shallow(<div />, options)).to.throw(
+          TypeError,
+          'the legacy enableComponentDidUpdateOnSetState option should be matched by `lifecycles: { componentDidUpdate: { onSetState: true } }`, for compatibility',
+        );
+      });
+
+      it('throws on invalid `supportPrevContextArgumentOfComponentDidUpdate` lifecycle config', () => {
+        const adapter = getAdapter();
+        const { lifecycles = {} } = adapter;
+        const options = {
+          supportPrevContextArgumentOfComponentDidUpdate: !!adapter.supportPrevContextArgumentOfComponentDidUpdate,
+          lifecycles: {
+            ...lifecycles,
+            componentDidUpdate: {
+              ...lifecycles.componentDidUpdate,
+              prevContext: !adapter.supportPrevContextArgumentOfComponentDidUpdate,
+            },
+          },
+        };
+        expect(() => shallow(<div />, options)).to.throw(
+          TypeError,
+          'the legacy supportPrevContextArgumentOfComponentDidUpdate option should be matched by `lifecycles: { componentDidUpdate: { prevContext: true } }`, for compatibility',
+        );
+      });
+    });
+
     describeIf(is('>= 16.3'), 'getDerivedStateFromProps', () => {
       let spy;
 

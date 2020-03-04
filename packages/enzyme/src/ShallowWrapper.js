@@ -83,7 +83,7 @@ function validateOptions(options) {
     disableLifecycleMethods,
     enableComponentDidUpdateOnSetState,
     supportPrevContextArgumentOfComponentDidUpdate,
-    lifecycles,
+    lifecycles = {},
   } = options;
   if (typeof lifecycleExperimental !== 'undefined' && typeof lifecycleExperimental !== 'boolean') {
     throw new Error('lifecycleExperimental must be either true or false if provided');
