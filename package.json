@@ -67,7 +67,6 @@
     "babel-preset-airbnb": "^2.6.0",
     "babel-register": "^6.26.0",
     "chai": "^4.2.0",
-    "coveralls": "^2.13.3",
     "eslint": "^6.8.0",
     "eslint-config-airbnb": "^18.1.0",
     "eslint-plugin-import": "^2.20.1",
