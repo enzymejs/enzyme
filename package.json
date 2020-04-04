@@ -99,5 +99,16 @@
     "semver": "^6.3.0",
     "webpack": "^1.15.0"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "greenkeeper": {
+    "ignore": [
+      "babel-loader",
+      "babel-plugin-transform-replace-object-assign",
+      "babel-preset-airbnb",
+      "mocha",
+      "nyc",
+      "semver",
+      "webpack"
+    ]
+  }
 }
