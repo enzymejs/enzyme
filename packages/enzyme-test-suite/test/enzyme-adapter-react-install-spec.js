@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import getAdapterForReactVersion from 'enzyme-adapter-react-helper/src/getAdapterForReactVersion';
+import getAdapterForReactVersion from 'enzyme-adapter-react-helper/build/getAdapterForReactVersion';
 
 describe('enzyme-adapter-react-helper', () => {
   describe('getAdapterForReactVersion', () => {

@@ -2,10 +2,10 @@
 
 'use strict';
 
-require('babel-register');
+require('@babel/register');
 
 var IgnorePlugin = require('webpack').IgnorePlugin;
-var is = require('./packages/enzyme-test-suite/test/_helpers/version').is;
+var is = require('./packages/enzyme-test-suite/build/_helpers/version').is;
 
 function getPlugins() {
   const adapter13 = new IgnorePlugin(/enzyme-adapter-react-13$/);
@@ -77,11 +77,11 @@ module.exports = function karma(config) {
     reporters: ['dots'],
 
     files: [
-      'packages/enzyme-test-suite/test/*.{jsx,js}',
+      'packages/enzyme-test-suite/build/*.js',
     ],
 
     exclude: [
-      'packages/enzyme-test-suite/test/_helpers/index.jsx',
+      'packages/enzyme-test-suite/build/_helpers/index.js',
     ],
 
     browsers: [
@@ -90,7 +90,7 @@ module.exports = function karma(config) {
     ],
 
     preprocessors: {
-      'packages/enzyme-test-suite/test/*.{jsx,js}': ['webpack', 'sourcemap'],
+      'packages/enzyme-test-suite/build/*.js': ['webpack', 'sourcemap'],
     },
 
     webpack: {

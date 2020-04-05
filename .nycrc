@@ -15,7 +15,6 @@
     "packages/*/node_modules"
   ],
   "require": [
-    "babel-register"
   ],
   "reporter": [
     "text",

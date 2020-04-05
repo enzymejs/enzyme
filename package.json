@@ -22,7 +22,7 @@
     "pretest": "lerna run lint",
     "test": "npm run test:only",
     "pretest:only": "npm run build",
-    "test:only": "mocha --recursive packages/enzyme-test-suite/test",
+    "test:only": "mocha --recursive packages/enzyme-test-suite/build",
     "test:single": "mocha --watch",
     "test:watch": "npm run test:only -- --watch",
     "pretest:karma": "npm run build",
@@ -35,7 +35,7 @@
     "docs:build": "npm run docs:prepare && gitbook build",
     "docs:watch": "npm run docs:prepare && gitbook serve",
     "docs:publish": "npm run docs:clean && npm run docs:build && cd _book && git init && git commit --allow-empty -m 'update book' && git fetch git@github.com:enzymejs/enzyme.git gh-pages && git checkout -b gh-pages && git add . && git commit -am 'update book' && git push git@github.com:enzymejs/enzyme.git gh-pages --force",
-    "travis": "nyc mocha --recursive packages/enzyme-test-suite/test",
+    "travis": "nyc mocha --recursive packages/enzyme-test-suite/build",
     "since": "node since"
   },
   "repository": {
@@ -59,12 +59,14 @@
   "author": "Jordan Harband <ljharb@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-core": "^6.26.3",
-    "babel-loader": "^6.4.1",
-    "babel-plugin-transform-replace-object-assign": "^1.0.0",
-    "babel-preset-airbnb": "^2.6.0",
-    "babel-register": "^6.26.0",
+    "@babel/cli": "^7.0.0",
+    "@babel/core": "^7.0.0",
+    "@babel/node": "^7.0.0",
+    "@babel/register": "^7.0.0",
+    "babel-eslint": "^10.1.0",
+    "babel-loader": "^8.1.0",
+    "babel-plugin-transform-replace-object-assign": "^2.0.0",
+    "babel-preset-airbnb": "^4.5.0",
     "chai": "^4.2.0",
     "eslint": "^6.8.0",
     "eslint-config-airbnb": "^18.1.0",
@@ -101,9 +103,6 @@
   "dependencies": {},
   "greenkeeper": {
     "ignore": [
-      "babel-loader",
-      "babel-plugin-transform-replace-object-assign",
-      "babel-preset-airbnb",
       "mocha",
       "nyc",
       "semver",

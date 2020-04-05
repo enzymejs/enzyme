@@ -4,6 +4,7 @@
   "env": {
     "node": true,
   },
+  "parser": "babel-eslint",
   "rules": {
     "id-length": 0,
     "react/no-find-dom-node": 1,

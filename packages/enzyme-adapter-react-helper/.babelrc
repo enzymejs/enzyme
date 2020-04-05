@@ -4,5 +4,5 @@
     ["transform-replace-object-assign", { "moduleSpecifier": "object.assign" }],
     ["add-module-exports"],
   ],
-  sourceMaps: "both",
+  "sourceMaps": "both",
 }

@@ -11,7 +11,7 @@
     "prebuild": "npm run clean",
     "build": "babel --source-maps=both src --out-dir build",
     "watch": "npm run build -- -w",
-    "prepublish": "npm run build && safe-publish-latest && (not-in-publish || cp ../../{LICENSE,README}.md ./)"
+    "prepublish": "not-in-publish || (npm run build && safe-publish-latest && cp ../../{LICENSE,README}.md ./)"
   },
   "repository": {
     "type": "git",
@@ -51,9 +51,11 @@
     "react-dom": "^0.14.0"
   },
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-plugin-transform-replace-object-assign": "^1.0.0",
-    "babel-preset-airbnb": "^2.6.0",
+    "@babel/cli": "^7.0.0",
+    "@babel/core": "^7.0.0",
+    "babel-eslint": "^10.1.0",
+    "babel-plugin-transform-replace-object-assign": "^2.0.0",
+    "babel-preset-airbnb": "^4.5.0",
     "enzyme": "^3.0.0",
     "eslint": "^6.8.0",
     "eslint-config-airbnb": "^18.1.0",

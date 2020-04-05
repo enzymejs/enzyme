@@ -1,5 +1,6 @@
 {
   "extends": "airbnb",
+  "parser": "babel-eslint",
   "root": true,
   "rules": {
     "max-classes-per-file": 0,
