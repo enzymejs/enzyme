@@ -2,6 +2,7 @@
 import isEqual from 'lodash.isequal';
 import is from 'object-is';
 import entries from 'object.entries';
+import fromEntries from 'object.fromentries';
 import functionName from 'function.prototype.name';
 import has from 'has';
 import flat from 'array.prototype.flat';
@@ -68,9 +69,9 @@ export function isCustomComponentElement(inst, adapter) {
 }
 
 export function propsOfNode(node) {
-  return entries((node && node.props) || {})
-    .filter(([, value]) => typeof value !== 'undefined')
-    .reduce((acc, [key, value]) => Object.assign(acc, { [key]: value }), {});
+  const newEntries = entries((node && node.props) || {})
+    .filter(([, value]) => typeof value !== 'undefined');
+  return fromEntries(newEntries);
 }
 
 export function typeOfNode(node) {

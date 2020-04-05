@@ -1,5 +1,6 @@
 import flat from 'array.prototype.flat';
 import entries from 'object.entries';
+import fromEntries from 'object.fromentries';
 import isSubset from 'is-subset';
 import functionName from 'function.prototype.name';
 import isRegex from 'is-regex';
@@ -120,8 +121,8 @@ function replaceUndefined(v) {
   return typeof v !== 'undefined' ? v : CAN_NEVER_MATCH;
 }
 function replaceUndefinedValues(obj) {
-  return entries(obj)
-    .reduce((acc, [k, v]) => ({ ...acc, [k]: replaceUndefined(v) }), {});
+  const newEntries = entries(obj).map(([k, v]) => [k, replaceUndefined(v)]);
+  return fromEntries(newEntries);
 }
 
 export function nodeMatchesObjectProps(node, props) {
