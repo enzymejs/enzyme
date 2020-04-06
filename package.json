@@ -24,7 +24,7 @@
     "pretest:only": "npm run build",
     "test:only": "mocha --recursive packages/enzyme-test-suite/test",
     "test:single": "mocha --watch",
-    "test:watch": "mocha --recursive --watch packages/enzyme-test-suite/test",
+    "test:watch": "npm run test:only -- --watch",
     "pretest:karma": "npm run build",
     "test:karma": "karma start",
     "test:all": "npm run react 13 && npm run test:only && npm run react 14 && npm run test:only && npm run react 15 && npm run test:only && npm run react 15.4 && npm run test:only && npm run react 15.5 && npm run test:only && npm run react 16 && npm run test:only && npm run react 16.1 && npm run test:only && npm run react 16.2 && npm run test:only && npm run react 16.3 && npm run test:only && npm run react 16.4 && npm run test:only && npm run react 16.5 && npm run test:only && npm run react 16.8 && npm run test:only",
@@ -35,7 +35,6 @@
     "docs:build": "npm run docs:prepare && gitbook build",
     "docs:watch": "npm run docs:prepare && gitbook serve",
     "docs:publish": "npm run docs:clean && npm run docs:build && cd _book && git init && git commit --allow-empty -m 'update book' && git fetch git@github.com:enzymejs/enzyme.git gh-pages && git checkout -b gh-pages && git add . && git commit -am 'update book' && git push git@github.com:enzymejs/enzyme.git gh-pages --force",
-    "pretravis": "npm run build",
     "travis": "nyc mocha --recursive packages/enzyme-test-suite/test",
     "since": "node since"
   },
