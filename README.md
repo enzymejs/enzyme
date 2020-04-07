@@ -3,7 +3,7 @@ Enzyme
 
 [![Join the chat at https://gitter.im/enzymejs/enzyme](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/enzymejs/enzyme?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-[![npm Version](https://img.shields.io/npm/v/enzyme.svg)](https://www.npmjs.com/package/enzyme) [![License](https://img.shields.io/npm/l/enzyme.svg)](https://github.com/enzymejs/enzyme/blob/master/LICENSE.md) [![Build Status](https://travis-ci.org/enzymejs/enzyme.svg)](https://travis-ci.org/enzymejs/enzyme) [![Coverage Status](https://codecov.io/gh/enzymejs/enzyme/branch/master/graph/badge.svg)(https://codecov.io/gh/enzymejs/enzyme/branch/master)]
+[![npm Version](https://img.shields.io/npm/v/enzyme.svg)](https://www.npmjs.com/package/enzyme) [![License](https://img.shields.io/npm/l/enzyme.svg)](https://github.com/enzymejs/enzyme/blob/master/LICENSE.md) [![Build Status](https://travis-ci.org/enzymejs/enzyme.svg)](https://travis-ci.org/enzymejs/enzyme) [![Coverage Status](https://codecov.io/gh/enzymejs/enzyme/branch/master/graph/badge.svg)](https://codecov.io/gh/enzymejs/enzyme/branch/master)
 
 
 Enzyme is a JavaScript Testing utility for React that makes it easier to test your React Components' output.
