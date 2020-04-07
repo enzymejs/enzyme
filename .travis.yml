@@ -1,15 +1,17 @@
 language: node_js
+workspaces:
+  use:
+    - build
+stages:
+  - install-build
+  - test
 node_js:
   - "12"
   - "4"
 import:
   - ljharb/travis-ci:node/latest-npm.yml
-install:
-  - 'npm install'
-  - 'npm run clean-local-npm'
+install: 'echo already installed!'
 before_script:
-  - './node_modules/.bin/lerna bootstrap'
-  - 'nvm exec node ./node_modules/.bin/lerna run build'
   - 'nvm exec node sh install-relevant-react.sh'
   - 'if [ -n "${KARMA-}" ]; then export CHROME_BIN=chromium-browser; export DISPLAY=:99.0; sh -e /etc/init.d/xvfb start; fi'
 script:
@@ -17,40 +19,69 @@ script:
 after_script:
   - 'if [ -n "${REACT-}" ] && [ "${TRAVIS_ALLOW_FAILURE}" != true ]; then case "${TRAVIS_NODE_VERSION}" in "8" | "6") ;; *) cat ./coverage/lcov.info | ./node_modules/.bin/coveralls ;; esac ; fi'
   - 'if [ -n "${REACT-}" ] && [ "${TRAVIS_ALLOW_FAILURE}" != true ]; then bash <(curl -s https://codecov.io/bash) -f coverage/*.json; fi'
-sudo: false
 matrix:
   fast_finish: true
   include:
+    - stage: install-build
+      workspaces:
+        create:
+          name: build
+          paths:
+            - ./
+      node_js: "lts/*"
+      env:
+      install:
+        - 'npm install'
+        - 'npm run clean-local-npm'
+      before_script:
+        - 'npx lerna bootstrap'
+      script:
+        - 'npx lerna run build'
     - node_js: "lts/*"
       env: LINT=true
+      stage: test
     - node_js: "8"
       env: REACT=16
+      stage: test
     - node_js: "6"
       env: REACT=16
+      stage: test
     - node_js: "lts/*"
       env: REACT=16.8.5 RENDERER=16.8.5
+      stage: test
     - node_js: "lts/*"
       env: REACT=16.8.5 RENDERER=16.8.3
+      stage: test
     - node_js: "lts/*"
       env: REACT=16.8.3
+      stage: test
     - node_js: "lts/*"
       env: REACT=16.8 RENDERER=16.7
+      stage: test
     - node_js: "lts/*"
       env: REACT=16.7 RENDERER=16.8
+      stage: test
     - node_js: "lts/*"
       env: REACT=16.7 RENDERER=16.7
+      stage: test
     - node_js: "lts/*"
       env: REACT=16.3 ADAPTER=16
+      stage: test
     - node_js: "6"
       env: KARMA=true REACT=0.13
+      stage: test
     - node_js: "6"
       env: KARMA=true REACT=0.14
+      stage: test
     - node_js: "6"
       env: KARMA=true REACT=15.4
+      stage: test
     - node_js: "6"
       env: KARMA=true REACT=15
+      stage: test
     - node_js: "6"
       env: KARMA=true REACT=16
+      stage: test
   allow_failures:
     - node_js: "6"
       env: KARMA=true REACT=0.13
