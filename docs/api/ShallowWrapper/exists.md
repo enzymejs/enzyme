@@ -20,7 +20,7 @@ Returns whether or not any nodes exist in the wrapper. Or, if a selector is pass
 
 
 ```jsx
-const wrapper = mount(<div className="some-class" />);
+const wrapper = shallow(<div className="some-class" />);
 expect(wrapper.exists('.some-class')).to.equal(true);
 expect(wrapper.find('.other-class').exists()).to.equal(false);
 ```
