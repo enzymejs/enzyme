@@ -74,7 +74,7 @@
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-markdown": "^1.0.2",
     "eslint-plugin-react": "^7.19.0",
-    "eslint-plugin-react-hooks": "^2.5.1",
+    "eslint-plugin-react-hooks": "^4.0.2",
     "gitbook-cli": "^1.0.1",
     "gitbook-plugin-anchors": "^0.7.1",
     "gitbook-plugin-codeblock-disable-glossary": "0.0.1",
