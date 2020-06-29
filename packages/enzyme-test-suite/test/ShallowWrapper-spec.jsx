@@ -1896,7 +1896,6 @@ describe('shallow', () => {
     it('does not replace LazyComponent with Fallback when render Suspense if options.suspenseFallback = false', () => {
       const LazyComponent = lazy(() => fakeDynamicImport(DynamicComponent));
 
-
       const wrapper = shallow((
         <Suspense fallback={<Fallback />}>
           <LazyComponent />

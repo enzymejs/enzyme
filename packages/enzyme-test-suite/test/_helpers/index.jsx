@@ -4,7 +4,6 @@ import React from 'react';
 import { Memo } from 'react-is';
 import { compareNodeTypeOf } from 'enzyme-adapter-utils';
 
-
 /**
  * Simple wrapper around mocha describe which allows a boolean to be passed in first which
  * determines whether or not the test will be run

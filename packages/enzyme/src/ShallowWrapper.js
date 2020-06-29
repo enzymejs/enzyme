@@ -369,7 +369,6 @@ function makeShallowOptions(nodes, root, passedOptions, wrapper) {
   };
 }
 
-
 function makeInheritedChildOptions(wrapper, options = {}) {
   const childOptions = {
     ...wrapper[OPTIONS],
@@ -382,7 +381,6 @@ function makeInheritedChildOptions(wrapper, options = {}) {
   privateSet(childOptions, PROVIDER_VALUES, wrapper[ROOT][PROVIDER_VALUES]);
   return childOptions;
 }
-
 
 /**
  * @class ShallowWrapper

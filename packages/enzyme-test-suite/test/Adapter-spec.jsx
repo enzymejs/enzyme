@@ -445,7 +445,6 @@ describe('Adapter', () => {
       }));
     });
 
-
     itIf(is('> 0.13'), 'renders complicated trees of composites and hosts', () => {
       // SFC returning host. no children props.
       const Qoo = () => <span className="Qoo">Hello World!</span>;

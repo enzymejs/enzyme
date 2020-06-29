@@ -143,7 +143,6 @@ function matchAttributeSelector(node, token) {
   }
 }
 
-
 function matchPseudoSelector(node, token, root) {
   const { name, parameters } = token;
   if (name === 'not') {
@@ -249,7 +248,6 @@ function buildPredicateFromToken(token, root) {
 function isComplexSelector(tokens) {
   return tokens.some((token) => token.type !== SELECTOR);
 }
-
 
 /**
  * Takes a component constructor, object, or string representing

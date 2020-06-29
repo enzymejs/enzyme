@@ -140,7 +140,6 @@ if (is('^16.8.0-0')) {
     act,
   } = require('react-dom/test-utils'));
 
-
 } else {
   useCallback = null;
   useContext = null;

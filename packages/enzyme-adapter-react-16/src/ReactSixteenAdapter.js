@@ -666,7 +666,6 @@ class ReactSixteenAdapter extends EnzymeAdapter {
             ));
           }
 
-
           if (!isStateful(Component) && typeof Component === 'function') {
             return withSetStateAllowed(() => renderElement(
               { ...renderedEl, type: wrapFunctionalComponent(Component) },
