@@ -65,7 +65,7 @@
   "dependencies": {
     "airbnb-js-shims": "^2.2.1",
     "install-peerdeps": "~1.8.0",
-    "npm-run": "^5.0.1",
+    "npm-run": "^4.1.2",
     "object.assign": "^4.1.0",
     "object.getownpropertydescriptors": "^2.1.0",
     "rimraf": "^2.7.1",
