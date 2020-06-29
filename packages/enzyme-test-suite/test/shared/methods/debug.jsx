@@ -1,5 +1,6 @@
 import React from 'react';
 import { expect } from 'chai';
+import inspect from 'object-inspect';
 
 import { debugNodes } from 'enzyme/build/Debug';
 
@@ -183,7 +184,7 @@ export default function describeDebug({
           it('shows everything when not memoized', () => {
             const wrapper = WrapRendered(<Body imageToShow={1} switchImage={() => {}} />);
             expect(wrapper.debug()).to.equal(`<div className="styles.body">
-  <button type="button" onClick={[Function]} className="buttonsStyles.button">
+  <button type="button" onClick={${inspect(() => {})}} className="buttonsStyles.button">
     <TransitionGroup className="body.animWrap">
       <CSSTransition classNames="mainImage" timeout={500}>
         <img className="bodyImg" src="../assets/1.png" alt="main_img" />
@@ -196,7 +197,7 @@ export default function describeDebug({
           it('shows everything when memoized', () => {
             const wrapper = WrapRendered(<BodyMemo imageToShow={1} switchImage={() => {}} />);
             expect(wrapper.debug()).to.equal(`<div className="styles.body">
-  <button type="button" onClick={[Function]} className="buttonsStyles.button">
+  <button type="button" onClick={${inspect(() => {})}} className="buttonsStyles.button">
     <TransitionGroup className="body.animWrap">
       <CSSTransition classNames="mainImage" timeout={500}>
         <img className="bodyImg" src="../assets/1.png" alt="main_img" />
