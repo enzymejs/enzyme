@@ -37,7 +37,7 @@ try {
   });
 } catch (e) {
   console.error('An uninstallation failed');
-  console.log(e);
+  console.error(e, e.stack);
   process.exit(1);
 }
 
@@ -48,6 +48,6 @@ try {
   npmRun.execSync(`install-peerdeps -S ${adapterName}`, { stdio: 'inherit' });
 } catch (e) {
   console.error('An installation failed');
-  console.log(e);
+  console.error(e, e.stack);
   process.exit(666);
 }
