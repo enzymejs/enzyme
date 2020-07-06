@@ -61,7 +61,7 @@ Create or update a `jest.config.js` file at the root of your project to include 
 
 module.exports = {
   // Load setup-tests.js before test execution
-  setupFilesAfterEnv: '<rootDir>setup-tests.js',
+  setupFilesAfterEnv: ['<rootDir>setup-tests.js'],
 
   // ...
 };
