@@ -76,7 +76,7 @@ Running Enzyme Tests
 
 Enzyme is unopinionated regarding which test runner or assertion library you use, and should be
 compatible with all major test runners and assertion libraries out there. The documentation and
-examples for enzyme use [mocha](https://mochajs.org/) and [chai](http://chaijs.com/), but you
+examples for enzyme use [Mocha](https://mochajs.org/) and [Chai](http://chaijs.com/), but you
 should be able to extrapolate to your framework of choice.
 
 If you are interested in using enzyme with custom assertions and convenience functions for
