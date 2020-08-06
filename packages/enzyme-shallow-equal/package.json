@@ -11,7 +11,7 @@
     "prebuild": "npm run clean",
     "build": "babel --source-maps=both src --out-dir build",
     "watch": "npm run build -- -w",
-    "prepublish": "not-in-publish || (npm run build && safe-publish-latest && cp ../../{LICENSE,README}.md ./)"
+    "prepublish": "not-in-publish || (npm run build && safe-publish-latest && cp ../../LICENSE.md ./)"
   },
   "repository": {
     "type": "git",
