@@ -49,7 +49,7 @@
     "object-inspect": "^1.6.0",
     "object.assign": "^4.1.0",
     "prop-types": "^15.7.2",
-    "react-is": "^16.12.0",
+    "react-is": "^16.13.1",
     "safe-publish-latest": "^1.1.4",
     "semver": "^5.7.0",
     "sinon": "^5.1.1",
