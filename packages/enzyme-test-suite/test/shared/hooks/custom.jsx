@@ -29,7 +29,7 @@ export default function describeCustomHooks({
       // will be repeated
       const Counter = ({ children, ...rest }) => children(useCounter(rest));
 
-      function setup(props) {
+      function setupTest(props) {
         const returnVal = {};
         Wrap(
           <Counter {...props}>
@@ -43,7 +43,7 @@ export default function describeCustomHooks({
       }
 
       it('useCounter', () => {
-        const counterData = setup();
+        const counterData = setupTest();
         counterData.increment();
         expect(counterData).to.have.property('count', 1);
         counterData.decrement();
@@ -51,7 +51,7 @@ export default function describeCustomHooks({
       });
 
       it('useCounter with initialCount', () => {
-        const counterData = setup({ initialCount: 2 });
+        const counterData = setupTest({ initialCount: 2 });
         counterData.increment();
         expect(counterData).to.have.property('count', 3);
         counterData.decrement();
@@ -59,7 +59,7 @@ export default function describeCustomHooks({
       });
 
       it('useCounter with step', () => {
-        const counterData = setup({ step: 2 });
+        const counterData = setupTest({ step: 2 });
         counterData.increment();
         expect(counterData).to.have.property('count', 2);
         counterData.decrement();
@@ -67,7 +67,7 @@ export default function describeCustomHooks({
       });
 
       it('useCounter with step and initialCount', () => {
-        const counterData = setup({ step: 2, initialCount: 5 });
+        const counterData = setupTest({ step: 2, initialCount: 5 });
         counterData.increment();
         expect(counterData).to.have.property('count', 7);
         counterData.decrement();
