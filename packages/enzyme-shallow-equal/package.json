@@ -1,6 +1,6 @@
 {
   "name": "enzyme-shallow-equal",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Adaptation of react-addons-shallow-compare, for independent usage",
   "homepage": "https://enzymejs.github.io/enzyme/",
   "main": "build",
