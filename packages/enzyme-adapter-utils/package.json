@@ -38,7 +38,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "airbnb-prop-types": "^2.15.0",
+    "airbnb-prop-types": "^2.16.0",
     "function.prototype.name": "^1.1.2",
     "object.assign": "^4.1.0",
     "object.fromentries": "^2.0.2",
