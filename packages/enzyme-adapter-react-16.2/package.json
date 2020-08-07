@@ -1,6 +1,6 @@
 {
   "name": "enzyme-adapter-react-16.2",
-  "version": "1.6.2",
+  "version": "1.6.3",
   "description": "JavaScript Testing utilities for React",
   "homepage": "https://enzymejs.github.io/enzyme/",
   "main": "build",
