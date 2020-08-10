@@ -41,7 +41,13 @@ matrix:
       env: LINT=true
       stage: test
     - node_js: "8"
+      env: REACT=17
+      stage: test
+    - node_js: "8"
       env: REACT=16
+      stage: test
+    - node_js: "6"
+      env: REACT=17
       stage: test
     - node_js: "6"
       env: REACT=16
@@ -101,6 +107,7 @@ matrix:
     - node_js: "6"
       env: REACT=0.13
 env:
+  - REACT=17.0
   - REACT=16.14
   - REACT=16.13
   - REACT=16.12

@@ -86,6 +86,9 @@ function getAdapter(reactVersion) {
       return '16.1';
     }
   }
+  if (semver.intersects(reactVersion, '^17.0.0')) {
+    return '17';
+  }
   return null;
 }
 const reactVersion = version < 15 ? '0.' + version : version;

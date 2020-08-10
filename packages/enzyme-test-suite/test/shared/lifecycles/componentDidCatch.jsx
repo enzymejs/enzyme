@@ -1,6 +1,7 @@
 import React from 'react';
 import sinon from 'sinon-sandbox';
 import { expect } from 'chai';
+import path from 'path';
 
 import { is } from '../../_helpers/version';
 import {
@@ -111,7 +112,14 @@ export default function describeCDC({
         const [[actualError, info]] = spy.args;
         expect(() => { throw actualError; }).to.throw(errorToThrow);
         expect(info).to.deep.equal({
-          componentStack: `
+          componentStack: is('>= 17')
+            ? `
+    at Thrower (${__filename}:2369:29)
+    at span
+    at div
+    at ErrorBoundary (${__filename}:2386:13)
+    at WrapperComponent (${path.join(path.dirname(__filename), '../../enzyme-adapter-utils/build/createMountWrapper.js')}:114:7)`
+            : `
     in Thrower (created by ErrorBoundary)
     in span (created by ErrorBoundary)${hasFragments ? '' : `
     in main (created by ErrorBoundary)`}
@@ -206,7 +214,15 @@ export default function describeCDC({
           const [[actualError, info]] = spy.args;
           expect(actualError).to.satisfy(properErrorMessage);
           expect(info).to.deep.equal({
-            componentStack: `
+            componentStack: is('>= 17')
+              ? `
+    at Thrower (${__filename}:2369:29)
+    at span
+    at div
+    at ErrorBoundary (${__filename}:2386:13)
+    at ErrorSFC
+    at WrapperComponent (${path.join(path.dirname(__filename), '../../enzyme-adapter-utils/build/createMountWrapper.js')}:114:7)`
+              : `
     in Thrower (created by ErrorBoundary)
     in span (created by ErrorBoundary)${hasFragments ? '' : `
     in main (created by ErrorBoundary)`}
