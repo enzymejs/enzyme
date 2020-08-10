@@ -101,9 +101,9 @@ export default function describeDebug({
             </div>
           ));
           expect(wrapper.debug()).to.equal(`<div>
-  <SFC />
+  ${is('>= 17') ? '<SFCMemoWithDisplayName! />' : '<SFC />'}
   <SFC! />
-  <Memo(SFC) />
+  ${is('>= 17') ? '<Memo(SFCMemoWithDisplayName!) />' : '<Memo(SFC) />'}
   <Memo(SFC!) />
   <SFCMemoWithDisplayName! />
   <SFCMemoWitDoubleDisplayName! />
