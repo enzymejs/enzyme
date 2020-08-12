@@ -27,6 +27,8 @@ if (process.env.ADAPTER) {
   Adapter = require('enzyme-adapter-react-16.3');
 } else if (is('^16.4.0-0')) {
   Adapter = require('enzyme-adapter-react-16');
+} else if (is('^17')) {
+  Adapter = require('enzyme-adapter-react-17');
 }
 
 module.exports = Adapter;
