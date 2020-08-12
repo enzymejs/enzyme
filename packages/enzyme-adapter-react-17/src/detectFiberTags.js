@@ -12,7 +12,7 @@ function getFiber(element) {
     }
   }
   ReactDOM.render(React.createElement(Tester), container);
-  return inst._reactInternalFiber.child;
+  return inst._reactInternals.child;
 }
 
 function getLazyFiber(LazyComponent) {
@@ -36,7 +36,7 @@ function getLazyFiber(LazyComponent) {
     }
   }
   ReactDOM.render(React.createElement(SuspenseWrapper), container);
-  return inst._reactInternalFiber.child;
+  return inst._reactInternals.child;
 }
 
 module.exports = function detectFiberTags() {
