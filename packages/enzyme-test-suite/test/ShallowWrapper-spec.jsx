@@ -1930,6 +1930,24 @@ describe('shallow', () => {
       const LazyComponent = lazy(() => fakeDynamicImport(DynamicComponent));
       expect(() => shallow(<LazyComponent />)).to.throw();
     });
+
+    it('returns the correct instance if using Suspense in stateful components', () => {
+      const LazyComponent = lazy(() => fakeDynamicImport(DynamicComponent));
+
+      class Bar extends React.Component {
+        render() {
+          return (
+            <Suspense fallback={<Fallback />}>
+              <LazyComponent />
+            </Suspense>
+          );
+        }
+      }
+
+      const wrapper = shallow(<Bar />);
+
+      expect(wrapper.instance()).to.instanceOf(Bar);
+    });
   });
 
   describe('lifecycle methods', () => {

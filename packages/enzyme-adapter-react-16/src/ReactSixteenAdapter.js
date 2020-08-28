@@ -120,20 +120,44 @@ function unmemoType(type) {
   return isMemo(type) ? type.type : type;
 }
 
-function checkIsSuspenseAndCloneElement(el, { suspenseFallback }) {
-  if (!isSuspense(el)) {
-    return el;
+function transformSuspense(renderedEl, prerenderEl, { suspenseFallback }) {
+  if (!isSuspense(renderedEl)) {
+    return renderedEl;
   }
 
-  let { children } = el.props;
+  let { children } = renderedEl.props;
 
   if (suspenseFallback) {
-    const { fallback } = el.props;
+    const { fallback } = renderedEl.props;
     children = replaceLazyWithFallback(children, fallback);
   }
 
-  const FakeSuspenseWrapper = (props) => React.createElement(el.type, { ...el.props, ...props }, children);
-  return React.createElement(FakeSuspenseWrapper, null, children);
+  if (isStateful(prerenderEl.type)) {
+    class FakeSuspense extends prerenderEl.type {
+      render() {
+        return React.createElement(
+          prerenderEl.type,
+          { ...prerenderEl.props, ...this.props },
+          children,
+        );
+      }
+    }
+
+    return React.createElement(FakeSuspense, null, children);
+  }
+
+  return React.createElement(
+    // eslint-disable-next-line prefer-arrow-callback
+    function FakeSuspense(props) {
+      return React.createElement(
+        renderedEl.type,
+        { ...renderedEl.props, ...props },
+        children,
+      );
+    },
+    null,
+    children,
+  );
 }
 
 function elementToTree(el) {
@@ -609,7 +633,7 @@ class ReactSixteenAdapter extends EnzymeAdapter {
 
       const typeIsExisted = !!(renderedEl && renderedEl.type);
       if (is166 && typeIsExisted) {
-        const clonedEl = checkIsSuspenseAndCloneElement(renderedEl, { suspenseFallback });
+        const clonedEl = transformSuspense(renderedEl, elConfig, { suspenseFallback });
 
         const elementIsChanged = clonedEl.type !== renderedEl.type;
         if (elementIsChanged) {
@@ -652,7 +676,7 @@ class ReactSixteenAdapter extends EnzymeAdapter {
             throw TypeError('`React.lazy` is not supported by shallow rendering.');
           }
 
-          renderedEl = checkIsSuspenseAndCloneElement(renderedEl, { suspenseFallback });
+          renderedEl = transformSuspense(renderedEl, renderedEl, { suspenseFallback });
           const { type: Component } = renderedEl;
 
           const context = getMaskedContext(Component.contextTypes, unmaskedContext);
