@@ -132,32 +132,42 @@ function transformSuspense(renderedEl, prerenderEl, { suspenseFallback }) {
     children = replaceLazyWithFallback(children, fallback);
   }
 
-  if (isStateful(prerenderEl.type)) {
-    class FakeSuspense extends prerenderEl.type {
-      render() {
+  const {
+    propTypes,
+    defaultProps,
+    contextTypes,
+    contextType,
+    childContextTypes,
+  } = renderedEl.type;
+
+  const FakeSuspense = Object.assign(
+    isStateful(prerenderEl.type)
+      ? class FakeSuspense extends prerenderEl.type {
+        render() {
+          const { type, props } = prerenderEl;
+          return React.createElement(
+            type,
+            { ...props, ...this.props },
+            children,
+          );
+        }
+      }
+      : function FakeSuspense(props) { // eslint-disable-line prefer-arrow-callback
         return React.createElement(
-          prerenderEl.type,
-          { ...prerenderEl.props, ...this.props },
+          renderedEl.type,
+          { ...renderedEl.props, ...props },
           children,
         );
-      }
-    }
-
-    return React.createElement(FakeSuspense, null, children);
-  }
-
-  return React.createElement(
-    // eslint-disable-next-line prefer-arrow-callback
-    function FakeSuspense(props) {
-      return React.createElement(
-        renderedEl.type,
-        { ...renderedEl.props, ...props },
-        children,
-      );
+      },
+    {
+      propTypes,
+      defaultProps,
+      contextTypes,
+      contextType,
+      childContextTypes,
     },
-    null,
-    children,
   );
+  return React.createElement(FakeSuspense, null, children);
 }
 
 function elementToTree(el) {

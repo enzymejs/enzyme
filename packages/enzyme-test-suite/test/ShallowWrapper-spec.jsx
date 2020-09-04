@@ -1948,6 +1948,58 @@ describe('shallow', () => {
 
       expect(wrapper.instance()).to.instanceOf(Bar);
     });
+
+    describe('propType errors', () => {
+      class MyComponent extends React.Component {
+        render() {
+          const { fallback, requiredString } = this.props;
+          return (
+            <Suspense fallback={fallback}>
+              hello world {requiredString}
+            </Suspense>
+          );
+        }
+      }
+      MyComponent.propTypes = {
+        fallback: PropTypes.node.isRequired,
+        requiredString: PropTypes.string.isRequired,
+      };
+
+      function MySFC({ fallback, requiredString }) {
+        return (
+          <Suspense fallback={fallback}>
+            hello world {requiredString}
+          </Suspense>
+        );
+      }
+      MySFC.propTypes = MyComponent.propTypes;
+
+      wrap()
+        .withConsoleThrows()
+        .it('renders with no propType errors with a string fallback', () => {
+          shallow(<MyComponent requiredString="abc" fallback="loading..." />);
+        });
+
+      wrap()
+        .withConsoleThrows()
+        .it('renders with no propType errors with a component fallback', () => {
+          shallow(<MyComponent requiredString="abc" fallback={<Fallback />} />);
+        });
+
+      describeIf(is('> 0.13'), 'stateless function components (SFCs)', () => {
+        wrap()
+          .withConsoleThrows()
+          .it('renders with no propType errors with a string fallback', () => {
+            shallow(<MySFC requiredString="abc" fallback="loading..." />);
+          });
+
+        wrap()
+          .withConsoleThrows()
+          .it('renders with no propType errors with a component fallback', () => {
+            shallow(<MySFC requiredString="abc" fallback={<Fallback />} />);
+          });
+      });
+    });
   });
 
   describe('lifecycle methods', () => {
