@@ -135,11 +135,11 @@ describe('<MyComponent />', () => {
   });
 
   it('renders children when passed in', () => {
-    const wrapper = shallow((
+    const wrapper = shallow(
       <MyComponent>
         <div className="unique" />
       </MyComponent>
-    ));
+    );
     expect(wrapper.contains(<div className="unique" />)).to.equal(true);
   });
 
@@ -176,9 +176,9 @@ describe('<Foo />', () => {
 
   it('simulates click events', () => {
     const onButtonClick = sinon.spy();
-    const wrapper = mount((
+    const wrapper = mount(
       <Foo onButtonClick={onButtonClick} />
-    ));
+    );
     wrapper.find('button').simulate('click');
     expect(onButtonClick).to.have.property('callCount', 1);
   });
