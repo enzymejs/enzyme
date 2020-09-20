@@ -21,7 +21,11 @@ like the one passed in.
 
 
 ```jsx
-const wrapper = mount(<MyComponent />);
+function MyComponent() {
+  return <div className="foo bar" />;
+}
+
+const wrapper = mount(<MyComponent />).childAt(0);
 expect(wrapper.equals(<div className="foo bar" />)).to.equal(true);
 ```
 

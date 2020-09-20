@@ -21,6 +21,10 @@ like the one passed in.
 
 
 ```jsx
+function MyComponent() {
+  return <div className="foo bar" />;
+}
+
 const wrapper = shallow(<MyComponent />);
 expect(wrapper.equals(<div className="foo bar" />)).to.equal(true);
 ```

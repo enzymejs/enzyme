@@ -33,5 +33,4 @@ expect(wrapper.find('.foo').every('.bar')).to.equal(false);
 #### Related Methods
 
 - [`.someWhere(predicate) => Boolean`](someWhere.md)
-- [`.every(selector) => Boolean`](every.md)
 - [`.everyWhere(predicate) => Boolean`](everyWhere.md)

@@ -27,14 +27,14 @@ class Stateful extends React.Component {
 
 #### React 16.x
 ```jsx
-test('shallow wrapper instance should be null', () => {
+test('mount wrapper instance should be null', () => {
   const wrapper = mount(<Stateless />);
   const instance = wrapper.instance();
 
   expect(instance).to.equal(null);
 });
 
-test('shallow wrapper instance should not be null', () => {
+test('mount wrapper instance should not be null', () => {
   const wrapper = mount(<Stateful />);
   const instance = wrapper.instance();
 
@@ -44,14 +44,14 @@ test('shallow wrapper instance should not be null', () => {
 
 #### React 15.x
 ```jsx
-test('shallow wrapper instance should not be null', () => {
+test('mount wrapper instance should not be null', () => {
   const wrapper = mount(<Stateless />);
   const instance = wrapper.instance();
 
   expect(instance).to.be.instanceOf(Stateless);
 });
 
-test('shallow wrapper instance should not be null', () => {
+test('mount wrapper instance should not be null', () => {
   const wrapper = mount(<Stateful />);
   const instance = wrapper.instance();
 

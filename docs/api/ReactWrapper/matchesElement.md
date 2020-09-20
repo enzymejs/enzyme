@@ -40,7 +40,7 @@ class MyComponent extends React.Component {
   }
 }
 
-const wrapper = mount(<MyComponent />);
+const wrapper = mount(<MyComponent />).childAt(0);
 expect(wrapper.matchesElement(<button>Hello</button>)).to.equal(true);
 expect(wrapper.matchesElement(<button className="foo bar">Hello</button>)).to.equal(true);
 ```

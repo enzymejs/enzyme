@@ -29,5 +29,6 @@ function Bar() {
 
 ```jsx
 const wrapper = mount(<Bar />);
-expect(wrapper.find(Foo).render().find('.in-foo')).to.have.lengthOf(1);
+expect(wrapper.find('.in-foo')).to.have.lengthOf(1);
+expect(wrapper.render().find('.in-foo')).to.have.lengthOf(1);
 ```

@@ -71,12 +71,12 @@ const wrapper = mount((
   />
 ));
 
-expect(wrapper.find('input').at(0).prop('value')).toEqual(10);
-expect(wrapper.find('input').at(1).prop('value')).toEqual(20);
+expect(wrapper.find('input').at(0).props().value).to.equal(10);
+expect(wrapper.find('input').at(1).props().value).to.equal(20);
 wrapper.find('input').at(0).simulate('change', { target: { name: 'width', value: 50 } });
 wrapper.find('input').at(1).simulate('change', { target: { name: 'height', value: 70 } });
-expect(testState.width).toEqual(50);
-expect(testState.height).toEqual(70);
+expect(testState.width).to.equal(50);
+expect(testState.height).to.equal(70);
 ```
 
 #### Common Gotchas

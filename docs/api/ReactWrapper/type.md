@@ -17,7 +17,7 @@ If it's `null`, it will be `null`. It must be a single-node wrapper.
 function Foo() {
   return <div />;
 }
-const wrapper = mount(<Foo />);
+const wrapper = mount(<Foo />).childAt(0);
 expect(wrapper.type()).to.equal('div');
 ```
 
@@ -38,7 +38,8 @@ function Foo() {
   return <Bar />;
 }
 const wrapper = mount(<Foo />);
-expect(wrapper.type()).to.equal(Bar);
+expect(wrapper.type()).to.equal(Foo);
+expect(wrapper.childAt(0).type()).to.equal(Bar);
 ```
 
 ```jsx

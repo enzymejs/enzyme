@@ -35,4 +35,4 @@ expect(wrapper.find('.foo').everyWhere((n) => n.hasClass('bar'))).to.equal(false
 
 - [`.some(selector) => Boolean`](some.md)
 - [`.every(selector) => Boolean`](every.md)
-- [`.everyWhere(predicate) => Boolean`](everyWhere.md)
+

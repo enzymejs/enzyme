@@ -18,5 +18,5 @@ expect(wrapper.find(Foo).first().props().foo).to.equal('bar');
 
 #### Related Methods
 
-- [`.at(index) => ShallowWrapper`](at.md) - retrieve any wrapper node
+- [`.at(index) => ShallowWrapper`](at.md) - retrieve a wrapper node at given index
 - [`.last() => ShallowWrapper`](last.md)
