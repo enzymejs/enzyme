@@ -298,6 +298,18 @@ function toTree(vnode) {
     }
     case FiberTags.Lazy:
       return childrenToTree(node.child);
+    case FiberTags.OffscreenComponent: {
+      console.log(node.return.memoizedProps.children);
+      return {
+        nodeType: 'function',
+        type: Suspense,
+        props: { ...node.memoizedProps },
+        key: ensureKeyOrUndefined(node.key),
+        ref: node.ref,
+        instance: null,
+        rendered: childrenToTree(nodeToHostNode(node.return.memoizedProps.children)),
+      };
+    }
     default:
       throw new Error(`Enzyme Internal Error: unknown node with tag ${node.tag}`);
   }

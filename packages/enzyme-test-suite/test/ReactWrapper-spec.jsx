@@ -1163,6 +1163,7 @@ describeWithDOM('mount', () => {
       const wrapper = mount(<SuspenseComponent />);
 
       expect(wrapper.is(SuspenseComponent)).to.equal(true);
+      console.log(wrapper.debug());
       expect(wrapper.find(Component)).to.have.lengthOf(1);
       expect(wrapper.find(Fallback)).to.have.lengthOf(0);
     });
