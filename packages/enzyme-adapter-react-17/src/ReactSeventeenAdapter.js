@@ -273,7 +273,10 @@ function toTree(vnode) {
     case FiberTags.Mode:
     case FiberTags.ContextProvider:
     case FiberTags.ContextConsumer:
+    case FiberTags.Lazy:
+    case FiberTags.OffscreenComponent: {
       return childrenToTree(node.child);
+    }
     case FiberTags.Profiler:
     case FiberTags.ForwardRef: {
       return {
@@ -296,11 +299,6 @@ function toTree(vnode) {
         instance: null,
         rendered: childrenToTree(node.child),
       };
-    }
-    case FiberTags.Lazy:
-      return childrenToTree(node.child);
-    case FiberTags.OffscreenComponent: {
-      return toTree(node.child);
     }
     default: {
       throw new Error(`Enzyme Internal Error: unknown node with tag ${node.tag}`);
@@ -504,6 +502,7 @@ class ReactSeventeenAdapter extends EnzymeAdapter {
           nodeTypeFromType,
           adapter.displayNameOfNode,
           catchingType,
+          true,
         );
       },
       simulateEvent(node, event, mock) {
@@ -708,6 +707,7 @@ class ReactSeventeenAdapter extends EnzymeAdapter {
           nodeTypeFromType,
           adapter.displayNameOfNode,
           cachedNode.type,
+          true,
         );
       },
       simulateEvent(node, event, ...args) {
@@ -732,7 +732,12 @@ class ReactSeventeenAdapter extends EnzymeAdapter {
           values,
           location,
           displayNameOfNode(cachedNode),
-          () => getComponentStack(hierarchy.concat([cachedNode])),
+          () => getComponentStack(
+            hierarchy.concat([cachedNode]),
+            undefined,
+            undefined,
+            true,
+          ),
         );
       },
     };

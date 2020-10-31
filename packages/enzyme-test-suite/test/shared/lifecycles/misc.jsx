@@ -354,7 +354,13 @@ export default function describeMisc({
         || error.message === reactError.message
       );
       const expectedInfo = {
-        componentStack: `
+        componentStack: is('>= 17')
+          ? `
+    at Thrower ($FILENAME:$LINE:$COL)
+    at div ($FILENAME:$LINE:$COL)
+    at ErrorBoundary ($FILENAME:$LINE:$COL)
+    at WrapperComponent`
+          : `
     in Thrower (created by ErrorBoundary)
     in div (created by ErrorBoundary)
     in ErrorBoundary (created by WrapperComponent)

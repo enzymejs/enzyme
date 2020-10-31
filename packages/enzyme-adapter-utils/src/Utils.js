@@ -274,6 +274,7 @@ export function getComponentStack(
   hierarchy,
   getNodeType = nodeTypeFromType,
   getDisplayName = displayNameOfNode,
+  useAtStyleStack = false,
 ) {
   const tuples = hierarchy.filter((node) => node.type !== RootFinder).map((x) => [
     getNodeType(x.type),
@@ -286,6 +287,9 @@ export function getComponentStack(
   // TODO: create proper component stack for react 17
   return tuples.map(([, name], i, arr) => {
     const [, closestComponent] = arr.slice(i + 1).find(([nodeType]) => nodeType !== 'host') || [];
+    if (useAtStyleStack) {
+      return `\n    at ${name}${closestComponent ? ' ($FILENAME:$LINE:$COL)' : ''}`;
+    }
     return `\n    in ${name}${closestComponent ? ` (created by ${closestComponent})` : ''}`;
   }).join('');
 }
@@ -298,6 +302,7 @@ export function simulateError(
   getNodeType = nodeTypeFromType,
   getDisplayName = displayNameOfNode,
   catchingType = {},
+  useAtStyleStack = false,
 ) {
   const instance = catchingInstance || {};
 
@@ -315,7 +320,7 @@ export function simulateError(
   }
 
   if (componentDidCatch) {
-    const componentStack = getComponentStack(hierarchy, getNodeType, getDisplayName);
+    const componentStack = getComponentStack(hierarchy, getNodeType, getDisplayName, useAtStyleStack);
     componentDidCatch.call(instance, error, { componentStack });
   }
 }
