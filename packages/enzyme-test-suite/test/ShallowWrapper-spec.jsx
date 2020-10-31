@@ -1764,6 +1764,32 @@ describe('shallow', () => {
       expect(wrapper.find(Fallback)).to.have.lengthOf(0);
     });
 
+    it('works with Suspense with multiple children if options.suspenseFallback=true', () => {
+      const wrapper = shallow((
+        <Suspense fallback={<Fallback />}>
+          <div />
+          <div />
+        </Suspense>
+      ), { suspenseFallback: true });
+      expect(wrapper.debug()).to.equal(`<Suspense fallback={{...}}>
+  <div />
+  <div />
+</Suspense>`);
+    });
+
+    it('works with Suspense with multiple children if options.suspenseFallback=false', () => {
+      const wrapper = shallow((
+        <Suspense fallback={<Fallback />}>
+          <div />
+          <div />
+        </Suspense>
+      ), { suspenseFallback: false });
+      expect(wrapper.debug()).to.equal(`<Suspense fallback={{...}}>
+  <div />
+  <div />
+</Suspense>`);
+    });
+
     it('finds LazyComponent when render component wrapping lazy component', () => {
       const LazyComponent = lazy(() => fakeDynamicImport(DynamicComponent));
       const SuspenseComponent = () => (
@@ -1893,7 +1919,7 @@ describe('shallow', () => {
       expect(wrapper.find('.should-be-rendered > .inner')).to.have.lengthOf(1);
     });
 
-    it('does not replace LazyComponent with Fallback when render Suspense if options.suspenseFallback = false', () => {
+    it('does not replace LazyComponent with Fallback when render Suspense if options.suspenseFallback=false', () => {
       const LazyComponent = lazy(() => fakeDynamicImport(DynamicComponent));
 
       const wrapper = shallow((
@@ -1906,7 +1932,7 @@ describe('shallow', () => {
       expect(wrapper.find(Fallback)).to.have.lengthOf(0);
     });
 
-    it('does not replace nested LazyComponent with Fallback when render Suspense if option.suspenseFallback = false', () => {
+    it('does not replace nested LazyComponent with Fallback when render Suspense if option.suspenseFallback=false', () => {
       const LazyComponent = lazy(() => fakeDynamicImport(DynamicComponent));
 
       const wrapper = shallow((

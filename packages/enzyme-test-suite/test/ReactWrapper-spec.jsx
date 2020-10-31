@@ -1103,6 +1103,7 @@ describeWithDOM('mount', () => {
         );
       }
     }
+
     class Fallback extends React.Component {
       render() {
         return (
@@ -1110,6 +1111,7 @@ describeWithDOM('mount', () => {
         );
       }
     }
+
     it('finds Suspense and its children when no lazy component', () => {
       class Component extends React.Component {
         render() {
@@ -1130,6 +1132,33 @@ describeWithDOM('mount', () => {
       expect(wrapper.is(SuspenseComponent)).to.equal(true);
       expect(wrapper.find(Component)).to.have.lengthOf(1);
       expect(wrapper.find(Fallback)).to.have.lengthOf(0);
+    });
+
+    it('works with Suspense with multiple children', () => {
+      const SuspenseComponent = () => (
+        <Suspense fallback={<Fallback />}>
+          <div />
+          <div />
+        </Suspense>
+      );
+
+      const wrapper = mount(<SuspenseComponent />);
+      expect(wrapper.debug()).to.equal(`<SuspenseComponent>
+  <Suspense fallback={{...}}>
+    <div />
+    <div />
+  </Suspense>
+</SuspenseComponent>`);
+    });
+
+    it('throws with Suspense with multiple children if options.suspenseFallback=false', () => {
+      const SuspenseComponent = () => (
+        <Suspense fallback={<Fallback />}>
+          <div />
+          <div />
+        </Suspense>
+      );
+      expect(() => mount(<SuspenseComponent />, { suspenseFallback: false })).to.throw();
     });
 
     it('can mount Suspense directly', () => {
