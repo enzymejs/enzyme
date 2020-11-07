@@ -40,6 +40,10 @@ matrix:
     - node_js: "lts/*"
       env: LINT=true
       stage: test
+    - node_js: "lts/*"
+      env: CRA=true REACT=16
+      script: 'cd packages/enzyme-example-cra && npm run tests-only'
+      stage: test
     - node_js: "8"
       env: REACT=16
       stage: test

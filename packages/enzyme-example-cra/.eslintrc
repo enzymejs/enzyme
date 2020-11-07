@@ -1,0 +1,13 @@
+{
+	"overrides": [
+		{
+			"files": ["src/setupTests.*", "src/*.test.*"],
+			"env": {
+				"jest": true,
+			},
+			"rules": {
+				"import/no-extraneous-dependencies": [2, { devDependencies: true }],
+			},
+		},
+	],
+}
