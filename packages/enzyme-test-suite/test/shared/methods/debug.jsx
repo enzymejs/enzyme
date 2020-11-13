@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { expect } from 'chai';
 import inspect from 'object-inspect';
 
@@ -205,6 +206,93 @@ export default function describeDebug({
     </TransitionGroup>
   </button>
 </div>`);
+          });
+        });
+      });
+
+      describe('defaultProps vs no defaultProps', () => {
+        function Child({ children }) {
+          return <main>{children}</main>;
+        }
+
+        function LazyC({ type }) {
+          return (
+            <Child>
+              <div>{type}</div>
+            </Child>
+          );
+        }
+
+        const ComponentWithDefaultProps = React.memo && Object.assign(
+          React.memo(LazyC),
+          {
+            defaultProps: {
+              type: 'block',
+            },
+            propTypes: {
+              type: PropTypes.oneOf(['block', 'inline']),
+            },
+          },
+        );
+
+        const ComponentWithoutDefaultProps = React.memo && Object.assign(
+          React.memo(LazyC),
+          {
+            propTypes: {
+              type: PropTypes.oneOf(['block', 'inline']),
+            },
+          },
+        );
+
+        [ComponentWithDefaultProps, ComponentWithoutDefaultProps].forEach((C) => {
+          const isWithout = C === ComponentWithoutDefaultProps;
+
+          // TODO: remove this ternary, pick either variant
+          // see https://github.com/enzymejs/enzyme/issues/2471 for details
+          const Name = isWithout ? 'Memo(LazyC)' : 'LazyC';
+
+          it(`produces the expected tree ${isWithout ? 'without' : 'with'} defaultProps, no prop provided`, () => {
+            const wrapper = Wrap(<C />);
+
+            expect(wrapper.debug()).to.equal(isShallow
+              ? `<Child>
+  ${isWithout
+    ? '<div />'
+    : `<div>
+    block
+  </div>`}
+</Child>`
+              : `<${Name}${isWithout ? '' : ' type="block"'}>
+  <Child>
+    <main>
+      ${isWithout
+    ? '<div />'
+    : `<div>
+        block
+      </div>`}
+    </main>
+  </Child>
+</${Name}>`);
+          });
+
+          it(`produces the expected tree ${isWithout ? 'without' : 'with'} defaultProps, prop provided`, () => {
+            const wrapper = Wrap(<C type="inline" />);
+
+            expect(wrapper.debug()).to.equal(isShallow
+              ? `<Child>
+  <div>
+    inline
+  </div>
+</Child>`
+              : `<${Name} type="inline">
+  <Child>
+    <main>
+      <div>
+        inline
+      </div>
+    </main>
+  </Child>
+</${Name}>`);
           });
         });
       });
