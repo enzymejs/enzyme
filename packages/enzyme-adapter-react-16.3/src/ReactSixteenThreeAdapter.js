@@ -26,6 +26,7 @@ import {
 } from 'react-is';
 import { EnzymeAdapter } from 'enzyme';
 import { typeOfNode } from 'enzyme/build/Utils';
+import shallowEqual from 'enzyme-shallow-equal';
 import {
   displayNameOfNode,
   elementToTree as utilElementToTree,
@@ -45,6 +46,7 @@ import {
   getNodeFromRootFinder,
   wrapWithWrappingComponent,
   getWrappingComponentMountRenderer,
+  spyMethod,
 } from 'enzyme-adapter-utils';
 import { findCurrentFiberUsingSlowPath } from 'react-reconciler/reflection';
 
@@ -411,6 +413,32 @@ class ReactSixteenThreeAdapter extends EnzymeAdapter {
             );
             return withSetStateAllowed(() => renderer.render({ ...el, type: wrappedEl }, context));
           }
+
+          if (isStateful) {
+            if (
+              renderer._instance
+              && el.props === renderer._instance.props
+              && !shallowEqual(context, renderer._instance.context)
+            ) {
+              const { restore } = spyMethod(
+                renderer,
+                '_updateClassComponent',
+                (originalMethod) => function _updateClassComponent(...args) {
+                  const { props } = renderer._instance;
+                  const clonedProps = { ...props };
+                  renderer._instance.props = clonedProps;
+
+                  const result = originalMethod.apply(renderer, args);
+
+                  renderer._instance.props = props;
+                  restore();
+
+                  return result;
+                },
+              );
+            }
+          }
+
           return withSetStateAllowed(() => renderer.render(el, context));
         }
       },

@@ -23,7 +23,9 @@ import {
   getNodeFromRootFinder,
   wrapWithWrappingComponent,
   getWrappingComponentMountRenderer,
+  spyMethod,
 } from 'enzyme-adapter-utils';
+import shallowEqual from 'enzyme-shallow-equal';
 
 function typeToNodeType(type) {
   if (typeof type === 'function') {
@@ -172,6 +174,51 @@ class ReactFourteenAdapter extends EnzymeAdapter {
           isDOM = true;
         } else {
           isDOM = false;
+
+          const inst = renderer._instance;
+          if (inst) {
+            const { restore: restoreUpdateComponent } = spyMethod(
+              inst,
+              'updateComponent',
+              (originalUpadateComponentMethod) => function updateComponent(
+                transaction,
+                prevParentElement,
+                nextParentElement,
+                prevUnmaskedContext,
+                nextUnmaskedContext,
+              ) {
+                if (prevParentElement === nextParentElement) {
+                  const { restore: restoreProcessPendingState } = spyMethod(
+                    inst,
+                    '_processPendingState',
+                    (originalProcessPendingStateMethod) => function _processPendingState(nextProps, nextContext) {
+                      if (!shallowEqual(prevUnmaskedContext, nextUnmaskedContext)) {
+                        if (inst._instance.componentWillReceiveProps) {
+                          inst._instance.componentWillReceiveProps(nextProps, nextContext);
+                        }
+                      }
+
+                      const result = originalProcessPendingStateMethod.call(inst, nextProps, nextContext);
+                      restoreProcessPendingState();
+                      return result;
+                    },
+                  );
+                }
+
+                const result = originalUpadateComponentMethod.call(
+                  inst,
+                  transaction,
+                  prevParentElement,
+                  nextParentElement,
+                  prevUnmaskedContext,
+                  nextUnmaskedContext,
+                );
+                restoreUpdateComponent();
+                return result;
+              },
+            );
+          }
+
           return withSetStateAllowed(() => renderer.render(el, context));
         }
       },

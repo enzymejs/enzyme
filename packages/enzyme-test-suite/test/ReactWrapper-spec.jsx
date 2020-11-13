@@ -122,7 +122,6 @@ describeWithDOM('mount', () => {
         expect(document.createElement('div')).to.be.instanceOf(HTMLElement);
 
         const [[firstArg]] = spy.args;
-        console.log(firstArg);
         expect(firstArg).to.be.instanceOf(HTMLElement);
       });
 

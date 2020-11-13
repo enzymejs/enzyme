@@ -2087,6 +2087,10 @@ describe('shallow', () => {
           }
         }
 
+        Foo.contextTypes = {
+          foo: PropTypes.string,
+        };
+
         const options = {
           disableLifecycleMethods: true,
           context: {
@@ -2122,7 +2126,7 @@ describe('shallow', () => {
           ]);
         });
 
-        describeIf(is('0.13 || 15 || > 16'), 'setContext', () => {
+        describe('setContext', () => {
           it('calls expected methods when receiving new context', () => {
             const wrapper = shallow(<Foo />, options);
             expect(spy.args).to.deep.equal([
@@ -2130,43 +2134,11 @@ describe('shallow', () => {
               ['render'],
             ]);
             spy.resetHistory();
-            wrapper.setContext({ foo: 'foo' });
+
+            wrapper.setContext({ foo: 'bar' });
+
             expect(spy.args).to.deep.equal([
               ['componentWillReceiveProps'],
-              ['shouldComponentUpdate'],
-              ['componentWillUpdate'],
-              ['render'],
-            ]);
-          });
-        });
-
-        describeIf(is('16'), 'setContext', () => {
-          it('calls expected methods when receiving new context', () => {
-            const wrapper = shallow(<Foo />, options);
-            expect(spy.args).to.deep.equal([
-              ['componentWillMount'],
-              ['render'],
-            ]);
-            spy.resetHistory();
-            wrapper.setContext({ foo: 'foo' });
-            expect(spy.args).to.deep.equal([
-              ['shouldComponentUpdate'],
-              ['componentWillUpdate'],
-              ['render'],
-            ]);
-          });
-        });
-
-        describeIf(is('0.14'), 'setContext', () => {
-          it('calls expected methods when receiving new context', () => {
-            const wrapper = shallow(<Foo />, options);
-            expect(spy.args).to.deep.equal([
-              ['componentWillMount'],
-              ['render'],
-            ]);
-            spy.resetHistory();
-            wrapper.setContext({ foo: 'foo' });
-            expect(spy.args).to.deep.equal([
               ['shouldComponentUpdate'],
               ['componentWillUpdate'],
               ['render'],

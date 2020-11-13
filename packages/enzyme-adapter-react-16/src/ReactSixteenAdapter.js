@@ -57,6 +57,7 @@ import {
   wrapWithWrappingComponent,
   getWrappingComponentMountRenderer,
   compareNodeTypeOf,
+  spyMethod,
 } from 'enzyme-adapter-utils';
 import findCurrentFiberUsingSlowPath from './findCurrentFiberUsingSlowPath';
 import detectFiberTags from './detectFiberTags';
@@ -700,14 +701,39 @@ class ReactSixteenAdapter extends EnzymeAdapter {
             ));
           }
 
-          if (!isStateful(Component) && typeof Component === 'function') {
+          const isComponentStateful = isStateful(Component);
+
+          if (!isComponentStateful && typeof Component === 'function') {
             return withSetStateAllowed(() => renderElement(
               { ...renderedEl, type: wrapFunctionalComponent(Component) },
               context,
             ));
           }
 
-          if (isStateful) {
+          if (isComponentStateful) {
+            if (
+              renderer._instance
+              && el.props === renderer._instance.props
+              && !shallowEqual(context, renderer._instance.context)
+            ) {
+              const { restore } = spyMethod(
+                renderer,
+                '_updateClassComponent',
+                (originalMethod) => function _updateClassComponent(...args) {
+                  const { props } = renderer._instance;
+                  const clonedProps = { ...props };
+                  renderer._instance.props = clonedProps;
+
+                  const result = originalMethod.apply(renderer, args);
+
+                  renderer._instance.props = props;
+                  restore();
+
+                  return result;
+                },
+              );
+            }
+
             // fix react bug; see implementation of `getEmptyStateValue`
             const emptyStateValue = getEmptyStateValue();
             if (emptyStateValue) {
