@@ -249,7 +249,7 @@ export default function describeDebug({
 
           // TODO: remove this ternary, pick either variant
           // see https://github.com/enzymejs/enzyme/issues/2471 for details
-          const Name = isWithout ? 'Memo(LazyC)' : 'LazyC';
+          const Name = isWithout || is('~16.6') ? 'Memo(LazyC)' : 'LazyC';
 
           it(`produces the expected tree ${isWithout ? 'without' : 'with'} defaultProps, no prop provided`, () => {
             const wrapper = Wrap(<C />);
