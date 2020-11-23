@@ -334,6 +334,59 @@ export function spyMethod(instance, methodName, getStub = () => {}) {
   };
 }
 
+export function spyProperty(instance, propertyName, handlers = {}) {
+  const originalValue = instance[propertyName];
+  const hasOwn = has(instance, propertyName);
+  let descriptor;
+  if (hasOwn) {
+    descriptor = Object.getOwnPropertyDescriptor(instance, propertyName);
+  }
+  let wasAssigned = false;
+  let holder = originalValue;
+  const getV = handlers.get ? () => {
+    const value = descriptor && descriptor.get ? descriptor.get.call(instance) : holder;
+    return handlers.get.call(instance, value);
+  } : () => holder;
+  const set = handlers.set ? (newValue) => {
+    wasAssigned = true;
+    const handlerNewValue = handlers.set.call(instance, holder, newValue);
+    holder = handlerNewValue;
+    if (descriptor && descriptor.set) {
+      descriptor.set.call(instance, holder);
+    }
+  } : (v) => {
+    wasAssigned = true;
+    holder = v;
+  };
+  Object.defineProperty(instance, propertyName, {
+    configurable: true,
+    enumerable: !descriptor || !!descriptor.enumerable,
+    get: getV,
+    set,
+  });
+
+  return {
+    restore() {
+      if (hasOwn) {
+        if (descriptor) {
+          Object.defineProperty(instance, propertyName, descriptor);
+        } else {
+          /* eslint-disable no-param-reassign */
+          instance[propertyName] = holder;
+          /* eslint-enable no-param-reassign */
+        }
+      } else {
+        /* eslint-disable no-param-reassign */
+        delete instance[propertyName];
+        /* eslint-enable no-param-reassign */
+      }
+    },
+    wasAssigned() {
+      return wasAssigned;
+    },
+  };
+}
+
 export { default as shallowEqual } from 'enzyme-shallow-equal';
 
 export function isEmptyValue(renderedValue) {

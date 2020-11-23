@@ -8,6 +8,7 @@ import {
   nodeMatches,
   displayNameOfNode,
   spyMethod,
+  spyProperty,
   nodeHasType,
   isCustomComponentElement,
   makeOptions,
@@ -811,6 +812,75 @@ describe('Utils', () => {
       expect(original).to.equal(descriptor.value);
       expect(obj).to.have.property('method', stub);
       expect(() => obj.method()).to.throw(EvalError);
+    });
+  });
+
+  describe('spyProperty', () => {
+    it('can spy "was assigned" status and restore it', () => {
+      let holder = 1;
+      const obj = {
+        count: 1,
+        get accessor() {
+          return holder;
+        },
+        set accessor(v) {
+          holder = v;
+        },
+      };
+
+      // test an instance method and an object property function
+      const targets = ['count', 'accessor'];
+      targets.forEach((target) => {
+        const originalValue = obj[target];
+
+        const spy = spyProperty(obj, target);
+
+        obj[target] += 1;
+
+        expect(spy.wasAssigned()).to.equal(true);
+
+        spy.restore();
+
+        expect(obj[target]).to.equal(originalValue);
+      });
+    });
+
+    it('restores the property descriptor', () => {
+      const obj = {};
+      const descriptor = {
+        configurable: true,
+        enumerable: true,
+        writable: true,
+        value: () => {},
+      };
+      const propertyName = 'foo';
+      Object.defineProperty(obj, propertyName, descriptor);
+      const spy = spyMethod(obj, propertyName);
+      spy.restore();
+      expect(Object.getOwnPropertyDescriptor(obj, propertyName)).to.deep.equal(descriptor);
+    });
+
+    it('accepts an optional `handlers` argument', () => {
+      const getSpy = sinon.stub().returns(1);
+      const setSpy = sinon.stub().returns(2);
+
+      const propertyName = 'foo';
+      const obj = {
+        [propertyName]: 1,
+      };
+
+      const spy = spyProperty(obj, propertyName, { get: getSpy, set: setSpy });
+
+      obj[propertyName] += 1;
+
+      spy.restore();
+
+      expect(getSpy.args).to.deep.equal([
+        [1],
+      ]);
+      expect(setSpy.args).to.deep.equal([
+        [1, 2],
+      ]);
     });
   });
 
