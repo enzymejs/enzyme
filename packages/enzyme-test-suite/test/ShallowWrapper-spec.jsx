@@ -3331,14 +3331,22 @@ describe('shallow', () => {
 
         const wrapper = shallow(<Foo foo="bar" />);
         expect(wrapper.instance().props.foo).to.equal('bar');
+        expect(spy.args).to.deep.equal([
+          ['render'],
+        ]);
+
+        spy.resetHistory();
         wrapper.setProps({ foo: 'baz' });
         expect(wrapper.instance().props.foo).to.equal('baz');
+        expect(spy.args).to.deep.equal([
+          ['componentWillReceiveProps'],
+          ['shouldComponentUpdate'],
+        ]);
+
+        spy.resetHistory();
         wrapper.setProps({ foo: 'bax' });
         expect(wrapper.instance().props.foo).to.equal('bax');
         expect(spy.args).to.deep.equal([
-          ['render'],
-          ['componentWillReceiveProps'],
-          ['shouldComponentUpdate'],
           ['componentWillReceiveProps'],
           ['shouldComponentUpdate'],
         ]);
