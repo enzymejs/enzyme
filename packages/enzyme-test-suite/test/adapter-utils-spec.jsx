@@ -18,6 +18,8 @@ import {
   assertDomAvailable,
   createMountWrapper,
   simulateError,
+  spyMethod,
+  spyProperty,
 } from 'enzyme-adapter-utils';
 import wrap from 'mocha-wrap';
 
@@ -614,6 +616,146 @@ describe('enzyme-adapter-utils', () => {
       expect(catchingInstance.componentDidCatch).to.have.property('callCount', 1);
 
       expect(getDerivedStateFromError).to.have.property('callCount', 1);
+    });
+  });
+
+  describe('spyMethod', () => {
+    it('can spy last return value and restore it', () => {
+      class Counter {
+        constructor() {
+          this.count = 1;
+        }
+
+        incrementAndGet() {
+          this.count += 1;
+          return this.count;
+        }
+      }
+      const instance = new Counter();
+      const obj = {
+        count: 1,
+        incrementAndGet() {
+          this.count += 1;
+          return this.count;
+        },
+      };
+
+      // test an instance method and an object property function
+      const targets = [instance, obj];
+      targets.forEach((target) => {
+        const original = target.incrementAndGet;
+        const spy = spyMethod(target, 'incrementAndGet');
+        target.incrementAndGet();
+        target.incrementAndGet();
+        expect(spy.getLastReturnValue()).to.equal(3);
+        spy.restore();
+        expect(target.incrementAndGet).to.equal(original);
+        expect(target.incrementAndGet()).to.equal(4);
+      });
+    });
+
+    it('restores the property descriptor', () => {
+      const obj = {};
+      const descriptor = {
+        configurable: true,
+        enumerable: true,
+        writable: true,
+        value: () => {},
+      };
+      Object.defineProperty(obj, 'method', descriptor);
+      const spy = spyMethod(obj, 'method');
+      spy.restore();
+      expect(Object.getOwnPropertyDescriptor(obj, 'method')).to.deep.equal(descriptor);
+    });
+
+    it('accepts an optional `getStub` argument', () => {
+      const obj = {};
+      const descriptor = {
+        configurable: true,
+        enumerable: true,
+        writable: true,
+        value: () => {},
+      };
+      Object.defineProperty(obj, 'method', descriptor);
+      let stub;
+      let original;
+      spyMethod(obj, 'method', (originalMethod) => {
+        original = originalMethod;
+        stub = () => { throw new EvalError('stubbed'); };
+        return stub;
+      });
+      expect(original).to.equal(descriptor.value);
+      expect(obj).to.have.property('method', stub);
+      expect(() => obj.method()).to.throw(EvalError);
+    });
+  });
+
+  describe('spyProperty', () => {
+    it('can spy "was assigned" status and restore it', () => {
+      let holder = 1;
+      const obj = {
+        count: 1,
+        get accessor() {
+          return holder;
+        },
+        set accessor(v) {
+          holder = v;
+        },
+      };
+
+      // test an instance method and an object property function
+      const targets = ['count', 'accessor'];
+      targets.forEach((target) => {
+        const originalValue = obj[target];
+
+        const spy = spyProperty(obj, target);
+
+        obj[target] += 1;
+
+        expect(spy.wasAssigned()).to.equal(true);
+
+        spy.restore();
+
+        expect(obj[target]).to.equal(originalValue);
+      });
+    });
+
+    it('restores the property descriptor', () => {
+      const obj = {};
+      const descriptor = {
+        configurable: true,
+        enumerable: true,
+        writable: true,
+        value: () => {},
+      };
+      const propertyName = 'foo';
+      Object.defineProperty(obj, propertyName, descriptor);
+      const spy = spyMethod(obj, propertyName);
+      spy.restore();
+      expect(Object.getOwnPropertyDescriptor(obj, propertyName)).to.deep.equal(descriptor);
+    });
+
+    it('accepts an optional `handlers` argument', () => {
+      const getSpy = sinon.stub().returns(1);
+      const setSpy = sinon.stub().returns(2);
+
+      const propertyName = 'foo';
+      const obj = {
+        [propertyName]: 1,
+      };
+
+      const spy = spyProperty(obj, propertyName, { get: getSpy, set: setSpy });
+
+      obj[propertyName] += 1;
+
+      spy.restore();
+
+      expect(getSpy.args).to.deep.equal([
+        [1],
+      ]);
+      expect(setSpy.args).to.deep.equal([
+        [1, 2],
+      ]);
     });
   });
 });
