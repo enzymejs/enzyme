@@ -568,6 +568,41 @@ describe('Utils', () => {
         expect(displayNameOfNode(<div />)).to.equal('div');
       });
     });
+
+    describeIf(is('>= 16.6'), 'given an inner displayName in Memo', () => {
+      it('returns the displayName', () => {
+        const adapter = getAdapter();
+        const Foo = () => <div />;
+        Foo.displayName = 'CustomWrapper';
+
+        const MemoFoo = React.memo(Foo);
+
+        expect(adapter.displayNameOfNode(<MemoFoo />)).to.equal('Memo(CustomWrapper)');
+      });
+    });
+
+    describeIf(is('>= 16.6'), 'given an inner displayName in forwardedRef', () => {
+      it('returns the displayName', () => {
+        const adapter = getAdapter();
+        const Foo = () => <div />;
+        Foo.displayName = 'CustomWrapper';
+
+        const ForwardedFoo = React.forwardRef(Foo);
+
+        expect(adapter.displayNameOfNode(<ForwardedFoo />)).to.equal('ForwardRef(CustomWrapper)');
+      });
+    });
+
+    describeIf(is('>= 16.6'), 'given an inner displayName wrapped in Memo and forwardRef', () => {
+      it('returns the displayName', () => {
+        const adapter = getAdapter();
+        const Foo = () => <div />;
+        Foo.displayName = 'CustomWrapper';
+
+        const MemoForwardFoo = React.memo(React.forwardRef(Foo));
+        expect(adapter.displayNameOfNode(<MemoForwardFoo />)).to.equal('Memo(ForwardRef(CustomWrapper))');
+      });
+    });
   });
 
   describe('childrenToSimplifiedArray', () => {

@@ -863,6 +863,7 @@ class ReactSixteenAdapter extends EnzymeAdapter {
   displayNameOfNode(node) {
     if (!node) return null;
     const { type, $$typeof } = node;
+    const adapter = this;
 
     const nodeType = type || $$typeof;
 
@@ -886,13 +887,13 @@ class ReactSixteenAdapter extends EnzymeAdapter {
       case ContextProvider || NaN: return 'ContextProvider';
       case Memo || NaN: {
         const nodeName = displayNameOfNode(node);
-        return typeof nodeName === 'string' ? nodeName : `Memo(${displayNameOfNode(type)})`;
+        return typeof nodeName === 'string' ? nodeName : `Memo(${adapter.displayNameOfNode(type)})`;
       }
       case ForwardRef || NaN: {
         if (type.displayName) {
           return type.displayName;
         }
-        const name = displayNameOfNode({ type: type.render });
+        const name = adapter.displayNameOfNode({ type: type.render });
         return name ? `ForwardRef(${name})` : 'ForwardRef';
       }
       case Lazy || NaN: {
