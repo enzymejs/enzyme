@@ -39,7 +39,7 @@
   "license": "MIT",
   "dependencies": {
     "has": "^1.0.3",
-    "object-is": "^1.1.2"
+    "object-is": "^1.1.4"
   },
   "peerDependencies": {},
   "devDependencies": {
