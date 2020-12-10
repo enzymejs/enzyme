@@ -41,8 +41,8 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@babel/cli": "^7.0.0",
-    "@babel/core": "^7.0.0",
+    "@babel/cli": "^7.12.10",
+    "@babel/core": "^7.12.10",
     "babel-eslint": "^10.1.0",
     "babel-plugin-add-module-exports": "^1.0.2",
     "babel-plugin-transform-replace-object-assign": "^2.0.0",
