@@ -7,6 +7,8 @@ import PropTypes from 'prop-types';
 import {
   describeIf,
   itIf,
+  argSpy,
+  expectArgs,
 } from '../../_helpers';
 import {
   PureComponent,
@@ -24,8 +26,7 @@ export default function describeMisc({
     let spy;
 
     beforeEach(() => {
-      spy = sinon.spy();
-      spy(1);
+      spy = argSpy();
     });
 
     describeIf(is('>= 16.3'), 'setProps calls `componentDidUpdate` when `getDerivedStateFromProps` is defined', () => {
@@ -62,9 +63,7 @@ export default function describeMisc({
         const wrapper = Wrap(<DummyComp changeState={false} counter={0} />);
 
         expect(wrapper.state()).to.eql({ state: -1 });
-        spy(1);
-        expect(spy.args).to.eql([
-          [1],
+        expectArgs(spy, 1, [
           [
             'getDerivedStateFromProps',
             {
@@ -78,17 +77,12 @@ export default function describeMisc({
             },
           ],
           ['render'],
-          [1],
         ]);
-        spy.resetHistory();
-        spy(2);
 
         wrapper.setProps({ counter: 1 });
 
         expect(wrapper.state()).to.eql({ state: -1 });
-        spy(2);
-        expect(spy.args).to.eql([
-          [2],
+        expectArgs(spy, 2, [
           [
             'getDerivedStateFromProps',
             {
@@ -103,17 +97,12 @@ export default function describeMisc({
           ],
           ['render'],
           ['componentDidUpdate'],
-          [2],
         ]);
-        spy.resetHistory();
-        spy(3);
 
         return new Promise((resolve) => {
           wrapper.setProps({ counter: 2 }, resolve);
         }).then(() => {
-          spy(3);
-          expect(spy.args).to.eql([
-            [3],
+          expectArgs(spy, 3, [
             [
               'getDerivedStateFromProps',
               {
@@ -128,9 +117,7 @@ export default function describeMisc({
             ],
             ['render'],
             ['componentDidUpdate'],
-            [3],
           ]);
-          spy.resetHistory();
           expect(wrapper.state()).to.eql({ state: -1 });
         });
       });
@@ -138,9 +125,7 @@ export default function describeMisc({
       it('with a state changes, calls both methods with a sync and async setProps', () => {
         const wrapper = Wrap(<DummyComp changeState counter={0} />);
 
-        spy(1);
-        expect(spy.args).to.eql([
-          [1],
+        expectArgs(spy, 1, [
           [
             'getDerivedStateFromProps',
             {
@@ -154,17 +139,12 @@ export default function describeMisc({
             },
           ],
           ['render'],
-          [1],
         ]);
-        spy.resetHistory();
-        spy(2);
         expect(wrapper.state()).to.eql({ state: 0 });
 
         wrapper.setProps({ counter: 1 });
 
-        spy(2);
-        expect(spy.args).to.eql([
-          [2],
+        expectArgs(spy, 2, [
           [
             'getDerivedStateFromProps',
             {
@@ -179,19 +159,14 @@ export default function describeMisc({
           ],
           ['render'],
           ['componentDidUpdate'],
-          [2],
         ]);
-        spy.resetHistory();
-        spy(3);
         expect(wrapper.state()).to.eql({ state: 10 });
 
         return new Promise((resolve) => {
           wrapper.setProps({ counter: 2 }, resolve);
         }).then(() => {
           expect(wrapper.state()).to.eql({ state: 20 });
-          spy(3);
-          expect(spy.args).to.eql([
-            [3],
+          expectArgs(spy, 3, [
             [
               'getDerivedStateFromProps',
               {
@@ -206,9 +181,7 @@ export default function describeMisc({
             ],
             ['render'],
             ['componentDidUpdate'],
-            [3],
           ]);
-          spy.resetHistory();
         });
       });
     });
@@ -246,13 +219,10 @@ export default function describeMisc({
       const wrapper = Wrap(<Foo />);
       wrapper.find('button').prop('onClick')();
       expect(wrapper.state('foo')).to.equal('onChange update');
-      spy(1);
-      expect(spy.args).to.eql([
-        [1],
+      expectArgs(spy, 1, [
         ['render'],
         ['render'],
         ['componentDidUpdate'],
-        [1],
       ]);
     });
 
@@ -284,14 +254,11 @@ export default function describeMisc({
 
       const wrapper = Wrap(<Foo />);
       expect(wrapper.state('foo')).to.equal('update');
-      spy(1);
-      expect(spy.args).to.eql([
-        [1],
+      expectArgs(spy, 1, [
         ['render'],
         ['componentDidMount'],
         ['render'],
         ['componentDidUpdate'],
-        [1],
       ]);
     });
 
@@ -320,36 +287,23 @@ export default function describeMisc({
       }
 
       const wrapper = Wrap(<Foo />);
-      spy(1);
-      expect(spy.args).to.eql([
-        [1],
+      expectArgs(spy, 1, [
         ['render'],
-        [1],
       ]);
-      spy.resetHistory();
-      spy(2);
 
       wrapper.setState({ foo: 'wrapper setState update' });
       expect(wrapper.state('foo')).to.equal('wrapper setState update');
-      spy(2);
-      expect(spy.args).to.eql([
-        [2],
+      expectArgs(spy, 2, [
         ['render'],
         ['componentDidUpdate'],
-        [2],
       ]);
-      spy.resetHistory();
-      spy(3);
 
       wrapper.instance().onChange();
       expect(wrapper.state('foo')).to.equal('onChange update');
 
-      spy(3);
-      expect(spy.args).to.eql([
-        [3],
+      expectArgs(spy, 3, [
         ['render'],
         ['componentDidUpdate'],
-        [3],
       ]);
     });
 
@@ -381,22 +335,14 @@ export default function describeMisc({
       }
 
       const wrapper = Wrap(<Foo />);
-      spy(1);
-      expect(spy.args).to.eql([
-        [1],
+      expectArgs(spy, 1, [
         ['render'],
         ['componentDidMount'],
-        [1],
       ]);
-      spy.resetHistory();
-      spy(2);
 
       wrapper.find('button').prop('onClick')();
-      spy(2);
-      expect(spy.args).to.eql([
-        [2],
+      expectArgs(spy, 2, [
         ['render'],
-        [2],
       ]);
     });
 
@@ -602,15 +548,10 @@ export default function describeMisc({
         itIf(isShallow, 'does not catch errors during shallow render', () => {
           const wrapper = Wrap(<ErrorBoundary />);
 
-          spy(1);
-          expect(spy.args).to.deep.equal([
-            [1],
+          expectArgs(spy, 1, [
             ['constructor'],
             ['render'],
-            [1],
           ]);
-          spy.resetHistory();
-          spy(2);
 
           wrapper.setState({ throws: true });
 
@@ -620,25 +561,18 @@ export default function describeMisc({
 
           expect(() => thrower.dive()).to.throw(errorToThrow);
 
-          spy(2);
-          expect(spy.args).to.deep.equal([
-            [2],
+          expectArgs(spy, 2, [
             ['render'],
-            [2],
           ]);
         });
 
         itIf(!isShallow, 'renders again without calling componentDidCatch and then fails', () => {
           const wrapper = Wrap(<ErrorBoundary />);
 
-          spy(1);
-          expect(spy.args).to.deep.equal([
-            [1],
+          expectArgs(spy, 1, [
             ['constructor'],
             ['render'],
-            [1],
           ]);
-
           spy.resetHistory();
 
           try {
@@ -662,52 +596,36 @@ export default function describeMisc({
         it('rerenders on a simulated error', () => {
           const wrapper = Wrap(<ErrorBoundary />);
 
-          spy(1);
-          expect(spy.args).to.deep.equal([
-            [1],
+          expectArgs(spy, 1, [
             ['constructor'],
             ['render'],
-            [1],
           ]);
-          spy.resetHistory();
-          spy(2);
 
           const thrower = wrapper.find(Thrower);
 
           expect(() => thrower.simulateError(errorToThrow)).not.to.throw(errorToThrow);
 
-          spy(2);
-          expect(spy.args).to.deep.equal([
-            [2],
+          expectArgs(spy, 2, [
             ['getDerivedStateFromError', errorToThrow],
             ['componentDidCatch', errorToThrow, expectedInfo],
             ['render'],
-            [2],
           ]);
         });
 
         it('renders again on simulated error', () => {
           const wrapper = Wrap(<ErrorBoundary />);
 
-          spy(1);
-          expect(spy.args).to.deep.equal([
-            [1],
+          expectArgs(spy, 1, [
             ['constructor'],
             ['render'],
-            [1],
           ]);
-          spy.resetHistory();
-          spy(2);
 
           expect(() => wrapper.find(Thrower).simulateError(errorToThrow)).not.to.throw();
 
-          spy(2);
-          expect(spy.args).to.deep.equal([
-            [2],
+          expectArgs(spy, 2, [
             ['getDerivedStateFromError', errorToThrow],
             ['componentDidCatch', errorToThrow, expectedInfo],
             ['render'],
-            [2],
           ]);
         });
       });
@@ -732,13 +650,10 @@ export default function describeMisc({
 
         Wrap(<Foo />);
 
-        spy(1);
-        expect(spy.args).to.deep.equal([
-          [1],
+        expectArgs(spy, 1, [
           ['componentWillMount'],
           ['render'],
           ['componentDidMount'],
-          [1],
         ]);
       });
 
@@ -775,14 +690,11 @@ export default function describeMisc({
         }
         const result = Wrap(<Foo />);
         expect(result.state('count')).to.equal(2);
-        spy(1);
-        expect(spy.args).to.deep.equal([
-          [1],
+        expectArgs(spy, 1, [
           ['componentWillMount'],
           ['render'],
           ['componentDidMount'],
           ['render'],
-          [1],
         ]);
       });
     });
@@ -830,20 +742,13 @@ export default function describeMisc({
             context: { foo: 'context' },
           },
         );
-        spy(1);
-        expect(spy.args).to.deep.equal([
-          [1],
+        expectArgs(spy, 1, [
           ['render'],
-          [1],
         ]);
-        spy.resetHistory();
-        spy(2);
 
         wrapper.setProps({ foo: 'baz' });
         wrapper.setProps({ foo: 'bax' });
-        spy(2);
-        expect(spy.args).to.deep.equal([
-          [2],
+        expectArgs(spy, 2, [
           [
             'componentWillReceiveProps',
             { foo: 'bar' }, { foo: 'baz' },
@@ -892,7 +797,6 @@ export default function describeMisc({
             { foo: 'state' }, { foo: 'state' },
             is('>= 16') ? undefined : { foo: 'context' },
           ],
-          [2],
         ]);
       });
 
@@ -922,20 +826,12 @@ export default function describeMisc({
         }
 
         const wrapper = Wrap(<Foo a="a" b="b" />);
-        spy(1);
-        expect(spy.args).to.deep.equal([
-          [1],
+        expectArgs(spy, 1, [
           ['render'],
-          [1],
         ]);
-        spy.resetHistory();
-        spy(2);
 
         wrapper.setProps({ b: 'c', d: 'e' });
-
-        spy(2);
-        expect(spy.args).to.deep.equal([
-          [2],
+        expectArgs(spy, 2, [
           [
             'componentWillReceiveProps',
             { a: 'a', b: 'b' },
@@ -957,7 +853,6 @@ export default function describeMisc({
             { a: 'a', b: 'b' },
             { a: 'a', b: 'c', d: 'e' },
           ],
-          [2],
         ]);
       });
 
@@ -988,35 +883,22 @@ export default function describeMisc({
 
         const wrapper = Wrap(<Foo foo="bar" />);
         expect(wrapper.instance().props.foo).to.equal('bar');
-        spy(1);
-        expect(spy.args).to.deep.equal([
-          [1],
+        expectArgs(spy, 1, [
           ['render'],
-          [1],
         ]);
-        spy.resetHistory();
-        spy(2);
 
         wrapper.setProps({ foo: 'baz' });
         expect(wrapper.instance().props.foo).to.equal('baz');
-        spy(2);
-        expect(spy.args).to.deep.equal([
-          [2],
+        expectArgs(spy, 2, [
           ['componentWillReceiveProps'],
           ['shouldComponentUpdate'],
-          [2],
         ]);
-        spy.resetHistory();
-        spy(3);
 
         wrapper.setProps({ foo: 'bax' });
         expect(wrapper.instance().props.foo).to.equal('bax');
-        spy(3);
-        expect(spy.args).to.deep.equal([
-          [3],
+        expectArgs(spy, 3, [
           ['componentWillReceiveProps'],
           ['shouldComponentUpdate'],
-          [3],
         ]);
       });
 
@@ -1044,24 +926,16 @@ export default function describeMisc({
           }
         }
         const result = Wrap(<Foo />);
-        spy(1);
-        expect(spy.args).to.deep.equal([
-          [1],
+        expectArgs(spy, 1, [
           ['render'],
-          [1],
         ]);
-        spy.resetHistory();
-        spy(2);
 
         result.setProps({ name: 'bar' });
 
         expect(result.state('count')).to.equal(1);
-        spy(2);
-        expect(spy.args).to.deep.equal([
-          [2],
+        expectArgs(spy, 2, [
           ['componentWillReceiveProps'],
           ['render'],
-          [2],
         ]);
       });
 
@@ -1093,26 +967,18 @@ export default function describeMisc({
           }
         }
         const result = Wrap(<Foo />);
-        spy(1);
-        expect(spy.args).to.deep.equal([
-          [1],
+        expectArgs(spy, 1, [
           ['render'],
-          [1],
         ]);
-        spy.resetHistory();
-        spy(2);
 
         result.setProps({ name: 'bar' });
 
         expect(result.state('count')).to.equal(1);
-        spy(2);
-        expect(spy.args).to.deep.equal([
-          [2],
+        expectArgs(spy, 2, [
           ['componentWillUpdate'],
           ['render'],
           ['componentWillUpdate'],
           ['render'],
-          [2],
         ]);
       });
 
@@ -1144,26 +1010,18 @@ export default function describeMisc({
           }
         }
         const result = Wrap(<Foo />);
-        spy(1);
-        expect(spy.args).to.deep.equal([
-          [1],
+        expectArgs(spy, 1, [
           ['render'],
-          [1],
         ]);
-        spy.resetHistory();
-        spy(2);
 
         result.setProps({ name: 'bar' });
 
         expect(result.state('count')).to.equal(1);
-        spy(2);
-        expect(spy.args).to.deep.equal([
-          [2],
+        expectArgs(spy, 2, [
           ['render'],
           ['componentDidUpdate'],
           ['render'],
           ['componentDidUpdate'],
-          [2],
         ]);
       });
     });
@@ -1207,19 +1065,12 @@ export default function describeMisc({
             context: { foo: 'context' },
           },
         );
-        spy(1);
-        expect(spy.args).to.deep.equal([
-          [1],
+        expectArgs(spy, 1, [
           ['render'],
-          [1],
         ]);
-        spy.resetHistory();
-        spy(2);
 
         wrapper.setState({ foo: 'baz' });
-        spy(2);
-        expect(spy.args).to.deep.equal([
-          [2],
+        expectArgs(spy, 2, [
           [
             'shouldComponentUpdate',
             { foo: 'props' }, { foo: 'props' },
@@ -1239,7 +1090,6 @@ export default function describeMisc({
             { foo: 'bar' }, { foo: 'baz' },
             is('>= 16') ? undefined : { foo: 'context' },
           ],
-          [2],
         ]);
       });
 
@@ -1273,22 +1123,14 @@ export default function describeMisc({
         }
         const wrapper = Wrap(<Foo />);
         expect(wrapper.instance().state.foo).to.equal('bar');
-        spy(1);
-        expect(spy.args).to.deep.equal([
-          [1],
+        expectArgs(spy, 1, [
           ['render'],
-          [1],
         ]);
-        spy.resetHistory();
-        spy(2);
 
         wrapper.setState({ foo: 'baz' });
         expect(wrapper.instance().state.foo).to.equal('baz');
-        spy(2);
-        expect(spy.args).to.deep.equal([
-          [2],
+        expectArgs(spy, 2, [
           ['shouldComponentUpdate'],
-          [2],
         ]);
       });
 
@@ -1321,25 +1163,17 @@ export default function describeMisc({
           }
         }
         const result = Wrap(<Foo />);
-        spy(1);
-        expect(spy.args).to.deep.equal([
-          [1],
+        expectArgs(spy, 1, [
           ['render'],
-          [1],
         ]);
-        spy.resetHistory();
-        spy(2);
 
         result.setState({ name: 'bar' });
         expect(result.state('count')).to.equal(1);
-        spy(2);
-        expect(spy.args).to.deep.equal([
-          [2],
+        expectArgs(spy, 2, [
           ['componentWillUpdate'],
           ['render'],
           ['componentWillUpdate'],
           ['render'],
-          [2],
         ]);
       });
 
@@ -1372,24 +1206,17 @@ export default function describeMisc({
           }
         }
         const result = Wrap(<Foo />);
-        spy(1);
-        expect(spy.args).to.deep.equal([
-          [1],
+        expectArgs(spy, 1, [
           ['render'],
-          [1],
         ]);
-        spy.resetHistory();
-        spy(2);
 
         result.setState({ name: 'bar' });
         expect(result.state('count')).to.equal(1);
-        spy(2);
-        expect(spy.args).to.deep.equal([
-          [2],
+        expectArgs(spy, 2, [
           ['render'],
           ['componentDidUpdate'],
           ['render'],
-          [2],
+          ['componentDidUpdate'],
         ]);
       });
     });
@@ -1433,20 +1260,13 @@ export default function describeMisc({
           },
         );
         expect(wrapper.instance().context.foo).to.equal('bar');
-        spy(1);
-        expect(spy.args).to.deep.equal([
-          [1],
+        expectArgs(spy, 1, [
           ['render'],
-          [1],
         ]);
-        spy.resetHistory();
-        spy(2);
 
         wrapper.setContext({ foo: 'baz' });
         expect(wrapper.instance().context.foo).to.equal('baz');
-        spy(2);
-        expect(spy.args).to.deep.equal([
-          [2],
+        expectArgs(spy, 2, [
           [
             'shouldComponentUpdate',
             { foo: 'props' }, { foo: 'props' },
@@ -1466,7 +1286,6 @@ export default function describeMisc({
             { foo: 'state' }, { foo: 'state' },
             is('>= 16') ? undefined : { foo: 'bar' },
           ],
-          [2],
         ]);
       });
 
@@ -1499,22 +1318,14 @@ export default function describeMisc({
             context: { foo: 'bar' },
           },
         );
-        spy(1);
-        expect(spy.args).to.deep.equal([
-          [1],
+        expectArgs(spy, 1, [
           ['render'],
-          [1],
         ]);
-        spy.resetHistory();
-        spy(2);
 
         wrapper.setContext({ foo: 'baz' });
 
-        spy(2);
-        expect(spy.args).to.deep.equal([
-          [2],
+        expectArgs(spy, 2, [
           ['shouldComponentUpdate'],
-          [2],
         ]);
       });
 
@@ -1551,25 +1362,17 @@ export default function describeMisc({
             context: { foo: 'bar' },
           },
         );
-        spy(1);
-        expect(spy.args).to.deep.equal([
-          [1],
+        expectArgs(spy, 1, [
           ['render'],
-          [1],
         ]);
-        spy.resetHistory();
-        spy(2);
 
         result.setContext({ foo: 'baz' });
         expect(result.state('count')).to.equal(1);
-        spy(2);
-        expect(spy.args).to.deep.equal([
-          [2],
+        expectArgs(spy, 2, [
           ['componentWillUpdate'],
           ['render'],
           ['componentWillUpdate'],
           ['render'],
-          [2],
         ]);
       });
 
@@ -1606,25 +1409,17 @@ export default function describeMisc({
             context: { foo: 'bar' },
           },
         );
-        spy(1);
-        expect(spy.args).to.deep.equal([
-          [1],
+        expectArgs(spy, 1, [
           ['render'],
-          [1],
         ]);
-        spy.resetHistory();
-        spy(2);
 
         result.setContext({ foo: 'baz' });
         expect(result.state('count')).to.equal(1);
-        spy(2);
-        expect(spy.args).to.deep.equal([
-          [2],
+        expectArgs(spy, 2, [
           ['render'],
           ['componentDidUpdate'],
           ['render'],
           ['componentDidUpdate'],
-          [2],
         ]);
       });
     });

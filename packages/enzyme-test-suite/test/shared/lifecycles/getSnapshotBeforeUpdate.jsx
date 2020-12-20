@@ -1,9 +1,9 @@
 import React from 'react';
-import sinon from 'sinon-sandbox';
-import { expect } from 'chai';
 
 import {
   describeIf,
+  argSpy,
+  expectArgs,
 } from '../../_helpers';
 import {
   is,
@@ -14,8 +14,7 @@ export default function describeGSBU({
 }) {
   describeIf(is('>= 16.3'), 'getSnapshotBeforeUpdate()', () => {
     it('calls getSnapshotBeforeUpdate and pass snapshot to componentDidUpdate', () => {
-      const spy = sinon.spy();
-      spy(1);
+      const spy = argSpy();
 
       class Foo extends React.Component {
         constructor(props) {
@@ -40,35 +39,22 @@ export default function describeGSBU({
         }
       }
       const wrapper = Wrap(<Foo name="foo" />);
-      spy(1);
-      expect(spy.args).to.deep.equal([
-        [1],
+      expectArgs(spy, 1, [
         ['render'],
-        [1],
       ]);
-      spy.resetHistory();
-      spy(2);
 
       wrapper.setProps({ name: 'bar' });
-      spy(2);
-      expect(spy.args).to.deep.equal([
-        [2],
+      expectArgs(spy, 2, [
         ['render'],
         ['getSnapshotBeforeUpdate', { name: 'foo' }, { name: 'bar' }, { foo: 'bar' }, { foo: 'bar' }],
         ['componentDidUpdate', { name: 'foo' }, { name: 'bar' }, { foo: 'bar' }, { foo: 'bar' }, { snapshot: 'ok' }],
-        [2],
       ]);
-      spy.resetHistory();
-      spy(3);
 
       wrapper.setState({ foo: 'baz' });
-      spy(3);
-      expect(spy.args).to.deep.equal([
-        [3],
+      expectArgs(spy, 3, [
         ['render'],
         ['getSnapshotBeforeUpdate', { name: 'bar' }, { name: 'bar' }, { foo: 'bar' }, { foo: 'baz' }],
         ['componentDidUpdate', { name: 'bar' }, { name: 'bar' }, { foo: 'bar' }, { foo: 'baz' }, { snapshot: 'ok' }],
-        [3],
       ]);
     });
   });

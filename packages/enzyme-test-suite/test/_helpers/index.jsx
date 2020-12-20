@@ -3,6 +3,8 @@
 import React from 'react';
 import { Memo } from 'react-is';
 import { compareNodeTypeOf } from 'enzyme-adapter-utils';
+import sinon from 'sinon-sandbox';
+import { expect } from 'chai';
 
 /**
  * Simple wrapper around mocha describe which allows a boolean to be passed in first which
@@ -163,4 +165,21 @@ export function delay(ms) {
 
 export function isMemo(type) {
   return compareNodeTypeOf(type, Memo);
+}
+
+export function argSpy() {
+  const spy = sinon.spy();
+  spy(1);
+  return spy;
+}
+
+export function expectArgs(spy, counter, args) {
+  spy(counter);
+  expect(spy.args).to.deep.equal([
+    [counter],
+    ...args,
+    [counter],
+  ]);
+  spy.resetHistory();
+  spy(counter + 1);
 }

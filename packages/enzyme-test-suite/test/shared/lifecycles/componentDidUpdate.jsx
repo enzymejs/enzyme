@@ -8,6 +8,8 @@ import {
 } from '../../_helpers/react-compat';
 import {
   describeIf,
+  argSpy,
+  expectArgs,
 } from '../../_helpers';
 import {
   is,
@@ -152,8 +154,7 @@ export default function describeCDU({
     describeIf(is('>= 15.3'), 'PureComponent', () => {
       let spy;
       beforeEach(() => {
-        spy = sinon.spy();
-        spy(1);
+        spy = argSpy();
       });
 
       it('does not update when state and props did not change', () => {
@@ -177,52 +178,27 @@ export default function describeCDU({
         }
 
         const wrapper = Wrap(<Foo id={1} />);
-        spy(1);
-        expect(spy.args).to.deep.equal([
-          [1],
+        expectArgs(spy, 1, [
           ['render'],
-          [1],
         ]);
-        spy.resetHistory();
-        spy(2);
 
         wrapper.setState({ foo: 'update' });
-        spy(2);
-        expect(spy.args).to.deep.equal([
-          [2],
+        expectArgs(spy, 2, [
           ['render'],
           ['componentDidUpdate'],
-          [2],
         ]);
-        spy.resetHistory();
-        spy(3);
 
         wrapper.setState({ foo: 'update' });
-        spy(3);
-        expect(spy.args).to.deep.equal([
-          [3],
-          [3],
-        ]);
-        spy.resetHistory();
-        spy(4);
+        expectArgs(spy, 3, []);
 
         wrapper.setProps({ id: 2 });
-        spy(4);
-        expect(spy.args).to.deep.equal([
-          [4],
+        expectArgs(spy, 4, [
           ['render'],
           ['componentDidUpdate'],
-          [4],
         ]);
-        spy.resetHistory();
-        spy(5);
 
         wrapper.setProps({ id: 2 });
-        spy(5);
-        expect(spy.args).to.deep.equal([
-          [5],
-          [5],
-        ]);
+        expectArgs(spy, 5, []);
       });
 
       class Test extends PureComponent {
@@ -312,8 +288,8 @@ export default function describeCDU({
 
     describe('Own PureComponent implementation', () => {
       it('does not update when state and props did not change', () => {
-        const spy = sinon.spy();
-        spy(1);
+        const spy = argSpy();
+
         class Foo extends React.Component {
           constructor(props) {
             super(props);
@@ -339,55 +315,32 @@ export default function describeCDU({
         }
 
         const wrapper = Wrap(<Foo id={1} />);
-        spy(1);
-        expect(spy.args).to.deep.equal([
-          [1],
+        expectArgs(spy, 1, [
           ['render'],
-          [1],
         ]);
-        spy.resetHistory();
-        spy(2);
 
         wrapper.setState({ foo: 'update' });
-        spy(2);
-        expect(spy.args).to.deep.equal([
-          [2],
+        expectArgs(spy, 2, [
           ['shouldComponentUpdate'],
           ['render'],
           ['componentDidUpdate'],
-          [2],
         ]);
-        spy.resetHistory();
-        spy(3);
 
         wrapper.setState({ foo: 'update' });
-        spy(3);
-        expect(spy.args).to.deep.equal([
-          [3],
+        expectArgs(spy, 3, [
           ['shouldComponentUpdate'],
-          [3],
         ]);
-        spy.resetHistory();
-        spy(4);
 
         wrapper.setProps({ id: 2 });
-        spy(4);
-        expect(spy.args).to.deep.equal([
-          [4],
+        expectArgs(spy, 4, [
           ['shouldComponentUpdate'],
           ['render'],
           ['componentDidUpdate'],
-          [4],
         ]);
-        spy.resetHistory();
-        spy(5);
 
         wrapper.setProps({ id: 2 });
-        spy(5);
-        expect(spy.args).to.deep.equal([
-          [5],
+        expectArgs(spy, 5, [
           ['shouldComponentUpdate'],
-          [5],
         ]);
       });
     });
