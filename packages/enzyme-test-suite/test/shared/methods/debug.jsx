@@ -89,6 +89,7 @@ export default function describeDebug({
         });
 
         it('displays the expected display names', () => {
+          expect(SFCMemoWithDisplayName).to.have.property('displayName');
           const wrapper = Wrap((
             <div>
               <SFC />

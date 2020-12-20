@@ -1171,7 +1171,8 @@ describeWithDOM('mount', () => {
       const SuspenseComponent = () => (
         <Suspense fallback={<Fallback />}>
           <div />
-          <div />
+          <span />
+          <main />
         </Suspense>
       );
 
@@ -1179,7 +1180,8 @@ describeWithDOM('mount', () => {
       expect(wrapper.debug()).to.equal(`<SuspenseComponent>
   <Suspense fallback={{...}}>
     <div />
-    <div />
+    <span />
+    <main />
   </Suspense>
 </SuspenseComponent>`);
     });

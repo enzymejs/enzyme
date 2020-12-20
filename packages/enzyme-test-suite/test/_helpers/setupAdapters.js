@@ -1,3 +1,4 @@
+const util = require('util');
 const Enzyme = require('enzyme');
 const wrap = require('mocha-wrap');
 // eslint-disable-next-line prefer-destructuring
@@ -12,12 +13,14 @@ const origError = console.error;
 wrap.register(function withConsoleThrows() {
   return this.withOverrides(() => console, () => ({
     error(msg) {
-      origError.apply(console, arguments); // eslint-disable-line prefer-rest-params
-      throw new EvalError(msg);
+      /* eslint prefer-rest-params: 1 */
+      origError.apply(console, arguments);
+      throw new EvalError(arguments.length > 1 ? util.format.apply(util, arguments) : msg);
     },
     warn(msg) {
-      origWarn.apply(console, arguments); // eslint-disable-line prefer-rest-params
-      throw new EvalError(msg);
+      /* eslint prefer-rest-params: 1, prefer-spread: 1 */
+      origWarn.apply(console, arguments);
+      throw new EvalError(arguments.length > 1 ? util.format.apply(util, arguments) : msg);
     },
   })).extend('with console throws', {
     beforeEach() {

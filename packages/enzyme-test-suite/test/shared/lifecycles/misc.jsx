@@ -1,7 +1,6 @@
 import React from 'react';
 import sinon from 'sinon-sandbox';
 import { expect } from 'chai';
-import isEqual from 'lodash.isequal';
 import PropTypes from 'prop-types';
 
 import {
@@ -489,7 +488,10 @@ export default function describeMisc({
             && properErrorMessage(error)
             && rest.length === 0);
           expect(third).to.deep.equal(['render']);
-          expect(fourth).to.satisfy(([name, error, info]) => name === 'componentDidCatch' && properErrorMessage(error) && isEqual(info, expectedInfo));
+          const [name, error, info] = fourth;
+          expect(name).to.equal('componentDidCatch');
+          expect(error).to.satisfy(properErrorMessage);
+          expect(info).to.deep.equal(expectedInfo);
 
           expect(stateSpy.args).to.deep.equal([
             [{
