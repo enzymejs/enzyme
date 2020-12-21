@@ -28,6 +28,7 @@ import {
   memo,
   Profiler,
   Suspense,
+  useCallback,
 } from './_helpers/react-compat';
 import {
   describeIf,
@@ -2029,6 +2030,46 @@ describe('shallow', () => {
           .it('renders with no propType errors with a component fallback', () => {
             shallow(<MySFC requiredString="abc" fallback={<Fallback />} />);
           });
+      });
+    });
+
+    // TODO: fix in v16.6 and v16.7
+    describeIf(is('>= 16.8'), 'avoids regressing #2200', () => {
+      const Home = lazy && lazy(() => new Promise(() => {}));
+
+      const PageSwitchFallback = memo ? memo(() => <div aria-live="polite" aria-busy />) : {};
+      PageSwitchFallback.displayName = 'PageSwitchFallback';
+
+      const PageSwitch = memo ? memo(({ pageData }) => {
+        const renderPageComponent = useCallback ? useCallback(() => {
+          if (pageData === 'NOT_FOUND') return null;
+
+          switch (pageData.key) {
+            case 'home':
+              return <Home />;
+            default:
+              return null;
+          }
+        }, [pageData]) : () => {};
+
+        return (
+          <Suspense fallback={<PageSwitchFallback />}>
+            {renderPageComponent()}
+          </Suspense>
+        );
+      }) : {};
+      PageSwitch.displayName = 'PageSwitch';
+
+      it('works with suspenseFallback: true', () => {
+        const wrapper = shallow(<PageSwitch pageData={{ key: 'home' }} />, { suspenseFallback: true });
+        expect(wrapper.find(PageSwitchFallback)).to.have.lengthOf(1);
+        expect(wrapper.find(Home)).to.have.lengthOf(0);
+      });
+
+      it('works with suspenseFallback: false', () => {
+        const wrapper = shallow(<PageSwitch pageData={{ key: 'home' }} />, { suspenseFallback: false });
+        expect(wrapper.find(PageSwitchFallback)).to.have.lengthOf(0);
+        expect(wrapper.find(Home)).to.have.lengthOf(1);
       });
     });
   });
