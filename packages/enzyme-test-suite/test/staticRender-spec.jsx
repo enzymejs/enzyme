@@ -142,10 +142,4 @@ describeWithDOM('render', () => {
       expect(() => render(<LazyComponent />, { suspenseFallback: false })).to.throw();
     });
   });
-
-  describe('can properly serialize innerHTML', () => {
-    const wrapper = render(<span><svg dangerouslySetInnerHTML={{ __html: '<use xlink:href="#1" />' }} /></span>);
-
-    expect(wrapper.find('svg').html()).to.equal('<use xlink:href="#1"></use>');
-  });
 });
