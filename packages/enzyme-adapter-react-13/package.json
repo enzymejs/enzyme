@@ -39,8 +39,8 @@
   "license": "MIT",
   "dependencies": {
     "enzyme-adapter-utils": "^1.14.0",
-    "object.assign": "^4.1.0",
-    "object.values": "^1.1.1",
+    "object.assign": "^4.1.2",
+    "object.values": "^1.1.2",
     "prop-types": "^15.7.2"
   },
   "peerDependencies": {
