@@ -40,10 +40,10 @@
   "dependencies": {
     "enzyme-adapter-utils": "^1.14.0",
     "enzyme-shallow-equal": "^1.0.4",
-    "object.assign": "^4.1.0",
-    "object.values": "^1.1.1",
+    "object.assign": "^4.1.2",
+    "object.values": "^1.1.2",
     "prop-types": "^15.7.2",
-    "react-is": "^16.13.1",
+    "react-is": "^17.0.1",
     "react-reconciler": "^0.7.0",
     "react-test-renderer": "~16.2.0"
   },
