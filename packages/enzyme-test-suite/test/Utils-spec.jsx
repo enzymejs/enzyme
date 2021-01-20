@@ -30,7 +30,7 @@ import { get, reset, merge as configure } from 'enzyme/build/configuration';
 import './_helpers/setupAdapters';
 
 import { describeIf } from './_helpers';
-import { is } from './_helpers/version';
+import { is, TODO_17 } from './_helpers/version';
 
 describe('Utils', () => {
   describe('nodeEqual', () => {
@@ -593,7 +593,7 @@ describe('Utils', () => {
       });
     });
 
-    describeIf(is('>= 16.6'), 'given an inner displayName wrapped in Memo and forwardRef', () => {
+    describeIf(is('>= 16.6') && !TODO_17(true), 'given an inner displayName wrapped in Memo and forwardRef', () => {
       it('returns the displayName', () => {
         const adapter = getAdapter();
         const Foo = () => <div />;
