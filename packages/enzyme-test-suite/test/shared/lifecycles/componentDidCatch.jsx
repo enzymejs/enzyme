@@ -2,7 +2,7 @@ import React from 'react';
 import sinon from 'sinon-sandbox';
 import { expect } from 'chai';
 
-import { is } from '../../_helpers/version';
+import { is, TODO_17 } from '../../_helpers/version';
 import {
   describeIf,
   itIf,
@@ -206,7 +206,7 @@ export default function describeCDC({
           expect(wrapper.find({ children: 'HasNotThrown' })).to.have.lengthOf(0);
         });
 
-        it('catches errors during render', () => {
+        itIf(!TODO_17(!isShallow), 'catches errors during render', () => {
           const spy = sinon.spy();
           const wrapper = Wrap(<ErrorBoundary spy={spy} />);
 
@@ -230,7 +230,7 @@ export default function describeCDC({
           });
         });
 
-        it('works when the root is an SFC', () => {
+        itIf(!TODO_17(!isShallow), 'works when the root is an SFC', () => {
           const spy = sinon.spy();
           const wrapper = Wrap(<ErrorSFC spy={spy} />);
 

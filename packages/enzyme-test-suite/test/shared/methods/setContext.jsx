@@ -7,7 +7,7 @@ import {
   describeIf,
   itIf,
 } from '../../_helpers';
-import { is } from '../../_helpers/version';
+import { is, TODO_17 } from '../../_helpers/version';
 
 import {
   createClass,
@@ -112,7 +112,7 @@ export default function describeSetContext({
 
       expect(spy.args).to.deep.equal([
         ['render'],
-        ['componentWillReceiveProps'],
+        ...(TODO_17(isShallow) ? [] : [['componentWillReceiveProps']]),
         ['render'],
       ]);
       expect(wrapper.context('foo')).to.equal(updatedProps.foo);
@@ -161,8 +161,10 @@ export default function describeSetContext({
 
       expect(spy.args).to.deep.equal([
         ['render'],
-        ['componentWillReceiveProps'],
-        ['UNSAFE_componentWillReceiveProps'],
+        ...(TODO_17(isShallow) ? [] : [
+          ['componentWillReceiveProps'],
+          ['UNSAFE_componentWillReceiveProps'],
+        ]),
         ['render'],
       ]);
       expect(wrapper.context('foo')).to.equal(updatedProps.foo);
