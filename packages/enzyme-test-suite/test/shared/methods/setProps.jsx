@@ -313,13 +313,18 @@ export default function describeSetProps({
       }
 
       const wrapper = Wrap(<RendersBar a="a" b="b" />);
-      expect(wrapper.props().a).to.equal('a');
-      expect(wrapper.props().b).to.equal('b');
+      expect(wrapper.props()).to.eql({
+        a: 'a',
+        b: 'b',
+      });
 
       wrapper.setProps({ b: 'c', d: 'e' });
-      expect(wrapper.props().a).to.equal('a');
-      expect(wrapper.props().b).to.equal('c');
-      expect(wrapper.props().d).to.equal('e');
+
+      expect(wrapper.props()).to.eql({
+        a: 'a',
+        b: 'c',
+        d: 'e',
+      });
     });
 
     it('passes in old context', () => {
@@ -533,13 +538,18 @@ export default function describeSetProps({
         );
 
         const wrapper = Wrap(<RendersBarSFC a="a" b="b" />);
-        expect(wrapper.props().a).to.equal('a');
-        expect(wrapper.props().b).to.equal('b');
+        expect(wrapper.props()).to.eql({
+          a: 'a',
+          b: 'b',
+        });
 
         wrapper.setProps({ b: 'c', d: 'e' });
-        expect(wrapper.props().a).to.equal('a');
-        expect(wrapper.props().b).to.equal('c');
-        expect(wrapper.props().d).to.equal('e');
+
+        expect(wrapper.props()).to.eql({
+          a: 'a',
+          b: 'c',
+          d: 'e',
+        });
       });
 
       it('passes in old context', () => {
