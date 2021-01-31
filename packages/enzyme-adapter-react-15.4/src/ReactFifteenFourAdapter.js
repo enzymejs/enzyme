@@ -7,7 +7,6 @@ import TestUtils from 'react-addons-test-utils';
 import values from 'object.values';
 import { isElement, isValidElementType } from 'react-is';
 import { EnzymeAdapter } from 'enzyme';
-import has from 'has';
 import {
   displayNameOfNode,
   elementToTree,
@@ -115,6 +114,31 @@ function instanceToTree(inst) {
     instance: inst._instance || null,
     rendered: childrenFromInst(inst, el).map(instanceToTree),
   };
+}
+
+function nodeToDOMNode(node) {
+  // TODO: investigate other primitive types
+  if (typeof node === 'string' || typeof node === 'number') {
+    return global.document.createTextNode(node);
+  }
+
+  if (node && node.nodeType === 'host') {
+    const domNode = global.document.createElement(node.type);
+
+    Object.keys(node.props).filter((x) => x !== 'children').forEach((propKey) => {
+      if (propKey === 'className') {
+        domNode.setAttribute('class', node.props[propKey]);
+      } else {
+        domNode.setAttribute(propKey, node.props[propKey]);
+      }
+    });
+
+    node.rendered.map(nodeToDOMNode).filter(Boolean).forEach((child) => {
+      domNode.appendChild(child);
+    });
+
+    return domNode;
+  }
 }
 
 const eventOptions = { animation: true };
@@ -304,6 +328,9 @@ class ReactFifteenFourAdapter extends EnzymeAdapter {
   }
 
   nodeToHostNode(node) {
+    if (!node.instance) {
+      return nodeToDOMNode(node);
+    }
     return ReactDOM.findDOMNode(node.instance);
   }
 
