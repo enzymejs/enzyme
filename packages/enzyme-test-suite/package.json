@@ -56,7 +56,7 @@
     "sinon-sandbox": "^2.0.6"
   },
   "peerDependencies": {
-    "react": "^15.5.0",
+    "react": "^15.5.0 || ^17.0.0",
     "react-dom": "^15.5.0"
   },
   "devDependencies": {

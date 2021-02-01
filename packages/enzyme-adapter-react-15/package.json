@@ -46,7 +46,7 @@
   },
   "peerDependencies": {
     "enzyme": "^3.0.0",
-    "react": "^15.5.0",
+    "react": "^15.5.0 || ^17.0.0",
     "react-dom": "^15.5.0",
     "react-test-renderer": "^15.5.0"
   },

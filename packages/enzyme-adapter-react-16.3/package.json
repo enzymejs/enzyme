@@ -49,7 +49,7 @@
   },
   "peerDependencies": {
     "enzyme": "^3.0.0",
-    "react": "~16.3.0-0",
+    "react": "~16.3.0-0 || ~16.14.0",
     "react-dom": "~16.3.0-0"
   },
   "devDependencies": {
