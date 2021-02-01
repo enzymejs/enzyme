@@ -55,7 +55,7 @@
     "eslint-plugin-react": "^7.22.0",
     "eslint-plugin-react-hooks": "^4.2.0",
     "in-publish": "^2.0.1",
-    "react": "0.13.x || 0.14.x || ^15.0.0-0 || ^16.0.0-0 || ^16.3.0-0 || ^16.4.0-0",
+    "react": "^17.0.0",
     "safe-publish-latest": "^1.1.4"
   },
   "peerDependencies": {

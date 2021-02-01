@@ -45,7 +45,7 @@
   },
   "peerDependencies": {
     "enzyme": "^3.0.0",
-    "react": "^0.13.0"
+    "react": "^0.13.0 || ^0.14.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.12.10",
