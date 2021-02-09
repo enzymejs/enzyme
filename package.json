@@ -29,7 +29,7 @@
     "test:karma": "karma start",
     "test:all": "npm run react 13 && npm run test:only && npm run react 14 && npm run test:only && npm run react 15 && npm run test:only && npm run react 15.4 && npm run test:only && npm run react 15.5 && npm run test:only && npm run react 16 && npm run test:only && npm run react 16.1 && npm run test:only && npm run react 16.2 && npm run test:only && npm run react 16.3 && npm run test:only && npm run react 16.4 && npm run test:only && npm run react 16.5 && npm run test:only && npm run react 16.8 && npm run test:only",
     "react": "sh install-relevant-react.sh",
-    "env": "babel-node ./env.js",
+    "env:": "babel-node ./env.js",
     "docs:clean": "rimraf _book",
     "docs:prepare": "gitbook install",
     "docs:build": "npm run docs:prepare && gitbook build",
@@ -100,7 +100,6 @@
     "semver": "^6.3.0",
     "webpack": "^2.7.0"
   },
-  "dependencies": {},
   "greenkeeper": {
     "ignore": [
       "mocha",
