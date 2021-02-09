@@ -32,7 +32,6 @@ matrix:
       env:
       install:
         - 'npm install'
-        - 'npm run clean-local-npm'
       before_script:
         - 'npx lerna bootstrap'
       script:

@@ -107,8 +107,6 @@ const packagesToRemove = [
 ].map((s) => `./node_modules/${s}`);
 
 const additionalDirsToRemove = [
-  'node_modules/.bin/npm',
-  'node_modules/.bin/npm.cmd',
 ];
 
 const rmrfs = []

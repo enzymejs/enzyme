@@ -5,8 +5,7 @@
   "description": "JavaScript Testing utilities for React",
   "homepage": "https://enzymejs.github.io/enzyme/",
   "scripts": {
-    "clean-local-npm": "rimraf node_modules/.bin/npm node_modules/.bin/npm.cmd",
-    "postinstall": "[ -n \"${TRAVIS-}\" ] || (npm run clean-local-npm && npm link npm && lerna bootstrap)",
+    "postinstall": "[ -n \"${TRAVIS-}\" ] || (npm link npm && lerna bootstrap)",
     "prepublish": "not-in-publish || (npm run build && safe-publish-latest)",
     "preversion": "npm run clean && npm run check",
     "postversion": "git push && git push --tags && npm run clean && npm run docs:publish",
@@ -93,6 +92,7 @@
     "lerna": "^2.11.0",
     "mocha": "^3.5.3",
     "mocha-lcov-reporter": "^1.3.0",
+    "npm": "gist:9cdb687f3806f8e6cb8a365d0b7840eb",
     "nyc": "^10.3.2",
     "prop-types": "^15.7.2",
     "rimraf": "^2.7.1",
