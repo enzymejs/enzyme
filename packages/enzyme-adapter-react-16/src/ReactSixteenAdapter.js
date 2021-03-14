@@ -690,7 +690,13 @@ class ReactSixteenAdapter extends EnzymeAdapter {
           renderedEl = transformSuspense(renderedEl, renderedEl, { suspenseFallback });
           const { type: Component } = renderedEl;
 
-          const context = getMaskedContext(Component.contextTypes, unmaskedContext);
+          let context;
+          if (Component.contextType) {
+            const Provider = adapter.getProviderFromConsumer(Component.contextType);
+            context = providerValues.has(Provider) ? providerValues.get(Provider) : getProviderDefaultValue(Provider);
+          } else {
+            context = getMaskedContext(Component.contextTypes, unmaskedContext);
+          }
 
           if (isMemo(el.type)) {
             const { type: InnerComp, compare } = el.type;
