@@ -1,0 +1,113 @@
+name: 'Tests: node.js'
+
+on: [pull_request, push]
+
+jobs:
+  build:
+    name: 'install deps and build'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ljharb/actions/node/install@main
+        with:
+          skip-ls-check: true
+      - run: npx lerna bootstrap
+      - run: npm run build
+      - uses: actions/cache@v2
+        with:
+          path: |
+            packages/*/build
+          key: enzyme-${{ github.workflow }}-${{ github.action }}-${{ github.run_id }}
+
+  tests:
+    needs: [build]
+    name: 'run tests'
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version:
+          - '14'
+          - '12'
+          - '4'
+        react:
+          - '16.14'
+          - '16.13'
+          - '16.12'
+          - '16.11'
+          - '16.10'
+          - '16.9'
+          - '16.8'
+          - '16.7'
+          - '16.6'
+          - '16.5'
+          - '16.4'
+          - '16.3'
+          - '16.2'
+          - '16.1'
+          - '16.0'
+          - '15.5'
+          - '15.4'
+          - '15.3'
+          - '15.2'
+          - '15.1'
+          - '15.0'
+          - '0.14'
+          - '0.13'
+        include:
+          - node-version: '10'
+            react: '16'
+          - node-version: '8'
+            react: '16'
+          - node-version: '6'
+            react: '16'
+          - react: '16.8.3'
+          - react: '16.8.5'
+            env:
+              RENDERER: '16.8.5'
+          - react: '16.8.5'
+            continue-on-error: true
+            env:
+              RENDERER: '16.8.3'
+          - react: '16.3'
+            env:
+              ADAPTER: '16'
+          - react: '16.8'
+            continue-on-error: true
+            env:
+              RENDERER: '16.7'
+          - react: '16.7'
+            env:
+              RENDERER: '16.8'
+          - react: '16.7'
+            env:
+              RENDERER: '16.7'
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: actions/cache@v2
+        with:
+          path: |
+            packages/*/build
+          key: enzyme-${{ github.workflow }}-${{ github.action }}-${{ github.run_id }}
+      - run: sudo chmod -R a+w .
+      - uses: ljharb/actions/node/install@main
+        with:
+          node-version: ${{ matrix.node-version || 'lts/* '}}
+          skip-install: true
+          before_install: 'npm install --ignore-scripts'
+          after_install: '(nvm install node && REACT=${{ matrix.react }} TRAVIS=1 sh install-relevant-react.sh)'
+          skip-ls-check: true
+      - run: npm run travis
+      - uses: codecov/codecov-action@v1
+      
+
+  node:
+    name: 'node + react'
+    needs: [tests]
+    runs-on: ubuntu-latest
+    steps:
+      - run: 'echo tests completed'

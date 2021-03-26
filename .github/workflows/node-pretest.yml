@@ -1,0 +1,26 @@
+name: 'Tests: pretest/posttest'
+
+on: [pull_request, push]
+
+jobs:
+  pretest:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ljharb/actions/node/install@main
+        with:
+          skip-ls-check: true
+      - run: sh install-relevant-react.sh
+      - run: npx lerna bootstrap
+      - run: npm run build
+      - run: npm run pretest
+
+  # posttest:
+  #   runs-on: ubuntu-latest
+
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - uses: ljharb/actions/node/install@main
+  #     - run: npm run build
+  #     - run: npm run posttest

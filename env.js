@@ -92,7 +92,8 @@ const reactVersion = version < 15 ? '0.' + version : version;
 const adapterVersion = process.env.ADAPTER || getAdapter(reactVersion) || version;
 const adapterName = `enzyme-adapter-react-${adapterVersion}`;
 const adapterPackageJsonPath = path.join(root, 'packages', adapterName, 'package.json');
-const testPackageJsonPath = path.join(root, 'packages', 'enzyme-test-suite', 'package.json');
+const testPackagePath = path.join(root, 'packages', 'enzyme-test-suite');
+const testPackageJsonPath = path.join(testPackagePath, 'package.json');
 
 if (!fs.statSync(adapterPackageJsonPath)) {
   throw new Error('Adapter not found: "' + adapterName + '"');
@@ -106,12 +107,18 @@ const packagesToRemove = [
   'create-react-class',
 ].map((s) => `./node_modules/${s}`);
 
+const pkgsDir = path.join(root, 'packages');
+const projects = fs.readdirSync(pkgsDir);
+
 const additionalDirsToRemove = [
 ];
 
 const rmrfs = []
   .concat(packagesToRemove)
+  .concat(packagesToRemove.flatMap((x) => projects.map((p) => path.join(pkgsDir, p, x))))
   .concat(additionalDirsToRemove);
+
+const originalTestJSON = getJSON(testPackageJsonPath);
 
 Promise.resolve()
   .then(() => Promise.all(rmrfs.map((s) => primraf(s))))
@@ -133,22 +140,22 @@ Promise.resolve()
 
     // eslint-disable-next-line no-param-reassign
     testJson.dependencies[adapterName] = adapterJson.version;
+    Object.assign(testJson.peerDependencies, adapterJson.peerDependencies);
+    Object.assign(testJson.devDependencies, adapterJson.peerDependencies);
 
-    return writeJSON(adapterPackageJsonPath, adapterJson, true).then(() => Promise.all([
-      // npm install the peer deps at the root
-      run('npm', 'i', '--no-save', ...installs),
-
+    return Promise.all([
+      writeJSON(adapterPackageJsonPath, adapterJson, true),
       // add the adapter to the dependencies of the test suite
       writeJSON(testPackageJsonPath, testJson, true),
-    ]));
+    ]).then(() => run('npm', 'i', '--no-save', ...installs)); // npm install the peer deps at the root
   })
   .then(() => run('lerna', 'bootstrap', '--hoist=\'react*\''))
-  .then(() => getJSON(testPackageJsonPath))
-  .then((testJson) => {
-    // now that we've lerna bootstrapped, we can remove the adapter from the
-    // package.json so there is no diff
-    // eslint-disable-next-line no-param-reassign
-    delete testJson.dependencies[adapterName];
-    return writeJSON(testPackageJsonPath, testJson, true);
-  })
+  .then(() => Promise.all([
+    path.join(pkgsDir, '*', 'node_modules', 'react'),
+    path.join(pkgsDir, '*', 'node_modules', 'react-dom'),
+    path.join(pkgsDir, '*', 'node_modules', 'react-addons-test-utils'),
+  ].map((x) => primraf(x))))
+  .then(() => originalTestJSON)
+  // now that we've lerna bootstrapped, we can revert the test package.json so there is no diff
+  .then((testJson) => writeJSON(testPackageJsonPath, testJson, true))
   .catch((err) => console.error(err));
