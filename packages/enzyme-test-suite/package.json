@@ -70,6 +70,8 @@
     "eslint-plugin-mocha": "^8.1.0",
     "eslint-plugin-react": "^7.23.1",
     "eslint-plugin-react-hooks": "^4.2.0",
+    "react": "*",
+    "react-dom": "*",
     "rimraf": "^2.7.1"
   }
 }

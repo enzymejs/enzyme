@@ -65,6 +65,8 @@
     "eslint-plugin-react": "^7.23.1",
     "eslint-plugin-react-hooks": "^4.2.0",
     "in-publish": "^2.0.1",
+    "react": "~16.0.0-0 || ~16.1",
+    "react-dom": "~16.0.0-0 || ~16.1",
     "rimraf": "^2.7.1",
     "safe-publish-latest": "^1.1.4"
   }
