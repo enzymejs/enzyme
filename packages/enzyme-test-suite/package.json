@@ -56,8 +56,8 @@
     "sinon-sandbox": "^2.0.6"
   },
   "peerDependencies": {
-    "react": "^15.5.0",
-    "react-dom": "^15.5.0"
+    "react": "*",
+    "react-dom": "*"
   },
   "devDependencies": {
     "@babel/cli": "^7.12.10",
