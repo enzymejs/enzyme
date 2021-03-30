@@ -39,9 +39,8 @@
   "license": "MIT",
   "dependencies": {
     "has": "^1.0.3",
-    "object-is": "^1.1.4"
+    "object-is": "^1.1.5"
   },
-  "peerDependencies": {},
   "devDependencies": {
     "@babel/cli": "^7.13.14",
     "@babel/core": "^7.13.14",
