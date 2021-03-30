@@ -1,10 +1,17 @@
 const util = require('util');
 const Enzyme = require('enzyme');
 const wrap = require('mocha-wrap');
+const inspect = require('object-inspect');
+
 // eslint-disable-next-line prefer-destructuring
 const resetWarningCache = require('prop-types').checkPropTypes.resetWarningCache;
 
+const { VERSION } = require('./version');
+
 const Adapter = require('./adapter');
+
+console.error(`*** React version: v${VERSION}`);
+console.error(`*** Adapter: ${inspect(Adapter)}`);
 
 Enzyme.configure({ adapter: new Adapter() });
 
