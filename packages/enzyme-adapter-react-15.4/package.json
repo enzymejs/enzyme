@@ -41,15 +41,15 @@
     "enzyme-adapter-react-helper": "^1.3.9",
     "enzyme-adapter-utils": "^1.14.0",
     "object.assign": "^4.1.2",
-    "object.values": "^1.1.2",
+    "object.values": "^1.1.3",
     "prop-types": "^15.7.2",
     "react-is": "^17.0.1"
   },
   "peerDependencies": {
     "enzyme": "^3.0.0",
     "react": "15.0.0-0 - 15.4.x",
-    "react-dom": "15.0.0-0 - 15.4.x",
-    "react-addons-test-utils": "15.0.0-0 - 15.4.x"
+    "react-addons-test-utils": "15.0.0-0 - 15.4.x",
+    "react-dom": "15.0.0-0 - 15.4.x"
   },
   "devDependencies": {
     "@babel/cli": "^7.12.10",
