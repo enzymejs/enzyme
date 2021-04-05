@@ -12,7 +12,7 @@ import {
 import { is } from '../../_helpers/version';
 
 // some React versions pass undefined as an argument of setState callback.
-const CALLING_SETSTATE_CALLBACK_WITH_UNDEFINED = is('^15.5');
+const CALLING_SETSTATE_CALLBACK_WITH_UNDEFINED = is('^15.4');
 
 export default function describeSetState({
   Wrap,
