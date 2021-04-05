@@ -22,6 +22,9 @@ function getPlugins() {
     adapter14,
     adapter154,
     adapter15,
+    adapter161,
+    adapter162,
+    adapter163,
     adapter16,
   ];
 
@@ -96,7 +99,7 @@ module.exports = function karma(config) {
     webpack: {
       devtool: 'inline-source-map',
       resolve: {
-        extensions: ['', '.js', '.jsx', '.json'],
+        extensions: ['.js', '.jsx', '.json'],
         alias: {
           // dynamic require calls in sinon confuse webpack so we ignore it
           sinon: 'sinon/pkg/sinon',
