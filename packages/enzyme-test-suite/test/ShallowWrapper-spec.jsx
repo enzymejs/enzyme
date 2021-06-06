@@ -2077,6 +2077,55 @@ describe('shallow', () => {
     });
   });
 
+  describeIf(is('>= 16.6'), 'Suspense & lazy component', () => {
+    class Fallback extends React.Component {
+      render() {
+        return (
+          <div>Fallback</div>
+        );
+      }
+    }
+
+    it('finds fallback when given lazy class component', () => {
+      class Component extends React.Component {
+        // eslint-disable-next-line react/require-render-return
+        render() {
+          throw Promise.resolve();
+        }
+      }
+
+      const SuspenseComponent = () => (
+        <Suspense fallback={Fallback}>
+          <Component />
+        </Suspense>
+      );
+
+      const wrapper = shallow(<SuspenseComponent />, { suspenseFallback: true });
+
+      expect(wrapper.is(Suspense)).to.equal(true);
+      expect(wrapper.find(Component)).to.have.lengthOf(1);
+      expect(wrapper.find(Fallback)).to.have.lengthOf(1);
+    });
+
+    it('finds fallback when given lazy functional component', () => {
+      function Component() {
+        throw Promise.resolve();
+      }
+
+      const SuspenseComponent = () => (
+        <Suspense fallback={Fallback}>
+          <Component />
+        </Suspense>
+      );
+
+      const wrapper = shallow(<SuspenseComponent />, { suspenseFallback: true });
+
+      expect(wrapper.is(Suspense)).to.equal(true);
+      expect(wrapper.find(Component)).to.have.lengthOf(1);
+      expect(wrapper.find(Fallback)).to.have.lengthOf(1);
+    });
+  });
+
   describe('lifecycle methods', () => {
     describe('disableLifecycleMethods option', () => {
       describe('validation', () => {

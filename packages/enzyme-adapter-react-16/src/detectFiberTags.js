@@ -51,10 +51,20 @@ module.exports = function detectFiberTags() {
   function Fn() {
     return null;
   }
+  function LazyFn() {
+    throw Promise.resolve();
+  }
   // eslint-disable-next-line react/prefer-stateless-function
   class Cls extends React.Component {
     render() {
       return null;
+    }
+  }
+  // eslint-disable-next-line react/prefer-stateless-function
+  class LazyCls extends React.Component {
+    // eslint-disable-next-line react/require-render-return
+    render() {
+      throw Promise.resolve();
     }
   }
   let Ctx = null;
@@ -75,8 +85,10 @@ module.exports = function detectFiberTags() {
   return {
     HostRoot: getFiber('test').return.return.tag, // Go two levels above to find the root
     ClassComponent: getFiber(React.createElement(Cls)).tag,
+    ClassComponentLazy: supportsSuspense ? getLazyFiber(LazyCls).tag : -1,
     Fragment: getFiber([['nested']]).tag,
     FunctionalComponent: getFiber(React.createElement(Fn)).tag,
+    FunctionalComponentLazy: supportsSuspense ? getLazyFiber(LazyFn).tag : -1,
     MemoSFC: supportsMemo
       ? getFiber(React.createElement(React.memo(Fn))).tag
       : -1,
