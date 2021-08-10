@@ -48,3 +48,8 @@ packages/*/LICENSE.md
 packages/enzyme/README.md
 packages/enzyme-adapter-react-*/README.md
 packages/enzyme-adapter-utils*/README.md
+
+# vim
+**/*.swp
+*.swp
+
