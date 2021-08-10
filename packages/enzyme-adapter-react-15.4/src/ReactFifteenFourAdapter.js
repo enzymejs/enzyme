@@ -50,6 +50,14 @@ function nodeType(inst) {
   if (inst._compositeType != null) {
     return compositeTypeToNodeType(inst._compositeType);
   }
+
+  const type = inst._instance && inst._instance.constructor;
+  if (type && type.prototype && type.prototype.isReactComponent) {
+    return 'class';
+  }
+  if (typeof type === 'function') {
+    return 'function';
+  }
   return 'host';
 }
 
@@ -106,6 +114,31 @@ function instanceToTree(inst) {
     instance: inst._instance || null,
     rendered: childrenFromInst(inst, el).map(instanceToTree),
   };
+}
+
+function nodeToDOMNode(node) {
+  // TODO: investigate other primitive types
+  if (typeof node === 'string' || typeof node === 'number') {
+    return global.document.createTextNode(node);
+  }
+
+  if (node && node.nodeType === 'host') {
+    const domNode = global.document.createElement(node.type);
+
+    Object.keys(node.props).filter((x) => x !== 'children').forEach((propKey) => {
+      if (propKey === 'className') {
+        domNode.setAttribute('class', node.props[propKey]);
+      } else {
+        domNode.setAttribute(propKey, node.props[propKey]);
+      }
+    });
+
+    node.rendered.map(nodeToDOMNode).filter(Boolean).forEach((child) => {
+      domNode.appendChild(child);
+    });
+
+    return domNode;
+  }
 }
 
 const eventOptions = { animation: true };
@@ -218,13 +251,15 @@ class ReactFifteenFourAdapter extends EnzymeAdapter {
           return elementToTree(cachedNode);
         }
         const output = renderer.getRenderOutput();
+
+        const internalInstance = renderer._instance;
         return {
-          nodeType: compositeTypeToNodeType(renderer._instance._compositeType),
+          nodeType: nodeType(internalInstance),
           type: cachedNode.type,
           props: cachedNode.props,
           key: ensureKeyOrUndefined(cachedNode.key),
           ref: cachedNode.ref,
-          instance: renderer._instance._instance,
+          instance: internalInstance._instance,
           rendered: elementToTree(output),
         };
       },
@@ -293,6 +328,9 @@ class ReactFifteenFourAdapter extends EnzymeAdapter {
   }
 
   nodeToHostNode(node) {
+    if (!node.instance) {
+      return nodeToDOMNode(node);
+    }
     return ReactDOM.findDOMNode(node.instance);
   }
 

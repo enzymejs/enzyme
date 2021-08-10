@@ -54,6 +54,7 @@ export default function describeCDC({
         }
 
         render() {
+          const { ThrowerComponent } = this.props;
           const {
             didThrow,
             throws,
@@ -62,7 +63,7 @@ export default function describeCDC({
             <div>
               <MaybeFragment>
                 <span>
-                  <Thrower throws={throws} />
+                  {<ThrowerComponent throws={throws} />}
                   <div>
                     {didThrow ? 'HasThrown' : 'HasNotThrown'}
                   </div>
@@ -72,6 +73,10 @@ export default function describeCDC({
           );
         }
       }
+
+      ErrorBoundary.defaultProps = {
+        ThrowerComponent: Thrower,
+      };
 
       function ErrorSFC(props) {
         return <ErrorBoundary {...props} />;
@@ -120,6 +125,39 @@ export default function describeCDC({
     in WrapperComponent`,
         });
       });
+
+      itIf(
+        is('>= 16.6'),
+        'catches a simulated error on memo() component',
+        () => {
+          const MemoThrower = React.memo(Thrower);
+          const spy = sinon.spy();
+          const wrapper = Wrap(
+            <ErrorBoundary spy={spy} ThrowerComponent={MemoThrower} />,
+          );
+
+          expect(spy).to.have.property('callCount', 0);
+
+          expect(() => wrapper.find(Thrower).simulateError(errorToThrow)).not.to.throw();
+
+          expect(spy).to.have.property('callCount', 1);
+
+          expect(spy.args).to.be.an('array').and.have.lengthOf(1);
+          const [[actualError, info]] = spy.args;
+          expect(() => {
+            throw actualError;
+          }).to.throw(errorToThrow);
+          expect(info).to.deep.equal({
+            componentStack: `
+    in Memo(Thrower) (created by ErrorBoundary)
+    in span (created by ErrorBoundary)${hasFragments ? '' : `
+    in main (created by ErrorBoundary)`}
+    in div (created by ErrorBoundary)
+    in ErrorBoundary (created by WrapperComponent)
+    in WrapperComponent`,
+          });
+        },
+      );
 
       it('rerenders on a simulated error', () => {
         const wrapper = Wrap(<ErrorBoundary spy={sinon.stub()} />);

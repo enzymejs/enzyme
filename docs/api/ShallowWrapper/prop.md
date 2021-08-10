@@ -55,7 +55,7 @@ expect(wrapper.prop('includedProp')).to.equal('Success!');
 
 const validInput = 1;
 wrapper.find('ValidateNumberInputComponent').prop('onChangeHandler')(validInput);
-expect(wrapper.state('number')).to.equal(number);
+expect(wrapper.state('number')).to.equal(validInput);
 
 const invalidInput = 'invalid input';
 wrapper.find('ValidateNumberInputComponent').prop('onChangeHandler')(invalidInput);

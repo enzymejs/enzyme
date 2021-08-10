@@ -527,7 +527,7 @@ class ReactSixteenAdapter extends EnzymeAdapter {
           rootNode,
           nodeHierarchy,
           nodeTypeFromType,
-          adapter.displayNameOfNode,
+          adapter.displayNameOfNode.bind(adapter),
           is166 ? catchingType : undefined,
         );
       },
@@ -787,7 +787,7 @@ class ReactSixteenAdapter extends EnzymeAdapter {
           cachedNode,
           nodeHierarchy.concat(cachedNode),
           nodeTypeFromType,
-          adapter.displayNameOfNode,
+          adapter.displayNameOfNode.bind(adapter),
           is166 ? cachedNode.type : undefined,
         );
       },

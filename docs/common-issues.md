@@ -39,7 +39,7 @@ More details and motivation can be found at [migration from 2 to 3: Calling prop
 Instead of storing `.find()` results into a local variable, re-find from the root after any change.
 
 ```jsx
-wrapper.find('button').props().onClick();
+wrapper.find('button').invoke('onClick')();
 expect(wrapper.find('input').prop('value')).to.equal('test');
 ```
 
@@ -52,7 +52,7 @@ function getButton(wrapper) {
 
 // …
 
-getButton(wrapper).prop('onClick')();
+getButton(wrapper).invoke('onClick')();
 ```
 
 ### Testing third party libraries

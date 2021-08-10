@@ -218,13 +218,15 @@ class ReactFifteenAdapter extends EnzymeAdapter {
           return elementToTree(cachedNode);
         }
         const output = renderer.getRenderOutput();
+
+        const internalInstance = renderer._instance;
         return {
-          nodeType: compositeTypeToNodeType(renderer._instance._compositeType),
+          nodeType: compositeTypeToNodeType(internalInstance._compositeType),
           type: cachedNode.type,
           props: cachedNode.props,
           key: ensureKeyOrUndefined(cachedNode.key),
           ref: cachedNode.ref,
-          instance: renderer._instance._instance,
+          instance: internalInstance._instance,
           rendered: elementToTree(output),
         };
       },

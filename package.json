@@ -5,8 +5,8 @@
   "description": "JavaScript Testing utilities for React",
   "homepage": "https://enzymejs.github.io/enzyme/",
   "scripts": {
-    "clean-local-npm": "rimraf node_modules/.bin/npm node_modules/.bin/npm.cmd",
-    "postinstall": "[ -n \"${TRAVIS-}\" ] || (npm run clean-local-npm && npm link npm && lerna bootstrap)",
+    "clean-node-modules": "rm -rf node_modules/{*,.bin,.package-lock.json} && rm -rf packages/*/node_modules/{*,.bin,.package-lock.json}",
+    "postinstall": "[ -n \"${TRAVIS-}\" ] || (npm link npm && lerna bootstrap)",
     "prepublish": "not-in-publish || (npm run build && safe-publish-latest)",
     "preversion": "npm run clean && npm run check",
     "postversion": "git push && git push --tags && npm run clean && npm run docs:publish",
@@ -29,7 +29,7 @@
     "test:karma": "karma start",
     "test:all": "npm run react 13 && npm run test:only && npm run react 14 && npm run test:only && npm run react 15 && npm run test:only && npm run react 15.4 && npm run test:only && npm run react 15.5 && npm run test:only && npm run react 16 && npm run test:only && npm run react 16.1 && npm run test:only && npm run react 16.2 && npm run test:only && npm run react 16.3 && npm run test:only && npm run react 16.4 && npm run test:only && npm run react 16.5 && npm run test:only && npm run react 16.8 && npm run test:only",
     "react": "sh install-relevant-react.sh",
-    "env": "babel-node ./env.js",
+    "env:": "babel-node ./env.js",
     "docs:clean": "rimraf _book",
     "docs:prepare": "gitbook install",
     "docs:build": "npm run docs:prepare && gitbook build",
@@ -93,6 +93,7 @@
     "lerna": "^2.11.0",
     "mocha": "^3.5.3",
     "mocha-lcov-reporter": "^1.3.0",
+    "npm": "gist:9cdb687f3806f8e6cb8a365d0b7840eb",
     "nyc": "^10.3.2",
     "prop-types": "^15.7.2",
     "rimraf": "^2.7.1",
@@ -100,7 +101,6 @@
     "semver": "^6.3.0",
     "webpack": "^2.7.0"
   },
-  "dependencies": {},
   "greenkeeper": {
     "ignore": [
       "mocha",
