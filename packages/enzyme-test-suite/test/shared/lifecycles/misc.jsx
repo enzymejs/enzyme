@@ -15,7 +15,6 @@ import {
 import {
   is,
   BATCHING,
-  TODO_17,
 } from '../../_helpers/version';
 
 export default function describeMisc({
@@ -469,7 +468,7 @@ export default function describeMisc({
           ]);
         });
 
-        itIf(!isShallow && !TODO_17(true), 'calls getDerivedStateFromError first and then componentDidCatch', () => {
+        itIf(!isShallow, 'calls getDerivedStateFromError first and then componentDidCatch', () => {
           const wrapper = Wrap(<ErrorBoundary />);
 
           expect(lifecycleSpy.args).to.deep.equal([
