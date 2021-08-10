@@ -83,7 +83,7 @@ export default function describeSetContext({
       });
     });
 
-    it('calls componentWillReceiveProps when context is updated', () => {
+    it('calls componentWillReceiveProps when context is updated up to 17.x', () => {
       const spy = sinon.spy();
       const updatedProps = { foo: 'baz' };
       class Foo extends React.Component {
@@ -112,7 +112,7 @@ export default function describeSetContext({
 
       expect(spy.args).to.deep.equal([
         ['render'],
-        ['componentWillReceiveProps'],
+        ...(is('>= 17') && isShallow ? [] : [['componentWillReceiveProps']]),
         ['render'],
       ]);
       expect(wrapper.context('foo')).to.equal(updatedProps.foo);
@@ -128,7 +128,7 @@ export default function describeSetContext({
 </Foo>`);
     });
 
-    itIf(is('>= 16.3'), 'calls componentWillReceiveProps and UNSAFE_componentWillReceiveProps when context is updated', () => {
+    itIf(is('>= 16.3'), 'calls componentWillReceiveProps and UNSAFE_componentWillReceiveProps when context is updated up to 17.x', () => {
       const spy = sinon.spy();
       const updatedProps = { foo: 'baz' };
       class Foo extends React.Component {
@@ -161,8 +161,10 @@ export default function describeSetContext({
 
       expect(spy.args).to.deep.equal([
         ['render'],
-        ['componentWillReceiveProps'],
-        ['UNSAFE_componentWillReceiveProps'],
+        ...(is('>= 17') && isShallow ? [] : [
+          ['componentWillReceiveProps'],
+          ['UNSAFE_componentWillReceiveProps'],
+        ]),
         ['render'],
       ]);
       expect(wrapper.context('foo')).to.equal(updatedProps.foo);
