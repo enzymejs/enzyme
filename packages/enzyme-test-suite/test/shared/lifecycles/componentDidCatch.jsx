@@ -219,15 +219,20 @@ export default function describeCDC({
           expect(spy.args).to.be.an('array').and.have.lengthOf(1);
           const [[actualError, info]] = spy.args;
           expect(actualError).to.satisfy(properErrorMessage);
-          expect(info).to.deep.equal({
-            componentStack: `
+          if (is('>= 17')) {
+            expect(info).to.have.property('componentStack');
+            expect(info.componentStack).to.match(/at Thrower (.+)\n/);
+          } else {
+            expect(info).to.deep.equal({
+              componentStack: `
     in Thrower (created by ErrorBoundary)
     in span (created by ErrorBoundary)${hasFragments ? '' : `
     in main (created by ErrorBoundary)`}
     in div (created by ErrorBoundary)
     in ErrorBoundary (created by WrapperComponent)
     in WrapperComponent`,
-          });
+            });
+          }
         });
 
         it('works when the root is an SFC', () => {
@@ -243,8 +248,12 @@ export default function describeCDC({
           expect(spy.args).to.be.an('array').and.have.lengthOf(1);
           const [[actualError, info]] = spy.args;
           expect(actualError).to.satisfy(properErrorMessage);
-          expect(info).to.deep.equal({
-            componentStack: `
+          if (is('>= 17')) {
+            expect(info).to.have.property('componentStack');
+            expect(info.componentStack).to.match(/at Thrower (.+)\n/);
+          } else {
+            expect(info).to.deep.equal({
+              componentStack: `
     in Thrower (created by ErrorBoundary)
     in span (created by ErrorBoundary)${hasFragments ? '' : `
     in main (created by ErrorBoundary)`}
@@ -252,7 +261,8 @@ export default function describeCDC({
     in ErrorBoundary (created by ErrorSFC)
     in ErrorSFC (created by WrapperComponent)
     in WrapperComponent`,
-          });
+            });
+          }
         });
       });
     });
