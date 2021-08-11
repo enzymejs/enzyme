@@ -434,6 +434,7 @@ class ReactSeventeenAdapter extends EnzymeAdapter {
           calledByRenderer: false,
         },
         getDerivedStateFromError: true,
+        componentWillReceivePropsOnShallowRerender: true,
       },
     };
   }
