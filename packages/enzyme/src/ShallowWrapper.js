@@ -637,7 +637,6 @@ class ShallowWrapper {
           }
           if (
             shouldRender
-            && !this[OPTIONS].disableLifecycleMethods
             && instance
             && context
           ) {

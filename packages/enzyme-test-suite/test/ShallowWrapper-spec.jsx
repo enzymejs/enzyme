@@ -2187,7 +2187,7 @@ describe('shallow', () => {
             wrapper.setContext({ foo: 'bar' });
 
             expect(spy.args).to.deep.equal([
-              ...(is('>= 17') ? [] : [['componentWillReceiveProps']]),
+              ['componentWillReceiveProps'],
               ['shouldComponentUpdate'],
               ['componentWillUpdate'],
               ['render'],
