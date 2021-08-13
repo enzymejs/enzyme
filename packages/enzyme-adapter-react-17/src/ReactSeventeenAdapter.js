@@ -299,7 +299,6 @@ function toTree(vnode) {
     case FiberTags.Lazy:
       return childrenToTree(node.child);
     case FiberTags.OffscreenComponent: {
-      console.log(node.return.memoizedProps.children);
       return {
         nodeType: 'function',
         type: Suspense,
@@ -478,7 +477,9 @@ class ReactSeventeenAdapter extends EnzymeAdapter {
         });
       },
       unmount() {
-        ReactDOM.unmountComponentAtNode(domNode);
+        wrapAct(() => {
+          ReactDOM.unmountComponentAtNode(domNode);
+        });
         instance = null;
       },
       getNode() {
@@ -699,7 +700,9 @@ class ReactSeventeenAdapter extends EnzymeAdapter {
             // TODO(lmr): create/use synthetic events
             // TODO(lmr): emulate React's event propagation
             // ReactDOM.unstable_batchedUpdates(() => {
-            handler(...args);
+            wrapAct(() => {
+              handler(...args);
+            });
             // });
           });
         }
