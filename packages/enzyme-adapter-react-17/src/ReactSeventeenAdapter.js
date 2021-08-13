@@ -299,6 +299,12 @@ function toTree(vnode) {
     case FiberTags.Lazy:
       return childrenToTree(node.child);
     case FiberTags.OffscreenComponent: {
+      const hostNodes = nodeToHostNode(node.return.memoizedProps.children);
+      let rendered = null;
+      if (hostNodes) {
+        const hostNodesFiltered = hostNodes.filter((item) => item !== null);
+        rendered = hostNodesFiltered.length > 0 ? childrenToTree(hostNodesFiltered) : null;
+      }
       return {
         nodeType: 'function',
         type: Suspense,
@@ -306,7 +312,7 @@ function toTree(vnode) {
         key: ensureKeyOrUndefined(node.key),
         ref: node.ref,
         instance: null,
-        rendered: childrenToTree(nodeToHostNode(node.return.memoizedProps.children)),
+        rendered,
       };
     }
     default:
