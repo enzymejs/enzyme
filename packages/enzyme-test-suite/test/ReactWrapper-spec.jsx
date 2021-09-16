@@ -1002,7 +1002,8 @@ describeWithDOM('mount', () => {
       if (typeof performance === 'undefined') {
         expect(firstArgs[2]).to.be.least(0);
         expect(firstArgs[3]).to.be.least(0);
-      } else {
+      } else if (!is('^16.9')) {
+        // React ^16.9 returns `0` here
         expect(firstArgs[2]).to.be.greaterThan(0);
         expect(firstArgs[3]).to.be.greaterThan(0);
       }
@@ -1013,7 +1014,8 @@ describeWithDOM('mount', () => {
       if (typeof performance === 'undefined') {
         expect(secondArgs[2]).to.be.least(0);
         expect(secondArgs[3]).to.be.least(0);
-      } else {
+      } else if (!is('^16.9')) {
+        // React ^16.9 returns `0` here
         expect(secondArgs[2]).to.be.greaterThan(0);
         expect(secondArgs[3]).to.be.greaterThan(0);
       }
