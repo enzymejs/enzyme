@@ -93,7 +93,7 @@ function findCurrentFiberUsingSlowPath(fiber) {
       }
     }
   }
-  if (a.stateNode.current === a) {
+  if (a.stateNode?.current === a) {
     // We've determined that A is the current branch.
     return fiber;
   }
