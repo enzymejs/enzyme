@@ -11,6 +11,7 @@ import { is } from '../../_helpers/version';
 
 import {
   createClass,
+  memo,
 } from '../../_helpers/react-compat';
 
 export default function describeIsEmptyRender({
@@ -177,6 +178,13 @@ export default function describeIsEmptyRender({
       const elements = wrapper.find(RenderNull);
       expect(elements).to.have.lengthOf(3);
       expect(elements.isEmptyRender()).to.equal(!isShallow);
+    });
+
+    it('works on a memoized functional component', () => {
+      const Component = memo(() => null);
+      const wrapper = Wrap(<Component />);
+      expect(wrapper.debug()).to.equal(isShallow ? '' : '<Memo() />');
+      expect(wrapper.isEmptyRender()).to.equal(true);
     });
   });
 }
