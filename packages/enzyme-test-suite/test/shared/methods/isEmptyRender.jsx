@@ -180,7 +180,7 @@ export default function describeIsEmptyRender({
       expect(elements.isEmptyRender()).to.equal(!isShallow);
     });
 
-    it('works on a memoized functional component', () => {
+    itIf(!!memo, 'works on a memoized functional component', () => {
       const Component = memo(() => null);
       const wrapper = Wrap(<Component />);
       expect(wrapper.debug()).to.equal(isShallow ? '' : '<Memo() />');
