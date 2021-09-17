@@ -1288,7 +1288,7 @@ describeWithDOM('mount', () => {
       expect(() => mount(<SuspenseComponent />, { suspenseFallback: false })).to.throw();
     });
 
-    it('avoids a TypeError', () => {
+    itIf(!!(useState && useEffect), 'avoids a TypeError', () => {
       const Component2 = lazy(() => Promise.resolve({ default: () => <div /> }));
 
       function Component() {
