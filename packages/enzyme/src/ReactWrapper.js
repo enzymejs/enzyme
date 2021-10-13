@@ -419,7 +419,7 @@ class ReactWrapper {
    * expect(wrapper.contains(<div className="foo bar" />)).to.equal(true);
    * ```
    *
-   * @param {ReactElement|Array<ReactElement>} nodeOrNodes
+   * @param {ReactElement|Array<ReactElement>|string|number} nodeOrNodes
    * @returns {Boolean}
    */
   contains(nodeOrNodes) {
