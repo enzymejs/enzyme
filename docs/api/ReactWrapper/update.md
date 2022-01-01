@@ -3,8 +3,10 @@
 Syncs the enzyme component tree snapshot with the react component tree. Useful to run before checking the render output if something external
 may be updating the state of the component somewhere.
 
-NOTE: can only be called on a wrapper instance that is also the root instance.
-NOTE: only update the Enzyme's representation of rendered tree.
+NOTE: no matter what instance this is called on, it will always update the root.
+
+NOTE: only updates Enzyme's representation of rendered tree.
+
 NOTE: this does not force a re-render. Use `wrapper.setProps({})` to force a re-render.
 
 
