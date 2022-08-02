@@ -600,11 +600,7 @@ describe('Utils', () => {
         Foo.displayName = 'CustomWrapper';
 
         const MemoForwardFoo = React.memo(React.forwardRef(Foo));
-        if (is('>= 17')) {
-          expect(adapter.displayNameOfNode(<MemoForwardFoo />)).to.equal('Memo([object Object])');
-        } else {
-          expect(adapter.displayNameOfNode(<MemoForwardFoo />)).to.equal('Memo(ForwardRef(CustomWrapper))');
-        }
+        expect(adapter.displayNameOfNode(<MemoForwardFoo />)).to.equal('Memo(ForwardRef(CustomWrapper))');
       });
     });
   });

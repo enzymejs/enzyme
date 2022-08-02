@@ -514,7 +514,7 @@ class ReactSeventeenAdapter extends EnzymeAdapter {
           rootNode,
           nodeHierarchy,
           nodeTypeFromType,
-          adapter.displayNameOfNode,
+          adapter.displayNameOfNode.bind(adapter),
           catchingType,
         );
       },
@@ -692,7 +692,7 @@ class ReactSeventeenAdapter extends EnzymeAdapter {
           cachedNode,
           nodeHierarchy.concat(cachedNode),
           nodeTypeFromType,
-          adapter.displayNameOfNode,
+          adapter.displayNameOfNode.bind(adapter),
           cachedNode.type,
         );
       },
@@ -818,8 +818,12 @@ class ReactSeventeenAdapter extends EnzymeAdapter {
       case ContextConsumer || NaN: return 'ContextConsumer';
       case ContextProvider || NaN: return 'ContextProvider';
       case Memo || NaN: {
-        const nodeName = displayNameOfNode(node);
-        return typeof nodeName === 'string' ? nodeName : `Memo(${displayNameOfNode(type)})`;
+        if (type.displayName) {
+          return type.displayName;
+        }
+        const name = this.displayNameOfNode({ type: type.type });
+        // "works on a memoized functional component" test desires `Memo()` instead of `Memo`
+        return `Memo(${name})`;
       }
       case ForwardRef || NaN: {
         if (type.displayName) {
