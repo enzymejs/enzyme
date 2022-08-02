@@ -409,10 +409,7 @@ function makeFakeElement(type) {
 }
 
 function isStateful(Component) {
-  return Component.prototype && (
-    Component.prototype.isReactComponent
-    || Array.isArray(Component.__reactAutoBindPairs) // fallback for createClass components
-  );
+  return Component.prototype && Component.prototype.isReactComponent;
 }
 
 class ReactSeventeenAdapter extends EnzymeAdapter {
