@@ -81,12 +81,29 @@ export default function describeDebug({
         const SFCMemo = memo && memo(SFC);
         const SFCwithDisplayNameMemo = memo && memo(SFCwithDisplayName);
 
-        const SFCMemoWithDisplayName = memo && Object.assign(memo(SFC), {
+        // `React.memo` in 17 and onwards copies `memo(Component).displayName` to `Component`
+        // i.e. `React.memo(Component)` has a side-effect on `Component`
+        // So we create a new function to not pollute `SFC` since we don't want to test React behavior but Enzyme behavior
+        // eslint-disable-next-line prefer-arrow-callback, no-shadow
+        const SFCMemoWithDisplayName = memo && Object.assign(memo(function SFC() { return null; }), {
           displayName: 'SFCMemoWithDisplayName!',
         });
-        const SFCMemoWitDoubleDisplayName = memo && Object.assign(memo(SFCwithDisplayName), {
-          displayName: 'SFCMemoWitDoubleDisplayName!',
-        });
+        const SFCMemoWitDoubleDisplayName = memo
+          && Object.assign(
+            memo(
+              Object.assign(
+                // `React.memo` in 17 and onwards copies `memo(Component).displayName` to `Component`
+                // i.e. `React.memo(Component)` has a side-effect on `Component`
+                // So we create a new function to not pollute `SFC` since we don't want to test React behavior but Enzyme behavior
+                // eslint-disable-next-line prefer-arrow-callback, no-shadow
+                function SFCwithDisplayName() { return null; },
+                { displayName: 'SFC!' },
+              ),
+            ),
+            {
+              displayName: 'SFCMemoWitDoubleDisplayName!',
+            },
+          );
 
         it('displays the expected display names', () => {
           expect(SFCMemoWithDisplayName).to.have.property('displayName');
@@ -100,10 +117,11 @@ export default function describeDebug({
               <SFCMemoWitDoubleDisplayName />
             </div>
           ));
+
           expect(wrapper.debug()).to.equal(`<div>
-  ${is('>= 17') ? '<SFCMemoWithDisplayName! />' : '<SFC />'}
+  <SFC />
   <SFC! />
-  ${is('>= 17') ? '<Memo(SFCMemoWithDisplayName!) />' : '<Memo(SFC) />'}
+  <Memo(SFC) />
   <Memo(SFC!) />
   <SFCMemoWithDisplayName! />
   <SFCMemoWitDoubleDisplayName! />

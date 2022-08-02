@@ -1709,14 +1709,24 @@ describe('shallow', () => {
     describeIf(is('>= 16.6'), 'memo', () => {
       const App = () => <div>Guest</div>;
 
-      const AppMemoized = memo && Object.assign(memo(App), { displayName: 'AppMemoized' });
+      const AppMemoized = memo
+        && Object.assign(
+          // `React.memo` in 17 and onwards copies `memo(Component).displayName` to `Component`
+          // i.e. `React.memo(Component)` has a side-effect on `Component`
+          // So we create a new function to not pollute `SFC` since we don't want to test React behavior but Enzyme behavior
+          // eslint-disable-next-line prefer-arrow-callback, no-shadow
+          memo(function App() {
+            return <div>Guest</div>;
+          }),
+          { displayName: 'AppMemoized' },
+        );
 
       const RendersApp = () => <App />;
       const RendersAppMemoized = () => <AppMemoized />;
 
       it('works without memoizing', () => {
         const wrapper = shallow(<RendersApp />);
-        expect(wrapper.debug()).to.equal(is('>= 17') ? '<AppMemoized />' : '<App />');
+        expect(wrapper.debug()).to.equal('<App />');
         expect(wrapper.dive().debug()).to.equal(`<div>
   Guest
 </div>`);
