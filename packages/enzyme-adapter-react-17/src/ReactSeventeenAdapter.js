@@ -392,10 +392,6 @@ function wrapAct(fn) {
 }
 
 function getProviderDefaultValue(Provider) {
-  // React stores references to the Provider's defaultValue differently across versions.
-  if ('_defaultValue' in Provider._context) {
-    return Provider._context._defaultValue;
-  }
   if ('_currentValue' in Provider._context) {
     return Provider._context._currentValue;
   }
@@ -875,10 +871,8 @@ class ReactSeventeenAdapter extends EnzymeAdapter {
     // React stores references to the Provider on a Consumer differently across versions.
     if (Consumer) {
       let Provider;
-      if (Consumer._context) { // check this first, to avoid a deprecation warning
+      if (Consumer._context) {
         ({ Provider } = Consumer._context);
-      } else if (Consumer.Provider) {
-        ({ Provider } = Consumer);
       }
       if (Provider) {
         return Provider;
