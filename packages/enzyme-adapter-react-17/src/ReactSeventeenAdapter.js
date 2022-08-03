@@ -238,7 +238,9 @@ function toTree(vnode) {
       };
     case FiberTags.MemoSFC: {
       let renderedNodes = flatten(nodeAndSiblingsArray(node.child).map(toTree));
-      if (renderedNodes.length === 0) {
+      if (node.child === null) {
+        renderedNodes = [null];
+      } else if (renderedNodes.length === 0) {
         renderedNodes = [node.memoizedProps.children];
       }
       return {
