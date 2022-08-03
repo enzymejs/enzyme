@@ -40,14 +40,6 @@ function getLazyFiber(LazyComponent) {
 }
 
 module.exports = function detectFiberTags() {
-  const supportsMode = typeof React.StrictMode !== 'undefined';
-  const supportsContext = typeof React.createContext !== 'undefined';
-  const supportsForwardRef = typeof React.forwardRef !== 'undefined';
-  const supportsMemo = typeof React.memo !== 'undefined';
-  const supportsProfiler = typeof React.unstable_Profiler !== 'undefined' || typeof React.Profiler !== 'undefined';
-  const supportsSuspense = typeof React.Suspense !== 'undefined';
-  const supportsLazy = typeof React.lazy !== 'undefined';
-
   function Fn() {
     return null;
   }
@@ -57,56 +49,29 @@ module.exports = function detectFiberTags() {
       return null;
     }
   }
-  let Ctx = null;
-  let FwdRef = null;
-  let LazyComponent = null;
-  if (supportsContext) {
-    Ctx = React.createContext();
-  }
-  if (supportsForwardRef) {
-    // React will warn if we don't have both arguments.
-    // eslint-disable-next-line no-unused-vars
-    FwdRef = React.forwardRef((props, ref) => null);
-  }
-  if (supportsLazy) {
-    LazyComponent = React.lazy(() => fakeDynamicImport(() => null));
-  }
+  const Ctx = React.createContext();
+  // React will warn if we don't have both arguments.
+  // eslint-disable-next-line no-unused-vars
+  const FwdRef = React.forwardRef((props, ref) => null);
+  const LazyComponent = React.lazy(() => fakeDynamicImport(() => null));
 
   return {
     HostRoot: getFiber('test').return.return.tag, // Go two levels above to find the root
     ClassComponent: getFiber(React.createElement(Cls)).tag,
     Fragment: getFiber([['nested']]).tag,
     FunctionalComponent: getFiber(React.createElement(Fn)).tag,
-    MemoSFC: supportsMemo
-      ? getFiber(React.createElement(React.memo(Fn))).tag
-      : -1,
-    MemoClass: supportsMemo
-      ? getFiber(React.createElement(React.memo(Cls))).tag
-      : -1,
+    MemoSFC: getFiber(React.createElement(React.memo(Fn))).tag,
+    MemoClass: getFiber(React.createElement(React.memo(Cls))).tag,
     HostPortal: getFiber(ReactDOM.createPortal(null, global.document.createElement('div'))).tag,
     HostComponent: getFiber(React.createElement('span')).tag,
     HostText: getFiber('text').tag,
-    Mode: supportsMode
-      ? getFiber(React.createElement(React.StrictMode)).tag
-      : -1,
-    ContextConsumer: supportsContext
-      ? getFiber(React.createElement(Ctx.Consumer, null, () => null)).tag
-      : -1,
-    ContextProvider: supportsContext
-      ? getFiber(React.createElement(Ctx.Provider, { value: null }, null)).tag
-      : -1,
-    ForwardRef: supportsForwardRef
-      ? getFiber(React.createElement(FwdRef)).tag
-      : -1,
-    Profiler: supportsProfiler
-      ? getFiber(React.createElement((React.Profiler || React.unstable_Profiler), { id: 'mock', onRender() {} })).tag
-      : -1,
-    Suspense: supportsSuspense
-      ? getFiber(React.createElement(React.Suspense, { fallback: false })).tag
-      : -1,
-    Lazy: supportsLazy
-      ? getLazyFiber(LazyComponent).tag
-      : -1,
+    Mode: getFiber(React.createElement(React.StrictMode)).tag,
+    ContextConsumer: getFiber(React.createElement(Ctx.Consumer, null, () => null)).tag,
+    ContextProvider: getFiber(React.createElement(Ctx.Provider, { value: null }, null)).tag,
+    ForwardRef: getFiber(React.createElement(FwdRef)).tag,
+    Profiler: getFiber(React.createElement(React.Profiler, { id: 'mock', onRender() {} })).tag,
+    Suspense: getFiber(React.createElement(React.Suspense, { fallback: false })).tag,
+    Lazy: getLazyFiber(LazyComponent).tag,
     OffscreenComponent: getLazyFiber('div').return.return.tag,
   };
 };
