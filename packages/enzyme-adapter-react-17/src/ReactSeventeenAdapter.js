@@ -288,25 +288,16 @@ function toTree(vnode) {
       };
     }
     case FiberTags.Suspense: {
-      return {
-        nodeType: 'function',
-        type: Suspense,
-        props: { ...node.memoizedProps },
-        key: ensureKeyOrUndefined(node.key),
-        ref: node.ref,
-        instance: null,
-        rendered: childrenToTree(node.child),
-      };
-    }
-    case FiberTags.Lazy:
-      return childrenToTree(node.child);
-    case FiberTags.OffscreenComponent: {
-      const hostNodes = nodeToHostNode(node.return.memoizedProps.children);
-      let rendered = null;
-      if (hostNodes) {
-        const hostNodesFiltered = hostNodes.filter((item) => item !== null);
-        rendered = hostNodesFiltered.length > 0 ? childrenToTree(hostNodesFiltered) : null;
-      }
+      // <Suspense fallback={<Fallback />}><Child /></Suspense> creates the following Fiber tree:
+      // suspended:
+      // <Suspense><Offscreen mode="visible"><Child /></Offscreen><Fallback /></Suspense>
+      // unsuspended:
+      // <Suspense><Offscreen mode="visible"><Child /></Suspense>
+      const rendered = node.stateNode === null
+        ? childrenToTree(node.child.child)
+        // Tests explicitly want both the Suspense children and fallback if a component suspended.
+        // It's conceivable that testers only want to assert on the component that's rendered i.e. only fallback or only component but never both.
+        : [childrenToTree(node.child.child), childrenToTree(node.child.sibling)];
       return {
         nodeType: 'function',
         type: Suspense,
@@ -316,6 +307,11 @@ function toTree(vnode) {
         instance: null,
         rendered,
       };
+    }
+    case FiberTags.Lazy:
+      return childrenToTree(node.child);
+    case FiberTags.OffscreenComponent: {
+      throw new Error('Enzyme Internal Error. Encountered a Offscreen Fiber');
     }
     default:
       throw new Error(`Enzyme Internal Error: unknown node with tag ${node.tag}`);
