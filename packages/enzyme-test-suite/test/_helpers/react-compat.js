@@ -36,7 +36,7 @@ let useRef;
 let useState;
 let act;
 
-if (is('>=15.5 || ^16.0.0-alpha || ^16.3.0-alpha || ^17.0.0')) {
+if (is('>=15.5 || ^16.0.0-alpha || ^16.3.0-alpha')) {
   // eslint-disable-next-line import/no-extraneous-dependencies
   createClass = require('create-react-class');
 } else {
