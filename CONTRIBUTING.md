@@ -93,7 +93,7 @@ npm run build:watch
 
 In another terminal tab execute a specific test file for faster TDD test execution:
 ```bash
-node_modules/.bin/mocha packages/enzyme-test-suite/build/ReactWrapper-spec.js
+npx mocha packages/enzyme-test-suite/build/ReactWrapper-spec.js
 ```
 
 NOTE that this alternate strategy may fail to rebuild some code and will bypass lint, so `npm test` will still be necessary periodically.
