@@ -868,7 +868,6 @@ class ReactSeventeenAdapter extends EnzymeAdapter {
   }
 
   getProviderFromConsumer(Consumer) {
-    // React stores references to the Provider on a Consumer differently across versions.
     if (Consumer) {
       let Provider;
       if (Consumer._context) {
