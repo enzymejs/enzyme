@@ -42,7 +42,7 @@
     "enzyme-adapter-utils": "^1.14.0",
     "object.assign": "^4.1.2",
     "object.values": "^1.1.4",
-    "prop-types": "^15.7.2",
+    "prop-types": "^15.8.1",
     "react-is": "^17.0.2"
   },
   "peerDependencies": {

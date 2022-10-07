@@ -44,7 +44,7 @@
     "has": "^1.0.3",
     "object.assign": "^4.1.2",
     "object.values": "^1.1.4",
-    "prop-types": "^15.7.2",
+    "prop-types": "^15.8.1",
     "react-is": "^16.13.1",
     "react-test-renderer": "^16.0.0-0",
     "semver": "^5.7.0"
