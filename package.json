@@ -7,7 +7,8 @@
   "scripts": {
     "clean-node-modules": "rm -rf node_modules/{*,.bin,.package-lock.json} && rm -rf packages/*/node_modules/{*,.bin,.package-lock.json}",
     "postinstall": "[ -n \"${TRAVIS-}\" ] || (npm link npm && lerna bootstrap)",
-    "prepublish": "not-in-publish || (npm run build && safe-publish-latest)",
+    "prepublishOnly": "npm run build && safe-publish-latest",
+    "prepublish": "not-in-publish || npm run prepublishOnly",
     "preversion": "npm run clean && npm run check",
     "postversion": "git push && git push --tags && npm run clean && npm run docs:publish",
     "version": "lerna run build",
@@ -97,7 +98,7 @@
     "nyc": "^10.3.2",
     "prop-types": "^15.7.2",
     "rimraf": "^2.7.1",
-    "safe-publish-latest": "^1.1.4",
+    "safe-publish-latest": "^2.0.0",
     "semver": "^6.3.0",
     "webpack": "^2.7.0"
   },

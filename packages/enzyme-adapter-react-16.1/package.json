@@ -11,7 +11,8 @@
     "prebuild": "npm run clean",
     "build": "babel --source-maps=both src --out-dir build",
     "watch": "npm run build -- -w",
-    "prepublish": "not-in-publish || (npm run build && safe-publish-latest && cp ../../{LICENSE,README}.md ./)"
+    "prepublishOnly": "npm run build && safe-publish-latest && cp ../../{LICENSE,README}.md ./",
+    "prepublish": "not-in-publish || npm run prepublishOnly"
   },
   "repository": {
     "type": "git",
@@ -66,6 +67,6 @@
     "eslint-plugin-react-hooks": "^4.2.0",
     "in-publish": "^2.0.1",
     "rimraf": "^2.7.1",
-    "safe-publish-latest": "^1.1.4"
+    "safe-publish-latest": "^2.0.0"
   }
 }
