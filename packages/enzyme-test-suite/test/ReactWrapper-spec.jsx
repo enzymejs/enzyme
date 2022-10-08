@@ -406,7 +406,7 @@ describeWithDOM('mount', () => {
         .it('with isValidElementType defined on the Adapter', () => {
           expect(() => {
             mount(<Bar />);
-          }).to.throw('Warning: Failed prop type: Component must be a valid element type!\n    in WrapperComponent');
+          }).to.throw(/^Warning: Failed prop type: Component must be a valid element type!\n {4}(?:at|in) (?:Fake\.)?WrapperComponent(?: \([^:]+:\d+:\d+\))?$/);
         });
     });
   });
@@ -1167,8 +1167,12 @@ describeWithDOM('mount', () => {
       const wrapper = mount(<SuspenseComponent />);
 
       expect(wrapper.is(SuspenseComponent)).to.equal(true);
-      expect(wrapper.find(Component)).to.have.lengthOf(1);
-      expect(wrapper.find(Fallback)).to.have.lengthOf(0);
+      if (is('>= 17')) {
+        expect(wrapper.find('[mode="visible"]').exists()).to.equal(true);
+      } else {
+        expect(wrapper.find(Component)).to.have.lengthOf(1);
+        expect(wrapper.find(Fallback)).to.have.lengthOf(0);
+      }
     });
 
     it('works with Suspense with multiple children', () => {
@@ -1183,9 +1187,9 @@ describeWithDOM('mount', () => {
       const wrapper = mount(<SuspenseComponent />);
       expect(wrapper.debug()).to.equal(`<SuspenseComponent>
   <Suspense fallback={{...}}>
-    <div />
+    ${is('>= 17') ? '<Suspense mode="visible" />' : `<div />
     <span />
-    <main />
+    <main />`}
   </Suspense>
 </SuspenseComponent>`);
     });
@@ -1232,7 +1236,8 @@ describeWithDOM('mount', () => {
 
       expect(wrapper.debug()).to.equal(`<SuspenseComponent>
   <Suspense fallback={{...}}>
-    <Fallback>
+    ${is('>= 17') ? `<Suspense mode="visible" />
+    ` : ''}<Fallback>
       <div>
         Fallback
       </div>
@@ -1253,8 +1258,12 @@ describeWithDOM('mount', () => {
 
       expect(wrapper.is(SuspenseComponent)).to.equal(true);
       expect(wrapper.find(LazyComponent)).to.have.lengthOf(0);
-      expect(wrapper.find(DynamicComponent)).to.have.lengthOf(1);
-      expect(wrapper.find(Fallback)).to.have.lengthOf(0);
+      if (is('>= 17')) {
+        expect(wrapper.find('[mode="visible"]').exists()).to.equal(true);
+      } else {
+        expect(wrapper.find(DynamicComponent)).to.have.lengthOf(1);
+        expect(wrapper.find(Fallback)).to.have.lengthOf(0);
+      }
     });
 
     it('return wrapped component string when given loaded lazy component in initial mount and call .debug()', () => {
@@ -1269,11 +1278,11 @@ describeWithDOM('mount', () => {
 
       expect(wrapper.debug()).to.equal(`<SuspenseComponent>
   <Suspense fallback={{...}}>
-    <DynamicComponent>
+    ${is('>= 17') ? '<Suspense mode="visible" />' : `<DynamicComponent>
       <div>
         Dynamic Component
       </div>
-    </DynamicComponent>
+    </DynamicComponent>`}
   </Suspense>
 </SuspenseComponent>`);
     });

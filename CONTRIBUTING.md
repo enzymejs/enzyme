@@ -85,6 +85,19 @@ npm run build:watch
 npm run test:watch
 ```
 
+Alternatively, run this in one terminal tab:
+```bash
+# build Enzyme locally upon save
+npm run build:watch
+```
+
+In another terminal tab execute a specific test file for faster TDD test execution:
+```bash
+node_modules/.bin/mocha packages/enzyme-test-suite/build/ReactWrapper-spec.js
+```
+
+NOTE that this alternate strategy may fail to rebuild some code and will bypass lint, so `npm test` will still be necessary periodically.
+
 ### Tests for functionality shared between `shallow` and `mount`
 
 Tests for a method "foo" are stored in `packages/enzyme-test-suite/test/shared/methods/foo`. The file default exports a function that receives an injected object argument, containing the following properties:

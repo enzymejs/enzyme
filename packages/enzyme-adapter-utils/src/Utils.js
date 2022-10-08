@@ -283,6 +283,7 @@ export function getComponentStack(
     'WrapperComponent',
   ]]);
 
+  // TODO: create proper component stack for react 17
   return tuples.map(([, name], i, arr) => {
     const [, closestComponent] = arr.slice(i + 1).find(([nodeType]) => nodeType !== 'host') || [];
     return `\n    in ${name}${closestComponent ? ` (created by ${closestComponent})` : ''}`;
