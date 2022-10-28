@@ -15,9 +15,9 @@ and traversal.
 Upgrading from Enzyme 2.x or React < 16
 ===========
 
-Are you here to check whether or not Enzyme is compatible with React 16? Are you currently using
+Are you here to check whether Enzyme is compatible with React 16? Are you currently using
 Enzyme 2.x? Great! Check out our [migration guide](/docs/guides/migration-from-2-to-3.md) for help
-moving on to Enzyme v3 where React 16 is supported.
+to move on to Enzyme v3 where React 16 is supported.
 
 ### [Installation](/docs/installation/README.md)
 
