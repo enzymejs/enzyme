@@ -1,1 +1,1 @@
-module.exports = require('./build/shallow').default;
+module.exports = require('./build/shallow');

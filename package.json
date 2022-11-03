@@ -66,6 +66,7 @@
     "@babel/register": "^7.18.9",
     "babel-eslint": "^10.1.0",
     "babel-loader": "^8.2.2",
+    "babel-plugin-add-module-exports": "^1.0.4",
     "babel-plugin-transform-replace-object-assign": "^2.0.0",
     "babel-preset-airbnb": "^4.5.0",
     "chai": "^4.3.4",

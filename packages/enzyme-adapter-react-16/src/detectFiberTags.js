@@ -39,7 +39,7 @@ function getLazyFiber(LazyComponent) {
   return inst._reactInternalFiber.child;
 }
 
-module.exports = function detectFiberTags() {
+export default function detectFiberTags() {
   const supportsMode = typeof React.StrictMode !== 'undefined';
   const supportsContext = typeof React.createContext !== 'undefined';
   const supportsForwardRef = typeof React.forwardRef !== 'undefined';
@@ -108,4 +108,4 @@ module.exports = function detectFiberTags() {
       ? getLazyFiber(LazyComponent).tag
       : -1,
   };
-};
+}

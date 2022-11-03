@@ -53,4 +53,4 @@ EnzymeAdapter.MODES = {
   SHALLOW: 'shallow',
 };
 
-module.exports = EnzymeAdapter;
+export default EnzymeAdapter;

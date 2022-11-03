@@ -336,4 +336,4 @@ class ReactFourteenAdapter extends EnzymeAdapter {
   }
 }
 
-module.exports = ReactFourteenAdapter;
+export default ReactFourteenAdapter;

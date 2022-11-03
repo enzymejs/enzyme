@@ -1,1 +1,1 @@
-module.exports = require('./build/mount').default;
+module.exports = require('./build/mount');

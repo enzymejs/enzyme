@@ -284,4 +284,4 @@ class ReactThirteenAdapter extends EnzymeAdapter {
   }
 }
 
-module.exports = ReactThirteenAdapter;
+export default ReactThirteenAdapter;

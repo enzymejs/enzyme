@@ -1,1 +1,1 @@
-module.exports = require('./build/ReactWrapper').default;
+module.exports = require('./build/ReactWrapper');

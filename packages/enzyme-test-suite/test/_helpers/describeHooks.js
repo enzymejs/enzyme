@@ -12,7 +12,7 @@ export default function describeHooks({
 
   hooks.forEach((hook) => {
     // eslint-disable-next-line global-require, import/no-dynamic-require
-    require(`../shared/hooks/${hook}`).default({
+    require(`../shared/hooks/${hook}`)({
       hasHooks: is('>= 16.8'),
       Wrap,
       WrapRendered: isShallow ? Wrap : (...args) => Wrap(...args).children(),

@@ -1,1 +1,1 @@
-module.exports = require('./build/render').default;
+module.exports = require('./build/render');

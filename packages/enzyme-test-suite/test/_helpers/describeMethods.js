@@ -10,7 +10,7 @@ export default function describeMethods({
 
   methods.forEach((method) => {
     // eslint-disable-next-line global-require, import/no-dynamic-require
-    require(`../shared/methods/${method}`).default({
+    require(`../shared/methods/${method}`)({
       Wrap,
       WrapRendered: isShallow ? Wrap : (...args) => Wrap(...args).children(),
       Wrapper,

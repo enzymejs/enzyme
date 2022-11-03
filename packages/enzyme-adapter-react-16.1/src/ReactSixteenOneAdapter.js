@@ -567,4 +567,4 @@ class ReactSixteenOneAdapter extends EnzymeAdapter {
   }
 }
 
-module.exports = ReactSixteenOneAdapter;
+export default ReactSixteenOneAdapter;

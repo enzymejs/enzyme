@@ -1,18 +1,8 @@
-import ReactWrapper from './ReactWrapper';
-import ShallowWrapper from './ShallowWrapper';
-import EnzymeAdapter from './EnzymeAdapter';
+export { default as ReactWrapper } from './ReactWrapper';
+export { default as ShallowWrapper } from './ShallowWrapper';
+export { default as EnzymeAdapter } from './EnzymeAdapter';
 
-import mount from './mount';
-import shallow from './shallow';
-import render from './render';
-import { merge as configure } from './configuration';
-
-module.exports = {
-  render,
-  shallow,
-  mount,
-  ShallowWrapper,
-  ReactWrapper,
-  configure,
-  EnzymeAdapter,
-};
+export { default as mount } from './mount';
+export { default as shallow } from './shallow';
+export { default as render } from './render';
+export { merge as configure } from './configuration';

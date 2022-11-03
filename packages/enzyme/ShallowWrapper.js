@@ -1,1 +1,1 @@
-module.exports = require('./build/ShallowWrapper').default;
+module.exports = require('./build/ShallowWrapper');
