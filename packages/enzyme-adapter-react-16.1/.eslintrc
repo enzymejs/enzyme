@@ -1,9 +1,10 @@
 {
   "extends": "airbnb",
-  "parser": "babel-eslint",
+  "parser": "@babel/eslint-parser",
   "root": true,
+  "ignorePatterns": ["build/"],
   "rules": {
-	"max-classes-per-file": 0,
+    "max-classes-per-file": 0,
     "max-len": 0,
     "react/no-deprecated": 0,
     "react/no-find-dom-node": 0,

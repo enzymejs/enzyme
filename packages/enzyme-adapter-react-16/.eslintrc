@@ -1,7 +1,8 @@
 {
   "extends": "airbnb",
-  "parser": "babel-eslint",
+  "parser": "@babel/eslint-parser",
   "root": true,
+  "ignorePatterns": ["build/"],
   "rules": {
     "max-classes-per-file": 0,
     "max-len": 0,

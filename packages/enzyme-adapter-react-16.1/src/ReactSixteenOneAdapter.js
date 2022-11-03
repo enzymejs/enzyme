@@ -416,7 +416,6 @@ class ReactSixteenOneAdapter extends EnzymeAdapter {
                       writable: true,
                     });
                   }
-                  return true;
                 },
               });
             }

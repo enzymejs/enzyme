@@ -7,7 +7,6 @@ This method is a reliable way of accessing the props of a node; `wrapper.instanc
 
 #### Example
 ```jsx
-
 import PropTypes from 'prop-types';
 
 function MyComponent(props) {

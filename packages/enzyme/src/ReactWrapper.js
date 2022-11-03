@@ -124,10 +124,12 @@ class ReactWrapper {
           throw new TypeError('your adapter does not support `wrappingComponent`. Try upgrading it!');
         }
 
-        // eslint-disable-next-line no-use-before-define
-        privateSet(this, WRAPPING_COMPONENT, new WrappingComponentWrapper(
-          this, this[RENDERER].getWrappingComponentRenderer(),
-        ));
+        privateSet(
+          this,
+          WRAPPING_COMPONENT,
+          // eslint-disable-next-line no-use-before-define
+          new WrappingComponentWrapper(this, this[RENDERER].getWrappingComponentRenderer()),
+        );
         this[LINKED_ROOTS].push(this[WRAPPING_COMPONENT]);
       }
     } else {

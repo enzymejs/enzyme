@@ -37,7 +37,6 @@ describe('<MyComponent />', () => {
     expect(onButtonClick).to.have.property('callCount', 1);
   });
 });
-
 ```
 
 ## `shallow(node[, options]) => ShallowWrapper`

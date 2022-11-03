@@ -13,7 +13,7 @@ const Code = require('code');
 const Lab = require('lab');
 
 const lab = Lab.script();
-exports.lab = lab;
+export { lab };
 
 lab.suite('A suite', () => {
   lab.test('calls componentDidMount', (done) => {

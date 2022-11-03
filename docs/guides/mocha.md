@@ -22,5 +22,4 @@ describe('<Foo />', () => {
     expect(Foo.prototype.componentDidMount).to.have.property('callCount', 1);
   });
 });
-
 ```

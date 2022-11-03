@@ -50,17 +50,19 @@ Mouse.propTypes = {
 ```
 
 ```jsx
-const App = () => (
-  <div style={{ height: '100%' }}>
-    <Mouse
-      render={(x = 0, y = 0) => (
-        <h1>
-          The mouse position is ({x}, {y})
-        </h1>
-      )}
-    />
-  </div>
-);
+function App() {
+  return (
+    <div style={{ height: '100%' }}>
+      <Mouse
+        render={(x = 0, y = 0) => (
+          <h1>
+            The mouse position is ({x}, {y})
+          </h1>
+        )}
+      />
+    </div>
+  );
+}
 ```
 
 ##### Testing with no arguments

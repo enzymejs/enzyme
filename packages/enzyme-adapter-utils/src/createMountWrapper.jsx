@@ -57,6 +57,7 @@ export default function createMountWrapper(node, options = {}) {
       };
     }
 
+    // eslint-disable-next-line react/no-unused-class-component-methods
     setChildProps(newProps, newContext, callback = undefined) {
       const { props: oldProps, context: oldContext } = this.state;
       const props = { ...oldProps, ...newProps };
@@ -64,6 +65,7 @@ export default function createMountWrapper(node, options = {}) {
       this.setState({ props, context }, callback);
     }
 
+    // eslint-disable-next-line react/no-unused-class-component-methods
     setWrappingComponentProps(props, callback = undefined) {
       this.setState({ wrappingComponentProps: props }, callback);
     }

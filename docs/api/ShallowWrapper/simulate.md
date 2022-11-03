@@ -48,12 +48,14 @@ expect(wrapper.find('.clicks-1').length).to.equal(1);
 #### Example `functional component`
 
 ```jsx
-const Foo = ({ width, height, onChange }) => (
-  <div>
-    <input name="width" value={width} onChange={onChange} />
-    <input name="height" value={height} onChange={onChange} />
-  </div>
-);
+function Foo({ width, height, onChange }) {
+  return (
+    <div>
+      <input name="width" value={width} onChange={onChange} />
+      <input name="height" value={height} onChange={onChange} />
+    </div>
+  );
+}
 Foo.propTypes = {
   width: PropTypes.number.isRequired,
   height: PropTypes.number.isRequired,

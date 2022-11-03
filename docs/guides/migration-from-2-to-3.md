@@ -78,7 +78,9 @@ const ICONS = {
   failure: <Icon name="exclamation-mark" />,
 };
 
-const StatusLabel = ({ id, label }) => <div>{ICONS[id]}{label}{ICONS[id]}</div>;
+function StatusLabel({ id, label }) {
+  return <div>{ICONS[id]}{label}{ICONS[id]}</div>;
+}
 ```
 
 ```js
@@ -504,11 +506,13 @@ Consider this example:
 <!-- eslint react/prop-types: 0, react/prefer-stateless-function: 0, react/jsx-props-no-spreading: 0 -->
 
 ```js
-const HelpLink = ({ text, ...rest }) => <a {...rest}>{text}</a>;
+function HelpLink({ text, ...rest }) {
+  return <a {...rest}>{text}</a>;
+}
 
-const HelpLinkContainer = ({ text, ...rest }) => (
-  <HelpLink text={text} {...rest} />
-);
+function HelpLinkContainer({ text, ...rest }) {
+  return <HelpLink text={text} {...rest} />;
+}
 
 const wrapper = mount(<HelpLinkContainer aria-expanded="true" text="foo" />);
 ```

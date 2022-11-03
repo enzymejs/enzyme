@@ -74,5 +74,3 @@ expect(spy.args).to.deep.equal([
   },
 ]);
 ```
-
-
