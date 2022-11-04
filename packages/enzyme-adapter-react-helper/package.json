@@ -53,7 +53,7 @@
     "eslint-config-airbnb": "^19.0.4",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-jsx-a11y": "^6.6.1",
-    "eslint-plugin-react": "^7.31.8",
+    "eslint-plugin-react": "^7.31.10",
     "eslint-plugin-react-hooks": "^4.6.0",
     "in-publish": "^2.0.1",
     "react": "0.13.x || 0.14.x || ^15.0.0-0 || ^16.0.0-0 || ^16.3.0-0 || ^16.4.0-0",

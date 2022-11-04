@@ -69,7 +69,7 @@
     "eslint-plugin-import": "^2.24.2",
     "eslint-plugin-jsx-a11y": "^6.4.1",
     "eslint-plugin-mocha": "^8.1.0",
-    "eslint-plugin-react": "^7.25.2",
+    "eslint-plugin-react": "^7.31.10",
     "eslint-plugin-react-hooks": "^4.2.0",
     "rimraf": "^2.7.1",
     "safe-publish-latest": "^2.0.0"
