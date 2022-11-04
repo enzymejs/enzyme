@@ -42,7 +42,7 @@
     "chai": "^4.3.4",
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",
-    "object.assign": "^4.1.0",
+    "object.assign": "^4.1.4",
     "react": "^16.2.0",
     "react-dom": "^16.2.0"
   },
