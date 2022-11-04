@@ -18,7 +18,7 @@
   "homepage": "https://github.com/enzymejs/enzyme.git",
   "devDependencies": {
     "@babel/cli": "^7.15.4",
-    "@babel/core": "^7.15.5",
+    "@babel/core": "^7.19.6",
     "@babel/eslint-parser": "^7.19.1",
     "babel-plugin-add-module-exports": "^1.0.4",
     "babel-plugin-transform-replace-object-assign": "^2.0.0",
