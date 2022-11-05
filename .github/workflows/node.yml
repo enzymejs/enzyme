@@ -1,0 +1,166 @@
+name: 'Tests: node.js'
+
+on: [pull_request, push]
+
+jobs:
+  build:
+    name: 'install deps and build'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ljharb/actions/node/install@main
+        with:
+          skip-ls-check: true
+      - run: npx lerna bootstrap
+      - run: npm run build
+      - uses: actions/cache@v3
+        with:
+          path: |
+            packages/*/build
+            node_modules
+            packages/*/node_modules
+          key: enzyme-${{ github.workflow }}-${{ github.action }}-${{ github.run_id }}
+
+  karma:
+    needs: [build]
+    name: 'karma tests'
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    strategy:
+      fail-fast: false
+      matrix:
+        react:
+          - '16'
+          - '16.3'
+          - '16.2'
+          - '16.1'
+          - '15'
+          - '15.4'
+          - '0.14'
+          - '0.13'
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/cache@v3
+        with:
+          path: |
+            packages/*/build
+            node_modules
+            packages/*/node_modules
+          key: enzyme-${{ github.workflow }}-${{ github.action }}-${{ github.run_id }}
+      - run: sudo chmod -R a+w .
+      - uses: ljharb/actions/node/install@main
+        with:
+          node-version: 'lts/*'
+          skip-install: true
+          after_install: '(nvm install node && REACT=${{ matrix.react }} TRAVIS=1 sh install-relevant-react.sh)'
+          skip-ls-check: true
+      - run: npm run test:karma -- --single-run
+        continue-on-error: true
+        env:
+          CHROME_BIN: chromium-browser
+          DISPLAY: 99.0
+      - run: echo 'karma tests expected to fail'
+
+  tests:
+    needs: [build]
+    name: 'tests'
+    runs-on: ubuntu-latest
+    continue-on-error: ${{ matrix.continue-on-error == 'true' }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version:
+          - '18'
+          - '4'
+        react:
+          - '16.14'
+          - '16.13'
+          - '16.12'
+          - '16.11'
+          - '16.10'
+          - '16.9'
+          - '16.8'
+          - '16.7'
+          - '16.6'
+          - '16.5'
+          - '16.4'
+          - '16.3'
+          - '16.2'
+          - '16.1'
+          - '16.0'
+          - '15.5'
+          - '15.4'
+          - '15.3'
+          - '15.2'
+          - '15.1'
+          - '15.0'
+          - '0.14'
+          - '0.13'
+        include:
+          - node-version: '16'
+            react: '16'
+          - node-version: '14'
+            react: '16'
+          - node-version: '12'
+            react: '16'
+          - node-version: '10'
+            react: '16'
+          - node-version: '8'
+            react: '16'
+          - node-version: '6'
+            react: '16'
+          - node-version: 'lts/*'
+            react: '16.8.3'
+          - node-version: 'lts/*'
+            react: '16.8.5'
+            env:
+              RENDERER: '16.8.5'
+          - node-version: 'lts/*'
+            react: '16.8.5'
+            env:
+              RENDERER: '16.8.3'
+          - node-version: 'lts/*'
+            react: '16.3'
+            env:
+              ADAPTER: '16'
+          - node-version: 'lts/*'
+            react: '16.8'
+            env:
+              RENDERER: '16.7'
+          - node-version: 'lts/*'
+            react: '16.7'
+            env:
+              RENDERER: '16.8'
+          - node-version: 'lts/*'
+            react: '16.7'
+            env:
+              RENDERER: '16.7'
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/cache@v3
+        with:
+          path: |
+            packages/*/build
+            node_modules
+            packages/*/node_modules
+          key: enzyme-${{ github.workflow }}-${{ github.action }}-${{ github.run_id }}
+      - run: sudo chmod -R a+w .
+      - uses: ljharb/actions/node/install@main
+        with:
+          node-version: ${{ matrix.node-version || 'lts/* '}}
+          skip-install: true
+          after_install: '(nvm install node && sh install-relevant-react.sh)'
+          skip-ls-check: true
+        env:
+          REACT: ${{ matrix.react }}
+      - run: npm run travis
+      - uses: codecov/codecov-action@v3
+
+  node:
+    name: 'node + react + karma'
+    needs: [tests, karma]
+    runs-on: ubuntu-latest
+    steps:
+      - run: 'echo tests completed'
