@@ -15,7 +15,7 @@ before_script:
   - 'nvm exec node sh install-relevant-react.sh'
   - 'if [ -n "${KARMA-}" ]; then export CHROME_BIN=chromium-browser; export DISPLAY=:99.0; sh -e /etc/init.d/xvfb start; fi'
 script:
-  - 'if [ -n "${LINT-}" ]; then npm run lint; elif [ -n "${KARMA-}" ]; then npm run test:karma -- --single-run; elif [ -n "${REACT-}" ]; then npm run travis; else false ; fi'
+  - 'if [ -n "${KARMA-}" ]; then npm run test:karma -- --single-run; elif [ -n "${REACT-}" ]; then npm run travis; else false ; fi'
 after_script:
   - 'if [ -n "${REACT-}" ] && [ "${TRAVIS_ALLOW_FAILURE}" != true ]; then case "${TRAVIS_NODE_VERSION}" in "8" | "6") ;; *) cat ./coverage/lcov.info | ./node_modules/.bin/coveralls ;; esac ; fi'
   - 'if [ -n "${REACT-}" ] && [ "${TRAVIS_ALLOW_FAILURE}" != true ]; then bash <(curl -s https://codecov.io/bash) -f coverage/*.json; fi'
@@ -36,9 +36,6 @@ matrix:
         - 'npx lerna bootstrap'
       script:
         - 'npx lerna run build'
-    - node_js: "lts/gallium"
-      env: LINT=true
-      stage: test
     - node_js: "8"
       env: REACT=16
       stage: test
