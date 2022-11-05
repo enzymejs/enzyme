@@ -406,7 +406,7 @@ describeWithDOM('mount', () => {
         .it('with isValidElementType defined on the Adapter', () => {
           expect(() => {
             mount(<Bar />);
-          }).to.throw('Warning: Failed prop type: Component must be a valid element type!\n    in WrapperComponent');
+          }).to.throw(/^Warning: Failed prop type: Component must be a valid element type!\n {4}(?:at|in) (?:Fake\.)?WrapperComponent(?: \([^:]+:\d+:\d+\))?$/);
         });
     });
   });

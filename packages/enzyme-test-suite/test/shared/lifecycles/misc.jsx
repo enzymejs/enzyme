@@ -491,7 +491,12 @@ export default function describeMisc({
           const [name, error, info] = fourth;
           expect(name).to.equal('componentDidCatch');
           expect(error).to.satisfy(properErrorMessage);
-          expect(info).to.deep.equal(expectedInfo);
+          if (is('>= 17')) {
+            expect(info).to.have.property('componentStack');
+            expect(info.componentStack).to.match(/at Thrower (.+)\n/);
+          } else {
+            expect(info).to.deep.equal(expectedInfo);
+          }
 
           expect(stateSpy.args).to.deep.equal([
             [{
