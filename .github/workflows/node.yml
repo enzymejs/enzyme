@@ -21,7 +21,7 @@ jobs:
             packages/*/node_modules
           key: enzyme-${{ github.workflow }}-${{ github.action }}-${{ github.run_id }}
 
-  karma:
+  karma-matrix:
     needs: [build]
     name: 'karma tests'
     runs-on: ubuntu-latest
@@ -159,8 +159,15 @@ jobs:
       - uses: codecov/codecov-action@v3
 
   node:
+    name: 'node + react'
+    needs: [tests]
+    runs-on: ubuntu-latest
+    steps:
+      - run: 'echo tests completed'
+  
+  karma:
     name: 'node + react + karma'
-    needs: [tests, karma]
+    needs: [karma-matrix]
     runs-on: ubuntu-latest
     steps:
       - run: 'echo tests completed'
