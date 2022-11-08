@@ -34,7 +34,6 @@
   "author": "Jordan Harband <ljharb@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "@sinonjs/commons": "=1.8.3",
     "chai": "^4.3.4",
     "create-react-class": "^15.7.0",
     "enzyme": "^3.11.0",
