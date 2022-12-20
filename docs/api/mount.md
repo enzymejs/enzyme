@@ -140,6 +140,12 @@ Returns the node at the provided index of the current wrapper.
 #### [`.getDOMNode() => DOMComponent`](ReactWrapper/getDOMNode.md)
 Returns the outer most DOMComponent of the current wrapper.
 
+#### [`.getElement() => ReactElement`](ReactWrapper/getElement.md)
+Returns the wrapped ReactElement.
+
+#### [`.getElements() => Array<ReactElement>`](ReactWrapper/getElements.md)
+Returns the wrapped ReactElements.
+
 #### [`.at(index) => ReactWrapper`](ReactWrapper/at.md)
 Returns a wrapper of the node at the provided index of the current wrapper.
 
