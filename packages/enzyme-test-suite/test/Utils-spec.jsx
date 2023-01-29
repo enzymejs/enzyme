@@ -744,7 +744,7 @@ describe('Utils', () => {
       });
     });
 
-    it('returns false when it recieves any other value than "false" or null', () => {
+    it('returns false when it receives any other value than "false" or null', () => {
       const values = [undefined, true, 'test', []];
 
       values.forEach((value) => {

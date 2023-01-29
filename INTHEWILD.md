@@ -21,7 +21,7 @@ Organizations
  - [Simple](https://github.com/simplefinance)
  - [Grab](https://github.com/grab)
  - [Megalytic](https://megalytic.com/)
- - [Chroma](http://hichroma.com/)
+ - [Chroma](https://www.chromatic.com)
  - [Mavens](https://github.com/mavens)
  - [Cucumber](https://cucumber.io)
  - [Genoa Telepsychiatry](https://genoatelepsychiatry.com)

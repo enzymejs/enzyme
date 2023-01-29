@@ -101,7 +101,7 @@ Tests for a method "foo" are stored in `packages/enzyme-test-suite/test/shared/m
 ### Style & Linting
 
 This codebase adheres to the [Airbnb Styleguide](https://github.com/airbnb/javascript) and is
-enforced using [ESLint](http://eslint.org/).
+enforced using [ESLint](https://eslint.org).
 
 As with the test suite, the linter will not fully pass unless it is running on *built* Enzyme. This is because the ESLint `import/*` rules rely on finding the target files in the filesystem (which won't be there unless they've been built).
 

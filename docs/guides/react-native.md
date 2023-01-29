@@ -27,7 +27,7 @@ Enzyme.configure({ adapter: new Adapter() });
 To use enzyme's `mount` until a React Native adapter exists, an emulated DOM must be loaded.
 
 While some have had success with [react-native-mock-renderer](https://github.com/Root-App/react-native-mock-render),
-the recommended approach is to use [https://github.com/tmpvar/jsdom](JSDOM),
+the recommended approach is to use [JSDOM](https://github.com/jsdom/jsdom),
 as documented for enzyme at the [JSDOM](https://enzymejs.github.io/enzyme/docs/guides/jsdom.html) documentation page.
 
 JSDOM will allow all of the `enzyme` behavior you would expect. While Jest snapshot testing can be used with

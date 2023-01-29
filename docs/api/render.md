@@ -4,7 +4,7 @@ Use enzyme's `render` function to generate HTML from your React tree, and analyz
 
 `render` returns a wrapper very similar to the other renderers in enzyme, [`mount`](mount.md) and
 [`shallow`](shallow.md); however, `render` uses a third party HTML parsing and traversal library
-[Cheerio](http://cheeriojs.github.io/cheerio/). We believe that Cheerio handles parsing and
+[Cheerio](https://cheerio.js.org). We believe that Cheerio handles parsing and
 traversing HTML extremely well, and duplicating this functionality ourselves would be a
 disservice.
 

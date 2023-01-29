@@ -1,6 +1,6 @@
 # Using enzyme with JSDOM
 
-[JSDOM](https://github.com/tmpvar/jsdom) is a JavaScript based headless browser that can be used to create a realistic testing environment.
+[JSDOM](https://github.com/jsdom/jsdom) is a JavaScript based headless browser that can be used to create a realistic testing environment.
 
 Since enzyme's [`mount`](../api/mount.md) API requires a DOM, JSDOM is required in order to use
 `mount` if you are not already in a browser environment (ie, a Node environment).
@@ -42,7 +42,7 @@ global.cancelAnimationFrame = function (id) {
 copyProps(window, global);
 ```
 
-Here is the sample of [jsdom old API](https://github.com/tmpvar/jsdom/blob/master/lib/old-api.md) as well.
+Here is the sample of [jsdom old API](https://github.com/jsdom/jsdom/blob/11.0.0/lib/old-api.md) as well.
 
 `jsdom ~<v10`:
 
@@ -108,7 +108,7 @@ may want to try using a browser-based test runner such as [Karma](../guides/karm
 Some times you may need to switch between different versions of node, you can use a CLI tool called
 `nvm` to quickly switch between node versions.
 
-To install `nvm`, use the curl script from http://nvm.sh, and then:
+To install `nvm`, use the curl script from https://nvm.sh, and then:
 
 ```bash
 nvm install 4

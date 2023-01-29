@@ -1857,7 +1857,7 @@ describeWithDOM('mount', () => {
       const p = wrapper.find('p');
       expect(wrapper.find('p').text()).to.equal('0');
       wrapper.find(Child).prop('onClick')();
-      // TOOD: this is a difference between mount and shallow
+      // TODO: this is a difference between mount and shallow
       // this is 1, because the wrapper has updated
       expect(p.text()).to.equal('1');
       expect(wrapper.find('p').text()).to.equal('1');

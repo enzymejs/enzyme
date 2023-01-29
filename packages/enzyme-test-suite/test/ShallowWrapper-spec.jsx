@@ -930,7 +930,7 @@ describe('shallow', () => {
           ))).to.throw('FaultyFooProvider.getChildContext(): key "foo" is not defined in childContextTypes');
         });
 
-        it('allows overridding context with the context option', () => {
+        it('allows overriding context with the context option', () => {
           const wrapper = shallow(<TestComponent />);
 
           const fooProvider = wrapper.find(FooProvider).dive();
@@ -2521,7 +2521,7 @@ describe('shallow', () => {
       const p = wrapper.find('p');
       expect(wrapper.find('p').text()).to.equal('0');
       wrapper.find(Child).prop('onClick')();
-      // TOOD: this is a difference between mount and shallow
+      // TODO: this is a difference between mount and shallow
       // this is still 0 because the wrapper won't be updated
       expect(p.text()).to.equal('0');
       expect(wrapper.find('p').text()).to.equal('1');

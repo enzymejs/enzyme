@@ -424,7 +424,7 @@ library from v2 to v3, it is hard to categorize changes in terms of sem
 
 ### Documentation
 
- - Update docs to use `prop-types` ([#894](https://github.com/enzymejs/enzyme/pull/894), [#890](https://github.com/enzymejs/enzyme/issue/890))
+ - Update docs to use `prop-types` ([#894](https://github.com/enzymejs/enzyme/pull/894), [#890](https://github.com/enzymejs/enzyme/issues/890))
 
 ## 2.8.1
 

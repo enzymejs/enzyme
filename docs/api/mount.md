@@ -5,7 +5,7 @@ Full DOM rendering is ideal for use cases where you have components that may int
 Full DOM rendering requires that a full DOM API be available at the global scope. This means that
 it must be run in an environment that at least “looks like” a browser environment. If you do not
 want to run your tests inside of a browser, the recommended approach to using `mount` is to depend
-on a library called [jsdom](https://github.com/tmpvar/jsdom) which is essentially a headless browser
+on a library called [jsdom](https://github.com/jsdom/jsdom) which is essentially a headless browser
 implemented completely in JS.
 
 **Note**: unlike shallow or static rendering, full rendering actually mounts the component in the DOM, which means that tests can affect each other if they are all using the same DOM. Keep that in mind while writing your tests and, if necessary, use [`.unmount()`](ReactWrapper/unmount.md) or something similar as cleanup.
