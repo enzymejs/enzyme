@@ -40,7 +40,7 @@ describe('<Foo />', () => {
 });
 ```
 
-## `mount(node[, options]) => ReactWrapper`
+## `mount(node,[options]) => ReactWrapper`
 
 #### Arguments
 
