@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: ljharb/actions/node/install@main
         with:
           skip-ls-check: true
@@ -20,7 +20,7 @@ jobs:
   #   runs-on: ubuntu-latest
 
   #   steps:
-  #     - uses: actions/checkout@v2
+  #     - uses: actions/checkout@v3
   #     - uses: ljharb/actions/node/install@main
   #     - run: npm run build
   #     - run: npm run posttest
