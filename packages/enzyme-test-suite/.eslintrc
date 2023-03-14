@@ -18,6 +18,7 @@
     "max-len": 0,
     "no-param-reassign": 0,
     "padded-blocks": 0,
+    "react/destructuring-assignment": 1,
     "react/jsx-props-no-spreading": [1, {
       "custom": "ignore",
       "explicitSpread": "ignore",
