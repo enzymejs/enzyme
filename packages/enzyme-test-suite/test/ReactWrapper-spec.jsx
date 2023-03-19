@@ -1966,4 +1966,12 @@ describeWithDOM('mount', () => {
       expect(divProps.onClick).to.be.a('function');
     });
   });
+
+  describe('console', () => {
+    it('does not call console.warn when rendering <video muted />', () => {
+      const spy = sinon.spy(console, 'error');
+      mount(<video muted />);
+      expect(spy.args).to.deep.equal([]);
+    });
+  });
 });
