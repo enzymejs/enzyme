@@ -38,7 +38,7 @@ test('wrapper instance is not null', () => {
   const wrapper = shallow(<Stateful />);
   const instance = wrapper.instance();
 
-  expect(instance).to.be.instanceOf(MyCStatefullass);
+  expect(instance).to.be.instanceOf(Stateful);
 });
 ```
 
