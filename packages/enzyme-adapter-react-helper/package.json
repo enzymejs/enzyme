@@ -72,7 +72,7 @@
     "object.assign": "^4.1.4",
     "object.getownpropertydescriptors": "^2.1.4",
     "rimraf": "^2.7.1",
-    "semver": "^5.7.1"
+    "semver": "^5.7.2"
   },
   "publishConfig": {
     "ignore": [
