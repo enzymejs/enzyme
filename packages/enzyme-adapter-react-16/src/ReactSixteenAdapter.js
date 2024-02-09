@@ -10,7 +10,7 @@ import { version as testRendererVersion } from 'react-test-renderer/package.json
 import TestUtils from 'react-dom/test-utils';
 import semver from 'semver';
 import checkPropTypes from 'prop-types/checkPropTypes';
-import has from 'has';
+import hasOwn from 'hasown';
 import {
   AsyncMode,
   ConcurrentMode,
@@ -458,7 +458,7 @@ class ReactSixteenAdapter extends EnzymeAdapter {
 
   createMountRenderer(options) {
     assertDomAvailable('mount');
-    if (has(options, 'suspenseFallback')) {
+    if (hasOwn(options, 'suspenseFallback')) {
       throw new TypeError('`suspenseFallback` is not supported by the `mount` renderer');
     }
     if (FiberTags === null) {
@@ -613,7 +613,7 @@ class ReactSixteenAdapter extends EnzymeAdapter {
     // Wrap functional components on versions prior to 16.5,
     // to avoid inadvertently pass a `this` instance to it.
     const wrapFunctionalComponent = (Component) => {
-      if (is166 && has(Component, 'defaultProps')) {
+      if (is166 && hasOwn(Component, 'defaultProps')) {
         if (lastComponent !== Component) {
           wrappedComponent = Object.assign(
             // eslint-disable-next-line new-cap
@@ -819,7 +819,7 @@ class ReactSixteenAdapter extends EnzymeAdapter {
   }
 
   createStringRenderer(options) {
-    if (has(options, 'suspenseFallback')) {
+    if (hasOwn(options, 'suspenseFallback')) {
       throw new TypeError('`suspenseFallback` should not be specified in options of string renderer');
     }
     return {

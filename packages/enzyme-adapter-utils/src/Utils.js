@@ -1,6 +1,6 @@
 import functionName from 'function.prototype.name';
 import fromEntries from 'object.fromentries';
-import has from 'has';
+import hasOwn from 'hasown';
 import createMountWrapper from './createMountWrapper';
 import createRenderWrapper from './createRenderWrapper';
 import wrap from './wrapWithSimpleWrapper';
@@ -380,9 +380,9 @@ export function compareNodeTypeOf(node, matchingTypeOf) {
 export function spyMethod(instance, methodName, getStub = () => {}) {
   let lastReturnValue;
   const originalMethod = instance[methodName];
-  const hasOwn = has(instance, methodName);
+  const hasOwnProp = hasOwn(instance, methodName);
   let descriptor;
-  if (hasOwn) {
+  if (hasOwnProp) {
     descriptor = Object.getOwnPropertyDescriptor(instance, methodName);
   }
   Object.defineProperty(instance, methodName, {
@@ -396,7 +396,7 @@ export function spyMethod(instance, methodName, getStub = () => {}) {
   });
   return {
     restore() {
-      if (hasOwn) {
+      if (hasOwnProp) {
         if (descriptor) {
           Object.defineProperty(instance, methodName, descriptor);
         } else {
@@ -419,9 +419,9 @@ export function spyMethod(instance, methodName, getStub = () => {}) {
 // TODO: when enzyme v3.12.0 is required, delete this
 export function spyProperty(instance, propertyName, handlers = {}) {
   const originalValue = instance[propertyName];
-  const hasOwn = has(instance, propertyName);
+  const hasOwnProp = hasOwn(instance, propertyName);
   let descriptor;
-  if (hasOwn) {
+  if (hasOwnProp) {
     descriptor = Object.getOwnPropertyDescriptor(instance, propertyName);
   }
   let wasAssigned = false;
@@ -450,7 +450,7 @@ export function spyProperty(instance, propertyName, handlers = {}) {
 
   return {
     restore() {
-      if (hasOwn) {
+      if (hasOwnProp) {
         if (descriptor) {
           Object.defineProperty(instance, propertyName, descriptor);
         } else {

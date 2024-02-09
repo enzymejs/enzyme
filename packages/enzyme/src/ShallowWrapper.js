@@ -1,5 +1,5 @@
 import flat from 'array.prototype.flat';
-import has from 'has';
+import hasOwn from 'hasown';
 import shallowEqual from 'enzyme-shallow-equal';
 import trim from 'string.prototype.trim';
 
@@ -1351,7 +1351,7 @@ class ShallowWrapper {
         throw new TypeError('ShallowWrapper::renderProp(): `propName` must be a string');
       }
       const props = this.props();
-      if (!has(props, propName)) {
+      if (!hasOwn(props, propName)) {
         throw new Error(`ShallowWrapper::renderProp(): no prop called “${propName}“ found`);
       }
       const propValue = props[propName];

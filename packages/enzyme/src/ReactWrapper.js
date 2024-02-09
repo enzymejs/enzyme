@@ -1,5 +1,5 @@
 import flat from 'array.prototype.flat';
-import has from 'has';
+import hasOwn from 'hasown';
 import trim from 'string.prototype.trim';
 
 import {
@@ -873,7 +873,7 @@ class ReactWrapper {
         throw new TypeError('ReactWrapper::renderProp(): `propName` must be a string');
       }
       const props = this.props();
-      if (!has(props, propName)) {
+      if (!hasOwn(props, propName)) {
         throw new Error(`ReactWrapper::renderProp(): no prop called “${propName}“ found`);
       }
       const propValue = props[propName];

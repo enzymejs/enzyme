@@ -4,7 +4,7 @@ import is from 'object-is';
 import entries from 'object.entries';
 import fromEntries from 'object.fromentries';
 import functionName from 'function.prototype.name';
-import has from 'has';
+import hasOwn from 'hasown';
 import flat from 'array.prototype.flat';
 import trim from 'string.prototype.trim';
 import cheerio from 'cheerio';
@@ -298,9 +298,9 @@ export function cloneElement(adapter, el, props) {
 export function spyMethod(instance, methodName, getStub = () => {}) {
   let lastReturnValue;
   const originalMethod = instance[methodName];
-  const hasOwn = has(instance, methodName);
+  const hasOwnProp = hasOwn(instance, methodName);
   let descriptor;
-  if (hasOwn) {
+  if (hasOwnProp) {
     descriptor = Object.getOwnPropertyDescriptor(instance, methodName);
   }
   Object.defineProperty(instance, methodName, {
@@ -314,7 +314,7 @@ export function spyMethod(instance, methodName, getStub = () => {}) {
   });
   return {
     restore() {
-      if (hasOwn) {
+      if (hasOwnProp) {
         if (descriptor) {
           Object.defineProperty(instance, methodName, descriptor);
         } else {
@@ -336,9 +336,9 @@ export function spyMethod(instance, methodName, getStub = () => {}) {
 
 export function spyProperty(instance, propertyName, handlers = {}) {
   const originalValue = instance[propertyName];
-  const hasOwn = has(instance, propertyName);
+  const hasOwnProp = hasOwn(instance, propertyName);
   let descriptor;
-  if (hasOwn) {
+  if (hasOwnProp) {
     descriptor = Object.getOwnPropertyDescriptor(instance, propertyName);
   }
   let wasAssigned = false;
@@ -367,7 +367,7 @@ export function spyProperty(instance, propertyName, handlers = {}) {
 
   return {
     restore() {
-      if (hasOwn) {
+      if (hasOwnProp) {
         if (descriptor) {
           Object.defineProperty(instance, propertyName, descriptor);
         } else {

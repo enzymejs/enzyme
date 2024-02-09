@@ -5,7 +5,7 @@ import isNumber from 'is-number-object';
 import isCallable from 'is-callable';
 import isBoolean from 'is-boolean-object';
 import inspect from 'object-inspect';
-import has from 'has';
+import hasOwn from 'hasown';
 
 import {
   propsOfNode,
@@ -69,13 +69,13 @@ function indentChildren(childrenStrs, indentLength) {
 }
 
 function isRSTNodeLike(node) {
-  return has(node, 'nodeType')
+  return hasOwn(node, 'nodeType')
     && typeof node.nodeType === 'string'
-    && has(node, 'type')
-    && has(node, 'key')
-    && has(node, 'ref')
-    && has(node, 'instance')
-    && has(node, 'rendered');
+    && hasOwn(node, 'type')
+    && hasOwn(node, 'key')
+    && hasOwn(node, 'ref')
+    && hasOwn(node, 'instance')
+    && hasOwn(node, 'rendered');
 }
 
 export function debugNode(node, indentLength = 2, options = {}) {

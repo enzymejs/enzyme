@@ -40,7 +40,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "has": "^1.0.3",
+    "hasown": "^2.0.0",
     "object-is": "^1.1.5"
   },
   "devDependencies": {

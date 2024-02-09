@@ -2,7 +2,7 @@ import { createParser } from 'rst-selector-parser';
 import values from 'object.values';
 import flat from 'array.prototype.flat';
 import is from 'object-is';
-import has from 'has';
+import hasOwn from 'hasown';
 import elementsByConstructor from 'html-element-map/byConstructor';
 import {
   treeFilter,
@@ -81,7 +81,7 @@ function matchAttributeSelector(node, token) {
     return false;
   }
   if (token.type === ATTRIBUTE_PRESENCE) {
-    return has(nodeProps, token.name);
+    return hasOwn(nodeProps, token.name);
   }
   // Only the exact value operator ("=") can match non-strings
   if (typeof nodePropValue !== 'string' || typeof value !== 'string') {

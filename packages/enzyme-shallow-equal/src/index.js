@@ -1,5 +1,5 @@
 import is from 'object-is';
-import has from 'has';
+import hasOwn from 'hasown';
 
 // adapted from https://github.com/facebook/react/blob/144328fe81719e916b946e22660479e31561bb0b/packages/shared/shallowEqual.js#L36-L68
 export default function shallowEqual(objA, objB) {
@@ -23,7 +23,7 @@ export default function shallowEqual(objA, objB) {
 
   // Test for A's keys different from B.
   for (let i = 0; i < keysA.length; i += 1) {
-    if (!has(objB, keysA[i]) || !is(objA[keysA[i]], objB[keysA[i]])) {
+    if (!hasOwn(objB, keysA[i]) || !is(objA[keysA[i]], objB[keysA[i]])) {
       return false;
     }
   }
