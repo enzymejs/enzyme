@@ -41,7 +41,7 @@
   "license": "MIT",
   "dependencies": {
     "enzyme-adapter-utils": "^1.14.2",
-    "enzyme-shallow-equal": "^1.0.5",
+    "enzyme-shallow-equal": "^1.0.7",
     "hasown": "^2.0.0",
     "object.assign": "^4.1.5",
     "object.values": "^1.1.7",
