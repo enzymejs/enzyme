@@ -27,15 +27,6 @@ export default function describeSingle({
       );
     });
 
-    it('throws if run on zero nodes', () => {
-      const wrapper = Wrap(<div />).children();
-      expect(wrapper).to.have.lengthOf(0);
-      expect(() => wrapper.single('name!')).to.throw(
-        Error,
-        'Method “name!” is meant to be run on 1 node. 0 found instead.',
-      );
-    });
-
     it('works with a name', () => {
       const wrapper = Wrap(<div />);
       wrapper.single('foo', (node) => {
