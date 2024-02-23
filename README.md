@@ -114,7 +114,7 @@ Basic Usage
 
 ## [Shallow Rendering](/docs/api/shallow.md)
 
-```javascript
+```jsx
 import React from 'react';
 import { expect } from 'chai';
 import { shallow } from 'enzyme';
@@ -158,7 +158,7 @@ Read the full [API Documentation](/docs/api/shallow.md)
 
 ## [Full DOM Rendering](/docs/api/mount.md)
 
-```javascript
+```jsx
 import React from 'react';
 import sinon from 'sinon';
 import { expect } from 'chai';
@@ -197,7 +197,7 @@ Read the full [API Documentation](/docs/api/mount.md)
 
 ## [Static Rendered Markup](/docs/api/render.md)
 
-```javascript
+```jsx
 import React from 'react';
 import { expect } from 'chai';
 import { render } from 'enzyme';
@@ -233,7 +233,7 @@ If you're using React 16.8+ and `.mount()`, Enzyme will wrap apis including [`.s
 
 A common pattern to trigger handlers with `.act()` and assert is:
 
-```javascript
+```jsx
 const wrapper = mount(<SomeComponent />);
 act(() => wrapper.prop('handler')());
 wrapper.update();
@@ -243,7 +243,7 @@ expect(/* ... */);
 We cannot wrap the result of `.prop()` (or `.props()`) with `.act()` in Enzyme internally since it will break the equality of the returned value.
 However, you could use `.invoke()` to simplify the code:
 
-```javascript
+```jsx
 const wrapper = mount(<SomeComponent />);
 wrapper.invoke('handler')();
 expect(/* ... */);
