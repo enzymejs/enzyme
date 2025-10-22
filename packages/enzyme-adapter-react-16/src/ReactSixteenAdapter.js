@@ -218,6 +218,7 @@ function toTree(vnode) {
       };
     }
     case FiberTags.ClassComponent:
+    case FiberTags.ClassComponentLazy:
       return {
         nodeType: 'class',
         type: node.type,
@@ -228,6 +229,7 @@ function toTree(vnode) {
         rendered: childrenToTree(node.child),
       };
     case FiberTags.FunctionalComponent:
+    case FiberTags.FunctionalComponentLazy:
       return {
         nodeType: 'function',
         type: node.type,
