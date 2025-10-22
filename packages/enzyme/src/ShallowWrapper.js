@@ -473,8 +473,13 @@ class ShallowWrapper {
    */
   getNodesInternal() {
     if (this[ROOT] === this && this.length === 1) {
-      this.update();
+      const adapter = getAdapter(this[OPTIONS]);
+      const prevProps = (this[UNRENDERED] && this[UNRENDERED].props) || {};
+      if (!adapter.shouldComponentUpdate || adapter.shouldComponentUpdate(prevProps, this[ROOT])) {
+        this.update();
+      }
     }
+
     return this[NODES];
   }
 
@@ -569,8 +574,10 @@ class ShallowWrapper {
    */
   unmount() {
     this[RENDERER].unmount();
+    this.update();
     if (this[ROOT][WRAPPING_COMPONENT]) {
       this[ROOT][WRAPPING_COMPONENT].unmount();
+      this[ROOT][WRAPPING_COMPONENT].update();
     }
     return this;
   }

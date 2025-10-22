@@ -2281,9 +2281,12 @@ describe('shallow', () => {
           }
         }
         const wrapper = shallow(<MyComponent />, { disableLifecycleMethods: true });
-        expect(wrapper.find(Table).length).to.equal(0);
+        expect(wrapper.find(Table)).to.have.lengthOf(0);
+
         wrapper.instance().componentDidMount();
-        expect(wrapper.find(Table).length).to.equal(1);
+        // wrapper.update(); // TODO: uncomment or delete
+
+        expect(wrapper.find(Table)).to.have.lengthOf(1);
       });
 
       it('calls shouldComponentUpdate when disableLifecycleMethods flag is true', () => {

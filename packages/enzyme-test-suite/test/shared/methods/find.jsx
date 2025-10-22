@@ -308,6 +308,50 @@ export default function describeFind({
       expect(wrapper.find('.b').find('.c')).to.have.lengthOf(6);
     });
 
+    it('can call find on the same wrapper more than once', () => {
+      class TestComponent extends React.Component {
+        render() {
+          return (
+            <div>
+              <h1>Title</h1>
+              <span key="1">1</span>
+              <span key="2">2</span>
+            </div>
+          );
+        }
+      }
+      const component = Wrap(<TestComponent />);
+
+      const cards = component.find('span');
+
+      const title = component.find('h1'); // for side effects
+      expect(title.is('h1')).to.equal(true);
+
+      expect(cards.at(0).parent().is('div')).to.equal(true);
+    });
+
+    describeIf(is('> 0.13'), 'stateless function components (SFCs)', () => {
+      it('can call find on the same wrapper more than once', () => {
+        function TestComponentSFC() {
+          return (
+            <div>
+              <h1>Title</h1>
+              <span key="1">1</span>
+              <span key="2">2</span>
+            </div>
+          );
+        }
+        const component = Wrap(<TestComponentSFC />);
+
+        const cards = component.find('span');
+
+        const title = component.find('h1'); // for side effects
+        expect(title.is('h1')).to.equal(true);
+
+        expect(cards.at(0).parent().debug()).to.equal('<div />');
+      });
+    });
+
     it('works with an adjacent sibling selector', () => {
       const a = 'some';
       const b = 'text';
