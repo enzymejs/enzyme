@@ -4,6 +4,7 @@ import { expect } from 'chai';
 import sinon from 'sinon-sandbox';
 import wrap from 'mocha-wrap';
 import inspect from 'object-inspect';
+import { isMemo } from 'react-is';
 
 import {
   shallow,
@@ -1730,6 +1731,11 @@ describe('shallow', () => {
   Guest
 </div>`);
         expect(() => wrapper.dive().dive()).to.throw(TypeError);
+      });
+
+      it('is still marked as memoized after going through the wrapper', () => {
+        const wrapper = shallow(<RendersAppMemoized />);
+        expect(isMemo(wrapper.get(0))).to.equal(true);
       });
     });
   });
