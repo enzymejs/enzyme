@@ -42,7 +42,7 @@
   "dependencies": {
     "airbnb-prop-types": "^2.16.0",
     "function.prototype.name": "^1.1.6",
-    "hasown": "^2.0.0",
+    "hasown": "^2.0.2",
     "object.assign": "^4.1.7",
     "object.fromentries": "^2.0.7",
     "prop-types": "^15.8.1",

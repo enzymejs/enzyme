@@ -42,7 +42,7 @@
   "dependencies": {
     "enzyme-adapter-utils": "^1.14.2",
     "enzyme-shallow-equal": "^1.0.7",
-    "hasown": "^2.0.0",
+    "hasown": "^2.0.2",
     "object.assign": "^4.1.7",
     "object.values": "^1.2.1",
     "prop-types": "^15.8.1",
