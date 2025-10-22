@@ -47,7 +47,7 @@
     "mocha": "^3.5.3",
     "mocha-wrap": "^2.1.2",
     "object-inspect": "^1.11.0",
-    "object.assign": "^4.1.4",
+    "object.assign": "^4.1.7",
     "prop-types": "^15.8.1",
     "react-is": "^16.13.1",
     "semver": "^5.7.2",

@@ -41,8 +41,8 @@
   "license": "MIT",
   "dependencies": {
     "enzyme-adapter-utils": "^1.14.2",
-    "object.assign": "^4.1.5",
-    "object.values": "^1.1.7",
+    "object.assign": "^4.1.7",
+    "object.values": "^1.2.1",
     "prop-types": "^15.8.1",
     "react-is": "^17.0.2"
   },

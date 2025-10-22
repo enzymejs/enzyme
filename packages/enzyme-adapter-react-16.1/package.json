@@ -42,7 +42,7 @@
   "dependencies": {
     "enzyme-adapter-utils": "^1.14.2",
     "enzyme-shallow-equal": "^1.0.7",
-    "object.assign": "^4.1.5",
+    "object.assign": "^4.1.7",
     "prop-types": "^15.8.1",
     "react-is": "^17.0.2",
     "react-reconciler": "^0.7.0",
