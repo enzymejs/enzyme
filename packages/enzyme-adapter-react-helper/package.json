@@ -70,7 +70,7 @@
     "install-peerdeps": "~1.8.0",
     "npm-run": "^4.1.2",
     "object.assign": "^4.1.7",
-    "object.getownpropertydescriptors": "^2.1.7",
+    "object.getownpropertydescriptors": "^2.1.8",
     "rimraf": "^2.7.1",
     "semver": "^5.7.2"
   },
