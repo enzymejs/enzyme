@@ -50,9 +50,9 @@
     "react": "^0.13.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.23.9",
-    "@babel/core": "^7.23.9",
-    "@babel/eslint-parser": "^7.23.10",
+    "@babel/cli": "^7.28.3",
+    "@babel/core": "^7.28.4",
+    "@babel/eslint-parser": "^7.28.4",
     "babel-plugin-add-module-exports": "^1.0.4",
     "babel-plugin-transform-replace-object-assign": "^2.0.0",
     "babel-preset-airbnb": "^4.5.0",
