@@ -4,5 +4,6 @@
     "packages/*"
   ],
   "version": "independent",
-  "independent": true
+  "independent": true,
+  "ci": false
 }
