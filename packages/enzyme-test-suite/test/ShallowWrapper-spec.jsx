@@ -539,7 +539,7 @@ describe('shallow', () => {
         let Consumer;
 
         beforeEach(() => {
-          ({ Provider, Consumer } = React.createContext('howdy!'));
+          ({ Provider, Consumer } = createContext('howdy!'));
         });
 
         class Consumes extends React.Component {
@@ -611,7 +611,7 @@ describe('shallow', () => {
         let Consumer;
 
         beforeEach(() => {
-          ({ Provider, Consumer } = React.createContext('howdy!'));
+          ({ Provider, Consumer } = createContext('howdy!'));
         });
 
         class Consumes extends React.Component {
@@ -664,6 +664,82 @@ describe('shallow', () => {
           const consumes = provider.find(Consumes).shallow();
           const consumer = consumes.find(Consumer).shallow();
           expect(consumer.text()).to.equal('foo');
+        });
+      });
+
+      describeIf(is('>= 16.6'), 'shallow() on Provider and Consumer through .contextType', () => {
+        let Provider;
+
+        beforeEach(() => {
+          ({ Provider } = createContext('howdy!'));
+        });
+
+        class OuterComponent extends React.Component {
+          render() {
+            const { value } = this.props;
+            return (
+              <Provider value={value}><InnerComponent /></Provider>
+            );
+          }
+        }
+
+        class WrappingComponent extends React.Component {
+          render() {
+            const { children, value } = this.props;
+            return (
+              <Provider value={value}>{ children }</Provider>
+            );
+          }
+        }
+
+        class InnerComponent extends React.Component {
+          render() {
+            return this.context;
+          }
+        }
+
+        InnerComponent.contextType = Provider;
+
+        describe('rendering the Provider directly', () => {
+          it('renders initial context value', () => {
+            const wrapper = shallow(<OuterComponent value="foo" />);
+            const provides = wrapper.find(Provider).shallow();
+            const provider = provides.find(InnerComponent).dive();
+
+            expect(provider.text()).to.equal('foo');
+          });
+
+          it('renders updated context value', () => {
+            const wrapper = shallow(<OuterComponent value="foo" />);
+            wrapper.setProps({ value: 'bar' });
+            const provides = wrapper.find(Provider).shallow();
+            const provider = provides.find(InnerComponent).dive();
+
+            expect(provider.text()).to.equal('bar');
+          });
+        });
+
+        describe('rendering the Provider through wrappingComponent', () => {
+          it('renders initial context value', () => {
+            const wrapper = shallow(<InnerComponent />, {
+              wrappingComponent: WrappingComponent,
+              wrappingComponentProps: { value: 'foo' },
+            });
+
+            expect(wrapper.text()).to.equal('foo');
+          });
+
+          it('renders updated context value', () => {
+            const wrapper = shallow(<InnerComponent />, {
+              wrappingComponent: WrappingComponent,
+              wrappingComponentProps: { value: 'foo' },
+            });
+            const wrappingComponent = wrapper.getWrappingComponent();
+            wrappingComponent.setProps({ value: 'bar' });
+            wrappingComponent.rerender();
+
+            expect(wrapper.text()).to.equal('bar');
+          });
         });
       });
     });
