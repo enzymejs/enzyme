@@ -140,14 +140,17 @@ class ReactFifteenAdapter extends EnzymeAdapter {
       render(el, context, callback) {
         if (instance === null) {
           const { type, props, ref } = el;
+          const ReactWrapperComponent = createMountWrapper(el, { ...options, adapter });
+          const refProp = ReactWrapperComponent.supportsForwardedRef === true
+            ? 'forwardedRef'
+            : 'ref';
           const wrapperProps = {
             Component: type,
             wrappingComponentProps: options.wrappingComponentProps,
             props,
             context,
-            ...(ref && { refProp: ref }),
+            ...(ref && { [refProp]: ref }),
           };
-          const ReactWrapperComponent = createMountWrapper(el, { ...options, adapter });
           const wrappedEl = React.createElement(ReactWrapperComponent, wrapperProps);
           instance = ReactDOM.render(wrappedEl, domNode);
           if (typeof callback === 'function') {

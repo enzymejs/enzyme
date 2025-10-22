@@ -275,14 +275,17 @@ class ReactSixteenOneAdapter extends EnzymeAdapter {
       render(el, context, callback) {
         if (instance === null) {
           const { type, props, ref } = el;
+          const ReactWrapperComponent = createMountWrapper(el, { ...options, adapter });
+          const refProp = ReactWrapperComponent.supportsForwardedRef === true
+            ? 'forwardedRef'
+            : 'ref';
           const wrapperProps = {
             Component: type,
             props,
             wrappingComponentProps,
             context,
-            ...(ref && { refProp: ref }),
+            ...(ref && { [refProp]: ref }),
           };
-          const ReactWrapperComponent = createMountWrapper(el, { ...options, adapter });
           const wrappedEl = React.createElement(ReactWrapperComponent, wrapperProps);
           instance = hydrateIn
             ? ReactDOM.hydrate(wrappedEl, domNode)

@@ -123,13 +123,16 @@ class ReactThirteenAdapter extends EnzymeAdapter {
       render(el, context, callback) {
         if (instance === null) {
           const { ref, type, props } = el;
+          const ReactWrapperComponent = createMountWrapper(el, { ...options, adapter });
+          const refProp = ReactWrapperComponent.supportsForwardedRef === true
+            ? 'forwardedRef'
+            : 'ref';
           const wrapperProps = {
             Component: type,
             props,
             context,
-            ...(ref && { ref }),
+            ...(ref && { [refProp]: ref }),
           };
-          const ReactWrapperComponent = createMountWrapper(el, { ...options, adapter });
           const wrappedEl = React.createElement(ReactWrapperComponent, wrapperProps);
           instance = React.render(wrappedEl, domNode);
           if (typeof callback === 'function') {
