@@ -49,6 +49,7 @@
     "object-inspect": "^1.11.0",
     "object.assign": "^4.1.7",
     "prop-types": "^15.8.1",
+    "psl": "=1.9.0",
     "react-is": "^16.13.1",
     "semver": "^5.7.2",
     "sinon": "^5.1.1",
