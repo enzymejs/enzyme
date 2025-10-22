@@ -41,7 +41,7 @@
   "license": "MIT",
   "dependencies": {
     "hasown": "^2.0.2",
-    "object-is": "^1.1.5"
+    "object-is": "^1.1.6"
   },
   "devDependencies": {
     "@babel/cli": "^7.28.3",
