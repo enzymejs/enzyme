@@ -14,6 +14,7 @@
   * [Lab](/docs/guides/lab.md)
   * [Tape and AVA](/docs/guides/tape-ava.md)
 * [Installation](/docs/installation/README.md)
+* [Working with React 17.x](/docs/installation/react-17.md)
   * [Working with React 16.x](/docs/installation/react-16.md)
   * [Working with React 15.x](/docs/installation/react-15.md)
   * [Working with React 0.14.x](/docs/installation/react-014.md)

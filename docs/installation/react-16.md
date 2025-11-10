@@ -10,7 +10,7 @@ npm i --save react@16 react-dom@16
 Next, to get started with enzyme, you can simply install it with npm:
 
 ```bash
-npm i --save-dev enzyme enzyme-adapter-react-16
+npm i --save-dev enzyme enzyme-adapter-react-17
 ```
 
 And then you're ready to go!  In your test files you can simply `require` or `import` enzyme:
@@ -19,7 +19,7 @@ ES6:
 ```js
 // setup file
 import { configure } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
+import Adapter from 'enzyme-adapter-react-17';
 
 configure({ adapter: new Adapter() });
 ```

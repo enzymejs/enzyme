@@ -4,7 +4,7 @@ enzyme works well with [Tape](https://github.com/substack/tape) and [AVA](https:
 Simply install it and start using it:
 
 ```bash
-npm i --save-dev enzyme enzyme-adapter-react-16
+npm i --save-dev enzyme enzyme-adapter-react-17
 ```
 
 ## Tape
@@ -13,7 +13,7 @@ npm i --save-dev enzyme enzyme-adapter-react-16
 import test from 'tape';
 import React from 'react';
 import { shallow, mount, configure } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
+import Adapter from 'enzyme-adapter-react-17';
 
 import Foo from '../path/to/foo';
 
@@ -38,7 +38,7 @@ test('mount', (t) => {
 import test from 'ava';
 import React from 'react';
 import { shallow, mount, configure } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
+import Adapter from 'enzyme-adapter-react-17';
 
 import Foo from '../path/to/foo';
 

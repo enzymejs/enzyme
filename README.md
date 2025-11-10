@@ -26,13 +26,13 @@ along with an Adapter corresponding to the version of react (or other UI Compone
 are using. For instance, if you are using enzyme with React 16, you can run:
 
 ```bash
-npm i --save-dev enzyme enzyme-adapter-react-16
+npm i --save-dev enzyme enzyme-adapter-react-17
 ```
 
 Each adapter may have additional peer dependencies which you will need to install as well. For instance,
-`enzyme-adapter-react-16` has peer dependencies on `react` and `react-dom`.
+`enzyme-adapter-react-17` has peer dependencies on `react` and `react-dom`.
 
-At the moment, Enzyme has adapters that provide compatibility with `React 16.x`, `React 15.x`,
+At the moment, Enzyme has adapters that provide compatibility with `React 17.x`, `React 16.x`, `React 15.x`,
 `React 0.14.x` and `React 0.13.x`.
 
 The following adapters are officially provided by enzyme, and have the following compatibility with
@@ -40,6 +40,7 @@ React:
 
 | Enzyme Adapter Package | React semver compatibility |
 | --- | --- |
+| `enzyme-adapter-react-17` | `^17.0.0` |
 | `enzyme-adapter-react-16` | `^16.4.0-0` |
 | `enzyme-adapter-react-16.3` | `~16.3.0-0` |
 | `enzyme-adapter-react-16.2` | `~16.2` |
@@ -54,7 +55,7 @@ the top level `configure(...)` API.
 
 ```js
 import Enzyme from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
+import Adapter from 'enzyme-adapter-react-17';
 
 Enzyme.configure({ adapter: new Adapter() });
 ```

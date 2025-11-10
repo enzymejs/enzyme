@@ -29,16 +29,16 @@ enzyme now has an "Adapter" system. This means that you now need to install enzy
 another module that provides the Adapter that tells enzyme how to work with your version of React
 (or whatever other React-like library you are using).
 
-At the time of writing this, enzyme publishes "officially supported" adapters for React 0.13.x,
-0.14.x, 15.x, and 16.x. These adapters are npm packages of the form `enzyme-adapter-react-{{version}}`.
+At the time of writing this, enzyme publishes "officially supported" adapters for React 0.13.x, 0.14.x, 15.x, 16.x, and 17.x.
+These adapters are npm packages of the form `enzyme-adapter-react-{{version}}`.
 
 You will want to configure enzyme with the adapter you'd like to use before using enzyme in your
 tests. The way to do this is with `enzyme.configure(...)`. For example, if your project depends
-on React 16, you would want to configure enzyme this way:
+on React 17, you would want to configure enzyme this way:
 
 ```js
 import Enzyme from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
+import Adapter from 'enzyme-adapter-react-17';
 
 Enzyme.configure({ adapter: new Adapter() });
 ```
@@ -47,6 +47,7 @@ The list of adapter npm packages for React semver ranges are as follows:
 
 | enzyme Adapter Package | React semver compatibility |
 | --- | --- |
+| `enzyme-adapter-react-17` | `^17.0.0` |
 | `enzyme-adapter-react-16` | `^16.4.0-0` |
 | `enzyme-adapter-react-16.3` | `~16.3.0-0` |
 | `enzyme-adapter-react-16.2` | `~16.2` |

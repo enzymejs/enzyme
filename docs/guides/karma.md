@@ -11,7 +11,7 @@ Create an Enzyme setup file. This file will configure Enzyme with the appropriat
 ```js
 /* test/enzyme.js */
 import Enzyme from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
+import Adapter from 'enzyme-adapter-react-17';
 import jasmineEnzyme from 'jasmine-enzyme';
 
 // Configure Enzyme for the appropriate React adapter

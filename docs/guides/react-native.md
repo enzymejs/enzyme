@@ -14,10 +14,10 @@ To use enzyme to test React Native, you currently need to configure an adapter, 
 ## Configuring an Adapter
 
 While a React Native adapter is [in discussion](https://github.com/enzymejs/enzyme/issues/1436),
-a standard adapter may be used, such as 'enzyme-adapter-react-16':
+a standard adapter may be used, such as 'enzyme-adapter-react-17':
 
 ```jsx
-import Adapter from 'enzyme-adapter-react-16';
+import Adapter from 'enzyme-adapter-react-17';
 
 Enzyme.configure({ adapter: new Adapter() });
 ```
@@ -74,7 +74,7 @@ Then create or update the file specified in `setupFilesAfterEnv`, in this case `
 
 import 'react-native';
 import 'jest-enzyme';
-import Adapter from 'enzyme-adapter-react-16';
+import Adapter from 'enzyme-adapter-react-17';
 import Enzyme from 'enzyme';
 
 /**
@@ -113,7 +113,7 @@ Update the file specified in `setupFilesAfterEnv`, in this case `setup-tests.js`
 ```jsx
 import 'react-native';
 import 'jest-enzyme';
-import Adapter from 'enzyme-adapter-react-16';
+import Adapter from 'enzyme-adapter-react-17';
 import Enzyme from 'enzyme';
 
 /**
