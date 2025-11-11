@@ -635,6 +635,20 @@ class ShallowWrapper {
               instance.state,
             );
           }
+          if (
+            shouldRender
+            && instance
+            && context
+          ) {
+            if (lifecycles.componentWillReceivePropsOnShallowRerender) {
+              if (typeof instance.componentWillReceiveProps === 'function') {
+                instance.componentWillReceiveProps(props);
+              }
+              if (typeof instance.UNSAFE_componentWillReceiveProps === 'function') { // eslint-disable-line new-cap
+                instance.UNSAFE_componentWillReceiveProps(props); // eslint-disable-line new-cap
+              }
+            }
+          }
           if (props) this[UNRENDERED] = cloneElement(adapter, this[UNRENDERED], props);
           this[RENDERER].render(this[UNRENDERED], nextContext, {
             providerValues: this[PROVIDER_VALUES],
