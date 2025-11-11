@@ -36,7 +36,7 @@ let useRef;
 let useState;
 let act;
 
-if (is('>=15.5 || ^16.0.0-alpha || ^16.3.0-alpha')) {
+if (is('>=15.5 || ^16.0.0-alpha || ^16.3.0-alpha || ^17.0.0')) {
   // eslint-disable-next-line import/no-extraneous-dependencies
   createClass = require('create-react-class');
 } else {
@@ -50,7 +50,7 @@ if (is('^0.13.0')) {
   ({ renderToString } = require('react-dom/server'));
 }
 
-if (is('^16.0.0-0 || ^16.3.0-0')) {
+if (is('^16.0.0-0 || ^16.3.0-0 || ^17.0.0')) {
   ({ createPortal } = require('react-dom'));
 } else {
   createPortal = null;
@@ -62,13 +62,13 @@ if (is('>=15.3')) {
   PureComponent = null;
 }
 
-if (is('^16.2.0-0')) {
+if (is('^16.2.0-0 || ^17.0.0')) {
   ({ Fragment } = require('react'));
 } else {
   Fragment = null;
 }
 
-if (is('^16.3.0-0')) {
+if (is('^16.3.0-0 || ^17.0.0')) {
   ({
     createContext,
     createRef,
@@ -84,7 +84,7 @@ if (is('^16.3.0-0')) {
   AsyncMode = null;
 }
 
-if (is('^16.9.0-0')) {
+if (is('^16.9.0-0 || ^17.0.0')) {
   ({ Profiler } = require('react'));
 } else if (is('^16.4.0-0')) {
   ({
@@ -94,7 +94,7 @@ if (is('^16.9.0-0')) {
   Profiler = null;
 }
 
-if (is('^16.6.0-0')) {
+if (is('^16.6.0-0 || ^17.0.0')) {
   ({
     Suspense,
     lazy,
@@ -122,7 +122,7 @@ if (is('^16.9.0-0')) {
   createRoot = null;
 }
 
-if (is('^16.8.0-0')) {
+if (is('^16.8.0-0 || ^17.0.0')) {
   ({
     useCallback,
     useContext,

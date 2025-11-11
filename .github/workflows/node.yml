@@ -72,9 +72,12 @@ jobs:
       fail-fast: false
       matrix:
         node-version:
+          - '25'
+          - '22'
           - '18'
           - '4'
         react:
+          - '17'
           - '16.14'
           - '16.13'
           - '16.12'
