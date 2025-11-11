@@ -13,6 +13,9 @@ function getValidRange(version) {
 export default function getAdapterForReactVersion(reactVersion) {
   const versionRange = getValidRange(reactVersion);
 
+  if (semver.intersects(versionRange, '^17.0.0')) {
+    return 'enzyme-adapter-react-17';
+  }
   if (semver.intersects(versionRange, '^16.4.0')) {
     return 'enzyme-adapter-react-16';
   }
