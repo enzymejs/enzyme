@@ -3,6 +3,10 @@ import getAdapterForReactVersion from 'enzyme-adapter-react-helper/build/getAdap
 
 describe('enzyme-adapter-react-helper', () => {
   describe('getAdapterForReactVersion', () => {
+    it('returns "enzyme-adapter-react-17" when intended', () => {
+      expect(getAdapterForReactVersion('17.0.0')).to.equal('enzyme-adapter-react-17');
+    });
+
     it('returns "enzyme-adapter-react-16" when intended', () => {
       expect(getAdapterForReactVersion('16')).to.equal('enzyme-adapter-react-16');
 

@@ -2,6 +2,8 @@ import React from 'react';
 import sinon from 'sinon-sandbox';
 import { expect } from 'chai';
 
+import path from 'path';
+
 import { is } from '../../_helpers/version';
 import {
   describeIf,
@@ -219,15 +221,20 @@ export default function describeCDC({
           expect(spy.args).to.be.an('array').and.have.lengthOf(1);
           const [[actualError, info]] = spy.args;
           expect(actualError).to.satisfy(properErrorMessage);
-          expect(info).to.deep.equal({
-            componentStack: `
+          if (is('>= 17')) {
+            expect(info).to.have.property('componentStack');
+            expect(info.componentStack).to.match(/at Thrower (.+)\n/);
+          } else {
+            expect(info).to.deep.equal({
+              componentStack: `
     in Thrower (created by ErrorBoundary)
     in span (created by ErrorBoundary)${hasFragments ? '' : `
     in main (created by ErrorBoundary)`}
     in div (created by ErrorBoundary)
     in ErrorBoundary (created by WrapperComponent)
     in WrapperComponent`,
-          });
+            });
+          }
         });
 
         it('works when the root is an SFC', () => {
@@ -243,8 +250,28 @@ export default function describeCDC({
           expect(spy.args).to.be.an('array').and.have.lengthOf(1);
           const [[actualError, info]] = spy.args;
           expect(actualError).to.satisfy(properErrorMessage);
+          if (is('>= 17')) {
+            expect(info).to.have.property('componentStack');
+            expect(info.componentStack).to.match(/at Thrower (.+)\n/);
+          }
+          const FILE_PATH = __filename;
+          const MOUNT_WRAPPER_PATH = path.join(
+            FILE_PATH,
+            '../../../../../enzyme-adapter-utils/build/createMountWrapper.js',
+          );
+          info.componentStack = info.componentStack
+            .replace(/^.*?(\/build)/, '$1')
+            .replace(/([^(]+\/[^:]+):\d+:\d+/gm, '$1:$LINE:$COL');
           expect(info).to.deep.equal({
-            componentStack: `
+            componentStack: is('>= 17')
+              ? `
+    at Thrower (${__filename}:$LINE:$COL)
+    at span
+    at div
+    at ErrorBoundary (${FILE_PATH}:$LINE:$COL)
+    at ErrorSFC
+    at WrapperComponent (${MOUNT_WRAPPER_PATH}:$LINE:$COL)`
+              : `
     in Thrower (created by ErrorBoundary)
     in span (created by ErrorBoundary)${hasFragments ? '' : `
     in main (created by ErrorBoundary)`}

@@ -26,7 +26,7 @@ if (!semver.intersects(reactVersion, '>=0.13')) {
 
 console.log('Cleaning up React and related packages...');
 const commands = [
-  'npm uninstall --no-save react-dom react-test-renderer react-addons-test-utils enzyme-adapter-react-14 enzyme-adapter-react-15.4 enzyme-adapter-react-15 enzyme-adapter-react-16',
+  'npm uninstall --no-save react-dom react-test-renderer react-addons-test-utils enzyme-adapter-react-14 enzyme-adapter-react-15.4 enzyme-adapter-react-15 enzyme-adapter-react-16 enzyme-adapter-react-17',
   'rimraf node_modules/react-test-renderer node_modules/react',
   'npm prune',
 ];

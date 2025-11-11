@@ -250,6 +250,7 @@ export default function describeSimulate({
 
       const wrapper = Wrap(<Multistate />);
       wrapper.simulate('click');
+
       expect(wrapper.text()).to.equal('1');
       expect(renderCount).to.equal(2);
     });

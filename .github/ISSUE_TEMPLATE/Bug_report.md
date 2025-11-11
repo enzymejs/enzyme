@@ -43,6 +43,7 @@ If you haven't found any duplicated issues, please report it with your environme
 
 #### Adapter
 
+- [ ] enzyme-adapter-react-17
 - [ ] enzyme-adapter-react-16
 - [ ] enzyme-adapter-react-16.3
 - [ ] enzyme-adapter-react-16.2
