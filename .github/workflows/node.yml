@@ -30,6 +30,7 @@ jobs:
       fail-fast: false
       matrix:
         react:
+          - '17'
           - '16'
           - '16.3'
           - '16.2'
