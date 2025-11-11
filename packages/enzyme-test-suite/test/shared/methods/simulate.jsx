@@ -251,19 +251,8 @@ export default function describeSimulate({
       const wrapper = Wrap(<Multistate />);
       wrapper.simulate('click');
 
-      if (is('>= 17') && isShallow) {
-        // Something changed in 17 so that calling an event handler (like onClick, above) directly,
-        // as enzyme's simulate() does under shallow(), does not batch setState calls. Using enzyme's
-        // simulate() under mount() still batches setState as expected, probably
-        // because enzyme uses ReactTestUtils.Simulate() to trigger event handlers under mount().
-        // See the two simulateEvent() methods in packages/enzyme-adapter-react-17/src/ReactSeventeenAdapter.js
-        // for more info
-        expect(wrapper.text()).to.equal('2');
-        expect(renderCount).to.equal(3);
-      } else {
-        expect(wrapper.text()).to.equal('1');
-        expect(renderCount).to.equal(2);
-      }
+      expect(wrapper.text()).to.equal('1');
+      expect(renderCount).to.equal(2);
     });
 
     // FIXME: figure out why this fails on 15.0 and 15.1
